@@ -158,32 +158,37 @@ namespace acommon {
     // append
     //
 
-    void append(const void * str, unsigned int sz)
+    String & append(const void * str, unsigned int sz)
     {
       reserve(size() + sz);
       memcpy(end_, str, sz);
       end_ += sz;
+      return *this;
     }
-    void append(const void * d, const void * e)
+    String & append(const void * d, const void * e)
     {
       append(d, (const char *)e - (const char *)d);
+      return *this;
     }
-    void append(String & str, unsigned int sz)
+    String & append(String & str, unsigned int sz)
     {
       append(str.begin_, sz);
+      return *this;
     }
-    void append(const char * str)
+    String & append(const char * str)
     {
       if (!end_) reserve_i();
       for (; *str && end_ != storage_end_ - 1; ++str, ++end_)
         *end_ = *str;
       if (end_ == storage_end_ - 1) append(str, strlen(str));
+      return *this;
     }
-    void append(char c)
+    String & append(char c)
     {
       reserve(size() + 1);
       *end_ = c;
       ++end_;
+      return *this;
     }
 
     String & operator+= (const char * s) {
