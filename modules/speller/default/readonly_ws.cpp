@@ -1091,7 +1091,10 @@ namespace {
     
     //CERR.printf("%d == %d\n", lookup.size(), uniq_entries);
     //assert(lookup.size() == uniq_entries);
-    lookup.resize(lookup.size() * 5 / 4);
+    if (affix_compress)
+      lookup.resize(lookup.size() * 3 / 2);
+    else
+      lookup.resize(lookup.size() * 5 / 4);
 
     data_head.word_count   = num_entries;
     data_head.word_buckets = lookup.bucket_count();

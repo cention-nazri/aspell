@@ -58,7 +58,7 @@ namespace aspeller {
     vector_iterator i = vector_.begin() + j.i;
     if (!parms_.is_multi && !j.at_end())
       return std::pair<iterator,bool>(iterator(i,this),false);
-    if (load_factor() > .8) {
+    if (load_factor() > .7) {
       resize(static_cast<size_type>(bucket_count()*1.5));
       return insert(d);
     } 
