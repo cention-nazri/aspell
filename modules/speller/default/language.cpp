@@ -44,7 +44,7 @@ namespace aspeller {
     , {"flag-char",           KeyInfoString, ":", "", 0, FOR_CONFIG}
     , {"repl-table",          KeyInfoString, "none", ""}
     , {"sug-split-chars",     KeyInfoString, "- ", "", 0, FOR_CONFIG}
-    , {"store-as",            KeyInfoString, "stripped", ""}
+    , {"store-as",            KeyInfoString, "", ""}
     , {"try",                 KeyInfoString, "", ""}
   };
 
@@ -147,7 +147,12 @@ namespace aspeller {
     //
     //
 
-    buf = data.retrieve("store-as");
+    if (data.have("store-as"))
+      buf = data.retrieve("store-as");
+    else if (data.retrieve_bool("affix-compress"))
+      buf = "lower";
+    else
+      buf = "stripped";
     if (buf == "stripped") {
       store_as_ = Stripped;
       to_clean_ = to_stripped_;
