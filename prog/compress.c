@@ -40,7 +40,7 @@ void usage ()
   fputs("Usage: word-list-compress c[ompress]|d[ecompress]\n" , stderr);
 }
 
-// bufsize > 2
+// PRECOND: bufsize >= 2
 static int get_word(FILE * in, char * w, size_t bufsize) 
 {
   int c;
