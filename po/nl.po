@@ -6,12 +6,12 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: aspell 0.60\n"
+"Project-Id-Version: aspell 0.60.1-b20041017\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-10-25 11:11-0600\n"
-"PO-Revision-Date: 2004-10-03 12:26+0200\n"
+"POT-Creation-Date: 2004-10-26 10:22-0600\n"
+"PO-Revision-Date: 2004-10-19 20:15+0200\n"
 "Last-Translator: Elros Cyriatan <cyriatan@fastmail.fm>\n"
-"Language-Team: Dutch <vertaling@nl.linux.org>\n"
+"Language-Team: Dutch <vertaling@vrijschrift.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -679,7 +679,7 @@ msgstr ""
 msgid "\"%expression:1\" is not a valid regular expression."
 msgstr "\"%expression:1\" is geen geldige reguliere uitdrukking."
 
-#: common/posib_err.cpp:98
+#: common/posib_err.cpp:99
 msgid "Unhandled Error: "
 msgstr "Niet-behandelde fout: "
 
@@ -705,9 +705,8 @@ msgid "enter TeX mode."
 msgstr "TeX modus binnengaan."
 
 #: prog/aspell.cpp:199
-#, fuzzy
 msgid "enter Nroff mode."
-msgstr "TeX modus binnengaan."
+msgstr "Nroff-modus binnengaan."
 
 #: prog/aspell.cpp:297
 #, c-format
@@ -739,7 +738,7 @@ msgstr "Ongeldige invoer"
 #: prog/aspell.cpp:679
 #, fuzzy
 msgid "WARNING: Unable to enter Nroff mode.\n"
-msgstr "TeX modus binnengaan."
+msgstr "Nroff-modus binnengaan."
 
 #: prog/aspell.cpp:699
 msgid "Time to load word list: "
@@ -1143,35 +1142,35 @@ msgstr "Dit is waarschijnlijk, omdat: "
 msgid "The required field \"name\" is missing."
 msgstr "Het vereiste veld \"name\" (naam) ontbreekt."
 
-#: modules/speller/default/language.cpp:450
+#: modules/speller/default/language.cpp:462
 msgid "Empty string."
 msgstr "Lege tekst."
 
-#: modules/speller/default/language.cpp:454
+#: modules/speller/default/language.cpp:466
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear at the beginning of a word."
 msgstr ""
 "Het teken '%s' (U+%02X) mag niet aan het begin van een woord voorkomen."
 
-#: modules/speller/default/language.cpp:456
-#: modules/speller/default/language.cpp:465
+#: modules/speller/default/language.cpp:468
+#: modules/speller/default/language.cpp:477
 #, c-format
 msgid ""
 "The character '%s' (U+%02X) must be followed by an alphabetic character."
 msgstr ""
 "Het teken '%s' (U+%02X) moet gevolgd worden door een alfabetisch teken."
 
-#: modules/speller/default/language.cpp:458
+#: modules/speller/default/language.cpp:470
 msgid "Does not contain any alphabetic characters."
 msgstr "Bevat geen alfabetische tekens."
 
-#: modules/speller/default/language.cpp:463
+#: modules/speller/default/language.cpp:475
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear in the middle of a word."
 msgstr ""
 "Het teken '%s' (U+%02X) mag niet in het midden van een woord voorkomen."
 
-#: modules/speller/default/language.cpp:470
+#: modules/speller/default/language.cpp:482
 msgid ""
 "The character '\\r' (U+0D) may not appear at the end of a word. This "
 "probably means means that the file is using MS-DOS EOL instead of Unix EOL."
@@ -1180,35 +1179,35 @@ msgstr ""
 "betekent waarschijnlijk dat het bestand MS-DOS einde-regel gebruikt in "
 "plaats van Unix einde-regel."
 
-#: modules/speller/default/language.cpp:473
+#: modules/speller/default/language.cpp:485
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear at the end of a word."
 msgstr ""
 "Het teken '%s' (U+%02X) mag niet aan het einde van een woord voorkomen."
 
-#: modules/speller/default/language.cpp:505
+#: modules/speller/default/language.cpp:517
 #, c-format
 msgid "Warning: Removing invalid affix '%s' from word %s.\n"
 msgstr ""
 "Waarschuwing: Ongeldig achtervoegsel '%s' wordt uit woord %s verwijderd.\n"
 
-#: modules/speller/default/language.cpp:506
+#: modules/speller/default/language.cpp:518
 #, c-format
 msgid "Warning: Removing inapplicable affix '%s' from word %s.\n"
 msgstr ""
 "Waarschuwing: Niet van toepassing zijnd achtervoegsel '%s' wordt van woord %"
 "s verwijderd.\n"
 
-#: modules/speller/default/language.cpp:637
+#: modules/speller/default/language.cpp:649
 #, c-format
 msgid "Warning: %s Skipping string.\n"
 msgstr "Waarschuwing: Tekenreeks %s overgeslagen.\n"
 
-#: modules/speller/default/language.cpp:695
+#: modules/speller/default/language.cpp:707
 msgid "The total length is larger than 240 characters."
 msgstr "De totale lengte is groter dan 240 tekens."
 
-#: modules/speller/default/language.cpp:699
+#: modules/speller/default/language.cpp:711
 #, c-format
 msgid "Warning: %s Skipping word.\n"
 msgstr "Waarschuwing: Woord %s overgeslagen.\n"
@@ -1285,9 +1284,8 @@ msgid "HTML tags to always skip the contents of"
 msgstr "HTML-tags waarvan inhoud moet worden overgeslagen"
 
 #: modules/filter/nroff-filter.info:7
-#, fuzzy
 msgid "filter for processing Nroff documents"
-msgstr "filter om om te gaan met HTML-documenten"
+msgstr "filter voor omgaan met Nroff-documenten"
 
 #: modules/filter/sgml-filter.info:9
 msgid "filter for dealing with generic SGML/XML documents"
@@ -1338,9 +1336,8 @@ msgid "mode to disable all filters"
 msgstr "modus om alle filters uit te schakelen"
 
 #: modules/filter/modes/nroff.amf:59
-#, fuzzy
 msgid "mode for checking Nroff documents"
-msgstr "modus om HTML-documenten te controleren"
+msgstr "modus om Nroff-documenten te controleren"
 
 #: modules/filter/modes/perl.amf:60
 msgid "mode for checking Perl comments and string literals"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-10-25 11:11-0600\n"
+"POT-Creation-Date: 2004-10-26 10:22-0600\n"
 "PO-Revision-Date: 2004-10-06 18:35+0200\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
@@ -660,7 +660,7 @@ msgstr ""
 msgid "\"%expression:1\" is not a valid regular expression."
 msgstr "\"%expression:1\" není platný regulární výraz."
 
-#: common/posib_err.cpp:98
+#: common/posib_err.cpp:99
 msgid "Unhandled Error: "
 msgstr "Neobsloužená chyba: "
 
@@ -1113,32 +1113,32 @@ msgstr "To je pravděpodobně protože: "
 msgid "The required field \"name\" is missing."
 msgstr "Vyžadované pole \"name\" chybí."
 
-#: modules/speller/default/language.cpp:450
+#: modules/speller/default/language.cpp:462
 msgid "Empty string."
 msgstr "Prázdný řetězec."
 
-#: modules/speller/default/language.cpp:454
+#: modules/speller/default/language.cpp:466
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear at the beginning of a word."
 msgstr "Znak '%s' (U+%02X) nesmí být na začátku slova."
 
-#: modules/speller/default/language.cpp:456
-#: modules/speller/default/language.cpp:465
+#: modules/speller/default/language.cpp:468
+#: modules/speller/default/language.cpp:477
 #, c-format
 msgid ""
 "The character '%s' (U+%02X) must be followed by an alphabetic character."
 msgstr "Znak '%s' (U+%02X) musí být následován písmenem."
 
-#: modules/speller/default/language.cpp:458
+#: modules/speller/default/language.cpp:470
 msgid "Does not contain any alphabetic characters."
 msgstr "Neobsahuje žádná písmena."
 
-#: modules/speller/default/language.cpp:463
+#: modules/speller/default/language.cpp:475
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear in the middle of a word."
 msgstr "Znak '%s' (U+%02X) nesmí být uprostřed slova."
 
-#: modules/speller/default/language.cpp:470
+#: modules/speller/default/language.cpp:482
 msgid ""
 "The character '\\r' (U+0D) may not appear at the end of a word. This "
 "probably means means that the file is using MS-DOS EOL instead of Unix EOL."
@@ -1146,31 +1146,31 @@ msgstr ""
 "Znak '\\r' (U+0D) nesmí být na konci slova. Toto pravděpodobně znamená, že "
 "soubor používá konce řádků MS-DOS místo unixových."
 
-#: modules/speller/default/language.cpp:473
+#: modules/speller/default/language.cpp:485
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear at the end of a word."
 msgstr "Znak '%s' (U+%02X) nesmí být na konci slova."
 
-#: modules/speller/default/language.cpp:505
+#: modules/speller/default/language.cpp:517
 #, c-format
 msgid "Warning: Removing invalid affix '%s' from word %s.\n"
 msgstr "Varování: Odstraňuji neplatnou příponu '%s' ze slova %s.\n"
 
-#: modules/speller/default/language.cpp:506
+#: modules/speller/default/language.cpp:518
 #, c-format
 msgid "Warning: Removing inapplicable affix '%s' from word %s.\n"
 msgstr "Varování: Odstraňuji nepoužitelnou příponu '%s' ze slova %s.\n"
 
-#: modules/speller/default/language.cpp:637
+#: modules/speller/default/language.cpp:649
 #, c-format
 msgid "Warning: %s Skipping string.\n"
 msgstr "Varování: %s Přeskakuji řetězec.\n"
 
-#: modules/speller/default/language.cpp:695
+#: modules/speller/default/language.cpp:707
 msgid "The total length is larger than 240 characters."
 msgstr "Celková délka je větší než 240 znaků."
 
-#: modules/speller/default/language.cpp:699
+#: modules/speller/default/language.cpp:711
 #, c-format
 msgid "Warning: %s Skipping word.\n"
 msgstr "Varování: %s Přeskakuji slovo.\n"

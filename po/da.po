@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60-b20040624\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-10-25 11:11-0600\n"
+"POT-Creation-Date: 2004-10-26 10:22-0600\n"
 "PO-Revision-Date: 2004-07-25 12:51+0200\n"
 "Last-Translator: Jacob Sparre Andersen <sparre@nbi.dk>\n"
 "Language-Team: Danish <dansk@klid.dk>\n"
@@ -669,7 +669,7 @@ msgstr ""
 msgid "\"%expression:1\" is not a valid regular expression."
 msgstr "\"%expression:1\" er ikke et gyldigt regulært udtryk."
 
-#: common/posib_err.cpp:98
+#: common/posib_err.cpp:99
 msgid "Unhandled Error: "
 msgstr "Uhåndteret fejl: "
 
@@ -1105,62 +1105,62 @@ msgstr "Det er sandsynligvis fordi: "
 msgid "The required field \"name\" is missing."
 msgstr "Det obligatoriske felt \"name\" (navn) mangler."
 
-#: modules/speller/default/language.cpp:450
+#: modules/speller/default/language.cpp:462
 msgid "Empty string."
 msgstr "Tom streng."
 
-#: modules/speller/default/language.cpp:454
+#: modules/speller/default/language.cpp:466
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear at the beginning of a word."
 msgstr "Et ord må ikke begynde med tegnet '%s' (U+%02X)."
 
-#: modules/speller/default/language.cpp:456
-#: modules/speller/default/language.cpp:465
+#: modules/speller/default/language.cpp:468
+#: modules/speller/default/language.cpp:477
 #, c-format
 msgid ""
 "The character '%s' (U+%02X) must be followed by an alphabetic character."
 msgstr "Tegnet '%s' (U+%02X) skal følges af et bogstav."
 
-#: modules/speller/default/language.cpp:458
+#: modules/speller/default/language.cpp:470
 msgid "Does not contain any alphabetic characters."
 msgstr "Indeholder ingen bogstaver."
 
-#: modules/speller/default/language.cpp:463
+#: modules/speller/default/language.cpp:475
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear in the middle of a word."
 msgstr "Tegnet '%s' (U+%02X) må ikke forekomme indeni et ord."
 
-#: modules/speller/default/language.cpp:470
+#: modules/speller/default/language.cpp:482
 msgid ""
 "The character '\\r' (U+0D) may not appear at the end of a word. This "
 "probably means means that the file is using MS-DOS EOL instead of Unix EOL."
 msgstr ""
 
-#: modules/speller/default/language.cpp:473
+#: modules/speller/default/language.cpp:485
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear at the end of a word."
 msgstr "Et ord må ikke slutte med tegnet '%s' (U+%02X)."
 
-#: modules/speller/default/language.cpp:505
+#: modules/speller/default/language.cpp:517
 #, c-format
 msgid "Warning: Removing invalid affix '%s' from word %s.\n"
 msgstr ""
 
-#: modules/speller/default/language.cpp:506
+#: modules/speller/default/language.cpp:518
 #, c-format
 msgid "Warning: Removing inapplicable affix '%s' from word %s.\n"
 msgstr ""
 
-#: modules/speller/default/language.cpp:637
+#: modules/speller/default/language.cpp:649
 #, c-format
 msgid "Warning: %s Skipping string.\n"
 msgstr ""
 
-#: modules/speller/default/language.cpp:695
+#: modules/speller/default/language.cpp:707
 msgid "The total length is larger than 240 characters."
 msgstr ""
 
-#: modules/speller/default/language.cpp:699
+#: modules/speller/default/language.cpp:711
 #, c-format
 msgid "Warning: %s Skipping word.\n"
 msgstr ""

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-10-25 11:11-0600\n"
+"POT-Creation-Date: 2004-10-26 10:22-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -645,7 +645,7 @@ msgstr ""
 msgid "\"%expression:1\" is not a valid regular expression."
 msgstr ""
 
-#: common/posib_err.cpp:98
+#: common/posib_err.cpp:99
 msgid "Unhandled Error: "
 msgstr ""
 
@@ -1072,62 +1072,62 @@ msgstr ""
 msgid "The required field \"name\" is missing."
 msgstr ""
 
-#: modules/speller/default/language.cpp:450
+#: modules/speller/default/language.cpp:462
 msgid "Empty string."
 msgstr ""
 
-#: modules/speller/default/language.cpp:454
+#: modules/speller/default/language.cpp:466
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear at the beginning of a word."
 msgstr ""
 
-#: modules/speller/default/language.cpp:456
-#: modules/speller/default/language.cpp:465
+#: modules/speller/default/language.cpp:468
+#: modules/speller/default/language.cpp:477
 #, c-format
 msgid ""
 "The character '%s' (U+%02X) must be followed by an alphabetic character."
 msgstr ""
 
-#: modules/speller/default/language.cpp:458
+#: modules/speller/default/language.cpp:470
 msgid "Does not contain any alphabetic characters."
 msgstr ""
 
-#: modules/speller/default/language.cpp:463
+#: modules/speller/default/language.cpp:475
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear in the middle of a word."
 msgstr ""
 
-#: modules/speller/default/language.cpp:470
+#: modules/speller/default/language.cpp:482
 msgid ""
 "The character '\\r' (U+0D) may not appear at the end of a word. This "
 "probably means means that the file is using MS-DOS EOL instead of Unix EOL."
 msgstr ""
 
-#: modules/speller/default/language.cpp:473
+#: modules/speller/default/language.cpp:485
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear at the end of a word."
 msgstr ""
 
-#: modules/speller/default/language.cpp:505
+#: modules/speller/default/language.cpp:517
 #, c-format
 msgid "Warning: Removing invalid affix '%s' from word %s.\n"
 msgstr ""
 
-#: modules/speller/default/language.cpp:506
+#: modules/speller/default/language.cpp:518
 #, c-format
 msgid "Warning: Removing inapplicable affix '%s' from word %s.\n"
 msgstr ""
 
-#: modules/speller/default/language.cpp:637
+#: modules/speller/default/language.cpp:649
 #, c-format
 msgid "Warning: %s Skipping string.\n"
 msgstr ""
 
-#: modules/speller/default/language.cpp:695
+#: modules/speller/default/language.cpp:707
 msgid "The total length is larger than 240 characters."
 msgstr ""
 
-#: modules/speller/default/language.cpp:699
+#: modules/speller/default/language.cpp:711
 #, c-format
 msgid "Warning: %s Skipping word.\n"
 msgstr ""

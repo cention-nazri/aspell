@@ -1,4 +1,4 @@
-# Translation of aspell-0.60.po to Russian
+# Translation of aspell-0.60.1-b20041017.po to Russian
 # Copyright (C) 2004 Free Software Foundation, Inc.
 # This file is distributed under the same license as the aspell package.
 # Copyright (C) 2004 Kevin Atkinson.
@@ -6,10 +6,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: aspell-0.60\n"
+"Project-Id-Version: aspell-0.60.1-b20041017\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-10-25 11:11-0600\n"
-"PO-Revision-Date: 2004-10-04 09:23+0300\n"
+"POT-Creation-Date: 2004-10-26 10:22-0600\n"
+"PO-Revision-Date: 2004-10-20 09:26+0300\n"
 "Last-Translator: Pavel Maryanov <acid_jack@ukr.net>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -672,7 +672,7 @@ msgstr ""
 msgid "\"%expression:1\" is not a valid regular expression."
 msgstr "\"%expression:2\" не является верным регулярным выражением."
 
-#: common/posib_err.cpp:98
+#: common/posib_err.cpp:99
 msgid "Unhandled Error: "
 msgstr "Необработанная ошибка: "
 
@@ -698,9 +698,8 @@ msgid "enter TeX mode."
 msgstr "переход в режим TeX."
 
 #: prog/aspell.cpp:199
-#, fuzzy
 msgid "enter Nroff mode."
-msgstr "переход в режим TeX."
+msgstr "переход в режим Nroff."
 
 #: prog/aspell.cpp:297
 #, c-format
@@ -732,7 +731,7 @@ msgstr "Неверные входные данные"
 #: prog/aspell.cpp:679
 #, fuzzy
 msgid "WARNING: Unable to enter Nroff mode.\n"
-msgstr "переход в режим TeX."
+msgstr "переход в режим Nroff."
 
 #: prog/aspell.cpp:699
 msgid "Time to load word list: "
@@ -1123,32 +1122,32 @@ msgstr "Это возможно вследствие: "
 msgid "The required field \"name\" is missing."
 msgstr "Отсутствует требуемое поле \"name\"."
 
-#: modules/speller/default/language.cpp:450
+#: modules/speller/default/language.cpp:462
 msgid "Empty string."
 msgstr "Пустая строка."
 
-#: modules/speller/default/language.cpp:454
+#: modules/speller/default/language.cpp:466
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear at the beginning of a word."
 msgstr "Символ '%s' (U+%02X) не может появляться в начале слова."
 
-#: modules/speller/default/language.cpp:456
-#: modules/speller/default/language.cpp:465
+#: modules/speller/default/language.cpp:468
+#: modules/speller/default/language.cpp:477
 #, c-format
 msgid ""
 "The character '%s' (U+%02X) must be followed by an alphabetic character."
 msgstr "После символа '%s' (U+%02X) должен следовать буквенный символ."
 
-#: modules/speller/default/language.cpp:458
+#: modules/speller/default/language.cpp:470
 msgid "Does not contain any alphabetic characters."
 msgstr "Не содержит никаких буквенных символов."
 
-#: modules/speller/default/language.cpp:463
+#: modules/speller/default/language.cpp:475
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear in the middle of a word."
 msgstr "Символ '%s' (U+%02X) не может появляться в середине слова."
 
-#: modules/speller/default/language.cpp:470
+#: modules/speller/default/language.cpp:482
 msgid ""
 "The character '\\r' (U+0D) may not appear at the end of a word. This "
 "probably means means that the file is using MS-DOS EOL instead of Unix EOL."
@@ -1156,31 +1155,31 @@ msgstr ""
 "Символ '\\r' (U+0D) не может появляться в конце слова. Возможно, это "
 "означает, что в файле используется символ конца файла MS-DOS, а не Unix."
 
-#: modules/speller/default/language.cpp:473
+#: modules/speller/default/language.cpp:485
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear at the end of a word."
 msgstr "Символ '%s' (U+%02X) не может появляться в конце слова."
 
-#: modules/speller/default/language.cpp:505
+#: modules/speller/default/language.cpp:517
 #, c-format
 msgid "Warning: Removing invalid affix '%s' from word %s.\n"
 msgstr "Предупреждение: Удаляется неверный аффикс '%s' из слова %s.\n"
 
-#: modules/speller/default/language.cpp:506
+#: modules/speller/default/language.cpp:518
 #, c-format
 msgid "Warning: Removing inapplicable affix '%s' from word %s.\n"
 msgstr "Предупреждение: Удаляется неподходящий аффикс '%s' из слова %s.\n"
 
-#: modules/speller/default/language.cpp:637
+#: modules/speller/default/language.cpp:649
 #, c-format
 msgid "Warning: %s Skipping string.\n"
 msgstr "Предупреждение: %s Пропускается строка.\n"
 
-#: modules/speller/default/language.cpp:695
+#: modules/speller/default/language.cpp:707
 msgid "The total length is larger than 240 characters."
 msgstr "Общая длина превышает 240 символов."
 
-#: modules/speller/default/language.cpp:699
+#: modules/speller/default/language.cpp:711
 #, c-format
 msgid "Warning: %s Skipping word.\n"
 msgstr "Предупреждение: %s Пропускается слово.\n"
@@ -1254,9 +1253,8 @@ msgid "HTML tags to always skip the contents of"
 msgstr "всегда пропускаемые теги HTML с содержимым"
 
 #: modules/filter/nroff-filter.info:7
-#, fuzzy
 msgid "filter for processing Nroff documents"
-msgstr "фильтр для работы с документами HTML"
+msgstr "фильтр для работы с документами Nroff"
 
 #: modules/filter/sgml-filter.info:9
 msgid "filter for dealing with generic SGML/XML documents"
@@ -1307,9 +1305,8 @@ msgid "mode to disable all filters"
 msgstr "режим для отключения всех фильтров"
 
 #: modules/filter/modes/nroff.amf:59
-#, fuzzy
 msgid "mode for checking Nroff documents"
-msgstr "режим для проверки документов HTML"
+msgstr "режим для проверки документов Nroff"
 
 #: modules/filter/modes/perl.amf:60
 msgid "mode for checking Perl comments and string literals"

@@ -6,10 +6,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: aspell 0.60\n"
+"Project-Id-Version: aspell 0.60.1-b20041017\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-10-25 11:11-0600\n"
-"PO-Revision-Date: 2004-10-02 06:24-0500\n"
+"POT-Creation-Date: 2004-10-26 10:22-0600\n"
+"PO-Revision-Date: 2004-10-21 06:24-0500\n"
 "Last-Translator: Kevin Patrick Scannell <scannell@SLU.EDU>\n"
 "Language-Team: Irish <ga@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -676,7 +676,7 @@ msgstr ""
 msgid "\"%expression:1\" is not a valid regular expression."
 msgstr "níl \"%expression:1\" ina slonn ionadaíochta bhailí."
 
-#: common/posib_err.cpp:98
+#: common/posib_err.cpp:99
 msgid "Unhandled Error: "
 msgstr "Earráid Gan Réiteach: "
 
@@ -702,9 +702,8 @@ msgid "enter TeX mode."
 msgstr "bain úsáid as an mhodh TeX."
 
 #: prog/aspell.cpp:199
-#, fuzzy
 msgid "enter Nroff mode."
-msgstr "bain úsáid as an mhodh TeX."
+msgstr "bain úsáid as an mhodh Nroff."
 
 #: prog/aspell.cpp:297
 #, c-format
@@ -736,7 +735,7 @@ msgstr "Ionchur Neamhbhailí"
 #: prog/aspell.cpp:679
 #, fuzzy
 msgid "WARNING: Unable to enter Nroff mode.\n"
-msgstr "bain úsáid as an mhodh TeX."
+msgstr "bain úsáid as an mhodh Nroff."
 
 #: prog/aspell.cpp:699
 msgid "Time to load word list: "
@@ -1032,7 +1031,7 @@ msgstr "Control-H"
 
 #: prog/check_funs.cpp:747
 msgid "Delete the previous character"
-msgstr "Scrios an carachtar roimh seo"
+msgstr "Scrios an carachtar roimhe seo"
 
 #. TRANSLATORS: This is a literal Key.
 #: prog/check_funs.cpp:750
@@ -1130,32 +1129,32 @@ msgstr "Is dócha é seo de bharr: "
 msgid "The required field \"name\" is missing."
 msgstr "Tá an réimse riachtanach \"name\" ar iarraidh."
 
-#: modules/speller/default/language.cpp:450
+#: modules/speller/default/language.cpp:462
 msgid "Empty string."
 msgstr "Teaghrán folamh."
 
-#: modules/speller/default/language.cpp:454
+#: modules/speller/default/language.cpp:466
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear at the beginning of a word."
 msgstr "Ní ceadaítear an carachtar '%s' (U+%02X) ar dtús focail."
 
-#: modules/speller/default/language.cpp:456
-#: modules/speller/default/language.cpp:465
+#: modules/speller/default/language.cpp:468
+#: modules/speller/default/language.cpp:477
 #, c-format
 msgid ""
 "The character '%s' (U+%02X) must be followed by an alphabetic character."
 msgstr "Ní foláir carachtar aibítreach a chur tar éis '%s' (U+%02X)."
 
-#: modules/speller/default/language.cpp:458
+#: modules/speller/default/language.cpp:470
 msgid "Does not contain any alphabetic characters."
 msgstr "Níl aon carachtar aibítreach ann."
 
-#: modules/speller/default/language.cpp:463
+#: modules/speller/default/language.cpp:475
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear in the middle of a word."
 msgstr "Ní ceadaítear an carachtar '%s' (U+%02X) sa lár focail."
 
-#: modules/speller/default/language.cpp:470
+#: modules/speller/default/language.cpp:482
 msgid ""
 "The character '\\r' (U+0D) may not appear at the end of a word. This "
 "probably means means that the file is using MS-DOS EOL instead of Unix EOL."
@@ -1163,31 +1162,31 @@ msgstr ""
 "Ní cheadaítear '\\r' (U+0D) ag deireadh focail.  Is dócha go bhfuil EOL MS-"
 "DOS sa chomhad in ionad EOL Unix."
 
-#: modules/speller/default/language.cpp:473
+#: modules/speller/default/language.cpp:485
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear at the end of a word."
 msgstr "Ní ceadaítear an carachtar '%s' (U+%02X) ag deireadh focail."
 
-#: modules/speller/default/language.cpp:505
+#: modules/speller/default/language.cpp:517
 #, c-format
 msgid "Warning: Removing invalid affix '%s' from word %s.\n"
 msgstr "Rabhadh: Ag cealú foircinn neamhbhailí '%s' ón fhocal %s.\n"
 
-#: modules/speller/default/language.cpp:506
+#: modules/speller/default/language.cpp:518
 #, c-format
 msgid "Warning: Removing inapplicable affix '%s' from word %s.\n"
 msgstr "Rabhadh: Ag cealú foircinn '%s' gan úsáid ón fhocal %s.\n"
 
-#: modules/speller/default/language.cpp:637
+#: modules/speller/default/language.cpp:649
 #, c-format
 msgid "Warning: %s Skipping string.\n"
 msgstr "Rabhadh: %s Ag gabháil thar teaghrán.\n"
 
-#: modules/speller/default/language.cpp:695
+#: modules/speller/default/language.cpp:707
 msgid "The total length is larger than 240 characters."
 msgstr "Tá an fad focail níos mó ná 240 carachtar ina iomláine."
 
-#: modules/speller/default/language.cpp:699
+#: modules/speller/default/language.cpp:711
 #, c-format
 msgid "Warning: %s Skipping word.\n"
 msgstr "Rabhadh: %s Ag gabháil thar focal.\n"
@@ -1262,9 +1261,8 @@ msgid "HTML tags to always skip the contents of"
 msgstr "clibeanna HTML le scipeáil i gcónaí"
 
 #: modules/filter/nroff-filter.info:7
-#, fuzzy
 msgid "filter for processing Nroff documents"
-msgstr "scagaire le haghaidh cáipéisí HTML"
+msgstr "scagaire le haghaidh cáipéisí Nroff"
 
 #: modules/filter/sgml-filter.info:9
 msgid "filter for dealing with generic SGML/XML documents"
@@ -1315,9 +1313,8 @@ msgid "mode to disable all filters"
 msgstr "dí-chumasaigh gach scagaire"
 
 #: modules/filter/modes/nroff.amf:59
-#, fuzzy
 msgid "mode for checking Nroff documents"
-msgstr "modh le haghaidh cáipéisí HTML"
+msgstr "modh le haghaidh cáipéisí Nroff"
 
 #: modules/filter/modes/perl.amf:60
 msgid "mode for checking Perl comments and string literals"

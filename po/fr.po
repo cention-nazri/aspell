@@ -8,10 +8,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: aspell 0.60\n"
+"Project-Id-Version: aspell 0.60.1-b20041017\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-10-25 11:11-0600\n"
-"PO-Revision-Date: 2004-10-03 21:47+0200\n"
+"POT-Creation-Date: 2004-10-26 10:22-0600\n"
+"PO-Revision-Date: 2004-10-19 21:20+0200\n"
 "Last-Translator: Thierry Thomas <thierry@pompo.net>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -688,7 +688,7 @@ msgstr ""
 msgid "\"%expression:1\" is not a valid regular expression."
 msgstr "« %expression:2 » n'est pas une expression rationnelle valide."
 
-#: common/posib_err.cpp:98
+#: common/posib_err.cpp:99
 msgid "Unhandled Error: "
 msgstr "Erreur imprévue : "
 
@@ -714,9 +714,8 @@ msgid "enter TeX mode."
 msgstr "entrer en mode TeX."
 
 #: prog/aspell.cpp:199
-#, fuzzy
 msgid "enter Nroff mode."
-msgstr "entrer en mode TeX."
+msgstr "entrer en mode Nroff."
 
 #: prog/aspell.cpp:297
 #, c-format
@@ -748,7 +747,7 @@ msgstr "Entrée invalide"
 #: prog/aspell.cpp:679
 #, fuzzy
 msgid "WARNING: Unable to enter Nroff mode.\n"
-msgstr "entrer en mode TeX."
+msgstr "entrer en mode Nroff."
 
 #: prog/aspell.cpp:699
 msgid "Time to load word list: "
@@ -1151,33 +1150,33 @@ msgstr "Cela est la cause probable : "
 msgid "The required field \"name\" is missing."
 msgstr "Le champ requis \"name\" est manquant."
 
-#: modules/speller/default/language.cpp:450
+#: modules/speller/default/language.cpp:462
 msgid "Empty string."
 msgstr "Chaîne vide."
 
-#: modules/speller/default/language.cpp:454
+#: modules/speller/default/language.cpp:466
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear at the beginning of a word."
 msgstr "Le caractère '%s' (U+%02X) ne peut pas apparaître au début d'un mot."
 
-#: modules/speller/default/language.cpp:456
-#: modules/speller/default/language.cpp:465
+#: modules/speller/default/language.cpp:468
+#: modules/speller/default/language.cpp:477
 #, c-format
 msgid ""
 "The character '%s' (U+%02X) must be followed by an alphabetic character."
 msgstr ""
 "Le caractère '%s' (U+%02X) doit être suivi d'un caractère alphabétique."
 
-#: modules/speller/default/language.cpp:458
+#: modules/speller/default/language.cpp:470
 msgid "Does not contain any alphabetic characters."
 msgstr "Ne contient aucun caractère alphabétique."
 
-#: modules/speller/default/language.cpp:463
+#: modules/speller/default/language.cpp:475
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear in the middle of a word."
 msgstr "Le caractère '%s' (U+%02X) ne peut pas apparaître au milieu d'un mot."
 
-#: modules/speller/default/language.cpp:470
+#: modules/speller/default/language.cpp:482
 msgid ""
 "The character '\\r' (U+0D) may not appear at the end of a word. This "
 "probably means means that the file is using MS-DOS EOL instead of Unix EOL."
@@ -1186,31 +1185,31 @@ msgstr ""
 "signifie probablement que le fichier utilise des fins de ligne MS-DOS au "
 "lieu d'Unix."
 
-#: modules/speller/default/language.cpp:473
+#: modules/speller/default/language.cpp:485
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear at the end of a word."
 msgstr "Le caractère '%s' (U+%02X) ne peut pas apparaître à la fin d'un mot."
 
-#: modules/speller/default/language.cpp:505
+#: modules/speller/default/language.cpp:517
 #, c-format
 msgid "Warning: Removing invalid affix '%s' from word %s.\n"
 msgstr "Attention : suppression de l'affixe invalide « %s » du mot %s.\n"
 
-#: modules/speller/default/language.cpp:506
+#: modules/speller/default/language.cpp:518
 #, c-format
 msgid "Warning: Removing inapplicable affix '%s' from word %s.\n"
 msgstr "Attention : suppression de l'affixe non-applicable « %s » du mot %s.\n"
 
-#: modules/speller/default/language.cpp:637
+#: modules/speller/default/language.cpp:649
 #, c-format
 msgid "Warning: %s Skipping string.\n"
 msgstr "Attention : %s chaîne ignorée.\n"
 
-#: modules/speller/default/language.cpp:695
+#: modules/speller/default/language.cpp:707
 msgid "The total length is larger than 240 characters."
 msgstr "La longueur totale dépasse 240 caractères."
 
-#: modules/speller/default/language.cpp:699
+#: modules/speller/default/language.cpp:711
 #, c-format
 msgid "Warning: %s Skipping word.\n"
 msgstr "Attention : %s mot ignoré.\n"
@@ -1285,9 +1284,8 @@ msgid "HTML tags to always skip the contents of"
 msgstr "balises HTML dont on ignore le contenu"
 
 #: modules/filter/nroff-filter.info:7
-#, fuzzy
 msgid "filter for processing Nroff documents"
-msgstr "filtre pour les documents HTML"
+msgstr "filtre pour les documents Nroff"
 
 #: modules/filter/sgml-filter.info:9
 msgid "filter for dealing with generic SGML/XML documents"
@@ -1338,9 +1336,8 @@ msgid "mode to disable all filters"
 msgstr "mode sans aucun filtre"
 
 #: modules/filter/modes/nroff.amf:59
-#, fuzzy
 msgid "mode for checking Nroff documents"
-msgstr "mode de vérif. des pages HTML"
+msgstr "mode de vérif. des pages Nroff"
 
 #: modules/filter/modes/perl.amf:60
 msgid "mode for checking Perl comments and string literals"
