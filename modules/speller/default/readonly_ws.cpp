@@ -124,8 +124,12 @@ static inline void mmap_free(char * block, unsigned int size)
 
 static inline size_t page_size() 
 {
+#ifdef _SC_PAGESIZE
+ /* BSDi does not expose this limit via the sysconf function */
   return sysconf (_SC_PAGESIZE);
-  //return getpagesize ();
+#else
+  return getpagesize ();
+#endif
 }
 
 #else
