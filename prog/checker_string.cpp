@@ -8,6 +8,7 @@
 #include "speller.hpp"
 #include "document_checker.hpp"
 #include "copy_ptr-t.hpp"
+#include "asc_ctype.hpp"
 
 static int get_line(FILE * in, CharVector & d)
 {
@@ -80,11 +81,21 @@ bool CheckerString::next_misspelling()
   if (has_repl_) {
     has_repl_ = false;
     CharVector word;
-    bool correct = aspell_speller_check(speller_, &*word_begin_, word_size_);
+    bool correct = false;
+    // FIXME: This is a hack to avoid trying to check a word with a space
+    //        in it.  The correct action is to reparse to string and
+    //        check each word individually.  However doing so involves
+    //        an API enhancement in Checker.
+    for (int i = 0; i != word_size_; ++i) {
+      if (asc_isspace(*(word_begin_ + i)))
+	correct = true;
+    }
+    if (!correct)
+      correct = aspell_speller_check(speller_, &*word_begin_, word_size_);
+    diff_ += word_size_ - tok_.len;
+    tok_.len = word_size_;
     if (!correct)
       return true;
-    diff_ += word_size_ - tok_.len;
-    word_size_ = 0;
   }
   while ((tok_ = checker_->next_misspelling()).len == 0) {
     next_line(cur_line_);
