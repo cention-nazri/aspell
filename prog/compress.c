@@ -77,16 +77,16 @@ int main (int argc, const char *argv[]) {
       int i = 0;
       /* get the length of the prefix */
       while (prev[i] != '\0' && cur[i] != '\0' && prev[i] == cur[i])
-	++i;
+        ++i;
       if (i > 31) {
-	putc('\0', stdout);
+        putc('\0', stdout);
       }
       putc(i+1, stdout);
       fputs(cur+i, stdout);
       if (cur == s1) {
-	prev = s1; cur = s2;
+        prev = s1; cur = s2;
       } else {
-	prev = s2; cur = s1;
+        prev = s2; cur = s1;
       }
     }
     return 0;
@@ -102,12 +102,12 @@ int main (int argc, const char *argv[]) {
     i = getc(stdin);
     while (i != -1 ) {
       if (i == 0)
-	i = getc(stdin);
+        i = getc(stdin);
       --i;
       if (i < 0) goto error;
       while ((c = getc(stdin)) > 32 && i < BUFSIZE)
-	cur[i++] = (char)c;
-      if (i == BUFSIZE) goto error;
+        cur[i++] = (char)c;
+      if (i >= BUFSIZE) goto error;
       cur[i] = '\0';
       fputs(cur, stdout);
       putc('\n', stdout);
