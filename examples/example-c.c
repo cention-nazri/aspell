@@ -81,6 +81,7 @@ int main(int argc, const char *argv[])
 
   if (aspell_error(ret) != 0) {
     printf("Error: %s\n",aspell_error_message(ret));
+    delete_aspell_can_have_error(ret);
     return 2;
   }
   speller = to_aspell_speller(ret);

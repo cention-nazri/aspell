@@ -31,30 +31,33 @@ namespace acommon {
   // FIXME: Avoid memory leak with ErrPtr and Error, 
   //        and in particular err->mesg
   
-  struct ErrPtr {
-    const Error * err;
-    bool handled;
-    int refcount;
-    ErrPtr(const Error * e) : err(e), handled(false), refcount(1) {}
-  };
-
   template <typename Ret> class PosibErr;
   
   class PosibErrBase {
+  private:
+    struct ErrPtr {
+      const Error * err;
+      bool handled;
+      int refcount;
+      ErrPtr(const Error * e) : err(e), handled(false), refcount(1) {}
+    };
+    ErrPtr * err_;
   public:
     PosibErrBase() 
       : err_(0) {}
-    // If the derived type has the potential for data (has_data_ is true)
-    // then its copy constructor and assigment operator calls
-    // copy and destroy directly overriding the comptaibly check
     PosibErrBase(const PosibErrBase & other) 
     {
       copy(other);
     }
     PosibErrBase& operator= (const PosibErrBase & other) {
+      destroy();
       copy(other);
       return *this;
     }
+    ~PosibErrBase() {
+      destroy();
+    }
+
     Error * release_err() {
       if (err_ == 0)
 	return 0;
@@ -107,9 +110,6 @@ namespace acommon {
     PosibErrBase & set(const ErrorInfo *, 
 		       ParmString, ParmString, ParmString, ParmString);
 
-    ~PosibErrBase() {
-      destroy();
-    }
 
   protected:
 
@@ -139,7 +139,6 @@ namespace acommon {
     void handle_err() const;
     Error * release();
     void del();
-    ErrPtr * err_;
   };
 
   template <typename Ret>

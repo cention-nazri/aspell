@@ -150,7 +150,6 @@ namespace aspeller {
     CopyPtr<Language>          lang_;
     CopyPtr<SensitiveCompare>  sensitive_compare_;
     CopyPtr<DataSetCollection> wls_;
-    CopyPtr<ConfigNotifier>    config_notifier_;
     ClonePtr<Suggest>       suggest_;
     ClonePtr<Suggest>       intr_suggest_;
     unsigned int            ignore_count;

@@ -427,9 +427,9 @@ namespace aspeller {
     enum Type {String, Int, Bool, Add, Rem, RemAll};
     Type type;
     union Fun {
-      typedef void (*WithStr )(SpellerImpl *, const char *);
-      typedef void (*WithInt )(SpellerImpl *, int);
-      typedef void (*WithBool)(SpellerImpl *, bool);
+      typedef PosibErr<void> (*WithStr )(SpellerImpl *, const char *);
+      typedef PosibErr<void> (*WithInt )(SpellerImpl *, int);
+      typedef PosibErr<void> (*WithBool)(SpellerImpl *, bool);
       WithStr  with_str;
       WithInt  with_int;
       WithBool with_bool;
@@ -437,16 +437,19 @@ namespace aspeller {
       Fun(WithStr  m) : with_str (m) {}
       Fun(WithInt  m) : with_int (m) {}
       Fun(WithBool m) : with_bool(m) {}
-      void call(SpellerImpl * m, const char * val) const {(*with_str) (m,val);}
-      void call(SpellerImpl * m, int val)          const {(*with_int) (m,val);}
-      void call(SpellerImpl * m, bool val)         const {(*with_bool)(m,val);}
+      PosibErr<void> call(SpellerImpl * m, const char * val) const 
+	{return (*with_str) (m,val);}
+      PosibErr<void> call(SpellerImpl * m, int val)          const 
+	{return (*with_int) (m,val);}
+      PosibErr<void> call(SpellerImpl * m, bool val)         const 
+	{return (*with_bool)(m,val);}
     } fun;
     typedef SpellerImpl::ConfigNotifier CN;
   };
 
   template <typename T>
-  void callback(SpellerImpl * m, const KeyInfo * ki, T value, 
-		UpdateMember::Type t);
+  PosibErr<void> callback(SpellerImpl * m, const KeyInfo * ki, T value, 
+			  UpdateMember::Type t);
   
   class SpellerImpl::ConfigNotifier : public Notifier {
   private:
@@ -457,54 +460,58 @@ namespace aspeller {
     {}
 
     PosibErr<void> item_updated(const KeyInfo * ki, int value) {
-      callback(speller_, ki, value, UpdateMember::Int);
-      return no_err;
+      return callback(speller_, ki, value, UpdateMember::Int);
     }
     PosibErr<void> item_updated(const KeyInfo * ki, bool value) {
-      callback(speller_, ki, value, UpdateMember::Bool);
-      return no_err;
+      return callback(speller_, ki, value, UpdateMember::Bool);
     }
     PosibErr<void> item_updated(const KeyInfo * ki, ParmString value) {
-      callback(speller_, ki, value, UpdateMember::String);
-      return no_err;
+      return callback(speller_, ki, value, UpdateMember::String);
     }
 
-    static void ignore(SpellerImpl * m, int value) {
+    static PosibErr<void> ignore(SpellerImpl * m, int value) {
       m->ignore_count = value;
+      return no_err;
     }
-    static void ignore_accents(SpellerImpl * m, bool value) {
+    static PosibErr<void> ignore_accents(SpellerImpl * m, bool value) {
       abort();
     }
-    static void ignore_case(SpellerImpl * m, bool value) {
+    static PosibErr<void> ignore_case(SpellerImpl * m, bool value) {
       abort();
     }
-    static void ignore_repl(SpellerImpl * m, bool value) {
+    static PosibErr<void> ignore_repl(SpellerImpl * m, bool value) {
       m->ignore_repl = value;
+      return no_err;
     }
-    static void save_repl(SpellerImpl * m, bool value) {
+    static PosibErr<void> save_repl(SpellerImpl * m, bool value) {
       // FIXME
       // m->save_on_saveall(DataSet::Id(&m->personal_repl()), value);
+      abort();
     }
-    static void sug_mode(SpellerImpl * m, const char * mode) {
-      m->suggest_->set_mode(mode);
-      m->intr_suggest_->set_mode(mode);
+    static PosibErr<void> sug_mode(SpellerImpl * m, const char * mode) {
+      RET_ON_ERR(m->suggest_->set_mode(mode));
+      RET_ON_ERR(m->intr_suggest_->set_mode(mode));
+      return no_err;
     }
-    static void run_together(SpellerImpl * m, bool value) {
+    static PosibErr<void> run_together(SpellerImpl * m, bool value) {
       m->unconditional_run_together_ = value;
+      return no_err;
     }
-    static void run_together_limit(SpellerImpl * m, int value) {
+    static PosibErr<void> run_together_limit(SpellerImpl * m, int value) {
       if (value > 8) {
 	m->config()->replace("run-together-limit", "8");
 	// will loop back
       } else {
 	m->run_together_limit_ = value;
       }
+      return no_err;
     }
-    static void run_together_min(SpellerImpl * m, int value) {
+    static PosibErr<void> run_together_min(SpellerImpl * m, int value) {
       m->run_together_min_ = value;
       if (m->unconditional_run_together_ 
 	  && m->run_together_min_ < m->run_together_start_len_)
 	m->run_together_start_len_ = m->run_together_min_;
+      return no_err;
     }
     
   };
@@ -529,8 +536,8 @@ namespace aspeller {
   };
 
   template <typename T>
-  void callback(SpellerImpl * m, const KeyInfo * ki, T value, 
-		UpdateMember::Type t) 
+  PosibErr<void> callback(SpellerImpl * m, const KeyInfo * ki, T value, 
+			  UpdateMember::Type t) 
   {
     const UpdateMember * i
       = update_members;
@@ -539,12 +546,13 @@ namespace aspeller {
     while (i != end) {
       if (strcmp(ki->name, i->name) == 0) {
 	if (i->type == t) {
-	  i->fun.call(m, value);
+	  RET_ON_ERR(i->fun.call(m, value));
 	  break;
 	}
       }
       ++i;
     }
+    return no_err;
   }
 
   //////////////////////////////////////////////////////////////////////
@@ -642,8 +650,7 @@ namespace aspeller {
     suggest_.reset(new_default_suggest(this));
     intr_suggest_.reset(new_default_suggest(this));
 
-    config_notifier_.reset(new ConfigNotifier(this));
-    config_->add_notifier(config_notifier_);
+    config_->add_notifier(new ConfigNotifier(this));
 
     config_->set_attached(true);
     return no_err;

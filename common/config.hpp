@@ -46,8 +46,7 @@ namespace acommon {
   public:
     // returns a copy if a copy should be made otherwise returns null
     virtual Notifier * clone(Config *) const {return 0;}
-    // should delete it self if it is dynamically allocated
-    virtual void del() {}
+    virtual ~Notifier() {}
 
     virtual PosibErr<void> item_updated(const KeyInfo *, bool)         {return no_err;}
     virtual PosibErr<void> item_updated(const KeyInfo *, int)          {return no_err;}

@@ -4,6 +4,8 @@
 // license along with this library if you did not you can find
 // it at http://www.gnu.org/.
 
+#include <string.h>
+
 #include "error.hpp"
 
 namespace acommon {
@@ -16,4 +18,33 @@ namespace acommon {
     }
     return false;
   }
+
+  Error::Error(const Error & other)
+  {
+    if (other.mesg) {
+      mesg = new char[strlen(other.mesg) + 1];
+      strcpy(const_cast<char *>(mesg), other.mesg);
+    }
+    err = other.err;
+  }
+
+  Error & Error::operator=(const Error & other)
+  {
+    if (mesg)
+      delete[] const_cast<char *>(mesg);
+    if (other.mesg) {
+      unsigned int len = strlen(other.mesg) + 1;
+      mesg = new char[len];
+      memcpy(const_cast<char *>(mesg), other.mesg, len);
+    }
+    err = other.err;
+    return *this;
+  }
+
+  Error::~Error()
+  {
+    if (mesg)
+      delete[] const_cast<char *>(mesg);
+  }
+
 }

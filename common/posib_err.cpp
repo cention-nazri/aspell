@@ -101,15 +101,22 @@ namespace acommon {
   Error * PosibErrBase::release() {
     assert (err_);
     assert (err_->refcount <= 1);
-    Error * tmp = const_cast<Error *>(err_->err);
-    delete err_;
+    --err_->refcount;
+    Error * tmp;
+    if (err_->refcount == 0) {
+      tmp = const_cast<Error *>(err_->err);
+      delete err_;
+    } else {
+      tmp = new Error(*err_->err);
+    }
     err_ = 0;
     return tmp;
   }
 
   void PosibErrBase::del() {
-    const Error * e = release();
-    delete e;
+    if (!err_) return;
+    delete const_cast<Error *>(err_->err);
+    delete err_;
   }
 
 }

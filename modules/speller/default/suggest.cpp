@@ -694,8 +694,8 @@ namespace aspeller_default_suggest {
     SuggestImpl(SpellerImpl * m, const SuggestParms & p) 
       : speller_(m), parms_(p) 
     {parms_.fill_distance_lookup(m->config(), m->lang());}
-    void set_mode(ParmString mode) {
-      parms_.set(mode);
+    PosibErr<void> set_mode(ParmString mode) {
+      return parms_.set(mode);
     }
     double score(const char *base, const char *other) {
       //parms_.set_original_word_size(strlen(base));

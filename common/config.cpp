@@ -52,7 +52,8 @@ namespace acommon {
   }
 
   Config::Config(const Config & other) 
-    : name_(other.name_), data_(other.data_), attached_(0), kmi(other.kmi)
+    : name_(other.name_), data_(other.data_), attached_(0), kmi(other.kmi),
+      md_info_list_index(other.md_info_list_index)
   {
     copy_notifiers(other);
   }
@@ -62,6 +63,7 @@ namespace acommon {
     attached_ = 0;
     kmi = other.kmi;
     data_ = other.data_;
+    md_info_list_index = other.md_info_list_index;
     copy_notifiers(other);
     return *this;
   }
@@ -117,9 +119,11 @@ namespace acommon {
     Vector<Notifier *>::iterator end = notifier_list.end();
 
     for(; i != end; ++i) {
-      (*i)->del();
+      delete (*i);
       *i = 0;
-    }    
+    }
+    
+    notifier_list.clear();
   }
   
   bool Config::add_notifier(Notifier * n) 
@@ -156,6 +160,7 @@ namespace acommon {
     
     } else {
 
+      delete *i;
       notifier_list.erase(i);
       return true;
 
@@ -177,6 +182,7 @@ namespace acommon {
     
     } else {
 
+      delete *i;
       *i = n;
       return true;
 

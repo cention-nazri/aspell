@@ -39,8 +39,6 @@ namespace acommon {
     ModeNotifierImpl(Config * c) : config(c) {}
     
     ModeNotifierImpl * clone(Config * c) const {return new ModeNotifierImpl(c);}
-    void del() {delete this;}
-
     PosibErr<void> item_updated(const KeyInfo * ki, ParmString value) {
       if (strcmp(ki->name, "mode") == 0) {
 
