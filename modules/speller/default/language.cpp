@@ -256,11 +256,13 @@ namespace aspeller {
     // prep phonetic code
     //
 
-    PosibErr<Soundslike *> pe = new_soundslike(data.retrieve("soundslike"),
-                                               iconv,
+    {
+      PosibErr<Soundslike *> pe = new_soundslike(data.retrieve("soundslike"),
+                                                 iconv,
                                                this);
-    if (pe.has_err()) return pe;
-    soundslike_.reset(pe);
+      if (pe.has_err()) return pe;
+      soundslike_.reset(pe.data);
+    }
     soundslike_chars_ = soundslike_->soundslike_chars();
 
     have_soundslike_ = strcmp(soundslike_->name(), "none") != 0;
@@ -268,8 +270,11 @@ namespace aspeller {
     //
     // prep affix code
     //
-
-    affix_.reset(new_affix_mgr(data.retrieve("affix"), iconv, this));
+    {
+      PosibErr<AffixMgr *> pe = new_affix_mgr(data.retrieve("affix"), iconv, this);
+      if (pe.has_err()) return pe;
+      affix_.reset(pe.data);
+    }
 
     //
     // fill repl tables (if any)

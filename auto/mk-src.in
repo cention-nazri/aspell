@@ -444,6 +444,17 @@ errors:
 		mismatched language
 			mesg => Expected language "%lang" but got "%prev".
 			parms => prev
+	affix
+		/
+		corrupt affix
+			mesg => Affix '%aff' is corrupt
+			parms => aff
+		invalid cond
+			mesg => The condition "%cond" is invalid.
+			parms => cond
+		incorrect encoding
+			mesg => The file "%file" is not in the proper format. Expected the file to be in "%exp" not "%got".
+			parms => file, exp, got
 	encoding
 		parms => encod
 		/

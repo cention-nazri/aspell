@@ -199,6 +199,23 @@ struct CondsLookupParms {
 
 typedef HashTable<CondsLookupParms> CondsLookup;
 
+static bool check_cond_str(const char * s)
+{
+  for (; *s; ++s) {
+    if (*s == '[') {
+      ++s;
+      if (*s == '\0' || *s == ']') return false;
+      for (;;) {
+        if (*s == '\0') return false;
+        if (*s == '[') return false;
+        if (*s == ']') break;
+        ++s;
+      }
+    }
+  }
+  return true;
+}
+
 static void encodeit(CondsLookup &, ObjStack &, 
                      AffEntry * ptr, char * cs);
 
@@ -259,11 +276,8 @@ PosibErr<void> AffixMgr::parse_file(const char * affpath, Conv & iconv)
     if (dp.key == "SET") {
       String buf;
       encoding = data_buf.dup(fix_encoding_str(dp.value, buf));
-      char msg[96];
-      snprintf(msg, 96, _("Expected the file to be in \"%s\" not \"%s\"."),
-               lang->data_encoding(), encoding);
       if (strcmp(encoding, lang->data_encoding()) != 0)
-        return make_err(bad_file_format, affix_file, msg);
+        return make_err(incorrect_encoding, affix_file, lang->data_encoding(), encoding);
     }
 
     /* parse in the flag used by the controlled compound words */
@@ -322,12 +336,9 @@ PosibErr<void> AffixMgr::parse_file(const char * affpath, Conv & iconv)
         split(dp);
         if (dp.key.empty()) goto error;
         // key is affix charter
-        if (iconv(dp.key)[0] != achar) {
-          char msg[64];
-          snprintf(msg, 64, _("affix '%s' is corrupt, possible incorrect count"), 
-                   MsgConv(lang)(achar));
-          return make_err(bad_file_format, affix_file, msg);
-        }
+        if (iconv(dp.key)[0] != achar)
+          return make_err(corrupt_affix, MsgConv(lang)(achar), 
+                          _("Possibly incorrect count.")).with_file(affix_file, dp.line_num);
         nptr->achar = achar;
  
         split(dp);
@@ -358,7 +369,10 @@ PosibErr<void> AffixMgr::parse_file(const char * affpath, Conv & iconv)
         split(dp);
         if (dp.key.empty()) goto error;
         // key is the conditions descriptions
-        encodeit(conds_lookup, data_buf, nptr,iconv(dp.key));
+        if (!check_cond_str(dp.key)) 
+          return (make_err(invalid_cond, MsgConv(lang)(dp.key))
+                  .with_file(affix_file, dp.line_num));
+        encodeit(conds_lookup, data_buf, nptr, iconv(dp.key));
     
         // now create SfxEntry or PfxEntry objects and use links to
         // build an ordered (sorted by affix string) list
@@ -370,9 +384,7 @@ PosibErr<void> AffixMgr::parse_file(const char * affpath, Conv & iconv)
     }
     continue;
   error:
-    char msg[32];
-    snprintf(msg, 32, _("Affix '%s' is corrupt"), MsgConv(lang)(achar));
-    return make_err(other_error, msg).with_file(affix_file, dp.line_num);
+    return make_err(corrupt_affix, MsgConv(lang)(achar)).with_file(affix_file, dp.line_num);
   }
   afflst.close();
 
