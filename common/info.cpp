@@ -208,10 +208,21 @@ namespace acommon {
     String key, data;
     while (getdata_pair(in, key, data)) {
       if (key == "order-num") {
-	char * tailptr;
-	to_add->c_struct.order_num = strtod(data.c_str(), &tailptr);
-	if (*tailptr != '\0' ||
-	    !(0 < to_add->c_struct.order_num && 
+	// FIXME: This is an ugly hack written by Melvin Hadasht to
+	//   get around the fact that reading in real numbers is
+	//   local dependent.  Find a better way!
+        int d, f, i;
+	i = sscanf(data.c_str(), "%d.%d", &d, &f);
+	if (i == 2) {
+	  double t;
+	  t = (double) f;
+	  while (t >= 1.0) 
+	    t = t/10.0;
+	  t = t + (double) d;
+	  to_add->c_struct.order_num = t;
+	} else
+	  to_add->c_struct.order_num = 0;
+	if (!(0 < to_add->c_struct.order_num && 
 	      to_add->c_struct.order_num < 1)) 
 	  {
 	    err.prim_err(bad_value, key, data,
