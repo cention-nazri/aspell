@@ -854,7 +854,6 @@ namespace acommon {
   {
     buf_.clear();
     decode_->decode(in, size, buf_);
-    buf_.append(0);
     FilterChar * start = buf_.pbegin();
     FilterChar * stop = buf_.pend();
     if (!filter.empty()) {

@@ -56,8 +56,8 @@ namespace acommon {
     Speller(const Speller &);
     Speller & operator= (const Speller &);
   public:
-    CharVector temp_str_0;
-    CharVector temp_str_1;
+    String temp_str_0;
+    String temp_str_1;
     ClonePtr<Convert> to_internal_;
     ClonePtr<Convert> from_internal_;
   protected:

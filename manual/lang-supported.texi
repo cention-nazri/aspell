@@ -4,8 +4,8 @@
 @item aa @tab Afar @tab Latin @tab - @tab -
 @item af @tab Afrikaans @tab Latin @tab Yes @tab -
 @item ak @tab Akan @tab Latin @tab - @tab -
-@item am @tab Amharic @tab Ethiopic @tab Maybe @tab -
-@item ar @tab Arabic @tab Arabic @tab Maybe @tab -
+@item am @tab Amharic @tab Ethiopic @tab Planned @tab -
+@item ar @tab Arabic @tab Arabic @tab Planned @tab -
 @item as @tab Assamese @tab Bengali @tab - @tab -
 @item ast @tab Asturian / Bable @tab Latin @tab Maybe @tab -
 @item av @tab Avar @tab Cyrillic @tab - @tab -
@@ -44,7 +44,7 @@
 @item
 @item fa @tab Persian @tab Arabic @tab Maybe @tab -
 @item ff @tab Fulah @tab Latin @tab - @tab -
-@item fi @tab Finnish @tab Latin @tab Planned @tab -
+@item fi @tab Finnish @tab Latin @tab Experimental @tab -
 @item fj @tab Fijian @tab Latin @tab - @tab -
 @item fo @tab Faroese @tab Latin @tab Yes @tab -
 @item fr @tab French @tab Latin @tab Yes @tab Yes
@@ -63,7 +63,7 @@
 @item hi @tab Hindi @tab Devanagari @tab Maybe @tab -
 @item ho @tab Hiri Motu @tab Latin @tab - @tab -
 @item hr @tab Croatian @tab Latin @tab Yes @tab -
-@item hsb @tab Upper Sorbian @tab Latin @tab Maybe @tab -
+@item hsb @tab Upper Sorbian @tab Latin @tab Experimental @tab -
 @item ht @tab Haitian Creole @tab Latin @tab - @tab -
 @item hu @tab Hungarian @tab Latin @tab Experimental @tab -
 @item hy @tab Armenian @tab Armenian @tab - @tab -
@@ -77,7 +77,6 @@
 @item is @tab Icelandic @tab Latin @tab Yes @tab -
 @item it @tab Italian @tab Latin @tab Yes @tab -
 @item
-@item jbo @tab Lojban @tab Latin @tab Maybe @tab -
 @item jv @tab Javanese @tab Javanese, Latin @tab - @tab -
 @item
 @item ka @tab Georgian @tab Georgian @tab - @tab -
@@ -150,8 +149,8 @@
 @item sm @tab Samoan @tab Latin @tab - @tab -
 @item sn @tab Shona @tab Latin @tab - @tab -
 @item so @tab Somali @tab Latin @tab - @tab -
-@item sq @tab Albanian @tab Latin @tab Planned @tab -
-@item sr @tab Serbian @tab Cyrillic, Latin @tab Maybe @tab Yes
+@item sq @tab Albanian @tab Latin @tab Maybe @tab -
+@item sr @tab Serbian @tab Cyrillic, Latin @tab Planned @tab Yes
 @item ss @tab Swati @tab Latin @tab Maybe @tab -
 @item st @tab Southern Sotho @tab Latin @tab - @tab -
 @item su @tab Sundanese @tab Latin @tab - @tab -
@@ -161,10 +160,10 @@
 @item ta @tab Tamil @tab Tamil @tab Experimental @tab -
 @item te @tab Telugu @tab Telugu @tab Maybe @tab -
 @item tet @tab Tetum @tab Latin @tab Maybe @tab -
-@item tg @tab Tajik @tab Cyrillic @tab Maybe @tab -
-@item ti @tab Tigrinya @tab Ethiopic @tab Maybe @tab -
+@item tg @tab Tajik @tab Cyrillic @tab Planned @tab -
+@item ti @tab Tigrinya @tab Ethiopic @tab Planned @tab -
 @item tk @tab Turkmen @tab Latin @tab - @tab -
-@item tl @tab Tagalog @tab Latin @tab Maybe @tab -
+@item tl @tab Tagalog @tab Latin @tab Planned @tab -
 @item tn @tab Tswana @tab Latin @tab Yes @tab -
 @item to @tab Tonga @tab Latin @tab - @tab -
 @item tpi @tab Tok Pisin @tab Latin @tab Maybe @tab -
@@ -177,7 +176,7 @@
 @item ug @tab Uighur @tab Arabic @tab - @tab -
 @item uk @tab Ukrainian @tab Cyrillic @tab Yes @tab Yes
 @item ur @tab Urdu @tab Arabic @tab Maybe @tab -
-@item uz @tab Uzbek @tab Cyrillic @tab Planned @tab -
+@item uz @tab Uzbek @tab Cyrillic @tab Experimental @tab -
 @item
 @item ve @tab Venda @tab Latin @tab Maybe @tab -
 @item vi @tab Vietnamese @tab Latin @tab Experimental @tab -

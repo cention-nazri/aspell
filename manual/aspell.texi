@@ -1,5 +1,5 @@
 \input texinfo   @c -*-texinfo-*-
-@comment $Id: aspell.texi,v 1.33 2004/05/15 23:53:08 kevina Exp $
+@comment $Id: aspell.texi,v 1.34 2004/05/17 02:22:58 kevina Exp $
 @comment %**start of header
 @setfilename aspell.info
 @settitle GNU Aspell 0.60
@@ -3175,8 +3175,6 @@ Ispell dictionaries are available for the following languages:
 @itemize
 @item Belarusian (be)
 @item Estonian (et)
-@item Finnish (fi)
-@item Albanian (sq)
 @end itemize
 
 Kevin Patrick Scannell has word lists available for the following
@@ -3186,7 +3184,7 @@ them:
 
 @itemize
 @item Asturian (ast)
-@item Cebuano (ceb)
+@item Cebuano (cb)
 @item Chamorro (ch)
 @item Cornish (kw)
 @item Frisian (fy)
@@ -3199,10 +3197,12 @@ them:
 If you are interested please contact him at scannell at slu edu.
 
 An Ispell hash table has been discovered for Sardinian (sc) at
-@uref{http://@/www.ditzionariu.org/@/correttore.asp}.  However, the raw
-word list is not provided and the author has not been responding to
-emails.  If you know how to disassemble a Ispell hash table or know of
-the wear abouts of the word list he used to create the hash table I
+@uref{http://@/www.ditzionariu.org/@/correttore.asp} and
+Albanian (sq) at @uref{http://@/www.7kosova.com/kde-shqip/@/ispell/ispell.html}.
+However, the raw
+word lists are not provided and the authors has not been responding to
+emails.  If you know how to disassemble a Ispell hash table or
+the wear abouts of the word lists used to create the hash tables I
 would appreciate hearing from you.
 
 A dictionary marked as "Planned" or "Maybe" but not listed in

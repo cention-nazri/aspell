@@ -158,7 +158,6 @@ namespace acommon {
       } else {
         buf.clear();
         decode_->decode(in, size, buf);
-        buf.append(0);
         encode_->encode(buf.pbegin(), buf.pend(), out);
       }
     }
@@ -173,7 +172,6 @@ namespace acommon {
       } else {
         buf.clear();
         RET_ON_ERR(decode_->decode_ec(in, size, buf, orig));
-        buf.append(0);
         RET_ON_ERR(encode_->encode_ec(buf.pbegin(), buf.pend(), 
                                       out, orig));
       }
@@ -267,6 +265,7 @@ namespace acommon {
       if (conv) {
         buf.clear();
         conv->convert(str, sz, buf, buf0);
+        buf.ensure_null_end();
         return buf.data();
       } else {
         return str;
@@ -281,6 +280,7 @@ namespace acommon {
       if (conv) {
         buf.clear();
         conv->convert(str, strlen(str), buf, buf0);
+        buf.ensure_null_end();
         return buf.data();
       } else {
         return str;
@@ -291,6 +291,7 @@ namespace acommon {
       if (conv) {
         buf.clear();
         conv->convert(str, str.size(), buf, buf0);
+        buf.ensure_null_end();
         return buf.data();
       } else {
         return str;
@@ -304,8 +305,8 @@ namespace acommon {
         conv->convert(str, 1, buf, buf0);
       } else {
         buf.append(c);
-        buf.append('\0');
       }
+      buf.ensure_null_end();
       return buf.data();
     }
   };
@@ -346,6 +347,7 @@ namespace acommon {
       if (conv) {
         buf.clear();
         RET_ON_ERR(conv->convert_ec(str, sz, buf, buf0, str));
+        buf.ensure_null_end();
         return buf.data();
       } else {
         return str;
@@ -360,6 +362,7 @@ namespace acommon {
       if (conv) {
         buf.clear();
         RET_ON_ERR(conv->convert_ec(str, strlen(str), buf, buf0, str));
+        buf.ensure_null_end();
         return buf.data();
       } else {
         return str;
@@ -370,6 +373,7 @@ namespace acommon {
       if (conv) {
         buf.clear();
         RET_ON_ERR(conv->convert_ec(str, str.size(), buf, buf0, str));
+        buf.ensure_null_end();
         return buf.data();
       } else {
         return str.str();
