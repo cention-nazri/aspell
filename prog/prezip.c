@@ -248,7 +248,7 @@ int main (int argc, const char *argv[]) {
   usage:
 
   printf("%s\n"
-         "Usgae:\n"
+         "Usage:\n"
          "  To Compress:   %s -z\n"
          "  To Decompress: %s -d\n", HEAD, argv[0], argv[0]);
   return 1;
