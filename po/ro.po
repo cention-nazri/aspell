@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60-b20040424\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-05-26 19:14-0400\n"
+"POT-Creation-Date: 2004-05-31 10:17-0400\n"
 "PO-Revision-Date: 2004-04-25 12:00-0500\n"
 "Last-Translator: Laurentiu Buzdugan <lbuz@rolix.org>\n"
 "Language-Team: Romanian <translation-team-ro@lists.sourceforge.net>\n"
@@ -17,6 +17,14 @@ msgstr ""
 "Content-Type: text/plain; charset=ISO-8859-2\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: common/info.cpp:230
+msgid "a number between 0 and 1"
+msgstr ""
+
+#: common/info.cpp:572
+msgid "in the form \"<name> <value>\""
+msgstr ""
 
 #: common/config.cpp:856
 msgid "configured as follows"
@@ -81,113 +89,109 @@ msgstr "ignorã litere mari/mici la verificarea cuvintelor"
 msgid "ignore commands to store replacement pairs"
 msgstr "ignorã comenzi de pãstrare a perechilor de înlocuiri"
 
-#: common/config.cpp:1042
+#: common/config.cpp:1042 common/config.cpp:1044
 msgid "extra information for the word list"
 msgstr "informaþie suplimentarã pentru lista de cuvinte"
 
-#: common/config.cpp:1044
+#: common/config.cpp:1046
 msgid "keyboard definition to use for typo analysis"
 msgstr "definiþia tastaturii de folosit pentru analiza tastãrii"
 
-#: common/config.cpp:1046
+#: common/config.cpp:1048
 msgid "language code"
 msgstr "cod limbã"
 
-#: common/config.cpp:1048
+#: common/config.cpp:1050
 msgid "deprecated, use lang instead"
 msgstr "depãsit, folosiþi lang în schimb"
 
-#: common/config.cpp:1050
+#: common/config.cpp:1052
 msgid "location of local language data files"
 msgstr "locaþia fiºierelor locale de date pentru limbi"
 
-#: common/config.cpp:1052
+#: common/config.cpp:1054
 msgid "base name of the main dictionary to use"
 msgstr "numele de bazã al dicþionarului principal de folosit"
 
-#: common/config.cpp:1056
+#: common/config.cpp:1058
 msgid "set module name"
 msgstr "seteazã nume modul"
 
-#: common/config.cpp:1058
+#: common/config.cpp:1060
 msgid "search order for modules"
 msgstr "aautã ordinea pentru module"
 
-#: common/config.cpp:1060
+#: common/config.cpp:1062
 msgid "personal configuration file"
 msgstr "fiºiere de configurare personal"
 
-#: common/config.cpp:1063
+#: common/config.cpp:1065
 msgid "personal dictionary file name"
 msgstr "nume fiºier dicþionar personal"
 
-#: common/config.cpp:1066
+#: common/config.cpp:1068
 msgid "prefix directory"
 msgstr "director prefix"
 
-#: common/config.cpp:1068
+#: common/config.cpp:1070
 msgid "replacements list file name"
 msgstr "nume fiºier cu lista de înlocuiri"
 
-#: common/config.cpp:1071
+#: common/config.cpp:1073
 msgid "consider run-together words legal"
 msgstr "considerã cuvintele puse într-un cuvânt legale"
 
-#: common/config.cpp:1073
+#: common/config.cpp:1075
 msgid "maximum number that can be strung together"
 msgstr "numãr maxim care pot fi legate împreunã"
 
-#: common/config.cpp:1075
+#: common/config.cpp:1077
 msgid "minimal length of interior words"
 msgstr "lungime minimã a cuvintelor interioare"
 
-#: common/config.cpp:1077
+#: common/config.cpp:1079
 msgid "save replacement pairs on save all"
 msgstr "salveazã perechile de înlocuiri la salveazã tot"
 
-#: common/config.cpp:1079
+#: common/config.cpp:1081
 msgid "set the prefix based on executable location"
 msgstr "seteazã prefixul bazat pe locaþia executabilului"
 
-#: common/config.cpp:1081
+#: common/config.cpp:1083
 msgid "size of the word list"
 msgstr "dimensiunea listei de cuvinte"
 
-#: common/config.cpp:1083
+#: common/config.cpp:1085
 msgid "no longer used"
 msgstr "nu mai este folosit"
 
-#: common/config.cpp:1085
+#: common/config.cpp:1087
 msgid "suggestion mode"
 msgstr "mod suggestie"
 
-#: common/config.cpp:1087
+#: common/config.cpp:1089
 msgid "edit distance to use, override sug-mode default"
 msgstr "editeazã distanþa de folosit, ignorã sug-mode implicit"
 
-#: common/config.cpp:1089
+#: common/config.cpp:1091
 msgid "use typo analysis, override sug-mode default"
 msgstr "foloseºte analiza tastãrii, ignorã sug-mode implicit"
 
-#: common/config.cpp:1091
+#: common/config.cpp:1093
 msgid "use replacement tables, override sug-mode default"
 msgstr "foloseºte tabele de înlocuiri, ignorã sug-mode implicit"
 
-#: common/config.cpp:1093
+#: common/config.cpp:1095
 msgid "characters to insert when a word is split"
 msgstr "literele de inserat când un cuvânt este despãrþit"
 
-#: common/config.cpp:1095
+#: common/config.cpp:1097
 msgid "search path for word list information files"
 msgstr "cale cãutare pentru fisierele cu informaþii despre listele de cuvinte"
 
-#: common/config.cpp:1097
+#: common/config.cpp:1099
 msgid "indicator for affix flags in word lists"
 msgstr "indicator pentru marcajele de affix în listele de cuvinte"
-
-#: common/config.cpp:1099
-msgid "indicator for additional flags in word lists"
-msgstr "indicator pentru marcaje adiþionale în listele de cuvinte"
 
 #: common/config.cpp:1101
 msgid "use personal, replacement & session dictionaries"
@@ -211,47 +215,73 @@ msgid "Unicode normalization form: none, nfd, nfc, comp"
 msgstr "Tipuri de normalizare Unicode: none, nfd, nfc, comp"
 
 #: common/config.cpp:1111
-msgid "avoid lossy conversions"
-msgstr ""
+#, fuzzy
+msgid "avoid lossy conversions when normalization"
+msgstr "permite normalizarea Unicode"
 
-#: common/config.cpp:1118
+#: common/config.cpp:1113
+#, fuzzy
+msgid "create dictionary aliases"
+msgstr "nume fiºier dicþionar personal"
+
+#: common/config.cpp:1121
 msgid "compute the soundslike on demand rather than storing"
 msgstr ""
 
-#: common/config.cpp:1120
+#: common/config.cpp:1123
 msgid "use affix compression when creating dictionaries"
 msgstr "foloseºte compresia affix-elor la crearea dicþionarelor"
 
-#: common/config.cpp:1122
+#: common/config.cpp:1125
 msgid "partially expand affixes for better suggestions"
 msgstr ""
 
-#: common/config.cpp:1128
+#: common/config.cpp:1133
+msgid "check if words are valid"
+msgstr ""
+
+#: common/config.cpp:1135
+msgid "check if affix flags are valid"
+msgstr ""
+
+#: common/config.cpp:1137
+msgid "attempts to clean words so that they are valid"
+msgstr ""
+
+#: common/config.cpp:1139
+msgid "skip invalid words"
+msgstr ""
+
+#: common/config.cpp:1141
+msgid "remove invalid affix flags"
+msgstr ""
+
+#: common/config.cpp:1148
 msgid "create a backup file by appending \".bak\""
 msgstr "creazã un fiºier de rezervã adãugând \".bak\""
 
-#: common/config.cpp:1130
+#: common/config.cpp:1150
 #, fuzzy
 msgid "create missing root/affix combinations"
 msgstr "fã posibile combinaþiile rãdãcinã/affix ce nu sunt în dictionar"
 
-#: common/config.cpp:1132
+#: common/config.cpp:1152
 msgid "keymapping for check mode, aspell or ispell"
 msgstr "mapare tastaturã pentru modul verificare, aspell sau ispell"
 
-#: common/config.cpp:1134
+#: common/config.cpp:1154
 msgid "reverse the order of the suggest list"
 msgstr "schimbã ordinea listei de sugestii"
 
-#: common/config.cpp:1136
+#: common/config.cpp:1156
 msgid "suggest possible replacements"
 msgstr "sugereazã înlocuiri posibile"
 
-#: common/config.cpp:1138
+#: common/config.cpp:1158
 msgid "time load time and suggest time in pipe mode"
 msgstr "cronometreazã timpul de încãrcare ºi sugereazã timpul în modul pipe"
 
-#: common/config.cpp:1140
+#: common/config.cpp:1160
 msgid "use byte offsets instead of character offsets"
 msgstr "Foloseºte offset-uri în octeþi în loc de offset-uri în caractere"
 
@@ -386,32 +416,41 @@ msgstr "ªirul \"%str:1\" este invalid."
 msgid "The word \"%word:1\" is invalid."
 msgstr "Cuvântul \"%word:1\" este invalid."
 
-#: common/errors.cpp:322
+#: common/errors.cpp:290
+msgid "The affix flag '%aff:1' is invalid for word \"%word:2\"."
+msgstr ""
+
+#: common/errors.cpp:298
+#, fuzzy
+msgid "The affix flag '%aff:1' can not be applied to word \"%word:2\"."
+msgstr "Fiºierul \"%file:1\" nu poate fi deschis pentru scriere."
+
+#: common/errors.cpp:338
 msgid "%where:1: \"%filter:2\":"
 msgstr "%where:1: \"%filter:2\":"
 
-#: common/errors.cpp:330
+#: common/errors.cpp:346
 msgid "%where:1: \"%filter:2\" dlopen returned \"%return:3\"."
 msgstr "%where:1: \"%filter:2\" dlopen a returnat \"%return:3\"."
 
-#: common/errors.cpp:338
+#: common/errors.cpp:354
 msgid "%where:1: The file \"%filter:2\" does not contain any filter."
 msgstr "%where:1: Fiºierul \"%filter:2\" nu conþine nici un filtru."
 
-#: common/errors.cpp:346
+#: common/errors.cpp:362
 msgid "%where:1: Filter \"%filter:2\" could not be found in filter paths."
 msgstr ""
 "%where:1: Filtrul \"%filter:2\" nu a putut fi gãsit în calea de filtre."
 
-#: common/errors.cpp:354
+#: common/errors.cpp:370
 msgid "%where:1: %filter:2: can't find option description."
 msgstr "%where:1: %filter:2: nu pot gãsi descrierea opþiunii."
 
-#: common/errors.cpp:362
+#: common/errors.cpp:378
 msgid "%where:1: \"%filter:2\" Line %line:3 confused by version control"
 msgstr "%where:1: \"%filter:2\" Linia %line:3 confuzatã de controlul versiunii"
 
-#: common/errors.cpp:370
+#: common/errors.cpp:386
 msgid ""
 "%where:1: \"%filter:2\": Line %line:3 Aspell version does not match filter's "
 "requirement."
@@ -419,7 +458,7 @@ msgstr ""
 "%where:1: \"%filter:2\": Linia %line:3 Versiunea Aspell nu se potriveºte cu "
 "cerinþele filtrului."
 
-#: common/errors.cpp:378
+#: common/errors.cpp:394
 msgid ""
 "%where:1: \"%filter:2\" error while extending Aspell options. (out of "
 "memory?)"
@@ -427,11 +466,11 @@ msgstr ""
 "%where:1: \"%filter:2\" eroare la extinderea opþiunilor Aspell. (nu mai e "
 "memorir?)"
 
-#: common/errors.cpp:386
+#: common/errors.cpp:402
 msgid "%where:1: \"%filter:2\" Line %line:3 Filter option already exists."
 msgstr "%where:1: \"%filter:2\" Linia %line:3 Opþiune fitru existã deja."
 
-#: common/errors.cpp:394
+#: common/errors.cpp:410
 msgid ""
 "%where:1: \"%filter:2\" %line:3 Use option modifiers only within named "
 "Option."
@@ -439,20 +478,20 @@ msgstr ""
 "%where:1: \"%filter:2\" %line:3 Foloseºte modificatori opþiune numai în "
 "opþiunea numitã."
 
-#: common/errors.cpp:402
+#: common/errors.cpp:418
 msgid "%where:1: \"%filter:2\" %line:3 Option modifier unknown."
 msgstr "%where:1: \"%filter:2\" %line:3 Modificator opþiune necunoscut."
 
-#: common/errors.cpp:410
+#: common/errors.cpp:426
 msgid "%where:1: \"%filter:2\" error setting filter description."
 msgstr "%where:1: \"%filter:2\" eroare la setarea descrierii filtrului."
 
-#: common/errors.cpp:418
+#: common/errors.cpp:434
 #, c-format
 msgid "%action:1: invalid regular expression."
 msgstr "%action:1: expresie regularã invalidã."
 
-#: common/errors.cpp:426
+#: common/errors.cpp:442
 #, c-format
 msgid "%action:1: `%expression:2' is not a valid regular expression."
 msgstr "%action:1: `%expression:2' nu este o expresie regularã validã."
@@ -585,24 +624,24 @@ msgstr "Îmi pare rãu, aceasta este o alegere invalidã!"
 msgid "Sorry \"filter\" is currently unimplemented.\n"
 msgstr "Îmi pare rãu, \"filter\" nu este încã implementat.\n"
 
-#: prog/aspell.cpp:1453
+#: prog/aspell.cpp:1405
 msgid "Can't merge a master word list yet. Sorry."
 msgstr "Încã nu pot combina o listã de cuvinte principalã. Îmi pare rãu."
 
-#: prog/aspell.cpp:1477
+#: prog/aspell.cpp:1429
 msgid "Sorry \"create/merge personal\" is currently unimplemented.\n"
 msgstr "Îmi pare rãu, \"create/merge personal\" nu este încã implementat.\n"
 
-#: prog/aspell.cpp:1486 prog/aspell.cpp:1543
+#: prog/aspell.cpp:1438 prog/aspell.cpp:1495
 #, c-format
 msgid "Sorry I won't overwrite \"%s\""
 msgstr "Îmi pare rãu, nu pot suprascrie \"%s\""
 
-#: prog/aspell.cpp:1534
+#: prog/aspell.cpp:1486
 msgid "Sorry \"create/merge repl\" is currently unimplemented.\n"
 msgstr "Îmi pare rãu, \"create/merge repl\" nu este încã implementat.\n"
 
-#: prog/aspell.cpp:1908
+#: prog/aspell.cpp:1860
 #, fuzzy, c-format
 msgid ""
 "\n"
@@ -669,7 +708,7 @@ msgstr ""
 "[opþiuni] este oricare dintre urmãtoarele:\n"
 "\n"
 
-#: prog/aspell.cpp:1944
+#: prog/aspell.cpp:1896
 #, c-format
 msgid ""
 "\n"
@@ -726,17 +765,42 @@ msgstr ""
 msgid "The character '%s' (U+%02X) may not appear at the end of a word."
 msgstr "Caracterul '%s' nu poate apare la sfârºitul unui cuvânt."
 
-#: modules/speller/default/affix.cpp:238
+#: modules/speller/default/language.cpp:500
+#, c-format
+msgid "Warning: Removing invalid affix '%s' from word %s.\n"
+msgstr ""
+
+#: modules/speller/default/language.cpp:501
+#, c-format
+msgid "Warning: Removing inapplicable affix '%s' from word %s.\n"
+msgstr ""
+
+#: modules/speller/default/language.cpp:632
+#, c-format
+msgid "Warning: %s Skipping string.\n"
+msgstr ""
+
+#: modules/speller/default/language.cpp:690
+#, fuzzy
+msgid "The total length is larger than 240 characters."
+msgstr "Lungimea totalã a cuvântului e mai mare de 240 caractere."
+
+#: modules/speller/default/language.cpp:694
+#, c-format
+msgid "Warning: %s Skipping word.\n"
+msgstr ""
+
+#: modules/speller/default/affix.cpp:243
 #, c-format
 msgid "Expected the file to be in \"%s\" not \"%s\"."
 msgstr "M-am aºteptat ca fiºierul sã fie în \"%s\" nu în \"%s\"."
 
-#: modules/speller/default/affix.cpp:299
+#: modules/speller/default/affix.cpp:307
 #, c-format
 msgid "affix '%s' is corrupt, possible incorrect count"
 msgstr "affix-ul '%s' este corupt, numãrãtoare posibil incorectã"
 
-#: modules/speller/default/affix.cpp:346
+#: modules/speller/default/affix.cpp:354
 #, c-format
 msgid "Affix '%s' is corrupt"
 msgstr "Affix-ul '%s' este corupt"
@@ -753,15 +817,11 @@ msgstr "\"Sunã ca\" greºit."
 msgid "Wrong soundslike version."
 msgstr "Versiune \"Sunã ca\" greºitã."
 
-#: modules/speller/default/readonly_ws.cpp:812
-msgid "The total word length is larger than 240 characters."
-msgstr "Lungimea totalã a cuvântului e mai mare de 240 caractere."
-
-#: modules/speller/default/readonly_ws.cpp:828
+#: modules/speller/default/readonly_ws.cpp:816
 msgid "Affix flags found in word but no affix file given."
 msgstr "Marcaje affix gãsie în cuvânt dar nici un fiºier de affix-e dat."
 
-#: modules/speller/default/readonly_ws.cpp:866
+#: modules/speller/default/readonly_ws.cpp:854
 #, fuzzy
 msgid ""
 "The total word length, with soundslike data, is larger than 240 characters."
@@ -830,6 +890,9 @@ msgstr "caractere folosite pentru a encoda locaþii de despãrþire în silabe"
 #: modules/filter/url-filter.opt:7
 msgid "Filter for hiding urls/paths and similar from Aspell"
 msgstr "Filtru pentru ascundere cãilor/url-urilor ºi similar din Aspell"
+
+#~ msgid "indicator for additional flags in word lists"
+#~ msgstr "indicator pentru marcaje adiþionale în listele de cuvinte"
 
 #~ msgid "strip accents from word lists"
 #~ msgstr "eliminã accentele din listele de cuvinte"

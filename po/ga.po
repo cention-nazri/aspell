@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60-b20040402\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-05-26 19:14-0400\n"
+"POT-Creation-Date: 2004-05-31 10:17-0400\n"
 "PO-Revision-Date: 2004-04-07 11:12-0600\n"
 "Last-Translator: Kevin Patrick Scannell <scannell@SLU.EDU>\n"
 "Language-Team: Irish <ga@li.org>\n"
@@ -16,6 +16,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=n==1 ? 0 : (n>1 && n<7) ? 1 : (n>6 && n "
 "<11) ? 2 : 3;\n"
+
+#: common/info.cpp:230
+msgid "a number between 0 and 1"
+msgstr ""
+
+#: common/info.cpp:572
+msgid "in the form \"<name> <value>\""
+msgstr ""
 
 #: common/config.cpp:856
 msgid "configured as follows"
@@ -80,113 +88,109 @@ msgstr "déan neamhshuim ar ceannlitreacha/litreacha beaga"
 msgid "ignore commands to store replacement pairs"
 msgstr "ná stóráil athfhocail"
 
-#: common/config.cpp:1042
+#: common/config.cpp:1042 common/config.cpp:1044
 msgid "extra information for the word list"
 msgstr "eolas breise don liosta focal"
 
-#: common/config.cpp:1044
+#: common/config.cpp:1046
 msgid "keyboard definition to use for typo analysis"
 msgstr "eochairchláir le húsáid d'anailís mílitrithe"
 
-#: common/config.cpp:1046
+#: common/config.cpp:1048
 msgid "language code"
 msgstr "cód teanga"
 
-#: common/config.cpp:1048
+#: common/config.cpp:1050
 msgid "deprecated, use lang instead"
 msgstr "dulta i léig, bain úsáid as `lang' ina áit"
 
-#: common/config.cpp:1050
+#: common/config.cpp:1052
 msgid "location of local language data files"
 msgstr "láthair na gcomhad teanga áitiúla"
 
-#: common/config.cpp:1052
+#: common/config.cpp:1054
 msgid "base name of the main dictionary to use"
 msgstr "bunainm an fhoclóra phríomha"
 
-#: common/config.cpp:1056
+#: common/config.cpp:1058
 msgid "set module name"
 msgstr "ainmnigh modúl"
 
-#: common/config.cpp:1058
+#: common/config.cpp:1060
 msgid "search order for modules"
 msgstr "rangú cuardaigh do mhodúil"
 
-#: common/config.cpp:1060
+#: common/config.cpp:1062
 msgid "personal configuration file"
 msgstr "comhad cumraíochta pearsanta"
 
-#: common/config.cpp:1063
+#: common/config.cpp:1065
 msgid "personal dictionary file name"
 msgstr "ainm comhaid d'fhoclóir pearsanta"
 
-#: common/config.cpp:1066
+#: common/config.cpp:1068
 msgid "prefix directory"
 msgstr "comhadlann réimíre"
 
-#: common/config.cpp:1068
+#: common/config.cpp:1070
 msgid "replacements list file name"
 msgstr "ainm comhaid liosta athfhocal"
 
-#: common/config.cpp:1071
+#: common/config.cpp:1073
 msgid "consider run-together words legal"
 msgstr "ná taispeáin focail chomhtháite mar earráidí"
 
-#: common/config.cpp:1073
+#: common/config.cpp:1075
 msgid "maximum number that can be strung together"
 msgstr "uasmhéid focail chomhtháite"
 
-#: common/config.cpp:1075
+#: common/config.cpp:1077
 msgid "minimal length of interior words"
 msgstr "fad íosta d'fhocail istigh i bhfocal comhtháite"
 
-#: common/config.cpp:1077
+#: common/config.cpp:1079
 msgid "save replacement pairs on save all"
 msgstr "sábháil athfhocail nuair a shábháiltear gach uile"
 
-#: common/config.cpp:1079
+#: common/config.cpp:1081
 msgid "set the prefix based on executable location"
 msgstr "socraigh réimír de réir suíomh an chomhaid inrite"
 
-#: common/config.cpp:1081
+#: common/config.cpp:1083
 msgid "size of the word list"
 msgstr "méid an liosta focal"
 
-#: common/config.cpp:1083
+#: common/config.cpp:1085
 msgid "no longer used"
 msgstr "ní úsáidtear a thuilleadh"
 
-#: common/config.cpp:1085
+#: common/config.cpp:1087
 msgid "suggestion mode"
 msgstr "modh moltaí"
 
-#: common/config.cpp:1087
+#: common/config.cpp:1089
 msgid "edit distance to use, override sug-mode default"
 msgstr "fad eagair le húsáid, sáraigh luach sug-mode"
 
-#: common/config.cpp:1089
+#: common/config.cpp:1091
 msgid "use typo analysis, override sug-mode default"
 msgstr "úsáid anailís mílitrithe, sáraigh luach sug-mode"
 
-#: common/config.cpp:1091
+#: common/config.cpp:1093
 msgid "use replacement tables, override sug-mode default"
 msgstr "úsáid athfhocail, sáraigh luach sug-mode"
 
-#: common/config.cpp:1093
+#: common/config.cpp:1095
 msgid "characters to insert when a word is split"
 msgstr "carachtar le hionsá agus focal scartha"
 
-#: common/config.cpp:1095
+#: common/config.cpp:1097
 msgid "search path for word list information files"
 msgstr "cosán cuardaigh d'eolas faoi liostaí focal"
 
-#: common/config.cpp:1097
+#: common/config.cpp:1099
 msgid "indicator for affix flags in word lists"
 msgstr "táscaire do bhratacha foircinn i liostaí focal"
-
-#: common/config.cpp:1099
-msgid "indicator for additional flags in word lists"
-msgstr "táscaire do bhratacha breise i liostaí focal"
 
 #: common/config.cpp:1101
 msgid "use personal, replacement & session dictionaries"
@@ -209,47 +213,72 @@ msgid "Unicode normalization form: none, nfd, nfc, comp"
 msgstr ""
 
 #: common/config.cpp:1111
-msgid "avoid lossy conversions"
+msgid "avoid lossy conversions when normalization"
 msgstr ""
 
-#: common/config.cpp:1118
+#: common/config.cpp:1113
+#, fuzzy
+msgid "create dictionary aliases"
+msgstr "ainm comhaid d'fhoclóir pearsanta"
+
+#: common/config.cpp:1121
 msgid "compute the soundslike on demand rather than storing"
 msgstr ""
 
-#: common/config.cpp:1120
+#: common/config.cpp:1123
 msgid "use affix compression when creating dictionaries"
 msgstr "úsáid comhbhrú foircinn agus ag cruthú foclóirí"
 
-#: common/config.cpp:1122
+#: common/config.cpp:1125
 msgid "partially expand affixes for better suggestions"
 msgstr ""
 
-#: common/config.cpp:1128
+#: common/config.cpp:1133
+msgid "check if words are valid"
+msgstr ""
+
+#: common/config.cpp:1135
+msgid "check if affix flags are valid"
+msgstr ""
+
+#: common/config.cpp:1137
+msgid "attempts to clean words so that they are valid"
+msgstr ""
+
+#: common/config.cpp:1139
+msgid "skip invalid words"
+msgstr ""
+
+#: common/config.cpp:1141
+msgid "remove invalid affix flags"
+msgstr ""
+
+#: common/config.cpp:1148
 msgid "create a backup file by appending \".bak\""
 msgstr "cruthaigh comhad cúltaca le sínteán \".bak\""
 
-#: common/config.cpp:1130
+#: common/config.cpp:1150
 #, fuzzy
 msgid "create missing root/affix combinations"
 msgstr "déan gach cuingir fréamh/foirceann atá indéanta"
 
-#: common/config.cpp:1132
+#: common/config.cpp:1152
 msgid "keymapping for check mode, aspell or ispell"
 msgstr "eochairmhapáil do mhodh seiceála, aspell nó ispell"
 
-#: common/config.cpp:1134
+#: common/config.cpp:1154
 msgid "reverse the order of the suggest list"
 msgstr "aisiompaigh liosta na moltaí"
 
-#: common/config.cpp:1136
+#: common/config.cpp:1156
 msgid "suggest possible replacements"
 msgstr "tabhair moltaí d'fhocail mílitrithe"
 
-#: common/config.cpp:1138
+#: common/config.cpp:1158
 msgid "time load time and suggest time in pipe mode"
 msgstr "tomhais fad ama lódála/molta i modh phíopa"
 
-#: common/config.cpp:1140
+#: common/config.cpp:1160
 msgid "use byte offsets instead of character offsets"
 msgstr ""
 
@@ -384,33 +413,42 @@ msgstr "Tá an teaghrán \"%str:1\" neamhbhailí."
 msgid "The word \"%word:1\" is invalid."
 msgstr "Tá an focal \"%word:1\" neamhbhailí."
 
-#: common/errors.cpp:322
+#: common/errors.cpp:290
+msgid "The affix flag '%aff:1' is invalid for word \"%word:2\"."
+msgstr ""
+
+#: common/errors.cpp:298
+#, fuzzy
+msgid "The affix flag '%aff:1' can not be applied to word \"%word:2\"."
+msgstr "Ní féidir an comhad \"%file:1\" a oscailt chun scríobh air."
+
+#: common/errors.cpp:338
 msgid "%where:1: \"%filter:2\":"
 msgstr "%where:1: \"%filter:2\":"
 
-#: common/errors.cpp:330
+#: common/errors.cpp:346
 msgid "%where:1: \"%filter:2\" dlopen returned \"%return:3\"."
 msgstr "D'aisfhill %where:1: \"%filter:2\" dlopen \"%return:3\"."
 
-#: common/errors.cpp:338
+#: common/errors.cpp:354
 msgid "%where:1: The file \"%filter:2\" does not contain any filter."
 msgstr "%where:1: Níl aon scagaire sa chomhad \"%filter:2\"."
 
-#: common/errors.cpp:346
+#: common/errors.cpp:362
 msgid "%where:1: Filter \"%filter:2\" could not be found in filter paths."
 msgstr ""
 "%where:1: Níl aon fháil ar an scagaire \"%filter:2\" sna cosáin scagaire."
 
-#: common/errors.cpp:354
+#: common/errors.cpp:370
 msgid "%where:1: %filter:2: can't find option description."
 msgstr "%where:1: %filter:2: níl aon fháil ar cuntas rogha."
 
-#: common/errors.cpp:362
+#: common/errors.cpp:378
 msgid "%where:1: \"%filter:2\" Line %line:3 confused by version control"
 msgstr ""
 "%where:1: \"%filter:2\" Líne %line:3 ar mearbhall mar gheall ar rialú leagain"
 
-#: common/errors.cpp:370
+#: common/errors.cpp:386
 msgid ""
 "%where:1: \"%filter:2\": Line %line:3 Aspell version does not match filter's "
 "requirement."
@@ -418,7 +456,7 @@ msgstr ""
 "%where:1: \"%filter:2\": Líne %line:3 níl an leagan Aspell comhoiriúnach le "
 "riachtanas an scagaire."
 
-#: common/errors.cpp:378
+#: common/errors.cpp:394
 msgid ""
 "%where:1: \"%filter:2\" error while extending Aspell options. (out of "
 "memory?)"
@@ -426,11 +464,11 @@ msgstr ""
 "%where:1: \"%filter:2\" earráid agus ag cur le roghanna Aspell.  (cuimhne "
 "ídithe?)"
 
-#: common/errors.cpp:386
+#: common/errors.cpp:402
 msgid "%where:1: \"%filter:2\" Line %line:3 Filter option already exists."
 msgstr "%where:1: \"%filter:2\" Líne %line:3 Tá an rogha scagaire ann cheana."
 
-#: common/errors.cpp:394
+#: common/errors.cpp:410
 msgid ""
 "%where:1: \"%filter:2\" %line:3 Use option modifiers only within named "
 "Option."
@@ -438,20 +476,20 @@ msgstr ""
 "%where:1: \"%filter:2\" %line:3 Ná bain úsáid as bunathraitheoirí rogha ach "
 "le Rogha cheaptha."
 
-#: common/errors.cpp:402
+#: common/errors.cpp:418
 msgid "%where:1: \"%filter:2\" %line:3 Option modifier unknown."
 msgstr "%where:1: \"%filter:2\" %line:3 Bunathraitheoir rogha anaithnid."
 
-#: common/errors.cpp:410
+#: common/errors.cpp:426
 msgid "%where:1: \"%filter:2\" error setting filter description."
 msgstr "%where:1: \"%filter:2\" earráid agus ag socrú cur síos scagaire."
 
-#: common/errors.cpp:418
+#: common/errors.cpp:434
 #, c-format
 msgid "%action:1: invalid regular expression."
 msgstr "%action:1: slonn ionadaíochta neamhbhailí."
 
-#: common/errors.cpp:426
+#: common/errors.cpp:442
 #, c-format
 msgid "%action:1: `%expression:2' is not a valid regular expression."
 msgstr "%action:1: níl `%expression:2' ina slonn ionadaíochta bhailí."
@@ -585,24 +623,24 @@ msgstr "Tá brón orm; is neamhbhailí an rogha sin!"
 msgid "Sorry \"filter\" is currently unimplemented.\n"
 msgstr "Tá brón orm; níl \"filter\" ar fáil faoi láthair.\n"
 
-#: prog/aspell.cpp:1453
+#: prog/aspell.cpp:1405
 msgid "Can't merge a master word list yet. Sorry."
 msgstr "Tá brón orm; ní féidir máistirliosta focal a chumasc go fóill."
 
-#: prog/aspell.cpp:1477
+#: prog/aspell.cpp:1429
 msgid "Sorry \"create/merge personal\" is currently unimplemented.\n"
 msgstr "Tá brón orm; níl \"create/merge personal\" ar fáil faoi láthair.\n"
 
-#: prog/aspell.cpp:1486 prog/aspell.cpp:1543
+#: prog/aspell.cpp:1438 prog/aspell.cpp:1495
 #, c-format
 msgid "Sorry I won't overwrite \"%s\""
 msgstr "Tá brón orm; ní féidir an comhad \"%s\" a fhorscríobh"
 
-#: prog/aspell.cpp:1534
+#: prog/aspell.cpp:1486
 msgid "Sorry \"create/merge repl\" is currently unimplemented.\n"
 msgstr "Tá brón orm; níl \"create/merge repl\" ar fáil faoi láthair.\n"
 
-#: prog/aspell.cpp:1908
+#: prog/aspell.cpp:1860
 #, fuzzy, c-format
 msgid ""
 "\n"
@@ -666,7 +704,7 @@ msgstr ""
 "is iad [roghanna] ceann amháin nó níos mó de:\n"
 "\n"
 
-#: prog/aspell.cpp:1944
+#: prog/aspell.cpp:1896
 #, c-format
 msgid ""
 "\n"
@@ -723,17 +761,41 @@ msgstr ""
 msgid "The character '%s' (U+%02X) may not appear at the end of a word."
 msgstr "Ní ceadaítear an carachtar '%s' ag deireadh focail."
 
-#: modules/speller/default/affix.cpp:238
+#: modules/speller/default/language.cpp:500
+#, c-format
+msgid "Warning: Removing invalid affix '%s' from word %s.\n"
+msgstr ""
+
+#: modules/speller/default/language.cpp:501
+#, c-format
+msgid "Warning: Removing inapplicable affix '%s' from word %s.\n"
+msgstr ""
+
+#: modules/speller/default/language.cpp:632
+#, c-format
+msgid "Warning: %s Skipping string.\n"
+msgstr ""
+
+#: modules/speller/default/language.cpp:690
+msgid "The total length is larger than 240 characters."
+msgstr ""
+
+#: modules/speller/default/language.cpp:694
+#, c-format
+msgid "Warning: %s Skipping word.\n"
+msgstr ""
+
+#: modules/speller/default/affix.cpp:243
 #, c-format
 msgid "Expected the file to be in \"%s\" not \"%s\"."
 msgstr "Ag súil leis an gcomhad i \"%s\", ní \"%s\"."
 
-#: modules/speller/default/affix.cpp:299
+#: modules/speller/default/affix.cpp:307
 #, c-format
 msgid "affix '%s' is corrupt, possible incorrect count"
 msgstr "foirceann '%s' truaillithe, b'fhéidir líon mícheart"
 
-#: modules/speller/default/affix.cpp:346
+#: modules/speller/default/affix.cpp:354
 #, c-format
 msgid "Affix '%s' is corrupt"
 msgstr "Tá an foirceann '%s' truaillithe"
@@ -750,15 +812,11 @@ msgstr "Comhad `soundslike' mícheart."
 msgid "Wrong soundslike version."
 msgstr "Leagan `soundslike' mícheart."
 
-#: modules/speller/default/readonly_ws.cpp:812
-msgid "The total word length is larger than 240 characters."
-msgstr ""
-
-#: modules/speller/default/readonly_ws.cpp:828
+#: modules/speller/default/readonly_ws.cpp:816
 msgid "Affix flags found in word but no affix file given."
 msgstr "Tá brait fhoircinn tugtha, ach níl on comhad foircinn ann."
 
-#: modules/speller/default/readonly_ws.cpp:866
+#: modules/speller/default/readonly_ws.cpp:854
 msgid ""
 "The total word length, with soundslike data, is larger than 240 characters."
 msgstr ""
@@ -826,6 +884,9 @@ msgstr "carachtair d'áiteanna fleiscínithe"
 #: modules/filter/url-filter.opt:7
 msgid "Filter for hiding urls/paths and similar from Aspell"
 msgstr "Scagaire do urlanna/cosáin, srl."
+
+#~ msgid "indicator for additional flags in word lists"
+#~ msgstr "táscaire do bhratacha breise i liostaí focal"
 
 #~ msgid "strip accents from word lists"
 #~ msgstr "bain aicinn as na liostaí focal"
