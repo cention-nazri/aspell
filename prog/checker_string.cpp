@@ -24,7 +24,7 @@ static int get_line(FILE * in, CharVector & d)
 CheckerString::CheckerString(Speller * speller, 
 			     FILE * in, FILE * out, 
 			     int num_lines)
-  : in_(in), out_(out), speller_(speller), diff_(0)
+  : in_(in), out_(out), speller_(speller)
 {
   lines_.reserve(num_lines + 1);
   for (; num_lines > 0; --num_lines)
@@ -38,6 +38,8 @@ CheckerString::CheckerString(Speller * speller,
 
   end_ = lines_.end() - 1;
   cur_line_ = lines_.begin();
+  diff = 0;
+  has_repl_ = false;
 
   checker_.reset(new_document_checker(speller, 0, 0));
   checker_->process(cur_line_->data(), cur_line_->size());
