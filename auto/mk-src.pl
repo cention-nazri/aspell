@@ -248,6 +248,7 @@ sub create_cc_file ( % )  {
   my $hm = "ASPELL_". to_upper($p{name})."__".to_upper($p{ext});
   $file .= "#ifndef $hm\n#define $hm\n\n" if $p{header};
   $file .= cmap {"#include \"".to_lower($_).".hpp\"\n"} sort keys %{$accum{headers}};
+  $file .= "#ifdef __cplusplus\nextern \"C\" {\n#endif\n" if $p{header} && !$p{cxx};
   $file .= "\nnamespace acommon {\n\n" if $p{cxx};
   $file .= cmap {"$_->{type} ".to_mixed($_->{name}).";\n"}
                 (sort {$a->{name} cmp $b->{name}} values %{$accum{types}})
@@ -255,6 +256,7 @@ sub create_cc_file ( % )  {
   $file .= "\n";
   $file .= $body;
   $file .= "\n\n}\n\n" if $p{cxx};
+  $file .= "#ifdef __cplusplus\n}\n#endif\n" if $p{header} && !$p{cxx};
   $file .= "#endif /* $hm */\n" if $p{header};
   create_file $p{dir}.'/'.to_lower($p{name}).$p{pre_ext}.'.'.$p{ext}, $file;
 }
