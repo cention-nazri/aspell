@@ -36,6 +36,12 @@
 // FIXME: OPTIMIZATIONS
 //   store the number of letters that are the same as the previous 
 //     soundslike so that it can possible be skipped
+// FIXME: Improve Suggest
+//   after scoring and ranking the suggestions there are not enough
+//     words than resort to MySpell ngram
+//   also considering first aiming for one edit distance then if that
+//     is not enough aim for two.  This strategy should only be used
+//     when true soundslike are not used.
 
 #include "getdata.hpp"
 

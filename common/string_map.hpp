@@ -11,32 +11,45 @@
 #include "parm_string.hpp"
 #include "posib_err.hpp"
 #include "string_pair.hpp"
+#include "hash.hpp"
+#include "objstack.hpp"
+
 
 namespace acommon {
 
 class StringPairEnumeration;
-  
-class StringMapNode {
-  // private data structure
-public:
-  StringPair      data;
-  StringMapNode * next;
-  StringMapNode() : next(0) {}
-  StringMapNode(const StringMapNode &);
-  ~StringMapNode();
-private:
-  StringMapNode & operator=(const StringMapNode &);
-};
-  
-typedef StringMapNode * StringMapNodePtr;
 
+using std::pair;
+  
 class StringMap : public MutableContainer {
+public: // but don't use
+  struct Parms {
+    typedef StringPair Value;
+    typedef const char * Key;
+    const char * key(const Value & v) {return v.first;}
+    static const bool is_multi = false;
+    acommon::hash<const char *>  hash;
+    bool equal(const char * x, const char * y) {return strcmp(x,y) == 0;}
+  };
+  typedef StringPair Value_;
+  typedef HashTable<Parms> Lookup;
+  typedef Lookup::iterator Iter_;
+  typedef Lookup::const_iterator CIter_;
+private:
+  HashTable<Parms> lookup_;
+  ObjStack buffer_;
+  const char empty_str[1];
+
+  void copy(const StringMap & other);
+  
   // copy and destructor provided
 public:
-  StringMap();
-  StringMap(const StringMap &);
-  StringMap & operator= (const StringMap &);
-  ~StringMap();
+  PosibErr<void> clear() {lookup_.clear(); buffer_.reset(); return no_err;}
+  
+  StringMap() : empty_str() {}
+  StringMap(const StringMap & other) {copy(other);}
+  StringMap & operator= (const StringMap & o) {clear(); copy(o); return *this;}
+  ~StringMap() {}
   
   StringMap * clone() const {
     return new StringMap(*this);
@@ -50,51 +63,58 @@ public:
   // insert a new element.   Will NOT overright an existing entry.
   // returns false if the element already exists.
   bool insert(ParmString key, ParmString value) {
-    return insert(key, value, false);
+    pair<Iter_,bool> res = lookup_.insert(Value_(key,0));
+    if (res.second) {
+      res.first->first  = buffer_.dup(key);
+      res.first->second = buffer_.dup(value);
+      return true;
+    } else {
+      return false;
+    }
   }
   PosibErr<bool> add(ParmString key) {
-    return insert(key, 0, false);
+    pair<Iter_,bool> res = lookup_.insert(Value_(key,0));
+    if (res.second) {
+      res.first->first  = buffer_.dup(key);
+      res.first->second = empty_str;
+      return true;
+    } else {
+      return false;
+    }
   }
   // insert a new element. WILL overight an exitsing entry
   // always returns true
   bool replace(ParmString key, ParmString value) {
-    return insert(key, value, true);
+    pair<Iter_,bool> res = lookup_.insert(Value_(key,0));
+    if (res.second) {
+      res.first->first  = buffer_.dup(key);
+      res.first->second = buffer_.dup(value);
+    } else {
+      res.first->second = buffer_.dup(value);
+    }
+    return true;
   }
   
   // removes an element.  Returnes true if the element existed.
-  PosibErr<bool> remove(ParmString key) ;
-  
-  PosibErr<void> clear();
+  PosibErr<bool> remove(ParmString key) {return lookup_.erase(key);}
   
   // looks up an element.  Returns null if the element did not exist.
   // returns an empty string if the element exists but has a null value
   // otherwise returns the value
-  const char * lookup(ParmString key) const;
+  const char * lookup(ParmString key) const 
+  {
+    CIter_ i = lookup_.find(key);
+    if (i == lookup_.end())
+      return 0;
+    else
+      return i->second;
+  }  
   
   bool have(ParmString key) const {return lookup(key) != 0;}
   
-  unsigned int size() const {return size_;}
-  bool empty() const {return size_ == 0;}
+  unsigned int size() const {return lookup_.size();}
+  bool empty() const {return lookup_.empty();}
 
-private:
-  void resize(const unsigned int *);
-  
-  // inserts an element the last paramerts conters if an
-  // existing element will be overwritten.
-  bool insert(ParmString key, ParmString value, bool);
-  
-  // clears the hash table, does NOT delete the old one
-  void clear_table(const unsigned int * size);
-  
-  void copy(const StringMap &);
-  
-  // destroys the hash table, assumes it exists
-  void destroy();
-  
-  StringMapNode * * find(ParmString);
-  unsigned int size_;
-  StringMapNodePtr * data;
-  const unsigned int * buckets;
 };
 
 StringMap * new_string_map();

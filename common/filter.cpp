@@ -4,11 +4,13 @@
  * LGPL license along with this library if you did not you can find it
  * at http://www.gnu.org/.                                              */
 
+
 #include "config.hpp"
 #include "filter.hpp"
 #include "speller.hpp"
 #include "indiv_filter.hpp"
 #include "copy_ptr-t.hpp"
+#undef HAVE_LIBDL // FIXME
 #ifdef HAVE_LIBDL
 #include <dlfcn>
 #endif

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Aspell 0.50.1\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-02-04 20:02-0500\n"
+"POT-Creation-Date: 2004-02-15 14:52-0500\n"
 "PO-Revision-Date: 2002-09-08 14:18+0300\n"
 "Last-Translator: Sergey Poznyakoff <gray@gnu.org>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -409,148 +409,148 @@ msgstr ""
 msgid "Unhandled Error: "
 msgstr "Error no soportado: "
 
-#: prog/aspell.cpp:76 prog/aspell.cpp:83
+#: prog/aspell.cpp:78 prog/aspell.cpp:85
 msgid "Error: "
 msgstr "Error: "
 
-#: prog/aspell.cpp:176
+#: prog/aspell.cpp:179
 msgid "enter Email mode."
 msgstr "entrar modo Email"
 
-#: prog/aspell.cpp:177
+#: prog/aspell.cpp:180
 msgid "enter Html/Sgml mode."
 msgstr "entrar modo Htmp/Sgml"
 
-#: prog/aspell.cpp:178
+#: prog/aspell.cpp:181
 msgid "enter TeX mode."
 msgstr "entrar modo TeX"
 
-#: prog/aspell.cpp:276
+#: prog/aspell.cpp:279
 #, fuzzy, c-format
 msgid "Invalid Option: %s"
 msgstr "Opción inválida: "
 
-#: prog/aspell.cpp:281
+#: prog/aspell.cpp:284
 msgid " does not take any parameters."
 msgstr " no admite ningún argumento"
 
-#: prog/aspell.cpp:289
+#: prog/aspell.cpp:292
 #, c-format
 msgid "You must specify a parameter for %s"
 msgstr "%s requiere un argumento"
 
-#: prog/aspell.cpp:314
+#: prog/aspell.cpp:317
 msgid "You must specify an action"
 msgstr "Vd. tiene que especificar una acción"
 
-#: prog/aspell.cpp:352 prog/aspell.cpp:358 prog/aspell.cpp:374
+#: prog/aspell.cpp:357 prog/aspell.cpp:363 prog/aspell.cpp:381
 #, fuzzy, c-format
 msgid "Unknown Action: %s"
 msgstr "Acción desconocida: "
 
-#: prog/aspell.cpp:461
+#: prog/aspell.cpp:468
 msgid "Invalid Input"
 msgstr "Entrada inválida"
 
-#: prog/aspell.cpp:529
+#: prog/aspell.cpp:536
 #, fuzzy
 msgid "Time to load word list: "
 msgstr "tamaño del vocabulario"
 
-#: prog/aspell.cpp:719
+#: prog/aspell.cpp:726
 #, fuzzy
 msgid "Suggestion Time: "
 msgstr "modo de sugestión"
 
-#: prog/aspell.cpp:760
+#: prog/aspell.cpp:766
 #, fuzzy
 msgid "You must specify a file name."
 msgstr "Vd. tiene que especificar nombre del archivo.\n"
 
-#: prog/aspell.cpp:770
+#: prog/aspell.cpp:776
 #, c-format
 msgid "Could not open the file \"%s\" for reading"
 msgstr "No se puede abrir «%s» para leer"
 
-#: prog/aspell.cpp:776
+#: prog/aspell.cpp:782
 #, c-format
 msgid "Could not open the file \"%s\"  for writing. File not saved."
 msgstr "No se puede abrir «%s» para escribir. El archivo no está guardado."
 
-#: prog/aspell.cpp:789
+#: prog/aspell.cpp:795
 #, fuzzy, c-format
 msgid "Invalid keymapping: %s"
 msgstr "Mapa de teclado inválida: "
 
-#: prog/aspell.cpp:810
+#: prog/aspell.cpp:812
 msgid "Ignore"
 msgstr "Omitir"
 
-#: prog/aspell.cpp:811
+#: prog/aspell.cpp:813
 msgid "Ignore all"
 msgstr "Omitir todos"
 
-#: prog/aspell.cpp:812
+#: prog/aspell.cpp:814
 msgid "Replace"
 msgstr "Sustituir"
 
-#: prog/aspell.cpp:813
+#: prog/aspell.cpp:815
 msgid "Replace all"
 msgstr "Sustituir todos"
 
-#: prog/aspell.cpp:814
+#: prog/aspell.cpp:816
 msgid "Add"
 msgstr "Agregar"
 
-#: prog/aspell.cpp:815
+#: prog/aspell.cpp:817
 msgid "Add Lower"
 msgstr "Agregar minúsculas"
 
-#: prog/aspell.cpp:816
+#: prog/aspell.cpp:818
 msgid "Abort"
 msgstr "Abortar"
 
-#: prog/aspell.cpp:817
+#: prog/aspell.cpp:819
 msgid "Exit"
 msgstr "Salir"
 
 # FUZZY
-#: prog/aspell.cpp:898
+#: prog/aspell.cpp:897
 msgid "Are you sure you want to abort? "
 msgstr "Está Vd. seguro que quiere abortar? "
 
 # sustituir ... a: ...
-#: prog/aspell.cpp:918
+#: prog/aspell.cpp:917
 msgid "With: "
 msgstr "a: "
 
-#: prog/aspell.cpp:932
+#: prog/aspell.cpp:931
 msgid "Sorry that is an invalid choice!"
 msgstr "Disculpe, la selección no es válida!"
 
-#: prog/aspell.cpp:1055
+#: prog/aspell.cpp:1077
 msgid "Sorry \"filter\" is currently unimplemented.\n"
 msgstr ""
 
-#: prog/aspell.cpp:1146
+#: prog/aspell.cpp:1168
 #, fuzzy
 msgid "Can't merge a master word list yet. Sorry."
 msgstr "No se puede juntar el vocabulario principal todavía. Disculpe\n"
 
-#: prog/aspell.cpp:1175
+#: prog/aspell.cpp:1197
 msgid "Sorry \"create/merge personal\" is currently unimplemented.\n"
 msgstr ""
 
-#: prog/aspell.cpp:1184 prog/aspell.cpp:1240
+#: prog/aspell.cpp:1206 prog/aspell.cpp:1262
 #, c-format
 msgid "Sorry I won't overwrite \"%s\""
 msgstr "Disculpe, no voy a sobreescribir «%s»"
 
-#: prog/aspell.cpp:1231
+#: prog/aspell.cpp:1253
 msgid "Sorry \"create/merge repl\" is currently unimplemented.\n"
 msgstr ""
 
-#: prog/aspell.cpp:1482
+#: prog/aspell.cpp:1613
 #, fuzzy, c-format
 msgid ""
 "\n"
@@ -603,7 +603,7 @@ msgstr ""
 "\n"
 "[opciones] son:\n"
 
-#: prog/aspell.cpp:1512
+#: prog/aspell.cpp:1643
 #, c-format
 msgid ""
 "\n"
@@ -611,19 +611,19 @@ msgid ""
 "    NOTE: in ambiguous case prefix following options by `filter-'\n"
 msgstr ""
 
-#: modules/speller/default/language.cpp:70
+#: modules/speller/default/language.cpp:69
 msgid "This is probably because: "
 msgstr ""
 
-#: modules/speller/default/language.cpp:77
+#: modules/speller/default/language.cpp:76
 msgid "The required field \"name\" is missing."
 msgstr ""
 
-#: modules/speller/default/language.cpp:323
+#: modules/speller/default/language.cpp:322
 msgid "Empty string."
 msgstr ""
 
-#: modules/speller/default/language.cpp:329
+#: modules/speller/default/language.cpp:328
 #, fuzzy
 msgid "Does not contain any letters."
 msgstr " no admite ningún argumento"

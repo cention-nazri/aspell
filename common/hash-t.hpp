@@ -216,7 +216,7 @@ namespace acommon {
     init(other.prime_index_);
     size_  = other.size_;
     parms_ = other.parms_;
-    for (int i = 0; i != other.table_size_; ++i) {
+    for (unsigned int i = 0; i != other.table_size_; ++i) {
       for (Node * j = other.table_[i]; j != 0; j = j->next) {
 	Node * n = node_pool_.new_node();
 	new 
