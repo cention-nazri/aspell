@@ -11,16 +11,16 @@ msgstr ""
 "Project-Id-Version: aspell 0.51\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
 "POT-Creation-Date: 2004-01-06 08:22-0500\n"
-"PO-Revision-Date: 2004-01-06 00:55+0200\n"
+"PO-Revision-Date: 2004-01-06 16:34+0200\n"
 "Last-Translator: Vital khilko <dojlid@mova.org>\n"
 "Language-Team: Belarusian <i18n@mova.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
+"Content-Transfer-Encoding: 8bit"
 
 #: common/config.cpp:848
 msgid "configured as follows"
-msgstr ""
+msgstr "сканфігуравана як наступнае"
 
 #: common/config.cpp:1053
 msgid "main configuration file"
@@ -310,6 +310,7 @@ msgid ""
 "%where:1: \"%filter:2\": Line %line:3 Aspell version does not match filter's "
 "requirement."
 msgstr ""
+"%where:1: \"%filter:2\": Радок %line:3 Вэрсыя Aspell не мае падтрымкі фільтараў."
 
 #: common/errors.cpp:354
 msgid ""
@@ -395,14 +396,12 @@ msgid "Invalid Input"
 msgstr "Недапушчальны ўвод"
 
 #: prog/aspell.cpp:516
-#, fuzzy
 msgid "Time to load word list: "
-msgstr "памер сьпісу файлаў"
+msgstr "Час загрузкі сьпісу словаў: "
 
 #: prog/aspell.cpp:678
-#, fuzzy
 msgid "Suggestion Time: "
-msgstr "рэжым прапанаваньня"
+msgstr "Час прапанаваньня: "
 
 #: prog/aspell.cpp:719
 msgid "You must specify a file name."
@@ -469,7 +468,7 @@ msgstr "Выбачайце, але гэта памылковы выбар!"
 
 #: prog/aspell.cpp:1011
 msgid "Sorry \"filter\" is currently unimplemented.\n"
-msgstr ""
+msgstr "Выбачайце \"фільтар\" зараз не працаздольны."
 
 #: prog/aspell.cpp:1102
 msgid "Can't merge a master word list yet. Sorry."
@@ -477,7 +476,7 @@ msgstr "Немагчыма зараз аб'яднаць асноўны сьпі�
 
 #: prog/aspell.cpp:1131
 msgid "Sorry \"create/merge personal\" is currently unimplemented.\n"
-msgstr ""
+msgstr "Выбачайце \"стварэньне/аб'яднаньне пэрсанальнага\" зараз непрацаздольнае.\n"
 
 #: prog/aspell.cpp:1140 prog/aspell.cpp:1196
 #, c-format
@@ -486,7 +485,7 @@ msgstr "Выбачайце, трэба перазапісаць \"%s\""
 
 #: prog/aspell.cpp:1187
 msgid "Sorry \"create/merge repl\" is currently unimplemented.\n"
-msgstr ""
+msgstr "Выбачайце пакуль гэтая апэрацыя непрацаздольная."
 
 #: prog/aspell.cpp:1365
 #, c-format
@@ -550,59 +549,63 @@ msgid ""
 "  %s Filter: %s\n"
 "\tNOTE: in ambiguous case prefix following options by `filter-'\n"
 msgstr ""
+"\n"
+"  %s Фільтар: %s\n"
+"\tЗаўвага: у двухсэнсавых выпадках прэфікс сьледуе за выбарам `filter-'\n"
 
 #: modules/filter/context-filter.opt:7
 msgid "Filter for hiding delimited contexts from Aspell"
-msgstr ""
+msgstr "Фільтар для хаваньня ад Aspell абмежаванага кантэксту"
 
 #: modules/filter/context-filter.opt:13
 msgid "add/rem delimiter(s) seperated by spaces"
-msgstr ""
+msgstr "даданьне/выдаленьне межаў пазначаных прагаламі"
 
 #: modules/filter/context-filter.opt:21
 msgid "swaps visible and invisible text;(starts invisible)"
-msgstr ""
+msgstr "абмен бачнага і нябачнага тэксту;( пачатак з бачнага)"
 
 #: modules/filter/email-filter.opt:7
 msgid "Filter for eliminating email quote characters"
-msgstr ""
+msgstr "Фільтар для выдаленьня дужак э.пошты"
 
 #: modules/filter/email-filter.opt:13
 msgid "email quote characters"
-msgstr ""
+msgstr "сымбалі дужак э.пошты"
 
 #: modules/filter/email-filter.opt:20
 msgid "num chars that can appear before the quote char"
-msgstr ""
+msgstr "колькасьць сымбаляў якія ідуць перад сымбалем дужак"
 
 #: modules/filter/sgml-filter.opt:7
 msgid "Filters for encoding, filtering and decoding sgml characters"
-msgstr ""
+msgstr "Фільтар для кадаваньня, фільтрацыі й дэкадаваньня сымбаляў sgml"
 
 #: modules/filter/sgml-filter.opt:13
 msgid "sgml attributes to always check."
-msgstr ""
+msgstr "атрыбуты sgml для сталае праверкі."
 
 #: modules/filter/tex-filter.opt:7
 msgid "Filter for recognizing TeX/LaTeX commands"
-msgstr ""
+msgstr "Фільтар для вызначэньня камандаў TeX/LaTeX"
 
 #: modules/filter/tex-filter.opt:15
 msgid "check TeX comments"
-msgstr ""
+msgstr "праверка камэнтараў TeX"
 
 #: modules/filter/tex-filter.opt:21
 msgid "TeX commands"
-msgstr ""
+msgstr "каманды TeX"
 
 #: modules/filter/tex-filter.opt:90
 msgid "multi character codied letters (<char>:<rep>[:<rep>[...]])"
-msgstr ""
+msgstr "літары кадаваныя шматзначнымі сымбалямі (<char>:<rep>[:<rep>[...]])"
 
 #: modules/filter/tex-filter.opt:102
 msgid "characters used to encode hyphenation locations"
-msgstr ""
+msgstr "сымбаль для пазначэньня пераносаў"
 
 #: modules/filter/url-filter.opt:7
 msgid "Filter for hiding urls/paths and similar from Aspell"
-msgstr ""
+msgstr "Фільтар для хаваньня ад·Aspell url, шляхоў ці падобнага"
+
