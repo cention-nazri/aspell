@@ -117,7 +117,7 @@ namespace aspeller {
       } else {
         const char * str = iconv(dp.key);
         char * res = (char *)parms->strings.alloc(strlen(str) + 1);
-        lang->LangImpl::to_clean(res, str);
+        lang->LangImpl::to_lower(res, str);
 	*r = res;
 	++r;
 	if (dp.value == "_") {
@@ -125,7 +125,7 @@ namespace aspeller {
 	} else {
           str = iconv(dp.value);
           res = (char *)parms->strings.alloc(strlen(str) + 1);
-          lang->LangImpl::to_clean(res, str);
+          lang->LangImpl::to_lower(res, str);
 	  *r = res;
 	}
 	++r;
