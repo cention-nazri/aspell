@@ -63,6 +63,8 @@
 #include "vararray.hpp"
 #include "string_list.hpp"
 
+#include "gettext.h"
+
 //#include "iostream.hpp"
 //#define DEBUG_SUGGEST
 
@@ -1388,7 +1390,7 @@ namespace aspeller {
       limit = 1000;
       ngram_threshold = 1;
     } else {
-      return make_err(bad_value, "sug-mode", mode, "one of ultra, fast, normal, slow, or bad-spellers");
+      return make_err(bad_value, "sug-mode", mode, _("one of ultra, fast, normal, slow, or bad-spellers"));
     }
     if (!sp->have_soundslike) {
       if (try_scan_2) {
