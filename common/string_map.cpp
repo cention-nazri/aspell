@@ -19,7 +19,10 @@ namespace acommon {
   void StringMap::copy(const StringMap & other)
   {
     lookup_ = other.lookup_;
-    for (Iter_ i = lookup_.begin(); i != lookup_.end(); ++i)
+    for (Iter_ i = lookup_.begin(); 
+         !(i == lookup_.end());  // i != lookup_.end() causes problems
+                                 // with gcc-2.95
+         ++i)
     {
       i->first = buffer_.dup(i->first);
       i->second = buffer_.dup(i->second);

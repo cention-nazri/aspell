@@ -4,6 +4,9 @@
 // license along with this library if you did not you can find
 // it at http://www.gnu.org/.
 
+#include <stdarg.h>
+#include <stdio.h>
+
 #include "string.hpp"
 #include "asc_ctype.hpp"
 
@@ -33,7 +36,7 @@ namespace acommon {
   loop: {
       size_t avail = storage_end_ - end_;
       if (avail > 1024) return -1;
-      va_copy(ap,ap0);
+      __va_copy(ap,ap0);
       res = vsnprintf(end_, avail, format, ap);
       va_end(ap);
       if (res < 0) {

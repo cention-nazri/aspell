@@ -314,7 +314,7 @@ public:
   Size   size()     const;
   bool   empty()    const;
   
-  using Dictionary::add;
+  PosibErr<void> add(ParmString w) {return Dictionary::add(w);}
   PosibErr<void> add(ParmString w, ParmString s);
 
   bool lookup (ParmString word, WordEntry &, const SensitiveCompare &) const;
@@ -556,7 +556,8 @@ public:
   WordEntryEnumeration * detailed_elements() const;
   SoundslikeEnumeration * soundslike_elements() const;
       
-  using Dictionary::add_repl;
+  PosibErr<void> add_repl(ParmString mis, ParmString cor) {
+    return Dictionary::add_repl(mis,cor);}
   PosibErr<void> add_repl(ParmString mis, ParmString cor, ParmString s);
 
 private:

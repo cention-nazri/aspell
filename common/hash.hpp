@@ -253,8 +253,6 @@ namespace acommon {
 
 #endif
 
-
-
   template <typename K, typename HF, typename E, bool m>
   struct HashSetParms 
   {
