@@ -33,7 +33,7 @@ namespace acommon {
     Segment * cur = f ? f->next : first;
     while (cur && cur != l) {
       Segment * next = cur->next;
-      if (cur->which && 
+      if (string_freed_callback_ && cur->which && 
           (!next || cur->which != next->which) &&
           (!f    || f->which != cur->which))
         string_freed_callback_(string_freed_callback_data_, cur->which);
