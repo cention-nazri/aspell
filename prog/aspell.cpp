@@ -24,13 +24,14 @@
 #include "errors.hpp"
 #include "file_util.hpp"
 #include "fstream.hpp"
+#include "info.hpp"
 #include "iostream.hpp"
 #include "posib_err.hpp"
 #include "speller.hpp"
 #include "stack_ptr.hpp"
 #include "string_enumeration.hpp"
-#include "word_list.hpp"
 #include "string_map.hpp"
+#include "word_list.hpp"
 
 using namespace acommon;
 
@@ -44,6 +45,7 @@ void check(bool interactive);
 void pipe();
 void filter();
 void list();
+void dicts();
 
 
 #define EXIT_ON_ERR(command) \
@@ -109,6 +111,7 @@ const PossibleOption possible_options[] = {
   COMMAND("pipe",      'a', 0),
   COMMAND("filter",    '\0', 0),
   COMMAND("list",      'l', 0),
+  COMMAND("dicts",     '\0', 0),
 
   COMMAND("dump",   '\0', 1),
 
@@ -279,6 +282,8 @@ int main (int argc, const char *argv[])
     print_ver();
   else if (action_str == "config")
     config();
+  else if (action_str == "dicts")
+    dicts();
   else if (action_str == "check")
     check(true);
   else if (action_str == "pipe")
@@ -303,6 +308,8 @@ int main (int argc, const char *argv[])
     args.pop_front();
     if (what_str == "config")
       config();
+    else if (what_str == "dicts")
+      dicts();
     else {
       CERR << "Error: Unknown Action: " << action_str 
 	   << " " << what_str << "\n";
@@ -324,10 +331,31 @@ int main (int argc, const char *argv[])
 // config
 //
 
-void config () {
+void config () 
+{
   StackPtr<Config> config(new_basic_config());
   EXIT_ON_ERR(config->read_in_settings(options));
   config->write_to_stream(COUT);
+}
+
+///////////////////////////
+//
+// dicts
+//
+
+void dicts() 
+{
+  DictInfoList * dlist = get_dict_info_list(options);
+
+  StackPtr<DictInfoEnumeration> dels(dlist->elements());
+
+  const DictInfo * entry;
+
+  while ( (entry = dels->next()) != 0) 
+  {
+    COUT << entry->name << "\n";
+  }
+
 }
 
 

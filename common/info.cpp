@@ -28,6 +28,7 @@
 #include "string.hpp"
 #include "string_list_impl.hpp"
 #include "vector.hpp"
+#include "stack_ptr.hpp"
 
 namespace acommon {
 
@@ -267,6 +268,7 @@ namespace acommon {
     DictInfo c_struct;
     DictInfoNode * next;
     DictInfoNode(DictInfoNode * n = 0) : next(n) {}
+    String name;
     String code;
     String jargon;
     String size_str;
@@ -329,7 +331,7 @@ namespace acommon {
 					 const ModuleInfo * module)
   {
     DictInfoNode * * prev = &head_;
-    DictInfoNode * to_add = new DictInfoNode();
+    StackPtr<DictInfoNode> to_add(new DictInfoNode());
     const char * p0;
     const char * p1;
     const char * p2;
@@ -344,11 +346,22 @@ namespace acommon {
     if (p0 + 2 < p1 && asc_isdigit(p1[-1]) && asc_isdigit(p1[-2]) && p1[-3] == '-')
       p1 -= 2;
 
-    to_add->c_struct.name = 0;
+    to_add->name.assign(name, p2-name);
+    to_add->c_struct.name = to_add->name.c_str();
   
     to_add->code.assign(name, p0-name);
     to_add->c_struct.code = to_add->code.c_str();
 
+    // check if the code is in a valid form.  If its not than 
+    // ignore this entry
+
+    if (!(to_add->code.size() >= 2 
+	  && asc_isalpha(to_add->code[0]) && asc_isalpha(to_add->code[1]) 
+	  && (to_add->code.size() == 2 
+	      || (to_add->code.size() == 5 && to_add->code[2] == '_' 
+		  && asc_isalpha(to_add->code[3]) 
+		  && asc_isalpha(to_add->code[4]))))) return no_err;
+    
     // Need to do it here as module is about to get a value
     // if it is null
     to_add->direct = module == 0 ? false : true;
@@ -357,7 +370,7 @@ namespace acommon {
       assert(p2 != 0); //FIXME: return error
       ModuleInfoNode * mod 
 	= list_all.module_info_list.find(p2+1, name_size - (p2+1-name));
-      //FIXME: Check for null and eturn an error on an unknown module
+      //FIXME: Check for null and return an error on an unknown module
       module = &(mod->c_struct);
     }
     to_add->c_struct.module = module;
@@ -380,7 +393,7 @@ namespace acommon {
     while (*prev != 0 && *(DictInfoNode *)*prev < *to_add)
       prev = &(*prev)->next;
     to_add->next = *prev;
-    *prev = to_add;
+    *prev = to_add.release();
 
     return no_err;
   }
