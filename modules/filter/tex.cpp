@@ -16,7 +16,7 @@
 #include "convert.hpp"
 
 #define FILTER_PROGRESS_CONTROL "tex-filter-debug.log"
-#include "loadable-filter-API.hpp"
+#include "filter_debug.hpp"
 #include <stdio.h>
 #include <cstdio>
 #include "filter_char_vector.hpp"
@@ -24,8 +24,9 @@
 #include "string_enumeration.hpp"
 
 
-namespace acommon {
+namespace {
 
+  using namespace acommon;
 
   class TexFilter : public IndividualFilter 
   {
@@ -747,8 +748,11 @@ namespace acommon {
   TexDecoder::~TexDecoder(){
     FDEBUGCLOSE;
   }
-    
-  ACTIVATE_ENCODER(acommon,TexEncoder,tex);
-  ACTIVATE_FILTER(acommon,TexFilter,tex);
-  ACTIVATE_DECODER(acommon,TexDecoder,tex);
 }
+
+C_EXPORT 
+IndividualFilter * new_aspell_tex_filter() {return new TexFilter;}
+C_EXPORT 
+IndividualFilter * new_aspell_tex_decoder() {return new TexDecoder;}
+C_EXPORT 
+IndividualFilter * new_aspell_tex_encoder() {return new TexEncoder;}

@@ -4,13 +4,12 @@
 // license along with this library if you did not you can find
 // it at http://www.gnu.org/.
 
-#define COMPILE_IN_FILTER // URL filter is always static
-
+#include "settings.h"
 #include "indiv_filter.hpp"
 #include "key_info.hpp"
-#include "loadable-filter-API.hpp"
 
-namespace acommon {
+namespace {
+  using namespace acommon;
 
   class UrlFilter : public IndividualFilter {
   public:
@@ -58,6 +57,10 @@ namespace acommon {
       }
     }
   }
-
-  ACTIVATE_FILTER(acommon,UrlFilter,url)
 }
+
+C_EXPORT 
+IndividualFilter * new_aspell_url_filter() {
+  return new UrlFilter;                                
+}
+

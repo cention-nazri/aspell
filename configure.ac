@@ -114,6 +114,7 @@ dnl GETTEXT
 AM_GNU_GETTEXT([external])
 AM_GNU_GETTEXT_VERSION(0.13)
 AH_BOTTOM([#include "gettext.h"])
+AH_BOTTOM([#define C_EXPORT extern "C"])
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                                                                 #

@@ -4,14 +4,18 @@
 // license along with this library if you did not you can find
 // it at http://www.gnu.org/.
 
+#include "settings.h"
+
+#include "indiv_filter.hpp"
 #include "convert.hpp"
 #include "config.hpp"
 #include "indiv_filter.hpp"
 #include "mutable_container.hpp"
 #include "copy_ptr-t.hpp"
-#include "loadable-filter-API.hpp"
 
-namespace acommon {
+namespace {
+
+  using namespace acommon;
 
   class EmailFilter : public IndividualFilter 
   {
@@ -102,7 +106,11 @@ namespace acommon {
       for (FilterChar * i = line_begin; i != cur; ++i)
 	*i = ' ';
   }
-  
-ACTIVATE_FILTER(acommon,EmailFilter,email);
 }
+
+C_EXPORT 
+IndividualFilter * new_aspell_email_filter() {
+  return new EmailFilter;                                
+}
+
 

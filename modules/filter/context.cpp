@@ -7,17 +7,42 @@
 // Example for a filter implementation usable via extended filter library
 // interface.
 // This was added to Aspell by Christoph Hintermüller
-// For further information see see development manual ccpp-context.h file
-// and loadable-filter-API.hpp
 
-#include <stdio.h>
+#include "settings.h"
+
+#include "can_have_error.hpp"
+#include "config.hpp"
+#include "filter_char.hpp"
+#include "indiv_filter.hpp"
 #include "iostream.hpp"
-#include "string_list.hpp"
+#include "posib_err.hpp"
+#include "string.hpp"
 #include "string_enumeration.hpp"
-#include "context.hpp"
+#include "string_list.hpp"
+#include "vector.hpp"
 
+using namespace acommon;
 
-namespace acommon {
+namespace {
+
+  enum filterstate {hidden=0, visible=1};
+  
+  class ContextFilter : public IndividualFilter {
+    filterstate state;
+    Vector<String> opening;
+    Vector<String> closing;
+    int correspond;
+    String filterversion;
+  
+    PosibErr<bool> hidecode(FilterChar * begin,FilterChar * end);
+  public:
+    ContextFilter(void);
+    virtual void reset(void);
+    void process(FilterChar *& start,FilterChar *& stop);
+    virtual PosibErr<bool> setup(Config * config);
+    virtual ~ContextFilter();
+  };
+
   ContextFilter::ContextFilter(void)
   : opening(),
     closing()
@@ -234,4 +259,9 @@ namespace acommon {
   ContextFilter::~ContextFilter() {
     reset();
   }
+}
+
+C_EXPORT 
+IndividualFilter * new_aspell_context_filter() {
+  return new ContextFilter;                                
 }

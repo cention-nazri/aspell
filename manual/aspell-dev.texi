@@ -1,5 +1,5 @@
 \input texinfo   @c -*-texinfo-*-
-@comment $Id: aspell-dev.texi,v 1.3.2.4 2004/05/17 01:56:55 kevina Exp $
+@comment $Id: aspell-dev.texi,v 1.7 2004/06/02 15:07:34 kevina Exp $
 @comment %**start of header
 @setfilename aspell-dev.info
 @settitle Aspell Developer's Manual
@@ -470,30 +470,14 @@ details and the other filter modules for examples of how it is used.
 After the class is created a function must be created which will
 return a new filter allocated with @code{new}.  The function must have
 the following prototype:
-@verbatim
-IndividualFilter * new_<<filtertype>>
-@end verbatim
+@example
+C_EXPORT IndividualFilter * new_aspell_@var{filtername}_@var{filtertype}
+@end example
 
 Filters are defined in groups where each group contains an
 @emph{encoding filter}, a @emph{true filter}, and a @emph{decoding
 filter} (see @ref{Filter Overview}).  Only one of them is required to
 be defined, however they all need a separate constructor function.
-
-Instead of coding the constructor function(s) manually it is more
-convenient to use the following macros@footnote{recommended, if filter
-is added to aspell standard distribution}:
-
-@example
-ACTIVATE_ENCODER(nspace,class_name,filter)
-ACTIVATE_FILTER(nspace,class_name,filter)
-ACTIVATE_DECODER(nspace,class_name,filter) 
-@end example
-
-They are provided by the @file{loadable_filteAPI.hpp} file (see
-@ref{Programmer's Interface}).  These macros hide details about
-differences concerning the naming of the constructor function when
-statically linking the filter to aspell instead of turning it into a
-loadable object.
 
 @section Filter Description File
 @anchor{Filter Description File}
@@ -507,7 +491,7 @@ Each file at least has to contain the following two lines in the given
 order.
  
 @example
-ASPELL >=0.51
+ASPELL >=0.60
 DESCRIPTION this is short filter description
 @end example
 
@@ -519,14 +503,6 @@ If the range prefix is omitted `@kbd{=}' is assumed.  The
 @code{DESCRIPTION} of the filter should be under 50, begin in lower
 case, and note include any trailing punctuation characters.
 The keyword @code{DESCRIPTION} may be abbreviated by @code{DESC}.
-
-If the filter description contains the following line
-@example
-ENDFILE
-@end example
-then aspell will assume end of file and ignore all following lines.
-It is not necessary to specify this explicitly on the final line of
-the file, as aspell will assume it implicitly at the end of file.
 
 For each filter feature (see @ref{Filter Overview}) provided by the
 corresponding loadable object, the option file has to contain the
@@ -571,8 +547,7 @@ Table 1. Shows the default values Aspell assumes if option
 @option{description} lacks a @code{DEFAULT} or @code{DEF} line.
 
 The @code{ENDOPTION} line may be omitted as it is assumed implicitly
-if a line containing @code{OPTION}, @code{STATIC} or @code{ENDFILE}
-occurs or the file ends.
+if a line containing @code{OPTION}, @code{STATIC}.
 
 @quotation
 @strong{Note:} The keywords in a filter description file are case

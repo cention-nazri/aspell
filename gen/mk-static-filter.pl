@@ -48,7 +48,7 @@ while ($filename=shift) {
       ( $_=~s/^DES(?:CRIPTION)[ \t]+//i) && (($_=~s/\\(?=[ \t])//g) || 1) &&
        (${$filter}{"DESCRIPTION"}=$_) && next;
       ( $_=~s/^STATIC[ \t]+//i) && (($feature=uc $_ ) || 1) &&
-       (${$filter}{$feature}="new_".$filtername."_".(lc $_)) && next;
+       (${$filter}{$feature}="new_aspell_".$filtername."_".(lc $_)) && next;
       ( $_=~s/^ASPELL[ \t]+//i) && next;
       ( $_=~/^OPTION[ \t]+/i) || 
        (die "Invalid general key in $filename on line $.");
@@ -100,13 +100,13 @@ printf STATICFILTERS "/*File generated during static filter build\n".
 @rallfilters=();
 while ($filter = shift @allfilters) {
   ( $filters{$filter}{"DECODER"} ne  "0") &&
-   (printf STATICFILTERS "\n  IndividualFilter * ".
+   (printf STATICFILTERS "\n  extern \"C\" IndividualFilter * ".
     $filters{$filter}{"DECODER"}."();\n");
   ( $filters{$filter}{"FILTER"} ne "0") &&
-   (printf STATICFILTERS "\n  IndividualFilter * ".
+   (printf STATICFILTERS "\n  extern \"C\" IndividualFilter * ".
                          $filters{$filter}{"FILTER"}."();\n");
   ( $filters{$filter}{"ENCODER"} ne "0") &&
-   (printf STATICFILTERS "\n  IndividualFilter * ".
+   (printf STATICFILTERS "\n  extern \"C\" IndividualFilter * ".
                          $filters{$filter}{"ENCODER"}."();\n");
   push @rallfilters,$filter;
 }

@@ -79,6 +79,7 @@ namespace acommon
     config->retrieve_list("filter", &sl);
     StringListEnumeration els = sl.elements_obj();
     const char * filter_name;
+    String fun;
 
     StackPtr<IndividualFilter> ifilter;
 
@@ -108,9 +109,22 @@ namespace acommon
             !(encoder_handle = dlopen(current_filter->load,RTLD_NOW)) ||
             !(filter_handle  = dlopen(current_filter->load,RTLD_NOW)))
           return make_err(cant_dlopen_file,dlerror()).with_file(filter_name);
-        dynamic_filter.decoder = (FilterFun *)dlsym(decoder_handle.get(),"new_decoder");
-        dynamic_filter.encoder = (FilterFun *)dlsym(encoder_handle.get(),"new_encoder");
-        dynamic_filter.filter  = (FilterFun *)dlsym(filter_handle.get(),"new_filter");
+
+        fun = "new_aspell_";
+        fun += filter_name;
+        fun += "_decoder";
+        dynamic_filter.decoder = (FilterFun *)dlsym(decoder_handle.get(), fun.str());
+
+        fun = "new_aspell_";
+        fun += filter_name;
+        fun += "_encoder";
+        dynamic_filter.encoder = (FilterFun *)dlsym(encoder_handle.get(), fun.str());
+
+        fun = "new_aspell_";
+        fun += filter_name;
+        fun += "_filter";
+        dynamic_filter.filter = (FilterFun *)dlsym(filter_handle.get(), fun.str());
+
         if (!dynamic_filter.decoder && 
 	    !dynamic_filter.encoder &&
 	    !dynamic_filter.filter)
@@ -302,13 +316,7 @@ namespace acommon
     if (!find_file(config, "filter-path", option_name))
       return make_err(no_such_filter, value);
 
-    const char * slash = strrchr(option_name.str(), '/');
-    assert(slash);
-
-    String filter_name(option_name.str(), slash + 1 - option_name.str());
-    filter_name += "lib";
-    filter_name += value;
-    filter_name += "-filter.so";
+    String filter_name;
 
     FStream options;
     RET_ON_ERR(options.open(option_name,"r"));
@@ -467,14 +475,16 @@ namespace acommon
         }
         continue;
       }
-	  
-      //
-      // key = endfile
-      //
-      if (d.key == "endfile") {
-        break;
-      }
 
+      //
+      // key == lib-file
+      //
+      if (d.key == "lib-file")
+      {
+        filter_name = d.value;
+        continue;
+      }
+	  
       //
       // !active_option
       //
@@ -553,6 +563,19 @@ namespace acommon
       return make_err(invalid_option_modifier).with_file(option_name,d.line_num);
         
     } // end while getdata_pair_c
+
+    const char * slash = strrchr(option_name.str(), '/');
+    assert(slash);
+    if (filter_name.empty()) {
+      filter_name.assign(option_name.str(), slash + 1 - option_name.str());
+      filter_name += "lib";
+      filter_name += value;
+      filter_name += "-filter.so";
+    } else {
+      if (filter_name[0] != '/')
+        filter_name.insert(0, option_name.str(), slash + 1 - option_name.str());
+      filter_name += ".so";
+    }
      
     if ( filter_modules_begin == filter_modules ) {
       mbegin = (ConfigModule*)malloc(modsize*sizeof(ConfigModule));
