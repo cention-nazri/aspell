@@ -135,5 +135,22 @@ namespace acommon {
       return no_err;
     }
   }
+
+  //
+  //
+  //
+
+  void IndividualFilter::set_name(ParmStr n, What w)
+  {
+    base_name_ = n;
+    what_ = w;
+    name_ = base_name_;
+    switch (what_) {
+    case Encoder: name_ += "-encoder"; break;
+    case Filter:  name_ += "-filter";  break;
+    case Decoder: name_ += "-decoder"; break;
+    }
+  }
+
 }
 

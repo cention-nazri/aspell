@@ -1,4 +1,4 @@
-#
+ #
 # mk-src.in -- Input file for the Perl program to automatically 
 #	       generate interface code.
 #
@@ -488,6 +488,8 @@ errors:
 		/
 		unknown encoding
 			mesg => The encoding "%encod" is not known.
+		not simple encoding
+			mesg => The encoding "%encod" is not a simple encoding and therefor can not be used in this context.
 		encoding not supported
 			mesg => The encoding "%encod" is not supported.
 		conversion not supported
@@ -505,6 +507,9 @@ errors:
 		invalid word
 			mesg => The word "%word" is invalid.
 			parms => word
+		expecting_not
+			mesg => Expecting "%exp" but got "%got".
+			parms => exp, got
 		invalid affix
 			mesg => The affix flag '%aff' is invalid for word "%word".
 			parms => aff, word
@@ -855,7 +860,7 @@ class: word list
 	c impl headers => string enumeration
 	/
 	cxx member: from internal
-		what => class Convert * from_internal_
+		what => class FullConvert * from_internal_
 		default => 0
 
 	method: empty

@@ -19,7 +19,7 @@ namespace acommon {
   class Config;
   class Speller;
   class Tokenizer;
-  class Convert;
+  class FullConvert;
 
   struct Token {
     unsigned int offset;
@@ -51,7 +51,7 @@ namespace acommon {
     void (* status_fun_)(void *, Token, int);
     void * status_fun_data_;
     Speller * speller_;
-    Convert * conv_;
+    FullConvert * conv_;
     FilterCharVector proc_str_;
   };
 

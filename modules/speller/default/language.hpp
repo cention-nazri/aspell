@@ -137,9 +137,9 @@ namespace aspeller {
     const char * charmap() const {return charmap_.c_str();}
     const char * data_encoding() const {return data_encoding_.c_str();}
 
-    const Convert * mesg_conv() const {return mesg_conv_.ptr;}
-    const Convert * to_utf8() const {return to_utf8_.ptr;}
-    const Convert * from_utf8() const {return from_utf8_.ptr;}
+    const SimpleConvert * mesg_conv() const {return mesg_conv_.ptr;}
+    const SimpleConvert * to_utf8() const {return to_utf8_.ptr;}
+    const SimpleConvert * from_utf8() const {return from_utf8_.ptr;}
 
     int to_uni(char c) const {return to_uni_[to_uchar(c)];}
 

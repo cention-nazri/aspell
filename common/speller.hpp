@@ -29,7 +29,7 @@ namespace acommon {
 
   class Config;
   class WordList;
-  class Convert;
+  class FullConvert;
   class Tokenizer;
   class Filter;
   class DocumentChecker;
@@ -58,8 +58,8 @@ namespace acommon {
   public:
     String temp_str_0;
     String temp_str_1;
-    ClonePtr<Convert> to_internal_;
-    ClonePtr<Convert> from_internal_;
+    ClonePtr<FullConvert> to_internal_;
+    ClonePtr<FullConvert> from_internal_;
   protected:
     CopyPtr<Config> config_;
     Speller(SpellerLtHandle h);
@@ -85,6 +85,8 @@ namespace acommon {
     // Strings from this point on are expected to be in the 
     // encoding specified by encoding()
     //
+
+    
 
     virtual PosibErr<bool> check(MutableString) = 0;
 

@@ -58,8 +58,8 @@ namespace {
 
   PosibErr<bool> TexInfoFilter::setup(Config * opts) 
   {
-    name_ = "texinfo-filter";
-    order_num_ = 0.35;
+    set_name("texinfo");
+    set_order_num(0.35);
     
     to_ignore.clear();
     opts->retrieve_list("f-texinfo-ignore", &to_ignore);

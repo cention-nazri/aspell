@@ -164,6 +164,10 @@ namespace acommon {
     {
       if (b) assign(b, strlen(b));
     }
+    void assign(const char * b, const char * e)
+    {
+      assign(b, e - b);
+    }
     String & operator= (const char * s) {
       assign(s);
       return *this;

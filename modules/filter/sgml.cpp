@@ -133,8 +133,8 @@ namespace {
 
   PosibErr<bool> SgmlFilter::setup(Config * opts) 
   {
-    name_ = which + "-filter";
-    order_num_ = 0.35;
+    set_name(which);
+    set_order_num(0.35);
     check_attribs.clear();
     skip_tags.clear();
     opts->retrieve_list("f-" + which + "-skip",  &skip_tags);
@@ -422,8 +422,8 @@ namespace {
 
   PosibErr<bool> SgmlDecoder::setup(Config *) 
   {
-    name_ = which + "-decoder";
-    order_num_ = 0.65;
+    set_name(which, Decoder);
+    set_order_num(0.65);
     return true;
   }
 

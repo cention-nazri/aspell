@@ -84,8 +84,8 @@ namespace {
 
   PosibErr<bool> NroffFilter::setup(Config * opts) 
   {
-    name_ = "nroff-filter";
-    order_num_ = 0.2;
+    set_name("nroff");
+    set_order_num(0.20);
     reset();
     return true;
   }

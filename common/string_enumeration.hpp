@@ -14,7 +14,7 @@
 namespace acommon {
 
   class StringEnumeration;
-  class Convert;
+  class FullConvert;
 
   class StringEnumeration {
   public:
@@ -29,7 +29,7 @@ namespace acommon {
     virtual StringEnumeration * clone() const = 0;
     virtual void assign(const StringEnumeration * other) = 0;
     CharVector temp_str;
-    Convert * from_internal_;
+    FullConvert * from_internal_;
     StringEnumeration() : ref_count_(0), copyable_(2), from_internal_(0) {}
     virtual ~StringEnumeration() {}
   };

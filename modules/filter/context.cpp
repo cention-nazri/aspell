@@ -61,7 +61,7 @@ namespace {
   }
     
   PosibErr<bool> ContextFilter::setup(Config * config){
-    name_ = "context-filter";
+    set_name("context");
     StringList delimiters;
     StringEnumeration * delimiterpairs;
     const char * delimiterpair=NULL;

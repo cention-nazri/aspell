@@ -87,9 +87,8 @@ namespace {
 
   PosibErr<bool> TexFilter::setup(Config * opts) 
   {
-    name_ = "tex-filter";
-    order_num_ = 0.35;
-    //fprintf(stderr,"name %s \n",name_);
+    set_name("tex");
+    set_order_num(0.35);
 
     commands.clear();
     opts->retrieve_list("f-tex-command", &commands);

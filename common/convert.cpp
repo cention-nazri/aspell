@@ -22,6 +22,8 @@
 #include "file_data_util.hpp"
 #include "objstack.hpp"
 
+#include "indiv_filter.hpp"
+
 #include "iostream.hpp"
 
 #include "gettext.h"
@@ -386,6 +388,7 @@ namespace acommon {
     String l;
     get_nb_line(in, l);
     remove_comments(l);
+    
     assert (l == "INTERNAL");
     get_nb_line(in, l);
     remove_comments(l);
@@ -454,11 +457,37 @@ namespace acommon {
   //////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////
 
+#if 0
 
   bool operator== (const Convert & rhs, const Convert & lhs)
   {
     return strcmp(rhs.in_code(), lhs.in_code()) == 0
       && strcmp(rhs.out_code(), lhs.out_code()) == 0;
+  }
+
+#endif
+
+  void FullConvert::add_filter_codes()
+  {
+    const char * slash = strchr(in_code_.str(), '/');
+    if (slash) in_code_.resize(slash - in_code_.str());
+    for (Filter::Iterator i = filter_.begin(); i != filter_.end(); ++i) {
+      if ((*i)->what() == IndividualFilter::Decoder) {
+        in_code_ += '/';
+        in_code_ += (*i)->base_name();
+      }
+    }
+
+    slash = strchr(out_code_.str(), '/');
+    if (slash) out_code_.resize(slash - out_code_.str());
+    for (Filter::Iterator i = filter_.begin(); i != filter_.end(); ++i) {
+      if ((*i)->what() == IndividualFilter::Encoder) {
+        out_code_ += '/';
+        out_code_ += (*i)->base_name();
+      }
+    }
+
+    //printf("%s => %s\n", in_code_.str(), out_code_.str());
   }
 
   //////////////////////////////////////////////////////////////////////
@@ -821,17 +850,16 @@ namespace acommon {
   // new_aspell_convert
   //
 
-  void Convert::generic_convert(const char * in, int size, CharVector & out)
+  void FullConvert::generic_convert(const char * in, int size, CharVector & out)
   {
     buf_.clear();
-    decode_->decode(in, size, buf_);
+    decode(in, size, buf_);
     FilterChar * start = buf_.pbegin();
     FilterChar * stop = buf_.pend();
-    if (!filter.empty())
-      filter.process(start, stop);
-    encode_->encode(start, stop, out);
+    filter(start, stop);
+    encode(start, stop, out);
   }
-
+  
   const char * fix_encoding_str(ParmStr enc, String & buf)
   {
     buf.clear();
@@ -852,6 +880,115 @@ namespace acommon {
       return "ucs-4";
     else
       return buf.c_str();
+  }
+
+  PosibErr<const char *> resolve_alias(const Config & c, 
+                                       ParmStr enc, String & buf)
+  {
+    String dir1 ,dir2,file_name;
+    fill_data_dir(&c, dir1, dir2);
+    find_file(file_name,dir1,dir2,enc, ".calias");
+    FStream f;
+    PosibErrBase err = f.open(file_name, "r");
+    if (err.get_err()) return enc.str();
+    char * p = get_nb_line(f, buf);
+    remove_comments(p);
+    unescape(p);
+    return p;
+  }
+
+  struct Encoding {
+    String base;
+    String norm_form; 
+    Vector<String> extra; // such as "tex", "texinfo", etc
+  };
+
+  bool operator== (const Encoding & x, const Encoding & y)
+  {
+    if (x.base != y.base) return false;
+    if (x.norm_form != y.norm_form) return false;
+    if (x.extra != y.extra) return false;
+    return true;
+  }
+
+  PosibErr<void> decode_encoding_string(const Config & c,
+                                        ParmStr str, Encoding & enc)
+  {
+    const char * slash = strchr(str, '/');
+    const char * colon = strchr(str, ':');
+
+    if (colon && (!slash || slash > colon)) {
+      enc.base.assign(str, colon);
+      if (!slash)
+        enc.norm_form.assign(colon + 1);
+      else
+        enc.norm_form.assign(colon + 1, slash);
+    } else if (slash) {
+      enc.base.assign(str, slash);
+    } else {
+      enc.base.assign(str);
+    }
+
+    {
+      String tmp;
+      const char * s = fix_encoding_str(enc.base, tmp);
+      enc.base = resolve_alias(c, s, tmp);
+    }
+    
+    bool conv_filter = false;
+#if 0 //FIXME
+    {
+      // test for .cset or .cmap file
+      String dir1,dir2,file_name;
+      fill_data_dir(&c, dir1, dir2);
+      find_file(file_name,dir1,dir2,enc.base,".cmap");
+      if (file_exists(file_name)) goto done; 
+      find_file(file_name,dir1,dir2,enc.base,".cset");
+      if (file_exists(file_name)) goto done;
+
+      // test for gen conv filter -- FIXME: Should check for any conv
+      // filter
+      conv_filter = true;
+      find_file(file_name,dir1,dir2,enc.base,".conv");
+      if (file_exists(file_name)) goto done;
+
+      // if nothing found error
+      return make_err(unknown_encoding, str, 
+                      _("This could also mean that no data files were found."));
+    }
+
+  done:
+#endif
+
+    const char * extra = 0;
+    if (conv_filter) {
+      enc.base.clear();
+      enc.norm_form = "none";
+      extra = str;
+    } else if (slash) {
+      extra = slash + 1;
+    }
+       
+    if (enc.norm_form.empty()) {
+      if (c.retrieve_bool("normalize") || c.retrieve_bool("norm-required"))
+        enc.norm_form = c.retrieve("norm-form");
+      else
+        enc.norm_form = "none";
+    }
+    if (enc.norm_form == "none" && c.retrieve_bool("norm-required"))
+      enc.norm_form = "nfc";
+
+    // push "extra" encoding on entra list
+    if (extra) {
+      do {
+        slash = strchr(extra,'/');
+        enc.extra.push_back(str);
+        if (slash) enc.extra.back().assign(extra, slash);
+        else       enc.extra.back().assign(extra);
+        extra = slash + 1;
+      } while (slash);
+    }
+    return no_err;
   }
 
   bool ascii_encoding(const Config & c, ParmStr enc0)
@@ -875,29 +1012,49 @@ namespace acommon {
   }
 
   PosibErr<Convert *> internal_new_convert(const Config & c,
-                                           ParmString in, 
-                                           ParmString out,
+                                           ParmString in_s, ParmString out_s,
                                            bool if_needed,
-                                           Normalize norm)
+                                           Normalize norm,
+                                           bool simple)
   {
-    String in_s;
-    in = fix_encoding_str(in, in_s);
-
-    String out_s;
-    out = fix_encoding_str(out, out_s); 
+    Encoding in, out;
+    RET_ON_ERR(decode_encoding_string(c, in_s,  in));
+    RET_ON_ERR(decode_encoding_string(c, out_s, out));
+    if      (in.base.empty())  in.base = out.base;
+    else if (out.base.empty()) out.base = in.base;
+    if (in.base.empty() /* implies out_e.base.empty() */)
+      in.base = out.base = "iso-8859-1";
 
     if (if_needed && in == out) return 0;
 
-    StackPtr<Convert> conv(new Convert);
-    switch (norm) {
-    case NormNone:
-      RET_ON_ERR(conv->init(c, in, out)); break;
-    case NormFrom:
-      RET_ON_ERR(conv->init_norm_from(c, in, out)); break;
-    case NormTo:
-      RET_ON_ERR(conv->init_norm_to(c, in, out)); break;
+    if (simple) {
+      if (! in.extra.empty()) return make_err(not_simple_encoding, in_s );
+      if (!out.extra.empty()) return make_err(not_simple_encoding, out_s);
     }
-    return conv.release();
+
+    StackPtr<Convert> conv;
+    if (simple) conv = new SimpleConvert;
+    else        conv = new FullConvert;
+
+    if (norm == NormNone) {
+      RET_ON_ERR(conv->init(c, in.base, out.base));
+    } else if (norm == NormFrom) {
+      if (in.norm_form == "none")
+        RET_ON_ERR(conv->init(c, in.base, out.base));
+      else
+        RET_ON_ERR(conv->init_norm_from(c, in.base, out.base));
+    } else if (norm == NormTo) {
+      if (out.norm_form == "none")
+        RET_ON_ERR(conv->init(c, in.base, out.base));
+      else
+        RET_ON_ERR(conv->init_norm_to(c, in.base, out.base, out.norm_form));
+    }
+
+    //printf("%s => %s\n", conv->in_code(),  conv->out_code());
+
+    if (simple) return conv.release();
+
+    // now add conv filters to the data stream
   }
 
   PosibErr<Decode *> Decode::get_new(const String & key, const Config * c)
@@ -942,8 +1099,10 @@ namespace acommon {
   {
     RET_ON_ERR(setup(decode_c, &decode_cache, &c, in));
     decode_ = decode_c.get();
+    in_code_ = decode_->key;
     RET_ON_ERR(setup(encode_c, &encode_cache, &c, out));
     encode_ = encode_c.get();
+    out_code_ = encode_->key;
 
     conv_ = 0;
     if (in == out) {
@@ -965,43 +1124,38 @@ namespace acommon {
   
   PosibErr<void> Convert::init_norm_from(const Config & c, ParmStr in, ParmStr out)
   {
-    if (!c.retrieve_bool("normalize") && !c.retrieve_bool("norm-required")) 
-      return init(c,in,out);
-
     RET_ON_ERR(setup(norm_tables_, &norm_tables_cache, &c, out));
 
     RET_ON_ERR(setup(decode_c, &decode_cache, &c, in));
     decode_ = decode_c.get();
+    in_code_ = decode_->key;
 
     if (c.retrieve_bool("norm-strict")) {
       encode_s = new EncodeNormLookup(norm_tables_->strict);
       encode_ = encode_s;
       encode_->key = out;
-      encode_->key += ":strict";
+      out_code_ = out;
+      in_code_ += "|strict";
     } else {
       encode_s = new EncodeNormLookup(norm_tables_->internal);
       encode_ = encode_s;
       encode_->key = out;
-      encode_->key += ":internal";
+      out_code_ = out;
+      in_code_ += "|norm";
     }
     conv_ = 0;
 
     return no_err;
   }
 
-  PosibErr<void> Convert::init_norm_to(const Config & c, ParmStr in, ParmStr out)
+  PosibErr<void> Convert::init_norm_to(const Config & c, ParmStr in, ParmStr out,
+                                       ParmStr norm_form)
   {
-    String norm_form = c.retrieve("norm-form");
-    if ((!c.retrieve_bool("normalize") || norm_form == "none")
-        && !c.retrieve_bool("norm-required"))
-      return init(c,in,out);
-    if (norm_form == "none" && c.retrieve_bool("norm-required"))
-      norm_form = "nfc";
-
     RET_ON_ERR(setup(norm_tables_, &norm_tables_cache, &c, in));
 
     RET_ON_ERR(setup(encode_c, &encode_cache, &c, out));
     encode_ = encode_c.get();
+    out_code_ = encode_->key;
 
     NormTables::ToUni::const_iterator i = norm_tables_->to_uni.begin();
     for (; i != norm_tables_->to_uni.end() && i->name != norm_form; ++i);
@@ -1010,8 +1164,9 @@ namespace acommon {
     decode_s = new DecodeNormLookup(i->ptr);
     decode_ = decode_s;
     decode_->key = in;
-    decode_->key += ':';
-    decode_->key += i->name;
+    in_code_ = decode_->key;
+    out_code_ += ':';
+    out_code_ += i->name;
 
     conv_ = 0;
 

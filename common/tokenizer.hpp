@@ -13,7 +13,7 @@
 
 namespace acommon {
 
-  class Convert;
+  class FullConvert;
   class Speller;
   class Config;
 
@@ -58,7 +58,7 @@ namespace acommon {
     };
     
     CharType char_type_[256];
-    Convert * conv_;
+    FullConvert * conv_;
     FilterCharVector buf_;
   };
 

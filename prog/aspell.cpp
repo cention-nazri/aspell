@@ -482,14 +482,15 @@ int main (int argc, const char *argv[])
 //
 
   
-static Convert * setup_conv(const aspeller::Language * lang,
-                                      Config * config)
+static SimpleConvert * setup_conv(const aspeller::Language * lang,
+                                  Config * config)
 {
   if (config->retrieve("encoding") != "none") {
-    PosibErr<Convert *> pe = new_convert_if_needed(*config,
-                                                   lang->charmap(),
-                                                   config->retrieve("encoding"),
-                                                   NormTo);
+    PosibErr<SimpleConvert *> pe 
+      = new_simple_convert_if_needed(*config,
+                                     lang->charmap(),
+                                     config->retrieve("encoding"),
+                                     NormTo);
     if (pe.has_err()) {print_error(pe.get_err()->mesg); exit(1);}
     return pe.data;
   } else {
@@ -497,14 +498,15 @@ static Convert * setup_conv(const aspeller::Language * lang,
   }
 }
  
-static Convert * setup_conv(Config * config,
-                            const aspeller::Language * lang)
+static SimpleConvert * setup_conv(Config * config,
+                                  const aspeller::Language * lang)
 {
   if (config->retrieve("encoding") != "none") {
-    PosibErr<Convert *> pe = new_convert_if_needed(*config,
-                                                   config->retrieve("encoding"),
-                                                   lang->charmap(),
-                                                   NormFrom);
+    PosibErr<SimpleConvert *> pe 
+      = new_simple_convert_if_needed(*config,
+                                     config->retrieve("encoding"),
+                                     lang->charmap(),
+                                     NormFrom);
     if (pe.has_err()) {print_error(pe.get_err()->mesg); exit(1);}
     return pe.data;
   } else {
@@ -717,8 +719,8 @@ void pipe()
   AspellSpeller * speller = to_aspell_speller(ret);
   aspeller::SpellerImpl * real_speller = reinterpret_cast<aspeller::SpellerImpl *>(speller);
   Config * config = real_speller->config();
-  Conv iconv(setup_conv(config, &real_speller->lang()));
-  Conv oconv(setup_conv(&real_speller->lang(), config));
+  FullConv iconv(real_speller->to_internal_);
+  FullConv oconv(real_speller->from_internal_);
   MBLen mb_len;
   if (!config->retrieve_bool("byte-offsets")) 
     mb_len.setup(*config, config->retrieve("encoding"));

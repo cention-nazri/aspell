@@ -21,10 +21,10 @@ namespace {
 
   //////////////////////////////////////////////////////////////////////
   //
-  // UniConv
+  // GenConv
   //
 
-  struct UniConvEntry
+  struct GenConvEntry
   {
     typedef Uni16 From;
     Uni16 from;
@@ -41,47 +41,47 @@ namespace {
 #endif
   ;
 
-  static const Uni16 uni_conv_empty[2] = {0, UniConvEntry::to_non_char};
-  static const Uni16 uni_conv_non_char_str[2] = {UniConvEntry::to_non_char, 0};
+  static const Uni16 gen_conv_empty[2] = {0, GenConvEntry::to_non_char};
+  static const Uni16 gen_conv_non_char_str[2] = {GenConvEntry::to_non_char, 0};
 
-  inline void UniConvEntry::set_to_to_non_char() 
+  inline void GenConvEntry::set_to_to_non_char() 
   {
-    to = uni_conv_non_char_str;
+    to = gen_conv_non_char_str;
   }
 
-  typedef NormTable<UniConvEntry> UniConvTable;
+  typedef NormTable<GenConvEntry> GenConvTable;
 
-  struct UniConvTables : public Cacheable {
+  struct GenConvTables : public Cacheable {
     typedef const Config CacheConfig;
     typedef const char * CacheKey;
     String key;
     bool cache_key_eq(const char * l) const  {return key == l;}
-    static PosibErr<UniConvTables *> get_new(const String &, const Config *);
+    static PosibErr<GenConvTables *> get_new(const String &, const Config *);
     struct FromSingle {
       const char * name;
-      UniConvTable * table;
+      GenConvTable * table;
     };
-    UniConvTable * to_single;
+    GenConvTable * to_single;
     Vector<FromSingle> from_single;
     ObjStack data;
-    ~UniConvTables();
+    ~GenConvTables();
   };
 
-  static GlobalCache<UniConvTables> uni_conv_tables_cache("uni_conv_tables");
+  static GlobalCache<GenConvTables> gen_conv_tables_cache("gen_conv_tables");
 
   //////////////////////////////////////////////////////////////////////
   //
   // read in uni conv tables
   //
 
-  struct UniConv {
+  struct GenConv {
     const Uni16 * from;
     const Uni16 * to;
-    UniConv(const Uni16 * f, const Uni16 * t)
+    GenConv(const Uni16 * f, const Uni16 * t)
       : from(f), to(t) {}
   };
 
-  static inline bool operator< (const UniConv & X, const UniConv & Y)
+  static inline bool operator< (const GenConv & X, const GenConv & Y)
   {
     const Uni16 * x = X.from;
     const Uni16 * y = Y.from;
@@ -91,17 +91,17 @@ namespace {
   
   struct WorkingFrom {
     const char * name;
-    Vector<UniConv> data;
+    Vector<GenConv> data;
   };
 
   struct TableFromSortedList {
   private:
-    Vector<UniConv>::const_iterator table_begin, i, begin, end;
+    Vector<GenConv>::const_iterator table_begin, i, begin, end;
     unsigned offset;
     void operator=(const TableFromSortedList &);
   public:
-    typedef UniConvEntry T;
-    TableFromSortedList(Vector<UniConv> & l) 
+    typedef GenConvEntry T;
+    TableFromSortedList(Vector<GenConv> & l) 
       : begin(l.begin()), end(l.end()), offset(0) {}
     TableFromSortedList(const TableFromSortedList & other) {}
     int size; // only valid after init is called
@@ -126,7 +126,7 @@ namespace {
       if (!i->from[offset + 1]) 
         cur->to = i->to;
       else
-        cur->to = uni_conv_empty;
+        cur->to = gen_conv_empty;
       Uni16 prev_char = i->from[offset];
       table_begin = i->from[offset + 1] ? i : i + 1;
       while (i != end && i->from[offset] == prev_char) ++i;
@@ -142,7 +142,7 @@ namespace {
   };
 
   struct Uni16Conv {
-    StackPtr<Convert> conv;
+    StackPtr<SimpleConvert> conv;
     CharVector tbuf;
     ConvertBuffer cbuf;
     Uni16 * operator() (const MutableString & str, ObjStack & fbuf) {
@@ -164,8 +164,8 @@ namespace {
     return make_err(invalid_table_entry, cols_str).with_file(file_name, d.line_num);
   }
       
-  PosibErr<UniConvTables *> 
-  UniConvTables::get_new(const String & name, const Config * c)
+  PosibErr<GenConvTables *> 
+  GenConvTables::get_new(const String & name, const Config * c)
   {
     String dir1,dir2,file_name;
     fill_data_dir(c, dir1, dir2);
@@ -175,9 +175,9 @@ namespace {
     RET_ON_ERR(in.open(file_name, "r"));
 
     Uni16Conv conv;
-    conv.conv = new_convert(*c, "utf-8", "ucs-2", NormNone);
-    UniConvTables * t = new UniConvTables;
-    Vector<UniConv> working_to;
+    conv.conv = new_simple_convert(*c, "utf-8", "ucs-2", NormNone);
+    GenConvTables * t = new GenConvTables;
+    Vector<GenConv> working_to;
     Vector<WorkingFrom> working_from;
     working_from.resize(1);
     int num_cols = 2;
@@ -195,18 +195,18 @@ namespace {
           } else {
             const Uni16 * single = (d.key != "." 
                                     ? conv(d.key, t->data) 
-                                    : uni_conv_empty);
+                                    : gen_conv_empty);
             for (unsigned i = 0; i != working_from.size(); ++i) {
               bool res = split(d);
               if (!res) return table_error(file_name, d, num_cols);
               Uni16 * multi  = conv(d.key, t->data);
-              working_to.push_back(UniConv(multi, single));
+              working_to.push_back(GenConv(multi, single));
               if (single[0])
-                working_from[i].data.push_back(UniConv(single, multi));
+                working_from[i].data.push_back(GenConv(single, multi));
             }
             while (split(d)) {
               Uni16 * multi  = conv(d.key, t->data);
-              working_to.push_back(UniConv(multi, single));
+              working_to.push_back(GenConv(multi, single));
             }
           }
         }
@@ -219,7 +219,7 @@ namespace {
     {
       std::sort(working_to.begin(), working_to.end());
       TableFromSortedList in0(working_to);
-      t->to_single = create_norm_table<UniConvEntry>(in0);
+      t->to_single = create_norm_table<GenConvEntry>(in0);
     }
     t->from_single.resize( working_from.size());
     for (unsigned i = 0; i != working_from.size(); ++i) 
@@ -227,12 +227,12 @@ namespace {
       t->from_single[i].name = working_from[i].name;
       std::sort(working_from[i].data.begin(), working_from[i].data.end());
       TableFromSortedList in0(working_from[i].data);
-      t->from_single[i].table = create_norm_table<UniConvEntry>(in0);
+      t->from_single[i].table = create_norm_table<GenConvEntry>(in0);
     }
     return t;
   }
 
-  UniConvTables::~UniConvTables()
+  GenConvTables::~GenConvTables()
   {
     if (to_single)
       free_norm_table(to_single);
@@ -250,10 +250,10 @@ namespace {
   class ConvertFilter : public IndividualFilter
   {
   public:
-    CachePtr<UniConvTables> tables;
+    CachePtr<GenConvTables> tables;
     bool decoder;
     ConvertFilterParms parms;
-    typedef UniConvEntry E;
+    typedef GenConvEntry E;
     NormTable<E> * data;
     FilterCharVector buf;
     PosibErr<bool> setup(Config *);
@@ -266,10 +266,10 @@ namespace {
 
   PosibErr<bool> ConvertFilter::setup(Config * c)
   {
-    name_ = parms.name;
+    set_name(parms.name, decoder ? Decoder : Encoder);
     if (parms.order_num == -1)
       parms.order_num = decoder ? 0.10 : 0.90;
-    order_num_ =  parms.order_num;
+    set_order_num(parms.order_num);
     if (parms.file.empty()) {
       String key = "f-"; key += parms.name; key += "-file";
       parms.file = c->retrieve(key);
@@ -279,7 +279,7 @@ namespace {
       String key = "f-"; key += parms.name; key += "-form";
       parms.form = c->retrieve(key);
     }
-    RET_ON_ERR(acommon::setup(tables, &uni_conv_tables_cache, c, parms.file.str()));
+    RET_ON_ERR(acommon::setup(tables, &gen_conv_tables_cache, c, parms.file.str()));
     if (decoder) {
       data = tables->to_single;
     } else {

@@ -62,7 +62,9 @@ namespace acommon {
   bool getline(IStream & in, DataPair & d, String & buf);
 
   char * get_nb_line(IStream & in, String & buf);
-  void remove_comments(String & buf);
 
+  char * remove_comments(char *);
+  void remove_comments(String & buf);
+  
 }
 #endif

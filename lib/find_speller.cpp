@@ -461,13 +461,11 @@ namespace acommon {
 
   PosibErr<void> reload_filters(Speller * m) 
   {
-    m->to_internal_->filter.clear();
-    m->from_internal_->filter.clear();
+    m->to_internal_->clear_filters();
+    m->from_internal_->clear_filters();
     // Add enocder and decoder filters if any
-    RET_ON_ERR(setup_filter(m->to_internal_->filter, m->config(), 
-			    true, false, false));
-    RET_ON_ERR(setup_filter(m->from_internal_->filter, m->config(), 
-			    false, false, true));
+    RET_ON_ERR(m->to_internal_->add_filters(m->config(), true, false, false));
+    RET_ON_ERR(m->from_internal_->add_filters(m->config(), false, false, true));
     return no_err;
   }
 

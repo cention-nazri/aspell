@@ -525,11 +525,11 @@ namespace aspeller {
       user_enc = sys_enc;
     }
 
-    PosibErr<Convert *> conv;
-    conv = new_convert(*c, user_enc, sys_enc, NormFrom);
+    PosibErr<FullConvert *> conv;
+    conv = new_full_convert(*c, user_enc, sys_enc, NormFrom);
     if (conv.has_err()) return conv;
     to_internal_.reset(conv);
-    conv = new_convert(*c, sys_enc, user_enc, NormTo);
+    conv = new_full_convert(*c, sys_enc, user_enc, NormTo);
     if (conv.has_err()) return conv;
     from_internal_.reset(conv);
 
