@@ -1,4 +1,4 @@
-# Czecht translation of aspell
+# Czech translation of aspell
 # Copyright (C) 2004 Kevin Atkinson
 # Copyright (C) 2004 Miloslav Trmac <mitr@volny.cz>
 # This file is distributed under the same license as the aspell package.
@@ -6,10 +6,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: aspell 0.60-b20040608\n"
+"Project-Id-Version: aspell 0.60-b20040624\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-06-22 17:32-0400\n"
-"PO-Revision-Date: 2004-06-16 12:49+0200\n"
+"POT-Creation-Date: 2004-06-27 00:43-0400\n"
+"PO-Revision-Date: 2004-06-24 14:34+0200\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -25,37 +25,36 @@ msgid "in the form \"<name> <value>\""
 msgstr "ve tvaru \"<název> <hodnota>\""
 
 #: common/config.cpp:68
-#, fuzzy
 msgid "string"
-msgstr "Prázdný řetězec."
+msgstr "řetězec"
 
 #: common/config.cpp:68
 msgid "integer"
-msgstr ""
+msgstr "celé číslo"
 
 #: common/config.cpp:68
 msgid "boolean"
-msgstr ""
+msgstr "booleovská hodnota"
 
 #: common/config.cpp:68
 msgid "list"
-msgstr ""
+msgstr "seznam"
 
 #. TRANSLATORS: "true" and "false" are literal
 #. * values and should not be translated.
-#: common/config.cpp:944
+#: common/config.cpp:966
 msgid "either \"true\" or \"false\""
-msgstr ""
+msgstr "buď \"true\" nebo \"false\""
 
-#: common/config.cpp:963
+#: common/config.cpp:985
 msgid "a positive integer"
-msgstr ""
+msgstr "kladné celé číslo"
 
-#: common/config.cpp:1089
+#: common/config.cpp:1111
 msgid "# default: "
-msgstr ""
+msgstr "# implicitní: "
 
-#: common/config.cpp:1149
+#: common/config.cpp:1174
 #, c-format
 msgid ""
 "\n"
@@ -67,271 +66,275 @@ msgid ""
 "# configured as follows:\n"
 "\n"
 msgstr ""
+"\n"
+"#######################################################################\n"
+"#\n"
+"# Filtr: %s\n"
+"#   %s\n"
+"#\n"
+"# nastaven následovně:\n"
+"\n"
 
-#: common/config.cpp:1167
-#, c-format
-msgid "# default: %s\n"
-msgstr ""
-
-#: common/config.cpp:1232
+#: common/config.cpp:1272
 msgid "ASPELL_CONF env var"
-msgstr ""
+msgstr "proměnná prostředí ASPELL_CONF"
 
 #. TRANSLATORS: The remaing strings in config.cpp should be kept
 #. under 50 characters, begin with a lower case character and not
 #. include any trailing punctuation marks.
-#: common/config.cpp:1308
+#: common/config.cpp:1346
 msgid "main configuration file"
 msgstr "hlavní soubor nastavení"
 
-#: common/config.cpp:1310
+#: common/config.cpp:1348
 msgid "location of main configuration file"
 msgstr "umístění hlavního souboru nastavení"
 
-#: common/config.cpp:1313
+#: common/config.cpp:1351
 msgid "location of language data files"
 msgstr "umístění souboru dat o jazycích"
 
-#: common/config.cpp:1315
+#: common/config.cpp:1353
 msgid "location of the main word list"
 msgstr "umístění hlavního seznamu slov"
 
-#: common/config.cpp:1317
+#: common/config.cpp:1355
 msgid "encoding to expect data to be in"
 msgstr "kódování, ve kterém očekávat data"
 
-#: common/config.cpp:1319
+#: common/config.cpp:1357
 msgid "add or removes a filter"
 msgstr "přidat nebo odstranit filtr"
 
 # FIXME: path(s), not pathes
-#: common/config.cpp:1321
-msgid "path(es) aspell looks for filters"
+#: common/config.cpp:1359
+#, fuzzy
+msgid "path(s) aspell looks for filters"
 msgstr "cesty, kde aspell hledá filtry"
 
-#: common/config.cpp:1325
-#, fuzzy
+#: common/config.cpp:1363
 msgid "filter mode"
-msgstr "přejít do režimu TeX."
+msgstr "režim filtru"
 
-#: common/config.cpp:1327
+#: common/config.cpp:1365
 msgid "extra dictionaries to use"
 msgstr "další slovníky, které používat"
 
-#: common/config.cpp:1329
+#: common/config.cpp:1367
 msgid "location for personal files"
 msgstr "umístění osobních souborů"
 
-#: common/config.cpp:1331
+#: common/config.cpp:1369
 msgid "ignore words <= n chars"
 msgstr "ignorovat slova s <= n znaky"
 
-#: common/config.cpp:1333
+#: common/config.cpp:1371
 msgid "ignore accents when checking words"
 msgstr "při kontrole slov ignorovat diakritiku"
 
-#: common/config.cpp:1335
+#: common/config.cpp:1373
 msgid "ignore case when checking words"
 msgstr "při kontrole slov nerozlišovat velikost písmen"
 
-#: common/config.cpp:1337
+#: common/config.cpp:1375
 msgid "ignore commands to store replacement pairs"
 msgstr "ignorovat příkazy pro uložení dvojic nahrazení"
 
-#: common/config.cpp:1339 common/config.cpp:1341
+#: common/config.cpp:1377 common/config.cpp:1379
 msgid "extra information for the word list"
 msgstr "informace navíc pro seznam slov"
 
-#: common/config.cpp:1343
+#: common/config.cpp:1381
 msgid "keyboard definition to use for typo analysis"
 msgstr "definice klávesnice pro analýzu překlepů"
 
-#: common/config.cpp:1345
+#: common/config.cpp:1383
 msgid "language code"
 msgstr "kód jazyka"
 
-#: common/config.cpp:1347
+#: common/config.cpp:1385
 msgid "deprecated, use lang instead"
 msgstr "zastaralé, použijte místo toho lang"
 
-#: common/config.cpp:1349
+#: common/config.cpp:1387
 msgid "location of local language data files"
 msgstr "umístění místních souborů dat o jazycích"
 
-#: common/config.cpp:1351
+#: common/config.cpp:1389
 msgid "base name of the main dictionary to use"
 msgstr "základní jméno hlavního slovníku, který používat"
 
-#: common/config.cpp:1355
+#: common/config.cpp:1393
 msgid "set module name"
 msgstr "nastavit název modulu"
 
-#: common/config.cpp:1357
+#: common/config.cpp:1395
 msgid "search order for modules"
 msgstr "pořadí hledání modulů"
 
-#: common/config.cpp:1359
+#: common/config.cpp:1397
 msgid "personal configuration file"
 msgstr "soubor s osobním nastavením"
 
-#: common/config.cpp:1362
+#: common/config.cpp:1400
 msgid "personal dictionary file name"
 msgstr "název souboru s osobním slovníkem"
 
-#: common/config.cpp:1365
+#: common/config.cpp:1403
 msgid "prefix directory"
 msgstr "adresář prefixu"
 
-#: common/config.cpp:1367
+#: common/config.cpp:1405
 msgid "replacements list file name"
 msgstr "název souboru se seznamem náhrad"
 
-#: common/config.cpp:1370
+#: common/config.cpp:1408
 msgid "consider run-together words legal"
 msgstr "považovat slova spojená dohromady za platná"
 
-#: common/config.cpp:1372
+#: common/config.cpp:1410
 msgid "maximum number that can be strung together"
 msgstr "maximální počet, který může být spojen dohromady"
 
-#: common/config.cpp:1374
+#: common/config.cpp:1412
 msgid "minimal length of interior words"
 msgstr "minimální délka vnitřních slov"
 
-#: common/config.cpp:1376
+#: common/config.cpp:1414
 msgid "save replacement pairs on save all"
 msgstr "uložit dvojice nahrazení při uložení všeho"
 
-#: common/config.cpp:1378
+#: common/config.cpp:1416
 msgid "set the prefix based on executable location"
 msgstr "nastavit prefix podle umístění programu"
 
-#: common/config.cpp:1380
+#: common/config.cpp:1418
 msgid "size of the word list"
 msgstr "velikost seznamu slov"
 
-#: common/config.cpp:1382
+#: common/config.cpp:1420
 msgid "no longer used"
 msgstr "už se nepoužívá"
 
-#: common/config.cpp:1384
+#: common/config.cpp:1422
 msgid "suggestion mode"
 msgstr "režim navrhování"
 
 #. TRANSLATORS: "sug-mode" is a literal value and should not be
 #. translated.
-#: common/config.cpp:1388
+#: common/config.cpp:1426
 msgid "edit distance to use, override sug-mode default"
 msgstr "nahradit vzdálenost implicitní ze sug-mode"
 
-#: common/config.cpp:1390
+#: common/config.cpp:1428
 msgid "use typo analysis, override sug-mode default"
 msgstr "používat analýzu překlepů bez ohledu na sug-mode"
 
-#: common/config.cpp:1392
+#: common/config.cpp:1430
 msgid "use replacement tables, override sug-mode default"
 msgstr "používat tabulky nahrazení bez ohledu na sug-mode"
 
-#: common/config.cpp:1394
+#: common/config.cpp:1432
 msgid "characters to insert when a word is split"
 msgstr "znaky, které vložit při rozdělení slova"
 
-#: common/config.cpp:1396
+#: common/config.cpp:1434
 msgid "search path for word list information files"
 msgstr "cesta pro soubory s informacemi o seznamech slov"
 
-#: common/config.cpp:1398
+#: common/config.cpp:1436
 msgid "indicator for affix flags in word lists"
 msgstr "indikátor příznaků přípon v seznamech slov"
 
-#: common/config.cpp:1400
+#: common/config.cpp:1438
 msgid "use personal, replacement & session dictionaries"
 msgstr "používat osobní slovník, slovník náhrad a sezení"
 
-#: common/config.cpp:1402
+#: common/config.cpp:1440
 msgid "enable warnings"
 msgstr "povolit varování"
 
-#: common/config.cpp:1404
+#: common/config.cpp:1442
 msgid "enable Unicode normalization"
 msgstr "povolit normalizaci Unicode"
 
-#: common/config.cpp:1406
-msgid "Unicode normalization required for the current lang"
+#: common/config.cpp:1444
+#, fuzzy
+msgid "Unicode normalization required for current lang"
 msgstr "Normalizace Unicode vyžadovaná pro aktuální jazyk"
 
 #. TRANSLATORS: the values after the ':' are literal
 #. values and should not be translated.
-#: common/config.cpp:1410
+#: common/config.cpp:1448
 msgid "Unicode normalization form: none, nfd, nfc, comp"
 msgstr "forma normalizace Unicode: none, nfd, nfc, comp"
 
-#: common/config.cpp:1412
+#: common/config.cpp:1450
 msgid "avoid lossy conversions when normalization"
 msgstr "nepoužívat při normalizaci ztrátové konverze"
 
-#: common/config.cpp:1414
+#: common/config.cpp:1452
 msgid "create dictionary aliases"
 msgstr "vytvořit aliasy slovníků"
 
-#: common/config.cpp:1422
-msgid "compute the soundslike on demand rather than storing"
+#: common/config.cpp:1460
+#, fuzzy
+msgid "compute soundslike on demand rather than storing"
 msgstr "počítat podobnost zvuku na požádání místo ukládání"
 
-#: common/config.cpp:1424
+#: common/config.cpp:1462
 msgid "use affix compression when creating dictionaries"
 msgstr "při tvorbě slovníků používat kompresi přípon"
 
-#: common/config.cpp:1426
+#: common/config.cpp:1464
 msgid "partially expand affixes for better suggestions"
 msgstr "částečně rozbalovat přípony pro lepší návrhy"
 
-#: common/config.cpp:1434
+#: common/config.cpp:1472
 msgid "check if words are valid"
 msgstr "kontrolovat, jestli jsou slova platná"
 
-#: common/config.cpp:1436
+#: common/config.cpp:1474
 msgid "check if affix flags are valid"
 msgstr "kontrolovat, jestli jsou příznaky přípon platné"
 
-#: common/config.cpp:1438
+#: common/config.cpp:1476
 msgid "attempts to clean words so that they are valid"
 msgstr "pokusí se vyčistit slova, aby byla platná"
 
-#: common/config.cpp:1440
+#: common/config.cpp:1478
 msgid "skip invalid words"
 msgstr "přeskakovat neplatná slova"
 
-#: common/config.cpp:1442
+#: common/config.cpp:1480
 msgid "remove invalid affix flags"
 msgstr "odstraňovat neplatné příznaky přípon"
 
-#: common/config.cpp:1449
+#: common/config.cpp:1487
 msgid "create a backup file by appending \".bak\""
 msgstr "vytvořit záložní soubor připojením \".bak\""
 
-#: common/config.cpp:1451
+#: common/config.cpp:1489
 msgid "create missing root/affix combinations"
 msgstr "vytvořit chybějící kombinace kořen/přípona"
 
-#: common/config.cpp:1453
-#, fuzzy
+#: common/config.cpp:1491
 msgid "keymapping for check mode: \"aspell\" or \"ispell\""
-msgstr "mapování kláves při kontrole, aspell nebo ispell"
+msgstr "mapování kláves pro režim kontroly: \"aspell\" nebo \"ispell\""
 
-#: common/config.cpp:1455
+#: common/config.cpp:1493
 msgid "reverse the order of the suggest list"
 msgstr "obrátit pořadí seznamu návrhů"
 
-#: common/config.cpp:1457
+#: common/config.cpp:1495
 msgid "suggest possible replacements"
 msgstr "navrhovat možné náhrady"
 
-#: common/config.cpp:1459
+#: common/config.cpp:1497
 msgid "time load time and suggest time in pipe mode"
 msgstr "měřit čas načítání a návrhů v režimu pipe"
 
-#: common/config.cpp:1461
+#: common/config.cpp:1499
 msgid "use byte offsets instead of character offsets"
 msgstr "používat posuny v bajtech místo ve znacích"
 
@@ -417,48 +420,44 @@ msgstr ""
 "Hodnota \"%value:2\" není %accepted:3 a je tedy neplatná pro klíč \"%key:1\"."
 
 #: common/errors.cpp:162
-#, fuzzy
 msgid "The key \"%key:1\" is not a string."
-msgstr "Klíč \"%key:1\" není znám."
+msgstr "Klíč \"%key:1\" není řetězec."
 
 #: common/errors.cpp:170
-#, fuzzy
 msgid "The key \"%key:1\" is not an integer."
-msgstr "Klíč \"%key:1\" není znám."
+msgstr "Klíč \"%key:1\" není celé číslo."
 
 #: common/errors.cpp:178
-#, fuzzy
 msgid "The key \"%key:1\" is not a boolean."
-msgstr "Klíč \"%key:1\" není znám."
+msgstr "Klíč \"%key:1\" není booleovská hodnota."
 
 #: common/errors.cpp:186
-#, fuzzy
 msgid "The key \"%key:1\" is not a list."
-msgstr "Klíč \"%key:1\" není znám."
+msgstr "Klíč \"%key:1\" není seznam."
 
 #: common/errors.cpp:194
 msgid ""
 "The key \"%key:1\" does not take any parameters when prefixed by a \"reset-"
 "\"."
-msgstr ""
+msgstr "Klíč \"%key:1\" nemá žádné parametry, když má předponu \"reset-\"."
 
 #: common/errors.cpp:202
 msgid ""
 "The key \"%key:1\" does not take any parameters when prefixed by a \"enable-"
 "\"."
-msgstr ""
+msgstr "Klíč \"%key:1\" nemá žádné parametry, když má předponu \"enable-\"."
 
 #: common/errors.cpp:210
 msgid ""
 "The key \"%key:1\" does not take any parameters when prefixed by a \"dont-\" "
 "or \"disable-\"."
-msgstr ""
+msgstr "Klíč \"%key:1\" nemá žádné parametry, když má předponu \"dont-\"."
 
 #: common/errors.cpp:218
 msgid ""
 "The key \"%key:1\" does not take any parameters when prefixed by a \"clear-"
 "\"."
-msgstr ""
+msgstr "Klíč \"%key:1\" nemá žádné parametry, když má předponu \"clear-\"."
 
 #: common/errors.cpp:234
 #, c-format
@@ -548,21 +547,20 @@ msgid "not a version number"
 msgstr "není číslo verze"
 
 #: common/errors.cpp:466
-#, fuzzy
 msgid "dlopen returned \"%return:1\"."
-msgstr "dlopen vrátilo \"%return:2\"."
+msgstr "dlopen vrátilo \"%return:1\"."
 
 #: common/errors.cpp:474
-#, fuzzy, c-format
+#, c-format
 msgid "The file \"%filter:1\" does not contain any filters."
-msgstr "Soubor \"%filter:1\" neobsahuje žádný filtr."
+msgstr "Soubor \"%filter:1\" neobsahuje žádné filtry."
 
 #: common/errors.cpp:482
-#, fuzzy, c-format
+#, c-format
 msgid "The filter \"%filter:1\" does not exist."
-msgstr "Soubor \"%filter:1\" neobsahuje žádný filtr."
+msgstr "Filtr \"%filter:1\" neexistuje."
 
-#: common/errors.cpp:490 common/errors.cpp:594
+#: common/errors.cpp:490 common/errors.cpp:586
 msgid "Confused by version control."
 msgstr "Zmaten správou verzí."
 
@@ -591,72 +589,67 @@ msgid "Empty option specifier."
 msgstr "Prázdný specifikátor přepínače."
 
 #: common/errors.cpp:554
-msgid "Empty value; only bool type option and \"rem-all\" list prefix."
-msgstr ""
-"Prázdná hodnota; jen přepínač typu bool a předpona seznamu \"rem-all\"."
-
-#: common/errors.cpp:562
 #, c-format
 msgid "Option \"%option:1\" possibly specified prior to filter."
 msgstr "Přepínač \"%option:1\" bylo možná zadán před filtrem."
 
-#: common/errors.cpp:570
+#: common/errors.cpp:562
 msgid "Unknown mode description key \"%key:1\"."
 msgstr "Neznámý klíč popisu režimu \"%key:1\"."
 
-#: common/errors.cpp:578
+#: common/errors.cpp:570
 #, c-format
 msgid "Expecting \"%modekey:1\" key."
 msgstr "Očekávám klíč \"%modekey:1\"."
 
-#: common/errors.cpp:586
+#: common/errors.cpp:578
 msgid "Version specifier missing key: \"aspell\"."
 msgstr "Ve specifikátoru verze chybí klíč: \"aspell\"."
 
-#: common/errors.cpp:602
+#: common/errors.cpp:594
 msgid "Aspell version does not match mode's requirement."
 msgstr "Verze Aspellu neodpovídá požadavku filtru."
 
-#: common/errors.cpp:610
+#: common/errors.cpp:602
 msgid "Missing magic mode expression."
 msgstr "Chybí výraz režimu magic."
 
-#: common/errors.cpp:618
+#: common/errors.cpp:610
 #, c-format
 msgid "Empty extension at char %char:1."
 msgstr "Prázdná přípona u znaku %char:1."
 
-#: common/errors.cpp:626
+#: common/errors.cpp:618
 #, c-format
 msgid "\"%mode:1\" error"
 msgstr "chyba \"%mode:1\""
 
-#: common/errors.cpp:634
-#, fuzzy, c-format
+#: common/errors.cpp:626
+#, c-format
 msgid "Unknown mode: \"%mode:1\"."
-msgstr "ignoruiji neznámý mód: \"%mode:1\"."
+msgstr "Neznámý mód: \"%mode:1\"."
 
-#: common/errors.cpp:642
+#: common/errors.cpp:634
 #, c-format
 msgid "\"%mode:1\" error while extend Aspell modes. (out of memory?)"
 msgstr "Chyba \"%mode:1\" při rozšiřování režimů Aspellu. (nedostatek paměti?)"
 
-#: common/errors.cpp:658
+#: common/errors.cpp:650
 #, c-format
 msgid "\"%mode:1\": no start for magic search given for magic \"%magic:2\"."
 msgstr "\"%mode:1\": pro magic \"%magic:2\" nebyl zadán začátek hledání."
 
-#: common/errors.cpp:666
+#: common/errors.cpp:658
 #, c-format
 msgid "\"%mode:1\": no range for magic search given for magic \"%magic:2\"."
 msgstr "\"%mode:1\": pro magic \"%magic:2\" nebyl zadán rozsah hledání."
 
-#: common/errors.cpp:674
+#: common/errors.cpp:666
 #, c-format
 msgid "\"%mode:1\": no magic expression available for magic \"%magic:2\"."
 msgstr "\"%mode:1\": pro magic \"%magic:2\" není k dispozici výraz magic."
 
-#: common/errors.cpp:682
+#: common/errors.cpp:674
 msgid ""
 "\"%mode:1\": Magic \"%magic:2\": bad regular expression after location "
 "specifier; regexp reports: \"%regerr:3\"."
@@ -664,21 +657,21 @@ msgstr ""
 "\"%mode:1\": Magic \"%magic:2\": špatný regulární výraz po určení umístění; "
 "regexp hlásí: \"%regerr:3\"."
 
-#: common/errors.cpp:698
-#, fuzzy, c-format
+#: common/errors.cpp:690
+#, c-format
 msgid "\"%expression:1\" is not a valid regular expression."
-msgstr "\"%action:1\": `%expression:2' není platný regulární výraz."
+msgstr "\"%expression:1\" není platný regulární výraz."
 
 #: common/posib_err.cpp:98
 msgid "Unhandled Error: "
 msgstr "Neobsloužená chyba: "
 
-#: prog/aspell.cpp:90
+#: prog/aspell.cpp:88
 #, c-format
 msgid "Error: %s\n"
 msgstr "Chyba: %s\n"
 
-#: prog/aspell.cpp:95
+#: prog/aspell.cpp:93
 msgid "Error: "
 msgstr "Chyba: "
 
@@ -687,8 +680,9 @@ msgid "enter Email mode."
 msgstr "přejít do režimu E-mail."
 
 #: prog/aspell.cpp:194
-msgid "enter Html/Sgml mode."
-msgstr "přejít do režimu Html/Sgml."
+#, fuzzy
+msgid "enter HTML mode."
+msgstr "přejít do režimu TeX."
 
 #: prog/aspell.cpp:195
 msgid "enter TeX mode."
@@ -712,234 +706,233 @@ msgstr "Musíte zadat parametr pro %s"
 msgid "You must specify an action"
 msgstr "Musíte určit akci"
 
-#: prog/aspell.cpp:407 prog/aspell.cpp:413 prog/aspell.cpp:431
+#: prog/aspell.cpp:407 prog/aspell.cpp:413 prog/aspell.cpp:435
 #, c-format
 msgid "Unknown Action: %s"
 msgstr "Neznámá akce: %s"
 
-#: prog/aspell.cpp:550
+#: prog/aspell.cpp:545
 msgid "Invalid Input"
 msgstr "Neplatný vstup"
 
-#: prog/aspell.cpp:638
+#: prog/aspell.cpp:633
 msgid "Time to load word list: "
 msgstr "Čas načítání seznamu slov: "
 
-#: prog/aspell.cpp:835
+#: prog/aspell.cpp:830
 #, c-format
 msgid "Suggestion Time: %f\n"
 msgstr "Čas návrhu: %f\n"
 
-#: prog/aspell.cpp:876
+#: prog/aspell.cpp:871
 msgid "You must specify a file name."
 msgstr "Musíte určit název souboru."
 
-#: prog/aspell.cpp:886
+#: prog/aspell.cpp:881
 #, c-format
 msgid "Could not open the file \"%s\" for reading"
 msgstr "Nemohu otevřít soubor \"%s\" pro čtení"
 
-#: prog/aspell.cpp:901
+#: prog/aspell.cpp:896
 #, c-format
 msgid "Could not open the file \"%s\"  for writing. File not saved."
 msgstr "Nemohu otevřít soubor \"%s\" pro zápis. Soubor nebyl uložen."
 
-#: prog/aspell.cpp:914
+#: prog/aspell.cpp:909
 #, c-format
 msgid "Invalid keymapping: %s"
 msgstr "Neplatné mapování kláves: %s"
 
-#: prog/aspell.cpp:931
+#: prog/aspell.cpp:926
 msgid "Ignore"
 msgstr "Ignorovat"
 
-#: prog/aspell.cpp:932
+#: prog/aspell.cpp:927
 msgid "Ignore all"
 msgstr "Ignorovat vše"
 
-#: prog/aspell.cpp:933
+#: prog/aspell.cpp:928
 msgid "Replace"
 msgstr "Nahradit"
 
-#: prog/aspell.cpp:934
+#: prog/aspell.cpp:929
 msgid "Replace all"
 msgstr "Nahradit vše"
 
-#: prog/aspell.cpp:935
+#: prog/aspell.cpp:930
 msgid "Add"
 msgstr "Přidat"
 
-#: prog/aspell.cpp:936
+#: prog/aspell.cpp:931
 msgid "Add Lower"
 msgstr "Přidat malá"
 
-#: prog/aspell.cpp:937
+#: prog/aspell.cpp:932
 msgid "Abort"
 msgstr "Přerušit"
 
-#: prog/aspell.cpp:938
+#: prog/aspell.cpp:933
 msgid "Exit"
 msgstr "Ukončit"
 
 # FIXME: "to abort"
-#: prog/aspell.cpp:1014
+#: prog/aspell.cpp:1009
 msgid "Are you sure you want to abort? "
 msgstr "Jste si jisti, že chcete přerušit? "
 
-#: prog/aspell.cpp:1034
+#: prog/aspell.cpp:1029
 msgid "With: "
 msgstr "S: "
 
-#: prog/aspell.cpp:1050
+#: prog/aspell.cpp:1045
 msgid "Sorry that is an invalid choice!"
 msgstr "Lituji, to je neplatná volba!"
 
-#: prog/aspell.cpp:1271
+#: prog/aspell.cpp:1266
 msgid "Sorry \"filter\" is currently unimplemented.\n"
 msgstr "Lituji, \"filter\" momentálně není implementováno.\n"
 
-#: prog/aspell.cpp:1405
+#: prog/aspell.cpp:1400
 msgid "Can't merge a master word list yet. Sorry."
 msgstr "Zatím neumím sloučit hlavní seznam slov. Lituji."
 
-#: prog/aspell.cpp:1429
+#: prog/aspell.cpp:1424
 msgid "Sorry \"create/merge personal\" is currently unimplemented.\n"
 msgstr "Lituji, \"vytvořit/sloučit osobní\" momentálně není implementováno.\n"
 
-#: prog/aspell.cpp:1438 prog/aspell.cpp:1494
+#: prog/aspell.cpp:1433 prog/aspell.cpp:1489
 #, c-format
 msgid "Sorry I won't overwrite \"%s\""
 msgstr "Lituji, nepřepíšu \"%s\""
 
-#: prog/aspell.cpp:1485
+#: prog/aspell.cpp:1480
 msgid "Sorry \"create/merge repl\" is currently unimplemented.\n"
 msgstr "Lituji, \"vytvořit/sloučit náhr\" momentálně není implementováno.\n"
 
 #. TRANSLATORS: This should be formated to fit on an 80 column
 #. terminal.
-#: prog/aspell.cpp:1826
+#: prog/aspell.cpp:1786
 msgid "<command> is one of:"
-msgstr ""
+msgstr "<příkaz> je jedno z:"
 
-#: prog/aspell.cpp:1827
-msgid "  -?|help [<expr>] display this help message"
-msgstr ""
+#: prog/aspell.cpp:1787
+#, fuzzy
+msgid "  -?|help          display this help message"
+msgstr "  -?|help [<výraz>] zobrazit tuto zprávu nápovědy"
 
-#: prog/aspell.cpp:1828
-msgid "                    and help for filters matching <expr> if installed"
-msgstr ""
-
-#: prog/aspell.cpp:1829
+#: prog/aspell.cpp:1788
 msgid "  -c|check <file>  to check a file"
-msgstr ""
+msgstr "  -c|check <soubor> zkontrolovat soubor"
 
-#: prog/aspell.cpp:1830
+#: prog/aspell.cpp:1789
 msgid "  -a|pipe          \"ispell -a\" compatibility mode"
-msgstr ""
+msgstr "  -a|pipe          režim pro kompatibilitu s \"ispell -a\""
 
-#: prog/aspell.cpp:1831
+#: prog/aspell.cpp:1790
 msgid ""
 "  list             produce a list of misspelled words from standard input"
 msgstr ""
+"  list             vypsat seznam slov s překlepy ze standardního vstupu"
 
-#: prog/aspell.cpp:1832
-msgid "  [dump] config [+e <expr>]  dumps the current configuration to stdout"
-msgstr ""
+#: prog/aspell.cpp:1791
+#, fuzzy
+msgid "  [dump] config    dumps the current configuration to stdout"
+msgstr "  [dump] config [+e <výraz>] vypíše aktuální nastavení na stdout"
 
-#: prog/aspell.cpp:1833
-msgid "  config [+e <expr>] <key>   prints the current value of an option"
-msgstr ""
+#: prog/aspell.cpp:1792
+#, fuzzy
+msgid "  config <key>     prints the current value of an option"
+msgstr "  config [+e <výraz>] <klíč>  vypíše aktuální hodnotu přepínače"
 
-#: prog/aspell.cpp:1834
-msgid "  [dump] dicts     lists available dictionaries"
-msgstr ""
-
-#: prog/aspell.cpp:1835
+#: prog/aspell.cpp:1793
 msgid ""
 "  soundslike       returns the sounds like equivalent for each word entered"
 msgstr ""
+"  soundslike       vrátí ekvivalent pro podobnost zvuku každého zadaného "
+"slova"
 
-#: prog/aspell.cpp:1836
+#: prog/aspell.cpp:1794
 msgid "  munch            generate possible root words and affixes"
-msgstr ""
+msgstr "  munch            vygenerovat možné kořeny slov a přípony"
 
-#: prog/aspell.cpp:1837
+#: prog/aspell.cpp:1795
 msgid "  expand [1-4]     expands affix flags"
-msgstr ""
+msgstr "  expand [1-4]     rozbaluje příznaky přípon"
 
-#: prog/aspell.cpp:1838
+#: prog/aspell.cpp:1796
 msgid ""
 "  clean [strict]   cleans a word list so that every line is a valid word"
 msgstr ""
+"  clean [strict]   vyčistí seznam slov, aby každý řádek bylo platné slovo"
 
-#: prog/aspell.cpp:1839
-msgid "  filter           passes standard input through filters"
-msgstr ""
-
-#: prog/aspell.cpp:1840
+#: prog/aspell.cpp:1798
 msgid "  -v|version       prints a version line"
-msgstr ""
+msgstr "  -v|version       vypíše řádek o verzi"
 
-#: prog/aspell.cpp:1841
+#: prog/aspell.cpp:1799
 msgid "  conv <from> <to> [<norm-form>]"
-msgstr ""
+msgstr "  conv <z> <do> [<norm-forma>]"
 
-#: prog/aspell.cpp:1842
+#: prog/aspell.cpp:1800
 msgid "    converts from one encoding to another"
-msgstr ""
+msgstr "    převede z jednoho kódování do jiného"
 
-#: prog/aspell.cpp:1843
+#: prog/aspell.cpp:1801
 msgid "  norm (<norm-map> | <from> <norm-map> <to>) [<norm-form>]"
-msgstr ""
+msgstr "  norm (<norm-map> | <z> <norm-map> <do>) [<norm-forma>]"
 
-#: prog/aspell.cpp:1844
-#, fuzzy
+#: prog/aspell.cpp:1802
 msgid "    perform unicode normlization"
-msgstr "povolit normalizaci Unicode"
+msgstr "   provést normalizaci unicode"
 
-#: prog/aspell.cpp:1845
+#: prog/aspell.cpp:1803
+#, fuzzy
+msgid "  [dump] dicts | filters | modes"
+msgstr "  [dump] dicts     vypíše dostupné slovníky"
+
+#: prog/aspell.cpp:1804
+#, fuzzy
+msgid "    lists available dictionaries / filters / filter modes"
+msgstr "  [dump] dicts     vypíše dostupné slovníky"
+
+#: prog/aspell.cpp:1805
 msgid "  dump|create|merge master|personal|repl [word list]"
-msgstr ""
+msgstr "  dump|create|merge master|personal|repl [seznam slov]"
 
-#: prog/aspell.cpp:1846
+#: prog/aspell.cpp:1806
 msgid ""
 "    dumps, creates or merges a master, personal, or replacement word list."
 msgstr ""
+"    vypíše, vytvoří nebo sloučí hlavní, osobní seznam slov nebo seznam "
+"náhrad."
 
-#: prog/aspell.cpp:1848
-msgid "  <expr>           regular expression matching filtername(s) or \"all\""
-msgstr ""
-
-#: prog/aspell.cpp:1849
+#: prog/aspell.cpp:1808
 msgid ""
 "  <norm-form>      normalization form to use, either none, internal, or "
 "strict"
-msgstr ""
+msgstr "  <norm-forma>     normalizační forma, buď none, internal nebo strict"
 
-#: prog/aspell.cpp:1851
+#: prog/aspell.cpp:1810
 msgid "[options] is any of the following:"
-msgstr ""
+msgstr "[přepínač] je libovolný z následujících:"
 
-#: prog/aspell.cpp:1859
+#: prog/aspell.cpp:1818
 #, c-format
 msgid ""
 "\n"
 "Aspell %s alpha.  Copyright 2000-2004 by Kevin Atkinson.\n"
 "\n"
 msgstr ""
+"\n"
+"Aspell %s alpha.  Copyright 2000-2004 Kevin Atkinson.\n"
+"\n"
 
-#: prog/aspell.cpp:1872
+#: prog/aspell.cpp:1832
 #, c-format
 msgid ""
 "\n"
 "  %s filter: %s\n"
-"    NOTE: in ambiguous case prefix following options by \"filter-\"\n"
 msgstr ""
-"\n"
-"  %s filtr: %s\n"
-"    UPOZORNĚNÍ: v nejednoznačném případě před následující přepínače "
-"přidejte\n"
-"\t\t\"filter-\"\n"
 
 #: modules/speller/default/language.cpp:101
 msgid "This is probably because: "
@@ -975,13 +968,12 @@ msgid "The character '%s' (U+%02X) may not appear in the middle of a word."
 msgstr "Znak '%s' (U+%02X) nesmí být uprostřed slova."
 
 #: modules/speller/default/language.cpp:456
-#, fuzzy
 msgid ""
 "The character '\\r' (U+0D) may not appear at the end of a word. This "
 "probably means means that the file is using MS-DOS EOL instead of Unix EOL."
 msgstr ""
 "Znak '\\r' (U+0D) nesmí být na konci slova. Toto pravděpodobně znamená, že "
-"soubor používá konce řádká MS-DOS místo unixových. "
+"soubor používá konce řádků MS-DOS místo unixových."
 
 #: modules/speller/default/language.cpp:459
 #, c-format
@@ -1039,94 +1031,160 @@ msgstr "Celková délka slova s daty o podobnosti zvuku je větší než 240 zna
 
 #: modules/filter/tex.cpp:250 modules/filter/tex.cpp:257
 msgid "a string of 'o','O','p',or 'P'"
+msgstr "řetězec 'o','O','p' nebo 'P'"
+
+#. TRANSLATORS: Like the strings in config.cpp, all strings in *-filter.opt
+#. should be under 50 characters, begin with a lower case character and 
+#. not include any trailing punctuation marks.
+#: modules/filter/context-filter.info:7
+#, fuzzy
+msgid "experimental filter for hiding delimited contexts"
+msgstr "Filtr pro skrývání daných kontextů před Aspellem"
+
+#: modules/filter/context-filter.info:13
+#, fuzzy
+msgid "context delimiters (separated by spaces)"
+msgstr "oddělovače přidání/odebrání oddělené mezerami"
+
+#: modules/filter/context-filter.info:21
+msgid "swaps visible and invisible text"
+msgstr "prohazuje viditelný a neviditelný text"
+
+#: modules/filter/email-filter.info:7
+msgid "filter for skipping quoted text in email messages"
 msgstr ""
 
+#: modules/filter/email-filter.info:13
+msgid "email quote characters"
+msgstr "znaky citací z e-mailu"
+
+#: modules/filter/email-filter.info:21
+msgid "num chars that can appear before the quote char"
+msgstr "počet znaků, které mohou být před znakem citace"
+
+#: modules/filter/html-filter.info:9
+msgid "filter for dealing with HTML documents"
+msgstr ""
+
+#: modules/filter/html-filter.info:15
 #, fuzzy
+msgid "HTML attributes to always check"
+msgstr "atributy sgml, které vždy kontrolovat"
+
+#: modules/filter/html-filter.info:21
+#, fuzzy
+msgid "HTML tags to always skip the contents of"
+msgstr "tagy sgml, jejichž obsah vždy přeskakovat"
+
+#: modules/filter/sgml-filter.info:9
+msgid "filter for dealing with generic SGML/XML documents"
+msgstr ""
+
+#: modules/filter/sgml-filter.info:15
+#, fuzzy
+msgid "SGML attributes to always check"
+msgstr "atributy sgml, které vždy kontrolovat"
+
+#: modules/filter/sgml-filter.info:20
+#, fuzzy
+msgid "SGML tags to always skip the contents of"
+msgstr "tagy sgml, jejichž obsah vždy přeskakovat"
+
+#: modules/filter/tex-filter.info:7
+#, fuzzy
+msgid "filter for dealing with TeX/LaTeX documents"
+msgstr "Filtr pro rozpoznávání příkazů TeXu/LaTeXu"
+
+#: modules/filter/tex-filter.info:15
+msgid "check TeX comments"
+msgstr "kontrolovat poznámky v TeXu"
+
+#: modules/filter/tex-filter.info:21
+msgid "TeX commands"
+msgstr "příkazy TeXu"
+
+#: modules/filter/url-filter.info:7
+msgid "filter to skip URL like constructs"
+msgstr ""
+
+#: modules/filter/modes/ccpp.amf:60
+msgid "mode for checking C++ comments and string literals"
+msgstr ""
+
+#: modules/filter/modes/comment.amf:61
+msgid "mode to check any lines starting with a #"
+msgstr ""
+
+#: modules/filter/modes/email.amf:61
+msgid "mode for skipping quoted text in email messages"
+msgstr ""
+
+#: modules/filter/modes/html.amf:60
+#, fuzzy
+msgid "mode for checking HTML documents"
+msgstr "Filtr pro rozpoznávání příkazů TeXu/LaTeXu"
+
+#: modules/filter/modes/none.amf:61
+msgid "mode to disable all filters"
+msgstr ""
+
+#: modules/filter/modes/perl.amf:60
+msgid "mode for checking perl comments and string literals"
+msgstr ""
+
+#: modules/filter/modes/sgml.amf:60
+msgid "mode for checking generic SGML/XML documents"
+msgstr ""
+
+#: modules/filter/modes/tex.amf:61
+#, fuzzy
+msgid "mode for checking TeX/LaTeX documents"
+msgstr "Filtr pro rozpoznávání příkazů TeXu/LaTeXu"
+
+#: modules/filter/modes/url.amf:61
+msgid "mode to skip URL like constructs (default mode)"
+msgstr ""
+
+#~ msgid ""
+#~ "                    and help for filters matching <expr> if installed"
+#~ msgstr ""
+#~ "                    a nápovědu filtrů odpovídajících <výraz>, jsou-li "
+#~ "nějaké"
+
+#~ msgid "  filter           passes standard input through filters"
+#~ msgstr "  filter           použije na standardní vstup filtry"
+
 #~ msgid ""
 #~ "\n"
-#~ "Aspell %s alpha.  Copyright 2000-2004 by Kevin Atkinson.\n"
-#~ "\n"
-#~ "Usage: aspell [options] <command>\n"
-#~ "\n"
-#~ "<command> is one of:\n"
-#~ "  -?|help [<expr>] display this help message\n"
-#~ "                    and help for filters matching <expr> if installed\n"
-#~ "  -c|check <file>  to check a file\n"
-#~ "  -a|pipe          \"ispell -a\" compatibility mode\n"
-#~ "  list             produce a list of misspelled words from standard "
-#~ "input\n"
-#~ "  [dump] config [+e <expr>]  dumps the current configuration to stdout\n"
-#~ "  config [+e <expr>] <key>   prints the current value of an option\n"
-#~ "  soundslike       returns the sounds like equivalent for each word "
-#~ "entered\n"
-#~ "  munch            generate possible root words and affixes\n"
-#~ "  expand [1-4]     expands affix flags\n"
-#~ "  clean [strict]   cleans a word list so that every line is a valid word\n"
-#~ "  filter           passes standard input through filters\n"
-#~ "  -v|version       prints a version line\n"
-#~ "  conv <from> <to> [<norm-form>]\n"
-#~ "    converts from one encoding to another\n"
-#~ "  norm (<norm-map> | <from> <norm-map> <to>) [<norm-form>]\n"
-#~ "    perform unicode normlization\n"
-#~ "  dump|create|merge master|personal|repl [word list]\n"
-#~ "    dumps, creates or merges a master, personal, or replacement word "
-#~ "list.\n"
-#~ "\n"
-#~ "  <expr>           regular expression matching filtername(s) or \"all\"\n"
-#~ "  <norm-form>      normalization form to use, either none, internal, or "
-#~ "strict\n"
-#~ "\n"
-#~ "[options] is any of the following:\n"
-#~ "\n"
+#~ "  %s filter: %s\n"
+#~ "    NOTE: in ambiguous case prefix following options by \"filter-\"\n"
 #~ msgstr ""
 #~ "\n"
-#~ "Aspell %s alfa. Copyright 2000-2004 Kevin Atkinson.\n"
-#~ "\n"
-#~ "Použití: aspell [přepínače] <příkaz>\n"
-#~ "\n"
-#~ "<příkaz> je jedno z:\n"
-#~ "  -?|help [<výraz>] zobrazit tuto zprávu nápovědy\n"
-#~ "                    a nápovědu filtrů odpovídajícím <výraz>, jsou-li "
-#~ "nějaké\n"
-#~ "  -c|check <soubor> zkontrolovat soubor\n"
-#~ "  -a|pipe          režim pro kompatibilitu s \"ispell -a\"\n"
-#~ "  -l|list          vypsat seznam slov s překlepy ze standardního vstupu\n"
-#~ "  [dump] config [-e <výraz>]  vypíše aktuální nastavení na stdout\n"
-#~ "  config [+e <výraz>] <klíč>   vypíše aktuální hodnotu přepínače\n"
-#~ "  soundslike       vrátí ekvivalent pro podobnost zvuku každého zadaného "
-#~ "slova\n"
-#~ "  munch            vygenerovat možné kořeny slov a přípony\n"
-#~ "  expand [1-4]     rozbaluje příznaky přípon\n"
-#~ "  clean [strict]   vyčistí seznam slov, aby každý řádek bylo platné "
-#~ "slovo\n"
-#~ "  filter           použít na standardní vstup filtry\n"
-#~ "  -v|version       vypíše řádek o verzi\n"
-#~ "  conv <z> <do> [<norm-forma>]\n"
-#~ "    převede z jednoho kódování do jiného\n"
-#~ "  norm (<norm-map> | <z> <norm-map> <do>) [<norm-forma>]\n"
-#~ "    provést normalizaci unicode\n"
-#~ "  dump|create|merge master|personal|repl [seznam slov]\n"
-#~ "    vypíše, vytvoří nebo sloučí hlavní, osobní seznam slov nebo seznam "
-#~ "náhrad.\n"
-#~ "\n"
-#~ "  <výraz>          regulární výraz odpovídající názvům filtrů nebo \"all"
-#~ "\"\n"
-#~ "  <norm-forma>     normalizační forma, buď none, internal nebo strict\n"
-#~ "\n"
-#~ "[přepínač] je libovolný z následujících:\n"
-#~ "\n"
+#~ "  %s filtr: %s\n"
+#~ "    UPOZORNĚNÍ: v nejednoznačném případě před následující přepínače "
+#~ "přidejte\n"
+#~ "\t\t\"filter-\"\n"
 
-#~ msgid "configured as follows"
-#~ msgstr "nastaven následovně"
+#~ msgid "enter Html/Sgml mode."
+#~ msgstr "přejít do režimu Html/Sgml."
 
-#~ msgid "path(es) aspell looks for options descriptions"
-#~ msgstr "cesty, kde aspell hledá popisy přepínačů"
+#~ msgid ""
+#~ "  <expr>           regular expression matching filtername(s) or \"all\""
+#~ msgstr ""
+#~ "  <výraz>          regulární výraz odpovídající názvům fitrlů nebo \"all\""
 
-#~ msgid "lis key `\"%key:1\"' requires one of [add|rem|rem-all]-"
-#~ msgstr "Klíč lis `\"%key:1\"' vyžaduje jedno z [add|rem|rem-all]-"
+#~ msgid "# default: %s\n"
+#~ msgstr "# implicitní: %s\n"
 
-#~ msgid "\"%filter:1\":"
-#~ msgstr "\"%filter:1\":"
+#~ msgid "Empty value; only bool type option and \"rem-all\" list prefix."
+#~ msgstr ""
+#~ "Prázdná hodnota; jen přepínač typu bool a předpona seznamu \"rem-all\"."
+
+#~ msgid "Filters for encoding, filtering and decoding sgml characters"
+#~ msgstr "Filtry pro kódování, filtrování a dekódování znaků sgml"
+
+#~ msgid "Filter for hiding urls/paths and similar from Aspell"
+#~ msgstr "Filtr pro skrývání url/cest a podobně před Aspellem"
 
 #~ msgid "Filter \"%filter:1\" could not be found in filter paths."
 #~ msgstr "Filtr \"%filter:1\" nelze najít v cestě filtrů."
@@ -1134,53 +1192,14 @@ msgstr ""
 #~ msgid "Can't find the option file \"%option:2\"."
 #~ msgstr "Nemohu najít soubor přepínačů \"%option:2\"."
 
-#~ msgid "\"%action:1\": invalid regular expression."
-#~ msgstr "\"%action:1\": neplatný regulární výraz."
-
-#~ msgid "Filter for hiding delimited contexts from Aspell"
-#~ msgstr "Filtr pro skrývání daných kontextů před Aspellem"
-
-#~ msgid "add/rem delimiter(s) separated by spaces"
-#~ msgstr "oddělovače přidání/odebrání oddělené mezerami"
-
-#~ msgid "swaps visible and invisible text"
-#~ msgstr "prohazuje viditelný a neviditelný text"
-
 #~ msgid "Filter for eliminating email quote characters"
 #~ msgstr "Filtr pro eliminaci znaků citací z e-mailu"
-
-#~ msgid "email quote characters"
-#~ msgstr "znaky citací z e-mailu"
-
-#~ msgid "num chars that can appear before the quote char"
-#~ msgstr "počet znaků, které mohou být před znakem citace"
-
-#~ msgid "Filters for encoding, filtering and decoding sgml characters"
-#~ msgstr "Filtry pro kódování, filtrování a dekódování znaků sgml"
-
-#~ msgid "sgml attributes to always check"
-#~ msgstr "atributy sgml, které vždy kontrolovat"
-
-#~ msgid "sgml tags to always skip the contents of"
-#~ msgstr "tagy sgml, jejichž obsah vždy přeskakovat"
-
-#~ msgid "Filter for recognizing TeX/LaTeX commands"
-#~ msgstr "Filtr pro rozpoznávání příkazů TeXu/LaTeXu"
-
-#~ msgid "check TeX comments"
-#~ msgstr "kontrolovat poznámky v TeXu"
-
-#~ msgid "TeX commands"
-#~ msgstr "příkazy TeXu"
 
 #~ msgid "multi character coded letters (<char>:<rep>[:<rep>[...]])"
 #~ msgstr "písmena kódovaná více znaky (<znak>:<náhr>[:<náhr>[...]])"
 
 #~ msgid "characters used to encode hyphenation locations"
 #~ msgstr "znaky používané pro kódování umístění dělení slov"
-
-#~ msgid "Filter for hiding urls/paths and similar from Aspell"
-#~ msgstr "Filtr pro skrývání url/cest a podobně před Aspellem"
 
 #~ msgid "indicator for additional flags in word lists"
 #~ msgstr "indikátor dalších příznaků v seznamech slov"
