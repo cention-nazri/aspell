@@ -196,7 +196,7 @@ namespace {
     struct WordLookupParms {
       const char * block_begin;
       WordLookupParms() {}
-      typedef BlockVector<const u32int> Vector;
+      typedef BlockVector<const u32int> Vec;
       typedef u32int                    Value;
       typedef const char *              Key;
       static const bool is_multi = false;
@@ -694,7 +694,7 @@ namespace {
   struct WordLookupParms {
     const char * block_begin;
     WordLookupParms() {}
-    typedef Vector<u32int>      Vector;
+    typedef Vector<u32int>      Vec;
     typedef u32int              Value;
     typedef const char *        Key;
     static const bool is_multi = false;

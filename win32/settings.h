@@ -94,6 +94,14 @@
 
 #define C_EXPORT extern "C"
 
+#if defined(ASPELL_NO_EXPORTS)
+#  define ASPELL_API
+#elif defined(_WINDLL) || defined(_USRDLL) || defined(__DLL__)
+#  define ASPELL_API  __declspec(dllexport)
+#else
+#  define ASPELL_API  __declspec(dllimport)
+#endif /*_DLL */
+
 // Microsoft VC6.0 does not allow typename except when directly
 // declaring a template param.  The other supporte compilers (Borlands
 // BCB5.5 and GNU C++) require or allow it anywhere in the template

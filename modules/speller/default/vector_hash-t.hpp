@@ -21,27 +21,7 @@
 
 namespace aspeller {
 
-  template <class Parms>
-  VectorHashTable<Parms>::FindIterator
-  ::FindIterator(const HashTable * ht, const key_type & k)
-    : vector(&ht->vector())
-    , parms(&ht->parms())
-    , key(k)
-    , i(ht->hash1(k))
-    , hash2(ht->hash2(k))
-  {
-    if (!parms->is_nonexistent((*vector)[i])
-	&& !parms->equal(parms->key((*vector)[i]), key))
-      adv();
-  }
 
-  template <class Parms>
-  void VectorHashTable<Parms>::FindIterator::adv() {
-    do {
-      i = (i + hash2) % vector->size();
-    } while (!parms->is_nonexistent((*vector)[i])
-	     && !parms->equal(parms->key((*vector)[i]), key));
-  }
 
   template<class Parms>
   void VectorHashTable<Parms>::nonexistent_vector() {
@@ -76,26 +56,7 @@ namespace aspeller {
     return !ConstFindIterator(this,key).at_end();
   }
 
-  template<class Parms>
-  typename VectorHashTable<Parms>::iterator 
-  VectorHashTable<Parms>::find(const key_type & key) 
-  {
-    MutableFindIterator i(this, key);
-    if (!i.at_end()) 
-      return iterator(vector_.begin() + i.i, this);
-    else
-      return end();
-  }
 
-  template<class Parms>
-  typename VectorHashTable<Parms>::const_iterator 
-  VectorHashTable<Parms>::find(const key_type & key) const {
-    ConstFindIterator i(this, key);
-    if (!i.at_end()) 
-      return const_iterator(vector_.begin() + i.i, this);
-    else
-      return end();
-  }
 
 #if 0 // it currently doesn't work needs fixing
 

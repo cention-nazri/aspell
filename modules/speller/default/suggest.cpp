@@ -923,12 +923,12 @@ namespace {
     int min_score = 0;
     int count = 0;
 
-    for (NearMisses::iterator i = scored_near_misses.begin();
-         i != scored_near_misses.end(); ++i)
+    for (NearMisses::iterator mi = scored_near_misses.begin();
+         mi != scored_near_misses.end(); ++mi)
     {
-      if (!i->soundslike)
-        i->soundslike = to_soundslike(i->word, strlen(i->word));
-      already_have.insert(i->soundslike);
+      if (!mi->soundslike)
+        mi->soundslike = to_soundslike(mi->word, strlen(mi->word));
+      already_have.insert(mi->soundslike);
     }
 
     for (SpellerImpl::WS::const_iterator i = sp->suggest_ws.begin();
@@ -976,12 +976,12 @@ namespace {
       }
     }
     
-    for (Candidates::iterator i = candidates.begin();
-         i != candidates.end();
-         ++i)
+    for (Candidates::iterator ci = candidates.begin();
+         ci != candidates.end();
+         ++ci)
     {
-      //COUT.printf("ngram: %s %d\n", i->soundslike, i->score);
-      add_sound(i->i, &i->info, i->soundslike);
+      //COUT.printf("ngram: %s %d\n", candidate->soundslike, candidate->score);
+      add_sound(ci->i, &ci->info, ci->soundslike);
     }
   }
   
@@ -1221,9 +1221,9 @@ namespace {
  	  dup_pair = duplicates_check.insert(fix_case(i->repl_list->word, buf));
  	  if (dup_pair.second && 
  	      ((pos = dup_pair.first->find(' '), pos == String::npos)
- 	       ? (bool)sp->check(*dup_pair.first)
- 	       : (sp->check((String)dup_pair.first->substr(0,pos)) 
- 		  && sp->check((String)dup_pair.first->substr(pos+1))) ))
+ 	       ? sp->check(*dup_pair.first).data
+ 	       : (sp->check((String)dup_pair.first->substr(0,pos)).data 
+ 		  && sp->check((String)dup_pair.first->substr(pos+1)).data) ))
  	    near_misses_final->push_back(*dup_pair.first);
  	} while (i->repl_list->adv());
       } else {
