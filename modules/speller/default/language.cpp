@@ -113,7 +113,9 @@ namespace aspeller {
 #ifdef ENABLE_NLS
       const char * tmp = 0;
       tmp = bind_textdomain_codeset("aspell", 0);
+#ifdef HAVE_LANGINFO_CODESET
       if (!tmp) tmp = nl_langinfo(CODESET);
+#endif
       if (is_ascii_enc(tmp)) tmp = 0;
       if (tmp)
         RET_ON_ERR(mesg_conv_.setup(*config, charset_, fix_encoding_str(tmp, buf)));
@@ -266,8 +268,14 @@ namespace aspeller {
       find_file(repl_file, dir1, dir2, repl, "_repl", ".dat");
       RET_ON_ERR(REPL.open(repl_file, "r"));
       
-      while (getdata_pair(REPL, d, buf), ::to_lower(d.key), d.key != "rep");
-      size_t num_repl = atoi(d.value); // FIXME make this more robust
+      size_t num_repl = 0;
+      while (getdata_pair(REPL, d, buf)) {
+        ::to_lower(d.key);
+        if (d.key == "rep") {
+          num_repl = atoi(d.value); // FIXME make this more robust
+          break;
+        }
+      }
       repls_.resize(num_repl);
 
       for (size_t i = 0; i != num_repl; ++i) {
@@ -571,7 +579,9 @@ namespace aspeller {
   bool find_language(Config & c)
   {
     String lang = c.retrieve("lang");
+    lang.ensure_null_end();
     char * l = lang.data();
+    CERR.printl(l);
 
     String dir1,dir2,path;
     fill_data_dir(&c, dir1, dir2);
