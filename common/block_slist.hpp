@@ -28,7 +28,7 @@ namespace acommon {
 
     // Delete a node, usefull when deleting objects that were
     // constructed inplace.
-    static void del_node(Node * node) {if (node) node->data.~T();
+    static void del_node(Node * node) {if (node) node->data.~T();}
     
   private:
 
