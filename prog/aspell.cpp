@@ -140,6 +140,7 @@ static const KeyInfo extra[] = {
   {"backup",  KeyInfoBool, "true", "create a backup file by appending \".bak\""},
   {"reverse", KeyInfoBool, "false", "reverse the order of the suggest list"},
   {"time"   , KeyInfoBool, "false", "time load time and suggest time in pipe mode"},
+  {"keymapping", KeyInfoString, "aspell", "keymapping for check mode, one of aspell ispell"}
 };
 
 const PossibleOption * find_option(char c) {
@@ -150,7 +151,7 @@ const PossibleOption * find_option(char c) {
 }
 
 static inline bool str_equal(const char * begin, const char * end, 
-		      const char * other) 
+			     const char * other) 
 {
   while(begin != end && *begin == *other)
     ++begin, ++other;
@@ -596,14 +597,28 @@ void pipe()
 // check
 //
 
-enum UserChoices {Ignore, IgnoreAl, Replace, ReplaceAll, Add, Exit};
+enum UserChoice {None, Ignore, IgnoreAll, Replace, ReplaceAll, 
+		 Add, AddLower, Exit, Abort};
+
+struct Mapping {
+  char primary[9];
+  UserChoice reverse[256];
+  void to_aspell();
+  void to_ispell();
+  char & operator[] (UserChoice c) {return primary[c];}
+  UserChoice & operator[] (char c) 
+    {return reverse[static_cast<unsigned char>(c)];}
+};
+
+void abort_check();
 
 void check(bool interactive)
 {
-  FILE * in = 0;
-  FILE * out = 0;
   String file_name;
   String backup_name;
+  FILE * in = 0;
+  FILE * out = 0;
+  Mapping mapping;
 
   if (interactive) {
     if (args.size() == 0) {
@@ -616,7 +631,7 @@ void check(bool interactive)
 
     backup_name += ".bak";
     if (! rename_file(file_name, backup_name) ) {
-      cerr << "Error: Could not rename the file \"" << file_name 
+      CERR << "Error: Could not rename the file \"" << file_name 
 	   << "\" to \"" << backup_name << "\".\n";
       exit(-1);
     }
@@ -630,8 +645,18 @@ void check(bool interactive)
     
     out = fopen(file_name.c_str(), "w");
     if (!out) {
-      cerr << "Error: Could not open the file \"" << file_name
+      CERR << "Error: Could not open the file \"" << file_name
            << "\" for writing.  File not saved.\n";
+      exit(-1);
+    }
+    
+    String m = options->retrieve("keymapping");
+    if (m == "aspell")
+      mapping.to_aspell();
+    else if (m == "ispell")
+      mapping.to_ispell();
+    else {
+      CERR << "Error: Invalid keymapping: " << m << "\n";
       exit(-1);
     }
 
@@ -646,12 +671,14 @@ void check(bool interactive)
   word_choices = new Choices;
 
   menu_choices = new Choices;
-  menu_choices->push_back(Choice('i', "Ignore"));
-  menu_choices->push_back(Choice('I', "Ignore all"));
-  menu_choices->push_back(Choice('r', "Replace"));
-  menu_choices->push_back(Choice('R', "Replace all"));
-  menu_choices->push_back(Choice('a', "Add"));
-  menu_choices->push_back(Choice('x', "Exit"));
+  menu_choices->push_back(Choice(mapping[Ignore],     "Ignore"));
+  menu_choices->push_back(Choice(mapping[IgnoreAll],  "Ignore all"));
+  menu_choices->push_back(Choice(mapping[Replace],    "Replace"));
+  menu_choices->push_back(Choice(mapping[ReplaceAll], "Replace all"));
+  menu_choices->push_back(Choice(mapping[Add],        "Add"));
+  menu_choices->push_back(Choice(mapping[AddLower],   "Add Lower"));
+  menu_choices->push_back(Choice(mapping[Abort],      "Abort"));
+  menu_choices->push_back(Choice(mapping[Exit],       "Exit"));
 
   String new_word;
   Vector<String> sug_con;
@@ -711,6 +738,8 @@ void check(bool interactive)
       //enable suspend
       display_menu();
 
+    choice_prompt:
+
       prompt("? ");
 
     choice_loop:
@@ -724,28 +753,36 @@ void check(bool interactive)
       
       if (choice == '0') choice = '9' + 1;
     
-      switch (choice) {
-      case 'X':
-      case 'x':
+      switch (mapping[choice]) {
+      case Exit:
 	goto exit_loop;
-      case ' ':
-      case '\n':
-      case 'i':
+      case Abort:
+	prompt("Are you sure you want to abort? ");
+	get_choice(choice);
+	if (choice == 'y' || choice == 'Y')
+	  goto abort_loop;
+	goto choice_prompt;
+      case Ignore:
 	break;
-      case 'I':
+      case IgnoreAll:
 	speller->add_to_session(word);
 	break;
-      case 'a':
+      case Add:
 	speller->add_to_personal(word);
 	break;
-      case 'R':
-      case 'r':
+      case AddLower:
+	speller->add_to_personal(speller->to_lower(word));
+	break;
+      case Replace:
+      case ReplaceAll:
 	prompt("With: ");
 	get_line(new_word);
+	if (new_word.size() == 0)
+	  goto choice_prompt;
 	if (new_word[0] >= '1' && new_word[0] < (char)suggestions_size + '1')
 	  new_word = sug_con[new_word[0]-'1'];
 	state->replace(new_word);
-	if (choice == 'R')
+	if (mapping[choice] == ReplaceAll)
 	  replace_list->replace(word, new_word);
 	break;
       default:
@@ -763,18 +800,99 @@ void check(bool interactive)
       
     }
   }
+exit_loop:
+  {
+    speller->save_all_word_lists();
+    state.del(); // to close the file handles
+    
+    bool keep_backup = options->retrieve_bool("backup");
+    if (!keep_backup)
+      remove_file(backup_name);
+    
+    //end_check();
+    
+    return;
+  }
+abort_loop:
+  {
+    state.del(); // to close the file handles
 
- exit_loop:
+    rename_file(backup_name, file_name);
 
-  speller->save_all_word_lists();
-  state.del(); // to close the file handles
+    return;
+  }
+}
 
-  bool keep_backup = options->retrieve_bool("backup");
-  if (!keep_backup)
-    remove_file(backup_name);
-  
-  //end_check();
-  
+void Mapping::to_aspell() 
+{
+  memset(this, 0, sizeof(Mapping));
+  primary[Ignore    ] = 'i';
+  reverse['i'] = Ignore;
+  reverse[' '] = Ignore;
+  reverse['\n'] = Ignore;
+
+  primary[IgnoreAll ] = 'I';
+  reverse['I'] = IgnoreAll;
+
+  primary[Replace   ] = 'r';
+  reverse['r'] = Replace;
+
+  primary[ReplaceAll] = 'R';
+  reverse['R'] = ReplaceAll;
+
+  primary[Add       ] = 'a';
+  reverse['A'] = Add;
+  reverse['a'] = Add;
+
+  primary[AddLower  ] = 'l';
+  reverse['L'] = AddLower;
+  reverse['l'] = AddLower;
+
+  primary[Abort     ] = 'b';
+  reverse['b'] = Abort;
+  reverse['B'] = Abort;
+  reverse[control('c')] = Abort;
+
+  primary[Exit      ] = 'x';
+  reverse['x'] = Exit;
+  reverse['X'] = Exit;
+}
+
+void Mapping::to_ispell() 
+{
+  memset(this, 0, sizeof(Mapping));
+  primary[Ignore    ] = ' ';
+  reverse[' '] = Ignore;
+  reverse['\n'] = Ignore;
+
+  primary[IgnoreAll ] = 'A';
+  reverse['A'] = IgnoreAll;
+  reverse['a'] = IgnoreAll;
+
+  primary[Replace   ] = 'R';
+  reverse['R'] = ReplaceAll;
+  reverse['r'] = Replace;
+
+  primary[ReplaceAll] = 'E';
+  reverse['E'] = ReplaceAll;
+  reverse['e'] = Replace;
+
+  primary[Add       ] = 'I';
+  reverse['I'] = Add;
+  reverse['i'] = Add;
+
+  primary[AddLower  ] = 'U';
+  reverse['U'] = AddLower;
+  reverse['u'] = AddLower;
+
+  primary[Abort     ] = 'Q';
+  reverse['Q'] = Abort;
+  reverse['q'] = Abort;
+  reverse[control('c')] = Abort;
+
+  primary[Exit      ] = 'X';
+  reverse['X'] = Exit;
+  reverse['x'] = Exit;
 }
 
 ///////////////////////////

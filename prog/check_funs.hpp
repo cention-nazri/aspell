@@ -12,7 +12,7 @@
 #include "stack_ptr.hpp"
 #include "vector.hpp"
 
-#define MENU_HEIGHT 8
+#define MENU_HEIGHT 9
 
 using namespace acommon;
 
@@ -37,4 +37,6 @@ void display_menu();
 void prompt(const char * prompt);
 void error(const char * error);
 
+#define control(key) (1 + (key-'a'))
+  
 #endif

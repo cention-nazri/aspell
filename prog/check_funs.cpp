@@ -261,35 +261,35 @@ void begin_check() {
   if (use_curses) {
     layout_screen();
     atexit(cleanup);
-  } else
-#endif
-  {
-#if   POSIX_TERMIOS
-    if (!isatty (STDIN_FILENO)) {
-      puts("Error: Stdin not a terminal.");
-      exit (-1);
-    }
-      
-    //
-    // Save the terminal attributes so we can restore them later.
-    //
-    tcgetattr (STDIN_FILENO, &saved_attributes);
-    atexit(cleanup);
-      
-    //
-    // Set up the terminal to read in a line character at a time
-    //
-    tcgetattr (STDIN_FILENO, &new_attributes);
-    new_attributes.c_lflag &= ~(ICANON); // Clear ICANON 
-    new_attributes.c_cc[VMIN] = 1;
-    new_attributes.c_cc[VTIME] = 0;
-    tcsetattr (STDIN_FILENO, TCSAFLUSH, &new_attributes);
-#endif
   }
+#endif
+#if   POSIX_TERMIOS || (HAVE_LIBCURSES && !CURSES_ONLY)
+  if (!isatty (STDIN_FILENO)) {
+    puts("Error: Stdin not a terminal.");
+    exit (-1);
+  }
+  
+  //
+  // Save the terminal attributes so we can restore them later.
+  //
+  tcgetattr (STDIN_FILENO, &saved_attributes);
+  atexit(cleanup);
+  
+  //
+  // Set up the terminal to read in a line character at a time
+  //
+  tcgetattr (STDIN_FILENO, &new_attributes);
+#if POSIX_TERMIOS
+  new_attributes.c_lflag &= ~(ICANON); // Clear ICANON 
+  new_attributes.c_cc[VMIN] = 1;
+  new_attributes.c_cc[VTIME] = 0;
+#endif
+  // FIXME correctly test for _POSIX_VDISABLE;
+  new_attributes.c_cc[VINTR] = _POSIX_VDISABLE;
+  tcsetattr (STDIN_FILENO, TCSAFLUSH, &new_attributes);
+#endif
 }
 
-#define control(key) (1 + (key-'a'))
-  
 void get_line(String & line) {
 #if   HAVE_LIBCURSES
   if (use_curses) {
@@ -310,6 +310,10 @@ void get_line(String & line) {
       if (c == ERR) continue;
       if (c == '\r' || c == '\n' || c == KEY_ENTER) 
 	break;
+      if (c == control('c') || c == KEY_BREAK) {
+	end_x = begin_x;
+	break;
+      }
       int y,x;
       getyx(choice_w,y,x);
       if ((c == KEY_LEFT || c == control('b')) && begin_x < x) {
@@ -369,7 +373,9 @@ void get_choice(char & c) {
       handle_last_signal();
       c0 = wgetch(choice_w);
     } while (c0 == ERR);
-    if (32 <= c0 && c0 < 128) {
+    if (c == KEY_BREAK)
+      c = control('c');
+    if (1 <= c0 && c0 < 128) {
       c = static_cast<char>(c0);
       waddch(choice_w,c);
       wrefresh(choice_w);
@@ -601,7 +607,7 @@ void display_menu() {
 	const char * control_key;
 	const char * desc;
       };
-      static MenuLine menu_items[8] = {
+      static MenuLine menu_items[9] = {
 	{0, "Enter", "", "Accept Changes"} 
 	, {0, "Backspace", "Control-H", "Delete the previous character"}
 	, {"kcub1", "Left", "Control-B", "Move Back 1 space"}
@@ -610,10 +616,11 @@ void display_menu() {
 	, {"kend" , "End",  "Control-E", "Move to the end of the line"}
 	, {"kdch1", "Delete", "Control-D", "Delete the next charcter"}
 	, {0, "", "Control-K", "Kill all characters to the EOL"}
+	, {0, "", "Control-C", "Abort This Operation"}
       };
       scrollok(menu_w,false);
       werase(menu_w);
-      for (int i = 0; i != 8; ++i) {
+      for (int i = 0; i != 9; ++i) {
 	wmove(menu_w, i, 0);
 	int w = width;
 	int fun_key_desc_width = 12;
