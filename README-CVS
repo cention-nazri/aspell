@@ -7,11 +7,8 @@ from CVS.
   libtool 1.5 or better
   gettext 0.13
   autoconf 2.50 or better
-  automake 1.5 (earlier versions *might* work)
+  automake 1.7 (earlier versions *might* work)
   makeinfo
-
-If you do not wish to build the manual use "make fake-manual" in the
-manual directory before building the rest of the source.
 
 Before the build:
 
