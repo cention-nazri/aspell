@@ -3,7 +3,7 @@
 #This Filter is usable with the following version(s) of Aspell
 ASPELL >=0.51
 
-#This line will be printed when typing `aspell help email'
+#This line will be printed when typing `Aspell help email'
 DESCRIPTION Filter for eliminating email quote characters
 
 STATIC filter

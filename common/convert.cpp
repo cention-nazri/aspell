@@ -72,12 +72,12 @@ namespace acommon {
   // FromUniLookup
   //
 
-  // Assumes that the maxium number of items in the table is 256
+  // Assumes that the maximum number of items in the table is 256
   // Also assumes (unsigned char)i == i % 256
 
-  // Based on the iso-8859-* character sets it is very fast, almsot all
+  // Based on the iso-8859-* character sets it is very fast, almost all
   // lookups involving no more than 2 comparisons.
-  // NO looks ups involded more than 3 comparssions.
+  // NO looks ups involded more than 3 compassions.
   // Also, no division (or modules) is done whatsoever.
 
 

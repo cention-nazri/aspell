@@ -13,7 +13,7 @@ TYPE list
 DESCRIPTION add/rem delimiter(s) separated by spaces
 DEFAULT " "
 DEFAULT /* */
-DEFAULT // \\0
+DEFAULT // \0
 ENDOPTION
 
 OPTION visible-first

@@ -28,7 +28,7 @@ namespace acommon {
     FilterChar * end;
     
     CharVector word; // this word is in the final encoded form
-    unsigned int begin_pos; // pointers back to the orignal word
+    unsigned int begin_pos; // pointers back to the original word
     unsigned int end_pos;
     
     // The string passed in _must_ have a null character

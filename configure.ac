@@ -64,6 +64,9 @@ AC_ARG_ENABLE(compile-in-filters,
 AC_ARG_ENABLE(pspell-compatibility,
 [  --disable-pspell-compatibility])
 
+AC_ARG_ENABLE(regex,
+[  --disable-regex])
+
 dnl
 
 AC_PROG_CXX
@@ -204,6 +207,21 @@ AC_TRY_COMPILE(
    AC_DEFINE(USE_POSIX_MUTEX, 1, [Defined if Posix mutexes are supported])],
   [AC_MSG_RESULT(no)
    AC_MSG_WARN([Unable to find locking mechanism, Aspell will not be thread safe.])] )
+
+
+if test "$enable_regex" == "yes"
+then
+  AC_MSG_CHECKING(if posix regex are supported)
+  AC_TRY_LINK(
+    [#include <sys/types.h>
+     #include <regex.h>],
+    [regex_t r;
+     regcomp(&r, "", REG_EXTENDED);
+     regexec(&r, "", 0, 0, 0);],
+    [AC_MSG_RESULT(yes)
+     AC_DEFINE(USE_POSIX_REGEX, 1, [Defined if Posix regex are supported])],
+    [AC_MSG_RESULT(no)])
+fi
 
 AM_LANGINFO_CODESET
 

@@ -13,12 +13,13 @@
 #include "iostream.hpp"
 
 namespace acommon {
+  unsigned int linenumber = 0 ;
 
   bool getdata_pair(IStream & in, DataPair & d, String & buf)
   {
     char * p;
 
-    // get first non blank line
+    // get first non blank line and count all read ones
     do {
       buf.clear();
       buf.append('\0'); // to avoid some special cases
@@ -40,7 +41,7 @@ namespace acommon {
     if (*p == '#' || *p == '\0') {*p = '\0'; return true;}
     *p = '\0';
 
-    // skip any whitspace
+    // skip any whitespace
     ++p;
     while (*p == ' ' || *p == '\t') ++p;
     if (*p == '\0' || *p == '#') {return true;}

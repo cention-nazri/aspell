@@ -75,5 +75,19 @@ namespace acommon {
     }
     return size == 0;
   }
+  String & String::lower() {
+    for ( unsigned int count = 0;
+          count < this->length() ; count ++ ) {
+      (*this)[count] = asc_tolower((*this)[count]);
+    }
+    return *this;
+  }
+  String & String::upper() {
+    for ( unsigned int count = 0;
+          count < this->length() ; count ++ ) {
+      (*this)[count] = asc_toupper((*this)[count]);
+    }
+    return *this;
+  }
 
 }

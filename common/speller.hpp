@@ -5,7 +5,7 @@
 // it at http://www.gnu.org/.
 
 // Aspell implementation header file.
-// Applications that just use the aspell library should not include 
+// Applications that just use the Aspell library should not include 
 // these files as they are subject to change.
 // Aspell Modules MUST include some of the implementation files and
 // spell checkers MAY include some of these files.

@@ -196,7 +196,6 @@ enum: key info type
 	int
 	bool
 	list
-	descript
 
 struct: key info
 	desc => The Key Info object is used for holding information
@@ -384,6 +383,11 @@ group: errors
 errors:
 	/
 	other
+		mesg => Some error
+		/
+		ooups
+			mesg => Ooups? you really got this message from "%file"(%line) are you sure?
+			parms => file, line
 	operation not supported
 		mesg => Operation Not Supported: %what
 		parms => what
@@ -418,6 +422,8 @@ errors:
 		/
 		unknown key
 			mesg => The key "%key" is unknown.
+		bad list operation
+			mesg => lis key `"%key"' requires one of [add|rem|rem-all]-
 		cant change value
 			mesg => The value for option "%key" can not be changed.
 		bad key
@@ -477,6 +483,10 @@ errors:
 			/
 			invalid flag
 			conflicting flags
+	version control
+		/
+		bad version string
+			mesg => not a version number
 	filter
 		mesg => %where: "%filter":
 		parms => where, filter
@@ -509,13 +519,66 @@ errors:
 			parms => line
 		cant describe filter
 			mesg => %where: "%filter" error setting filter description.
+	filter mode file
+		mesg => "%file: "%line:
+		parms => file, line
+		/
+		mode option name
+			mesg => "%file": Line %line: empty option specifier.
+		empty non bool
+			mesg => "%file": Line %line: empty value; only  bool type option and `rem-all' list prefix.
+		no filter to option 
+			mesg => "%file": Line %line: option `"%option"' possibly specified prior to filter.
+			parms => option
+		bad mode key 
+			mesg => "%file": Line %line: unknown mode description key `"%key"'.
+			parms => key
+		exspect mode key
+			mesg => "%file": Line %line: exspecting "%modekey" key 
+			parms => modekey
+		mode version requirement
+			mesg => "%file": Line %line: version specifier missing key: `aspell'
+		confusing mode version
+			mesg => "%file": Line %line: confused by version control
+		bad mode version
+			mesg => "%file": Line %line: Aspell version does not match mode's requirement.
+		missing magic expression
+			mesg => "%file": Line %line: missing magic mode expression
+		empty file ext
+			mesg => "%file": Line %line: empty extension at char %char
+			parms => char
+		error on line
+			mesg => "%errortext" caused by line %line in "%file"
+			parms => errortext
+	filter mode expand
+		mesg => "%mode" error
+		parms => mode
+		/
+		unknown mode
+			mesg => ignoring unknown mode: "%mode"
+		mode extend expand
+			mesg => "%mode" error while extend Aspell modes. (out of memory?)
+	filter mode magic
+		mesg = "%mode": bad magic "%magic"
+		parms => mode, magic
+		/
+		file magic pos
+			mesg => "%mode": no start for magic search given for magic "%magic"
+		file magic range
+			mesg => "%mode": no range for magic search given for magic "%magic"
+		missing magic 
+			mesg => "%mode": no magic expression available for magic "%magic"
+		bad magic
+			mesg => "%mode": Magic "%magic": bad regular expression after location specifier;\
+				\n\t regexp reports: "%regerr"
+			parms => regerr
 
 	expression
-		mesg => %action: invalid regular expression.
+		mesg => "%action": invalid regular expression.
 		parms => action
 		/
 		invalid expression
-			mesg => %action: `%expression' is not a valid regular expression.
+			mesg => "%action": `"%expression"' is not a valid regular expression.
 			parms => expression
 }
 group: speller

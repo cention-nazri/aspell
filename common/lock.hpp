@@ -20,10 +20,6 @@
 
 namespace acommon {
 
-#ifndef __GNUC__
-#define __attribute__(x)
-#endif
-
 #define LOCK(l) const Lock the_lock(l);
 
 #ifdef USE_POSIX_MUTEX
@@ -60,6 +56,6 @@ namespace acommon {
     Lock(Mutex * l) : lock_(l) {if (lock_) lock_->lock();}
     ~Lock() {if (lock_) lock_->unlock();}
   };
-}
+};
 
 #endif

@@ -16,14 +16,14 @@ namespace acommon {
 
   // PosibErr<type> is a special Error handling device that will make
   // sure that an error is properly handled.  It is expected to be
-  // used as the return type of the function It will automatitcly
+  // used as the return type of the function It will automatically
   // convert to the "normal" return type however if the normal
   // returned type is accessed and there is an "unhandled" error
   // condition it will abort It will also abort if the object is
   // destroyed with an "unhandled" error condition.  This includes
-  // ignoring the return type of a function returing an error
+  // ignoring the return type of a function returning an error
   // condition.  An error condition is handled by simply checking for
-  // the precence of an error, calling ignore, or taking owenership of
+  // the presence of an error, calling ignore, or taking ownership of
   // the error.
 
   enum WhichErr { PrimErr, SecErr };

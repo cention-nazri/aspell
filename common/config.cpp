@@ -4,6 +4,8 @@
 // license along with this library if you did not you can find
 // it at http://www.gnu.org/.
 
+#include <stdio.h>
+#define DEBUG {fprintf(stderr,"File: %s(%i)\n",__FILE__,__LINE__);}
 #include <string.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -36,7 +38,7 @@
 #define DEFAULT_LANG "en_US"
 
 // FIXME: Consider eliminating KeyInfoDescript in favor of a better
-//   solution for string a filters decryption
+//   solution for string a filters description
 
 // NOTE: All filter options are now stored with he "filter-" prefix.  However
 //   during lookup, the non prefix version is also recognized.
@@ -220,7 +222,7 @@ namespace acommon {
   }
 
   //
-  // retrive methods
+  // retrieve methods
   //
 
   PosibErr<bool> Config::retrieve_bool(ParmString key) const
@@ -300,12 +302,28 @@ namespace acommon {
   {
     const char * c = strchr(name, '-');
     unsigned int p = c ? c - name : -1;
-    if ((p == 3 && (strncmp(name, "add",p) == 0 
-		    || strncmp(name, "rem",p) == 0))
-	|| (p == 4 && strncmp(name, "dont",p) == 0)) 
+    bool haveRemove = false;
+    if (    (    ( p == 3 )
+              && (    ( strncmp(name, "add",p) == 0 )
+	           || (    ( strncmp(name, "rem",p) == 0 )
+                        && ( haveRemove = true ) ) ) )
+ 	 || (    ( p == 4 )
+              && ( strncmp(name, "dont",p) == 0 ) ) ) {
+      if ( haveRemove ) {
+
+        const char * C = strchr(&name[p + 1],'-');
+        unsigned int rem_all = C ? C - &name[p + 1] : -1;
+
+        if (    ( rem_all == 3 )
+             && ( strncmp(&name[p + 1],"all",rem_all) == 0 ) ) {
+          p += rem_all + 1;
+        }
+      }
       return name + p + 1;
-    else
+    }
+    else {
       return name;
+    }
   }
 
   PosibErr<const char *> Config::expand_key(ParmString k) const
@@ -659,7 +677,8 @@ namespace acommon {
 
       char a;
       if (p == 0) {
-	abort(); //FIXME
+        return make_err(bad_list_operation,key);
+	//abort(); //FIXME done by the above line if valid
 	//return ret.prim_err(list_set, key); 
       } else if (p == 7) {        // prefix must be "rem-all-"
 	if (value[0] != '\0') {
@@ -755,12 +774,13 @@ namespace acommon {
   {
   private:
     bool include_extra;
+    bool module_changed;
     const Config * cd;
     const KeyInfo * i;
     const ConfigModule * m;
   public:
     PossibleElementsEmul(const Config * d, bool ic)
-      : include_extra(ic), cd(d), i(d->kmi.main_begin), m(0) {}
+      : include_extra(ic), module_changed(false), cd(d), i(d->kmi.main_begin), m(0) {}
 
     KeyInfoEnumeration * clone() const {
       return new PossibleElementsEmul(*this);
@@ -770,9 +790,19 @@ namespace acommon {
       *this = *(const PossibleElementsEmul *)(other);
     }
 
+    virtual bool active_filter_module_changed(void) {
+      return module_changed;
+    }
+
     const char * active_filter_module_name(void){
       if (m != 0)
         return m->name;
+      return "";
+    }
+
+    virtual const char * active_filter_module_desc(void) {
+      if (m != 0)
+        return m->desc;
       return "";
     }
 
@@ -784,10 +814,14 @@ namespace acommon {
 	  i = cd->kmi.extra_end;
       }
       
+      module_changed = false;
       if (i == cd->kmi.extra_end) {
 	m = cd->kmi.filter_modules_begin;
 	if (m == cd->kmi.filter_modules_end) return 0;
-	else i = m->begin;
+	else {
+          i = m->begin;
+          module_changed = true;
+        }
       }
 
       if (m == 0){
@@ -801,7 +835,10 @@ namespace acommon {
       while (i == m->end) {
 	++m;
 	if (m == cd->kmi.filter_modules_end) return 0;
-	else i = m->begin;
+	else {
+          i = m->begin;
+          module_changed = true;
+        }
       }
 
       return i++;
@@ -848,14 +885,25 @@ namespace acommon {
 
     while ((i = els->next()) != 0) {
       if (i->desc == 0) continue;
-      if (i->type == KeyInfoDescript) {
+
+/* FIXME strip this comment as it contains obsolete code 
+ * 
+        if (i->type == KeyInfoDescript) {
         int prefix_end = 0;
         if(strncmp(i->name,"filter-",7) == 0)
           prefix_end = 7;
         out << "###  " << &(i->name)[prefix_end] << " Filter: " << _(i->desc)
             << "\n###    " << _("configured as follows") << "\n\n\n";
         continue;
+      }*/
+
+      if (els->active_filter_module_changed()) {
+        out << "###  " << els->active_filter_module_name() << " Filter: " 
+            << gettext(els->active_filter_module_desc()) << "\n"
+            << "###    " << _("configured as follows") << "\n\n\n";
+        continue;
       }
+
       out << "# " << (i->type ==  KeyInfoList ? "add|rem-" : "") << i->name
 	  << " descrip: " << (i->def == 0 ? "(action option) " : "") << _(i->desc)
 	  << '\n';
@@ -919,7 +967,7 @@ namespace acommon {
     String this_value;
     String other_value;
     while ( (k = els->next()) != 0) {
-      if (k->type == KeyInfoDescript) continue; // FIXME: hack
+//      if (k->type == KeyInfoDescript) continue; // FIXME: strip obsolete hack
 
       other_name = k->name;
       other_k = other.keyinfo(other_name);
@@ -958,7 +1006,7 @@ namespace acommon {
   PosibErr<void> Config::read_in_settings(const Config * override)
   {
     // FIXME: make this more robust.  
-    // Catch errors and atatched there source of origin
+    // Catch errors and attach there source of origin
 
     {
       PosibErrBase pe = read_in_file(retrieve("conf-path"));

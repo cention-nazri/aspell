@@ -10,6 +10,7 @@
 namespace acommon {
 
   double strtod_c(const char * nptr, char ** endptr);
+  long strtoi_c(const char * npter,char ** endptr);
 
 }
 

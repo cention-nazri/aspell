@@ -606,6 +606,9 @@ namespace acommon {
                 name_,multibyte);
         continue;
       }
+      FDEBUGPRINTF("next multibyte chars `");
+      FDEBUGPRINTF(multibyte);
+      FDEBUGPRINTF("'\n");
 
       int countmulti=0;
 
@@ -613,6 +616,9 @@ namespace acommon {
              !multibytes[countmulti].setExpansion(multibyte)) {
         countmulti++;
       }
+      FDEBUGPRINTF("next multibyte chars `");
+      FDEBUGPRINTF(multibyte);
+      FDEBUGPRINTF("'\n");
       if (countmulti >= multibytes.size()) {
         multibytes.resize(multibytes.size()+1);
         if (!multibytes[multibytes.size()-1].setExpansion(multibyte)) {
@@ -620,6 +626,9 @@ namespace acommon {
           continue;
         }
       }
+      FDEBUGPRINTF("next multibyte chars `");
+      FDEBUGPRINTF(multibyte);
+      FDEBUGPRINTF("'\n");
     }
     StringList hyphenChars;
     

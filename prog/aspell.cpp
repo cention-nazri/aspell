@@ -235,6 +235,7 @@ int main (int argc, const char *argv[])
   setlocale (LC_ALL, "");
 #endif
 
+  EXIT_ON_ERR(intialize_filter_modes(options));
   EXIT_ON_ERR(options->read_in_settings());
 
   if (argc == 1) {print_help(); return 0;}
@@ -264,7 +265,7 @@ int main (int argc, const char *argv[])
 	  PosibErr<const KeyInfo *> ki = options->keyinfo(base_name);
           if (!ki.has_err(unknown_key)) {
             other_opt.name    = option_name.c_str();
-            other_opt.num_arg = ki.data->type == KeyInfoBool ? 0 : 1;
+            other_opt.num_arg = ki.data->type == KeyInfoBool ? 0 : 1; //FIXME what if --rem-all- given ??;; debug mode ???
             o = &other_opt;
           }
 	} 
@@ -1805,49 +1806,35 @@ void expand_expression(Config * config){
     config->retrieve_list("option-path",&optpath);
     filterpath=filtpath;
     optionpath=optpath;
-    if (regcomp(&seekfor,args[0].c_str(),REG_NEWLINE|REG_NOSUB)) {
+    if (regcomp(&seekfor,args[0].c_str(),REG_NEWLINE|REG_NOSUB|REG_EXTENDED)) {
       make_err(invalid_expression,"help",args[0]);
       return;
     }
     while (filterpath.expand_file_part(&seekfor,candidate)) {
 
-      if (candidate.suffix("-filter.so")) {
-        candidate.pop_back(10);
-        eliminate_path=0;
-        while ((hold_eliminator=candidate.find('/',eliminate_path)) < 
-               candidate.size()) {
-          eliminate_path=hold_eliminator+1;
-        }
-        if (!candidate.prefix("lib",eliminate_path)) {
-          continue;
-        }
-        candidate.erase(0,eliminate_path);
-        candidate.erase(0,3);
-        locate_ending=candidate.size();
-        toload=candidate;
-        if (regexec(&seekfor,toload.c_str(),0,NULL,0)) {
-          continue;
-        }
-        candidate+="-filter.opt";
-        if (!optionpath.expand_filename(candidate)) {
-          continue;
-        }
-      } else if (candidate.suffix(".flt")) {
-        candidate.pop_back(4);
-        eliminate_path=0;
-        while ((hold_eliminator=candidate.find('/',eliminate_path)) < 
-               candidate.size()) {
-          eliminate_path=hold_eliminator+1;
-        }
-        candidate.erase(0,eliminate_path);
-        toload = candidate;
-        if (regexec(&seekfor,toload.c_str(),0,NULL,0)) {
-          continue;
-        }
-      } else {
+      if (!candidate.suffix("-filter.so")) continue;
+
+      candidate.pop_back(10);
+      eliminate_path=0;
+      while ((hold_eliminator=candidate.find('/',eliminate_path)) < 
+             candidate.size() && hold_eliminator >= 0) {
+        eliminate_path=hold_eliminator+1;
+      }
+      if (!candidate.prefix("lib",eliminate_path)) {
         continue;
       }
-
+      candidate.erase(0,eliminate_path);
+      candidate.erase(0,3);
+      locate_ending=candidate.size();
+      toload=candidate;
+      if (regexec(&seekfor,toload.c_str(),0,NULL,0)) {
+        continue;
+      }
+      candidate+="-filter.opt";
+      if (!optionpath.expand_filename(candidate)) {
+        continue;
+      }
+      
       config->replace("add-filter",toload.c_str());
     }
     regfree(&seekfor);
@@ -1892,12 +1879,11 @@ void print_help () {
   const KeyInfo * k;
   while (k = els->next(), k) {
     if (k->desc == 0) continue;
-    if (k->type == KeyInfoDescript && !strncmp(k->name,"filter-",7)) {
+    if (els->active_filter_module_changed()) {
       printf(_("\n"
                "  %s filter: %s\n"
                "    NOTE: in ambiguous case prefix following options by \"filter-\"\n"),
-               &(k->name)[7],k->desc);
-      continue;
+             els->active_filter_module_name(),els->active_filter_module_desc());
     }
     const PossibleOption * o = find_option(k->name);
     const char * name = k->name;
@@ -1914,5 +1900,6 @@ void print_help () {
       }
     }
   }
+  print_mode_help(stdout);//wouldnt stderr be better ??
 }
 

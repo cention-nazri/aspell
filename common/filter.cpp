@@ -10,12 +10,15 @@
 #include "speller.hpp"
 #include "indiv_filter.hpp"
 #include "copy_ptr-t.hpp"
+#include "strtonum.hpp"
+#include "errors.hpp"
 #undef HAVE_LIBDL // FIXME
 #ifdef HAVE_LIBDL
-#include <dlfcn>
+#include <dlfcn.h>
 #endif
 #include <stdio.h>
 #include <cstdio>
+#define DEBUG {fprintf(stderr,"File: %s(%i)\n",__FILE__,__LINE__);}
 
 namespace acommon {
 
@@ -67,7 +70,7 @@ namespace acommon {
         break;
       }
       default: {
-/* NOTE: if aspell has to use this default case, than any of the programmers in
+/* NOTE: if Aspell has to use this default case, than any of the programmers in
  * charge of maintaining Aspell or at least some lines of code have made some
  * mistake when calling Filter::addFilter function.
  */
@@ -172,6 +175,69 @@ namespace acommon {
   Filter::~Filter() 
   {
     clear();
+  }
+
+  PosibErr<bool> verifyVersion(const char * relOp, const char * actual, 
+                                const char * required,const char * module) {
+    //FIXME translate following if into assertion 
+    if ( actual == NULL || required == NULL ) {
+      return false;
+    }
+    char * actVers = (char *) actual;
+    char * reqVers = (char *) required;
+    while ( * actVers != '\0' || * reqVers != '\0'  ) {
+
+      char * nextActVers = actVers;
+      char * nextReqVers = reqVers;
+      int actNum = strtoi_c(actVers,&nextActVers);
+      int reqNum = strtoi_c(reqVers,&nextReqVers);
+
+
+      if ( nextReqVers ==  reqVers) {
+        while ( *nextReqVers == 'x' || *nextReqVers == 'X' ) {
+          nextReqVers++;
+        }
+        if ( reqVers == nextReqVers && reqVers != '\0') {
+          return make_err(bad_version_string);
+        }
+        else if ( reqVers != '\0' ) {
+          reqNum = actNum;
+        }
+      }
+      if (    ( nextActVers == actVers )
+           && ( actVers != '\0' ) ) {
+        return make_err(bad_version_string);
+      }
+      if ( relOp != NULL && relOp[0] == '>' && actVers != '\0' && 
+           ( reqVers == '\0' || actNum > reqNum ) ) {
+        return true;
+      }
+      if ( relOp != NULL && relOp[0] == '<' && reqVers != '\0' &&
+           ( actVers == '\0' || actNum < reqNum ) ) {
+        return true;
+      }
+      if ( actNum == reqNum ) {
+        actVers = nextActVers;
+        reqVers = nextReqVers;
+        while ( *actVers == '.' ) {
+          actVers++;
+        }
+        while ( *reqVers == '.' ) {
+          reqVers++;
+        }
+        continue;
+      }
+      if ( relOp != NULL && relOp[0] == '!' ) {
+        return true;
+      }
+      return false;
+    }
+    if ( relOp != NULL && relOp[0] != '\0' &&
+         ( relOp[0] == '!'  || 
+           ( relOp[1] != '=' && relOp[0] != '=' ) ) ) {
+      return false;
+    }
+    return true;
   }
 
 }

@@ -59,7 +59,7 @@ static FILE * controllout=stderr;
 /* ACTIVATE_ENCODER, ACTIVATE_FILTER, ACTIVATE_DECODER:
  *          Before a encoding, decoding or processing filter can be
  *          loaded (if Aspell is built within a shared environment) and used
- *          by aspell filter interface it has to be activated.
+ *          by Aspell filter interface it has to be activated.
  *          If a specific class is denoted as encoder, decoder or filter
  *          by one of the above macros use the following ones to activate
  *          the entire filter feature.

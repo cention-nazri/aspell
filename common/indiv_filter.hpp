@@ -39,7 +39,7 @@ namespace acommon {
     // end of its buffer respectfully.
     //
     // The string passed in should only be split on white space
-    // characters.  Furthermore, between calles to reset, each string
+    // characters.  Furthermore, between calls to reset, each string
     // should be passed in exactly once and in the order they appeared
     // in the document.  Passing in stings out of order, skipping
     // strings or passing them in more than once may lead to undefined

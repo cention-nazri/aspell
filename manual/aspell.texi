@@ -1,5 +1,5 @@
 \input texinfo   @c -*-texinfo-*-
-@comment $Id: aspell.texi,v 1.37 2004/05/25 03:03:27 kevina Exp $
+@comment $Id: aspell.texi,v 1.5.2.6 2004/06/02 10:34:32 kevina Exp $
 @comment %**start of header
 @setfilename aspell.info
 @settitle GNU Aspell 0.60
@@ -293,7 +293,7 @@ the more useful ones include:
 @table @option
 @item --mode=@var{mode}
 the mode to use when checking files.  The available modes are
-@code{none}, @code{url}, @code{email}, @code{sgml}, or @code{tex}.
+@code{none}, @code{url}, @code{email}, @code{sgml}, @code{ccpp} or @code{tex}.
 for more information on the various modes see @ref{Notes on Various
 Filters and Filter Modes}.
 
@@ -1033,17 +1033,23 @@ listed.
 @node Notes on Various Filters and Filter Modes
 @subsection Notes on Various Filters and Filter Modes
 
-Aspell now has rudimentary filter support.  You can either select from
+Aspell now has filter support.  You can either select from
 individual filters or chose a filter mode.  To select a filter mode
-use the @option{mode} option (please note this may be removed in
-future as right now it is possible to define meta filters).  You may
-chose from @samp{none}, @samp{url}, @samp{email}, @samp{sgml}, and
-@samp{tex}.  The default mode is @samp{url}.  Individual filters can
-be added with the option @option{add-filter} and removed with the
+use the @option{mode} option.  You may chose from @samp{none}, @samp{url},
+@samp{email}, @samp{sgml}, @samp{ccpp}, @samp{tex} and any other available on
+your system.  The default mode is @samp{url}.  Individual filters can be
+added with the option @option{add-filter} and removed with the
 @option{rem-filter} option.  The currently available filters are
-@samp{url}, @samp{email}, @samp{sgml} and @samp{tex}, @samp{context}
-as well as a bunch of filters which translate the text from one format
-to another.
+@samp{url}, @samp{email}, @samp{sgml} and @samp{tex},
+@samp{latex} (alias for @samp{tex}), @samp{context} as well as a
+bunch of filters which translate the text from one format to another.
+
+To check which filter modes are available type one of
+@verbatim
+  aspell help
+  aspell help all 
+@end verbatim
+The later displays all available filters too.
  
 @subsubsection @option{none} Filter Mode
 
@@ -1237,6 +1243,14 @@ and rep stands for a specific representation of that character.  For
 each character may be specified as many representations as available
 for it.
 @end quotation
+
+
+@subsubsection @option{ccpp} Filter Mode
+@anchor{ccpp Filter Mode}
+
+The @option{ccpp} filter mode will limit spell checking to C/C++ comments
+and string literals. Any code inbetween will be left alone. 
+
 
 @subsubsection Context Filter Mode
 

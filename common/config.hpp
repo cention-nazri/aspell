@@ -35,8 +35,9 @@ namespace acommon {
   class Config;
 
   struct ConfigModule {
-    const char * name;
-    const char * load;
+    const char * name; 
+    const char * load; //path of shared object or dll
+    const char * desc; //description of modules (new)
     const KeyInfo * begin;
     const KeyInfo * end;
   };
@@ -53,7 +54,7 @@ namespace acommon {
     virtual PosibErr<void> item_added  (const KeyInfo *, ParmString) {return no_err;}
     virtual PosibErr<void> item_removed(const KeyInfo *, ParmString) {return no_err;}
     virtual PosibErr<void> all_removed (const KeyInfo *, ParmString) {return no_err;}
-    // the second paramater for all_removed should not be used
+    // the second parameter for all_removed should not be used
   };
 
   class PossibleElementsEmul;
@@ -186,6 +187,8 @@ namespace acommon {
     virtual bool at_end() const = 0;
     virtual const KeyInfo * next() = 0;
     virtual const char * active_filter_module_name(void) = 0;
+    virtual const char * active_filter_module_desc(void) = 0;
+    virtual bool active_filter_module_changed(void) = 0;
     virtual ~KeyInfoEnumeration() {}
   };
 

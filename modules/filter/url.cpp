@@ -4,7 +4,7 @@
 // license along with this library if you did not you can find
 // it at http://www.gnu.org/.
 
-#define COMPILE_IN_FILTER // url filter is always static
+#define COMPILE_IN_FILTER // URL filter is always static
 
 #include "indiv_filter.hpp"
 #include "key_info.hpp"

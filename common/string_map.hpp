@@ -60,7 +60,7 @@ public:
   
   StringPairEnumeration * elements() const;
   
-  // insert a new element.   Will NOT overright an existing entry.
+  // insert a new element.   Will NOT overwrite an existing entry.
   // returns false if the element already exists.
   bool insert(ParmString key, ParmString value) {
     pair<Iter_,bool> res = lookup_.insert(Value_(key,0));
@@ -82,7 +82,7 @@ public:
       return false;
     }
   }
-  // insert a new element. WILL overight an exitsing entry
+  // insert a new element. WILL overwrite an exitsing entry
   // always returns true
   bool replace(ParmString key, ParmString value) {
     pair<Iter_,bool> res = lookup_.insert(Value_(key,0));
@@ -95,7 +95,7 @@ public:
     return true;
   }
   
-  // removes an element.  Returnes true if the element existed.
+  // removes an element.  Returns true if the element existed.
   PosibErr<bool> remove(ParmString key) {return lookup_.erase(key);}
   
   // looks up an element.  Returns null if the element did not exist.

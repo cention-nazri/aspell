@@ -59,14 +59,19 @@ namespace acommon {
   };
 
   void set_mode_from_extension(Config * config,
-			       ParmString filename);
+			       ParmString filename,FILE * in = NULL);
   
   PosibErr<void> setup_filter(Filter &, Config *, 
 			      bool use_decoder, 
 			      bool use_filter, 
 			      bool use_encoder);
   void activate_dynamic_filteroptions(Config *c);
+  void activate_filter_modes(Config * config);
+  void print_mode_help(FILE * helpScreen);
+  PosibErr<void> intialize_filter_modes(Config * config);
+  PosibErr<bool> verifyVersion(const char * relOp, const char * actual,
+                               const char * required, const char * module = "aspell");
 
-}
+};
 
 #endif /* ASPELL_FILTER__HPP */

@@ -71,5 +71,25 @@ namespace acommon {
     return x;
   }
 
+  long strtoi_c(const char * npter,char ** endptr) {
+    
+    char * str = (char*)npter;
+    long num = 0;
+    long sign = 1;
+ 
+    *endptr = str;
+    while (asc_isspace(*str)) {
+      str++;
+    }
+    if (*str == '-' || *str == '+') {
+      sign = *(str++) == '-' ? -1 : 1;
+    }
+    while (*str >= '0' && *str <= '9' ) {
+      num = num * 10 + (long)(*str - '0');
+      str++;
+    }
+    *endptr = str;
+    return num;
+  }
 }
 

@@ -320,7 +320,7 @@ namespace acommon {
       return pos;
     }
 
-    bool prefix(ParmString str, size_t offset) const
+    bool prefix(ParmString str, size_t offset = 0) const
     {
       if (str.size() > size() - offset) return false;
       return memcmp(begin_ + offset, str.str(), str.size()) == 0;
@@ -368,6 +368,9 @@ namespace acommon {
       append(str);
       return *this;
     }
+
+    String & lower();
+    String & upper();
 
     String & operator << (char c) {
       append(c);

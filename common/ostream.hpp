@@ -13,7 +13,7 @@
 
 namespace acommon {
 
-  // FIXME: Add Print Method compatable with printf and friends.
+  // FIXME: Add Print Method compatible with printf and friends.
   //   Than avoid code bloat by using it in many places instead of
   //   out << "Bla " << something << " djdkdk " << something else << "\n"
 

@@ -85,6 +85,7 @@ libaspell_la_SOURCES =\
   lib/can_have_error-c.cpp\
   lib/dummy.cpp\
   lib/new_filter.cpp\
+  lib/new_fmode.cpp\
   lib/string_list-c.cpp\
   lib/find_speller.cpp\
   lib/speller-c.cpp\
@@ -150,10 +151,18 @@ optfiles = \
   modules/filter/sgml-filter.opt\
   modules/filter/context-filter.opt
 
-### If your filter sources contain ALIAS line add .flt file
-### corresponding to entire alias name
+### Add all your aspell mode files ###
 fltfiles = \
-  modules/filter/latex.flt
+  modules/filter/modes/html.amf \
+  modules/filter/modes/sgml.amf \
+  modules/filter/modes/tex.amf \
+  modules/filter/modes/email.amf \
+  modules/filter/modes/ccpp.amf \
+  modules/filter/modes/none.amf \
+  modules/filter/modes/perl.amf \
+  modules/filter/modes/url.amf \
+  modules/filter/modes/comment.amf
+
 
 if COMPILE_IN_FILTERS
 

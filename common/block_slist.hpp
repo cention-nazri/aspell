@@ -65,7 +65,7 @@ namespace acommon {
     void clear();
     // free all memory.  add_block must then be called before any nodes
     // are available
-    // Note: the node's data memeber destructor is NOT called
+    // Note: the node's data member destructor is NOT called
     
 
     ~BlockSList() {clear();}

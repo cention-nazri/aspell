@@ -50,15 +50,15 @@ namespace acommon{
   
   
   void Directory::operator=(const Directory & brother){
-  //+1+ as browsing is only a pointer to system internals wich becomes invalid on
+  //+1+ as browsing is only a pointer to system internals which becomes invalid on
   //+   closing the directory either by brother it is not allowed to copy it
-  //+   on the other hand on copying brother we are not interested anymor in the
+  //+   on the other hand on copying brother we are not interested anymore in the
   //+   old directory therefor it is closed on assignment if open
     close();
     name=brother.name;
     contentcounter=brother.contentcounter;
-  //+2+ neve copy refcounter of brother as this is not the ammount of objects
-  //+   holding a refernce to us
+  //+2+ never copy refcounter of brother as this is not the amount of objects
+  //+   holding a reference to us
   }
   
   void Directory::operator=(const String & newname){
@@ -71,7 +71,7 @@ namespace acommon{
   
   bool Directory::open(void){
     if (browsing) {
-  //+1+ Directory is allready opened just call rewind to restart :)
+  //+1+ Directory is already opened just call rewind to restart :)
       return rewind();
     }
   #ifndef _WIN32

@@ -291,8 +291,8 @@ namespace acommon {
 
       ////////////////////////////////////////////////////////////////////
       //
-      // Give first prefrence to an exect match for the language-country
-      // code, then give prefrence to those in the alternate code list
+      // Give first preference to an exact match for the language-country
+      // code, then give preference to those in the alternate code list
       // in the order they are presented, then if there is no match
       // look for one for just language.  If that fails give up.
       // Once the best matching code is found, try to find a matching
@@ -327,7 +327,7 @@ namespace acommon {
       }
   
       //
-      // Retrive acceptable code search orders
+      // Retrieve acceptable code search orders
       //
       String lang_country_list;
       if (have_country) {
@@ -337,7 +337,7 @@ namespace acommon {
       String lang_only_list = lang;
       lang_only_list += ' ';
 
-      // read retrive lang_country_list and lang_only_list from file(s)
+      // read retrieve lang_country_list and lang_only_list from file(s)
       // FIXME: Write Me
 
       //
@@ -355,7 +355,7 @@ namespace acommon {
       str.data.clear();
 
       //
-      // Retrive module list
+      // Retrieve module list
       //
       if (config->have("module"))
         b_module.list.add(config->retrieve("module"));
@@ -370,7 +370,7 @@ namespace acommon {
       b_module.init();
 
       //
-      // Retrive size
+      // Retrieve size
       //
       str = config->retrieve("size");
       p = str.data.c_str();

@@ -24,9 +24,9 @@
 //   and hash_multimap which are very similar to SGI STL's implementation
 //   with a few notable exceptions.  The main one is that while 
 //   const_iterator is never invalided until the actual element is removed
-//   iterator is invalded my most all non-const member functions.  This
-//   is to simply the implemenation slighly and allow the removial 
-//   of an element in garenteed constant time when a non-const iterator
+//   iterator is invalided my most all non-const member functions.  This
+//   is to simply the implementation slightly and allow the removal 
+//   of an element in guaranteed constant time when a non-const iterator
 //   is provided rather that normally constant time.
 
 // All of the hash_* implementations are derived from the HashTable class
