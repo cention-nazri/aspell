@@ -21,6 +21,7 @@
 #include "check_list.hpp"
 #include "speller_impl.hpp"
 #include "vararray.hpp"
+#include "lsort.hpp"
 
 using namespace std;
 
@@ -38,10 +39,10 @@ struct AffEntry
 {
   char *         appnd;
   char *         strip;
-  unsigned short appndl;
-  unsigned short stripl;
-  unsigned short numconds;
-  short        xpflg;
+  unsigned int   appndl;
+  unsigned int   stripl;
+  unsigned int   numconds;
+  int            xpflg;
   char         achar;
   char         conds[SETSIZE];
 };
@@ -115,6 +116,12 @@ static bool isRevSubset(const char * s1, const char * end_of_s2, int len)
   return (*s1 == '\0');
 }
 
+template <class T>
+struct AffixLess
+{
+  bool operator() (T * x, T * y) const {return strcmp(x->key(),y->key()) < 0;}
+};
+
 //////////////////////////////////////////////////////////////////////
 //
 // CheckList
@@ -179,7 +186,7 @@ AffixMgr::~AffixMgr()
   // pass through linked prefix entries and clean up
   for (int i=0; i < SETSIZE ;i++) {
     pFlag[i] = NULL;
-    PfxEntry * ptr = (PfxEntry *)pStart[i];
+    PfxEntry * ptr = pStart[i];
     PfxEntry * nptr = NULL;
     while (ptr) {
       nptr = ptr->next;
@@ -192,7 +199,7 @@ AffixMgr::~AffixMgr()
   // pass through linked suffix entries and clean up
   for (int j=0; j < SETSIZE ; j++) {
     sFlag[j] = NULL;
-    SfxEntry * ptr = (SfxEntry *)sStart[j];
+    SfxEntry * ptr = sStart[j];
     SfxEntry * nptr = NULL;
     while (ptr) {
       nptr = ptr->next;
@@ -393,7 +400,6 @@ PosibErr<void> AffixMgr::parse_file(const char * affpath, Conv & iconv)
 PosibErr<void> AffixMgr::build_pfxlist(PfxEntry* pfxptr)
 {
   PfxEntry * ptr;
-  PfxEntry * pptr;
   PfxEntry * ep = pfxptr;
 
   // get the right starting point 
@@ -405,36 +411,12 @@ PosibErr<void> AffixMgr::build_pfxlist(PfxEntry* pfxptr)
   ep->flag_next = ptr;
   pFlag[flg] = ep;
 
-  // next index by affix string
+  // next insert the affix string, it will be sorted latter
 
-  // handle the special case of null affix string
-  if (strlen(key) == 0) {
-    // always inset them at head of list at element 0
-    ptr = pStart[0];
-    ep->next = ptr;
-    pStart[0] = ep;
-    return no_err;
-  }
-
-  // now handle the general case
   byte sp = *((const byte *)key);
-  ptr = (PfxEntry*)pStart[sp];
-  
-  /* handle the insert at top of list case */
-  if ((!ptr) || ( strcmp( ep->key() , ptr->key() ) <= 0)) {
-    ep->next = ptr;
-    pStart[sp] = ep;
-    return no_err;
-  }
-
-  /* otherwise find where it fits in order and insert it */
-  pptr = NULL;
-  for (; ptr != NULL; ptr = ptr->next) {
-    if (strcmp( ep->key() , ptr->key() ) <= 0) break;
-    pptr = ptr;
-  }
-  pptr->next = ep;
+  ptr = pStart[sp];
   ep->next = ptr;
+  pStart[sp] = ep;
   return no_err;
 }
 
@@ -446,7 +428,6 @@ PosibErr<void> AffixMgr::build_pfxlist(PfxEntry* pfxptr)
 PosibErr<void> AffixMgr::build_sfxlist(SfxEntry* sfxptr)
 {
   SfxEntry * ptr;
-  SfxEntry * pptr;
   SfxEntry * ep = sfxptr;
   sfxptr->rappnd = (char *)strings.alloc(sfxptr->appndl + 1);
   // reverse the string
@@ -460,43 +441,17 @@ PosibErr<void> AffixMgr::build_sfxlist(SfxEntry* sfxptr)
   const char * key = ep->key();
   const byte flg = ep->flag();
 
-
   // first index by flag which must exist
   ptr = sFlag[flg];
   ep->flag_next = ptr;
   sFlag[flg] = ep;
 
-
-  // next index by affix string
+  // next insert the affix string, it will be sorted latter
     
-  // handle the special case of null affix string
-  if (strlen(key) == 0) {
-    // always inset them at head of list at element 0
-    ptr = sStart[0];
-    ep->next = ptr;
-    sStart[0] = ep;
-    return no_err;
-  }
-
-  // now handle the normal case
   byte sp = *((const byte *)key);
   ptr = sStart[sp];
-  
-  /* handle the insert at top of list case */
-  if ((!ptr) || ( strcmp( ep->key() , ptr->key() ) <= 0)) {
-    ep->next = ptr;
-    sStart[sp] = ep;
-    return no_err;
-  }
-
-  /* otherwise find where it fits in order and insert it */
-  pptr = NULL;
-  for (; ptr != NULL; ptr = ptr->next) {
-    if (strcmp( ep->key(), ptr->key() ) <= 0) break;
-    pptr = ptr;
-  }
-  pptr->next = ep;
   ep->next = ptr;
+  sStart[sp] = ep;
   return no_err;
 }
 
@@ -511,6 +466,9 @@ PosibErr<void> AffixMgr::process_pfx_order()
   for (int i=1; i < SETSIZE; i++) {
 
     ptr = pStart[i];
+
+    if (ptr && ptr->next)
+      ptr = pStart[i] = sort(ptr, AffixLess<PfxEntry>());
 
     // look through the remainder of the list
     //  and find next entry with affix that 
@@ -537,7 +495,7 @@ PosibErr<void> AffixMgr::process_pfx_order()
     // but not a subset of the next, search can end here
     // so set NextNE properly
 
-    ptr = (PfxEntry *) pStart[i];
+    ptr = pStart[i];
     for (; ptr != NULL; ptr = ptr->next) {
       PfxEntry * nptr = ptr->next;
       PfxEntry * mptr = NULL;
@@ -563,6 +521,9 @@ PosibErr<void> AffixMgr::process_sfx_order()
 
     ptr = sStart[i];
 
+    if (ptr && ptr->next)
+      ptr = sStart[i] = sort(ptr, AffixLess<SfxEntry>());
+
     // look through the remainder of the list
     //  and find next entry with affix that 
     // the current one is not a subset of
@@ -587,7 +548,7 @@ PosibErr<void> AffixMgr::process_sfx_order()
     // but not a subset of the next, search can end here
     // so set NextNE properly
 
-    ptr = (SfxEntry *) sStart[i];
+    ptr = sStart[i];
     for (; ptr != NULL; ptr = ptr->next) {
       SfxEntry * nptr = ptr->next;
       SfxEntry * mptr = NULL;
@@ -713,7 +674,7 @@ bool AffixMgr::prefix_check (const LookupInfo & linf, ParmString word,
 {
  
   // first handle the special case of 0 length prefixes
-  PfxEntry * pe = (PfxEntry *) pStart[0];
+  PfxEntry * pe = pStart[0];
   while (pe) {
     if (pe->check(linf,word,ci,gi)) return true;
     pe = pe->next;
@@ -721,7 +682,7 @@ bool AffixMgr::prefix_check (const LookupInfo & linf, ParmString word,
   
   // now handle the general case
   byte sp = *reinterpret_cast<const byte *>(word.str());
-  PfxEntry * pptr = (PfxEntry *)pStart[sp];
+  PfxEntry * pptr = pStart[sp];
 
   while (pptr) {
     if (isSubset(pptr->key(),word)) {
@@ -743,7 +704,7 @@ bool AffixMgr::suffix_check (const LookupInfo & linf, ParmString word,
 {
 
   // first handle the special case of 0 length suffixes
-  SfxEntry * se = (SfxEntry *) sStart[0];
+  SfxEntry * se = sStart[0];
   while (se) {
     if (se->check(linf, word, ci, gi, sfxopts, ppfx)) return true;
     se = se->next;
@@ -751,7 +712,7 @@ bool AffixMgr::suffix_check (const LookupInfo & linf, ParmString word,
   
   // now handle the general case
   byte sp = *((const byte *)(word + word.size() - 1));
-  SfxEntry * sptr = (SfxEntry *) sStart[sp];
+  SfxEntry * sptr = sStart[sp];
 
   while (sptr) {
     if (isRevSubset(sptr->key(), word + word.size() - 1, word.size())) {
@@ -1003,7 +964,7 @@ inline bool LookupInfo::lookup (ParmString word, WordEntry & o) const
 // add prefix to this word assuming conditions hold
 SimpleString PfxEntry::add(SimpleString word, ObjStack & buf) const
 {
-  int cond;
+  unsigned int cond;
   /* make sure all conditions match */
   if ((word.size > stripl) && (word.size >= numconds)) {
     const byte * cp = (const byte *) word.str;
@@ -1027,7 +988,7 @@ SimpleString PfxEntry::add(SimpleString word, ObjStack & buf) const
 bool PfxEntry::check(const LookupInfo & linf, ParmString word,
                      CheckInfo & ci, GuessInfo * gi) const
 {
-  int			cond;	// condition number being examined
+  unsigned int		cond;	// condition number being examined
   int	                tmpl;   // length of tmpword
   WordEntry             wordinfo;     // hash entry of root word or NULL
   byte *	cp;		
