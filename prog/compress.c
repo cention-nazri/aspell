@@ -37,7 +37,7 @@
 
 static void usage ()
 {
-  fputs("Compresses or uncompresses sorted word lists.  Version 0.2.\n",        stderr);
+  fputs("Compresses or uncompresses sorted word lists.  Version 0.2.1\n",       stderr);
   fputs("For best result the locale should be set to C before sorting by\n",    stderr);
   fputs("  setting the environmental variable LANG to \"C\" before sorting.\n", stderr);
   fputs("Copyright 2000-2004 by Kevin Atkinson.\n",                             stderr);
@@ -108,6 +108,7 @@ int main (int argc, const char *argv[]) {
       char cur[BUFSIZE+1];
       int i;
       int c;
+      int last_max = 0;
 
       SETBIN (stdin);
     
@@ -117,10 +118,11 @@ int main (int argc, const char *argv[]) {
         if (i == 0)
           i = getc(stdin);
         --i;
-        if (i < 0) goto error_in_d;
+        if (i < 0 || i > last_max) goto error_in_d;
         while ((c = getc(stdin)) > 32 && i < BUFSIZE)
           cur[i++] = (char)c;
 	if (i >= BUFSIZE) goto error_in_d;
+        last_max = i;
 	cur[i] = '\n'; cur[++i] = '\0';
 	if (fputs(cur, stdout) < 0) goto error_out_d;
         i = c;

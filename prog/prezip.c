@@ -47,7 +47,7 @@
 
 #endif
 
-#define HEAD "prezip, a prefix delta compressor. Version 0.1, 2004-04-23"
+#define HEAD "prezip, a prefix delta compressor. Version 0.1.1, 2004-11-06"
 
 typedef struct Word {
   char * str;
@@ -160,6 +160,7 @@ int main (int argc, const char *argv[]) {
 
     if (c == 2)
     {
+      *w = '\0';
       while (c != EOF && ret <= 0) {
         ret = -1;
         if (c != 2) {ret = 3; break;}
@@ -200,16 +201,19 @@ int main (int argc, const char *argv[]) {
     }
     else if (c == 1)
     {
+      int last_max = 0;
       while (c != -1) {
         if (c == 0)
           c = getc(stdin);
         --c;
+        if (c > last_max) {ret = 3; break;}
         w = cur.str + c;
         while (c = getc(stdin), c > 32) {
           INSURE_SPACE(&cur,w,1);
           *w++ = (char)c;
         }
         *w = '\0';
+        last_max = w - cur.str;
         fputs(cur.str, stdout);
         putc('\n', stdout);
       }
