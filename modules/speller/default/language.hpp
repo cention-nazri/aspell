@@ -112,7 +112,7 @@ namespace aspeller {
     char          to_plain_[256];
     int           to_uni_[256];
     CharType      char_type_[256];
-    char *        to_clean_;
+    char          to_clean_[256];
 
     StoreAs       store_as_;
 

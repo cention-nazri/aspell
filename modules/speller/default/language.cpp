@@ -194,12 +194,14 @@ namespace aspeller {
       buf = "stripped";
     if (buf == "stripped") {
       store_as_ = Stripped;
-      to_clean_ = to_stripped_;
+      memcpy(to_clean_, to_stripped_, 256);
     } else {
       store_as_ = Lower;
-      to_clean_ = to_lower_;
+      memcpy(to_clean_, to_lower_, 256);
     }
 
+    to_clean_[0] = 1; // to make things slightly easier
+    to_clean_[1] = 1;
     clean_chars_   = get_clean_chars(*this);
     
     //
