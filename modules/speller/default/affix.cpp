@@ -1250,7 +1250,7 @@ bool SfxEntry::check(const LookupInfo & linf, ParmString word,
       CheckInfo * lci = 0;
       tmpl += stripl;
       const SensitiveCompare * cmp = 
-        optflags & XPRODUCT ? &linf.sp->s_cmp_middle : &linf.sp->s_cmp_end;
+        optflags & XPRODUCT ? &linf.sp->s_cmp_middle : &linf.sp->s_cmp_begin;
       int res = linf.lookup(tmpword, cmp, achar, wordinfo, gi);
       if (res == 1
           && ((optflags & XPRODUCT) == 0 || TESTAFF(wordinfo.aff, ep->achar)))
