@@ -299,7 +299,7 @@ namespace aspeller {
           break;
         }
       }
-      repls_.resize(num_repl);
+
       if (num_repl > 0)
         have_repl_ = true;
 
@@ -309,10 +309,21 @@ namespace aspeller {
         ::to_lower(d.key);
         assert(d.key == "rep"); // FIXME
         split(d);
-        repls_[i].substr = buf_.dup(iconv(d.key));
-        to_clean((char *)repls_[i].substr, repls_[i].substr);
-        repls_[i].repl   = buf_.dup(iconv(d.value));
-        to_clean((char *)repls_[i].repl, repls_[i].repl);
+        SuggestRepl rep;
+        rep.substr = buf_.dup(iconv(d.key));
+        if (check_if_valid(*this, rep.substr).get_err()) 
+          continue; // FIXME: This should probably be an error, but
+                    // this may cause problems with compatibility with
+                    // Myspell as these entries may make sense for
+                    // Myspell (but obviously not for Aspell)
+        to_clean((char *)rep.substr, rep.substr);
+        rep.repl   = buf_.dup(iconv(d.value));
+        if (check_if_valid(*this, rep.repl).get_err()) 
+          continue; // FIXME: Ditto
+        to_clean((char *)rep.repl, rep.repl);
+        if (strcmp(rep.substr, rep.repl) == 0 || rep.substr[0] == '\0')
+          continue; // FIXME: Ditto
+        repls_.push_back(rep);
       }
 
     }
