@@ -36,8 +36,8 @@ namespace acommon {
 
   struct ConfigModule {
     const char * name; 
-    const char * load; //path of shared object or dll
-    const char * desc; //description of modules (new)
+    const char * file; // path of shared object or dll
+    const char * desc; // description of module
     const KeyInfo * begin;
     const KeyInfo * end;
   };
@@ -58,15 +58,6 @@ namespace acommon {
   class NotifierEnumeration;
   class GetLine;
   class MDInfoListofLists;
-
-  struct ConfigKeyModuleInfo {
-    const KeyInfo       * main_begin;
-    const KeyInfo       * main_end;
-    const KeyInfo       * extra_begin;
-    const KeyInfo       * extra_end;
-    const ConfigModule  * filter_modules_begin;
-    const ConfigModule  * filter_modules_end;
-  };
 
   static const bool REPLACE = true;
   static const bool INSERT  = false;
@@ -128,7 +119,10 @@ namespace acommon {
 
     friend class PossibleElementsEmul;
 
-    ConfigKeyModuleInfo kmi;
+    const KeyInfo       * keyinfo_begin;
+    const KeyInfo       * keyinfo_end;
+    const KeyInfo       * extra_begin;
+    const KeyInfo       * extra_end;
 
     int md_info_list_index;
 
@@ -165,7 +159,10 @@ namespace acommon {
 
     PosibErr<ConfigModule *> (* load_filter_hook)(Config * config, ParmStr value);
     Notifier * filter_mode_notifier;
-    
+
+    Vector<ConfigModule>      filter_modules;
+    Vector<class Cacheable *> filter_modules_ptrs;
+
     Config(ParmStr name,
 	   const KeyInfo * mainbegin, 
 	   const KeyInfo * mainend);

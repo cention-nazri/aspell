@@ -90,6 +90,7 @@ namespace acommon {
     } else {
       StringListNode * tmp = *cur;
       *cur = (*cur)->next;
+      delete tmp;
       return true;
     }
   }

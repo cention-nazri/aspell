@@ -10,14 +10,15 @@ STATIC filter
 
 OPTION check
 TYPE list
-DESCRIPTION sgml attributes to always check
+DESCRIPTION   sgml attributes to always check
 DEFAULT alt
 ENDOPTION
 
 OPTION skip
 TYPE list
-DESCRIPTION sgml tags to always skip the contents of
-DEFAULT script, style
+DESCRIPTION  sgml tags to always skip the contents of
+DEFAULT script
+DEFAULT style
 ENDOPTION
 
 STATIC decoder

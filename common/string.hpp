@@ -336,7 +336,6 @@ namespace acommon {
 
     // FIXME: Eventually remove
     static const size_t npos = INT_MAX;
-    size_t length() const {return size();}
     size_t find(char c, size_t pos = 0) const {
       char * res = (char *)memchr(begin_ + pos, c, size() - pos);
       if (res == 0) return npos;
@@ -371,11 +370,6 @@ namespace acommon {
       append(str);
       return *this;
     }
-
-    // FIXME: Remove
-    String & lower();
-    String & upper();
-    // END FIXME
 
     String & operator << (char c) {
       append(c);

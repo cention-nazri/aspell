@@ -9,6 +9,7 @@
 
 #include "settings.h"
 
+#include "cache-t.hpp"
 #include "asc_ctype.hpp"
 #include "config.hpp"
 #include "enumeration.hpp"
@@ -32,44 +33,59 @@
 #include <stdio.h>
 
 #ifdef HAVE_LIBDL
-#include <dlfcn.h>
+#  include <dlfcn.h>
 #endif
-#define DEBUG {fprintf(stderr,"File: %s(%i)\n",__FILE__,__LINE__);}
-
-#ifdef NULL
-#undef NULL
-#endif
-#define NULL 0
 
 namespace acommon
 {
-
 #include "static_filters.src.cpp"
 
+#ifdef HAVE_LIBDL
+
+  struct ConfigFilterModule : public Cacheable {
+    String name; 
+    String file; // path of shared object or dll
+    String desc; // description of module
+    Vector<KeyInfo> options;
+    typedef Config CacheConfig;
+    typedef String CacheKey;
+    static PosibErr<ConfigFilterModule *> get_new(const String & key, const Config *);
+    bool cache_key_eq(const String & okey) const {
+      return name == okey;
+    }
+    ~ConfigFilterModule();
+    KeyInfo * new_option() {options.push_back(KeyInfo()); return &options.back();}
+  };
+
+  static GlobalCache<ConfigFilterModule> filter_module_cache("filters");
+
+  ConfigFilterModule::~ConfigFilterModule()
+  {
+    for (Vector<KeyInfo>::iterator i = options.begin();
+         i != options.end();
+         ++i)
+    {
+      free(const_cast<char *>(i->name));
+      free(const_cast<char *>(i->def));
+      free(const_cast<char *>(i->desc));
+    }
+  }
+
+#endif
+
   class IndividualFilter;
-  static int filter_modules_referencing = 0;
 
   //
   // actual code
   //
 
-  FilterEntry * find_individual_filter(ParmStr);
-  PosibErr<ConfigModule *> get_dynamic_filter(Config * config, ParmStr value);
+  FilterEntry * get_standard_filter(ParmStr);
+  PosibErr<const ConfigModule *> get_dynamic_filter(Config * config, ParmStr value);
 
-  class ExtsMap : public StringMap 
-  {
-    const char * cur_mode;
-  public:
-    void set_mode(ParmStr mode)
-    {
-      cur_mode = mode;
-    }
-    PosibErr<bool> add(ParmStr key)
-    {
-      insert (key, cur_mode);
-      return true;
-    }
-  };
+  //////////////////////////////////////////////////////////////////////////
+  //
+  // setup filter
+  //
 
   PosibErr<void> setup_filter(Filter & filter, 
 			      Config * config, 
@@ -87,7 +103,7 @@ namespace acommon
 
     while ((filter_name = els.next()) != 0) {
       //fprintf(stderr, "Loading %s ... \n", filter_name);
-      FilterEntry * f = find_individual_filter(filter_name);
+      FilterEntry * f = get_standard_filter(filter_name);
       // In case libdl is not available a filter is only available if made
       // one of the standard filters. This is done by statically linking
       // the filter sources.
@@ -101,13 +117,11 @@ namespace acommon
       if (!f) {
 
         RET_ON_ERR_SET(get_dynamic_filter(config, filter_name),
-                       ConfigModule *, current_filter);
+                       const ConfigModule *, module);
 
-        assert(current_filter < filter_modules_end);
-	
-        if (!(decoder_handle = dlopen(current_filter->load,RTLD_NOW)) ||
-            !(encoder_handle = dlopen(current_filter->load,RTLD_NOW)) ||
-            !(filter_handle  = dlopen(current_filter->load,RTLD_NOW)))
+        if (!(decoder_handle = dlopen(module->file,RTLD_NOW)) ||
+            !(encoder_handle = dlopen(module->file,RTLD_NOW)) ||
+            !(filter_handle  = dlopen(module->file,RTLD_NOW)))
           return make_err(cant_dlopen_file,dlerror()).with_file(filter_name);
 
         fun = "new_aspell_";
@@ -167,7 +181,12 @@ namespace acommon
     return no_err;
   }
 
-  FilterEntry * find_individual_filter(ParmStr filter_name) {
+  //////////////////////////////////////////////////////////////////////////
+  //
+  // get filter
+  //
+
+  FilterEntry * get_standard_filter(ParmStr filter_name) {
     unsigned int i = 0;
     while (i != standard_filters_size) {
       if (standard_filters[i].name == filter_name) {
@@ -178,264 +197,92 @@ namespace acommon
     return 0;
   }
 
-#if 0
+#ifdef HAVE_LIBDL
 
-  // the FilterOptionExpandNotifier was added in order to be able to
-  // expand filter and corresponding Option list during runtime.
-  // It implements the entire loadability if not loaded and handed to
-  // Config class via addnotifier there will not be any filter
-  // loadability
-  // If shared between multiple config objects having their own
-  // FilterOptionExpandNotifier class each of them increments the
-  // filter_modules_referencing counter in order to indicate that they
-  // too changes the filter modules structure
-  class FilterOptionExpandNotifier {
-    PathBrowser option_path;
-    PathBrowser filter_path;
-    FilterOptionExpandNotifier(void) {
-      filter_modules_referencing++;
+  PosibErr<const ConfigModule *> get_dynamic_filter(Config * config, ParmStr filter_name) 
+  {
+    for (const ConfigModule * cur = config->filter_modules.pbegin();
+         cur != config->filter_modules.pend();
+         ++cur)
+    {
+      if (strcmp(cur->name,filter_name) == 0) return cur;
     }
-    FilterOptionExpandNotifier(const FilterOptionExpandNotifier & brother);
-    void operator=(const FilterOptionExpandNotifier & brother);
-    void release_options(const KeyInfo * begin,const KeyInfo * end);
-  public:
-    Config * config;
 
-    FilterOptionExpandNotifier(Config * conf);
-    virtual ~FilterOptionExpandNotifier(void);
-    virtual PosibErr<void> item_added(ParmStr value);
-  };
+    RET_ON_ERR_SET(get_cache_data(&filter_module_cache, config, filter_name), 
+                   ConfigFilterModule *, module);
 
-  FilterOptionExpandNotifier::FilterOptionExpandNotifier(const FilterOptionExpandNotifier & brother)
-  : option_path(),
-    filter_path()
-  {
-    *this = brother;
-    filter_modules_referencing++;
-  }
-  void  FilterOptionExpandNotifier::operator=(const FilterOptionExpandNotifier & brother) {
-    option_path = brother.option_path;
-    filter_path = brother.filter_path;
+    ConfigModule m = {
+      module->name.str(), module->file.str(), module->desc.str(),
+      module->options.pbegin(), module->options.pend()
+    };
+
+    config->filter_modules_ptrs.push_back(module);
+    config->filter_modules.push_back(m);
+
+    return &config->filter_modules.back();
   }
 
-  FilterOptionExpandNotifier::FilterOptionExpandNotifier(Config * conf) 
-  : option_path(),
-    filter_path(), 
-    config(conf) 
+  PosibErr<ConfigFilterModule *> ConfigFilterModule::get_new(const String & filter_name, 
+                                                             const Config * config)
   {
-    filter_modules_referencing++;
-  }
-
-
-  FilterOptionExpandNotifier::~FilterOptionExpandNotifier(void) 
-  {
-    int countextended = filter_modules_size/sizeof(ConfigModule);
-
-    if (--filter_modules_referencing == 0) {
-      if (filter_modules_begin != &filter_modules[0]) {
-        for( ; countextended < filter_modules_end-filter_modules_begin;
-            countextended++ ){
-          if (filter_modules_begin[countextended].name != NULL) {
-            free((char*)filter_modules_begin[countextended].name);
-          }
-          if (filter_modules_begin[countextended].load != NULL) {
-            free((char*)filter_modules_begin[countextended].load);
-          }
-          if (filter_modules_begin[countextended].desc != NULL) {
-            free((char*)filter_modules_begin[countextended].desc);
-          }
-          release_options(filter_modules_begin[countextended].begin,
-                          filter_modules_begin[countextended].end);
-          if (filter_modules_begin[countextended].begin) {
-            free((KeyInfo*)filter_modules_begin[countextended].begin);
-          }
-        }
-        free((ConfigModule*)filter_modules_begin);
-        filter_modules_begin = (ConfigModule*)&filter_modules[0];
-        filter_modules_end = (ConfigModule*)filter_modules_begin+filter_modules_size/
-                                                               sizeof(ConfigModule);
-      }
-      if (config != NULL) {
-        config->set_filter_modules(filter_modules_begin, filter_modules_end);
-      }
-    }
-  }
-
-#endif
-
-  void release_options(const KeyInfo * begin,const KeyInfo * end) 
-  {
-    KeyInfo * current = NULL;
-    
-    if (begin == NULL) {
-      return;
-    }
-    for (current = (KeyInfo*)begin;current < end; current++) {
-      if (current->name) {
-        free((char*)current->name);
-      }
-      if (current->def) {
-        free((char*)current->def);
-      }
-      if (current->desc) {
-        free((char*)current->desc);
-      }
-    }
-  }
-
-  PosibErr<ConfigModule *> get_dynamic_filter(Config * config, ParmStr value) 
-  {
-    config->set_filter_modules(filter_modules_begin, filter_modules_end);
-
-    KeyInfo * begin = NULL;
+    StackPtr<ConfigFilterModule> module(new ConfigFilterModule);
+    module->name = filter_name;
     KeyInfo * cur_opt = NULL;
-    int optsize = 0;
-    ConfigModule * mbegin = NULL;
-    int modsize = filter_modules_end-filter_modules_begin;
     int active_option = 0;
-
-    ConfigModule * current = (ConfigModule*)filter_modules_begin + standard_filters_size;
-    for (; current < filter_modules_end; ++current) {
-      if (!strncmp(value.str(), current->name,
-                   value.size() <= strlen(current->name) 
-                   ? value.size()
-                   : strlen(current->name))) 
-        return current;
-    }
-
-    if (config->have(value)) {
-//FEATURE ? rescale priority instead and continue ???
-      fprintf(stderr,"warning: specifying filter twice makes no sense\n");
-      return no_err;
-    }
     
-    String filter_description = "";
-    
-    String option_name = value;
-    option_name += "-filter.info";
-    if (!find_file(config, "filter-path", option_name))
-      return make_err(no_such_filter, value);
-
-    String filter_name;
+    String option_file = filter_name;
+    option_file += "-filter.info";
+    if (!find_file(config, "filter-path", option_file))
+      return make_err(no_such_filter, filter_name);
 
     FStream options;
-    RET_ON_ERR(options.open(option_name,"r"));
+    RET_ON_ERR(options.open(option_file,"r"));
 
-    String option_value;
-    String expand;
     String buf; DataPair d;
     while (getdata_pair(options,d,buf))
     {
       to_lower(d.key);
-      option_value = d.value;
 
       //
       // key == aspell
       //
       if (d.key == "aspell") 
       {
-        if ( d.value == NULL || *(d.value) == '\0' )
-          return make_err(confusing_version).with_file(option_name,d.line_num);
+        if ( d.value == NULL || *d.value == '\0' )
+          return make_err(confusing_version).with_file(option_file,d.line_num);
 
-        char * requirement = d.value.str;
-        char * relop = requirement;
-        char swap = '\0';
-            
-        if ( *requirement == '>' || *requirement == '<' || 
-             *requirement == '!' ) {
-          requirement++;
-        }
-        if ( *requirement == '=' ) {
-          requirement++;
-        }
+        PosibErr<void> peb = check_version(d.value.str);
+        if (peb.has_err()) return peb.with_file(option_file,d.line_num);
 
-        String reqVers(requirement);
-
-        swap = *requirement;
-        *requirement = '\0';
-
-        String relOp(relop);
-
-        *requirement = swap;
-
-        char actVersion[] = PACKAGE_VERSION;
-        char * act = &actVersion[0];
-        char * seek = act;
-
-        while (    ( seek != NULL )
-                   && ( *seek != '\0' ) 
-                   && ( *seek < '0' )
-                        && ( *seek > '9' ) 
-                   && ( *seek != '.' )
-                   && ( *seek != 'x' )
-                   && ( *seek != 'X' ) ) {
-          seek++;
-        }
-        act = seek;
-        while (    ( seek != NULL )
-                   && ( seek != '\0' ) 
-                   && (    (    ( *seek >= '0' )
-                                && ( *seek <= '9' ) )
-                           || ( *seek == '.' )
-                           || ( *seek == 'x' )
-                           || ( *seek == 'X' ) ) ) {
-          seek++;
-        }
-        if ( seek != NULL ) {
-          *seek = '\0';
-        }
-
-        PosibErr<bool> peb = verify_version(relOp.c_str(),act,requirement,"add_filter");
-
-        if ( peb.has_err() ) {
-          peb.ignore_err();
-          return make_err(confusing_version).with_file(option_name,d.line_num);
-        }
-        if ( peb == false ) {
-          peb.ignore_err();
-          return make_err(bad_version).with_file(option_name,d.line_num);
-        }
         continue;
-      } 
+      }
 	  
       //
       // key == option
       //
       if (d.key == "option" ) {
-        expand  = "filter-";
-        expand += option_value;
-        if (config->have(expand)) {
-          if (begin != NULL) {
-            release_options(begin,begin+optsize);
-            free(begin);
-          }
-          option_value.insert(0,"(filter-)", 9);
-          return make_err(identical_option).with_file(option_name,d.line_num);
+
+        to_lower(d.value.str);
+
+        cur_opt = module->new_option();
+        
+        char * s = (char *)malloc(7 + filter_name.size() + 1 + d.value.size + 1);
+        cur_opt->name = s;
+        memcpy(s, "filter-", 7); 
+        s+= 7;
+        memcpy(s, filter_name.str(), filter_name.size());
+        s += filter_name.size();
+        *s++ = '-';
+        memcpy(s, d.value.str, d.value.size);
+        s += d.value.size;
+        *s = '\0';
+        for (Vector<KeyInfo>::iterator cur = module->options.begin();
+             cur != module->options.end() - 1; // avoid checking the one just inserted
+             ++cur) {
+          if (strcmp(cur_opt->name,cur->name) == 0)
+            return make_err(identical_option).with_file(option_file,d.line_num);
         }
 
-        // this is safe even if begin is null
-        KeyInfo * expandopt = (KeyInfo *)realloc(begin,sizeof(KeyInfo) * (optsize + 1));
-        begin = expandopt;
-
-        // let cur_opt point to newly generated last element 
-        // ( begin + optsize ) and increment optsize after to indicate
-        // actual number of options 
-        // ( !!! postfix increment !!! returns value before increment !!! )
-        cur_opt = begin + optsize;
-        optsize++;
-            
-        char * n = (char *)malloc(7 + value.size() + 1 + option_value.size() + 1);
-
-        cur_opt->name = n;
-        memcpy(n, "filter-", 7);              n += 7;
-        memcpy(n, value.str(), value.size()); n += value.size();
-        *n = '-'; ++n;
-        memcpy(n, option_value.c_str(), option_value.size() + 1);
-        cur_opt->type = KeyInfoBool;
-        cur_opt->def  = NULL;
-        cur_opt->desc = NULL;
-        cur_opt->flags = 0;
-        cur_opt->other_data = 0;
         active_option = 1;
         continue;
       }
@@ -454,24 +301,21 @@ namespace acommon
       if ((d.key == "desc") ||
           (d.key == "description")) {
 
+        unescape(d.value);
+
         //
         // filter description
         // 
         if (!active_option) {
-          filter_description = option_value;
-        }
-
+          module->desc = d.value;
+        } 
         //
         //option description
         //
         else {
-
           //avoid memory leak;
-          if ( cur_opt->desc != NULL) {
-            free((char *)cur_opt->desc);
-            cur_opt->desc = NULL;
-          }
-          cur_opt->desc = strdup(option_value.c_str());
+          if (cur_opt->desc) free((char *)cur_opt->desc);
+          cur_opt->desc = strdup(d.value.str);
         }
         continue;
       }
@@ -481,7 +325,7 @@ namespace acommon
       //
       if (d.key == "lib-file")
       {
-        filter_name = d.value;
+        module->file = d.value;
         continue;
       }
 	  
@@ -489,10 +333,7 @@ namespace acommon
       // !active_option
       //
       if (!active_option) {
-        if (begin != NULL) {
-          free(begin);
-        }
-        return make_err(options_only).with_file(option_name,d.line_num);
+        return make_err(options_only).with_file(option_file,d.line_num);
       }
 
       //
@@ -517,22 +358,45 @@ namespace acommon
       //
       if (d.key == "def" || d.key == "default") {
             
-        if ( cur_opt->type == KeyInfoList && cur_opt->def != NULL) {
-          option_value += ",";
-          option_value += cur_opt->def;
-          free((void*)cur_opt->def);
-        }
+        if (cur_opt->type == KeyInfoList) {
 
-        // FIXME
-        //may try some syntax checking
-        //if ( cur_opt->type == KeyInfoBool ) {
-        //  check for valid bool values true false 0 1 on off ...
-        //  and issue error if wrong or assume false ??
-        //}
-        //if ( cur_opt->type == KeyInfoInt ) {
-        //  check for valid integer or double and issue error if not
-        //}
-        cur_opt->def = strdup(option_value.c_str());
+          int new_len = 0;
+          int orig_len = 0;
+          if (cur_opt->def) {
+            orig_len = strlen(cur_opt->def);
+            new_len += orig_len + 1;
+          }
+          for (const char * s = d.value.str; *s; ++s) {
+            if (*s == ':') ++new_len;
+            ++new_len;
+          }
+          new_len += 1;
+          char * x = (char *)realloc((char *)cur_opt->def, new_len);
+          cur_opt->def = x;
+          if (orig_len > 0) {
+            x += orig_len;
+            *x++ = ':';
+          }
+          for (const char * s = d.value.str; *s; ++s) {
+            if (*s == ':') *x++ = ':';
+            *x++ = *s;
+          }
+          *x = '\0';
+
+        } else {
+
+          // FIXME
+          //may try some syntax checking
+          //if ( cur_opt->type == KeyInfoBool ) {
+          //  check for valid bool values true false 0 1 on off ...
+          //  and issue error if wrong or assume false ??
+          //}
+          //if ( cur_opt->type == KeyInfoInt ) {
+          //  check for valid integer or double and issue error if not
+          //}
+          unescape(d.value);
+          cur_opt->def = strdup(d.value.str);
+        }
         continue;
       }
           
@@ -556,48 +420,25 @@ namespace acommon
       // 
       // error
       // 
-      if (begin != NULL) {
-        release_options(begin,begin+optsize);
-        free(begin);
-      }
-      return make_err(invalid_option_modifier).with_file(option_name,d.line_num);
+      return make_err(invalid_option_modifier).with_file(option_file,d.line_num);
         
     } // end while getdata_pair_c
 
-    const char * slash = strrchr(option_name.str(), '/');
+    const char * slash = strrchr(option_file.str(), '/');
     assert(slash);
-    if (filter_name.empty()) {
-      filter_name.assign(option_name.str(), slash + 1 - option_name.str());
-      filter_name += "lib";
-      filter_name += value;
-      filter_name += "-filter.so";
+    if (module->file.empty()) {
+      module->file.assign(option_file.str(), slash + 1 - option_file.str());
+      module->file += "lib";
+      module->file += filter_name;
+      module->file += "-filter.so";
     } else {
-      if (filter_name[0] != '/')
-        filter_name.insert(0, option_name.str(), slash + 1 - option_name.str());
-      filter_name += ".so";
-    }
-     
-    if ( filter_modules_begin == filter_modules ) {
-      mbegin = (ConfigModule*)malloc(modsize*sizeof(ConfigModule));
-      memcpy(mbegin,filter_modules_begin,(modsize)*sizeof(ConfigModule));
-      filter_modules_begin = mbegin;
-      filter_modules_end   = mbegin + modsize;
-      config->set_filter_modules(filter_modules_begin,filter_modules_end);
+      if (module->file[0] != '/')
+        module->file.insert(0, option_file.str(), slash + 1 - option_file.str());
+      module->file += ".so";
     }
 
-    mbegin = (ConfigModule*)realloc((ConfigModule*)filter_modules_begin,
-                                    ++modsize*sizeof(ConfigModule));
-    current = mbegin + modsize-1;
-
-    current->name  = strdup(value);
-    current->load  = strdup(filter_name.c_str());
-    current->desc  = strdup(filter_description.c_str());
-    current->begin = begin;
-    current->end   = begin+optsize;
-    filter_modules_begin = mbegin;
-    filter_modules_end   = mbegin+modsize;
-    config->set_filter_modules(filter_modules_begin,filter_modules_end);
-    return current;
+    return module.release();
   }
 
+#endif
 }

@@ -204,7 +204,7 @@ namespace acommon {
   bool FilterMode::lockFileToMode(const String & fileName,FILE * in) {
 
     Vector<unsigned int> extStart;
-    int first_point = fileName.length();
+    int first_point = fileName.size();
 
     while ( first_point > 0 ) {
       while (    ( --first_point >= 0 )
@@ -306,32 +306,32 @@ namespace acommon {
 
   PosibErr<bool> FilterMode::MagicString::testMagic(FILE * seekIn,String & magic,const String & mode) {
 
-    if ( magic.length() == 0 ) {
+    if ( magic.size() == 0 ) {
       return true;
     }
  
     unsigned int magicFilePosition = 0;
 
-    while (    ( magicFilePosition < magic.length() )
+    while (    ( magicFilePosition < magic.size() )
             && ( magic[magicFilePosition] != ':' ) ) {
       magicFilePosition++;
     }
 
     String number(magic);
 
-    number.erase(magicFilePosition,magic.length() - magicFilePosition);
+    number.erase(magicFilePosition,magic.size() - magicFilePosition);
 
     char * num = (char *)number.str();
-    char * numEnd = num + number.length();
+    char * numEnd = num + number.size();
     char * endHere = numEnd;
     long position = 0;
 
-    if (    ( number.length() == 0 ) 
+    if (    ( number.size() == 0 ) 
          || ( (position = strtoi_c(num,&numEnd)) < 0 )
          || ( numEnd != endHere ) ) {
       return make_err(file_magic_pos,"",magic.str());
     }
-    if (    ( magicFilePosition >= magic.length() )
+    if (    ( magicFilePosition >= magic.size() )
          || (    ( seekIn != NULL )
               && ( fseek(seekIn,position,SEEK_SET) < 0 ) ) ) {
       if ( seekIn != NULL ) {
@@ -343,7 +343,7 @@ namespace acommon {
     //increment magicFilePosition to skip the `:'
     unsigned int seekRangePos = ++ magicFilePosition; 
 
-    while (    ( magicFilePosition < magic.length() )
+    while (    ( magicFilePosition < magic.size() )
             && ( magic[magicFilePosition] != ':' ) ) {
       magicFilePosition++;
     }
@@ -351,7 +351,7 @@ namespace acommon {
     String magicRegExp(magic);
 
     magicRegExp.erase(0,magicFilePosition + 1);
-    if ( magicRegExp.length() == 0 ) {
+    if ( magicRegExp.size() == 0 ) {
       if ( seekIn != NULL ) {
         rewind(seekIn);
       }
@@ -359,12 +359,12 @@ namespace acommon {
     }
     
     number = magic;
-    number.erase(magicFilePosition,magic.length() - magicFilePosition);
+    number.erase(magicFilePosition,magic.size() - magicFilePosition);
     number.erase(0,seekRangePos);//already incremented by one see above
     num = (char*)number.str();
-    endHere = numEnd = num + number.length();
+    endHere = numEnd = num + number.size();
 
-    if (    ( number.length() == 0 )
+    if (    ( number.size() == 0 )
          || ( (position = strtoi_c(num,&numEnd)) < 0 )
          || ( numEnd != endHere ) ) {
       if ( seekIn != NULL ) {
@@ -542,11 +542,13 @@ namespace acommon {
       unsigned pathPos = 0;
       unsigned pathPosEnd = 0;
 
-      while (    ( (pathPosEnd = possMode.find('/',pathPos)) < possMode.length() )
+      while (    ( (pathPosEnd = possMode.find('/',pathPos)) < possMode.size() )
               && ( pathPosEnd >= 0 ) ) {
         pathPos = pathPosEnd + 1;
       }
       possMode.erase(0,pathPos);
+      possMode.ensure_null_end();
+      to_lower(possMode.data());
 
       Vector<FilterMode>::iterator fmIt = filter_modes->begin();
 
@@ -573,7 +575,7 @@ namespace acommon {
       to_lower(dp.value);
       if (    !get_sucess
            || ( dp.key != "mode" ) 
-           || ( dp.value != possMode.lower().str() ) )
+           || ( dp.value != possMode.str() ) )
         return make_err(expect_mode_key,"mode").with_file(possModeFile, dp.line_num);
 
       get_sucess = getdata_pair(toParse, dp, buf);
@@ -584,64 +586,8 @@ namespace acommon {
            || ( *(dp.value) == '\0' ) )
         return make_err(mode_version_requirement).with_file(possModeFile, dp.line_num);
 
-      char * requirement = dp.value.str;
-      char * relop = requirement;
-      char swap = '\0';
-
-      if (    ( *requirement == '>' )
-           || ( *requirement == '<' )
-           || ( *requirement == '!' ) ) {
-        requirement++;
-      }
-      if ( *requirement == '=' ) {
-           requirement++;
-      }
-
-      String reqVers(requirement);
-
-      swap = *requirement;
-      *requirement = '\0';
-
-      String relOp(relop);
-
-      *requirement = swap;
-
-      char actVersion[] = PACKAGE_VERSION;
-      char * act = &actVersion[0];
-      char * seek = act;
-
-      while (    ( seek != NULL )
-              && ( *seek != '\0' ) 
-              && ( *seek < '0' )
-              && ( *seek > '9' ) 
-              && ( *seek != '.' )
-              && ( *seek != 'x' )
-              && ( *seek != 'X' ) ) {
-        seek++;
-      }
-      act = seek;
-      while (    ( seek != NULL )
-              && ( seek != '\0' ) 
-              && (    (    ( *seek >= '0' )
-                        && ( *seek <= '9' ) )
-                   || ( *seek == '.' )
-                   || ( *seek == 'x' )
-                   || ( *seek == 'X' ) ) ) {
-        seek++;
-      }
-      if ( seek != NULL ) {
-        *seek = '\0';
-      }
-
-      PosibErr<bool> peb = verify_version(relOp.str(),act,requirement,"add_filter");
-
-      if ( peb.has_err() ) {
-        peb.ignore_err();
-        return make_err(confusing_mode_version).with_file(possModeFile, dp.line_num);
-      }
-      if ( peb == false ) {
-        return make_err(bad_mode_version).with_file(possModeFile, dp.line_num);
-      }
+      PosibErr<void> peb = check_version(dp.value.str);
+      if (peb.has_err()) return peb.with_file(possModeFile, dp.line_num);
       
       FilterMode collect(possMode);
       
@@ -780,12 +726,11 @@ namespace acommon {
     config->add_notifier(new ModeNotifierImpl(config));
   }
 
-  void print_mode_help(FILE * helpScreen) {
-#if 0
+  PosibErr<void> print_mode_help(const Config * config, FILE * helpScreen) {
+
     RET_ON_ERR_SET(static_cast<ModeNotifierImpl *>(config->filter_mode_notifier)
                    ->get_filter_modes(), FilterModeList *, fm);
     
-
     fprintf(helpScreen,
       "\n\n[Filter Modes] reconfigured combinations filters optimized for files of\n"
           "               a specific type. A mode is selected by Aspell's `--mode\n"
@@ -795,12 +740,12 @@ namespace acommon {
           "         Note: If the file type can not be identified uniquely by the\n"
           "               file extension Aspell will in addition test the file\n"
           "               content to ensure proper mode selection.\n\n");
-    for ( Vector<FilterMode>::iterator it = filterModes.begin() ;
-          it != filterModes.end() ; it++ ) {
+    for (Vector<FilterMode>::iterator it = fm->begin(); it != fm->end(); it++)
+    {
       fprintf(helpScreen,"  %-10s ",(*it).modeName().str());
 
       String desc = (*it).getDescription();
-      int preLength = (*it).modeName().length() + 4;
+      int preLength = (*it).modeName().size() + 4;
 
       if ( preLength < 13 ) {
         preLength = 13;
@@ -821,10 +766,10 @@ namespace acommon {
         
         String prDesc(desc);
 
-        prDesc.erase(locate,prDesc.length() - locate);
+        prDesc.erase(locate,prDesc.size() - locate);
         fprintf(helpScreen,"%s\n             ",prDesc.str());
         desc.erase(0,locate);
-        if (    ( desc.length() > 0 )
+        if (    ( desc.size() > 0 )
              && (    ( desc[0] == ' ' )
                   || ( desc[0] == '\t' )
                   || ( desc[0] == '\n' ) ) ) {
@@ -835,8 +780,7 @@ namespace acommon {
       fprintf(helpScreen,desc.str());
       fprintf(helpScreen,"\n");
     }
-#endif
+    return no_err;
   }
-
-};
+}
 

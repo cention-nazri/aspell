@@ -20,7 +20,7 @@ namespace acommon {
   class FilterHandle {
   public:
     FilterHandle() : handle(0) {}
-    ~FilterHandle() {} // FIXME NOW: dlclose(handle)
+    ~FilterHandle();
     void * release() {
       void * tmp = handle;
       handle = NULL;
@@ -37,6 +37,8 @@ namespace acommon {
       return *this;
     }
   private:
+    FilterHandle(const FilterHandle &);
+    void operator = (const FilterHandle &);
     void * handle;
   };  
 

@@ -14,10 +14,16 @@
 #include "strtonum.hpp"
 #include "errors.hpp"
 #ifdef HAVE_LIBDL
-#include <dlfcn.h>
+#  include <dlfcn.h>
 #endif
 
 namespace acommon {
+
+  FilterHandle::~FilterHandle() 
+  {
+    //FIXME: This causes a seg fault
+    //if (handle) dlclose(handle);
+  } 
 
   Filter::Filter() {}
 
@@ -66,17 +72,15 @@ namespace acommon {
     clear();
   }
 
-
-
   PosibErr<bool> verify_version(const char * relOp, const char * actual, 
-                                const char * required, const char * module) 
+                                const char * required) 
   {
     assert(actual != NULL && required != NULL);
 
     char * actVers = (char *) actual;
     char * reqVers = (char *) required;
     while ( * actVers != '\0' || * reqVers != '\0'  ) {
-
+      
       char * nextActVers = actVers;
       char * nextReqVers = reqVers;
       int actNum = strtoi_c(actVers,&nextActVers);
@@ -130,5 +134,56 @@ namespace acommon {
     return true;
   }
 
+  PosibErr<void> check_version(char * requirement)
+  {
+    char * relop = requirement;
+    char swap = '\0';
+    
+    if (*requirement == '>' || *requirement == '<' || *requirement == '!' )
+      requirement++;
+    if (*requirement == '=')
+      requirement++;
+    
+    String reqVers(requirement);
+    
+    swap = *requirement;
+    *requirement = '\0';
+    
+    String relOp(relop);
+    
+    *requirement = swap;
+    
+    char actVersion[] = PACKAGE_VERSION;
+    char * act = &actVersion[0];
+    char * seek = act;
+    
+    while (seek != NULL && 
+           *seek != '\0' && 
+           *seek < '0' && *seek > '9'&& 
+           *seek != '.' && 
+           *seek != 'x' && *seek != 'X' )
+      seek++;
+    act = seek;
+    while (seek != NULL && seek != '\0' && 
+           ((*seek >= '0' && *seek <= '9' ) || 
+            *seek == '.' || 
+            *seek == 'x' || 
+            *seek == 'X'))
+      seek++;
+    if ( seek != NULL ) {
+      *seek = '\0';
+    }
+    
+    PosibErr<bool> peb = verify_version(relOp.c_str(),act,requirement);
+    
+    if ( peb.has_err() ) {
+      peb.ignore_err();
+      return make_err(confusing_version);
+    }
+    if ( peb == false ) {
+      return make_err(bad_version);
+    }
+    return no_err;
+  }
 }
 

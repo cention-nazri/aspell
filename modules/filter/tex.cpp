@@ -355,7 +355,7 @@ namespace {
       keylen=strlen(code[0]);
     }
     while (begin && end && *begin) {
-      while (end && *end && (*end != ':')) {
+      while (end && *end && (*end != ' ')) {
         end++;
       }
       if (end  && (begin != end)) {

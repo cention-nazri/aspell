@@ -51,10 +51,11 @@ namespace acommon {
 			      bool use_encoder);
   void activate_dynamic_filteroptions(Config *c);
   void activate_filter_modes(Config * config);
-  void print_mode_help(FILE * helpScreen);
-  PosibErr<bool> verify_version(const char * relOp, const char * actual,
-                                const char * required, const char * module = "aspell");
+  PosibErr<void> print_mode_help(const Config *, FILE * helpScreen);
 
+  PosibErr<bool> verify_version(const char * relOp, const char * actual,
+                                const char * required);
+  PosibErr<void> check_version(char * requirement);
 };
 
 #endif /* ASPELL_FILTER__HPP */

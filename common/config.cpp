@@ -18,6 +18,7 @@
 # include <langinfo.h>
 #endif
 
+#include "cache.hpp"
 #include "asc_ctype.hpp"
 #include "config.hpp"
 #include "errors.hpp"
@@ -70,8 +71,6 @@ namespace acommon {
   const int Config::num_parms_[9] = {1, 1, 0, 0, 0,
                                      1, 1, 1, 0};
   
-  static const ConfigModule a_module = ConfigModule();
-  
   typedef Notifier * NotifierPtr;
   
   Config::Config(ParmStr name,
@@ -85,12 +84,10 @@ namespace acommon {
     , load_filter_hook(0)
     , filter_mode_notifier(0)
   {
-    kmi.main_begin = mainbegin;
-    kmi.main_end   = mainend;
-    kmi.extra_begin = 0;
-    kmi.extra_end   = 0;
-    kmi.filter_modules_begin = &a_module;
-    kmi.filter_modules_end   = &a_module;
+    keyinfo_begin = mainbegin;
+    keyinfo_end   = mainend;
+    extra_begin = 0;
+    extra_end   = 0;
   }
 
   Config::~Config() {
@@ -128,7 +125,20 @@ namespace acommon {
     attached_ = other.attached_;
     settings_read_in_ = other.settings_read_in_;
 
-    kmi = other.kmi;
+    keyinfo_begin = other.keyinfo_begin;
+    keyinfo_end   = other.keyinfo_end;
+    extra_begin   = other.extra_begin;
+    extra_end     = other.extra_end;
+    filter_modules = other.filter_modules;
+
+#ifdef HAVE_LIBDL
+    filter_modules_ptrs = other.filter_modules_ptrs;
+    for (Vector<Cacheable *>::iterator i = filter_modules_ptrs.begin();
+         i != filter_modules_ptrs.end();
+         ++i)
+      (*i)->copy();
+#endif
+
     md_info_list_index = other.md_info_list_index;
 
     insert_point_ = 0;
@@ -179,20 +189,30 @@ namespace acommon {
     }
     
     notifier_list.clear();
+
+#ifdef HAVE_LIBDL
+    filter_modules.clear();
+    for (Vector<Cacheable *>::iterator i = filter_modules_ptrs.begin();
+         i != filter_modules_ptrs.end();
+         ++i)
+      (*i)->release();
+    filter_modules_ptrs.clear();
+#endif
   }
 
   void Config::set_filter_modules(const ConfigModule * modbegin, 
 				  const ConfigModule * modend)
   {
-    kmi.filter_modules_begin = modbegin;
-    kmi.filter_modules_end   = modend;
+    assert(filter_modules_ptrs.empty());
+    filter_modules.clear();
+    filter_modules.assign(modbegin, modend);
   }
 
   void Config::set_extra(const KeyInfo * begin, 
 			       const KeyInfo * end) 
   {
-    kmi.extra_begin = begin;
-    kmi.extra_end   = end;
+    extra_begin = begin;
+    extra_end   = end;
   }
 
   //
@@ -429,11 +449,11 @@ namespace acommon {
     typedef PosibErr<const KeyInfo *> Ret;
     {
       const KeyInfo * i;
-      i = acommon::find(key, kmi.main_begin, kmi.main_end);
-      if (i != kmi.main_end) return Ret(i);
+      i = acommon::find(key, keyinfo_begin, keyinfo_end);
+      if (i != keyinfo_end) return Ret(i);
       
-      i = acommon::find(key, kmi.extra_begin, kmi.extra_end);
-      if (i != kmi.extra_end) return Ret(i);
+      i = acommon::find(key, extra_begin, extra_end);
+      if (i != extra_end) return Ret(i);
       
       const char * s = strncmp(key, "filter-", 7) == 0 ? key + 7 : key.str();
       const char * h = strchr(s, '-');
@@ -441,19 +461,19 @@ namespace acommon {
 
       String k(s, h - s);
       const ConfigModule * j = acommon::find(k,
-					     kmi.filter_modules_begin,
-					     kmi.filter_modules_end);
+					     filter_modules.pbegin(),
+					     filter_modules.pend());
       
-      if (j == kmi.filter_modules_end && load_filter_hook && committed_) {
+      if (j == filter_modules.pend() && load_filter_hook && committed_) {
         // FIXME: This isn't quite write
         PosibErrBase pe = load_filter_hook(const_cast<Config *>(this), k);
         pe.ignore_err();
         j = acommon::find(k,
-                          kmi.filter_modules_begin,
-                          kmi.filter_modules_end);
+                          filter_modules.pbegin(),
+                          filter_modules.pend());
       }
 
-      if (j == kmi.filter_modules_end) goto err;
+      if (j == filter_modules.pend()) goto err;
 
       i = acommon::find(key, j->begin, j->end);
       if (i != j->end) return Ret(i);
@@ -952,7 +972,7 @@ namespace acommon {
     const ConfigModule * m;
   public:
     PossibleElementsEmul(const Config * d, bool ic)
-      : include_extra(ic), module_changed(false), cd(d), i(d->kmi.main_begin), m(0) {}
+      : include_extra(ic), module_changed(false), cd(d), i(d->keyinfo_begin), m(0) {}
 
     KeyInfoEnumeration * clone() const {
       return new PossibleElementsEmul(*this);
@@ -979,17 +999,17 @@ namespace acommon {
     }
 
     const KeyInfo * next() {
-      if (i == cd->kmi.main_end) {
+      if (i == cd->keyinfo_end) {
 	if (include_extra)
-	  i = cd->kmi.extra_begin;
+	  i = cd->extra_begin;
 	else
-	  i = cd->kmi.extra_end;
+	  i = cd->extra_end;
       }
       
       module_changed = false;
-      if (i == cd->kmi.extra_end) {
-	m = cd->kmi.filter_modules_begin;
-	if (m == cd->kmi.filter_modules_end) return 0;
+      if (i == cd->extra_end) {
+	m = cd->filter_modules.pbegin();
+	if (m == cd->filter_modules.pend()) return 0;
 	else {
           i = m->begin;
           module_changed = true;
@@ -1000,13 +1020,13 @@ namespace acommon {
 	return i++;
       }
 
-      if (m == cd->kmi.filter_modules_end){
+      if (m == cd->filter_modules.pend()){
 	return 0;
       }
 
       while (i == m->end) {
 	++m;
-	if (m == cd->kmi.filter_modules_end) return 0;
+	if (m == cd->filter_modules.pend()) return 0;
 	else {
           i = m->begin;
           module_changed = true;
@@ -1017,7 +1037,7 @@ namespace acommon {
     }
 
     bool at_end() const {
-      return (m == cd->kmi.filter_modules_end);
+      return (m == cd->filter_modules.pend());
     }
   };
 
@@ -1110,7 +1130,6 @@ namespace acommon {
                      "\n"),
                    els->active_filter_module_name(),
                    _(els->active_filter_module_desc()));
-        continue;
       }
 
       out.printf("# %s (%s)\n#   %s\n",

@@ -164,15 +164,15 @@ namespace {
                countdelimit < (signed)closing.size();countdelimit++) {
             for (matchdelim=0; 
                  (current+closing[countdelimit].size() < localstop) &&
-                 (matchdelim < (signed)closing[countdelimit].length());
+                 (matchdelim < (signed)closing[countdelimit].size());
                  matchdelim++){
 //FIXME Warning about comparison of signed and unsigned in following line
               if (current[matchdelim] != closing[countdelimit][matchdelim]) {
                 break;
               }
             }
-            if ((matchdelim == (signed) closing[countdelimit].length()) &&
-                closing[countdelimit].length()) {
+            if ((matchdelim == (signed) closing[countdelimit].size()) &&
+                closing[countdelimit].size()) {
               correspond=countdelimit;
               break;
             }
@@ -180,17 +180,17 @@ namespace {
         }
         if ((countmasking % 2 == 0) && (correspond >= 0) &&
            (correspond < (signed)closing.size()) &&
-           (closing[correspond].length() > 0) &&
-           (current+closing[correspond].length() < localstop)) {
-          for (matchdelim=0;matchdelim < (signed)closing[correspond].length();
+           (closing[correspond].size() > 0) &&
+           (current+closing[correspond].size() < localstop)) {
+          for (matchdelim=0;matchdelim < (signed)closing[correspond].size();
                matchdelim++) {
 //FIXME Warning about comparison of signed and unsigned in following line
             if (current[matchdelim] != closing[correspond][matchdelim]) {
               break;
             }
           }
-          if ((matchdelim == (signed) closing[correspond].length()) &&
-              closing[correspond].length()) {
+          if ((matchdelim == (signed) closing[correspond].size()) &&
+              closing[correspond].size()) {
             beginblind=current;
             endblind=localstop;
             state=hidden;
@@ -206,17 +206,17 @@ namespace {
       }
       countmasking=0;
       for (countdelimit=0;countdelimit < (signed)opening.size();countdelimit++) {
-        for (matchdelim=0;(current+opening[countdelimit].length() < localstop) &&
-                          (matchdelim < (signed)opening[countdelimit].length());
+        for (matchdelim=0;(current+opening[countdelimit].size() < localstop) &&
+                          (matchdelim < (signed)opening[countdelimit].size());
              matchdelim++) {
 //FIXME Warning about comparison of signed and unsigned in following line
           if (current[matchdelim] != opening[countdelimit][matchdelim]) {
             break;
           }
         }
-        if ((matchdelim == (signed) opening[countdelimit].length()) &&
-            opening[countdelimit].length()) {
-          endblind=current+opening[countdelimit].length();
+        if ((matchdelim == (signed) opening[countdelimit].size()) &&
+            opening[countdelimit].size()) {
+          endblind=current+opening[countdelimit].size();
           state=visible;
           hidecode(beginblind,endblind);
           current=endblind-1;

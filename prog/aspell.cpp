@@ -903,7 +903,7 @@ void check()
   }
 
   if (!options->have("mode"))
-    set_mode_from_extension(options, file_name);
+    EXIT_ON_ERR(set_mode_from_extension(options, file_name));
     
   String m = options->retrieve("keymapping");
   if (m == "aspell")
@@ -1880,6 +1880,6 @@ void print_help () {
       }
     }
   }
-  print_mode_help(stdout);//wouldnt stderr be better ??
+  EXIT_ON_ERR(print_mode_help(options,stdout));//wouldnt stderr be better ??
 }
 
