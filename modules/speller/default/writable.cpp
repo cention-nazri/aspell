@@ -35,8 +35,7 @@ protected:
   virtual ~WritableBaseCode() {}
     
   virtual PosibErr<void> save(FStream &, ParmString) = 0;
-  virtual PosibErr<void> merge(FStream &, ParmString, 
-                               Config * config = 0) = 0;
+  virtual PosibErr<void> merge(FStream &, ParmString, const Config * = 0) = 0;
     
   virtual const char * file_name() = 0;
   virtual PosibErr<void> set_file_name(ParmString name) = 0;
@@ -46,13 +45,13 @@ protected:
   PosibErr<void> update(FStream &, ParmString);
   PosibErr<void> save(bool do_update);
   PosibErr<void> update_file_date_info(FStream &);
-  PosibErr<void> load(ParmString, Config *);
+  PosibErr<void> load(ParmString, const Config &);
   PosibErr<void> merge(ParmString);
   PosibErr<void> save_as(ParmString);
 
   String file_encoding;
-  Conv iconv;
-  Conv oconv;
+  ConvObj iconv;
+  ConvObj oconv;
   PosibErr<void> set_file_encoding(ParmString, const Config * c, const Language *);
 };
 
@@ -69,9 +68,6 @@ protected:
   PosibErr<void> set_file_encoding(ParmString enc, const Config * c) {
     return WritableBaseCode::set_file_encoding(enc, c, Base::lang());
   }
-  void set_lang_hook(Config * c) {
-    set_file_encoding(Base::lang()->data_encoding(), c);
-  }
 
 public:
   WritableBase(const char * s, const char * cs) 
@@ -81,8 +77,8 @@ public:
     return Base::file_name();
   }
     
-  PosibErr<void> load(ParmString f, Config * c, 
-                      SpellerImpl *, const LocalWordSetInfo *) { 
+  PosibErr<void> load(ParmString f, const Config & c, LocalDictList *,
+                      SpellerImpl *, const LocalDictInfo *) { 
     return WritableBaseCode::load(f,c);
   };
   PosibErr<void> merge(ParmString f) {
@@ -105,7 +101,7 @@ PosibErr<void> WritableBaseCode::update_file_date_info(FStream & f) {
   return no_err;
 }
   
-PosibErr<void> WritableBaseCode::load(ParmString f0, Config * config)
+PosibErr<void> WritableBaseCode::load(ParmString f0, const Config & config)
 {
   set_file_name(f0);
   const String f = file_name();
@@ -116,7 +112,7 @@ PosibErr<void> WritableBaseCode::load(ParmString f0, Config * config)
     RET_ON_ERR(open_file_readlock(in, f));
     if (in.peek() == EOF) return make_err(cant_read_file,f); 
     // ^^ FIXME 
-    RET_ON_ERR(merge(in, f, config));
+    RET_ON_ERR(merge(in, f, &config));
       
   } else if (f.substr(f.size()-suffix.size(),suffix.size()) 
              == suffix) {
@@ -128,7 +124,7 @@ PosibErr<void> WritableBaseCode::load(ParmString f0, Config * config)
       PosibErr<void> pe = open_file_readlock(in, compatibility_file_name);
       if (pe.has_err()) {compatibility_file_name = ""; return pe;}
     } {
-      PosibErr<void> pe = merge(in, compatibility_file_name, config);
+      PosibErr<void> pe = merge(in, compatibility_file_name, &config);
       if (pe.has_err()) {compatibility_file_name = ""; return pe;}
     }
       
@@ -143,7 +139,7 @@ PosibErr<void> WritableBaseCode::load(ParmString f0, Config * config)
 
 PosibErr<void> WritableBaseCode::merge(ParmString f0) {
   FStream in;
-  DataSet::FileName fn(f0);
+  Dict::FileName fn(f0);
   RET_ON_ERR(open_file_readlock(in, fn.path));
   RET_ON_ERR(merge(in, fn.path));
   return no_err;
@@ -331,7 +327,7 @@ struct ElementsParms {
 //  WritableWS
 //
 
-class WritableWS : public WritableBase<WritableWordSet>
+class WritableWS : public WritableBase<WritableBasicDict>
 {
 public: //but don't use
   StackPtr<WordLookup> word_lookup;
@@ -339,16 +335,17 @@ public: //but don't use
   ObjStack             buffer;
 
   PosibErr<void> save(FStream &, ParmString);
-  PosibErr<void> merge(FStream &, ParmString, Config * config = 0);
+  PosibErr<void> merge(FStream &, ParmString, const Config * config);
 
 protected:
-  void set_lang_hook(Config *) {
+  void set_lang_hook(const Config * c) {
+    set_file_encoding(lang()->data_encoding(), c);
     word_lookup.reset(new WordLookup(10, Hash(lang()), Equal(lang())));
   }
     
 public:
 
-  WritableWS() : WritableBase<WritableWordSet>(".pws", ".per") {
+  WritableWS() : WritableBase<WritableBasicDict>(".pws", ".per") {
     have_soundslike = true; fast_lookup = true;
   }
 
@@ -474,7 +471,7 @@ PosibErr<void> WritableWS::add(ParmString w, ParmString s) {
 
 PosibErr<void> WritableWS::merge(FStream & in, 
                                  ParmString file_name, 
-                                 Config * config)
+                                 const Config * config)
 {
   typedef PosibErr<void> Ret;
   unsigned int ver;
@@ -508,12 +505,13 @@ PosibErr<void> WritableWS::merge(FStream & in,
   else
     set_file_encoding("", config);
   
+  ConvP conv(iconv);
   while (getline(in, dp, buf)) {
     if (ver == 10)
       split(dp);
     else
       dp.key = dp.value;
-    Ret pe = add(iconv(dp.key));
+    Ret pe = add(conv(dp.key));
     if (pe.has_err()) {
       clear();
       return pe.with_file(file_name);
@@ -532,9 +530,10 @@ PosibErr<void> WritableWS::save(FStream & out, ParmString file_name)
     
   StrVector::const_iterator j;
   
+  ConvP conv(oconv);
   for (;i != e; ++i) {
     for (j = i->second.begin(); j != i->second.end(); ++j) {
-      out.printf("%s\n", oconv(*j));
+      out.printf("%s\n", conv(*j));
     }
   }
   return no_err;
@@ -550,7 +549,7 @@ static inline StrVector * get_vector(Str s)
   return (StrVector *)(s - sizeof(StrVector));
 }
 
-class WritableReplS : public WritableBase<WritableReplacementSet>
+class WritableReplS : public WritableBase<WritableReplacementDict>
 {
 private:
   StackPtr<WordLookup> word_lookup;
@@ -561,12 +560,13 @@ private:
   WritableReplS& operator=(const WritableReplS&);
 
 protected:
-  void set_lang_hook(Config *) {
+  void set_lang_hook(const Config * c) {
+    set_file_encoding(lang()->data_encoding(), c);
     word_lookup.reset(new WordLookup(10, Hash(lang()), Equal(lang())));
   }
 
 public:
-  WritableReplS() : WritableBase<WritableReplacementSet>(".prepl",".rpl") 
+  WritableReplS() : WritableBase<WritableReplacementDict>(".prepl",".rpl") 
   {
     have_soundslike = true;
     fast_lookup = true;
@@ -595,7 +595,7 @@ public:
 
 private:
   PosibErr<void> save(FStream &, ParmString );
-  PosibErr<void> merge(FStream &, ParmString , Config * config = 0);
+  PosibErr<void> merge(FStream &, ParmString , const Config * config);
 };
 
 WritableReplS::Size WritableReplS::size() const 
@@ -780,13 +780,16 @@ PosibErr<void> WritableReplS::save (FStream & out, ParmString file_name)
   
   WordLookup::iterator i = word_lookup->begin();
   WordLookup::iterator e = word_lookup->end();
+
+  ConvP conv1(oconv);
+  ConvP conv2(oconv);
   
   for (;i != e; ++i) 
   {
     StrVector * v = get_vector(*i);
     for (StrVector::iterator j = v->begin(); j != v->end(); ++j)
     {
-      out.printf("%s %s\n", oconv(*i), oconv(*j));
+      out.printf("%s %s\n", conv1(*i), conv2(*j));
     }
   }
   return no_err;
@@ -794,7 +797,7 @@ PosibErr<void> WritableReplS::save (FStream & out, ParmString file_name)
 
 PosibErr<void> WritableReplS::merge(FStream & in,
                                     ParmString file_name, 
-                                    Config * config)
+                                    const Config * config)
 {
   typedef PosibErr<void> Ret;
   unsigned int version;
@@ -838,12 +841,14 @@ PosibErr<void> WritableReplS::merge(FStream & in,
 
   if (version == 11) {
 
+    ConvP conv1(iconv);
+    ConvP conv2(iconv);
     do {
       in.getline(mis, ' ');
       if (!in) break;
       in.getline(repl, '\n');
       if (!in) make_err(bad_file_format, file_name);
-      WritableReplS::add(iconv(mis), iconv(repl));
+      WritableReplS::add(conv1(mis), conv2(repl));
     } while (true);
 
   } else {
@@ -878,11 +883,11 @@ WritableReplS::~WritableReplS()
 
 namespace aspeller {
 
-  WritableWordSet * new_default_writable_word_set() {
+  WritableBasicDict * new_default_writable_basic_dict() {
     return new WritableWS();
   }
 
-  WritableReplacementSet * new_default_writable_replacement_set() {
+  WritableReplacementDict * new_default_writable_replacement_dict() {
     return new WritableReplS();
   }
 

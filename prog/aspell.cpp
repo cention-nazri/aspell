@@ -18,9 +18,9 @@
 #include <ctype.h>
 #include "settings.h"
 
-
 #ifdef USE_LOCALE
 # include <locale.h>
+# include <langinfo.h>
 #endif
 
 #include "aspell.h"
@@ -28,10 +28,11 @@
 #include <sys/types.h>
 #include <regex.h>
 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
-
+#ifdef USE_FILE_INO
+# include <sys/types.h>
+# include <sys/stat.h>
+# include <unistd.h>
+#endif
 
 #include "asc_ctype.hpp"
 #include "check_funs.hpp"
@@ -849,11 +850,14 @@ void check()
     print_error(_("Could not open the file \"%s\"  for writing. File not saved."), file_name);
     exit(-1);
   }
+
+#ifdef USE_FILE_INO
   {
     struct stat st;
     fstat(fileno(in), &st);
     fchmod(fileno(out), st.st_mode);
   }
+#endif
 
   if (!options->have("mode"))
     set_mode_from_extension(options, file_name);
@@ -1215,27 +1219,27 @@ public:
   bool at_end() const {return *in;}
 };
 
-void dump (aspeller::LocalWordSet lws, Convert * conv) 
+void dump (aspeller::LocalDict lws, Convert * conv) 
 {
   using namespace aspeller;
 
-  switch (lws.word_set->basic_type) {
-  case DataSet::basic_word_set:
+  switch (lws.dict->basic_type) {
+  case Dict::basic_dict:
     {
-      BasicWordSet * ws = static_cast<BasicWordSet *>(lws.word_set);
+      BasicDict * ws = static_cast<BasicDict *>(lws.dict);
       StackPtr<WordEntryEnumeration> els(ws->detailed_elements());
       WordEntry * wi;
       while (wi = els->next(), wi) {
-        wi->write(COUT,*ws->lang(), lws.local_info.convert, conv);
+        wi->write(COUT,*ws->lang(), lws.convert, conv);
         COUT << '\n';
       }
     }
     break;
-  case DataSet::basic_multi_set:
+  case Dict::multi_dict:
     {
-      StackPtr<BasicMultiSet::Enum> els 
-	(static_cast<BasicMultiSet *>(lws.word_set)->detailed_elements());
-      LocalWordSet ws;
+      StackPtr<MultiDict::Enum> els 
+	(static_cast<MultiDict *>(lws.dict)->detailed_elements());
+      LocalDict ws;
       while (ws = els->next(), ws) 
 	dump (ws, conv);
     }
@@ -1257,7 +1261,7 @@ void master () {
 
   if (action == do_create) {
     
-    EXIT_ON_ERR(create_default_readonly_word_set
+    EXIT_ON_ERR(create_default_readonly_basic_dict
                 (new IstreamVirEnumeration(CIN),
                  *config));
 
@@ -1268,14 +1272,10 @@ void master () {
     
   } else if (action == do_dump) {
 
-    EXIT_ON_ERR_SET(add_data_set(config->retrieve("master-path"), 
-                                 *config),
-                    LoadableDataSet *, mas);
-    LocalWordSetInfo wsi;
-    wsi.set(mas->lang(), config);
-    StackPtr<Convert> conv(setup_conv(mas->lang(), config));
-    dump(LocalWordSet(mas,wsi), conv);
-    delete mas;
+    LocalDict d;
+    EXIT_ON_ERR(add_data_set(config->retrieve("master-path"), *config, d));
+    StackPtr<Convert> conv(setup_conv(d.dict->lang(), config));
+    dump(d, conv);
   }
 }
 
@@ -1319,11 +1319,11 @@ void personal () {
 
     StackPtr<Config> config(new_basic_config());
     EXIT_ON_ERR(config->read_in_settings(options));
-    WritableWordSet * per = new_default_writable_word_set();
-    per->load(config->retrieve("personal-path"), config);
+    WritableBasicDict * per = new_default_writable_basic_dict();
+    per->load(config->retrieve("personal-path"), *config);
     StackPtr<WordEntryEnumeration> els(per->detailed_elements());
-    LocalWordSetInfo wsi;
-    wsi.set(per->lang(), config);
+    LocalDictInfo wsi;
+    wsi.set(per->lang(), *config);
     StackPtr<Convert> conv(setup_conv(per->lang(), config));
 
     WordEntry * wi;
@@ -1384,8 +1384,8 @@ void repl() {
     StackPtr<Config> config(new_basic_config());
     EXIT_ON_ERR(config->read_in_settings());
 
-     WritableReplacementSet * repl = new_default_writable_replacement_set();
-     repl->load(config->retrieve("repl-path"), config);
+     WritableReplacementDict * repl = new_default_writable_replacement_dict();
+     repl->load(config->retrieve("repl-path"), *config);
      StackPtr<WordEntryEnumeration> els(repl->detailed_elements());
  
      WordEntry * rl = 0;

@@ -1,5 +1,8 @@
 // Copyright 2000 by Kevin Atkinson under the terms of the LGPL
 
+#ifndef ASPELLER_SUGGEST__HPP
+#define ASPELLER_SUGGEST__HPP
+
 #include "word_list.hpp"
 #include "enumeration.hpp"
 #include "parm_string.hpp"
@@ -38,3 +41,4 @@ namespace aspeller {
 }
 
 
+#endif

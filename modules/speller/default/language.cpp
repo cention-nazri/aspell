@@ -17,6 +17,10 @@
 #include "cache-t.hpp"
 #include "getdata.hpp"
 
+#ifdef ENABLE_NLS
+#  include <langinfo.h>
+#endif
+
 namespace aspeller {
 
   static const int FOR_CONFIG = 1;
@@ -44,7 +48,7 @@ namespace aspeller {
 
   static GlobalCache<Language> language_cache;
 
-  PosibErr<void> Language::setup(const String & lang, Config * config)
+  PosibErr<void> Language::setup(const String & lang, const Config * config)
   {
     //
     // get_lang_info
@@ -399,15 +403,15 @@ namespace aspeller {
   }
 
 
-  PosibErr<Language *> new_language(Config & config, ParmString lang)
+  PosibErr<Language *> new_language(const Config & config, ParmString lang)
   {
     if (!lang)
-      return language_cache.get(config.retrieve("actual-lang"), &config);
+      return get_cache_data(&language_cache, &config, config.retrieve("actual-lang"));
     else
-      return language_cache.get(lang, &config);
+      return get_cache_data(&language_cache, &config, lang);
   }
 
-  PosibErr<void> open_affix_file(Config & c, FStream & f)
+  PosibErr<void> open_affix_file(const Config & c, FStream & f)
   {
 
     String lang = c.retrieve("actual-lang");
@@ -427,13 +431,4 @@ namespace aspeller {
     return no_err;
   }
 
-}
-
-namespace acommon {
-
-  using aspeller::Language;
-  
-  template
-  void release_cache_data(GlobalCache<Language> *, const Language *);
-  
 }

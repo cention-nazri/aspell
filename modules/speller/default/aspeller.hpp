@@ -10,6 +10,7 @@
 
 namespace aspeller {
 
+#if 0
   class SpellerImpl::DataSetCollection {
     friend class SpellerImpl;
   public:
@@ -19,12 +20,11 @@ namespace aspeller {
       bool              use_to_check;
       bool              use_to_suggest;
       bool              save_on_saveall;
-      bool              own;
       SpecialId         special_id;
       LocalWordSetInfo  local_info;
       Item(DataSet * w) : data_set(w), 
 	use_to_check(false), use_to_suggest(false), 
-	save_on_saveall(false), own(false), special_id(none_id)
+	save_on_saveall(false), special_id(none_id)
       {}
       void set_sensible_defaults();
     };
@@ -91,6 +91,7 @@ namespace aspeller {
       return i;
     }
   };
+#endif
 }
 
 #endif

@@ -135,7 +135,7 @@ namespace {
     SoundslikeJump() {memset(this, 0, sizeof(SoundslikeJump));}
   };
   
-  class ReadOnlyWS : public BasicWordSet
+  class ReadOnlyWS : public BasicDict
   {
       
   public: //but don't use
@@ -200,8 +200,9 @@ namespace {
 	  free(block);
       }
     }
-      
-    PosibErr<void> load(ParmString, Config *, SpellerImpl *, const LocalWordSetInfo *);
+    
+    PosibErr<void> load(ParmString, const Config &, LocalDictList *, 
+                        SpellerImpl *, const LocalDictInfo *);
 
     bool lookup(ParmString word, WordEntry &, const SensitiveCompare &) const;
 
@@ -270,8 +271,9 @@ namespace {
     u32int affix_info; // none zero if affix information is encoded in table
   };
 
-  PosibErr<void> ReadOnlyWS::load(ParmString f0, Config * config, 
-				  SpellerImpl *, const LocalWordSetInfo *)
+  PosibErr<void> ReadOnlyWS::load(ParmString f0, const Config & config, 
+                                  LocalDictList *, 
+                                  SpellerImpl *, const LocalDictInfo *)
   {
     set_file_name(f0);
     const char * fn = file_name();
@@ -304,7 +306,7 @@ namespace {
     word.resize(data_head.lang_name_size);
     f.read(word.data(), data_head.lang_name_size);
 
-    PosibErr<void> pe = set_check_lang(word.data(),config);
+    PosibErr<void> pe = set_check_lang(word.data(),&config);
     if (pe.has_err()) {
       if (pe.prvw_err()->is_a(language_related_error))
         return pe.with_file(fn);
@@ -577,7 +579,7 @@ namespace {
 
 namespace aspeller {
 
-  BasicWordSet * new_default_readonly_word_set() {
+  BasicDict * new_default_readonly_basic_dict() {
     return new ReadOnlyWS();
   }
   
@@ -1113,8 +1115,8 @@ namespace {
 }
 
 namespace aspeller {
-  PosibErr<void> create_default_readonly_word_set(StringEnumeration * els,
-                                                  Config & config)
+  PosibErr<void> create_default_readonly_basic_dict(StringEnumeration * els,
+                                                    Config & config)
   {
     CachePtr<Language> lang;
     PosibErr<Language *> res = new_language(config);

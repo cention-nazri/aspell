@@ -1,9 +1,6 @@
-#ifndef __ACOMMON_CACHE_T__
-#define __ACOMMON_CACHE_T__
+#ifndef ACOMMON_CACHE_T__HPP
+#define ACOMMON_CACHE_T__HPP
 
-#include <assert.h>
-
-#include "string.hpp"
 #include "lock.hpp"
 #include "cache.hpp"
 
@@ -13,76 +10,45 @@ namespace acommon {
 
 class GlobalCacheBase
 {
-public: // but don't use
-  mutable Mutex lock;
-};
-
-template <class Data>
-class GlobalCache : public GlobalCacheBase
-{
 public:
-  typedef typename Data::CacheKey    Key;
-  typedef typename Data::CacheConfig Config;
-private:
+  mutable Mutex lock;
+protected:
   class List
   {
-    Data * first;
+    Cacheable * first;
   public:
     List() : first(0) {}
-    Data * find(const Key & id) {
-      Data * cur = first;
+    template <class D>
+    D * find(const typename D::CacheKey & id, D * = 0) {
+      D * cur = static_cast<D *>(first);
       while (cur && !cur->cache_key_eq(id))
-        cur = static_cast<Data *>(cur->next);
+        cur = static_cast<D *>(cur->next);
       return cur;
     }
-    void add(Data * node) {
+    void add(Cacheable * node) {
       node->next = first;
       node->attached = true;
       first = node;
     }
-    void del(Data * d) {
-      Cacheable * * cur = (Cacheable * *)(&first);
-      while (*cur && *cur != d) cur = &((*cur)->next);
-      assert(*cur);
-      *cur = (*cur)->next;
-      d->attached = false;
-    }
+    void del(Cacheable * d);
   };
   List list;
 public:
-  PosibErr<Data *> get(const Key & key, Config * config) {
-    LOCK(&lock);
-    Data * n = list.find(key);
-    {
-      //CERR << "Getting " << key << "\n";
-      if (n) {
-        //CERR << "FOUND IN CACHE\n"; 
-        goto ret;
-      }
-      PosibErr<Data *> res = Data::get_new(key, config);
-      if (res.has_err()) {
-        //CERR << "ERROR\n"; 
-        return res;
-      }
-      n = res.data;
-      list.add(n);
-      n->cache = this;
-      //CERR << "LOADED FROM DISK\n";
-    } 
-  ret:
-    n->refcount++;
-    return n;
-  }
-  void release(Data * d) {
-    //CERR << "RELEASE\n";
-    LOCK(&lock);
-    d->refcount--;
-    assert(d->refcount >= 0);
-    if (d->refcount != 0) return;
-    //CERR << "DEL\n";
-    if (d->attached)
-      list.del(d);
-    delete d;
+  void add(Cacheable * n);
+  void release(Cacheable * d);
+};
+
+template <class D>
+class GlobalCache : public GlobalCacheBase
+{
+public:
+  typedef D Data;
+  typedef typename Data::CacheKey Key;
+public:
+  Data * find(const Key & key) {
+    Data * dummy;
+    // needed due to gcc (< 3.4) bug.
+    return list.find(key,dummy);
   }
 };
 
@@ -91,13 +57,22 @@ PosibErr<Data *> get_cache_data(GlobalCache<Data> * cache,
                                 typename Data::CacheConfig * config, 
                                 const typename Data::CacheKey & key)
 {
-  return cache->get(key, config);
-}
-
-template <class Data>
-void release_cache_data(GlobalCache<Data> * cache, const Data * d)
-{
-  cache->release(const_cast<Data *>(d));
+  LOCK(&cache->lock);
+  Data * n = cache->find(key);
+  //CERR << "Getting " << key << "\n";
+  if (n) {
+    n->copy();
+    return n;
+  }
+  PosibErr<Data *> res = Data::get_new(key, config);
+  if (res.has_err()) {
+    //CERR << "ERROR\n"; 
+    return res;
+  }
+  n = res.data;
+  cache->add(n);
+  //CERR << "LOADED FROM DISK\n";
+  return n;
 }
 
 }

@@ -13,16 +13,19 @@
 #include "fstream.hpp"
 #include "language.hpp"
 #include "speller_impl.hpp"
+#include "cache-t.hpp"
 
 #include "iostream.hpp"
 
 namespace aspeller {
 
+  GlobalCache<Dict> dict_cache;
+
   //
-  // DataSet impl
+  // Dict impl
   //
 
-  DataSet::Id::Id(DataSet * p, const FileName & fn)
+  Dict::Id::Id(Dict * p, const FileName & fn)
     : ptr(p)
   {
     file_name = fn.name;
@@ -39,7 +42,7 @@ namespace aspeller {
 #endif
   }
 
-  bool operator==(const DataSet::Id & rhs, const DataSet::Id & lhs)
+  bool operator==(const Dict::Id & rhs, const Dict::Id & lhs)
   {
     if (rhs.ptr == 0 || lhs.ptr == 0) {
       if (rhs.file_name == 0 || lhs.file_name == 0)
@@ -54,42 +57,34 @@ namespace aspeller {
     }
   }
 
-  PosibErr<void> DataSet::attach(const Language &l) {
+  PosibErr<void> Dict::attach(const Language &l) {
     if (lang_ && strcmp(l.name(),lang_->name()) != 0)
       return make_err(mismatched_language, lang_->name(), l.name());
     if (!lang_) lang_.copy(&l);
-    ++attach_count_;
+    copy();
     return no_err;
   }
 
-  void DataSet::detach() {
-    --attach_count_;
-  }
-
-  DataSet::DataSet()
-    : lang_(), attach_count_(0), id_(), basic_type(no_type) 
+  Dict::Dict()
+    : Cacheable(&dict_cache), lang_(), id_(), basic_type(no_type) 
   {
     id_.reset(new Id(this));
   }
 
-  DataSet::~DataSet() {
+  Dict::~Dict() {
   }
 
-  bool DataSet::is_attached() const {
-    return attach_count_;
-  }
-
-  const char * DataSet::lang_name() const {
+  const char * Dict::lang_name() const {
     return lang_->name();
   }
 
-  PosibErr<void> DataSet::check_lang(ParmString l) {
+  PosibErr<void> Dict::check_lang(ParmString l) {
     if (l != lang_->name())
       return make_err(mismatched_language, lang_->name(), l);
     return no_err;
   }
 
-  PosibErr<void> DataSet::set_check_lang (ParmString l, Config * config)
+  PosibErr<void> Dict::set_check_lang (ParmString l, const Config * config)
   {
     if (lang_ == 0) {
       PosibErr<Language *> res = new_language(*config, l);
@@ -103,19 +98,19 @@ namespace aspeller {
     return no_err;
   }
 
-  void DataSet::FileName::copy(const FileName & other) 
+  void Dict::FileName::copy(const FileName & other) 
   {
     const_cast<String &      >(path) = other.path;
     const_cast<const char * &>(name) = path.c_str() + (other.name - other.path.c_str());
   }
 
-  void DataSet::FileName::clear()
+  void Dict::FileName::clear()
   {
     path  = "";
     name = path.c_str();
   }
 
-  void DataSet::FileName::set(ParmString str) 
+  void Dict::FileName::set(ParmString str) 
   {
     path = str;
     int i = path.size() - 1;
@@ -130,17 +125,17 @@ namespace aspeller {
   }
 
   //
-  // LoadableDataSet impl
+  // LoadableDict impl
   //
 
-  PosibErr<void> LoadableDataSet::set_file_name(ParmString fn) 
+  PosibErr<void> LoadableDict::set_file_name(ParmString fn) 
   {
     file_name_.set(fn);
     *id_ = Id(this, file_name_);
     return no_err;
   }
 
-  PosibErr<void> LoadableDataSet::update_file_info(FStream & f) 
+  PosibErr<void> LoadableDict::update_file_info(FStream & f) 
   {
 #ifdef USE_FILE_INO
     struct stat s;
@@ -153,14 +148,14 @@ namespace aspeller {
   }
 
   //
-  // BasicWordSet
+  // BasicDict
   //
 
-//   class BasicWordSetEnumeration : public StringEnumeration 
+//   class BasicDictEnumeration : public StringEnumeration 
 //   {
-//     BasicWordSet::Emul real_;
+//     BasicDict::Emul real_;
 //   public:
-//     BasicWordSetEnumeration(BasicWordSet::VirEmul * r) : real_(r) {}
+//     BasicDictEnumeration(BasicDict::VirEmul * r) : real_(r) {}
 
 //     bool at_end() const {
 //       return real_.at_end();
@@ -169,17 +164,17 @@ namespace aspeller {
 //       return real_.next().word; // FIXME: It's not this simple
 //     }
 //     StringEnumeration * clone() const {
-//       return new BasicWordSetEnumeration(*this);
+//       return new BasicDictEnumeration(*this);
 //     }
 //     void assign(const StringEnumeration * other) {
-//       *this = *static_cast<const BasicWordSetEnumeration *>(other);
+//       *this = *static_cast<const BasicDictEnumeration *>(other);
 //     }
 //   };
 
-  StringEnumeration * BasicWordSet::elements() const 
+  StringEnumeration * BasicDict::elements() const 
   {
     abort(); // FIXME
-    //return new BasicWordSetEnumeration(detailed_elements());
+    //return new BasicDictEnumeration(detailed_elements());
   }
 
 #define write_conv(s) do { \
@@ -203,12 +198,14 @@ namespace aspeller {
     return o;
   }
 
-  PosibErr<LoadableDataSet *> add_data_set(ParmString fn,
-					   Config & config,
-					   SpellerImpl * speller,
-					   const LocalWordSetInfo * local_info,
-					   ParmString dir,
-					   DataType allowed)
+  PosibErr<void> add_data_set(ParmString fn,
+                              const Config & config,
+                              LocalDict & res,
+                              LocalDictList * new_dicts,
+                              SpellerImpl * speller,
+                              const LocalDictInfo * local_info,
+                              ParmString dir,
+                              DataType allowed)
   {
     static const char * suffix_list[] = {"", ".multi", ".alias", 
 					 ".spcl", ".special",
@@ -219,7 +216,7 @@ namespace aspeller {
       = suffix_list + sizeof(suffix_list)/sizeof(const char *);
     String dict_dir = config.retrieve("dict-dir");
     String true_file_name;
-    DataSet::FileName file_name(fn);
+    Dict::FileName file_name(fn);
     const char * d = dir;
     do {
       if (d == 0) d = dict_dir.c_str();
@@ -270,59 +267,84 @@ namespace aspeller {
       return make_err(bad_file_format, true_file_name
 		      , _("is not one of the allowed types"));
 
-    LoadableDataSet * ws = 0;
-    if (speller != 0)
-      ws = speller
-	->locate(DataSet::Id(0,DataSet::FileName(true_file_name))).word_set;
+    Dict::Id id(0,Dict::FileName(true_file_name));
 
-    if (ws != 0) {
-      //  cerr << "Warning: " << true_file_name << " already exists!" << endl;      
-      return ws;
+    if (speller != 0) {
+      const LocalDict * d = speller->locate(id);
+      if (d != 0) {
+        res = *d;
+        return no_err;
+      }
     }
 
-    switch (actual_type) {
-    case DT_ReadOnly: 
-      ws = new_default_readonly_word_set();
-      break;
-    case DT_Multi:
-      ws = new_default_multi_word_set();
-      break;
-    case DT_Writable: 
-      ws = new_default_writable_word_set(); 
-      break;
-    case DT_WritableRepl:
-      ws = new_default_writable_replacement_set();
-      break;
-    default:
-      abort();
+    res.dict = 0;
+
+    if (actual_type == DT_ReadOnly) { // try to get it from the cache
+      res.dict = dict_cache.find(id);
     }
 
-    RET_ON_ERR(ws->load(true_file_name, &config, speller, local_info));
-    if (speller != 0)
-      speller->steal(ws, local_info);
+    if (!res.dict) {
 
-    return ws;
+      StackPtr<LoadableDict> w;
+      switch (actual_type) {
+      case DT_ReadOnly: 
+        w = new_default_readonly_basic_dict();
+        break;
+      case DT_Multi:
+        w = new_default_multi_dict();
+        break;
+      case DT_Writable: 
+        w = new_default_writable_basic_dict();
+        break;
+      case DT_WritableRepl:
+        w = new_default_writable_replacement_dict();
+        break;
+      default:
+        abort();
+      }
+
+      RET_ON_ERR(w->load(true_file_name, config, new_dicts, speller, local_info));
+
+      if (actual_type == DT_ReadOnly)
+        dict_cache.add(w);
+      
+      res.dict = w.release();
+
+    } else {
+      
+      res.dict->copy();
+      
+    }
+
+    if (local_info) {
+      res.set(*local_info);
+      res.set_language(res.dict->lang());
+    } else
+      res.set(res.dict->lang(), config);
+    if (new_dicts)
+      new_dicts->add(res);
     
+    return no_err;
   }
 
   //
-  // LocalWordSetInfo
+  // LocalDictInfo
   //
   
-  void LocalWordSetInfo::set_language(const Language * l)
+  void LocalDictInfo::set_language(const Language * l)
   {
     compare.lang = l;
     convert.lang = l;
   }
 
-  void LocalWordSetInfo::set(const Language * l, const Config * c, bool strip)
+  void LocalDictInfo::set(const Language * l, const Config & c, bool strip)
   {
-    if (c->have("strip-accents"))
-      strip = c->retrieve_bool("strip-accents");
+    if (c.have("strip-accents"))
+      strip = c.retrieve_bool("strip-accents");
 
     compare.lang = l;
-    compare.case_insensitive = c->retrieve_bool("ignore-case");
-    compare.ignore_accents   = c->retrieve_bool("ignore-accents");
+    compare.case_insensitive = c.retrieve_bool("ignore-case");
+    compare.ignore_accents   = c.retrieve_bool("ignore-accents");
     compare.strip_accents    = strip;
     convert.lang = l;
     convert.strip_accents = strip;

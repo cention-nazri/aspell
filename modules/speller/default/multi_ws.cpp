@@ -13,10 +13,11 @@
 
 namespace aspeller {
 
-  class MultiWS : public BasicMultiSet
+  class MultiWS : public MultiDict
   {
   public:
-    PosibErr<void> load(ParmString, Config *, SpellerImpl *, const LocalWordSetInfo * li);
+    PosibErr<void> load(ParmString, const Config &, LocalDictList *, 
+                        SpellerImpl *, const LocalDictInfo *);
 
     Enum * detailed_elements() const;
     unsigned int      size()     const;
@@ -27,18 +28,20 @@ namespace aspeller {
   private:
     Wss wss;
   };
-  
+
   PosibErr<void> MultiWS::load(ParmString fn, 
-			       Config * config, SpellerImpl * speller, 
-			       const LocalWordSetInfo * li)
+                               const Config & config, 
+                               LocalDictList * new_dicts,
+                               SpellerImpl * speller,
+                               const LocalDictInfo * li)
   {
     String dir = figure_out_dir("",fn);
     FStream in;
     RET_ON_ERR(in.open(fn, "r"));
     set_file_name(fn);
     bool strip_accents;
-    if (config->have("strip-accents"))
-      strip_accents = config->retrieve_bool("strip-accents");
+    if (config.have("strip-accents"))
+      strip_accents = config.retrieve_bool("strip-accents");
     else if (li == 0)
       strip_accents = false;
     else
@@ -47,7 +50,7 @@ namespace aspeller {
     while(getdata_pair(in, d, buf)) 
     {
       if (d.key == "strip-accents") {
-	if (config->have("strip-accents")) {
+	if (config.have("strip-accents")) {
 	  // do nothing
 	} if (d.value == "true") {
 	  strip_accents = true;
@@ -57,13 +60,12 @@ namespace aspeller {
 	  return make_err(bad_value, "strip-accents", d.value, "true or false").with_file(fn, d.line_num);
 	}
       } else if (d.key == "add") {
-	LocalWordSet ws;
-	ws.local_info.set(0, config, strip_accents);
-        RET_ON_ERR_SET(add_data_set(d.value, *config, speller, &ws.local_info, dir),LoadableDataSet  *,wstemp);
-        ws.word_set=wstemp;
-        RET_ON_ERR(set_check_lang(ws.word_set->lang()->name(), config));
-	ws.local_info.set_language(ws.word_set->lang());
-	wss.push_back(ws);
+
+	LocalDict res;
+	res.set(0, config, strip_accents);
+        RET_ON_ERR(add_data_set(d.value, config, res, new_dicts, speller, &res, dir));
+        RET_ON_ERR(set_check_lang(res.dict->lang()->name(), &config));
+	wss.push_back(res);
 
       } else {
 	
@@ -96,7 +98,7 @@ namespace aspeller {
     return wss.size();
   }
 
-  BasicMultiSet * new_default_multi_word_set() 
+  MultiDict * new_default_multi_dict() 
   {
     return new MultiWS();
   }

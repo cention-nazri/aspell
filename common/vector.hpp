@@ -8,7 +8,6 @@
 #define ASPELL_VECTOR__HPP
 
 #include <vector>
-#include <string.h>
 
 namespace acommon
 {

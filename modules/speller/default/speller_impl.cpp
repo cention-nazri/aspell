@@ -50,21 +50,18 @@ namespace aspeller {
   //
 
   PosibErr<void> SpellerImpl::add_to_personal(MutableString word) {
-    DataSetCollection::Iterator i = wls_->locate(personal_id);
-    if (i == wls_->end()) return no_err;
-    return static_cast<WritableWordSet *>(i->data_set)->add(word);
+    if (!personal_) return no_err;
+    return personal_->add(word);
   }
   
   PosibErr<void> SpellerImpl::add_to_session(MutableString word) {
-    DataSetCollection::Iterator i = wls_->locate(session_id);
-    if (i == wls_->end()) return no_err;
-    return static_cast<WritableWordSet *>(i->data_set)->add(word);
+    if (!session_) return no_err;
+    return session_->add(word);
   }
 
   PosibErr<void> SpellerImpl::clear_session() {
-    DataSetCollection::Iterator i = wls_->locate(session_id);
-    if (i == wls_->end()) return no_err;
-    return static_cast<WritableWordSet *>(i->data_set)->clear();
+    if (!session_) return no_err;
+    return session_->clear();
   }
 
   PosibErr<void> SpellerImpl::store_replacement(MutableString mis, 
@@ -78,8 +75,7 @@ namespace aspeller {
 						bool memory) 
   {
     if (ignore_repl) return no_err;
-    DataSetCollection::Iterator i = wls_->locate(personal_repl_id);
-    if (i == wls_->end()) return no_err;
+    if (!repl_) return no_err;
     String::size_type pos;
     StackPtr<StringEnumeration> sugels(intr_suggest_->suggest(mis.c_str()).elements());
     const char * first_word = sugels->next();
@@ -101,9 +97,7 @@ namespace aspeller {
  	cor_orignal_casing += cor2;
       }
       if (first_word == 0 || cor != first_word) {
- 	static_cast<WritableReplacementSet *>(i->data_set)
- 	  ->add(aspeller::to_lower(lang(), mis), 
- 		cor_orignal_casing);
+ 	repl_->add(aspeller::to_lower(lang(), mis), cor_orignal_casing);
       }
       
       if (memory && prev_cor_repl_ == mis) 
@@ -128,43 +122,6 @@ namespace aspeller {
   {
     return &suggest_->suggest(word);
   }
-  
-  SpellerImpl::SpecialId SpellerImpl::check_id(const DataSet::Id & wl) const {
-    return wls_->locate(wl)->special_id;
-  }
-
-  bool SpellerImpl::use_to_check(const DataSet::Id & wl) const 
-  {
-    return wls_->locate(wl)->use_to_check;
-  }
-
-  void SpellerImpl::use_to_check(const DataSet::Id & wl, bool v) {
-    wls_->locate(wl)->use_to_check = v;
-  }
-
-  bool SpellerImpl::use_to_suggest(const DataSet::Id & wl) const {
-    return wls_->locate(wl)->use_to_suggest;
-  }
-
-  void SpellerImpl::use_to_suggest(const DataSet::Id & wl, bool v) {
-    wls_->locate(wl)->use_to_suggest = v;
-  }
-
-  bool SpellerImpl::save_on_saveall(const DataSet::Id & wl) const {
-    return wls_->locate(wl)->save_on_saveall;
-  }
-
-  void SpellerImpl::save_on_saveall(const DataSet::Id & wl, bool v) {
-    wls_->locate(wl)->save_on_saveall = v;
-  }
-
-  bool SpellerImpl::own(const DataSet::Id & wl) const {
-    return wls_->locate(wl)->own;
-  }
-
-  void SpellerImpl::own(const DataSet::Id & wl, bool v) {
-    wls_->locate(wl)->own = v;
-  }
 
   bool SpellerImpl::check_simple (ParmString w, WordEntry & w0) 
   {
@@ -175,7 +132,7 @@ namespace aspeller {
     WS::const_iterator i   = check_ws.begin();
     WS::const_iterator end = check_ws.end();
     do {
-      if (i->ws->lookup(w, w0, i->cmp)) return true;
+      if (i->dict->lookup(w, w0, i->compare)) return true;
       ++i;
     } while (i != end);
     return false;
@@ -232,19 +189,18 @@ namespace aspeller {
   //
   
   PosibErr<void> SpellerImpl::save_all_word_lists() {
-    DataSetCollection::Iterator i   = wls_->begin();
-    DataSetCollection::Iterator end = wls_->end();
-    WritableDataSet * wl;
-    for (; i != end; ++i) {
+    SpellerDict * i = dicts_;
+    WritableDict * wl;
+    for (; i; i = i->next) {
       if  (i->save_on_saveall && 
-	   (wl = dynamic_cast<WritableDataSet *>(i->data_set)))
+	   (wl = dynamic_cast<WritableDict *>(i->dict)))
 	RET_ON_ERR(wl->synchronize());
     }
     return no_err;
   }
-
+  
   int SpellerImpl::num_wordlists() const {
-    return wls_->wordlists_.size();
+    return 0; //FIXME
   }
 
   SpellerImpl::WordLists SpellerImpl::wordlists() const {
@@ -252,144 +208,65 @@ namespace aspeller {
     //return MakeEnumeration<DataSetCollection::Parms>(wls_->begin(), DataSetCollection::Parms(wls_->end()));
   }
 
-  bool SpellerImpl::have(const DataSet::Id &to_find) const {
-    return wls_->locate(to_find) != wls_->end();
-  }
-
-  LocalWordSet SpellerImpl::locate(const DataSet::Id &to_find) {
-    DataSetCollection::Iterator i = wls_->locate(to_find);
-    LocalWordSet ws;
-    if (i == wls_->end()) {
-      return LocalWordSet();
-    } else {
-      return LocalWordSet(static_cast<LoadableDataSet *>(i->data_set), 
-			  i->local_info);
-    }
-    return ws;
-  }
-
-  bool SpellerImpl::have(SpellerImpl::SpecialId to_find) const {
-    return wls_->locate(to_find) != wls_->end();
-  }
-
   PosibErr<const WordList *> SpellerImpl::personal_word_list() const {
-    return 
-      static_cast<const WordList *>
-      (static_cast<const BasicWordSet *>
-       (wls_->locate(personal_id)->data_set));
+    return static_cast<const WordList *>(personal_);
   }
 
   PosibErr<const WordList *> SpellerImpl::session_word_list() const {
-    return 
-      static_cast<const WordList *>
-      (static_cast<const BasicWordSet *>
-       (wls_->locate(session_id)->data_set));
+    return static_cast<const WordList *>(session_);
   }
 
   PosibErr<const WordList *> SpellerImpl::main_word_list() const {
-    return 
-      static_cast<const WordList *>
-      (static_cast<const BasicWordSet *>
-       (wls_->locate(main_id)->data_set));
+    return dynamic_cast<const WordList *>(main_);
   }
 
-  bool SpellerImpl::attach(DataSet * w, const LocalWordSetInfo * li) {
-    DataSetCollection::Iterator i = wls_->locate(w);
-    if (i != wls_->end()) {
-      return false;
-    } else {
-      if (!lang_) 
-      {
-	lang_.copy(w->lang());
-	config_->replace("lang", lang_name());
-	config_->replace("language-tag", lang_name());
-      }
-      w->attach(*lang_);
-      DataSetCollection::Item wc(w);
-      wc.set_sensible_defaults();
-      if (li == 0) {
-	wc.local_info.set(lang_, config_);
-      } else {
-	wc.local_info = *li;
-	wc.local_info.set_language(lang_);
-      }
-      wls_->wordlists_.push_back(wc);
-      return true;
+  const SpellerDict * SpellerImpl::locate (const Dict::Id & id) const
+  {
+    for (const SpellerDict * i = dicts_; i; i = i->next)
+      if (i->dict->id() == id) return i;
+    return 0;
+  }
+
+  void SpellerImpl::add_dict(SpellerDict * wc)
+  {
+    Dict * w = wc->dict;
+    assert(locate(w->id()) == 0);
+
+    if (!lang_) 
+    {
+      lang_.copy(w->lang());
+      config_->replace("lang", lang_name());
+      config_->replace("language-tag", lang_name());
     }
-  }
 
-  bool SpellerImpl::steal(DataSet * w, const LocalWordSetInfo * li) {
-    bool ret = attach(w,li);
-    own(w, true);
-    return ret;
-  }
+    // add to master list
+    wc->next = dicts_;
+    dicts_ = wc;
 
-  bool SpellerImpl::detach(const DataSet::Id &w) {
-    DataSetCollection::Iterator to_del = wls_->locate(w);
-    if (to_del == wls_->wordlists_.end()) return false;
-    to_del->data_set->detach();
-    wls_->wordlists_.erase(to_del);
-    return true;
-  }  
-
-  bool SpellerImpl::destroy(const DataSet::Id & w) {
-    DataSetCollection::Iterator to_del = wls_->locate(w);
-    if (to_del == wls_->wordlists_.end()) return false;
-    assert(to_del->own);
-    delete to_del->data_set;
-    wls_->wordlists_.erase(to_del);
-    return true;
-  }
-
-  void SpellerImpl::change_id(const DataSet::Id & w , SpecialId id) {
-    DataSetCollection::Iterator to_change = wls_->locate(w);
-
-    assert(to_change != wls_->end());
-
-    assert (id == none_id || !have(id));
-    
-    switch (id) {
+    // check if it has a special_id and act accordingly
+    switch (wc->special_id) {
     case main_id:
-      if (dynamic_cast<BasicWordSet *>(to_change->data_set)) {
-
-	to_change->use_to_check    = true;
-	to_change->use_to_suggest  = true;
-	to_change->save_on_saveall = false;
-
-      } else if (dynamic_cast<BasicMultiSet *>(to_change->data_set)) {
-	
-	to_change->use_to_check    = false;
-	to_change->use_to_suggest  = false;
-	to_change->save_on_saveall = false;
-	
-      } else {
-	
-	abort();
-	
-      }
+      assert(main_ == 0);
+      main_ = w;
       break;
     case personal_id:
-      assert(dynamic_cast<WritableWordSet *>(to_change->data_set));
-      to_change->use_to_check = true;
-      to_change->use_to_suggest = true;
-      to_change->save_on_saveall = true;
+      assert(dynamic_cast<WritableBasicDict *>(w));
+      assert(personal_ == 0);
+      personal_ = static_cast<WritableBasicDict *>(w);
       break;
     case session_id:
-      assert(dynamic_cast<WritableWordSet *>(to_change->data_set));
-      to_change->use_to_check = true;
-      to_change->use_to_suggest = true;
-      to_change->save_on_saveall = false;
+      assert(dynamic_cast<WritableBasicDict *>(w));
+      assert(session_ == 0);
+      session_ = static_cast<WritableBasicDict *>(w);
       break;
     case personal_repl_id:
-      assert (dynamic_cast<BasicReplacementSet *>(to_change->data_set));
-      to_change->use_to_check = false;
-      to_change->use_to_suggest = true;
-      to_change->save_on_saveall = config_->retrieve_bool("save-repl");
+      assert(dynamic_cast<WritableReplacementDict *>(w));
+      assert(repl_ == 0);
+      repl_ = static_cast<WritableReplacementDict *>(w);
       break;
     case none_id:
       break;
     }
-    to_change->special_id = id;
   }
 
   //////////////////////////////////////////////////////////////////////
@@ -536,8 +413,20 @@ namespace aspeller {
   //
 
   SpellerImpl::SpellerImpl() 
-    : Speller(0) /* FIXME */, ignore_repl(true), guess_info(7)
+    : Speller(0) /* FIXME */, ignore_repl(true), 
+      dicts_(0), personal_(0), session_(0), repl_(0), main_(0),
+      guess_info(7)
   {}
+
+  inline void add_dicts(SpellerImpl * sp, LocalDictList & d)
+  {
+    for (;!d.empty(); d.pop())
+    {
+      if (!sp->locate(d.last().dict->id())) {
+        sp->add_dict(new SpellerDict(d.last()));
+      }
+    }
+  }
 
   PosibErr<void> SpellerImpl::setup(Config * c) {
     assert (config_ == 0);
@@ -546,63 +435,61 @@ namespace aspeller {
     ignore_repl = config_->retrieve_bool("ignore-repl");
     ignore_count = config_->retrieve_int("ignore");
 
-    wls_.reset(new DataSetCollection());
-
-    RET_ON_ERR_SET(add_data_set(config_->retrieve("master-path"), *config_, this),
-		   LoadableDataSet *, ltemp);
-    
-    change_id(ltemp, main_id);
+    LocalDict res;
+    LocalDictList to_add;
+    RET_ON_ERR(add_data_set(config_->retrieve("master-path"), *config_, res, &to_add, this));
+    add_dicts(this, to_add);
 
     use_soundslike = true;
 
-    {
-      DataSetCollection::Iterator i   = wls_->begin();
-      DataSetCollection::Iterator end = wls_->end();
-      for (; i != end; ++i) {
-	if (const BasicWordSet * ws = dynamic_cast<const BasicWordSet *>(i->data_set)) 
-	  use_soundslike = use_soundslike && ws->have_soundslike;
-      }
+    for (SpellerDict * i = dicts_; i; i = i->next) {
+      if (const BasicDict * ws = dynamic_cast<const BasicDict *>(i->dict)) 
+        use_soundslike = use_soundslike && ws->have_soundslike;
     }
 
     StringList extra_dicts;
     config_->retrieve_list("extra-dicts", &extra_dicts);
     StringListEnumeration els = extra_dicts.elements_obj();
     const char * dict_name;
-    while ( (dict_name = els.next()) != 0)
-      RET_ON_ERR(add_data_set(dict_name,*config_, this));
+    while ( (dict_name = els.next()) != 0) {
+      RET_ON_ERR(add_data_set(dict_name,*config_, res, &to_add, this));
+      add_dicts(this, to_add);
+    }
 
+    bool use_other_dicts = config_->retrieve_bool("use-other-dicts");
+
+    if (use_other_dicts && !personal_)
     {
-      BasicWordSet * temp;
-      temp = new_default_writable_word_set();
+      BasicDict * temp;
+      temp = new_default_writable_basic_dict();
       temp->have_soundslike = use_soundslike;
-      PosibErrBase pe = temp->load(config_->retrieve("personal-path"),config_);
+      PosibErrBase pe = temp->load(config_->retrieve("personal-path"),*config_);
       if (pe.has_err(cant_read_file))
 	temp->set_check_lang(lang_name(), config_);
       else if (pe.has_err())
 	return pe;
-      steal(temp);
-      change_id(temp, personal_id);
+      add_dict(new SpellerDict(temp, lang_, *config_, personal_id));
     }
     
+    if (use_other_dicts && !session_)
     {
-      BasicWordSet * temp;
-      temp = new_default_writable_word_set();
+      BasicDict * temp;
+      temp = new_default_writable_basic_dict();
       temp->have_soundslike = use_soundslike;
       temp->set_check_lang(lang_name(), config_);
-      steal(temp);
-      change_id(temp, session_id);
+      add_dict(new SpellerDict(temp, lang_, *config_, session_id));
     }
      
+    if (use_other_dicts && !repl_)
     {
-      BasicReplacementSet * temp = new_default_writable_replacement_set();
+      ReplacementDict * temp = new_default_writable_replacement_dict();
       temp->have_soundslike = use_soundslike;
-      PosibErrBase pe = temp->load(config_->retrieve("repl-path"),config_);
+      PosibErrBase pe = temp->load(config_->retrieve("repl-path"),*config_);
       if (pe.has_err(cant_read_file))
 	temp->set_check_lang(lang_name(), config_);
       else if (pe.has_err())
 	return pe;
-      steal(temp);
-      change_id(temp, personal_repl_id);
+      add_dict(new SpellerDict(temp, lang_, *config_, personal_repl_id));
     }
 
     const char * sys_enc = lang_->charset();
@@ -641,15 +528,13 @@ namespace aspeller {
     // setup word set lists
     //
 
-    typedef Vector<const DataSetCollection::Item *> AllWS; AllWS all_ws;
-    DataSetCollection::Iterator i   = wls_->begin();
-    DataSetCollection::Iterator end = wls_->end();
-    for (; i != end; ++i) {
-      if (dynamic_cast<const BasicWordSet *>(i->data_set)) {
-        all_ws.push_back(&*i);
+    typedef Vector<SpellerDict *> AllWS; AllWS all_ws;
+    for (SpellerDict * i = dicts_; i; i = i->next) {
+      if (dynamic_cast<const BasicDict *>(i->dict)) {
+        all_ws.push_back(i);
       }
     }
-
+    
     const std::type_info * ti = 0;
     while (!all_ws.empty())
     {
@@ -658,34 +543,34 @@ namespace aspeller {
       AllWS::iterator i = all_ws.begin();
       for (; i != all_ws.end(); ++i)
       {
-        const BasicWordSet * ws = (const BasicWordSet *)(*i)->data_set;
+        const BasicDict * ws = static_cast<const BasicDict *>((*i)->dict);
         if (ti && *ti != typeid(*ws)) continue;
         if ((int)ws->size() > max) {max = ws->size(); i0 = i;}
       }
 
       if (i0 == all_ws.end()) {ti = 0; continue;}
 
-      const DataSetCollection::Item * cur = *i0;
+      SpellerDict * cur = *i0;
 
       all_ws.erase(i0);
 
-      ti = &typeid(*cur->data_set);
+      ti = &typeid(*cur->dict);
 
-      WSInfo inf = {(const BasicWordSet *)cur->data_set, 
-                    cur->local_info.compare,
-                    cur->local_info.convert};
+      WSInfo inf;
+      inf.dict = static_cast<const BasicDict *>(cur->dict);
+      inf.set(*cur);
 
       if (cur->use_to_check) {
         check_ws.push_back(inf);
-        if (inf.ws->affix_compressed) affix_ws.push_back(inf);
+        if (inf.dict->affix_compressed) affix_ws.push_back(inf);
       }
       if (cur->use_to_suggest) {
         suggest_ws.push_back(inf);
-        if (inf.ws->affix_compressed) suggest_affix_ws.push_back(inf);
+        if (inf.dict->affix_compressed) suggest_affix_ws.push_back(inf);
       }
     }
-    fast_scan   = suggest_ws.front().ws->fast_scan;
-    fast_lookup = suggest_ws.front().ws->fast_lookup;
+    fast_scan   = suggest_ws.front().dict->fast_scan;
+    fast_lookup = suggest_ws.front().dict->fast_lookup;
     affix_compress = !affix_ws.empty();
 
     //
@@ -704,11 +589,10 @@ namespace aspeller {
   //
 
   SpellerImpl::~SpellerImpl() {
-    DataSetCollection::Iterator i   = wls_->begin();
-    DataSetCollection::Iterator end = wls_->end();
-    for (; i != end; ++i) {
-      if (i->own && i->data_set)
-	delete i->data_set;
+    while (dicts_) {
+      SpellerDict * next = dicts_->next;
+      delete dicts_;
+      dicts_ = next;
     }
   }
 
@@ -735,20 +619,68 @@ namespace aspeller {
   //
   //
 
-  void SpellerImpl::DataSetCollection::Item::set_sensible_defaults()
+  SpellerDict::SpellerDict(LocalDict & d) 
+    : LocalDict(d), special_id(none_id), next(0) 
   {
-    switch (data_set->basic_type) {
-    case DataSet::basic_word_set:
+    switch (dict->basic_type) {
+    case Dict::basic_dict:
       use_to_check = true;
       use_to_suggest = true;
       break;
-    case DataSet::basic_replacement_set:
+    case Dict::replacement_dict:
       use_to_check = false;
       use_to_suggest = true;
-    case DataSet::basic_multi_set:
+    case Dict::multi_dict:
       break;
     default:
       abort();
+    }
+    save_on_saveall = false;
+  }
+
+  SpellerDict::SpellerDict(Dict * w, const Language * l, const Config & c, SpecialId id)
+    : next(0) 
+  {
+    set(l, c);
+    dict = w;
+    special_id = id;
+    switch (id) {
+    case main_id:
+      if (dict->basic_type == Dict::basic_dict) {
+
+	use_to_check    = true;
+	use_to_suggest  = true;
+	save_on_saveall = false;
+
+      } else if (dict->basic_type == Dict::replacement_dict) {
+	
+	use_to_check    = false;
+	use_to_suggest  = false;
+	save_on_saveall = false;
+	
+      } else {
+	
+	abort();
+	
+      }
+      break;
+    case personal_id:
+      use_to_check = true;
+      use_to_suggest = true;
+      save_on_saveall = true;
+      break;
+    case session_id:
+      use_to_check = true;
+      use_to_suggest = true;
+      save_on_saveall = false;
+      break;
+    case personal_repl_id:
+      use_to_check = false;
+      use_to_suggest = true;
+      save_on_saveall = c.retrieve_bool("save-repl");
+      break;
+    case none_id:
+      break;
     }
   }
 

@@ -1,7 +1,6 @@
-#ifndef __ACOMMON_CACHE__
-#define __ACOMMON_CACHE__
+#ifndef ACOMMON_CACHE__HPP
+#define ACOMMON_CACHE__HPP
 
-#include "string.hpp"
 #include "posib_err.hpp"
 
 namespace acommon {
@@ -14,12 +13,11 @@ PosibErr<Data *> get_cache_data(GlobalCache<Data> *,
                                 typename Data::CacheConfig *, 
                                 const typename Data::CacheKey &);
 
-template <class Data>
-void release_cache_data(GlobalCache<Data> *, const Data *);
-template <class Data>
-static inline void release_cache_data(GlobalCache<const Data> * c, const Data * d)
+class Cacheable;
+void release_cache_data(GlobalCacheBase *, const Cacheable *);
+static inline void release_cache_data(const GlobalCacheBase * c, const Cacheable * d)
 {
-  release_cache_data((GlobalCache<Data> *)c,d);
+  release_cache_data(const_cast<GlobalCacheBase *>(c),d);
 }
 
 class Cacheable
@@ -28,9 +26,10 @@ public: // but don't use
   Cacheable * next;
   mutable int refcount;
   bool attached;
-  void * cache;
+  GlobalCacheBase * cache;
   void copy() const;
-  Cacheable() : next(0), refcount(0), attached(false), cache(0) {}
+  void release() const {release_cache_data(cache,this);}
+  Cacheable(GlobalCacheBase * c = 0) : next(0), refcount(1), attached(false), cache(c) {}
   virtual ~Cacheable() {}
 };
 
@@ -41,8 +40,7 @@ class CachePtr
 
 public:
   void reset(Data * p) {
-    if (ptr) 
-      release_cache_data(static_cast<GlobalCache<Data> *>(ptr->cache), ptr);
+    if (ptr) ptr->release();
     ptr = p;
   }
   void copy(Data * p) {p->copy(); reset(p);}

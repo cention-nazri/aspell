@@ -964,7 +964,7 @@ inline bool LookupInfo::lookup (ParmString word, WordEntry & o) const
   LookupBookkepping s;
   if (mode == Word) {
     do {
-      if (i->ws->lookup(word, o, i->cmp)) {
+      if (i->dict->lookup(word, o, i->compare)) {
         w = o.word;
         if (s.aff == 0) s.aff = o.aff;
         else append_aff(s, o); // this should not be a very common case
@@ -973,7 +973,7 @@ inline bool LookupInfo::lookup (ParmString word, WordEntry & o) const
     } while (i != end);
   } else if (mode == Soundslike) {
     do {
-      if (i->ws->soundslike_lookup(word, o)) {
+      if (i->dict->soundslike_lookup(word, o)) {
         w = o.word;
         if (s.aff == 0) s.aff = o.aff;
         else append_aff(s, o); // this should not be a very common case

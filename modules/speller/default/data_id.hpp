@@ -9,17 +9,22 @@
 
 namespace aspeller {
   
-  class DataSet::Id {
+  class Dict::Id {
   public: // but don't use
-    const DataSet * ptr;
-    const char    * file_name;
+    const Dict * ptr;
+    const char * file_name;
 #ifdef USE_FILE_INO
     ino_t           ino;
     dev_t           dev;
 #endif
   public:
-    Id(DataSet * p, const FileName & fn = FileName());
+    Id(Dict * p, const FileName & fn = FileName());
   };
+
+  inline bool Dict::cache_key_eq(const Id & o) 
+  {
+    return *id_ == o;
+  }
 
 }
 

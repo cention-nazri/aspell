@@ -270,7 +270,7 @@ namespace {
          i != speller->suggest_ws.end();
          ++i)
     {
-      i->ws->soundslike_lookup(str, sw);
+      i->dict->soundslike_lookup(str, sw);
       for (;!sw.at_end(); sw.adv()) {
         ParmString sw_word(sw.word);
         char * w = (char *)buffer.alloc(sw_word.size() + 1);
@@ -278,9 +278,9 @@ namespace {
         WordEntry * repl = 0;
         if (sw.what == WordEntry::Misspelled) {
           repl = new WordEntry;
-          const BasicReplacementSet * repl_set
-            = static_cast<const BasicReplacementSet *>(i->ws);
-          repl_set->repl_lookup(sw, *repl);
+          const ReplacementDict * repl_dict
+            = static_cast<const ReplacementDict *>(i->dict);
+          repl_dict->repl_lookup(sw, *repl);
         }
         add_nearmiss(ParmString(w, sw_word.size()), score, do_count, repl);
       }
@@ -296,7 +296,7 @@ namespace {
 	   i != speller->suggest_affix_ws.end();
 	   ++i) 
       {
-	i->ws->soundslike_lookup(ci.word, sw);
+	i->dict->soundslike_lookup(ci.word, sw);
 	for (;!sw.at_end(); sw.adv()) { // FIXME: Ineffecent
 	  word.clear();
 	  i->convert.convert(sw.word, word);
@@ -454,7 +454,7 @@ namespace {
          i != speller->suggest_ws.end();
          ++i) 
     {
-      StackPtr<SoundslikeEnumeration> els(i->ws->soundslike_elements());
+      StackPtr<SoundslikeEnumeration> els(i->dict->soundslike_elements());
       
       while ( (sw = els->next(stopped_at)) ) {
 
@@ -472,7 +472,7 @@ namespace {
         stopped_at = score.stopped_at - sl;
         if (score >= LARGE_NUM) continue;
         stopped_at = LARGE_NUM;
-        i->ws->soundslike_lookup(*sw, w);
+        i->dict->soundslike_lookup(*sw, w);
 	//CERR << sw->word << "\n";
         for (; !w.at_end(); w.adv()) {
 	  //CERR << "  " << w.word << "\n";
@@ -482,9 +482,9 @@ namespace {
           WordEntry * repl = 0;
           if (w.what == WordEntry::Misspelled) {
             repl = new WordEntry;
-            const BasicReplacementSet * repl_set
-              = static_cast<const BasicReplacementSet *>(i->ws);
-            repl_set->repl_lookup(w, *repl);
+            const ReplacementDict * repl_dict
+              = static_cast<const ReplacementDict *>(i->dict);
+            repl_dict->repl_lookup(w, *repl);
           }
           add_nearmiss(ParmString(wf, w_word.size()), score, do_count, repl);
         }

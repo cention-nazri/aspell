@@ -1073,6 +1073,8 @@ namespace acommon {
        N_("indicator for affix flags in word lists"), KEYINFO_UTF8}
     , {"flag-char",           KeyInfoString, ":",
        N_("indicator for additional flags in word lists"), KEYINFO_UTF8}
+    , {"use-other-dicts", KeyInfoBool, "true",
+       N_("use personal, replacement & session dictionaries")}
     
     //
     // These options are only used when creating dictionaries

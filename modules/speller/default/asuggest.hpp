@@ -3,6 +3,7 @@
 #ifndef _asuggest_hh_
 #define _asuggest_hh_
 
+#include "suggest.hpp"
 #include "editdist.hpp"
 #include "typo_editdist.hpp"
 

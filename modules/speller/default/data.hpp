@@ -26,21 +26,14 @@ namespace acommon {
 
 namespace aspeller {
 
-  static const bool USE_LOCK = true;
-  static const bool DONT_LOCK = false;
-  static const bool USE_SOUNDSLIKE = true;
-  static const bool NO_SOUNDSLIKE = false;
-  
   typedef Enumeration<WordEntry *> WordEntryEnumeration;
 
-  class DataSet {
+  class Dict : public Cacheable {
     friend class SpellerImpl;
   private:
     CachePtr<const Language> lang_;
-    int                      attach_count_;
   private:
     PosibErr<void> attach(const Language &);
-    void detach();
   public:
     class FileName {
       void copy(const FileName & other);
@@ -59,59 +52,87 @@ namespace aspeller {
     class Id;
   protected:
     CopyPtr<Id> id_;
-    virtual void set_lang_hook(Config *) {}
+    virtual void set_lang_hook(const Config *) {}
     
   public:
-    enum BasicType {no_type, basic_word_set, basic_replacement_set, basic_multi_set};
+    typedef Id CacheKey;
+    bool cache_key_eq(const Id &);
+
+    enum BasicType {no_type, basic_dict, replacement_dict, multi_dict};
     BasicType basic_type;
 
-    DataSet();
-    virtual ~DataSet();
+    Dict();
+    virtual ~Dict();
     const Id & id() {return *id_;}
     PosibErr<void> check_lang(ParmString lang);
-    PosibErr<void> set_check_lang(ParmString lang, Config *);
+    PosibErr<void> set_check_lang(ParmString lang, const Config *);
     const Language * lang() const {return lang_;};
     const char * lang_name() const;
-    bool is_attached () const ;
   };
 
-  bool operator==(const DataSet::Id & rhs, const DataSet::Id & lhs);
+  bool operator==(const Dict::Id & rhs, const Dict::Id & lhs);
 
-  inline bool operator!=(const DataSet::Id & rhs, const DataSet::Id & lhs)
+  inline bool operator!=(const Dict::Id & rhs, const Dict::Id & lhs)
   {
     return !(rhs == lhs);
   }
 
-  struct LocalWordSetInfo;
+  struct LocalDictInfo 
+  {
+    SensitiveCompare compare;
+    ConvertWord      convert;
+    void set_language(const Language * l);
+    void set(const Language * l, const Config & c, bool strip = false);
+    void set(const LocalDictInfo & li) {operator=(li);}
+  };
 
-  class LoadableDataSet : public DataSet {
+  struct LocalDict : public LocalDictInfo {
+    Dict * dict;
+    LocalDict(Dict * d = 0) : dict(d) {}
+    LocalDict(Dict * d, LocalDictInfo li)
+      : LocalDictInfo(li), dict(d) {}
+    operator bool () const {return dict != 0;}
+  };
+
+  class LocalDictList {
+    // well a stack at the moment but it may eventually become a list
+    // NOT necessarily first in first out
+    Vector<LocalDict> data;
+  private:
+    LocalDictList(const LocalDictList &);
+    void operator= (const LocalDictList &);
+  public:
+    // WILL take ownership of the dict
+    LocalDictList() {}
+    void add(const LocalDict & o) {data.push_back(o);}
+    LocalDict & last() {return data.back();}
+    void pop() {data.pop_back();}
+    bool empty() {return data.empty();}
+    ~LocalDictList() {for (; !empty(); pop()) last().dict->release();}
+  };
+    
+  class LoadableDict : public Dict {
   private:
     FileName file_name_;
   protected:
     PosibErr<void> set_file_name(ParmString name);
     PosibErr<void> update_file_info(FStream & f);
   public:
-    bool compare(const LoadableDataSet &);
+    bool compare(const LoadableDict &);
     const char * file_name() const {return file_name_.path.c_str();}
-    virtual PosibErr<void> load(ParmString, Config *, SpellerImpl * = 0, const LocalWordSetInfo * li = 0) = 0;
+    // returns any additional dictionaries that are also used
+    virtual PosibErr<void> load(ParmString, const Config &, LocalDictList * = 0, 
+                                SpellerImpl * = 0, const LocalDictInfo * = 0) = 0;
   };
 
-  class WritableDataSet {
+  class WritableDict {
   public:
-    WritableDataSet() {}
+    WritableDict() {}
     virtual PosibErr<void> merge(ParmString) = 0;
     virtual PosibErr<void> synchronize() = 0;
     virtual PosibErr<void> save_noupdate() = 0;
     virtual PosibErr<void> save_as(ParmString) = 0;
     virtual PosibErr<void> clear() = 0;
-  };
-
-  struct LocalWordSetInfo 
-  {
-    SensitiveCompare compare;
-    ConvertWord      convert;
-    void set_language(const Language * l);
-    void set(const Language * l, const Config * c, bool strip = false);
   };
 
   class SoundslikeEnumeration 
@@ -125,7 +146,7 @@ namespace aspeller {
     void operator=(const SoundslikeEnumeration &);
   };
 
-  class BasicWordSet : public LoadableDataSet, public WordList
+  class BasicDict : public LoadableDict, public WordList
   {
   public:
     bool affix_compressed;
@@ -136,9 +157,9 @@ namespace aspeller {
     bool fast_lookup; // can effectly find all words with a given soundslike
                       // when the SoundslikeWord is not given
     
-    BasicWordSet() : affix_compressed(false), have_soundslike(false), 
+    BasicDict() : affix_compressed(false), have_soundslike(false), 
                      fast_scan(false), fast_lookup(false) {
-      basic_type =  basic_word_set;
+      basic_type =  basic_dict;
     }
     
     typedef WordEntryEnumeration        Enum;
@@ -169,19 +190,19 @@ namespace aspeller {
     virtual SoundslikeEnumeration * soundslike_elements() const = 0;
   };
 
-  class WritableWordSet : public BasicWordSet,
-			  public WritableDataSet
+  class WritableBasicDict : public BasicDict,
+                            public WritableDict
   {
   public:
     virtual PosibErr<void> add(ParmString w) = 0;
     virtual PosibErr<void> add(ParmString w, ParmString s) = 0;
   };
 
-  class BasicReplacementSet : public BasicWordSet
+  class ReplacementDict : public BasicDict
   {
   public:
-    BasicReplacementSet() {
-      basic_type = basic_replacement_set;
+    ReplacementDict() {
+      basic_type = replacement_dict;
     }
 
     // FIXME: are both functions needed since a WordEntry can easily be created from
@@ -191,32 +212,22 @@ namespace aspeller {
   };
 
 
-  class WritableReplacementSet : public BasicReplacementSet,
-				 public WritableDataSet
+  class WritableReplacementDict : public ReplacementDict,
+                                  public WritableDict
   {
   public:
     virtual PosibErr<void> add(ParmString mis, ParmString cor) = 0;
     virtual PosibErr<void> add(ParmString mis, ParmString cor, ParmString s) = 0;
   };
 
-  struct LocalWordSet {
-    // NOTE: perhaps LoadableDataSet is too specific
-    LoadableDataSet  * word_set;
-    LocalWordSetInfo local_info;
-    LocalWordSet() : word_set(0) {}
-    LocalWordSet(LoadableDataSet * ws, LocalWordSetInfo li) 
-      : word_set(ws), local_info(li) {}
-    operator bool () const {return word_set != 0;}
-  };
-  
-  class BasicMultiSet : public LoadableDataSet, public WordList
+  class MultiDict : public LoadableDict, public WordList
   {
   public:
-    BasicMultiSet() {
-      basic_type = basic_multi_set;
+    MultiDict() {
+      basic_type = multi_dict;
     }
     
-    typedef LocalWordSet         Value;
+    typedef LocalDict            Value;
     typedef Enumeration<Value>   Enum;
     typedef unsigned int         Size;
 
@@ -234,26 +245,31 @@ namespace aspeller {
   static const DataType DT_Multi        = 1<<3;
   static const DataType DT_Any          = 0xFF;
 
-  PosibErr<LoadableDataSet *> add_data_set(ParmString file_name,
-					   Config &,
-					   SpellerImpl * = 0,
-					   const LocalWordSetInfo * = 0,
-					   ParmString dir = 0,
-					   DataType allowed = DT_Any);
+  // stores result in LocalDict
+  // any new extra dictionaries that were loaded will be ii
+  PosibErr<void> add_data_set(ParmString file_name,
+                              const Config &,
+                              LocalDict &,
+                              LocalDictList * other_dicts = 0,
+                              SpellerImpl * = 0,
+                              const LocalDictInfo * local_info = 0,
+                              ParmString dir = 0,
+                              DataType allowed = DT_Any);
   
   // implemented in readonly_ws.cc
-  BasicWordSet * new_default_readonly_word_set();
-  PosibErr<void> create_default_readonly_word_set(StringEnumeration * els,
-                                                  Config & config);
-
+  BasicDict * new_default_readonly_basic_dict();
+  
+  PosibErr<void> create_default_readonly_basic_dict(StringEnumeration * els,
+                                                    Config & config);
+  
   // implemented in multi_ws.cc
-  BasicMultiSet * new_default_multi_word_set();
+  MultiDict * new_default_multi_dict();
 
   // implemented in writable.cpp
-  WritableWordSet * new_default_writable_word_set();
+  WritableBasicDict * new_default_writable_basic_dict();
 
   // implemented in writable.cpp
-  WritableReplacementSet * new_default_writable_replacement_set();
+  WritableReplacementDict * new_default_writable_replacement_dict();
 
   
 }

@@ -42,8 +42,8 @@ namespace aspeller {
 
   class Language : public Cacheable {
   public:
-    typedef Config  CacheConfig;
-    typedef String  CacheKey;
+    typedef const Config CacheConfig;
+    typedef String       CacheKey;
 
     enum CharType {letter, space, other};
 
@@ -97,7 +97,7 @@ namespace aspeller {
   public:
 
     Language() {}
-    PosibErr<void> setup(const String & lang, Config * config);
+    PosibErr<void> setup(const String & lang, const Config * config);
     void set_lang_defaults(Config & config);
 
     const char * data_dir() const {return dir_.c_str();}
@@ -157,7 +157,7 @@ namespace aspeller {
     SuggestReplEnumeration * repl() const {
       return new SuggestReplEnumeration(repls_.pbegin(), repls_.pend());}
 
-    static inline PosibErr<Language *> get_new(const String & lang, Config * config) {
+    static inline PosibErr<Language *> get_new(const String & lang, const Config * config) {
       StackPtr<Language> l(new Language());
       RET_ON_ERR(l->setup(lang, config));
       return l.release();
@@ -385,9 +385,9 @@ namespace aspeller {
   
   PosibErr<void> check_if_valid(const Language & l, ParmString word);
 
-  PosibErr<Language *> new_language(Config &, ParmString lang = 0);
+  PosibErr<Language *> new_language(const Config &, ParmString lang = 0);
 
-  PosibErr<void> open_affix_file(Config &, FStream & o);
+  PosibErr<void> open_affix_file(const Config &, FStream & o);
   
 }
 
