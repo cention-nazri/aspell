@@ -148,6 +148,7 @@ int main (int argc, const char *argv[]) {
     Word cur;
     int c;
     char * w;
+    unsigned char ch;
 
     cur.str = (char *)malloc(256);
     cur.alloc = 256;
@@ -180,7 +181,7 @@ int main (int argc, const char *argv[]) {
               putc(*w, stdout);
             } else {
               ++w;
-              unsigned char ch = *w;
+              ch = *w;
               if (32 <= ch && ch < 64) {
                 putc(ch - 32, stdout);
               } else if (ch == 255) {
