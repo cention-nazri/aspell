@@ -756,7 +756,6 @@ bool WritableReplDict::soundslike_lookup(const WordEntry & word, WordEntry & o) 
     o.aff = "";
   }
   return true;
-  return 0;
 }
 
 bool WritableReplDict::soundslike_lookup(ParmString soundslike, WordEntry & o) const
