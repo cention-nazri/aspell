@@ -642,8 +642,6 @@ namespace aspeller {
         str = iconv.buf.pbegin();
         str_end = iconv.buf.pend();
       }
-      while (asc_isspace(*str)) ++str;
-      while (str_end > str && asc_isspace(str_end[-1])) {str_end[-1] = '\0'; --str_end;}
       char * aff = str_end;
       char * aff_end = str_end;
       if (have_affix) {
