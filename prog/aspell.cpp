@@ -384,6 +384,15 @@ void status_fun(void * d, Token, int correct)
     COUT << "*\n";
 }
 
+DocumentChecker * new_checker(Speller * speller, 
+			      bool & print_star) 
+{
+  EXIT_ON_ERR_SET(new_document_checker(speller,0,0), 
+		  StackPtr<DocumentChecker>, checker);
+  checker->set_status_fun(status_fun, &print_star);
+  return checker.release();
+}
+
 void pipe() 
 {
   bool terse_mode = true;
@@ -395,10 +404,8 @@ void pipe()
   if (do_time)
     COUT << "Time to load word list: " 
          << (clock() - start)/(double)CLOCKS_PER_SEC << "\n";
-  EXIT_ON_ERR_SET(new_document_checker(speller,0,0), 
-		  StackPtr<DocumentChecker>, checker);
   bool print_star = true;
-  checker->set_status_fun(status_fun, &print_star);
+  StackPtr<DocumentChecker> checker(new_checker(speller, print_star));
   const char * w;
   char line[1024];
   char * l;
@@ -436,11 +443,13 @@ void pipe()
       err = speller->config()->replace("mode", word);
       if (err.get_err())
 	speller->config()->replace("mode", "tex");
-      checker->reset();
+      checker.release();
+      checker = new_checker(speller, print_star);
       break;
     case '-':
       speller->config()->remove("filter");
-      checker->reset();
+      checker.release();
+      checker = new_checker(speller, print_star);
       break;
     case '~':
       break;

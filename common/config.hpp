@@ -11,6 +11,8 @@
 #include "key_info.hpp"
 #include "posib_err.hpp"
 #include "string.hpp"
+#include "clone_ptr.hpp"
+#include "vector.hpp"
 
 namespace acommon {
 
@@ -32,6 +34,8 @@ namespace acommon {
   // A p in the other datavalue means that is is a placeholder
   // for when a "r" is merged.  It should start with <config name>
 
+  class Config;
+
   struct ConfigModule {
     const char * name;
     const KeyInfo * begin;
@@ -40,6 +44,11 @@ namespace acommon {
 
   class Notifier {
   public:
+    // returns a copy if a copy should be made otherwise returns null
+    virtual Notifier * clone(Config *) const {return 0;}
+    // should delete it self if it is dynamically allocated
+    virtual void del() {}
+
     virtual PosibErr<void> item_updated(const KeyInfo *, bool)         {return no_err;}
     virtual PosibErr<void> item_updated(const KeyInfo *, int)          {return no_err;}
     virtual PosibErr<void> item_updated(const KeyInfo *, ParmString) {return no_err;}
@@ -68,16 +77,19 @@ namespace acommon {
     friend class MDInfoListofLists;
   private:
     String      name_;
-    StringMap * data_;
+    ClonePtr<StringMap> data_;
 
     bool attached_;    // if attached can't copy
-    Notifier * * notifier_list;
+    Vector<Notifier *> notifier_list;
 
     friend class PossibleElementsEmul;
 
     ConfigKeyModuleInfo kmi;
 
     int md_info_list_index;
+
+    void copy_notifiers(const Config & other);
+    void del_notifiers();
 
   public:
     
@@ -149,16 +161,18 @@ namespace acommon {
 
   class NotifierEnumeration {
     // no copy and destructor needed
-    Notifier * * i;
+    Vector<Notifier *>::const_iterator i;
+    Vector<Notifier *>::const_iterator end;
   public:
-    NotifierEnumeration(Notifier * * b) : i(b) {}
+    NotifierEnumeration(const Vector<Notifier *> & b) 
+      : i(b.begin()), end(b.end()) {}
     const Notifier * next() {
-      Notifier * * temp = i;
-      if (*i != 0)
+      const Notifier * temp = *i;
+      if (i != end)
 	++i;
-      return *temp;
+      return temp;
     }
-    bool at_end() const {return *i == 0;}
+    bool at_end() const {return i == end;}
   };
 
   class KeyInfoEnumeration {

@@ -35,7 +35,6 @@ namespace acommon {
     status_fun_data_ = d;
   }
 
-
   void DocumentChecker::reset()
   {
     if (filter_)

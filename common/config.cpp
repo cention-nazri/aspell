@@ -21,6 +21,7 @@
 #include "mutable_container.hpp"
 #include "posib_err.hpp"
 #include "string_map.hpp"
+#include "clone_ptr-t.hpp"
 
 #define DEFAULT_LANG "en_US"
 
@@ -44,32 +45,24 @@ namespace acommon {
     kmi.extra_end   = 0;
     kmi.modules_begin = &a_module;
     kmi.modules_end   = &a_module;
-    notifier_list = new NotifierPtr[1];
-    notifier_list[0] = 0;
   }
 
   Config::~Config() {
-    delete data_;
-    delete[] notifier_list;
+    del_notifiers();
   }
 
   Config::Config(const Config & other) 
-    : name_(other.name_), attached_(0), kmi(other.kmi) 
+    : name_(other.name_), data_(other.data_), attached_(0), kmi(other.kmi)
   {
-    data_ = other.data_->clone();
-    notifier_list = new NotifierPtr[1];
-    notifier_list[0] = 0;
+    copy_notifiers(other);
   }
 
   Config & Config::operator= (const Config & other)
   {
-    delete data_;
-    delete[] notifier_list;
     attached_ = 0;
     kmi = other.kmi;
-    data_->assign(other.data_);
-    notifier_list = new NotifierPtr[1];
-    notifier_list[0] = 0;
+    data_ = other.data_;
+    copy_notifiers(other);
     return *this;
   }
 
@@ -103,29 +96,47 @@ namespace acommon {
   {
     return new NotifierEnumeration(notifier_list);
   }
+
+  void Config::copy_notifiers(const Config & other)
+  {
+    notifier_list.clear();
+
+    Vector<Notifier *>::const_iterator i   = other.notifier_list.begin();
+    Vector<Notifier *>::const_iterator end = other.notifier_list.end();
+
+    for(; i != end; ++i) {
+      Notifier * tmp = (*i)->clone(this);
+      if (tmp != 0)
+	notifier_list.push_back(tmp);
+    }
+  }
+
+  void Config::del_notifiers()
+  {
+    Vector<Notifier *>::iterator i   = notifier_list.begin();
+    Vector<Notifier *>::iterator end = notifier_list.end();
+
+    for(; i != end; ++i) {
+      (*i)->del();
+      *i = 0;
+    }    
+  }
   
   bool Config::add_notifier(Notifier * n) 
   {
-    Notifier * * i = notifier_list;
+    Vector<Notifier *>::iterator i   = notifier_list.begin();
+    Vector<Notifier *>::iterator end = notifier_list.end();
 
-    while (*i != 0 && *i != n)
+    while (i != end && *i != n)
       ++i;
 
-    if (*i != 0) {
+    if (i != end) {
     
       return false;
     
     } else {
 
-      Notifier * * temp = notifier_list;
-      size_t old_size = i - temp;
-      notifier_list = new NotifierPtr[old_size + 2];
-      unsigned int j = 0;
-      for (; j != old_size; ++j)
-	notifier_list[j] = temp[j];
-      delete[] temp;
-      notifier_list[j] = n;
-      notifier_list[j+1] = 0;
+      notifier_list.push_back(n);
       return true;
 
     }
@@ -133,38 +144,42 @@ namespace acommon {
 
   bool Config::remove_notifier(const Notifier * n) 
   {
-    Notifier * * i = notifier_list;
-    while (*i != 0 && *i != n)
+    Vector<Notifier *>::iterator i   = notifier_list.begin();
+    Vector<Notifier *>::iterator end = notifier_list.end();
+
+    while (i != end && *i != n)
       ++i;
-    if (*i == 0) {
+
+    if (i == end) {
+    
       return false;
+    
     } else {
-      Notifier * * temp = notifier_list;
-      size_t old_size = i - temp;
-      notifier_list = new NotifierPtr[old_size];
-      unsigned j = 0;
-      for (; j != old_size - 1; ++j) {
-	if (temp[j] != n)
-	  notifier_list[j] = temp[j];
-      }
-      delete[] temp;
-      notifier_list[j] = 0;
+
+      notifier_list.erase(i);
       return true;
+
     }
-    return true;
   }
 
   bool Config::replace_notifier(const Notifier * o, 
 				      Notifier * n) 
   {
-    Notifier * * i = notifier_list;
-    while (*i != 0 && *i != n)
+    Vector<Notifier *>::iterator i   = notifier_list.begin();
+    Vector<Notifier *>::iterator end = notifier_list.end();
+
+    while (i != end && *i != o)
       ++i;
-    if (*i == 0) {
+
+    if (i == end) {
+    
       return false;
+    
     } else {
+
       *i = n;
       return true;
+
     }
   }
 
@@ -388,29 +403,30 @@ namespace acommon {
   }
 
 
-#define notify_all(ki, value, fun)        \
-  do {                                    \
-    Notifier * * i = notifier_list;       \
-    while (*i != 0) {                     \
-      RET_ON_ERR((*i)->fun(ki,value));    \
-      ++i;                                \
-    }                                     \
+#define notify_all(ki, value, fun)                            \
+  do {                                                        \
+    Vector<Notifier *>::iterator   i = notifier_list.begin(); \
+    Vector<Notifier *>::iterator end = notifier_list.end();   \
+    while (i != end) {                                        \
+      RET_ON_ERR((*i)->fun(ki,value));                        \
+      ++i;                                                    \
+    }                                                         \
   } while (false)
 
 
   class NotifyListBlockChange : public MutableContainer 
   {
     const KeyInfo * key_info;
-    Notifier * * notifier_list;
+    Vector<Notifier *> & notifier_list;
   public:
-    NotifyListBlockChange(const KeyInfo * ki, Notifier * * n);
+    NotifyListBlockChange(const KeyInfo * ki, Vector<Notifier *> & n);
     PosibErr<bool> add(ParmString);
     PosibErr<bool> remove(ParmString);
     PosibErr<void> clear();
   };
 
   NotifyListBlockChange::
-  NotifyListBlockChange(const KeyInfo * ki, Notifier * * n)
+  NotifyListBlockChange(const KeyInfo * ki, Vector<Notifier *> & n)
     : key_info(ki), notifier_list(n) {}
 
   PosibErr<bool> NotifyListBlockChange::add(ParmString v) {

@@ -37,6 +37,9 @@ namespace acommon {
   public:
     Config * config;
     ModeNotifierImpl(Config * c) : config(c) {}
+    
+    ModeNotifierImpl * clone(Config * c) const {return new ModeNotifierImpl(c);}
+    void del() {delete this;}
 
     PosibErr<void> item_updated(const KeyInfo * ki, ParmString value) {
       if (strcmp(ki->name, "mode") == 0) {
@@ -68,7 +71,7 @@ namespace acommon {
   Config * new_config() {
     Config * config = new_basic_config();
     config->set_modules(filter_modules_begin, filter_modules_end);
-    config->add_notifier(new ModeNotifierImpl(config)); // FIXME: Memory Leak!
+    config->add_notifier(new ModeNotifierImpl(config));
     return config;
   }
 
