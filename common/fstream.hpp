@@ -42,7 +42,7 @@ namespace pcommon {
 
     void flush() {fflush(file_);}
 
-    // 
+    // flushes the stream and goes to the beginning of the file
     void restart();
 
     void skipws();

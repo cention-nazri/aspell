@@ -4,6 +4,27 @@
 #include <string.h>
 #include <limits.h>
 
+//
+// ParmString is a special string class that is designed to be used as
+// a parameter for a function that is expecting a string It will allow
+// either a "const char *" or "String" class to be passed in.  It will
+// automatically convert to a "const char *".  The string can also be
+// accesses via the "str" method.  Usage example:
+//
+// void foo(ParmString s1, s2) {
+//   const char *  str0 = s1;
+//   unsigned int size0 = s2.size()
+//   if (s1 == s2 || s2 == "bar") {
+//     ...
+//   }
+// }
+// ...
+// String s1 = "...";
+// foo(s1);
+// const char * s2 = "...";
+// foo(s2);
+//
+
 namespace pcommon {
 
   template<typename Ret> class PosibErr;
