@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60-b20040608\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-06-20 21:35-0400\n"
+"POT-Creation-Date: 2004-06-22 17:32-0400\n"
 "PO-Revision-Date: 2004-06-17 12:00-0500\n"
 "Last-Translator: Laurentiu Buzdugan <lbuz@rolix.org>\n"
 "Language-Team: Romanian <translation-team-ro@lists.sourceforge.net>\n"
@@ -219,8 +219,8 @@ msgstr "nu mai este folosit"
 msgid "suggestion mode"
 msgstr "mod suggestie"
 
-#. TRANSLATORS: "sug-mode" is a literal value and should not
-#. * be translated.
+#. TRANSLATORS: "sug-mode" is a literal value and should not be
+#. translated.
 #: common/config.cpp:1388
 msgid "edit distance to use, override sug-mode default"
 msgstr "editeazã distanþa de folosit, ignorã sug-mode implicit"
@@ -262,7 +262,7 @@ msgid "Unicode normalization required for the current lang"
 msgstr "Normalizare Unicode necesarã pentru limba curentã"
 
 #. TRANSLATORS: the values after the ':' are literal
-#. * values and should not be translated.
+#. values and should not be translated.
 #: common/config.cpp:1410
 msgid "Unicode normalization form: none, nfd, nfc, comp"
 msgstr "Tipuri de normalizare Unicode: none, nfd, nfc, comp"
@@ -824,83 +824,120 @@ msgstr "Îmi pare rãu, nu pot suprascrie \"%s\""
 msgid "Sorry \"create/merge repl\" is currently unimplemented.\n"
 msgstr "Îmi pare rãu, \"create/merge repl\" nu este încã implementat.\n"
 
+#. TRANSLATORS: This should be formated to fit on an 80 column
+#. terminal.
+#: prog/aspell.cpp:1826
+msgid "<command> is one of:"
+msgstr ""
+
 #: prog/aspell.cpp:1827
-#, fuzzy, c-format
+msgid "  -?|help [<expr>] display this help message"
+msgstr ""
+
+#: prog/aspell.cpp:1828
+msgid "                    and help for filters matching <expr> if installed"
+msgstr ""
+
+#: prog/aspell.cpp:1829
+msgid "  -c|check <file>  to check a file"
+msgstr ""
+
+#: prog/aspell.cpp:1830
+msgid "  -a|pipe          \"ispell -a\" compatibility mode"
+msgstr ""
+
+#: prog/aspell.cpp:1831
+msgid ""
+"  list             produce a list of misspelled words from standard input"
+msgstr ""
+
+#: prog/aspell.cpp:1832
+msgid "  [dump] config [+e <expr>]  dumps the current configuration to stdout"
+msgstr ""
+
+#: prog/aspell.cpp:1833
+msgid "  config [+e <expr>] <key>   prints the current value of an option"
+msgstr ""
+
+#: prog/aspell.cpp:1834
+msgid "  [dump] dicts     lists available dictionaries"
+msgstr ""
+
+#: prog/aspell.cpp:1835
+msgid ""
+"  soundslike       returns the sounds like equivalent for each word entered"
+msgstr ""
+
+#: prog/aspell.cpp:1836
+msgid "  munch            generate possible root words and affixes"
+msgstr ""
+
+#: prog/aspell.cpp:1837
+msgid "  expand [1-4]     expands affix flags"
+msgstr ""
+
+#: prog/aspell.cpp:1838
+msgid ""
+"  clean [strict]   cleans a word list so that every line is a valid word"
+msgstr ""
+
+#: prog/aspell.cpp:1839
+msgid "  filter           passes standard input through filters"
+msgstr ""
+
+#: prog/aspell.cpp:1840
+msgid "  -v|version       prints a version line"
+msgstr ""
+
+#: prog/aspell.cpp:1841
+msgid "  conv <from> <to> [<norm-form>]"
+msgstr ""
+
+#: prog/aspell.cpp:1842
+msgid "    converts from one encoding to another"
+msgstr ""
+
+#: prog/aspell.cpp:1843
+msgid "  norm (<norm-map> | <from> <norm-map> <to>) [<norm-form>]"
+msgstr ""
+
+#: prog/aspell.cpp:1844
+#, fuzzy
+msgid "    perform unicode normlization"
+msgstr "permite normalizarea Unicode"
+
+#: prog/aspell.cpp:1845
+msgid "  dump|create|merge master|personal|repl [word list]"
+msgstr ""
+
+#: prog/aspell.cpp:1846
+msgid ""
+"    dumps, creates or merges a master, personal, or replacement word list."
+msgstr ""
+
+#: prog/aspell.cpp:1848
+msgid "  <expr>           regular expression matching filtername(s) or \"all\""
+msgstr ""
+
+#: prog/aspell.cpp:1849
+msgid ""
+"  <norm-form>      normalization form to use, either none, internal, or "
+"strict"
+msgstr ""
+
+#: prog/aspell.cpp:1851
+msgid "[options] is any of the following:"
+msgstr ""
+
+#: prog/aspell.cpp:1859
+#, c-format
 msgid ""
 "\n"
 "Aspell %s alpha.  Copyright 2000-2004 by Kevin Atkinson.\n"
 "\n"
-"Usage: aspell [options] <command>\n"
-"\n"
-"<command> is one of:\n"
-"  -?|help [<expr>] display this help message\n"
-"                    and help for filters matching <expr> if installed\n"
-"  -c|check <file>  to check a file\n"
-"  -a|pipe          \"ispell -a\" compatibility mode\n"
-"  list             produce a list of misspelled words from standard input\n"
-"  [dump] config [+e <expr>]  dumps the current configuration to stdout\n"
-"  config [+e <expr>] <key>   prints the current value of an option\n"
-"  soundslike       returns the sounds like equivalent for each word entered\n"
-"  munch            generate possible root words and affixes\n"
-"  expand [1-4]     expands affix flags\n"
-"  clean [strict]   cleans a word list so that every line is a valid word\n"
-"  filter           passes standard input through filters\n"
-"  -v|version       prints a version line\n"
-"  conv <from> <to> [<norm-form>]\n"
-"    converts from one encoding to another\n"
-"  norm (<norm-map> | <from> <norm-map> <to>) [<norm-form>]\n"
-"    perform unicode normlization\n"
-"  dump|create|merge master|personal|repl [word list]\n"
-"    dumps, creates or merges a master, personal, or replacement word list.\n"
-"\n"
-"  <expr>           regular expression matching filtername(s) or \"all\"\n"
-"  <norm-form>      normalization form to use, either none, internal, or "
-"strict\n"
-"\n"
-"[options] is any of the following:\n"
-"\n"
 msgstr ""
-"\n"
-"Aspell %s alpha.  Copyright 2000-2004 de Kevin Atkinson.\n"
-"\n"
-"Folosire: aspell [opþiuni] <comandã>\n"
-"\n"
-"<comandã> este una dintre:\n"
-"  -?|help [<expr>]  afiºeazã acest mesaj de ajutor\n"
-"                     ºi ajutor pentru filtrele ce se potrivesc cu <expr>\n"
-"                     dacã acestea sunt instalate\n"
-"  -c|check <fiºier> pentru a verifica un fiºier\n"
-"  -a|pipe           mod compatibilitate \"ispell -a\"\n"
-"  list              genereazã o listã de cuvinte scrise greºit de la "
-"intrarea standard\n"
-"  [dump] config [-e <expr>]  scrie configuraþia curentã la stdout\n"
-"  config [+e <expr>] <key>   afiºeazã valoarea curentã pentru o opþiune\n"
-"  soundslike        întoarce echivalentul \"sunã ca\" pentru fiecare cuvânt "
-"introdus\n"
-"  munch             genereazã cuvintele rãdãcinã posibile ºi affix-ele\n"
-"  expand [1-4]      expandeazã marcajele affix\n"
-"  clean [strict]    curãþã o listã de cuvinte pentru ca fiecare linie sã "
-"fie\n"
-"                     un cuvânt valid\n"
-"  filter            paseazã intrarea standard prin filtre\n"
-"  -v|version        afiºeazã o linie de versiune\n"
-"  conv <din> <în> [<norm-form>]\n"
-"    converteºte dintr-un encodin într-altul\n"
-"  norm (<norm-map> | <din> <norm-map> <în>) [<norm-form>]\n"
-"    realizeazã normalizare unicode\n"
-"  dump|create|merge master|personal|repl [listã cuvinte]\n"
-"    scrie, creazã sau combinã o listã de cuvinte principalã, personalã, \n"
-"    sau de înlocuiri.\n"
-"\n"
-"  <expr>           expresii regulare ce se potrivesc cu numefiltre sau \"all"
-"\"\n"
-"  <norm-form>      forma de normalizare de folosit, fie none, internal \n"
-"                    sau strict\n"
-"\n"
-"[opþiuni] este oricare dintre urmãtoarele:\n"
-"\n"
 
-#: prog/aspell.cpp:1863
+#: prog/aspell.cpp:1872
 #, c-format
 msgid ""
 "\n"
@@ -1014,6 +1051,84 @@ msgstr ""
 #: modules/filter/tex.cpp:250 modules/filter/tex.cpp:257
 msgid "a string of 'o','O','p',or 'P'"
 msgstr ""
+
+#, fuzzy
+#~ msgid ""
+#~ "\n"
+#~ "Aspell %s alpha.  Copyright 2000-2004 by Kevin Atkinson.\n"
+#~ "\n"
+#~ "Usage: aspell [options] <command>\n"
+#~ "\n"
+#~ "<command> is one of:\n"
+#~ "  -?|help [<expr>] display this help message\n"
+#~ "                    and help for filters matching <expr> if installed\n"
+#~ "  -c|check <file>  to check a file\n"
+#~ "  -a|pipe          \"ispell -a\" compatibility mode\n"
+#~ "  list             produce a list of misspelled words from standard "
+#~ "input\n"
+#~ "  [dump] config [+e <expr>]  dumps the current configuration to stdout\n"
+#~ "  config [+e <expr>] <key>   prints the current value of an option\n"
+#~ "  soundslike       returns the sounds like equivalent for each word "
+#~ "entered\n"
+#~ "  munch            generate possible root words and affixes\n"
+#~ "  expand [1-4]     expands affix flags\n"
+#~ "  clean [strict]   cleans a word list so that every line is a valid word\n"
+#~ "  filter           passes standard input through filters\n"
+#~ "  -v|version       prints a version line\n"
+#~ "  conv <from> <to> [<norm-form>]\n"
+#~ "    converts from one encoding to another\n"
+#~ "  norm (<norm-map> | <from> <norm-map> <to>) [<norm-form>]\n"
+#~ "    perform unicode normlization\n"
+#~ "  dump|create|merge master|personal|repl [word list]\n"
+#~ "    dumps, creates or merges a master, personal, or replacement word "
+#~ "list.\n"
+#~ "\n"
+#~ "  <expr>           regular expression matching filtername(s) or \"all\"\n"
+#~ "  <norm-form>      normalization form to use, either none, internal, or "
+#~ "strict\n"
+#~ "\n"
+#~ "[options] is any of the following:\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Aspell %s alpha.  Copyright 2000-2004 de Kevin Atkinson.\n"
+#~ "\n"
+#~ "Folosire: aspell [opþiuni] <comandã>\n"
+#~ "\n"
+#~ "<comandã> este una dintre:\n"
+#~ "  -?|help [<expr>]  afiºeazã acest mesaj de ajutor\n"
+#~ "                     ºi ajutor pentru filtrele ce se potrivesc cu <expr>\n"
+#~ "                     dacã acestea sunt instalate\n"
+#~ "  -c|check <fiºier> pentru a verifica un fiºier\n"
+#~ "  -a|pipe           mod compatibilitate \"ispell -a\"\n"
+#~ "  list              genereazã o listã de cuvinte scrise greºit de la "
+#~ "intrarea standard\n"
+#~ "  [dump] config [-e <expr>]  scrie configuraþia curentã la stdout\n"
+#~ "  config [+e <expr>] <key>   afiºeazã valoarea curentã pentru o opþiune\n"
+#~ "  soundslike        întoarce echivalentul \"sunã ca\" pentru fiecare "
+#~ "cuvânt introdus\n"
+#~ "  munch             genereazã cuvintele rãdãcinã posibile ºi affix-ele\n"
+#~ "  expand [1-4]      expandeazã marcajele affix\n"
+#~ "  clean [strict]    curãþã o listã de cuvinte pentru ca fiecare linie sã "
+#~ "fie\n"
+#~ "                     un cuvânt valid\n"
+#~ "  filter            paseazã intrarea standard prin filtre\n"
+#~ "  -v|version        afiºeazã o linie de versiune\n"
+#~ "  conv <din> <în> [<norm-form>]\n"
+#~ "    converteºte dintr-un encodin într-altul\n"
+#~ "  norm (<norm-map> | <din> <norm-map> <în>) [<norm-form>]\n"
+#~ "    realizeazã normalizare unicode\n"
+#~ "  dump|create|merge master|personal|repl [listã cuvinte]\n"
+#~ "    scrie, creazã sau combinã o listã de cuvinte principalã, personalã, \n"
+#~ "    sau de înlocuiri.\n"
+#~ "\n"
+#~ "  <expr>           expresii regulare ce se potrivesc cu numefiltre sau "
+#~ "\"all\"\n"
+#~ "  <norm-form>      forma de normalizare de folosit, fie none, internal \n"
+#~ "                    sau strict\n"
+#~ "\n"
+#~ "[opþiuni] este oricare dintre urmãtoarele:\n"
+#~ "\n"
 
 #~ msgid "configured as follows"
 #~ msgstr "configurat astfel"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell-0.60-b20040608\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-06-20 21:35-0400\n"
+"POT-Creation-Date: 2004-06-22 17:32-0400\n"
 "PO-Revision-Date: 2004-06-10 11:56+0300\n"
 "Last-Translator: Pavel Maryanov <acid_jack@ukr.net>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -218,8 +218,8 @@ msgstr "больше не используется"
 msgid "suggestion mode"
 msgstr "режим предложения"
 
-#. TRANSLATORS: "sug-mode" is a literal value and should not
-#. * be translated.
+#. TRANSLATORS: "sug-mode" is a literal value and should not be
+#. translated.
 #: common/config.cpp:1388
 msgid "edit distance to use, override sug-mode default"
 msgstr "изменение исп. расстояния, перекрывает sug-mode"
@@ -261,7 +261,7 @@ msgid "Unicode normalization required for the current lang"
 msgstr "для текущего языка требуется нормализация Юникода"
 
 #. TRANSLATORS: the values after the ':' are literal
-#. * values and should not be translated.
+#. values and should not be translated.
 #: common/config.cpp:1410
 msgid "Unicode normalization form: none, nfd, nfc, comp"
 msgstr "тип нормализации Юникода: none, nfd, nfc, comp"
@@ -821,79 +821,120 @@ msgstr "Извините, \"%s\" не будет перезаписан"
 msgid "Sorry \"create/merge repl\" is currently unimplemented.\n"
 msgstr "Извините, \"create/merge repl\" на данный момент не релизован.\n"
 
+#. TRANSLATORS: This should be formated to fit on an 80 column
+#. terminal.
+#: prog/aspell.cpp:1826
+msgid "<command> is one of:"
+msgstr ""
+
 #: prog/aspell.cpp:1827
-#, fuzzy, c-format
+msgid "  -?|help [<expr>] display this help message"
+msgstr ""
+
+#: prog/aspell.cpp:1828
+msgid "                    and help for filters matching <expr> if installed"
+msgstr ""
+
+#: prog/aspell.cpp:1829
+msgid "  -c|check <file>  to check a file"
+msgstr ""
+
+#: prog/aspell.cpp:1830
+msgid "  -a|pipe          \"ispell -a\" compatibility mode"
+msgstr ""
+
+#: prog/aspell.cpp:1831
+msgid ""
+"  list             produce a list of misspelled words from standard input"
+msgstr ""
+
+#: prog/aspell.cpp:1832
+msgid "  [dump] config [+e <expr>]  dumps the current configuration to stdout"
+msgstr ""
+
+#: prog/aspell.cpp:1833
+msgid "  config [+e <expr>] <key>   prints the current value of an option"
+msgstr ""
+
+#: prog/aspell.cpp:1834
+msgid "  [dump] dicts     lists available dictionaries"
+msgstr ""
+
+#: prog/aspell.cpp:1835
+msgid ""
+"  soundslike       returns the sounds like equivalent for each word entered"
+msgstr ""
+
+#: prog/aspell.cpp:1836
+msgid "  munch            generate possible root words and affixes"
+msgstr ""
+
+#: prog/aspell.cpp:1837
+msgid "  expand [1-4]     expands affix flags"
+msgstr ""
+
+#: prog/aspell.cpp:1838
+msgid ""
+"  clean [strict]   cleans a word list so that every line is a valid word"
+msgstr ""
+
+#: prog/aspell.cpp:1839
+msgid "  filter           passes standard input through filters"
+msgstr ""
+
+#: prog/aspell.cpp:1840
+msgid "  -v|version       prints a version line"
+msgstr ""
+
+#: prog/aspell.cpp:1841
+msgid "  conv <from> <to> [<norm-form>]"
+msgstr ""
+
+#: prog/aspell.cpp:1842
+msgid "    converts from one encoding to another"
+msgstr ""
+
+#: prog/aspell.cpp:1843
+msgid "  norm (<norm-map> | <from> <norm-map> <to>) [<norm-form>]"
+msgstr ""
+
+#: prog/aspell.cpp:1844
+#, fuzzy
+msgid "    perform unicode normlization"
+msgstr "включение нормализации Юникода"
+
+#: prog/aspell.cpp:1845
+msgid "  dump|create|merge master|personal|repl [word list]"
+msgstr ""
+
+#: prog/aspell.cpp:1846
+msgid ""
+"    dumps, creates or merges a master, personal, or replacement word list."
+msgstr ""
+
+#: prog/aspell.cpp:1848
+msgid "  <expr>           regular expression matching filtername(s) or \"all\""
+msgstr ""
+
+#: prog/aspell.cpp:1849
+msgid ""
+"  <norm-form>      normalization form to use, either none, internal, or "
+"strict"
+msgstr ""
+
+#: prog/aspell.cpp:1851
+msgid "[options] is any of the following:"
+msgstr ""
+
+#: prog/aspell.cpp:1859
+#, c-format
 msgid ""
 "\n"
 "Aspell %s alpha.  Copyright 2000-2004 by Kevin Atkinson.\n"
 "\n"
-"Usage: aspell [options] <command>\n"
-"\n"
-"<command> is one of:\n"
-"  -?|help [<expr>] display this help message\n"
-"                    and help for filters matching <expr> if installed\n"
-"  -c|check <file>  to check a file\n"
-"  -a|pipe          \"ispell -a\" compatibility mode\n"
-"  list             produce a list of misspelled words from standard input\n"
-"  [dump] config [+e <expr>]  dumps the current configuration to stdout\n"
-"  config [+e <expr>] <key>   prints the current value of an option\n"
-"  soundslike       returns the sounds like equivalent for each word entered\n"
-"  munch            generate possible root words and affixes\n"
-"  expand [1-4]     expands affix flags\n"
-"  clean [strict]   cleans a word list so that every line is a valid word\n"
-"  filter           passes standard input through filters\n"
-"  -v|version       prints a version line\n"
-"  conv <from> <to> [<norm-form>]\n"
-"    converts from one encoding to another\n"
-"  norm (<norm-map> | <from> <norm-map> <to>) [<norm-form>]\n"
-"    perform unicode normlization\n"
-"  dump|create|merge master|personal|repl [word list]\n"
-"    dumps, creates or merges a master, personal, or replacement word list.\n"
-"\n"
-"  <expr>           regular expression matching filtername(s) or \"all\"\n"
-"  <norm-form>      normalization form to use, either none, internal, or "
-"strict\n"
-"\n"
-"[options] is any of the following:\n"
-"\n"
 msgstr ""
-"\n"
-"Aspell %s альфа.  Copyright 2000-2004 by Kevin Atkinson.\n"
-"\n"
-"Использование: aspell [опции] <команда>\n"
-"\n"
-"<команда> одна из:\n"
-"  -?|help [<выр>]  вывод этого справочного сообщения\n"
-"                   и справка по фильтрам, совпадающим с <выр>, если "
-"установлены\n"
-"  -c|check <файл>  проверка файла\n"
-"  -a|pipe          режим совместимости с \"ispell -a\"\n"
-"  list             создание списка слов с ошибками со стандарного ввода\n"
-"  [dump] config [-e <выр>]  дамп текущей конфигурации на стандарный вывод\n"
-"  config [+e <выр>] <ключ>  вывод текущего значения опции\n"
-"  soundslike       возврат звукоподобного эквивалента для каждого введенного "
-"слова\n"
-"  munch            создание возможных корневых слов и аффиксов\n"
-"  expand [1-4]     расширение флагов аффикса\n"
-"  filter           прогон стандарного ввода через фильтры\n"
-"  -v|version       вывод строки версии\n"
-"  conv <из> <в> [<форма-норм>]\n"
-"    преобразование из одной кодировки в другую\n"
-"  norm (<карта-норм> | <из> <карта-норм> <в>) [<форма-норм>]\n"
-"    нормализация Юникода\n"
-"  dump|create|merge master|personal|repl [список слов]\n"
-"    дамп, создание или слияние главного, личного или с заменами списка "
-"слов.\n"
-"\n"
-"  <выр>            регулярное выражение, сопоставляемое именам фильтров или "
-"\"all\"\n"
-"  <форма-норм>     используемая форма номализации: none, internal или "
-"strict\n"
-"\n"
-"[опции] любые из следующих:\n"
-"\n"
 
-#: prog/aspell.cpp:1863
+#: prog/aspell.cpp:1872
 #, c-format
 msgid ""
 "\n"
@@ -1004,6 +1045,81 @@ msgstr "Общая длина слов с данными soundslike превышает 240 символов."
 #: modules/filter/tex.cpp:250 modules/filter/tex.cpp:257
 msgid "a string of 'o','O','p',or 'P'"
 msgstr ""
+
+#, fuzzy
+#~ msgid ""
+#~ "\n"
+#~ "Aspell %s alpha.  Copyright 2000-2004 by Kevin Atkinson.\n"
+#~ "\n"
+#~ "Usage: aspell [options] <command>\n"
+#~ "\n"
+#~ "<command> is one of:\n"
+#~ "  -?|help [<expr>] display this help message\n"
+#~ "                    and help for filters matching <expr> if installed\n"
+#~ "  -c|check <file>  to check a file\n"
+#~ "  -a|pipe          \"ispell -a\" compatibility mode\n"
+#~ "  list             produce a list of misspelled words from standard "
+#~ "input\n"
+#~ "  [dump] config [+e <expr>]  dumps the current configuration to stdout\n"
+#~ "  config [+e <expr>] <key>   prints the current value of an option\n"
+#~ "  soundslike       returns the sounds like equivalent for each word "
+#~ "entered\n"
+#~ "  munch            generate possible root words and affixes\n"
+#~ "  expand [1-4]     expands affix flags\n"
+#~ "  clean [strict]   cleans a word list so that every line is a valid word\n"
+#~ "  filter           passes standard input through filters\n"
+#~ "  -v|version       prints a version line\n"
+#~ "  conv <from> <to> [<norm-form>]\n"
+#~ "    converts from one encoding to another\n"
+#~ "  norm (<norm-map> | <from> <norm-map> <to>) [<norm-form>]\n"
+#~ "    perform unicode normlization\n"
+#~ "  dump|create|merge master|personal|repl [word list]\n"
+#~ "    dumps, creates or merges a master, personal, or replacement word "
+#~ "list.\n"
+#~ "\n"
+#~ "  <expr>           regular expression matching filtername(s) or \"all\"\n"
+#~ "  <norm-form>      normalization form to use, either none, internal, or "
+#~ "strict\n"
+#~ "\n"
+#~ "[options] is any of the following:\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Aspell %s альфа.  Copyright 2000-2004 by Kevin Atkinson.\n"
+#~ "\n"
+#~ "Использование: aspell [опции] <команда>\n"
+#~ "\n"
+#~ "<команда> одна из:\n"
+#~ "  -?|help [<выр>]  вывод этого справочного сообщения\n"
+#~ "                   и справка по фильтрам, совпадающим с <выр>, если "
+#~ "установлены\n"
+#~ "  -c|check <файл>  проверка файла\n"
+#~ "  -a|pipe          режим совместимости с \"ispell -a\"\n"
+#~ "  list             создание списка слов с ошибками со стандарного ввода\n"
+#~ "  [dump] config [-e <выр>]  дамп текущей конфигурации на стандарный "
+#~ "вывод\n"
+#~ "  config [+e <выр>] <ключ>  вывод текущего значения опции\n"
+#~ "  soundslike       возврат звукоподобного эквивалента для каждого "
+#~ "введенного слова\n"
+#~ "  munch            создание возможных корневых слов и аффиксов\n"
+#~ "  expand [1-4]     расширение флагов аффикса\n"
+#~ "  filter           прогон стандарного ввода через фильтры\n"
+#~ "  -v|version       вывод строки версии\n"
+#~ "  conv <из> <в> [<форма-норм>]\n"
+#~ "    преобразование из одной кодировки в другую\n"
+#~ "  norm (<карта-норм> | <из> <карта-норм> <в>) [<форма-норм>]\n"
+#~ "    нормализация Юникода\n"
+#~ "  dump|create|merge master|personal|repl [список слов]\n"
+#~ "    дамп, создание или слияние главного, личного или с заменами списка "
+#~ "слов.\n"
+#~ "\n"
+#~ "  <выр>            регулярное выражение, сопоставляемое именам фильтров "
+#~ "или \"all\"\n"
+#~ "  <форма-норм>     используемая форма номализации: none, internal или "
+#~ "strict\n"
+#~ "\n"
+#~ "[опции] любые из следующих:\n"
+#~ "\n"
 
 #~ msgid "configured as follows"
 #~ msgstr "настроен следующим образом"
