@@ -451,7 +451,7 @@ namespace aspell_default_suggest {
   void Working::score_list() {
     if (near_misses.empty()) return;
 
-    bool no_soundslike = strcmp(manager->lang().soundslike_name(), "none") != 0;
+    bool no_soundslike = strcmp(manager->lang().soundslike_name(), "none") == 0;
 
     if (parms.use_typo_analysis) {
       

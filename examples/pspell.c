@@ -43,7 +43,7 @@ int main(int argc, const char *argv[]) {
 
   pspell_config_replace(config, "lang", argv[1]);
 
-  pspell_config_replace(config, "sug-mode", "fast"); 
+  pspell_config_replace(config, "sug-mode", "ultra"); 
   // to make things faster, espacally when not compiled with optimiztion,
   // REMOVE BEFORE RELEASE
 
