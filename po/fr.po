@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Aspell 0.51\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-04-02 01:56-0500\n"
+"POT-Creation-Date: 2004-04-03 01:45-0500\n"
 "PO-Revision-Date: 2004-01-06 23:25+0200\n"
 "Last-Translator: Thierry Thomas <thierry@pompo.net>\n"
 "Language-Team: French <aspell-devel@gnu.org>\n"
@@ -746,7 +746,11 @@ msgstr ""
 msgid "Affix compression is currently incompatible with soundslike lookup."
 msgstr ""
 
-#: modules/speller/default/readonly_ws.cpp:817
+#: modules/speller/default/readonly_ws.cpp:805
+msgid "The total word length is larger than 240 characters."
+msgstr ""
+
+#: modules/speller/default/readonly_ws.cpp:821
 msgid "Affix flags found in word but no affix file given."
 msgstr ""
 

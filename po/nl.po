@@ -6,10 +6,10 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: aspell 0.60-b20040317\n"
+"Project-Id-Version: aspell 0.60-b20040402\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-04-02 01:56-0500\n"
-"PO-Revision-Date: 2004-03-18 22:44+0100\n"
+"POT-Creation-Date: 2004-04-03 01:45-0500\n"
+"PO-Revision-Date: 2004-04-02 20:13+0200\n"
 "Last-Translator: Elros Cyriatan <cyriatan@fastmail.fm>\n"
 "Language-Team: Dutch <vertaling@nl.linux.org>\n"
 "MIME-Version: 1.0\n"
@@ -247,16 +247,18 @@ msgid ""
 "This could also mean that the file \"%s\" could not be opened for reading or "
 "does not exist."
 msgstr ""
+"Dit kan ook betekenen dat het bestand \"%s\" niet kon worden geopend om te "
+"lezen, of niet bestaat."
 
 #: common/convert.cpp:350
-#, fuzzy, c-format
+#, c-format
 msgid "The unicode code point U+%04X is unsupported."
-msgstr "De codering \"%encod:1\" wordt niet ondersteund."
+msgstr "Het unicode codepunt U+%04X wordt niet ondersteund."
 
 #: common/convert.cpp:453
 #, c-format
 msgid "Invalid UTF-8 sequence at position %d."
-msgstr ""
+msgstr "Ongeldige UTF-8 reeks op positie %d."
 
 #: common/errors.cpp:26
 msgid "Operation Not Supported: %what:1"
@@ -364,9 +366,9 @@ msgstr ""
 "De conversie van \"%encod:1\" naar \"%encod2:2\" wordt niet ondersteund."
 
 #: common/errors.cpp:274
-#, fuzzy, c-format
+#, c-format
 msgid "The string \"%str:1\" is invalid."
-msgstr "Het woord \"%word:1\" is ongeldig."
+msgstr "De string \"%str:1\" is ongeldig."
 
 #: common/errors.cpp:282
 msgid "The word \"%word:1\" is invalid."
@@ -726,7 +728,11 @@ msgstr ""
 "Achtervoegsel compressie gaat op dit moment niet samen met klinkt-als "
 "opzoeken."
 
-#: modules/speller/default/readonly_ws.cpp:817
+#: modules/speller/default/readonly_ws.cpp:805
+msgid "The total word length is larger than 240 characters."
+msgstr ""
+
+#: modules/speller/default/readonly_ws.cpp:821
 msgid "Affix flags found in word but no affix file given."
 msgstr ""
 "Achtervoegsel opties gevonden in woord, maar er is geen achtervoegsel "

@@ -5,10 +5,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: aspell 0.60-b20040317\n"
+"Project-Id-Version: aspell 0.60-b20040402\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-04-02 01:56-0500\n"
-"PO-Revision-Date: 2004-03-29 23:41+0100\n"
+"POT-Creation-Date: 2004-04-03 01:45-0500\n"
+"PO-Revision-Date: 2004-04-02 22:23+0100\n"
 "Last-Translator: Roland Illig <roland.illig@gmx.de>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -246,16 +246,18 @@ msgid ""
 "This could also mean that the file \"%s\" could not be opened for reading or "
 "does not exist."
 msgstr ""
+"Das könnte auch heißen, dass die Datei »%s« nicht zum Lesen geöffnet werden "
+"konnte oder nicht existiert."
 
 #: common/convert.cpp:350
-#, fuzzy, c-format
+#, c-format
 msgid "The unicode code point U+%04X is unsupported."
-msgstr "Die Codierung »%encod:1« wird nicht unterstützt."
+msgstr "Das Unicodezeichen an der Stelle U+%04X wird nicht unterstützt."
 
 #: common/convert.cpp:453
 #, c-format
 msgid "Invalid UTF-8 sequence at position %d."
-msgstr ""
+msgstr "Falsche UTF-8-Folge an Position %d."
 
 #: common/errors.cpp:26
 msgid "Operation Not Supported: %what:1"
@@ -361,9 +363,9 @@ msgid "The conversion from \"%encod:1\" to \"%encod2:2\" is not supported."
 msgstr "Die Umwandlung von »%encod:1« nach »%encod:2« wird nicht unterstützt."
 
 #: common/errors.cpp:274
-#, fuzzy, c-format
+#, c-format
 msgid "The string \"%str:1\" is invalid."
-msgstr "Das Wort »%word:1« ist ungültig."
+msgstr "Die Zeichenkette »%str:1« ist ungültig."
 
 #: common/errors.cpp:282
 msgid "The word \"%word:1\" is invalid."
@@ -718,7 +720,11 @@ msgstr "Falsche Wortklangversion."
 msgid "Affix compression is currently incompatible with soundslike lookup."
 msgstr "Die Endungskompression ist momentan inkompatibel zur Wortklangsuche."
 
-#: modules/speller/default/readonly_ws.cpp:817
+#: modules/speller/default/readonly_ws.cpp:805
+msgid "The total word length is larger than 240 characters."
+msgstr ""
+
+#: modules/speller/default/readonly_ws.cpp:821
 msgid "Affix flags found in word but no affix file given."
 msgstr "Endungsflags im Wort gefunden, aber keine Endungsdatei angegeben."
 

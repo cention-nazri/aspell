@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-04-02 01:56-0500\n"
+"POT-Creation-Date: 2004-04-03 01:45-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -671,7 +671,11 @@ msgstr ""
 msgid "Affix compression is currently incompatible with soundslike lookup."
 msgstr ""
 
-#: modules/speller/default/readonly_ws.cpp:817
+#: modules/speller/default/readonly_ws.cpp:805
+msgid "The total word length is larger than 240 characters."
+msgstr ""
+
+#: modules/speller/default/readonly_ws.cpp:821
 msgid "Affix flags found in word but no affix file given."
 msgstr ""
 
