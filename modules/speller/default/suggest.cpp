@@ -47,7 +47,7 @@
 #include "speller_impl.hpp"
 #include "asuggest.hpp"
 #include "basic_list.hpp"
-#include "clone_ptr-t.hpp"
+#include "clone_ptr.hpp"
 #include "config.hpp"
 #include "data.hpp"
 #include "editdist.hpp"

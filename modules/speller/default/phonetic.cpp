@@ -6,7 +6,7 @@
 
 #include "file_util.hpp"
 #include "file_data_util.hpp"
-#include "clone_ptr-t.hpp"
+#include "clone_ptr.hpp"
 
 namespace aspeller {
   

@@ -13,7 +13,7 @@
 #ifndef __autil_enumeration__
 #define __autil_enumeration__
 
-#include "clone_ptr-t.hpp"
+#include "clone_ptr.hpp"
 
 // Microsoft VC6.0 does not allow typename except when directly
 // declaring a template param.  The other supporte compilers (Borlands

@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <typeinfo>
 
-#include "clone_ptr-t.hpp"
+#include "clone_ptr.hpp"
 #include "config.hpp"
 #include "data.hpp"
 #include "data_id.hpp"

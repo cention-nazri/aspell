@@ -8,7 +8,7 @@
 #include <iostream.hpp>
 
 #include "asc_ctype.hpp"
-#include "clone_ptr-t.hpp"
+#include "clone_ptr.hpp"
 #include "config.hpp"
 #include "enumeration.hpp"
 #include "errors.hpp"

@@ -6,7 +6,7 @@
 
 #include "speller.hpp"
 #include "convert.hpp"
-#include "clone_ptr-t.hpp"
+#include "clone_ptr.hpp"
 #include "config.hpp"
 
 namespace acommon {

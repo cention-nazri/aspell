@@ -10,7 +10,7 @@
 #include "indiv_filter.hpp"
 #include "mutable_container.hpp"
 #include "string_map.hpp"
-#include "clone_ptr-t.hpp"
+#include "clone_ptr.hpp"
 #include "vector.hpp"
 #include "errors.hpp"
 #include "convert_filter.hpp"
