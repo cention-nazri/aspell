@@ -155,6 +155,7 @@ namespace aspeller {
     const char * soundslike_name() const {
       return soundslike_->name();
     }
+    bool have_soundslike() const {return strcmp(soundslike_->name(),"none") == 0;}
 
     const char * soundslike_version() const {
       return soundslike_->version();
@@ -165,11 +166,20 @@ namespace aspeller {
 
     const AffixMgr * affix() const {return affix_;}
 
+    bool have_affix() const {return affix_;}
+
     SuggestReplEnumeration * repl() const {
       return new SuggestReplEnumeration(repls_.pbegin(), repls_.pend());}
 
     char * to_soundslike(char * res, const char * str, int len = -1) const 
     { return soundslike_->to_soundslike(res,str,len);}
+
+    void munch(ParmString word, CheckList * cl) const {affix_->munch(word, cl);}
+
+    WordAff * expand(ParmString word, ParmString aff, 
+                     ObjStack & buf, int limit = INT_MAX) const {
+      return affix_->expand(word, aff, buf, limit);
+    }
     
     char * to_lower(char * res, const char * str) const {
       while (*str) *res++ = to_lower(*str++); *res = '\0'; return res;}

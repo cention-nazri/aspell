@@ -84,7 +84,8 @@ namespace aspeller {
     const Id & id() {return *id_;}
     PosibErr<void> check_lang(ParmString lang);
     PosibErr<void> set_check_lang(ParmString lang, const Config *);
-    const Language * lang() const {return lang_;};
+    const LangImpl * lang() const {return lang_;};
+    const Language * language() const {return lang_;};
     const char * lang_name() const;
 
   private:
@@ -94,6 +95,7 @@ namespace aspeller {
     PosibErr<void> update_file_info(FStream & f);
   public:
     bool compare(const Dictionary &);
+
     const char * file_name() const {return file_name_.path.c_str();}
     // returns any additional dictionaries that are also used
     virtual PosibErr<void> load(ParmString, const Config &, LocalDictList * = 0, 
