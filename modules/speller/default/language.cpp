@@ -298,9 +298,9 @@ namespace aspeller {
         assert(d.key == "rep"); // FIXME
         split(d);
         repls_[i].substr = buf_.dup(iconv(d.key));
-        repls_[i].substr = to_clean((char *)repls_[i].substr, repls_[i].substr);
+        to_clean((char *)repls_[i].substr, repls_[i].substr);
         repls_[i].repl   = buf_.dup(iconv(d.value));
-        repls_[i].repl   = to_clean((char *)repls_[i].repl, repls_[i].repl);
+        to_clean((char *)repls_[i].repl, repls_[i].repl);
       }
 
     }

@@ -864,6 +864,7 @@ namespace {
         p += strlen(r->substr);
         buf.append(p, wend + 1);
         buf.ensure_null_end();
+        //CERR.printf("%s (%s) => %s (%s)\n", word, r->substr, buf.str(), r->repl);
         try_word(buf.pbegin(), buf.pend(), parms->edit_distance_weights.sub*3/2);
       }
     }
