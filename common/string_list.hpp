@@ -1,37 +1,94 @@
-/* This file is part of The New Aspell
- * Copyright (C) 2001 by Kevin Atkinson under the GNU LGPL
- * license version 2.0 or 2.1.  You should have received a copy of the
- * LGPL license along with this library if you did not you can find it
- * at http://www.gnu.org/.                                              */
+// This file is part of The New Aspell
+// Copyright (C) 2001 by Kevin Atkinson under the GNU LGPL license
+// version 2.0 or 2.1.  You should have received a copy of the LGPL
+// license along with this library if you did not you can find
+// it at http://www.gnu.org/.
 
-#ifndef ASPELL_STRING_LIST__HPP
-#define ASPELL_STRING_LIST__HPP
-
+#include "string.hpp"
+#include "string_enumeration.hpp"
 #include "mutable_container.hpp"
-#include "parm_string.hpp"
 #include "posib_err.hpp"
 
 namespace acommon {
 
-class StringEnumeration;
-class StringList;
+  struct StringListNode {
+    // private data structure
+    // default copy & destructor unsafe
+    String           data;
+    StringListNode * next;
+    StringListNode(ParmString str,  StringListNode * n = 0)
+      : data(str), next(n) {}
+  };
 
-class StringList : public MutableContainer {
- public:
-  virtual bool empty() const = 0;
-  virtual unsigned int size() const = 0;
-  virtual StringEnumeration * elements() const = 0;
-  virtual PosibErr<bool> add(ParmString to_add) = 0;
-  virtual PosibErr<bool> remove(ParmString to_rem) = 0;
-  virtual PosibErr<void> clear() = 0;
-  virtual StringList * clone() const = 0;
-  virtual void assign(const StringList * other) = 0;
-  StringList() {}
-  virtual ~StringList() {}
-};
-StringList * new_string_list();
+  class StringListEnumeration : public StringEnumeration {
+    // default copy and destructor safe
+  private:
+    StringListNode * n_;
+  public:
+    StringEnumeration * clone() const;
+    void assign(const StringEnumeration *);
 
+    StringListEnumeration(StringListNode * n) : n_(n) {}
+    const char * next() {
+      const char * temp;
+      if (n_ == 0) {
+	temp = 0;
+      } else {
+	temp = n_->data.c_str();
+	n_ = n_->next;
+      }
+      return temp;
+    }
+    bool at_end() const {
+      return n_ == 0;
+    }
+  };
+
+
+  class StringList : public MutableContainer {
+    // copy and destructor provided
+  private:
+    StringListNode * first;
+
+    StringListNode * * find (ParmString str);
+    void copy(const StringList &);
+    void destroy();
+  public:
+    friend bool operator==(const StringList &, const StringList &);
+    StringList() : first(0) {}
+    StringList(const StringList & other) 
+    {
+      copy(other);
+    }
+    StringList & operator= (const StringList & other)
+    {
+      destroy();
+      copy(other);
+      return *this;
+    }
+    virtual ~StringList() 
+    {
+      destroy();
+    }
+
+    StringList * clone() const;
+    void assign(const StringList *);
+
+    PosibErr<bool> add(ParmString);
+    PosibErr<bool> remove(ParmString);
+    PosibErr<void> clear();
+
+    StringEnumeration * elements() const;
+    StringListEnumeration elements_obj() const 
+    {
+      return StringListEnumeration(first);
+    }
+
+    bool empty() const { return first == 0; }
+    unsigned int size() const { abort(); }
+
+  };
+
+  StringList * new_string_list();
 
 }
-
-#endif /* ASPELL_STRING_LIST__HPP */

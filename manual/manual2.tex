@@ -102,13 +102,15 @@ version.
 
 \chapter{Introduction}
 
-Aspell is an Open Source spell checker designed to eventually replace
-Ispell. Its main feature is that it does a much better job of coming
-up with possible suggestions than Ispell does. In fact recent tests
-shows that it even does better than Microsoft Word 97's spell checker
-in some cases. In addition it has both compile time and run time support
-for other non-English languages. Aspell also functions as a library
-which can be used by other programs.
+{[}FIXME{]}
+
+GNU Aspell is a Free and Open Source spell checker designed to eventually
+replace Ispell. Its main feature is that it does a much better job
+of coming up with possible suggestions than Ispell does. In fact recent
+tests shows that it even does better than Microsoft Word 97's spell
+checker in some cases. In addition it has both compile time and run
+time support for other non-English languages. Aspell also functions
+as a library which can be used by other programs.
 
 
 \section{Comparison to other spell checker engines}
@@ -232,6 +234,8 @@ be found off the Aspell home page at \url{http://aspell.net}.
 
 \section{Helping Out}
 
+{[}FIXME{]}
+
 
 \section{Compiling \& Installing}
 
@@ -241,6 +245,9 @@ be found off the Aspell home page at \url{http://aspell.net}.
 \begin{quote}
 ./configure --disable-static \&\& make
 \end{quote}
+{[}FIXME: Static libraries should be disabled by default, add an explanation
+on why static libraries should not be used{]}
+
 For additional configure options type ./configure --help. You can
 control what C++ compiler is used by setting the environmental variable
 CXX before running configure and you can control what flags are passed
@@ -256,9 +263,9 @@ To install the program simply type
 make install
 \end{quote}
 After Aspell is installed at least one dictionary needs to be installed.
-You can find them at http://aspell.net. The \char`\"{}speller-util\char`\"{}
-program must be in your path in order for the dictionaries to install
-correctly.
+You can find them at \url{http://www.gnu.org/software/aspell/}. The
+\char`\"{}speller-util\char`\"{} program must be in your path in order
+for the dictionaries to install correctly.
 
 If you do not have Ispell or the traditional Unix {}``spell'' utility
 installed on your system than you should also copy the compatibly
@@ -377,7 +384,7 @@ utility use {}``--help''.
 
 \section{Spellchecking Individual Files\label{check}}
 
-To use Aspell to spellcheck a file type in 
+To use Aspell to spellcheck a file use:
 
 \begin{quote}
 aspell check {[}<\,{}<options>\,{}>{]}
@@ -423,7 +430,8 @@ is .tex, then \TeX{} mode will be uses, if the extension is .html,
 it will use url mode. Please note that the \textbf{sgml-options} can
 be used to change what extension are used for the sgml mode. See chapter
 \ref{filter} for more information on the various modes that can be
-used.
+used. {[}FIXME: Make sure this still works, and if it doesn't add
+support for it{]}
 
 If Aspell was compiled with curses support and the TERM environmental
 variable is set to a capable terminal type than Aspell will use a
@@ -908,6 +916,9 @@ are recognized as sgml/html files. The default is html, htm, php,
 and sgml. The extension are not case sensitive so extensions like
 .HTM will also be recognized.
 
+{[}FIXME: Add note about sgml character decoding and possable enhance
+the code to do so{]}
+
 
 \subsubsection{\TeX{} Filter/Mode}
 
@@ -1021,7 +1032,7 @@ analysis. It is slower than Ispell by a factor of 1.5 to 2 when a
 single word list is used. It speed is only minor affected by the size
 of the word list, if at all, but it is strongly effected by the number
 of word lists use. In this mode Aspell gets about 87\% of the words
-from my small test kernel of misspelled words. (Go to \url{http://aspell.sourceforge.net/test}
+from my small test kernel of misspelled words. (Go to \url{http://aspell.net/test}
 for more info on the test kernel as well as comparisons of this version
 of Aspell with previous versions and other spell checkers.)
 \item [fast]This method is like ultra except that it also performs typo
@@ -2231,6 +2242,8 @@ algorithm please see the data file \textbf{english\_phonet.dat}.
 
 
 \section*{Changes from 0.33.7.1 to 0.50}
+
+{[}FIXME{]}
 
 Tons :)
 

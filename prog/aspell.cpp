@@ -672,6 +672,9 @@ void check(bool interactive)
            << "\" for writing.  File not saved.\n";
       exit(-1);
     }
+
+    if (!options->have("mode"))
+      set_mode_from_extension(options, file_name);
     
     String m = options->retrieve("keymapping");
     if (m == "aspell")

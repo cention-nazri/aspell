@@ -26,9 +26,10 @@
 #include "info.hpp"
 #include "itemize.hpp"
 #include "string.hpp"
-#include "string_list_impl.hpp"
+#include "string_list.hpp"
 #include "vector.hpp"
 #include "stack_ptr.hpp"
+#include "strtonum.hpp"
 
 namespace acommon {
 
@@ -48,7 +49,7 @@ namespace acommon {
   //
 
   static void get_data_dirs (Config *,
-			     StringListImpl &);
+			     StringList &);
 
   struct DictExt
   {
@@ -65,15 +66,15 @@ namespace acommon {
   // this is in an invalid state if some of the lists
   // has data but others don't
   {
-    StringListImpl for_dirs;
+    StringList for_dirs;
     ModuleInfoList module_info_list;
-    StringListImpl dict_dirs;
+    StringList dict_dirs;
     DictExtList    dict_exts;
     DictInfoList   dict_info_list;
     void clear();
-    PosibErr<void> fill(Config *, StringListImpl &);
+    PosibErr<void> fill(Config *, StringList &);
     bool has_data() {return module_info_list.head_ != 0;}
-    void fill_helper_lists(const StringListImpl &);
+    void fill_helper_lists(const StringList &);
   };
 
   struct MDInfoListofLists
@@ -89,7 +90,7 @@ namespace acommon {
     ~MDInfoListofLists();
 
     void clear(Config * c);
-    int find(const StringListImpl &);
+    int find(const StringList &);
 
     PosibErr<MDInfoListAll *> get_lists(Config * c);
 
@@ -134,8 +135,8 @@ namespace acommon {
     ModuleInfoNode(ModuleInfoNode * n = 0) : next(n) {}
     String name;
     String lib_dir;
-    StringListImpl dict_exts;
-    StringListImpl dict_dirs;
+    StringList dict_exts;
+    StringList dict_dirs;
   };
 
   void ModuleInfoList::clear() 
@@ -208,20 +209,7 @@ namespace acommon {
     String key, data;
     while (getdata_pair(in, key, data)) {
       if (key == "order-num") {
-	// FIXME: This is an ugly hack written by Melvin Hadasht to
-	//   get around the fact that reading in real numbers is
-	//   local dependent.  Find a better way!
-        int d, f, i;
-	i = sscanf(data.c_str(), "%d.%d", &d, &f);
-	if (i == 2) {
-	  double t;
-	  t = (double) f;
-	  while (t >= 1.0) 
-	    t = t/10.0;
-	  t = t + (double) d;
-	  to_add->c_struct.order_num = t;
-	} else
-	  to_add->c_struct.order_num = 0;
+	to_add->c_struct.order_num = strtod_c(data.c_str(), NULL);
 	if (!(0 < to_add->c_struct.order_num && 
 	      to_add->c_struct.order_num < 1)) 
 	  {
@@ -464,7 +452,7 @@ namespace acommon {
   //
 
   void get_data_dirs (Config * config,
-		      StringListImpl & lst)
+		      StringList & lst)
   {
     lst.clear();
     lst.add(config->retrieve("data-dir"));
@@ -487,7 +475,7 @@ namespace acommon {
     dict_info_list.clear();
   }
 
-  PosibErr<void> MDInfoListAll::fill(Config * c, StringListImpl & dirs)
+  PosibErr<void> MDInfoListAll::fill(Config * c, StringList & dirs)
   {
     PosibErr<void> err;
 
@@ -506,7 +494,7 @@ namespace acommon {
     return err;
   }
 
-  void MDInfoListAll::fill_helper_lists(const StringListImpl & def_dirs)
+  void MDInfoListAll::fill_helper_lists(const StringList & def_dirs)
   {
     dict_dirs = def_dirs;
     dict_exts.append(DictExt(0, ".awli"));
@@ -540,7 +528,7 @@ namespace acommon {
 
   void MDInfoListofLists::clear(Config * c)
   {
-    StringListImpl dirs;
+    StringList dirs;
     get_data_dirs(c, dirs);
     int pos = find(dirs);
     if (pos == -1) {
@@ -548,7 +536,7 @@ namespace acommon {
     }
   }
 
-  int MDInfoListofLists::find(const StringListImpl & dirs)
+  int MDInfoListofLists::find(const StringList & dirs)
   {
     for (int i = 0; i != size; ++i) {
       if (data[i].for_dirs == dirs)
@@ -562,7 +550,7 @@ namespace acommon {
   {
     Config * config = (Config *)c;
     int & pos = config->md_info_list_index;
-    StringListImpl dirs;
+    StringList dirs;
     if (!valid_pos(pos)) {
       get_data_dirs(config, dirs);
       pos = find(dirs);

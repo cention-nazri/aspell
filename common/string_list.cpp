@@ -4,11 +4,11 @@
 // license along with this library if you did not you can find
 // it at http://www.gnu.org/.
 
-#include "string_list_impl.hpp"
+#include "string_list.hpp"
 
 namespace acommon {
 
-  void StringListImpl::copy(const StringListImpl & other)
+  void StringList::copy(const StringList & other)
   {
     StringListNode * * cur = &first;
     StringListNode * other_cur = other.first;
@@ -20,7 +20,7 @@ namespace acommon {
     *cur = 0;
   }
 
-  void StringListImpl::destroy()
+  void StringList::destroy()
   {
     while (first != 0) {
       StringListNode * next = first->next;
@@ -29,8 +29,8 @@ namespace acommon {
     }
   }
 
-  bool operator==(const StringListImpl & rhs, 
-		  const StringListImpl & lhs)
+  bool operator==(const StringList & rhs, 
+		  const StringList & lhs)
   {
     StringListNode * rhs_cur = rhs.first;
     StringListNode * lhs_cur = lhs.first;
@@ -52,17 +52,17 @@ namespace acommon {
   }
 
 
-  StringList * StringListImpl::clone() const
+  StringList * StringList::clone() const
   {
-    return new StringListImpl(*this);
+    return new StringList(*this);
   }
 
-  void StringListImpl::assign(const StringList * other)
+  void StringList::assign(const StringList * other)
   {
-    *this = *(const StringListImpl *)other;
+    *this = *(const StringList *)other;
   }
 
-  PosibErr<bool> StringListImpl::add(ParmString str)
+  PosibErr<bool> StringList::add(ParmString str)
   {
     StringListNode * * cur = & first;
     while (*cur != 0 && strcmp((*cur)->data.c_str(), str) != 0)
@@ -75,7 +75,7 @@ namespace acommon {
     }
   }
 
-  PosibErr<bool> StringListImpl::remove(ParmString str)
+  PosibErr<bool> StringList::remove(ParmString str)
   {
     StringListNode * * prev = 0;
     StringListNode * * cur  = & first;
@@ -92,7 +92,7 @@ namespace acommon {
     }
   }
 
-  PosibErr<void> StringListImpl::clear()
+  PosibErr<void> StringList::clear()
   {
     StringListNode * temp;
     while (first != 0) {
@@ -104,13 +104,13 @@ namespace acommon {
     return no_err;
   }
 
-  StringEnumeration * StringListImpl::elements() const
+  StringEnumeration * StringList::elements() const
   {
     return new StringListEnumeration(first);
   }
 
   StringList * new_string_list() {
-    return new StringListImpl;
+    return new StringList;
   }
 
 }

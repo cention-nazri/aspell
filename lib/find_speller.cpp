@@ -91,7 +91,7 @@ namespace acommon {
   }
 
   // Note this writes all over str
-  static void split_string_list(StringList * list, ParmString str)
+  static void split_string_list(StringList & list, ParmString str)
   {
     const char * s0 = str;
     const char * s1;
@@ -101,7 +101,7 @@ namespace acommon {
       s1 = s0;
       while (!asc_isspace(*s1)) ++s1;
       String temp(s0,s1-s0);
-      list->add(temp);
+      list.add(temp);
       if (*s1 != '\0')
 	s0 = s1 + 1;
     }
@@ -144,7 +144,7 @@ namespace acommon {
   struct BetterList : public Better
   {
     const char *         cur;
-    ClonePtr<StringList> list;
+    StringList           list;
     const char *         best;
     BetterList();
     void init();
@@ -153,12 +153,11 @@ namespace acommon {
   };
 
   BetterList::BetterList() 
-    : list(new_string_list()) 
   {
   }
 
   void BetterList::init() {
-    Enumeration<StringEnumeration> es = list->elements();
+    StringListEnumeration es = list.elements_obj();
     worst_rank = 0;
     while ( (es.next()) != 0)
       ++worst_rank;
@@ -173,7 +172,7 @@ namespace acommon {
 
   void BetterList::set_cur_rank() 
   {
-    Enumeration<StringEnumeration> es = list->elements();
+    StringListEnumeration es = list.elements_obj();
     const char * m;
     cur_rank = 0;
     while ( (m = es.next()) != 0 && strcmp(m, cur) != 0)
@@ -285,8 +284,8 @@ namespace acommon {
     // 
     str = config->retrieve("jargon");
     if (str.get_err() != 0)
-      b_jargon.list->add(str);
-    b_jargon.list->add("");
+      b_jargon.list.add(str);
+    b_jargon.list.add("");
     b_jargon.init();
     str.data.clear();
 
@@ -294,15 +293,15 @@ namespace acommon {
     // Retrive module list
     //
     if (config->have("module"))
-      b_module.list->add(config->retrieve("module"));
+      b_module.list.add(config->retrieve("module"));
     else if (config->have("module-search-order"))
-      config->retrieve_list("module-search-order", b_module.list);
+      config->retrieve_list("module-search-order", &b_module.list);
     {
       Enumeration<ModuleInfoEnumeration> els 
 	= get_module_info_list(config)->elements();
       const ModuleInfo * entry;
       while ( (entry = els.next()) != 0)
-	b_module.list->add(entry->name);
+	b_module.list.add(entry->name);
     }
     b_module.init();
 

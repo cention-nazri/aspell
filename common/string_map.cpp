@@ -44,87 +44,6 @@
 
 namespace acommon {
 
-  class StringMapImplNode {
-    // private data structure
-  public:
-    StringPair      data;
-    StringMapImplNode * next;
-    StringMapImplNode() : next(0) {}
-    StringMapImplNode(const StringMapImplNode &);
-    ~StringMapImplNode();
-  private:
-    StringMapImplNode & operator=(const StringMapImplNode &);
-  };
-
-  typedef StringMapImplNode * StringMapImplNodePtr;
-
-  class StringMapImpl : public StringMap {
-    // copy and destructor provided
-  public:
-    StringMapImpl();
-    StringMapImpl(const StringMapImpl &);
-    StringMapImpl & operator= (const StringMapImpl &);
-    ~StringMapImpl();
-
-    StringMap * clone() const {
-      return new StringMapImpl(*this);
-    }
-    void assign(const StringMap * other) {
-      *this = *(const StringMapImpl *)(other);
-    }
-
-    StringPairEnumeration * elements() const;
-
-    // insert a new element.   Will NOT overright an existing entry.
-    // returns false if the element already exists.
-    bool insert(ParmString key, ParmString value) {
-      return insert(key, value, false);
-    }
-    PosibErr<bool> add(ParmString key) {
-      return insert(key, 0, false);
-    }
-    // insert a new element. WILL overight an exitsing entry
-    // always returns true
-    bool replace(ParmString key, ParmString value) {
-      return insert(key, value, true);
-    }
-
-    // removes an element.  Returnes true if the element existed.
-    PosibErr<bool> remove(ParmString key) ;
-
-    PosibErr<void> clear();
-
-    // looks up an element.  Returns null if the element did not exist.
-    // returns an empty string if the element exists but has a null value
-    // otherwise returns the value
-    const char * lookup(ParmString key) const;
-  
-    bool have(ParmString key) const {return lookup(key) != 0;}
-
-    unsigned int size() const {return size_;}
-    bool empty() const {return size_ == 0;}
-
-  private:
-    void resize(const unsigned int *);
-
-    // inserts an element the last paramerts conters if an
-    // existing element will be overwritten.
-    bool insert(ParmString key, ParmString value, bool);
-
-    // clears the hash table, does NOT delete the old one
-    void clear_table(const unsigned int * size);
-
-    void copy(const StringMapImpl &);
-
-    // destroys the hash table, assumes it exists
-    void destroy();
-
-    StringMapImplNode * * find(ParmString);
-    unsigned int size_;
-    StringMapImplNodePtr * data;
-    const unsigned int * buckets;
-  };
-
   static const unsigned int primes[] =
     {
       53,         97,         193,       389,       769,
@@ -142,17 +61,17 @@ namespace acommon {
     return h;
   }
 
-  StringMapImplNode * * StringMapImpl::find(ParmString key) {
-    StringMapImplNode * * i = &data[hash_string(key) % *buckets];
+  StringMapNode * * StringMap::find(ParmString key) {
+    StringMapNode * * i = &data[hash_string(key) % *buckets];
     while (*i != 0 && strcmp((*i)->data.first, key) != 0)
       i = &(*i)->next;
     return i;
   }
 
-  const char * StringMapImpl::lookup(ParmString key) const 
+  const char * StringMap::lookup(ParmString key) const 
   {
-    const StringMapImplNode * i 
-      = *((StringMapImpl *)this)->find(key);
+    const StringMapNode * i 
+      = *((StringMap *)this)->find(key);
     if (i == 0) {
       return 0;
     } else {
@@ -161,10 +80,10 @@ namespace acommon {
     }
   }
 
-  bool StringMapImpl::insert(ParmString key, ParmString val, 
+  bool StringMap::insert(ParmString key, ParmString val, 
 				   bool replace) 
   {
-    StringMapImplNode * * i = find(key);
+    StringMapNode * * i = find(key);
     char * temp;
     if (*i != 0) {
 
@@ -195,7 +114,7 @@ namespace acommon {
 
       } else {
 
-	*i = new StringMapImplNode();
+	*i = new StringMapNode();
 	char * temp = new char[strlen(key) + 1];
 	strcpy(temp, key);
 	(*i)->data.first = temp;
@@ -212,29 +131,29 @@ namespace acommon {
     }
   }
 
-  PosibErr<bool> StringMapImpl::remove(ParmString key) {
-    StringMapImplNode * * i = find(key);
+  PosibErr<bool> StringMap::remove(ParmString key) {
+    StringMapNode * * i = find(key);
     if (*i == 0) {
       return false;
     } else {
       --size_;
-      StringMapImplNode * temp = *i;
+      StringMapNode * temp = *i;
       *i = (*i)->next;
       delete temp;
       return true;
     }
   }
 
-  void StringMapImpl::resize(const unsigned int * new_buckets) {
+  void StringMap::resize(const unsigned int * new_buckets) {
     assert (*new_buckets != 0);
-    StringMapImplNode * * old_data = data;
+    StringMapNode * * old_data = data;
     unsigned int old_buckets = *buckets;
     clear_table(new_buckets);
     unsigned int i = 0;
     for(;i != old_buckets; ++i) {
-      StringMapImplNode * j = old_data[i];
+      StringMapNode * j = old_data[i];
       while (j != 0) {
-	StringMapImplNode * * k = find(j->data.first);
+	StringMapNode * * k = find(j->data.first);
 	*k = j;
 	j = j->next;
 	(*k)->next = 0;
@@ -243,49 +162,49 @@ namespace acommon {
     delete[] old_data;
   }
 
-  StringMapImpl::StringMapImpl() {
+  StringMap::StringMap() {
     clear_table(primes);
     size_ = 0;
   }
 
-  PosibErr<void> StringMapImpl::clear() {
+  PosibErr<void> StringMap::clear() {
     destroy();
     clear_table(primes);
     size_ = 0;
     return no_err;
   }
 
-  StringMapImpl::StringMapImpl(const StringMapImpl & other) {
+  StringMap::StringMap(const StringMap & other) {
     copy(other);
   }
 
-  StringMapImpl & 
-  StringMapImpl::operator= (const StringMapImpl & other) 
+  StringMap & 
+  StringMap::operator= (const StringMap & other) 
   {
     destroy();
     copy(other);
     return *this;
   }
 
-  StringMapImpl::~StringMapImpl() {
+  StringMap::~StringMap() {
     destroy();
   }
 
-  void StringMapImpl::clear_table(const unsigned int * size) {
+  void StringMap::clear_table(const unsigned int * size) {
     buckets = size;
-    data = new StringMapImplNodePtr[*buckets];
-    memset(data, 0, sizeof(StringMapImplNodePtr) * (*buckets));
+    data = new StringMapNodePtr[*buckets];
+    memset(data, 0, sizeof(StringMapNodePtr) * (*buckets));
   }
 
-  void StringMapImpl::copy(const StringMapImpl & other) {
+  void StringMap::copy(const StringMap & other) {
     clear_table(other.buckets);
     size_ = other.size_;
     unsigned int i = 0;
     for (; i != *buckets; ++i) {
-      StringMapImplNode * * j0 = &other.data[i];
-      StringMapImplNode * * j1 = &data[i];
+      StringMapNode * * j0 = &other.data[i];
+      StringMapNode * * j1 = &data[i];
       while(*j0 != 0) {
-	*j1 = new StringMapImplNode(**j0);
+	*j1 = new StringMapNode(**j0);
 	j0 = &(*j0)->next;
 	j1 = &(*j1)->next;
       }
@@ -293,12 +212,12 @@ namespace acommon {
     }
   }
 
-  void StringMapImpl::destroy() {
+  void StringMap::destroy() {
     unsigned int i = 0;
     for (; i != *buckets; ++i) {
-      StringMapImplNode * j = data[i];
+      StringMapNode * j = data[i];
       while(j != 0) {
-	StringMapImplNode * k = j;
+	StringMapNode * k = j;
 	j = j->next;
 	delete k;
       }
@@ -308,11 +227,11 @@ namespace acommon {
   }
 
   //
-  // StringMapImplNode methods
+  // StringMapNode methods
   //
 
-  StringMapImplNode::StringMapImplNode
-  (const StringMapImplNode & other) 
+  StringMapNode::StringMapNode
+  (const StringMapNode & other) 
   {
     data.first = new char[strlen(other.data.first) + 1];
     strcpy((char *)data.first, other.data.first);
@@ -324,7 +243,7 @@ namespace acommon {
     }
   }
 
-  StringMapImplNode::~StringMapImplNode() {
+  StringMapNode::~StringMapNode() {
     delete[] (char *)(data.first);
     if (data.second != 0) delete[] (char *)(data.second);
   }
@@ -334,22 +253,22 @@ namespace acommon {
   //
   //
 
-  class StringMapImplEnumeration : public StringPairEnumeration {
+  class StringMapEnumeration : public StringPairEnumeration {
     unsigned int i;
-    const StringMapImplNode    * j;
-    const StringMapImplNodePtr * data;
+    const StringMapNode    * j;
+    const StringMapNodePtr * data;
     unsigned int size;
   public:
-    StringMapImplEnumeration(const StringMapImplNodePtr * d, 
-				 unsigned int s);    
+    StringMapEnumeration(const StringMapNodePtr * d, 
+			 unsigned int s);    
     StringPairEnumeration * clone() const;
     void assign(const StringPairEnumeration *);
     bool at_end() const;
     StringPair next();
   };
 
-  StringMapImplEnumeration
-  ::StringMapImplEnumeration(const StringMapImplNodePtr * d, 
+  StringMapEnumeration
+  ::StringMapEnumeration(const StringMapNodePtr * d, 
 				 unsigned int s) 
   {
     data = d;
@@ -361,22 +280,22 @@ namespace acommon {
       j = data[i];
   }
 
-  StringPairEnumeration * StringMapImplEnumeration::clone() const {
-    return new StringMapImplEnumeration(*this);
+  StringPairEnumeration * StringMapEnumeration::clone() const {
+    return new StringMapEnumeration(*this);
   }
 
   void 
-  StringMapImplEnumeration::assign
+  StringMapEnumeration::assign
   (const StringPairEnumeration * other)
   {
-    *this = *(const StringMapImplEnumeration *)(other);
+    *this = *(const StringMapEnumeration *)(other);
   }
 
-  bool StringMapImplEnumeration::at_end() const {
+  bool StringMapEnumeration::at_end() const {
     return i == size;
   }
 
-  StringPair StringMapImplEnumeration::next() {
+  StringPair StringMapEnumeration::next() {
     StringPair temp;
     if (i == size)
       return temp;
@@ -391,12 +310,12 @@ namespace acommon {
     return temp;
   }
 
-  StringPairEnumeration * StringMapImpl::elements() const {
-    return new StringMapImplEnumeration(data, *buckets);
+  StringPairEnumeration * StringMap::elements() const {
+    return new StringMapEnumeration(data, *buckets);
   }
 
   StringMap * new_string_map() 
   {
-    return new StringMapImpl();
+    return new StringMap();
   }
 }

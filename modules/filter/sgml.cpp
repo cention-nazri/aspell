@@ -17,27 +17,19 @@
 
 namespace acommon {
 
-  class ToLowerMap : public MutableContainer
+  class ToLowerMap : public StringMap
   {
-    StringMap * real_;
-
   public:
-    ToLowerMap(StringMap * r) : real_(r) {}
-
     PosibErr<bool> add(ParmString to_add) {
       String new_key;
       for (const char * i = to_add; *i; ++i) new_key += asc_tolower(*i);
-      return real_->add(new_key);
+      return StringMap::add(new_key);
     }
 
     PosibErr<bool> remove(ParmString to_rem) {
       String new_key;
       for (const char * i = to_rem; *i; ++i) new_key += asc_tolower(*i);
-      return real_->remove(new_key);
-    }
-
-    PosibErr<void> clear() {
-      return real_->clear();
+      return StringMap::remove(new_key);
     }
   };
 
@@ -50,7 +42,7 @@ namespace acommon {
     String parm_name;
     enum InWhat {InKey, InValue, InValueNoSkip, InOther};
     InWhat in_what;
-    ClonePtr<StringMap> noskip_tags;
+    StringMap noskip_tags;
 
     inline bool process_char(FilterChar::Chr c);
  
@@ -65,9 +57,8 @@ namespace acommon {
   {
     name_ = "sgml";
     order_num_ = 0.35;
-    noskip_tags.reset(new_string_map());
-    ToLowerMap tl_noskip_tags(noskip_tags);
-    RET_ON_ERR(opts->retrieve_list("sgml-check", &tl_noskip_tags));
+    noskip_tags.clear();
+    RET_ON_ERR(opts->retrieve_list("sgml-check", &noskip_tags));
     reset();
     return true;
   }
@@ -113,7 +104,7 @@ namespace acommon {
 	
     } else if (!in_quote && c == '=') {
 	
-      if (noskip_tags->have(parm_name.c_str()))
+      if (noskip_tags.have(parm_name.c_str()))
 	in_what = InValueNoSkip;
       else
 	in_what = InValue;

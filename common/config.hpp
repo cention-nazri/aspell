@@ -11,14 +11,13 @@
 #include "key_info.hpp"
 #include "posib_err.hpp"
 #include "string.hpp"
-#include "clone_ptr.hpp"
 #include "vector.hpp"
+#include "string_map.hpp"
 
 namespace acommon {
 
   class OStream;
   class KeyInfoEnumeration;
-  class StringMap;
   class StringPairEnumeration;
   class MutableContainer;
 
@@ -48,8 +47,8 @@ namespace acommon {
     virtual Notifier * clone(Config *) const {return 0;}
     virtual ~Notifier() {}
 
-    virtual PosibErr<void> item_updated(const KeyInfo *, bool)         {return no_err;}
-    virtual PosibErr<void> item_updated(const KeyInfo *, int)          {return no_err;}
+    virtual PosibErr<void> item_updated(const KeyInfo *, bool)       {return no_err;}
+    virtual PosibErr<void> item_updated(const KeyInfo *, int)        {return no_err;}
     virtual PosibErr<void> item_updated(const KeyInfo *, ParmString) {return no_err;}
     virtual PosibErr<void> item_added  (const KeyInfo *, ParmString) {return no_err;}
     virtual PosibErr<void> item_removed(const KeyInfo *, ParmString) {return no_err;}
@@ -75,8 +74,8 @@ namespace acommon {
     // copy and destructor provided
     friend class MDInfoListofLists;
   private:
-    String      name_;
-    ClonePtr<StringMap> data_;
+    String    name_;
+    StringMap data_;
 
     bool attached_;    // if attached can't copy
     Vector<Notifier *> notifier_list;

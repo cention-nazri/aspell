@@ -34,6 +34,9 @@ namespace acommon {
     typedef Vector<IndividualFilter *> Filters;
     Filters filters_;
   };
+
+  void set_mode_from_extension(Config * config,
+			       ParmString filename);
   
   PosibErr<void> setup_filter(Filter &, Config *, 
 			      bool use_decoder, 

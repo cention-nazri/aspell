@@ -115,7 +115,11 @@ The eventual goal is to convert this manual into Texinfo.
 Introduction
 \layout Standard
 
-Aspell is an Open Source spell checker designed to eventually replace Ispell.
+[FIXME]
+\layout Standard
+
+GNU Aspell is a Free and Open Source spell checker designed to eventually
+ replace Ispell.
  Its main feature is that it does a much better job of coming up with possible
  suggestions than Ispell does.
  In fact recent tests shows that it even does better than Microsoft Word
@@ -534,6 +538,9 @@ Support for Aspell can be found on the Aspell mailing lists.
 \layout Section
 
 Helping Out
+\layout Standard
+
+[FIXME]
 \layout Section
 
 Compiling & Installing
@@ -543,6 +550,10 @@ Generic Install Instructions
 \layout Quote
 
 ./configure --disable-static && make
+\layout Standard
+
+[FIXME: Static libraries should be disabled by default, add an explanation
+ on why static libraries should not be used]
 \layout Standard
 
 For additional configure options type ./configure --help.
@@ -563,7 +574,12 @@ make install
 \layout Standard
 
 After Aspell is installed at least one dictionary needs to be installed.
- You can find them at http://aspell.net.
+ You can find them at 
+\begin_inset LatexCommand \url{http://www.gnu.org/software/aspell/}
+
+\end_inset 
+
+.
  The "speller-util" program must be in your path in order for the dictionaries
  to install correctly.
 \layout Standard
@@ -854,7 +870,7 @@ Spellchecking Individual Files
 
 \layout Standard
 
-To use Aspell to spellcheck a file type in 
+To use Aspell to spellcheck a file use:
 \layout Quote
 
 aspell check [<<options>>] <<filename>>
@@ -944,6 +960,7 @@ sgml-options
 \end_inset 
 
  for more information on the various modes that can be used.
+ [FIXME: Make sure this still works, and if it doesn't add support for it]
 \layout Standard
 
 If Aspell was compiled with curses support and the TERM environmental variable
@@ -2383,6 +2400,10 @@ add|rem-sgml-extension
  The default is html, htm, php, and sgml.
  The extension are not case sensitive so extensions like .HTM will also be
  recognized.
+\layout Standard
+
+[FIXME: Add note about sgml character decoding and possable enhance the
+ code to do so]
 \layout Subsubsection
 
 TeX Filter/Mode
@@ -2739,7 +2760,7 @@ ultra This method will use the fastest method available to come up with
  In this mode Aspell gets about 87% of the words from my small test kernel
  of misspelled words.
  (Go to 
-\begin_inset LatexCommand \url{http://aspell.sourceforge.net/test}
+\begin_inset LatexCommand \url{http://aspell.net/test}
 
 \end_inset 
 
@@ -5824,6 +5845,9 @@ Changelog
 \layout Section*
 
 Changes from 0.33.7.1 to 0.50
+\layout Standard
+
+[FIXME]
 \layout Standard
 
 Tons :)

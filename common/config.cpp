@@ -21,7 +21,6 @@
 #include "mutable_container.hpp"
 #include "posib_err.hpp"
 #include "string_map.hpp"
-#include "clone_ptr-t.hpp"
 
 #define DEFAULT_LANG "en_US"
 
@@ -35,7 +34,6 @@ namespace acommon {
 		 const KeyInfo * mainbegin, 
 		 const KeyInfo * mainend)
     : name_(name)
-    , data_(new_string_map())
     , attached_(0)
     , md_info_list_index(-1)
   {
@@ -191,7 +189,7 @@ namespace acommon {
 
   bool Config::have(ParmString key) const 
   {
-    const char * value = data_->lookup(key);
+    const char * value = data_.lookup(key);
     if (value == 0 || value[0] == '\x01') {
       return false;
     } else {
@@ -219,7 +217,7 @@ namespace acommon {
 
   PosibErr<String> Config::retrieve(ParmString key) const
   {
-    const char * value = data_->lookup(key);
+    const char * value = data_.lookup(key);
     if (value != 0) {
       if (value[0] == '\x01')
 	++value;
@@ -233,10 +231,10 @@ namespace acommon {
 				       MutableContainer * m) const
   {
     RET_ON_ERR_SET(get_default(key), String, def);
-    const char * value = data_->lookup(key);
+    const char * value = data_.lookup(key);
     if (value != 0) {
       def += ',';
-      def += data_->lookup(key);
+      def += data_.lookup(key);
     }
     RET_ON_ERR(itemize(def, *m));
     return no_err;
@@ -486,7 +484,7 @@ namespace acommon {
     
       if (p == 4 || (p == 0 && strcmp(value,"false") == 0)) {
 
-	data_->replace(key, "false");
+	data_.replace(key, "false");
 	notify_all(ki, false, item_updated);
 	return no_err;
 
@@ -496,7 +494,7 @@ namespace acommon {
 
       } else if (value[0] == '\0' || strcmp(value,"true") == 0) {
 
-	data_->replace(key, "true");
+	data_.replace(key, "true");
 	notify_all(ki, true, item_updated);
 	return no_err;
 
@@ -511,7 +509,7 @@ namespace acommon {
       
       if (p == 0) {
 
-	data_->replace(key,value);
+	data_.replace(key,value);
 	notify_all(ki, value, item_updated);
 	return no_err;
       
@@ -526,7 +524,7 @@ namespace acommon {
 
       if (p == 0 && sscanf(value, "%i", &num) == 1 && num >= 0) {
 
-	data_->replace(key,value);
+	data_.replace(key,value);
 	notify_all(ki, num, item_updated);
 	return no_err;
 
@@ -559,15 +557,15 @@ namespace acommon {
       }
 
       if (a != '!') {
-	i = data_->lookup(key);
+	i = data_.lookup(key);
 	if (i == 0) i = "";
 	String s = i;
 	s += ',';
 	s += a;
 	s += value;
-	data_->replace(key, s);
+	data_.replace(key, s);
       } else {
-	data_->replace(key, "!");
+	data_.replace(key, "!");
       }
 
       switch (a) {
@@ -598,7 +596,7 @@ namespace acommon {
     assert(ki->def != 0); // if null this key should never have values
     // directly added to it
 
-    bool success = data_->remove(key);
+    bool success = data_.remove(key);
 
     switch (ki->type) {
 
@@ -629,7 +627,7 @@ namespace acommon {
 
   StringPairEnumeration * Config::elements() 
   {
-    return data_->elements();
+    return data_.elements();
   }
 
 
@@ -734,7 +732,7 @@ namespace acommon {
 	  if (have(i->name))
 	    out << i->name << " " << val << "\n";
 	} else {
-	  const char * value = data_->lookup(i->name);
+	  const char * value = data_.lookup(i->name);
 	  if (value != 0) {
 	    ListDump ld(out, i->name);
 	    itemize(value, ld);
@@ -806,7 +804,7 @@ namespace acommon {
       // if the two values match there is no need to insert it into the
       // table unless the other value is specificly set
       if (k->type != KeyInfoList) {
-	data_->replace(k->name, other_value);
+	data_.replace(k->name, other_value);
       } else {
 	String new_value;
 	if (other_value[0] != '!') {
@@ -814,7 +812,7 @@ namespace acommon {
 	  new_value += ',';
 	}
 	new_value += other_value;
-	data_->replace(k->name, new_value);
+	data_.replace(k->name, new_value);
       }
     }
     delete els;

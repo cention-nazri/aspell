@@ -4,14 +4,17 @@
 // LGPL license along with this library if you did not you can find it
 // at http://www.gnu.org/.
 
+#include "asc_ctype.hpp"
+#include "config.hpp"
+#include "enumeration.hpp"
 #include "filter.hpp"
 #include "indiv_filter.hpp"
+#include "itemize.hpp"
 #include "parm_string.hpp"
-#include "config.hpp"
-#include "string_list.hpp"
 #include "stack_ptr.hpp"
 #include "string_enumeration.hpp"
-#include "enumeration.hpp"
+#include "string_list.hpp"
+#include "string_map.hpp"
 
 #include "iostream.hpp"
 
@@ -92,15 +95,51 @@ namespace acommon {
 
   FilterEntry * find_individual_filter(ParmString);
 
+  class ExtsMap : public StringMap 
+  {
+    const char * cur_mode;
+  public:
+    void set_mode(ParmString mode) {cur_mode = mode;}
+    PosibErr<bool> add(ParmString key) {insert(key, cur_mode); return true;}
+  };
+
+  void set_mode_from_extension(Config * config,
+			       ParmString filename)
+  {
+
+    // Initialize exts mapping
+    StringList modes;
+    itemize(filter_modes, modes);
+    StringListEnumeration els = modes.elements_obj();
+    const char * mode;
+    ExtsMap exts;
+    while ( (mode = els.next()) != 0) {
+      exts.set_mode(mode);
+      String to_find = mode;
+      to_find += "-extension";
+      PosibErr<void> err = config->retrieve_list(to_find, &exts);
+      err.ignore_err();
+    }
+    const char * ext0 = strrchr(filename, '.');
+    if (ext0 == 0) ext0 = filename;
+    else ++ext0;
+    String ext = ext0;
+    for (unsigned int i = 0; i != ext.size(); ++i)
+      ext[i] = asc_tolower(ext[i]);
+    mode = exts.lookup(ext);
+    if (mode != 0)
+      config->replace("mode", mode);
+  }
+
   PosibErr<void> setup_filter(Filter & filter, 
 			      Config * config, 
 			      bool use_decoder, 
 			      bool use_filter, 
 			      bool use_encoder)
   {
-    StackPtr<StringList> sl(new_string_list());
-    config->retrieve_list("filter", sl);
-    Enumeration<StringEnumeration> els = sl->elements();
+    StringList sl;
+    config->retrieve_list("filter", &sl);
+    StringListEnumeration els = sl.elements_obj();
     StackPtr<IndividualFilter> ifilter;
     const char * filter_name;
     while ( (filter_name = els.next()) != 0) 

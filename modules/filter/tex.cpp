@@ -33,16 +33,13 @@ namespace acommon {
     bool prev_backslash;
     Vector<Command> stack;
 
-    class CommandsIn : public MutableContainer {
-      StringMap * real_;
+    class Commands : public StringMap {
     public:
-      CommandsIn(StringMap * r) : real_(r) {}
       PosibErr<bool> add(ParmString to_add);
       PosibErr<bool> remove(ParmString to_rem);
-      PosibErr<void> clear();
     };
     
-    ClonePtr<StringMap> commands;
+    Commands commands;
     bool check_comments;
     
     inline void push_command(InWhat);
@@ -80,9 +77,8 @@ namespace acommon {
   {
     name_ = "tex";
     order_num_ = 0.35;
-    commands.reset(new_string_map());
-    CommandsIn commands_in(commands);
-    RET_ON_ERR(opts->retrieve_list("tex-command", &commands_in));
+    commands.clear();
+    RET_ON_ERR(opts->retrieve_list("tex-command", &commands));
     check_comments = opts->retrieve_bool("tex-check-comments");
     reset();
     return true;
@@ -124,12 +120,12 @@ namespace acommon {
 	if (top.name.empty()) {
 	  top.name.clear();
 	  top.name += c;
-	  top.do_check = commands->lookup(top.name.c_str());
+	  top.do_check = commands.lookup(top.name.c_str());
 	  if (top.do_check == 0) top.do_check = "";
 	  return !asc_isspace(c);
 	}
 
-	top.do_check = commands->lookup(top.name.c_str());
+	top.do_check = commands.lookup(top.name.c_str());
 	if (top.do_check == 0) top.do_check = "";
 
 	if (asc_isspace(c)) { // swallow extra spaces
@@ -227,10 +223,10 @@ namespace acommon {
   }
 
   //
-  // TexFilter::CommandsIn
+  // TexFilter::Commands
   //
 
-  PosibErr<bool> TexFilter::CommandsIn::add(ParmString value) {
+  PosibErr<bool> TexFilter::Commands::add(ParmString value) {
     int p1 = 0;
     while (!asc_isspace(value[p1])) {
       if (value[p1] == '\0') 
@@ -245,20 +241,16 @@ namespace acommon {
     }
     String t1; t1.assign(value,p1);
     String t2; t2.assign(value+p2);
-    return real_->replace(t1, t2);
+    return StringMap::replace(t1, t2);
   }
   
-  PosibErr<bool> TexFilter::CommandsIn::remove(ParmString value) {
+  PosibErr<bool> TexFilter::Commands::remove(ParmString value) {
     int p1 = 0;
     while (!asc_isspace(value[p1]) && value[p1] != '\0') ++p1;
     String temp; temp.assign(value,p1);
-    return real_->remove(temp);
+    return StringMap::remove(temp);
   }
   
-  PosibErr<void> TexFilter::CommandsIn::clear() {
-    return real_->clear();
-  }
-
   //
   //
   //
@@ -349,8 +341,8 @@ namespace acommon {
        // Geometry Package
        "geometry p,"
        ,"TeX commands"},
-      {"tex-check-comments", KeyInfoBool, "false",
-	 "check TeX comments"}
+    {"tex-check-comments", KeyInfoBool, "false", "check TeX comments"},
+    {"tex-extension", KeyInfoList, "tex", "TeX file extensions"}
   };
   const KeyInfo * tex_options_begin = tex_options;
   const KeyInfo * tex_options_end = tex_options + 2;

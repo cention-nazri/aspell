@@ -19,8 +19,6 @@ namespace acommon {
     : status_fun_(0), speller_(0) {}
   DocumentChecker::~DocumentChecker() 
   {
-    //abort();
-    CERR << "Bye\n";
   }
 
   PosibErr<void> DocumentChecker

@@ -578,9 +578,9 @@ namespace aspeller {
     
     change_id(ltemp, main_id);
 
-    StackPtr<StringList> extra_dicts(new_string_list());
-    config_->retrieve_list("extra-dicts", extra_dicts);
-    Enumeration<StringEnumeration> els = extra_dicts->elements();
+    StringList extra_dicts;
+    config_->retrieve_list("extra-dicts", &extra_dicts);
+    StringListEnumeration els = extra_dicts.elements_obj();
     const char * dict_name;
     while ( (dict_name = els.next()) != 0)
       RET_ON_ERR(add_data_set(dict_name,*config_, this));
