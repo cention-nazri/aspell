@@ -1936,17 +1936,14 @@ cases the set of words returned is, provably, the minimum number
 possible.  In the typical case the number of words returned is within
 1% of the optimum number.
 
-By default Aspell will remove redundant affix flags.  The @option{keep}
-flag will avoid removing them, which can be useful if you want to
-include all possible expansions for each base word.
-
 When cross products are involved it may be beneficial to list a base
-word more than once.  Unfortunately, the current version of Aspell can
-not correctly handle multiple base words in a dictionary.  Therefore,
-the current default behavior is to only include the one with the most
-expansions.  All of them can be included via the @option{multi} flag.
-Once aspell is able to handle multiple base words the default will be
-to include them all.  The @option{single} flag can be used to only
+word more than once.  While Aspell 0.61 and better can correctly
+handle multiple base words in a dictionary, Aspell 0.60 can not.
+Therefore, the current default behavior is to only include the one
+with the most expansions.  All of them can be included via the
+@option{multi} flag, but be aware that the word lists will not work
+correctly with Aspell 0.60.  A future version of Aspell may default to
+including them all.  The @option{single} flag can be used to only
 include one of them.
 
 The @option{simple} flag will select an alternate faster algorithm.

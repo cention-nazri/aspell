@@ -446,7 +446,7 @@ namespace {
     const char * w = (const char *)wi->intr[0];
     const SensitiveCompare * c = (const SensitiveCompare *)wi->intr[1];
     const char * orig = (const char *)wi->intr[2];
-    wi->word = w;
+    convert(w,*wi);
     wi->adv_ = 0;
     prep_next(wi, w, c, orig);
   }
@@ -908,27 +908,21 @@ namespace {
     InsensitiveEqual ieq(&lang);
     while (cur) {
       if (strcmp(prev->word, cur->word) == 0) {
-        // merge affix info if necessary
         if (!prev->aff && cur->aff) {
+          // merge affix info into previous word
           prev->flags |= HAVE_AFFIX_FLAG;
           prev->aff = cur->aff;
           prev->data_size += strlen(prev->aff) + 1;
+          prev->next = cur->next;
         } else if (prev->aff && cur->aff) {
-          unsigned l1 = strlen(prev->aff);
-          unsigned l2 = strlen(cur->aff);
-          char * aff = (char *)buf.alloc(l1 + l2 + 1);
-          memcpy(aff, prev->aff, l1);
-          prev->aff = aff;
-          aff += l1;
-          for (const char * p = cur->aff; *p; ++p) {
-            if (memchr(prev->aff, l1, *p)) continue;
-            *aff = *p;
-            ++aff;
-          }
-          *aff = '\0';
-          prev->data_size = prev->word_size + (aff - prev->aff) + 2;
+          // don't merge affix info, store both entries
+          prev->flags |= DUPLICATE_FLAG;
+          ++num_entries;
+          prev = cur;
+        } else {
+          // ignore this word
+          prev->next = cur->next;
         }
-        prev->next = cur->next;
       } else {
         if (ieq(prev->word, cur->word)) prev->flags |= DUPLICATE_FLAG;
         else ++uniq_entries;
