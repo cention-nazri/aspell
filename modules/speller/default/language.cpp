@@ -396,23 +396,37 @@ namespace aspeller {
   try_again:
     const char * word = word0;
     const char * inlist = inlist0;
-    if (begin) {
-      if (*word == *inlist || *word == lang->to_title(*inlist)) ++word, ++inlist;
-      else                                                      goto try_upper;
+
+    if (!case_insensitive) {
+      
+      if (begin) {
+        if (*word == *inlist || *word == lang->to_title(*inlist)) ++word, ++inlist;
+        else                                                      goto try_upper;
+      }
+      while (*word && *inlist && *word == *inlist) ++word, ++inlist;
+      if (*inlist) goto try_upper;
+      if (end && lang->special(*word).end) ++word;
+      if (*word) goto try_upper;
+      return true;
+    try_upper:
+      word = word0;
+      inlist = inlist0;
+      while (*word && *inlist && *word == lang->to_upper(*inlist)) ++word, ++inlist;
+      if (*inlist) goto fail;
+      if (end && lang->special(*word).end) ++word;
+      if (*word) goto fail;
+      
+    } else { // case_insensitive
+      
+      while (*word && *inlist && 
+             lang->to_upper(*word) == lang->to_upper(*inlist)) ++word, ++inlist;
+      if (*inlist) goto fail;
+      if (end && lang->special(*word).end) ++word;
+      if (*word) goto fail;
+      
     }
-    while (*word && *inlist && *word == *inlist) ++word, ++inlist;
-    if (*inlist) goto try_upper;
-    if (end && lang->special(*word).end) ++word;
-    if (*word) goto try_upper;
     return true;
-  try_upper:
-    word = word0;
-    inlist = inlist0;
-    while (*word && *inlist && *word == lang->to_upper(*inlist)) ++word, ++inlist;
-    if (*inlist) goto fail;
-    if (end && lang->special(*word).end) ++word;
-    if (*word) goto fail;
-    return true;
+
   fail:
     if (begin && lang->special(*word0).begin) {++word0; goto try_again;}
     return false;

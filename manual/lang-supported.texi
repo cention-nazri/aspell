@@ -132,7 +132,7 @@
 @item nr @tab South Ndebele @tab Latin @tab - @tab -
 @item nso @tab Northern Sotho @tab Latin @tab Maybe @tab -
 @item nv @tab Navajo @tab Latin @tab - @tab -
-@item ny @tab Nyanja @tab Latin @tab Planned @tab -
+@item ny @tab Nyanja @tab Latin @tab 0.50 @tab -
 @item
 @item oc @tab Occitan / Provencal @tab Latin @tab Maybe @tab -
 @item om @tab Oromo @tab Latin @tab - @tab -

@@ -1373,8 +1373,7 @@ namespace acommon {
     , {"ignore",   KeyInfoInt   , "1",
        N_("ignore words <= n chars"), KEYINFO_MAY_CHANGE}
     , {"ignore-accents" , KeyInfoBool, "false",
-       /* TRANSLATORS: It is OK if this is longer than 50 chars */
-       N_("ignore accents when checking words -- CURRENTLY IGNORED"), KEYINFO_MAY_CHANGE | KEYINFO_HIDDEN}
+       N_("ignore accents when checking words"), KEYINFO_MAY_CHANGE | KEYINFO_HIDDEN}
     , {"ignore-case", KeyInfoBool  , "false",
        /* TRANSLATORS: It is OK if this is longer than 50 chars */
        N_("ignore case when checking words -- CURRENTLY IGNORED"), KEYINFO_MAY_CHANGE | KEYINFO_HIDDEN}
@@ -1426,7 +1425,7 @@ namespace acommon {
     , {"run-together-min",    KeyInfoInt,   "3",
        N_("minimal length of interior words"), KEYINFO_MAY_CHANGE}
     , {"save-repl", KeyInfoBool  , "true",
-       N_("save replacement pairs on save all"), KEYINFO_MAY_CHANGE}
+       N_("save replacement pairs on save all")}
     , {"set-prefix", KeyInfoBool, "true",
        N_("set the prefix based on executable location")}
     , {"size",          KeyInfoString, "+60",

@@ -850,7 +850,7 @@ Suggestion mode = @samp{ultra} | @samp{fast} | @samp{normal} | @samp{slow} |
 
 @item ignore-case 
 @i{(boolean)}
-Ignore case when checking words -- @emph{currently ignored}.
+Ignore case when checking words.
 
 @item ignore-accents 
 @i{(boolean)}

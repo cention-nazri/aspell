@@ -345,12 +345,17 @@ namespace aspeller {
       return no_err;
     }
     static PosibErr<void> ignore_accents(SpellerImpl * m, bool value) {
-      abort(); return no_err;
+      return no_err;
     }
     static PosibErr<void> ignore_case(SpellerImpl * m, bool value) {
-      abort(); return no_err;
+      m->s_cmp.case_insensitive = value;
+      m->s_cmp_begin.case_insensitive = value;
+      m->s_cmp_middle.case_insensitive = value;
+      m->s_cmp_end.case_insensitive = value;
+      return no_err;
     }
     static PosibErr<void> ignore_repl(SpellerImpl * m, bool value) {
+      
       m->ignore_repl = value;
       return no_err;
     }
@@ -391,7 +396,7 @@ namespace aspeller {
     ,{"ignore-accents",UpdateMember::Bool,    UpdateMember::CN::ignore_accents}
     ,{"ignore-case",   UpdateMember::Bool,    UpdateMember::CN::ignore_case}
     ,{"ignore-repl",   UpdateMember::Bool,    UpdateMember::CN::ignore_repl}
-    ,{"save-repl",     UpdateMember::Bool,    UpdateMember::CN::save_repl}
+    //,{"save-repl",     UpdateMember::Bool,    UpdateMember::CN::save_repl}
     ,{"sug-mode",      UpdateMember::String,  UpdateMember::CN::sug_mode}
     ,{"run-together",  
         UpdateMember::Bool,    
@@ -457,15 +462,19 @@ namespace aspeller {
     RET_ON_ERR(add_dicts(this, to_add));
 
     s_cmp.lang = lang_;
+    s_cmp.case_insensitive = config_->retrieve_bool("ignore-case");
 
-    s_cmp_begin.lang = lang_;
+    s_cmp_begin.lang = lang_; 
+    s_cmp_begin.case_insensitive = s_cmp.case_insensitive;
     s_cmp_begin.end = false;
 
     s_cmp_middle.lang = lang_;
+    s_cmp_middle.case_insensitive = s_cmp.case_insensitive;
     s_cmp_middle.begin = false;
     s_cmp_middle.end   = false;
 
     s_cmp_end.lang = lang_;
+    s_cmp_end.case_insensitive = s_cmp.case_insensitive;
     s_cmp_end.begin = false;
 
     StringList extra_dicts;

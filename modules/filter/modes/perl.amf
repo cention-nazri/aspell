@@ -57,14 +57,13 @@ MAGIC /<empty>/pl/pm
 #       thus if missing mode will be rejected by aspell.
 #       keep it as short as possible allthough line wrapping will be done implicitly
 #       possible abreviations are `des' and `desc' 
-DESCRIPTION mode for checking perl comments and string literals
+DESCRIPTION mode for checking Perl comments and string literals
 
 # the mode file body 
 # the following lines may appear as often as needed in the below.
 
 # states an additonal filter to load it has to preceed all OPTION keys dealing
 # with options specific to FILTER
-# NOTE: if FILTER key is preceded by `!' filter will be removed from mode
 FILTER context
 
 # this selectes proper values for the filters options.

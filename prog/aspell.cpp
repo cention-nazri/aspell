@@ -1070,12 +1070,16 @@ void check()
     switch (mapping[choice]) {
     case Exit:
       goto exit_loop;
-    case Abort:
+    case Abort: {
       prompt(_("Are you sure you want to abort (y/n)? "));
       get_choice(choice);
-      if (choice == 'y' || choice == 'Y')
+      /* TRANSLATORS: The user may input any of these characters to say "yes".
+         MUST ONLY CONSIST OF ASCII CHARACTERS. */
+      const char * yes_characters = _("Yy");
+      if (strchr(yes_characters, choice) != 0)
         goto abort_loop;
       goto choice_prompt;
+    }
     case Ignore:
       break;
     case IgnoreAll:
