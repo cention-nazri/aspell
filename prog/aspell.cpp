@@ -513,7 +513,7 @@ void pipe()
   AspellSpeller * speller = to_aspell_speller(ret);
   Config * config = reinterpret_cast<Speller *>(speller)->config();
   if (do_time)
-    COUT << "Time to load word list: " 
+    COUT << _("Time to load word list: ")
          << (clock() - start)/(double)CLOCKS_PER_SEC << "\n";
   bool print_star = true;
   StackPtr<DocumentChecker> checker(new_checker(speller, print_star));
@@ -675,7 +675,7 @@ void pipe()
 	       << "\n";
 	}
 	if (do_time)
-	  COUT << "Suggestion Time: " 
+	  COUT << _("Suggestion Time: ")
 	       << (finish-start)/(double)CLOCKS_PER_SEC << "\n";
       }
       COUT << "\n";
@@ -1008,7 +1008,7 @@ void filter()
 {
   //assert(setvbuf(stdin, 0, _IOLBF, 0) == 0);
   //assert(setvbuf(stdout, 0, _IOLBF, 0) == 0);
-  CERR << "Sorry \"filter\" is currently unimplemented.\n";
+  CERR << _("Sorry \"filter\" is currently unimplemented.\n");
   exit(3);
 }
 
@@ -1128,7 +1128,7 @@ void personal () {
   }
   options->replace("module", "aspeller");
   if (action == do_create || action == do_merge) {
-    CERR << "Sorry \"create/merge personal\" is currently unimplemented.\n";
+    CERR << _("Sorry \"create/merge personal\" is currently unimplemented.\n");
     exit(3);
 
     // FIXME
@@ -1184,7 +1184,7 @@ void repl() {
 
   if (action == do_create || action == do_merge) {
 
-    CERR << "Sorry \"create/merge repl\" is currently unimplemented.\n";
+    CERR << _("Sorry \"create/merge repl\" is currently unimplemented.\n");
     exit(3);
 
     // FIXME

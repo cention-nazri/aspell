@@ -191,7 +191,7 @@ libcontext_filter_la_LDFLAGS  = -avoid-version
 
 endif # COMPILE_IN_FILTERS
 
-noinst_DATA += $(static_optfiles)
+noinst_DATA += $(static_optfiles) gen/filter.pot
 opt_DATA = $(dynamic_optfiles)
 filter_DATA = $(fltfiles)
 
@@ -202,8 +202,12 @@ gen/static_filters.src.cpp: ${static_optfiles} gen/mk-static-filter.pl gen/setti
 
 lib/new_filter.cpp: gen/static_filters.src.cpp
 
+gen/filter.pot: gen/mk-filter-pot.pl ${static_optfiles} ${dynamic_optfiles}
+	${PERLPROG} gen/mk-filter-pot.pl
+
 EXTRA_DIST += ${static_optfiles} ${dynamic_optfiles} ${fltfiles} \
-              gen/mk-static-filter.pl
+              gen/mk-static-filter.pl gen/mk-filter-pot.pl\
+              gen/filter.pot
 
 CLEANFILES = gen/static_filters.src.cpp
 

@@ -5,3 +5,4 @@ prog/aspell.cpp
 modules/filter/email.cpp
 modules/filter/sgml.cpp
 modules/filter/tex.cpp
+gen/filter.pot

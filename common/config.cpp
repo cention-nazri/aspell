@@ -844,48 +844,39 @@ namespace acommon {
         if( strncmp(i->name,"filter-",7) == 0 ){
           prefixend=7;
         }
-        out << "###  " << &(i->name)[prefixend] << " Filter: " << i->desc 
-            << "\n###\tconfigured as follows;\n";
+        out << "###  " << &(i->name)[prefixend] << " Filter: " << gettext(i->desc)
+            << "\n###    " << _("configured as follows") << ";\n";
         continue;
       }
       expandname="";
       if( ( strlen(els->active_module_name()) > strlen(i->name) ) ||
           ( strlen(els->active_module_name()) &&
             strncmp(i->name,els->active_module_name(),
-                    strlen(els->active_module_name())))){
+                    strlen(els->active_module_name())))) {
         expandname+=els->active_module_name();
         expandname+="-";
       }
       expandname+=i->name;
-//      out << "# " << (i->type ==  KeyInfoList ? "add|rem-" : "") << i->name
       out << "# " << (i->type ==  KeyInfoList ? "add|rem-" : "") << expandname
-	  << " descrip: " << (i->def == 0 ? "(action option) " : "") << i->desc
+	  << " descrip: " << (i->def == 0 ? "(action option) " : "") << gettext(i->desc)
 	  << '\n';
       if (i->def != 0) {
-//	out << "# " << i->name << " default: " << i->def << '\n';
 	out << "# " << expandname << " default: " << i->def << '\n';
-//	String val = retrieve(i->name);
 	String val = retrieve(expandname.c_str());
 	if (i->type != KeyInfoList) {
-//	  out << "# " << i->name << " current: " << val << "\n";
 	  out << "# " << expandname << " current: " << val << "\n";
-//	  if (have(i->name))
 	  if (have(expandname.c_str()))
-//	    out << i->name << " " << val << "\n";
 	    out << expandname << " " << val << "\n";
 	} else {
-//	  const char * value = data_.lookup(i->name);
 	  const char * value = data_.lookup(expandname.c_str());
           String alt_expandname="filter-";
           alt_expandname+=expandname;
 	  const char * alt_value = data_.lookup(alt_expandname.c_str());
 	  if (value != 0) {
-//	    ListDump ld(out, i->name);
 	    ListDump ld(out, expandname.c_str());
 	    itemize(value, ld);
 	  }
 	  if ( alt_value != 0 ) {
-//	    ListDump ld(out, i->name);
 	    ListDump ld(out, alt_expandname.c_str());
 	    itemize(alt_value, ld);
 	  }
@@ -990,15 +981,12 @@ namespace acommon {
 	other_value = pe;
       }
       if (other_value == "(default)") continue;
-//      this_value = retrieve(k->name);
       this_value = retrieve(other_name);
       if (this_value == other_value && 
-//	  !other.have(k->name)) continue;
-	!other.have(other_name)) continue;
+          !other.have(other_name)) continue;
       // if the two values match there is no need to insert it into the
       // table unless the other value is specificly set
       if (k->type != KeyInfoList) {
-//	data_.replace(k->name, other_value);
 	data_.replace(other_name, other_value);
       } else {
 	String new_value;
@@ -1007,7 +995,6 @@ namespace acommon {
 	  new_value += ',';
 	}
 	new_value += other_value;
-//	data_.replace(k->name, new_value);
 	data_.replace(other_name, new_value);
       }
     }
