@@ -15,8 +15,8 @@ Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.1 or
 any later version published by the Free Software Foundation; with no
 Invariant Sections, no Front-Cover Texts and no Back-Cover Texts.  A
-copy of the license is included in the section entitled "GNU Free
-Documentation License".
+copy of the license is included in the section entitled ``GNU Free
+Documentation License''.
 @end quotation
 @end copying
 
@@ -276,7 +276,7 @@ them) can be found off the Aspell home page at @uref{http://aspell.net}.
 @chapter Basic Usage
 
 For a quick reference on the Aspell utility use the command
-@command{aspell --help}.
+@samp{aspell --help}.
 
 @menu
 * Spellchecking Individual Files::  
@@ -401,7 +401,7 @@ Ispell is to change the @command{ispell} command from within the
 program being used.  If the program uses @command{ispell} in pipe mode
 simple change @command{ispell} to @command{aspell}.  If the program
 calls the @command{ispell} command to check the file change
-@command{ispell} with @command{aspell check}.
+@command{ispell} with @samp{aspell check}.
 
 If that is impossible than the @command{run-with-aspell} script can be
 used.  This script modifies the patch so that programs see the Ispell
@@ -533,9 +533,9 @@ can.
 The easiest way to use Aspell with Emacs or XEmacs is to add this
 line:
 
-@verbatim
+@example
 (setq-default ispell-program-name "aspell")
-@end verbatim
+@end example
 
 to the end of your .emacs file.
 
@@ -543,9 +543,9 @@ For some reason version 3.0 of ispell.el (the lisp program that
 (x)emacs uses) want to reverse the suggestion list.  To fix this add
 this line:
 
-@verbatim
+@example
 (setq-default ispell-extra-args '("--reverse"))
-@end verbatim
+@end example
 
 after the previous line in your .emacs file and it should solve the problem.
 
@@ -570,9 +570,9 @@ utility.
 To use Aspell in VIM you simply need to add the following line to your
 @file{.vimrc} file:
 
-@verbatim
+@example
 map ^T :w!<CR>:!aspell check %<CR>:e! %<CR>
-@end verbatim
+@end example
 
 I use @kbd{Ctrl-T} since that's the way you spell check in
 @command{pico}.  In order to add a control character to your
@@ -582,11 +582,12 @@ I use @kbd{Ctrl-T} since that's the way you spell check in
 A more useful way to use Aspell, IMHO, is in combination with Newsbody
 (@uref{http://www.image.dk/~byrial/newsbody/}) which is how I use it
 since VIM is my editor for my mailer and my news reader.
-@verbatim
+
+@example
 map ^T\\1\\2<CR>:e! %<CR>
 map \\1 :w!<CR>
 map \\2 :!newsbody -qs -n % -p aspell check \\%f<CR>
-@end verbatim
+@end example
 
 @subsection With Pine
 
@@ -1707,9 +1708,9 @@ prompt.  If you get an error about @file{/usr/bin/perl} not being
 found, then instead try @command{perl @var{bindir}/aspell-import}.  When
 running the script if you get a message like:
 
-@verbatim
+@example
 Error: No word lists can be found for the language "de".
-@end verbatim
+@end example
 
 This means that you have not installed support for the given language,
 in this case @code{de} for German.  To rectify the situation download
