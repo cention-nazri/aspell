@@ -738,9 +738,7 @@ void pipe()
       break;
     case '&':
       word = trim_wspace(line + 1);
-      aspell_speller_add_to_personal
-	(speller, 
-	 real_speller->to_lower(word), -1);
+      aspell_speller_add_lower_to_personal(speller, word, -1);
       BREAK_ON_SPELLER_ERR;
       break;
     case '@':
@@ -825,7 +823,7 @@ void pipe()
       line0 = line;
       line += ignore;
       checker->process(line, strlen(line));
-      const Token * token = 0;
+      const CheckerToken * token = 0;
       while (token = checker->next(), token) {
         if (token->correct) {
           if (!terse_mode) {
@@ -1010,7 +1008,14 @@ void check()
 
   setup_display_conv(real_speller->config());
 
-  state = new CheckerString(speller,in,out,64);
+  ret = new_aspell_checker(speller);
+  if (aspell_error(ret)) {
+    print_error(aspell_error_message(ret));
+    exit(1);
+  }
+  AspellChecker * checker = to_aspell_checker(ret);
+
+  state = new CheckerString(checker, speller,in,out,64);
  
   word_choices = new Choices;
 
@@ -1116,9 +1121,7 @@ void check()
       aspell_speller_add_to_personal(speller, word, -1);
       break;
     case AddLower:
-      aspell_speller_add_to_personal
-        (speller, 
-         reinterpret_cast<Speller *>(speller)->to_lower(word), -1);
+      aspell_speller_add_lower_to_personal(speller, word, -1);
       break;
     case Replace:
     case ReplaceAll:
@@ -1149,6 +1152,7 @@ exit_loop:
   {
     aspell_speller_save_all_word_lists(speller);
     state.del(); // to close the file handles
+    delete_aspell_checker(checker);
     delete_aspell_speller(speller);
 
     if (changed) {
@@ -1174,6 +1178,7 @@ exit_loop:
 abort_loop:
   {
     state.del(); // to close the file handles
+    delete_aspell_checker(checker);
     delete_aspell_speller(speller);
 
     remove_file(new_name);
@@ -1272,7 +1277,14 @@ void list()
   }
   AspellSpeller * speller = to_aspell_speller(ret);
 
-  state = new CheckerString(speller,stdin,0,64);
+  ret = new_aspell_checker(speller);
+  if (aspell_error(ret)) {
+    print_error(aspell_error_message(ret));
+    exit(1);
+  }
+  AspellChecker * checker = to_aspell_checker(ret);
+
+  state = new CheckerString(checker, speller,stdin,0,64);
 
   String word;
  

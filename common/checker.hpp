@@ -7,6 +7,7 @@
 #ifndef ASPELL_DOCUMENT_CHECKER__HPP
 #define ASPELL_DOCUMENT_CHECKER__HPP
 
+#include "checker_types.hpp"
 #include "filter.hpp"
 #include "char_vector.hpp"
 #include "copy_ptr.hpp"
@@ -18,7 +19,6 @@ namespace acommon {
 
   class Config;
   class Speller;
-  class Tokenizer;
   class FullConvert;
 
   struct SegmentData : public FilterCharVector {
@@ -75,35 +75,25 @@ namespace acommon {
     Segment() : begin(0), end(0), prev(0), next(0), 
                 which(0), id(0), offset(0), ignore(0) {}
   };
-  
-  struct Token {
-    struct Pos {
-      void * which;
-      unsigned offset;
-    };
-    Pos begin;
-    Pos end;
-    bool correct;
-  };
-  
-  struct CheckerToken : public Token
-  {
-    struct CheckerPos {
-      Segment * seg;
-      const FilterChar * pos;
-    };
-    CheckerPos b; // begin
-    CheckerPos e; // end
-  };
-  
-  class Checker {
+
+  class Checker : public CanHaveError {
     friend class SegmentIterator;
   protected:
+    struct IToken : public CheckerToken
+    {
+      struct Pos {
+        Segment * seg;
+        const FilterChar * pos;
+      };
+      Pos b; // begin
+      Pos e; // end
+    };
+  
     virtual void i_reset(Segment *) = 0;
     
     virtual void i_recheck(Segment *) = 0;
     
-    CheckerToken token;
+    IToken token;
 
     void free_segments(Segment * f = 0, Segment * l = 0); 
     // free all segments between f and l, but not including f and l
@@ -156,10 +146,16 @@ namespace acommon {
     // always an option when statefull filters are
     // involved
     
-    virtual const Token * next() = 0; 
+    virtual const CheckerToken * next() = 0; 
     // get next word, returns null if more data is needed
 
-    const Token * cur() const {return &token;}
+    const CheckerToken * next_misspelling() {
+      const CheckerToken * tok;
+      while (tok = next(), tok && tok->correct);
+      return tok;
+    }
+
+    const CheckerToken * cur() const {return &token;}
     
     //bool can_reset_mid(); // true if no statefull filters are involved
     //                      // and thus can be reset mid document
@@ -188,6 +184,13 @@ namespace acommon {
     void set_span_strings(bool v) {span_strings_ = v;}
     // if a word can span multiple strings in the case when word has a
     // space in it or the like.  This defaults to false.
+
+    // Should I add these?
+    //PosibErr<void> add_to_personal();
+    //PosibErr<void> add_lower_to_personal();
+    //PosibErr<void> add_to_session();
+    //PosibErr<void> add_lower_to_session();
+    //PosibErr<const WordList *> suggest();
 
   private:
     Checker(const Checker &);

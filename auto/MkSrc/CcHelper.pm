@@ -10,7 +10,7 @@ BEGIN {
   use Exporter;
   our @ISA = qw(Exporter);
   our @EXPORT = qw(to_c_return_type c_error_cond
-		   to_type_name make_desc make_func call_func
+		   to_type_name make_desc make_func call_func make_callback
 		   make_c_method call_c_method form_c_method
 		   make_cxx_method);
 }
@@ -85,6 +85,30 @@ sub make_func ( $ \@ $ ; \% ) {
 	  (to_type_name(shift @d, {%$p,pos=>'return'}, %$accum),
 	   ' ',
 	   to_lower $name,
+	   '(',
+	   (join ', ', map {to_type_name $_, {%$p,pos=>'parm'}, %$accum} @d),
+	   ')'));
+}
+
+=item make_callback NAME @TYPES PARMS ; %ACCUM
+
+Creates a callback typedef
+
+Parms can be any of:
+
+  mode: code generation mode
+
+=cut
+
+sub make_callback ( $ \@ $ ; \% ) {
+  my ($name, $d, $p, $accum) = @_;
+  $accum = {} unless defined $accum;
+  my @d = @$d;
+  return (join '', 
+	  ('typedef ',
+           to_type_name(shift @d, {%$p,pos=>'return'}, %$accum),
+	   ' ',
+	   to_mixed $name,
 	   '(',
 	   (join ', ', map {to_type_name $_, {%$p,pos=>'parm'}, %$accum} @d),
 	   ')'));
@@ -189,6 +213,9 @@ sub to_type_name ( $ $ ; \% ) {
 	$accum->{headers}->{$t->{created_in}} = true;
       }
       $str .= "$c_type Aspell" if $mode eq 'cc';
+      $str .= to_mixed($name);
+    } elsif ($type eq 'callback') {
+      $str .= "Aspell" if $mode eq 'cc';
       $str .= to_mixed($name);
     } else {
       print STDERR "Warning: Unknown Type: $name\n";

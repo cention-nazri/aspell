@@ -400,7 +400,7 @@ namespace acommon {
         b_code  .cur = entry->code;
         b_module.cur = entry->module->name;
 
-        b_variety.cur = entry->variety;
+        b_variety.cur = entry->jargon;
     
         b_size.cur_str = entry->size_str;
         b_size.cur     = entry->size;

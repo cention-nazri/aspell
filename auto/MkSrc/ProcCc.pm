@@ -84,6 +84,12 @@ $info{func}{proc}{cc} = sub {
           make_func("aspell ".$d->{name}, @{$d->{data}}, {mode => 'cc'}).';');
 };
 
+$info{callback}{proc}{cc} = sub {
+  my ($d) = @_;
+  return (make_desc($d->{desc}).
+          make_callback("aspell ".$d->{name}, @{$d->{data}}, {mode => 'cc'}).';');
+};
+
 $info{errors}{proc}{cc} = sub {
   my ($d) = @_;
   my $p;
@@ -115,7 +121,7 @@ sub make_c_object ( $ @ ) {
 		(map {"\n".make_desc($_->{desc},2).
 			  "  ".to_type_name($_, {mode=>'cc'}). ";\n"}
 		 grep {$_->{type} ne 'method'
-			   && $_->{type} ne 'cxx constructor'}
+			   && $_->{type} ne 'cxx extra'}
 		 @{$d->{data}}),
 		"\n};\n"),
 	  "typedef $t $struct $struct;",

@@ -91,6 +91,14 @@ namespace acommon {
   
     virtual PosibErr<void> add_to_personal(MutableString) = 0;
     virtual PosibErr<void> add_to_session (MutableString) = 0;
+
+    PosibErr<void> add_lower_to_personal(MutableString str) {
+      return add_to_personal(to_lower(str));
+    }
+    
+    PosibErr<void> add_lower_to_session(MutableString str) {
+      return add_to_session(to_lower(str));
+    }
     
     // because the word lists may potently have to convert from one
     // encoding to another the pointer returned by the enumeration is only

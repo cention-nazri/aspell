@@ -91,7 +91,7 @@ sub advance ( ) {
     $line =~ s/\#.*$//;
     $line =~ s/^(\t*)//;
     $level = $base_level + length($1);
-      $line =~ s/\s*$//;
+    $line =~ s/\s*$//;
     ++$base_level if $line =~ s/^\{$//;
     --$base_level if $line =~ s/^\}$//;
     $line =~ s/\\([{}])/$1/g;

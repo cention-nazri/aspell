@@ -35,10 +35,11 @@ static int get_line(FILE * in, CheckerString::Line & d)
   return d.real.size();
 }
 
-CheckerString::CheckerString(AspellSpeller * speller, 
+CheckerString::CheckerString(AspellChecker * checker,
+                             AspellSpeller * speller,
 			     FILE * in, FILE * out, 
 			     int num_lines)
-  : in_(in), out_(out), speller_(speller)
+  : in_(in), out_(out), checker_(checker), speller_(speller)
 {
   lines_.reserve(num_lines + 1);
   for (; num_lines > 0; --num_lines)
@@ -53,9 +54,8 @@ CheckerString::CheckerString(AspellSpeller * speller,
   end_ = lines_.pend() - 1;
   cur_line_ = lines_.pbegin();
 
-  checker_.reset(new_checker(reinterpret_cast<Speller *>(speller)));
-  checker_->set_more_data_callback(checker_callback, this);
-  checker_->process(cur_line_->real.data(), cur_line_->real.size(), 0, cur_line_);
+  aspell_checker_set_more_data_callback(checker_, checker_callback, this);
+  aspell_checker_process(checker_, cur_line_->real.data(), cur_line_->real.size(), 0, cur_line_);
 }
 
 CheckerString::~CheckerString()
@@ -93,13 +93,12 @@ void CheckerString::checker_callback(void * d, void * w)
   Line * cur = static_cast<Line *>(w);
   cs->next_line(cur);
   if (cs->off_end(cur)) return;
-  cs->checker_->process(cur->real.data(), cur->real.size(), 0, cur);
+  aspell_checker_process(cs->checker_, cur->real.data(), cur->real.size(), 0, cur);
 }
 
 bool CheckerString::next_misspelling()
 {
-  const Token * tok = 0;
-  while ((tok = checker_->next()), tok && tok->correct);
+  const AspellCheckerToken * tok = aspell_checker_next_misspelling(checker_);
   if (!tok) return false;
   cur_line_ = static_cast<Line *>(tok->begin.which);
   real_word_begin_ = cur_line_->real.begin() + tok->begin.offset;
@@ -116,7 +115,7 @@ void CheckerString::replace(ParmString repl)
 				   repl.str(), repl.size());
   cur_line_->real.replace(real_word_begin_, real_word_begin_ + real_word_size_,
                           repl.str(), repl.str() + repl.size());
-  checker_->replace(repl.str(), repl.size());
+  aspell_checker_replace(checker_, repl.str(), repl.size());
   real_word_begin_ = cur_line_->real.begin() + offset;
   real_word_size_ = repl.size();
   fix_display_str();

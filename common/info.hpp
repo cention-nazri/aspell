@@ -7,8 +7,8 @@
 #ifndef ASPELL_INFO__HPP
 #define ASPELL_INFO__HPP
 
+#include "info_types.hpp"
 #include "posib_err.hpp"
-#include "type_id.hpp"
 
 namespace acommon {
 
@@ -26,25 +26,8 @@ namespace acommon {
   class FStream;
   class StringMap;
 
-  struct ModuleInfo {
-    const char * name;
-    double order_num;
-    const char * lib_dir;
-    StringList * dict_exts;
-    StringList * dict_dirs;
-  };
-
   PosibErr<void> get_dict_file_name(const DictInfo *, 
 				    String & main_wl, String & flags);
-  
-  struct DictInfo {
-    const char * name;
-    const char * code;
-    const char * variety;
-    int size;
-    const char * size_str;
-    const ModuleInfo * module;
-  };
 
   struct MDInfoListAll;
   
@@ -106,14 +89,9 @@ namespace acommon {
 
     bool at_end() const;
     const ModuleInfo * next();
-    int ref_count_;
-    TypeId type_id_;
-    unsigned int type_id() { return type_id_.num; }
-    int copyable_;
-    int copyable() { return copyable_; }
     ModuleInfoEnumeration * clone() const;
     void assign(const ModuleInfoEnumeration * other);
-    ModuleInfoEnumeration() : ref_count_(0), copyable_(2) {}
+    ModuleInfoEnumeration() {}
     virtual ~ModuleInfoEnumeration() {}
   };
 
@@ -128,14 +106,9 @@ namespace acommon {
 
     bool at_end() const;
     const DictInfo * next();
-    int ref_count_;
-    TypeId type_id_;
-    unsigned int type_id() { return type_id_.num; }
-    int copyable_;
-    int copyable() { return copyable_; }
     DictInfoEnumeration * clone() const;
     void assign(const DictInfoEnumeration * other);
-    DictInfoEnumeration() : ref_count_(0), copyable_(2) {}
+    DictInfoEnumeration() {}
     virtual ~DictInfoEnumeration() {}
   };
 

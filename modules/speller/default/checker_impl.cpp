@@ -10,7 +10,7 @@ namespace aspeller {
     CheckerImpl(SpellerImpl *);
     void i_reset(Segment * seg);
     void i_recheck(Segment * seg);
-    const Token * next();
+    const CheckerToken * next();
     
     String word;
     SegmentIterator prev_;
@@ -44,7 +44,7 @@ namespace aspeller {
 
 #define ADV do {prev_ = cur_; cur_ = next_; next_.adv(this);} while (false)
 
-  const Token * CheckerImpl::next() 
+  const CheckerToken * CheckerImpl::next() 
   {
     // get "cur_" in a consistent state
     if (cur_.off_end()) {

@@ -87,12 +87,14 @@ libaspell_la_SOURCES =\
   lib/find_speller.cpp\
   lib/speller-c.cpp\
   lib/string_pair_enumeration-c.cpp\
-  lib/new_checker.cpp
+  lib/new_checker.cpp\
+  lib/checker-c.cpp\
+  lib/document_checker-c.cpp
 
 libaspell_la_LIBADD =  $(LIBINTL) $(PTHREAD_LIB)
 
 if INCREMENTED_SONAME
-libaspell_la_LDFLAGS = -version-info 17:0:0 -no-undefined
+libaspell_la_LDFLAGS = -version-info 17:0:1 -no-undefined
 else
 libaspell_la_LDFLAGS = -version-info 17:0:2 -no-undefined
 endif
@@ -103,7 +105,7 @@ libpspell_la_SOURCES = lib/dummy.cpp
 libpspell_la_LIBADD = libaspell.la
 
 if INCREMENTED_SONAME
-libpspell_la_LDFLAGS = -version-info 17:0:0 -no-undefined
+libpspell_la_LDFLAGS = -version-info 17:0:1 -no-undefined
 else
 libpspell_la_LDFLAGS = -version-info 17:0:2 -no-undefined
 endif

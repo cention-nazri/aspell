@@ -1096,8 +1096,6 @@ namespace acommon {
 
     FullConvert * fc = (FullConvert *)(simple ? 0 : conv.get());
     
-    Vector<String>::const_iterator i;
-    
     {
       PosibErr<bool> pe = add_conv_filters(c, fc, in.layers, true,
                                            prev_err.error == Convert::UnknownDecoder);

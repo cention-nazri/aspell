@@ -28,6 +28,7 @@ $info{forward}{proc}{impl} = sub {
 
 $info{group}{proc}{impl} = sub {
   my ($data) = @_;
+  return if exists $data->{'no impl'};
   create_cc_file (type => 'impl',
 		  cxx => true,
 		  namespace => 'acommon',

@@ -1,4 +1,4 @@
- #
+#
 # mk-src.in -- Input file for the Perl program to automatically 
 #	       generate interface code.
 #
@@ -28,19 +28,19 @@ See MkSrc::Info for a description of the categorys and options
 =cut
 
 
-group: type id
-{
-/
-union: type id
-	treat as object
-	/
-	unsigned int: num
-		default => 0
-	array 4 char: str
-	cxx constructor:
-		/
-		string: str
-}
+#group: type id
+#{
+#/
+#union: type id
+#	treat as object
+#	/
+#	unsigned int: num
+#		default => 0
+#	array 4 char: str
+#	cxx constructor:
+#		/
+#		string: str
+#}
 methods: destructible
 	/
 	destructor
@@ -98,8 +98,8 @@ methods: copyable
 methods: can have error
 	/
 	cxx member: err
-		headers => copy ptr, error
 		what => CopyPtr<Error> err_
+		headers => copy ptr, error
 
 	method: error number
 		const
@@ -148,6 +148,7 @@ methods: mutable container
 
 group: mutable container
 {
+no native
 /
 class: mutable container
 	/
@@ -374,14 +375,11 @@ struct: error info
 }
 group: can have error
 {
+no native
 /
 class: can have error
 	c impl headers => error
 	/
-	cxx constructor:
-		cxx impl => : err_(e) {}
-		/
-		error: e
 	can have error methods
 		prefix => 
 	destructible methods
@@ -658,8 +656,22 @@ class: speller
 		void
 		encoded string: word
 
+	method: add lower to personal
+		
+		posib err
+		/
+		void
+		encoded string: word
+
 	method: add to session
 
+		posib err
+		/
+		void
+		encoded string: word
+
+	method: add lower to session
+		
 		posib err
 		/
 		void
@@ -734,7 +746,7 @@ class: word list
 		const
 		/
 		unsigned int
-
+	
 	method: elements
 		const
 		c impl =>
@@ -746,6 +758,7 @@ class: word list
 }
 group: string enumeration
 {
+no native
 /
 class: string enumeration
 	c impl headers => convert
@@ -771,7 +784,8 @@ class: string enumeration
 		const string
 
 }
-group: info
+
+group: info types
 {
 /
 struct: module info
@@ -791,7 +805,13 @@ struct: dict info
 	int: size
 	string: size str
 	module info: module
+}
 
+group: info
+{
+no native
+no impl
+/
 class: module info list
 	/
 	constructor: get aspell module info list
@@ -821,6 +841,7 @@ class: dict info enumeration
 
 group: string list
 {
+no native
 /
 class: string list
 	/
@@ -835,6 +856,7 @@ class: string list
 
 group: string map
 {
+no native
 /
 class: string map
 	/
@@ -885,6 +907,8 @@ struct: string pair
 		default => ""
 	string: second
 		default => ""
+	cxx extra:
+		what => StringPair(const char * f, const char * s) : first(f), second(s) {}
 }
 group: string pair enumeration
 {
@@ -907,3 +931,188 @@ func: reset cache
 	string: which
 }
 
+group: checker types
+{
+/
+struct: checker pos
+	treat as object
+	/
+	void pointer: which
+	unsigned int: offset
+
+struct: checker token
+	/
+	checker pos: begin
+	checker pos: end
+	bool: correct
+
+callback: more data callback
+	/
+	void
+	void pointer: data
+	void pointer: which
+
+callback: string freed callback
+	/
+	void
+	void pointer: data
+	void pointer: which
+}
+
+group: checker
+{
+no native
+/
+class: checker
+	c impl headers => error
+	/
+	destructible methods
+	
+	can have error methods
+
+	constructor: new aspell checker
+		returns alt type
+		c impl =>
+			PosibErr<Checker *> ret = new_checker(speller);
+			if (ret.has_err()) \{
+			  return new CanHaveError(ret.release_err());
+			\} else \{
+			  return ret;
+			\}
+		/
+		can have error
+		speller: speller
+
+	constructor: to aspell checker
+		c impl => return static_cast<Checker *>(obj);
+		/
+		can have error: obj
+
+	method: reset
+		/
+		void
+
+	method: process
+		/
+		void
+		string: str
+		unsigned int: size
+		unsigned int: ignore
+		void pointer: which
+	
+	method: add separator
+		/
+		void
+
+	method: replace
+		/
+		void
+		string: str
+		unsigned int: size
+
+	method: next
+		/
+		const checker token
+	
+	method: next_misspelling
+		/
+		const checker token
+	
+	method: cur
+		const
+		/
+		const checker token
+
+	method: set more data callback
+		/
+		void
+		more data callback: callback
+		void pointer: callback data
+
+	method: set string freed callback
+		/
+		void
+		string freed callback: callback
+		void pointer: callback data
+
+	method: set span strings
+		/
+		void
+		bool: value
+}
+
+group: document checker
+{
+no native
+no impl
+/
+struct: token
+	/
+	unsigned int: offset
+	unsigned int: len
+
+class: document checker
+	c impl headers => error
+	/
+	destructible methods
+	
+	can have error methods
+
+	# FIME make a "methods" of the next two contractors
+
+	constructor: new aspell document checker
+		returns alt type
+		c impl =>
+			PosibErr<DocumentChecker *> ret = new_document_checker(speller);
+			if (ret.has_err()) \{
+			  return new CanHaveError(ret.release_err());
+			\} else \{
+			  return ret;
+			\}
+		desc => Creates a new document checker.
+			The speller class is expect to last until this
+			class is destroyed.
+			If config is given it will be used to overwide
+			any relevent options set by this speller class.
+			The config class is not once this function is done.
+			If filter is given then it will take ownership of 
+			the filter class and use it to do the filtering.
+			You are expected to free the checker when done.
+		/
+		can have error
+		speller: speller
+
+	constructor: to aspell document checker
+		c impl => return static_cast<DocumentChecker *>(obj);
+		/
+		can have error: obj
+
+	method: reset
+
+		desc => reset the internal state of the filter.
+			should be called whenever a new document is being filtered
+		/
+		void
+
+	method: process
+	
+		desc => process a string
+			The string passed in should only be split on white space
+			characters.  Furthermore, between calles to reset, each string
+			should be passed in exactly once and in the order they appeared
+			in the document.  Passing in stings out of order, skipping
+			strings or passing them in more than once may lead to undefined
+			results.
+		/
+		void
+		string: str
+		int: size
+
+	method: next misspelling
+	
+		desc => returns the next misspelled word in the processed string
+			if there are no more misspelled word than token.word
+			will be null and token.size will be 0
+		/
+		token object
+}

@@ -26,7 +26,8 @@ public:
   };
 
   typedef Vector<Line> Lines;
-  CheckerString(AspellSpeller * speller, FILE * in, FILE * out, int lines);
+  CheckerString(AspellChecker * checker, AspellSpeller * speller, 
+                FILE * in, FILE * out, int lines);
   ~CheckerString();
 
 public: // but don't use
@@ -103,7 +104,7 @@ private:
   FILE * in_;
   FILE * out_;
 
-  CopyPtr<Checker> checker_;
+  AspellChecker * checker_;
   AspellSpeller * speller_;
   Line * end_;
 
