@@ -58,7 +58,7 @@ PosibErr<Data *> get_cache_data(GlobalCache<Data> * cache,
   Data * n = cache->find(key);
   //CERR << "Getting " << key << "\n";
   if (n) {
-    n->copy();
+    n->refcount++;
     return n;
   }
   PosibErr<Data *> res = Data::get_new(key, config);
@@ -82,7 +82,7 @@ PosibErr<Data *> get_cache_data(GlobalCache<Data> * cache,
   Data * n = cache->find(key);
   //CERR << "Getting " << key << "\n";
   if (n) {
-    n->copy();
+    n->refcount++;
     return n;
   }
   PosibErr<Data *> res = Data::get_new(key, config, config2);
