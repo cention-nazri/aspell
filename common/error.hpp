@@ -12,7 +12,7 @@ namespace acommon {
 struct ErrorInfo;
 
 struct Error {
-  const char * mesg; // expected to be allocated with new[]
+  const char * mesg; // expected to be allocated with malloc
   const ErrorInfo * err;
 
   Error() : mesg(0), err(0) {}

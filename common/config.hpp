@@ -27,16 +27,10 @@ namespace acommon {
   // an error.  Extra accepted keys can be added with the set_extra 
   // method.
 
-  // Unless otherwise states all data is expected to be stored UTF-8
-  // format.  Filenames, however should be untranslated.  That is
-  // filenames may contain 8-bit characters but they are not
-  // necessarly in UTF-8 format.
-
-  // An r in the otherdata[0] value means that when merged into
-  // a config of a different type it will be renamed to
-  // <config name>_<name>
-  // A p in the other datavalue means that is is a placeholder
-  // for when a "r" is merged.  It should start with <config name>
+  // Keys taged with KEYINFO_UTF8 are expected to be in UTF-8 format.
+  // Keys with file/dir names may contain 8-bit characters and must
+  //   remain untranslated
+  // All other keys are expected to only contain ASCII characters.
 
   class Config;
 
