@@ -69,10 +69,11 @@ namespace acommon {
     void * which;
     unsigned id;     // uniq id for the orignal string
     unsigned offset; // offset from the orignal string
+    unsigned ignore; // don't spellchecker up to ignore
     
     SegmentDataPtr data;
     Segment() : begin(0), end(0), prev(0), next(0), 
-                which(0), id(0), offset(0) {}
+                which(0), id(0), offset(0), ignore(0) {}
   };
   
   struct Token {
@@ -111,7 +112,7 @@ namespace acommon {
     void init(Speller * speller);
 
     void need_more(Segment * seg) // seg = last segment on list
-      {if (callback_) callback_(callback_data_, seg->which);}
+      {if (more_data_callback_) more_data_callback_(more_data_callback_data_, seg->which);}
 
   public:
 
@@ -121,7 +122,8 @@ namespace acommon {
     // Should be called to reset the state when starting a new
     // document.
 
-    void process(const char * str, int size, void * which = 0);
+    void process(const char * str, unsigned size, unsigned ignore = 0,
+                 void * which = 0);
     // Process the current string and add it to the queue of strings
     // to check.  The string can be as long as you want it to be (even
     // the whole document) not be smaller than a whitespace seperated
@@ -134,6 +136,11 @@ namespace acommon {
     //   NOT: "http://", "www.google.com"
     // The "which" is a genertic pointer which can be used to
     // keep track of which string the current word belongs to.
+    //
+    // A refrence to the orignal string is NOT kept, therefore you
+    // are free to delete or modify the original string.  However 
+    // if the need_more_callback is defined you might want to keep
+    // the string around ...
 
     void add_separator();
     // Add a separator after the last processed string, to seperate
@@ -141,7 +148,7 @@ namespace acommon {
     // a whitespace character in the case when the word can have a
     // space in it
 
-    void replace(const char * str, int size); 
+    void replace(const char * str, unsigned size); 
     // after a word is corrected, as restarting is not
     // always an option when statefull filters are
     // involved
@@ -157,8 +164,15 @@ namespace acommon {
     void set_filter(Filter * f) // will take ownership of filter
       {filter_.reset(f);}
 
-    void set_callback(void (*c)(void *, void *), void * d) 
-      {callback_ = c; callback_data_ = d;}
+    void set_more_data_callback(void (*c)(void *, void *), void * d) 
+      {more_data_callback_ = c; more_data_callback_data_ = d;}
+    // sets the callback that is called when more data is needed the
+    // callback function is expected to add more data with the
+    // "process" method.  If the callback is not set or fails to add
+    // more data than the "next" method will return a null
+
+    void set_string_freed_callback(void (*c)(void *, void *), void * d) 
+      {string_freed_callback_ = c; string_freed_callback_data_ = d;}
     // sets the callback that is called when more data is needed the
     // callback function is expected to add more data with the
     // "process" method.  If the callback is not set or fails to add
@@ -173,11 +187,15 @@ namespace acommon {
     Checker(const Checker &);
     void operator= (const Checker &);
 
-    Segment * fill_segment(Segment * seg, const char * str, int size, 
-                           void * which, Filter * filter);
+    Segment * fill_segment(Segment * seg, 
+                           const char * str, unsigned size, 
+                           Filter * filter);
 
-    void (* callback_)(void *, void *);
-    void * callback_data_;
+    void (* more_data_callback_)(void *, void *);
+    void * more_data_callback_data_;
+
+    void (* string_freed_callback_)(void *, void *);
+    void * string_freed_callback_data_;
 
     FullConvert * conv_;
     CopyPtr<Filter> filter_;

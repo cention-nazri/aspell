@@ -12,7 +12,8 @@
 namespace acommon {
 
   Checker::Checker() 
-    : callback_(0), last_id(0), span_strings_(false), first(0), last(0)
+    : more_data_callback_(0), string_freed_callback_(0), 
+      last_id(0), span_strings_(false), first(0), last(0)
   {
     separator_.append(FilterChar(0x10, 0));
     separator_.append(FilterChar(0x10, 0));
@@ -53,8 +54,8 @@ namespace acommon {
   }
 
   Segment * Checker::fill_segment(Segment * seg, 
-                                  const char * str, int size, 
-                                  void * which,
+                                  const char * str,
+                                  unsigned size,
                                   Filter * filter)
   {
     proc_str_.clear();
@@ -71,20 +72,34 @@ namespace acommon {
     if (seg == 0) seg = new Segment;
     seg->begin = buf->pbegin();
     seg->end = buf->pend();
-    seg->which = which;
     seg->offset = 0;
     seg->data = buf;
     return seg;
   }
 
-  void Checker::process(const char * str, int size, void * which)
+  void Checker::process(const char * str, 
+                        unsigned size, unsigned ignore, 
+                        void * which)
   {
-    Segment * seg = fill_segment(0, str, size, which, filter_);
-    seg->id = last_id++;
-    seg->prev = last;
-    last->next = seg;
-    last = seg;
-    if (!span_strings_) add_separator();
+    if (size > ignore) {
+      Segment * seg = fill_segment(0, str, size, filter_);
+      seg->ignore = ignore;
+      seg->which = which;
+      seg->id = last_id++;
+      seg->prev = last;
+      last->next = seg;
+      last = seg;
+      if (!span_strings_) add_separator();
+    } else if (filter_) {
+      proc_str_.clear();
+      conv_->decode(str, size, proc_str_);
+      proc_str_.append(0);
+      FilterChar * begin = proc_str_.pbegin();
+      FilterChar * end   = proc_str_.pend() - 1;
+      filter_->process(begin, end);
+    } else {
+      // do nothing
+    }
   }
 
   // precond: at least one segment already in list
@@ -101,18 +116,19 @@ namespace acommon {
     last = seg;
   }
 
-  void Checker::replace(const char * str, int size)
+  void Checker::replace(const char * str, unsigned size)
   {
     Segment * seg = 0;
     if (token.b.seg == token.e.seg &&
         token.b.pos == token.b.seg->begin && token.e.pos == token.e.seg->end)
     {
 
-      seg = fill_segment(token.b.seg, str, size, token.b.seg->which, 0);
+      seg = fill_segment(token.b.seg, str, size, 0);
 
     } else {
       
-      seg = fill_segment(0, str, size, token.b.seg->which, 0);
+      seg = fill_segment(0, str, size, 0);
+      seg->which = token.b.seg->which;
       seg->id = token.b.seg->id;
       
       Segment * prev_seg = token.b.seg;

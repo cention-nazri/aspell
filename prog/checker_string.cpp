@@ -54,8 +54,8 @@ CheckerString::CheckerString(AspellSpeller * speller,
   cur_line_ = lines_.pbegin();
 
   checker_.reset(new_checker(reinterpret_cast<Speller *>(speller)));
-  checker_->set_callback(checker_callback, this);
-  checker_->process(cur_line_->real.data(), cur_line_->real.size(), cur_line_);
+  checker_->set_more_data_callback(checker_callback, this);
+  checker_->process(cur_line_->real.data(), cur_line_->real.size(), 0, cur_line_);
 }
 
 CheckerString::~CheckerString()
@@ -93,7 +93,7 @@ void CheckerString::checker_callback(void * d, void * w)
   Line * cur = static_cast<Line *>(w);
   cs->next_line(cur);
   if (cs->off_end(cur)) return;
-  cs->checker_->process(cur->real.data(), cur->real.size(), cur);
+  cs->checker_->process(cur->real.data(), cur->real.size(), 0, cur);
 }
 
 bool CheckerString::next_misspelling()
