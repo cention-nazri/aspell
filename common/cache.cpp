@@ -4,7 +4,7 @@
 
 namespace acommon {
 
-static Mutex global_cache_lock;
+static Mutex * global_cache_lock = new Mutex;
 static GlobalCacheBase * first_cache = 0;
 
 void Cacheable::copy() const
@@ -69,7 +69,7 @@ void release_cache_data(GlobalCacheBase * cache, const Cacheable * d)
 GlobalCacheBase::GlobalCacheBase(const char * n)
   : name (n)
 {
-  LOCK(&global_cache_lock);
+  LOCK(global_cache_lock);
   next = first_cache;
   prev = &first_cache;
   if (first_cache) first_cache->prev = &next;
@@ -79,14 +79,14 @@ GlobalCacheBase::GlobalCacheBase(const char * n)
 GlobalCacheBase::~GlobalCacheBase()
 {
   detach_all();
-  LOCK(&global_cache_lock);
+  LOCK(global_cache_lock);
   *prev = next;
   if (next) next->prev = prev;
 }
 
 bool reset_cache(const char * which)
 {
-  LOCK(&global_cache_lock);
+  LOCK(global_cache_lock);
   bool any = false;
   for (GlobalCacheBase * i = first_cache; i; i = i->next)
   {
