@@ -59,8 +59,8 @@
 #include "suggest.hpp"
 #include "vararray.hpp"
 
-#include "iostream.hpp"
-#define DEBUG_SUGGEST
+//#include "iostream.hpp"
+//#define DEBUG_SUGGEST
 
 using namespace aspeller;
 using namespace acommon;

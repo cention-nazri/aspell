@@ -1105,10 +1105,10 @@ bool SfxEntry::check(const LookupInfo & linf, ParmString word,
       {
         lci = &ci;
         lci->word = wordinfo.word;
-      } else if (res == 1) {
+      } else if (res == 1 && gi) {
         lci = gi->add();
         lci->word = wordinfo.word;
-      } else if (res == -1) {
+      } else if (res == -1) { // gi must be defined
         lci = gi->head;
       }
 
