@@ -277,15 +277,9 @@ programs that expect ispell or spell command will work correctly.
 
 \subsection{General Problems}
 
-There seams to be a bug in gcc when compiling with {}``-O3'' which
-will cause undefined references involving the CopyPtr class. If you
-get undefined references when compiling with {}``-O3'' simply change
-that to {}``-O2'' and you should be okay. If you can find a work
-around for this problem please let me know.
-
-Also, Aspell does not use a released version of GNU Libtool. If you
-have a need to modify configure.ac or any of the Makefile.am's you
-should install the CVS version of libtool.
+Aspell does not use a released version of GNU Libtool. If you have
+a need to modify configure.ac or any of the Makefile.am's you should
+install the CVS version of libtool.
 
 
 \subsection{Curses Notes}
@@ -1275,10 +1269,13 @@ strip-accents options are ignored
 
 In order for Aspell to be able to correctly recognize a dictionary
 based on the setting of the LANG environmental variable the dictionaries
-need to be located located .... and they need to be a {}``multi''
-dictionary.
+need to be located some where Aspell can find it and they need to
+be a {}``multi'' dictionary. Where aspell looks for dictionaries
+depends on the value of the \textbf{dict-dir} and \textbf{word-list-path}
+option. \textbf{Dict-dir} is generally <\,{}<prefix>\,{}>/lib/aspell,
+and \textbf{word-list-path} is generally empty.
 
-Each dictionary that yoou expact aspell to be able to find needs to
+Each dictionary that you expect aspell to be able to find needs to
 have the following name:
 
 \begin{quote}
@@ -1300,7 +1297,7 @@ en\_US.multi\\
 en-medical.multi\\
 en-medical-85.multi\\
 en-85.multi\\
-de.pwli
+de.multi
 \end{quote}
 
 \section{AWLI files}
@@ -1313,7 +1310,7 @@ can find it.
 Each AWLI has the the following name:
 
 \begin{quote}
-<\,{}<language>\,{}>{[}\_<\,{}<region>{]}{[}-<\,{}<jargon>\,{}>{]}{[}-<\,{}<size>\,{}>{]}-<\,{}<module>\,{}>.pwli
+<\,{}<language>\,{}>{[}\_<\,{}<region>{]}{[}-<\,{}<jargon>\,{}>{]}{[}-<\,{}<size>\,{}>{]}-<\,{}<module>\,{}>.awli
 \end{quote}
 Where the names have the same meaning as in section \ref{dictname}
 and <\,{}<module>\,{}> is the speller
@@ -1790,7 +1787,7 @@ same as the are in the normal configurations files. Please see section
 Once you have a working language data file installed in the right
 place you are ready to compile the main word list. See section \ref{manage}
 to find out what to do. This section also includes instructions for
-creating the PWLI file.
+creating the awli file.
 
 
 \section{Phonetic Code}
@@ -2254,11 +2251,18 @@ algorithm please see the data file \textbf{english\_phonet.dat}.
 \chapter{Changelog}
 
 
-\section*{Changes from 0.50 to 0.50.1 (Sep ??, 2002)}
+\section*{Changes from 0.50 to 0.50.1 (Aug 28, 2002)}
 
 \begin{itemize}
-\item Lots of portability fixes for non GNU/Linux platforms.
-\item Updated note on Win32 support
+\item A rather large number of portability fixes for non GNU/Linux platforms.
+\item Fixed pkglibdir and pkgdatadir in configure.
+\item Reintroduced some configure options from Aspell .33.7 included dict-dir,
+data-dir, curses, curses-include, win32-relocatable.
+\item Fixed Aspell so it will now compile with -O3 when using gcc.
+\item Updated note on Win32 support.
+\item Other minor manual improvements.
+\item Portability fixes in dictionary files
+\item Official dictionary package for the Slovak language.
 \end{itemize}
 
 \section*{Changes from .33.7.1 to 0.50 (Aug 23, 2002)}
@@ -2322,7 +2326,7 @@ in /usr/local.
 
 \begin{itemize}
 \item Fixed a formating problem with the manual involving <\,{}<.
-\item Added a note about creating PWLI files.
+\item Added a note about creating pwli files.
 \item Removed the space after between the -L and the directory name in the
 pspell-module/ Makefile which caused problems on some platforms.
 \item Added the configure option AM\_MAINTAINER\_MODE to avoid enabling

@@ -1,7 +1,7 @@
 
 AC_INIT
 AM_CONFIG_HEADER(common/settings.h)
-AM_INIT_AUTOMAKE(aspell, 0.50.1-test3)
+AM_INIT_AUTOMAKE(aspell, 0.50.1)
 
 AM_MAINTAINER_MODE
 

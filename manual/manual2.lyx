@@ -616,36 +616,7 @@ spell
 General Problems
 \layout Standard
 
-There seams to be a bug in gcc when compiling with 
-\begin_inset Quotes eld
-\end_inset 
-
--O3
-\begin_inset Quotes erd
-\end_inset 
-
- which will cause undefined references involving the CopyPtr class.
- If you get undefined references when compiling with 
-\begin_inset Quotes eld
-\end_inset 
-
--O3
-\begin_inset Quotes erd
-\end_inset 
-
- simply change that to 
-\begin_inset Quotes eld
-\end_inset 
-
--O2
-\begin_inset Quotes erd
-\end_inset 
-
- and you should be okay.
- If you can find a work around for this problem please let me know.
-\layout Standard
-
-Also, Aspell does not use a released version of GNU Libtool.
+Aspell does not use a released version of GNU Libtool.
  If you have a need to modify configure.ac or any of the Makefile.am's you
  should install the CVS version of libtool.
 \layout Subsection
@@ -3332,8 +3303,7 @@ Dictionary Naming
 
 In order for Aspell to be able to correctly recognize a dictionary based
  on the setting of the LANG environmental variable the dictionaries need
- to be located located ....
- and they need to be a 
+ to be located some where Aspell can find it and they need to be a 
 \begin_inset Quotes eld
 \end_inset 
 
@@ -3342,9 +3312,27 @@ multi
 \end_inset 
 
  dictionary.
+ Where aspell looks for dictionaries depends on the value of the 
+\series bold 
+dict-dir
+\series default 
+ and 
+\series bold 
+word-list-path
+\series default 
+ option.
+ 
+\series bold 
+Dict-dir
+\series default 
+ is generally <<prefix>>/lib/aspell, and 
+\series bold 
+word-list-path
+\series default 
+ is generally empty.
 \layout Standard
 
-Each dictionary that yoou expact aspell to be able to find needs to have
+Each dictionary that you expect aspell to be able to find needs to have
  the following name:
 \layout Quote
 
@@ -3371,7 +3359,7 @@ en-medical-85.multi
 \newline 
 en-85.multi
 \newline 
-de.pwli
+de.multi
 \layout Section
 
 AWLI files
@@ -3390,7 +3378,7 @@ In order for Aspell to find dictionaries that are located in odd places
 Each AWLI has the the following name:
 \layout Quote
 
-<<language>>[_<<region>][-<<jargon>>][-<<size>>]-<<module>>.pwli
+<<language>>[_<<region>][-<<jargon>>][-<<size>>]-<<module>>.awli
 \layout Standard
 
 Where the names have the same meaning as in section 
@@ -4243,7 +4231,7 @@ Once you have a working language data file installed in the right place
 \end_inset 
 
  to find out what to do.
- This section also includes instructions for creating the PWLI file.
+ This section also includes instructions for creating the awli file.
 \layout Section
 
 Phonetic Code
@@ -5593,13 +5581,32 @@ appendix
 Changelog
 \layout Section*
 
-Changes from 0.50 to 0.50.1 (Sep ??, 2002)
+Changes from 0.50 to 0.50.1 (Aug 28, 2002)
 \layout Itemize
 
-Lots of portability fixes for non GNU/Linux platforms.
+A rather large number of portability fixes for non GNU/Linux platforms.
 \layout Itemize
 
-Updated note on Win32 support
+Fixed pkglibdir and pkgdatadir in configure.
+\layout Itemize
+
+Reintroduced some configure options from Aspell .33.7 included dict-dir, data-dir,
+ curses, curses-include, win32-relocatable.
+\layout Itemize
+
+Fixed Aspell so it will now compile with -O3 when using gcc.
+\layout Itemize
+
+Updated note on Win32 support.
+\layout Itemize
+
+Other minor manual improvements.
+\layout Itemize
+
+Portability fixes in dictionary files
+\layout Itemize
+
+Official dictionary package for the Slovak language.
 \layout Section*
 
 Changes from .33.7.1 to 0.50 (Aug 23, 2002)
@@ -5710,7 +5717,7 @@ Changes from .33.6 to .33.6.1 (May 29, 2001)
 Fixed a formating problem with the manual involving <<.
 \layout Itemize
 
-Added a note about creating PWLI files.
+Added a note about creating pwli files.
 \layout Itemize
 
 Removed the space after between the -L and the directory name in the pspell-modu
