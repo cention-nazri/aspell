@@ -81,22 +81,15 @@ namespace acommon {
   PosibErr<bool> StringList::remove(ParmStr str)
   {
     //CERR.printf("REM %s\n", str.str());
-    StringListNode  * * prev = 0;
     StringListNode  * * cur  = &first;
     while (*cur != 0 && strcmp((*cur)->data.c_str(), str)!=0 )  {
-      prev = cur;
       cur = &(*cur)->next;
     }
     if (*cur == 0) {
       return false;
     } else {
-      if (prev != 0) {
-        *prev = (*cur)->next;
-        delete *cur;
-      } else {
-        delete first;
-        first = 0;
-      }
+      StringListNode * tmp = *cur;
+      *cur = (*cur)->next;
       return true;
     }
   }

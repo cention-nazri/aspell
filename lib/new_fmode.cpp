@@ -8,6 +8,8 @@
 #include <sys/types.h>
 #include <regex.h>
 
+#include "stack_ptr.hpp"
+#include "cache-t.hpp"
 #include "string.hpp"
 #include "vector.hpp"
 #include "config.hpp"
@@ -61,7 +63,7 @@ namespace acommon {
     void setDescription(const String & desc) {desc_ = desc;}
     const String & getDescription() {return desc_;}
     PosibErr<void> expand(Config * config);
-    PosibErr<void> build(FStream &, Config * config, int line = 1, 
+    PosibErr<void> build(FStream &, int line = 1, 
                          const char * name = "mode file");
 
     ~FilterMode();
@@ -78,6 +80,47 @@ namespace acommon {
       KeyValue(ParmStr k, ParmStr v) : key(k), value(v) {}
     };
     Vector<KeyValue> expansion;
+  };
+
+  class FilterModeList : public Cacheable, public Vector<FilterMode>
+  {
+  public:
+    typedef Config CacheConfig;
+    typedef String CacheKey;
+    String key;
+    static PosibErr<FilterModeList *> get_new(const String & key, const Config *);
+    bool cache_key_eq(const String & okey) const {
+      return key == okey;
+    }
+  };
+
+  class ModeNotifierImpl : public Notifier
+  {
+  private:
+    ModeNotifierImpl();
+    ModeNotifierImpl(const ModeNotifierImpl &);
+    ModeNotifierImpl & operator= (const ModeNotifierImpl & b);
+    CachePtr<FilterModeList> filter_modes_;
+  public:
+    Config * config;
+    PosibErr<FilterModeList *> get_filter_modes();
+    
+    ModeNotifierImpl(Config * c) : config(c) 
+    {
+      c->filter_mode_notifier = this;
+    }
+    ModeNotifierImpl(const ModeNotifierImpl & other,  Config * c) 
+      : filter_modes_(other.filter_modes_), config(c) 
+    {
+      c->filter_mode_notifier = this;
+    }
+    
+    ModeNotifierImpl * clone(Config * c) const {return new ModeNotifierImpl(*this, c);}
+
+    PosibErr<void> item_updated(const KeyInfo * ki, ParmStr);
+    PosibErr<void> list_updated(const KeyInfo * ki);
+
+    ~ModeNotifierImpl() {}
   };
 
   FilterMode::FilterMode(const String & name)
@@ -386,7 +429,7 @@ namespace acommon {
     return no_err;  
   }
 
-  PosibErr<void> FilterMode::build(FStream & toParse, Config * config, int line0, const char * name) {
+  PosibErr<void> FilterMode::build(FStream & toParse, int line0, const char * name) {
 
     String buf;
     DataPair dp;
@@ -417,97 +460,49 @@ namespace acommon {
     return no_err;
   }
 
-  // FIXME: Use cache
-  static Vector<FilterMode> filterModes;
-  int filterModesRef = 0;
+  static GlobalCache<FilterModeList> filter_modes_cache("filter_modes");
 
+  PosibErr<void> set_mode_from_extension (Config * config, ParmString filename, FILE * in) 
+  {
+    RET_ON_ERR_SET(static_cast<ModeNotifierImpl *>(config->filter_mode_notifier)
+                   ->get_filter_modes(), FilterModeList *, fm);
 
-
-  void set_mode_from_extension (Config * config, ParmString filename, FILE * in) {
-    for ( Vector<FilterMode>::iterator it = filterModes.begin() ;
-         it != filterModes.end() ; it++ ) {
+    for ( FilterModeList::iterator it = fm->begin(); it != fm->end(); it++ ) 
+    {
       if ( it->lockFileToMode(filename,in) ) {
         config->replace("mode", it->modeName().str());
         break;
       }
     }
+    return no_err;
   }
-
 
   void activate_filter_modes(Config *config);
 
-
-  class ModeNotifierImpl : public Notifier
+  PosibErr<FilterModeList *>  ModeNotifierImpl::get_filter_modes()
   {
-  private:
-    Config * config;
-    StringList mode_path;
-
-    ModeNotifierImpl();
-    ModeNotifierImpl(const ModeNotifierImpl &);
-    ModeNotifierImpl & operator= (const ModeNotifierImpl & b);
-    PosibErr<void> intLoadModes(const bool reset = false);
-  public:
-    ModeNotifierImpl(Config * c);
-    
-    ModeNotifierImpl * clone(Config * c) const {return new ModeNotifierImpl(c);}
-
-    PosibErr<void> item_updated(const KeyInfo * ki, ParmStr);
-    PosibErr<void> item_added(const KeyInfo * ki, ParmStr, int pos);
-
-    PosibErr<void> initModes();
-
-    ~ModeNotifierImpl();
-  };
-
-  PosibErr<void> ModeNotifierImpl::initModes() {
-
-    if (    ( filterModesRef > 0 )
-         && ( filterModes.size() > 0 ) ) {
-      return no_err;
+    if (!filter_modes_) {
+      //FIXME is filter-path proper for filter mode files ???
+      //      if filter-options-path better ???
+      //      do we need a filter-mode-path ???
+      //      should change to use genetic data-path once implemented
+      //        and then search filter-path - KevinA
+      String filter_path;
+      StringList filter_path_lst;
+      config->retrieve_list("filter-path", &filter_path_lst);
+      combine_list(filter_path, filter_path_lst);
+      RET_ON_ERR(setup(filter_modes_, &filter_modes_cache, config, filter_path));
     }
-    filterModes.clear();
-    return intLoadModes();
+    return filter_modes_.get();
   }
 
-  ModeNotifierImpl::ModeNotifierImpl() 
-  : config(NULL),
-    mode_path()
-  {
-    filterModesRef++;
-  }
-
-  ModeNotifierImpl::ModeNotifierImpl(Config * c) 
-  : config(c),
-    mode_path()
-  {
-    filterModesRef++;
-  }
-
-  ModeNotifierImpl::ModeNotifierImpl(const ModeNotifierImpl & b) 
-  : config(b.config),
-    mode_path(b.mode_path)
-  {
-    filterModesRef++;
-  }
-
-  ModeNotifierImpl::~ModeNotifierImpl() {
-    if ( --filterModesRef < 1 ) {
-      filterModes.clear();
-    }
-  }
-    
-  ModeNotifierImpl & ModeNotifierImpl::operator= (const ModeNotifierImpl & b) {
-    config = b.config;
-    mode_path = b.mode_path;
-    return *this;
-  }
 
   PosibErr<void> ModeNotifierImpl::item_updated(const KeyInfo * ki, ParmStr value)
   {
     if ( strcmp(ki->name, "mode") == 0 ) {
-      for ( Vector<FilterMode>::iterator it = filterModes.begin() ;
-            it != filterModes.end() ; it++ ) {
+      RET_ON_ERR_SET(get_filter_modes(), FilterModeList *, filter_modes);
+      for ( Vector<FilterMode>::iterator it = filter_modes->begin() ;
+            it != filter_modes->end() ; it++ ) {
         if ( it->modeName() == value )
           return it->expand(config);
       }
@@ -516,24 +511,22 @@ namespace acommon {
     return no_err;
   }
 
-  PosibErr<void> ModeNotifierImpl::item_added(const KeyInfo * ki, ParmStr value, int)
+  PosibErr<void> ModeNotifierImpl::list_updated(const KeyInfo * ki)
   {
     if (strcmp(ki->name, "filter-path") == 0) {
-      return intLoadModes();
+      filter_modes_.reset(0);
     }
     return no_err;
   }
 
-  PosibErr<void> ModeNotifierImpl::intLoadModes(const bool reset) {
+  PosibErr<FilterModeList *> FilterModeList::get_new(const String & key,
+                                                     const Config *) 
+  {
 
-
-//FIXME is filter-path proper for filter mode files ???
-//      if filter-options-path better ???
-//      do we need a filter-mode-path ???
-//      should change to use genetic data-path once implemented
-//        and then search filter-path - KevinA
-    RET_ON_ERR(config->retrieve_list("filter-path",&mode_path));
-    if (mode_path.empty()) return no_err;
+    StackPtr<FilterModeList> filter_modes(new FilterModeList);
+    filter_modes->key = key;
+    StringList mode_path;
+    separate_list(key, mode_path);
     
     PathBrowser els(mode_path, ".amf");
 
@@ -555,15 +548,15 @@ namespace acommon {
       }
       possMode.erase(0,pathPos);
 
-      Vector<FilterMode>::iterator fmIt = filterModes.begin();
+      Vector<FilterMode>::iterator fmIt = filter_modes->begin();
 
-      for ( fmIt = filterModes.begin() ; 
-            fmIt != filterModes.end() ; fmIt++ ) {
+      for ( fmIt = filter_modes->begin() ; 
+            fmIt != filter_modes->end() ; fmIt++ ) {
         if ( (*fmIt).modeName() == possMode ) {
           break;
         }
       }
-      if ( fmIt != filterModes.end() ) {
+      if ( fmIt != filter_modes->end() ) {
         continue;
       }
 
@@ -775,22 +768,24 @@ namespace acommon {
       
       }//while getdata_pair
       
-      RET_ON_ERR(collect.build(toParse,config,dp.line_num,possMode.str()));
+      RET_ON_ERR(collect.build(toParse,dp.line_num,possMode.str()));
 
-      filterModes.push_back(collect);
+      filter_modes->push_back(collect);
     }
-    return no_err;
+    return filter_modes.release();
   }
 
-  void activate_filter_modes(Config *config) {
-
-    ModeNotifierImpl * activate = NULL;
-
-    config->add_notifier((activate = new ModeNotifierImpl(config)));
-//    activate->loadModes();//ensure existence of modes
+  void activate_filter_modes(Config *config) 
+  {
+    config->add_notifier(new ModeNotifierImpl(config));
   }
 
   void print_mode_help(FILE * helpScreen) {
+#if 0
+    RET_ON_ERR_SET(static_cast<ModeNotifierImpl *>(config->filter_mode_notifier)
+                   ->get_filter_modes(), FilterModeList *, fm);
+    
+
     fprintf(helpScreen,
       "\n\n[Filter Modes] reconfigured combinations filters optimized for files of\n"
           "               a specific type. A mode is selected by Aspell's `--mode\n"
@@ -840,16 +835,8 @@ namespace acommon {
       fprintf(helpScreen,desc.str());
       fprintf(helpScreen,"\n");
     }
+#endif
   }
 
-  PosibErr<void> intialize_filter_modes(Config * config){
-    filterModesRef++;
-
-    ModeNotifierImpl * intializer = new ModeNotifierImpl(config);
-
-    PosibErr<void> init_err = intializer->initModes();
-    filterModesRef--;
-    return init_err;
-  }
 };
 

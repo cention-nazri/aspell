@@ -41,8 +41,9 @@ namespace acommon {
     Filters filters_;
   };
 
-  void set_mode_from_extension(Config * config,
-			       ParmString filename,FILE * in = NULL);
+  PosibErr<void> set_mode_from_extension(Config * config,
+                                         ParmString filename,
+                                         FILE * in = NULL);
   
   PosibErr<void> setup_filter(Filter &, Config *, 
 			      bool use_decoder, 
@@ -51,7 +52,6 @@ namespace acommon {
   void activate_dynamic_filteroptions(Config *c);
   void activate_filter_modes(Config * config);
   void print_mode_help(FILE * helpScreen);
-  PosibErr<void> intialize_filter_modes(Config * config);
   PosibErr<bool> verify_version(const char * relOp, const char * actual,
                                 const char * required, const char * module = "aspell");
 

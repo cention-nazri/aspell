@@ -32,6 +32,7 @@
 #include "char_vector.hpp"
 #include "convert.hpp"
 #include "vararray.hpp"
+#include "string_list.hpp"
 
 #include "iostream.hpp"
 
@@ -66,8 +67,6 @@ namespace acommon {
     N_("string"), N_("integer"), N_("boolean"), N_("list")
   };
 
-  void seperate_list(ParmStr value, AddableContainer & out, bool do_unescape);
-
   const int Config::num_parms_[9] = {1, 1, 0, 0, 0,
                                      1, 1, 1, 0};
   
@@ -84,6 +83,7 @@ namespace acommon {
     , md_info_list_index(-1)
     , settings_read_in_(false)
     , load_filter_hook(0)
+    , filter_mode_notifier(0)
   {
     kmi.main_begin = mainbegin;
     kmi.main_end   = mainend;
@@ -353,9 +353,12 @@ namespace acommon {
 
     cur = first_to_use;
 
-    if (include_default && (!cur || cur->action == Reset)) {
+    if (include_default && 
+        (!cur || 
+         !(cur->action == Set || cur->action == ListClear)))
+    {
       String def = get_default(ki);
-      seperate_list(def, m, true);
+      separate_list(def, m, true);
     }
 
     if (cur && cur->action == Reset) {
@@ -661,7 +664,7 @@ namespace acommon {
 
 #undef TEST
 
-  void seperate_list(ParmStr value, AddableContainer & out, bool do_unescape)
+  void separate_list(ParmStr value, AddableContainer & out, bool do_unescape)
   {
     unsigned len = value.size();
     
@@ -696,6 +699,23 @@ namespace acommon {
       out.add(b);
       ++s;
     }
+  }
+
+  void combine_list(String & res, const StringList & in)
+  {
+    res.clear();
+    StringListEnumeration els = in.elements_obj();
+    const char * s = 0;
+    while ( (s = els.next()) != 0) 
+    {
+      for (; *s; ++s) {
+        if (*s == ':')
+          res.append('\\');
+        res.append(*s);
+      }
+      res.append(':');
+    }
+    if (res.back() == ':') res.pop_back();
   }
 
   struct ListAddHelper : public AddableContainer 
@@ -801,7 +821,7 @@ namespace acommon {
       helper.config = this;
       helper.orig_entry = entry;
 
-      seperate_list(entry->value.str(), helper, do_unescape);
+      separate_list(entry->value.str(), helper, do_unescape);
     }
     return no_err;
   }

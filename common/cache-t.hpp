@@ -56,7 +56,7 @@ PosibErr<Data *> get_cache_data(GlobalCache<Data> * cache,
 {
   LOCK(&cache->lock);
   Data * n = cache->find(key);
-  //CERR << "Getting " << key << "\n";
+  //CERR << "Getting " << key << " for " << cache->name << "\n";
   if (n) {
     n->refcount++;
     return n;

@@ -236,8 +236,6 @@ int main (int argc, const char *argv[])
 
   options->set_committed_state(false);
 
-  EXIT_ON_ERR(intialize_filter_modes(options));
-
   if (argc == 1) {print_help(); return 0;}
 
   int i = 1;
@@ -323,7 +321,6 @@ int main (int argc, const char *argv[])
         entry->key = o->name;
         entry->value = parm;
         entry->need_conv = true;
-        CERR.printf("%s %s\n", o->name, parm);
         if (num_parms == -1) {
           entry->place_holder = args.size();
           args.push_back(parm);

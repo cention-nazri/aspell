@@ -164,6 +164,7 @@ namespace acommon {
     String temp_str;
 
     PosibErr<ConfigModule *> (* load_filter_hook)(Config * config, ParmStr value);
+    Notifier * filter_mode_notifier;
     
     Config(ParmStr name,
 	   const KeyInfo * mainbegin, 
@@ -259,6 +260,14 @@ namespace acommon {
 
   static const int KEYINFO_MAY_CHANGE = 1 << 0;
   static const int KEYINFO_UTF8       = 1 << 1;
+  
+  class AddableContainer;
+  class StringList;
+
+  void separate_list(ParmStr value, AddableContainer & out, bool do_unescape = true);
+  void combine_list(String & res, const StringList &);
+
+
 }
 
 #endif

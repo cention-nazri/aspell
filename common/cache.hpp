@@ -49,7 +49,7 @@ public:
     if (ptr) ptr->release();
     ptr = p;
   }
-  void copy(Data * p) {p->copy(); reset(p);}
+  void copy(Data * p) {if (p) p->copy(); reset(p);}
   Data * release() {Data * tmp = ptr; ptr = 0; return tmp;}
 
   Data & operator*  () const {return *ptr;}
@@ -58,7 +58,7 @@ public:
   operator Data * ()   const {return ptr;}
 
   CachePtr() : ptr(0) {}
-  CachePtr(const CachePtr & other) {ptr = other.ptr; ptr->copy();}
+  CachePtr(const CachePtr & other) {ptr = other.ptr; if (ptr) ptr->copy();}
   void operator=(const CachePtr & other) {copy(other.ptr);}
   ~CachePtr() {reset(0);}
 };
