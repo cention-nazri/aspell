@@ -19,7 +19,7 @@ The latest version can always be found at GNU Aspell's home page at
 * Curses Notes::                
 * Upgrading from Aspell 0.50::  
 * Upgrading from Aspell .33/Pspell .12::  
-* Upgrading from a pre-release snapshot::  
+* Upgrading from a pre-0.50 snapshot::  
 * WIN32 Notes::                 
 @end menu
 
@@ -202,8 +202,8 @@ of how to do this.  Unfortunately there isn't any simple way to find
 out which dictionaries are installed which will work with both the old
 Aspell/Pspell and the new GNU Aspell.
 
-@node Upgrading from a pre-release snapshot, WIN32 Notes, Upgrading from Aspell .33/Pspell .12, Installing
-@appendixsec Upgrading from a pre-release snapshot
+@node Upgrading from a pre-0.50 snapshot
+@appendixsec Upgrading from a pre-0.50 snapshot
 
 At the last minute I decided to merge the @file{speller-util} program
 into the main @file{aspell} program.  You may wish to remove that
@@ -211,7 +211,7 @@ into the main @file{aspell} program.  You may wish to remove that
 dictionaries designed to work with the snapshot will no longer work
 with the official release.
  
-@node WIN32 Notes,  , Upgrading from a pre-release snapshot, Installing
+@node WIN32 Notes
 @appendixsec WIN32 Notes
 
 @appendixsubsec Getting the WIN32 version

@@ -66,7 +66,7 @@ namespace acommon {
     const String & getDescription() const {return desc_;}
     PosibErr<void> expand(Config * config);
     PosibErr<void> build(FStream &, int line = 1, 
-                         const char * name = "mode file");
+                         const char * fname = "mode file");
 
     ~FilterMode();
   private:
@@ -440,10 +440,13 @@ namespace acommon {
     return no_err;  
   }
 
-  PosibErr<void> FilterMode::build(FStream & toParse, int line0, const char * name) {
+  PosibErr<void> FilterMode::build(FStream & toParse, int line0, const char * fname) {
 
     String buf;
     DataPair dp;
+
+    file_ = fname;
+
     dp.line_num = line0;
 
     while ( getdata_pair(toParse, dp, buf) ) {
@@ -464,7 +467,7 @@ namespace acommon {
 
       } else {
         
-        return make_err(bad_mode_key,dp.key).with_file(name,dp.line_num);
+        return make_err(bad_mode_key,dp.key).with_file(fname,dp.line_num);
       }
     }
 
@@ -481,7 +484,7 @@ namespace acommon {
     for ( FilterModeList::iterator it = fm->begin(); it != fm->end(); it++ ) 
     {
       if ( it->lockFileToMode(filename,in) ) {
-        config->replace("mode", it->modeName().str());
+        RET_ON_ERR(config->replace("mode", it->modeName().str()));
         break;
       }
     }
@@ -726,7 +729,7 @@ namespace acommon {
       
       }//while getdata_pair
       
-      RET_ON_ERR(collect.build(toParse,dp.line_num,possMode.str()));
+      RET_ON_ERR(collect.build(toParse,dp.line_num,possModeFile.str()));
 
       filter_modes->push_back(collect);
     }

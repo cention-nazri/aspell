@@ -75,8 +75,5 @@ FILTER tex
 #
 # option value may be empty if entire option is boolean or in case of list options
 # prefixed by `clear'
-OPTION add-tex-hyphen -
-OPTION add-tex-hyphen \-
-OPTION add-tex-hyphen \=
 
 FILTER url
