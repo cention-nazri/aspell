@@ -249,7 +249,6 @@ static void sl_init(const StrVector * tmp, WordEntry & o)
 {
   const Str * i   = tmp->pbegin();
   const Str * end = tmp->pend();
-  o.what = WordEntry::Word;
   set_word(o, *i);
   ++i;
   if (i != end) {

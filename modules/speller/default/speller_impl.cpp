@@ -547,7 +547,8 @@ namespace aspeller {
 
     typedef Vector<SpellerDict *> AllWS; AllWS all_ws;
     for (SpellerDict * i = dicts_; i; i = i->next) {
-      if (i->dict->basic_type == Dict::basic_dict) {
+      if (i->dict->basic_type == Dict::basic_dict ||
+          i->dict->basic_type == Dict::replacement_dict) {
         all_ws.push_back(i);
       }
     }

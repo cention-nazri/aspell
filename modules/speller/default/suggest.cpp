@@ -527,7 +527,7 @@ namespace {
     add_nearmiss(buffer.dup(ParmString(w.word, w.word_size)), 
                  w.word_size, w.word_info, 
                  sl,
-                 w_score, sl_score, count);
+                 w_score, sl_score, count, repl);
   }
   
   void Working::add_nearmiss(SpellerImpl::WS::const_iterator i,
@@ -652,16 +652,16 @@ namespace {
     for (; !w.at_end(); w.adv()) {
       
       add_nearmiss(i, w, sl, -1, score);
-
+      
       if (w.aff[0]) {
         String sl_buf;
         temp_buffer.reset();
         WordAff * exp_list;
-        exp_list = lang->affix()->expand(w.word, w.aff, temp_buffer);
-        for (WordAff * p = exp_list->next; p; p = p->next)
-          add_nearmiss(i, p, 0, -1, -1);
+          exp_list = lang->affix()->expand(w.word, w.aff, temp_buffer);
+          for (WordAff * p = exp_list->next; p; p = p->next)
+            add_nearmiss(i, p, 0, -1, -1);
       }
-
+      
     }
   }
 
@@ -682,6 +682,7 @@ namespace {
          i != sp->suggest_ws.end();
          ++i) 
     {
+      //CERR.printf(">>%p %s\n", *i, typeid(**i).name());
       StackPtr<SoundslikeEnumeration> els((*i)->soundslike_elements());
 
       while ( (sw = els->next(stopped_at)) ) {
@@ -1204,7 +1205,6 @@ namespace {
       if (i->repl_list != 0) {
  	String::size_type pos;
 	do {
-          abort();
  	  dup_pair = duplicates_check.insert(fix_case(i->repl_list->word, buf));
  	  if (dup_pair.second && 
  	      ((pos = dup_pair.first->find(' '), pos == String::npos)
