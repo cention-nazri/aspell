@@ -1135,12 +1135,14 @@ namespace acommon {
     //
     , {"backup",  KeyInfoBool, "true",
        N_("create a backup file by appending \".bak\"")}
-    , {"reverse", KeyInfoBool, "false",
-       N_("reverse the order of the suggest list")}
-    , {"time"   , KeyInfoBool, "false",
-       N_("time load time and suggest time in pipe mode")}
     , {"keymapping", KeyInfoString, "aspell",
        N_("keymapping for check mode, one of aspell ispell")}
+    , {"reverse", KeyInfoBool, "false",
+       N_("reverse the order of the suggest list")}
+    , {"suggest", KeyInfoBool, "true",
+       N_("suggest possible replacements")}
+    , {"time"   , KeyInfoBool, "false",
+       N_("time load time and suggest time in pipe mode")}
     
   };
 

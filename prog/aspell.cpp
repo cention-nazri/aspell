@@ -502,6 +502,7 @@ void pipe()
 
   bool terse_mode = true;
   bool do_time = options->retrieve_bool("time");
+  bool suggest = options->retrieve_bool("suggest");
   clock_t start,finish;
   start = clock();
 
@@ -604,6 +605,8 @@ void pipe()
 	  case 's':
 	    if (get_word_pair(line + 4, word, word2))
 	      BREAK_ON_ERR(err = config->replace(word, word2));
+            if (strcmp(word,"suggest") == 0)
+              suggest = config->retrieve_bool("suggest");
 	    break;
 	  case 'r':
 	    word = trim_wspace(line + 4);
@@ -639,10 +642,12 @@ void pipe()
 	word = line + token.offset;
 	word[token.len] = '\0';
 	start = clock();
-        const AspellWordList * suggestions 
-	  = aspell_speller_suggest(speller, word, -1);
+        const AspellWordList * suggestions = 0;
+        if (suggest) 
+          suggestions = aspell_speller_suggest(speller, word, -1);
 	finish = clock();
-	if (!aspell_word_list_empty(suggestions)) {
+	if (suggestions && !aspell_word_list_empty(suggestions)) 
+        {
 	  COUT << "& " << word 
 	       << " " << aspell_word_list_size(suggestions) 
 	       << " " << token.offset + ignore
