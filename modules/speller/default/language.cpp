@@ -46,7 +46,7 @@ namespace aspeller {
     , {"sug-split-chars",     KeyInfoString, "- ", "", 0, FOR_CONFIG}
   };
 
-  static GlobalCache<Language> language_cache;
+  static GlobalCache<Language> language_cache("language");
 
   PosibErr<void> Language::setup(const String & lang, const Config * config)
   {

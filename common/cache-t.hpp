@@ -12,30 +12,20 @@ class GlobalCacheBase
 {
 public:
   mutable Mutex lock;
+public: // but don't use
+  const char * name;
+  GlobalCacheBase * next;
+  GlobalCacheBase * * prev;
 protected:
-  class List
-  {
-    Cacheable * first;
-  public:
-    List() : first(0) {}
-    template <class D>
-    D * find(const typename D::CacheKey & id, D * = 0) {
-      D * cur = static_cast<D *>(first);
-      while (cur && !cur->cache_key_eq(id))
-        cur = static_cast<D *>(cur->next);
-      return cur;
-    }
-    void add(Cacheable * node) {
-      node->next = first;
-      node->attached = true;
-      first = node;
-    }
-    void del(Cacheable * d);
-  };
-  List list;
-public:
+  Cacheable * first;
+  void del(Cacheable * d);
   void add(Cacheable * n);
+  GlobalCacheBase(const char * n);
+  ~GlobalCacheBase();
+public:
   void release(Cacheable * d);
+  void detach(Cacheable * d);
+  void detach_all();
 };
 
 template <class D>
@@ -45,11 +35,18 @@ public:
   typedef D Data;
   typedef typename Data::CacheKey Key;
 public:
+  GlobalCache(const char * n) : GlobalCacheBase(n) {}
+  // "find" and "add" will _not_ acquire a lock
   Data * find(const Key & key) {
-    Data * dummy;
-    // needed due to gcc (< 3.4) bug.
-    return list.find(key,dummy);
+    D * cur = static_cast<D *>(first);
+    while (cur && !cur->cache_key_eq(key))
+      cur = static_cast<D *>(cur->next);
+    return cur;
   }
+  void add(Data * n) {GlobalCacheBase::add(n);}
+  // "release" and "detach" _will_ acquire a lock
+  void release(Data * d) {GlobalCacheBase::release(d);}
+  void detach(Data * d) {GlobalCacheBase::detach(d);}
 };
 
 template <class Data>

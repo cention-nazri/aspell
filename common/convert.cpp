@@ -448,8 +448,8 @@ namespace acommon {
   // Cache
   //
 
-  static GlobalCache<Decode> decode_cache;
-  static GlobalCache<Encode> encode_cache;
+  static GlobalCache<Decode> decode_cache("decode");
+  static GlobalCache<Encode> encode_cache("encode");
   
   //////////////////////////////////////////////////////////////////////
   //

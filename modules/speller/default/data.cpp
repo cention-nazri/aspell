@@ -19,7 +19,7 @@
 
 namespace aspeller {
 
-  GlobalCache<Dict> dict_cache;
+  GlobalCache<Dict> dict_cache("dictionary");
 
   //
   // Dict impl

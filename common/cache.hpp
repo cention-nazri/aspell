@@ -24,12 +24,13 @@ class Cacheable
 {
 public: // but don't use
   Cacheable * next;
+  Cacheable * * prev;
   mutable int refcount;
-  bool attached;
   GlobalCacheBase * cache;
+  bool attached() {return prev;}
   void copy() const;
   void release() const {release_cache_data(cache,this);}
-  Cacheable(GlobalCacheBase * c = 0) : next(0), refcount(1), attached(false), cache(c) {}
+  Cacheable(GlobalCacheBase * c = 0) : next(0), prev(0), refcount(1), cache(c) {}
   virtual ~Cacheable() {}
 };
 
@@ -64,6 +65,9 @@ public:
     reset(pe.data);
     return no_err;
   }
+
+  bool reset_cache();
+  void reset_cache(const char *);
 };
 
 }

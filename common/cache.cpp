@@ -4,6 +4,9 @@
 
 namespace acommon {
 
+static Mutex global_cache_lock;
+static GlobalCacheBase * first_cache = 0;
+
 void Cacheable::copy() const
 {
   //CERR << "COPY\n";
@@ -11,36 +14,94 @@ void Cacheable::copy() const
   refcount++;
 }
 
-void GlobalCacheBase::List::del(Cacheable * d)
+void GlobalCacheBase::del(Cacheable * n)
 {
-  Cacheable * * cur = &first;
-  while (*cur && *cur != d) cur = &((*cur)->next);
-  assert(*cur);
-  *cur = (*cur)->next;
-  d->attached = false;
+  *n->prev = n->next;
+  if (n->next) n->next->prev = n->prev;
+  n->next = 0;
+  n->prev = 0;
 }
-  
-void GlobalCacheBase::add(Cacheable * n) {
+
+void GlobalCacheBase::add(Cacheable * n) 
+{
   assert(n->refcount > 0);
-  list.add(n);
+  n->next = first;
+  n->prev = &first;
+  if (first) first->prev = &n->next;
+  first = n;
   n->cache = this;
 }
 
-void GlobalCacheBase::release(Cacheable * d) {
+void GlobalCacheBase::release(Cacheable * d) 
+{
   //CERR << "RELEASE\n";
   LOCK(&lock);
   d->refcount--;
   assert(d->refcount >= 0);
   if (d->refcount != 0) return;
   //CERR << "DEL\n";
-  if (d->attached)
-    list.del(d);
+  if (d->attached()) del(d);
   delete d;
+}
+
+void GlobalCacheBase::detach(Cacheable * d)
+{
+  LOCK(&lock);
+  if (d->attached()) del(d);
+}
+
+void GlobalCacheBase::detach_all()
+{
+  LOCK(&lock);
+  Cacheable * p = first;
+  while (p) {
+    *p->prev = 0;
+    p->prev = 0;
+    p = p->next;
+  }
 }
 
 void release_cache_data(GlobalCacheBase * cache, const Cacheable * d)
 {
   cache->release(const_cast<Cacheable *>(d));
+}
+
+GlobalCacheBase::GlobalCacheBase(const char * n)
+  : name (n)
+{
+  LOCK(&global_cache_lock);
+  next = first_cache;
+  prev = &first_cache;
+  if (first_cache) first_cache->prev = &next;
+  first_cache = this;
+}
+
+GlobalCacheBase::~GlobalCacheBase()
+{
+  detach_all();
+  LOCK(&global_cache_lock);
+  *prev = next;
+  if (next) next->prev = prev;
+}
+
+void reset_cache()
+{
+  LOCK(&global_cache_lock);
+  for (GlobalCacheBase * i = first_cache; i; i = i->next)
+  {
+    i->detach_all();
+  }
+}
+
+bool reset_cache(const char * which)
+{
+  LOCK(&global_cache_lock);
+  bool any = false;
+  for (GlobalCacheBase * i = first_cache; i; i = i->next)
+  {
+    if (strcmp(i->name, which) == 0) {i->detach_all(); any = true;}
+  }
+  return any;
 }
 
 #if 0
