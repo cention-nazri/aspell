@@ -1,5 +1,5 @@
 
-2002/07/22
+2002/07/30
 
 The New Aspell is complete enough to function as a replacement for
 both the old Aspell/Pspell replacement with a few exceptions.
@@ -19,9 +19,6 @@ configuration information which may give you some problems as some of
 the options have changed.  The two also share the same personal
 word-lists, however, since the format of them has not changed, this
 should not be a problem.
-
-The main features missing from the old Aspell/Pspell is an HTML and
-TeX filter.  Those should be ported over shortly.
 
 See README-CVS if building from CVS.
 

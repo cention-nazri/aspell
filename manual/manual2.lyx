@@ -7092,62 +7092,6 @@ Words in bold indicate how you should refer to the item when discussing
  it with me or others.
 \layout Section
 
-Things that will be done real soon
-\layout Standard
-
-These items should get done within a release or two.
-\layout Itemize
-
-Totally rewrite the aspell international support.
- See 
-\begin_inset LatexCommand \url{http://aspell.sourceforge.net/international/}
-
-\end_inset 
-
- for more information.
-\layout Itemize
-
-Rework the aspell 
-\series bold 
-check
-\series default 
- function to provide support for using any number of filters which will
- be needed for international support.
-\layout Itemize
-
-Add support for more intelligently coming up with suggestions for words
- that are run-togethers.
-\layout Section
-
-Things that need to be done
-\layout Standard
-
-Things items will eventually be implemented as I know they are important
- however I am not sure when they will get done.
-\layout Itemize
-
-Figure out a way for Aspell to work better with 
-\series bold 
-extremely large dictionaries
-\series default 
-.
-\layout Section
-
-Things that I would like to get done
-\layout Standard
-
-These items will eventually be implemented.
- I hope to have them all done before I move aspell to beta testing.
- They are in the approximate order of when they will get done.
-\layout Section
-
-Things that will be done eventually
-\layout Standard
-
-I plan on doing these things eventually.
- It is just a matter of getting around to it.
-\layout Section
-
 Good ideas that are worth implementing
 \layout Standard
 
@@ -7165,11 +7109,6 @@ Use Lawrence Philips' new Double Metaphone algorithm.
 \end_inset 
 
 .
-\layout Itemize
-
-Add support for
-\series bold 
- affix compression.
 \layout Itemize
 
 Come up with a plug-in for 
@@ -7279,50 +7218,7 @@ Since ispell has dictionaries available to it, it is conceivable that it
  lines.
 \layout Section
 
-Things that are not likely to get implemented
-\layout Standard
-
-Theses ideas are not likely to get implemented any time soon.
-\layout Itemize
-
-(None Yet)
-\layout Section
-
 Notes and Status of various items
-\layout Subsection
-
-Affix Compression
-\begin_inset LatexCommand \label{affixcomp}
-
-\end_inset 
-
-
-\layout Standard
-
-Due to the current way my spell checker works implementing affix compression
- would be next to impossible.
- Nevertheless, I do realize that for some languages affix compression is
- very important.
-\layout Standard
-
-So to solve this dilemma I plan on having two different modes of my spell
- checker: One with affix compression that does not use soundslike pairs
- (much like ispell) and one without affix compression that does use soundslike.
- 
-\layout Standard
-
-I plan to extract the affix manipulation code from Ispell with the help
- of an Ispell author.
- The tricky part would be getting this to getting this all to work properly
- at tun time bases on the dictionary used.
-\layout Subsection
-
-Extremely Large Dictionaries
-\layout Standard
-
-This problem extends back to the fact of the way words are index is Aspell.
- This problem will get resolved when I implanted the affix compression mode
- as only one index would be used.
 \layout Subsection
 
 G

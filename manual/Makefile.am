@@ -101,6 +101,7 @@ SUBDIRS = man-html man-text dev-html dev-text
 
 EXTRA_DIST = ${pkgdoc_DATA} \
              html.sty html2txt.pl edit-man manual2.per man-proc.pl\
-	     manual-text manual-html
+	     manual-text manual-html devel-html devel-text
+	     
 
 
