@@ -5,178 +5,178 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: aspell 0.51\n"
+"Project-Id-Version: aspell 0.51-b20040106\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-01-06 10:07-0500\n"
-"PO-Revision-Date: 2004-01-04 23:42-0500\n"
+"POT-Creation-Date: 2004-01-11 23:09-0500\n"
+"PO-Revision-Date: 2004-01-11 20:42-0500\n"
 "Last-Translator: Kevin Patrick Scannell <scannell@SLU.EDU>\n"
 "Language-Team: Irish <ga@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: common/config.cpp:848
+#: common/config.cpp:847
 msgid "configured as follows"
 msgstr "cumraithe mar leanas"
 
-#: common/config.cpp:1053
+#: common/config.cpp:1052
 msgid "main configuration file"
 msgstr "comhad cumraíochta príomha"
 
-#: common/config.cpp:1055
+#: common/config.cpp:1054
 msgid "location of main configuration file"
 msgstr "láthair an chomhaid cumraíochta príomha"
 
-#: common/config.cpp:1058
+#: common/config.cpp:1057
 msgid "location of language data files"
 msgstr "láthair na gcomhad teanga"
 
-#: common/config.cpp:1060
+#: common/config.cpp:1059
 msgid "location of the main word list"
 msgstr "láthair an liosta focal príomha"
 
-#: common/config.cpp:1062
+#: common/config.cpp:1061
 msgid "encoding to expect data to be in"
 msgstr "an t-ionchódú lena bhfuiltear ag súil"
 
-#: common/config.cpp:1064
+#: common/config.cpp:1063
 msgid "add or removes a filter"
 msgstr "cuir scagaire ar obair, nó cuir as feidhm"
 
-#: common/config.cpp:1066
+#: common/config.cpp:1065
 msgid "path(es) aspell looks for filters (.so/.dll/.flt);"
 msgstr "cosá(i)n ina lorgaíonn aspell scagairí (.so/.dll/.flt);"
 
-#: common/config.cpp:1068
+#: common/config.cpp:1067
 msgid "path(es) aspell looks for options descriptions;"
 msgstr "cosá(i)n ina lorgaíonn aspell cuntais ar roghanna;"
 
-#: common/config.cpp:1071
+#: common/config.cpp:1070
 msgid "extra dictionaries to use"
 msgstr "foclóirí breise le húsáid"
 
-#: common/config.cpp:1073
+#: common/config.cpp:1072
 msgid "location for personal files"
 msgstr "láthair chomhaid phearsanta"
 
-#: common/config.cpp:1075
+#: common/config.cpp:1074
 msgid "ignore words <= n chars"
 msgstr "déan neamhshuim ar focail <= n carachtar"
 
-#: common/config.cpp:1077
+#: common/config.cpp:1076
 msgid "ignore accents when checking words"
 msgstr "déan neamhshuim ar síntí fada agus ag seiceáil focal"
 
-#: common/config.cpp:1079
+#: common/config.cpp:1078
 msgid "ignore case when checking words"
 msgstr "déan neamhshuim ar ceannlitreacha/litreacha beaga"
 
-#: common/config.cpp:1081
+#: common/config.cpp:1080
 msgid "ignore commands to store replacement pairs"
 msgstr "déan neamhshuim ar orduithe chun athfhocail a stóráil"
 
-#: common/config.cpp:1083
+#: common/config.cpp:1082
 msgid "extra information for the word list"
 msgstr "eolas breise don liosta focal"
 
-#: common/config.cpp:1085
+#: common/config.cpp:1084
 msgid "keyboard definition to use for typo analysis"
 msgstr "cur síos eochairchláir le húsáid d'anailís mílitrithe"
 
-#: common/config.cpp:1087
+#: common/config.cpp:1086
 msgid "language code"
 msgstr "cód teanga"
 
-#: common/config.cpp:1089
+#: common/config.cpp:1088
 msgid "deprecated, use lang instead"
 msgstr "dulta i léig, bain úsáid as `lang' ina áit"
 
-#: common/config.cpp:1091
+#: common/config.cpp:1090
 msgid "location of local language data files"
 msgstr "láthair na gcomhad teanga áitiúla"
 
-#: common/config.cpp:1093
+#: common/config.cpp:1092
 msgid "base name of the main dictionary to use"
 msgstr "bunainm an fhoclóra phríomha"
 
-#: common/config.cpp:1097
+#: common/config.cpp:1096
 msgid "Set module name"
 msgstr "Ainmnigh modúl"
 
-#: common/config.cpp:1099
+#: common/config.cpp:1098
 msgid "Search order for modules"
 msgstr "Rangú cuardaigh do mhodúil"
 
-#: common/config.cpp:1101
+#: common/config.cpp:1100
 msgid "personal configuration file"
 msgstr "comhad cumraíochta pearsanta"
 
-#: common/config.cpp:1104
+#: common/config.cpp:1103
 msgid "personal word list file name"
 msgstr "ainm comhaid liosta focal pearsanta"
 
-#: common/config.cpp:1107
+#: common/config.cpp:1106
 msgid "prefix directory"
 msgstr "comhadlann réimíre"
 
-#: common/config.cpp:1109
+#: common/config.cpp:1108
 msgid "replacements list file name"
 msgstr "ainm comhaid liosta athfhocal"
 
-#: common/config.cpp:1112
+#: common/config.cpp:1111
 msgid "consider run-together words legal"
 msgstr "ná taispeáin focail chomhtháite mar earráidí"
 
-#: common/config.cpp:1114
+#: common/config.cpp:1113
 msgid "maxium numbers that can be strung together"
 msgstr "uasmhéid focail chomhtháite"
 
-#: common/config.cpp:1116
+#: common/config.cpp:1115
 msgid "minimal length of interior words"
 msgstr "fad íosta d'fhocail istigh i bhfocal comhtháite"
 
-#: common/config.cpp:1119
+#: common/config.cpp:1118
 msgid "save replacement pairs on save all"
 msgstr "sábháil athfhocail nuair a shábháiltear gach uile"
 
-#: common/config.cpp:1121
+#: common/config.cpp:1120
 msgid "set the prefix based on executable location"
 msgstr "socraigh an réimír chosáin de réir suíomh an chomhaid inrite"
 
-#: common/config.cpp:1123
+#: common/config.cpp:1122
 msgid "size of the word list"
 msgstr "méid an liosta focal"
 
-#: common/config.cpp:1125
+#: common/config.cpp:1124
 msgid "no longer used"
 msgstr "ní úsáidtear a thuilleadh"
 
-#: common/config.cpp:1127
+#: common/config.cpp:1126
 msgid "strip accents from word lists"
 msgstr "bain aicinn as na liostaí focal"
 
-#: common/config.cpp:1129
+#: common/config.cpp:1128
 msgid "suggestion mode"
 msgstr "modh moltaí"
 
-#: common/config.cpp:1131
+#: common/config.cpp:1130
 msgid "Search path for word list information files"
 msgstr "Cosán cuardaigh do chomhaid le heolas faoi liostaí focal"
 
-#: common/config.cpp:1138
+#: common/config.cpp:1137
 msgid "create a backup file by appending \".bak\""
 msgstr "cruthaigh comhad cúltaca le sínteán \".bak\""
 
-#: common/config.cpp:1140
+#: common/config.cpp:1139
 msgid "reverse the order of the suggest list"
 msgstr "Aisiompaigh liosta na moltaí"
 
-#: common/config.cpp:1142
+#: common/config.cpp:1141
 msgid "time load time and suggest time in pipe mode"
 msgstr ""
 "tomhais fad ama chun an clár a lódáil agus na moltaí a ghineadh i modh phíopa"
 
-#: common/config.cpp:1144
+#: common/config.cpp:1143
 msgid "keymapping for check mode, one of aspell ispell"
 msgstr "eochairmhapáil i modh seiceála, `aspell' nó `ispell'"
 
@@ -490,7 +490,7 @@ msgstr "Tá brón orm; ní féidir an comhad \"%s\" a fhorscríobh"
 msgid "Sorry \"create/merge repl\" is currently unimplemented.\n"
 msgstr "Tá brón orm; níl \"create/merge repl\" ar fáil faoi láthair.\n"
 
-#: prog/aspell.cpp:1366
+#: prog/aspell.cpp:1367
 #, c-format
 msgid ""
 "\n"
@@ -542,7 +542,7 @@ msgstr ""
 "is iad [roghanna] ceann de:\n"
 "\n"
 
-#: prog/aspell.cpp:1395
+#: prog/aspell.cpp:1396
 #, c-format
 msgid ""
 "\n"
@@ -558,7 +558,6 @@ msgid "Filter for hiding delimited contexts from Aspell"
 msgstr "Scagaire chun comhthéacsanna teorannaithe a chur i bhfolach ó Aspell"
 
 #: modules/filter/context-filter.opt:13
-#, fuzzy
 msgid "add/rem delimiter(s) separated by spaces"
 msgstr "cuir teorantóir(í) i, nó bain iad amach, scartha le spásanna"
 
@@ -599,9 +598,8 @@ msgid "TeX commands"
 msgstr "Orduithe TeX"
 
 #: modules/filter/tex-filter.opt:90
-#, fuzzy
 msgid "multi character coded letters (<char>:<rep>[:<rep>[...]])"
-msgstr "litreacha ionchódaithe ilcharachtar (<char>:<rep>[:<rep>[...]])"
+msgstr "litreacha ionchódaithe ilcharachtair (<char>:<rep>[:<rep>[...]])"
 
 #: modules/filter/tex-filter.opt:102
 msgid "characters used to encode hyphenation locations"

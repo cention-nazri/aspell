@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.51\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-01-06 10:07-0500\n"
+"POT-Creation-Date: 2004-01-11 23:09-0500\n"
 "PO-Revision-Date: 2004-01-06 16:34+0200\n"
 "Last-Translator: Vital khilko <dojlid@mova.org>\n"
 "Language-Team: Belarusian <i18n@mova.org>\n"
@@ -18,167 +18,167 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: common/config.cpp:848
+#: common/config.cpp:847
 msgid "configured as follows"
 msgstr "сканфігуравана як наступнае"
 
-#: common/config.cpp:1053
+#: common/config.cpp:1052
 msgid "main configuration file"
 msgstr "канфігурацыйны файл"
 
-#: common/config.cpp:1055
+#: common/config.cpp:1054
 msgid "location of main configuration file"
 msgstr "знаходжаньне канфігурацыйнага файла"
 
-#: common/config.cpp:1058
+#: common/config.cpp:1057
 msgid "location of language data files"
 msgstr "разьмяшччэньне файлаў даньняў мовы"
 
-#: common/config.cpp:1060
+#: common/config.cpp:1059
 msgid "location of the main word list"
 msgstr "разьмяшчэньне сьпісу словаў"
 
-#: common/config.cpp:1062
+#: common/config.cpp:1061
 msgid "encoding to expect data to be in"
 msgstr "кадаваньне чаканых даньняў"
 
-#: common/config.cpp:1064
+#: common/config.cpp:1063
 msgid "add or removes a filter"
 msgstr "дадае ці выдаляе фільтар"
 
-#: common/config.cpp:1066
+#: common/config.cpp:1065
 msgid "path(es) aspell looks for filters (.so/.dll/.flt);"
 msgstr "шлях(і) для прагляду фільтараў (.so/.dll/.flt);"
 
-#: common/config.cpp:1068
+#: common/config.cpp:1067
 msgid "path(es) aspell looks for options descriptions;"
 msgstr "шлях(і) для прагляду выбараў апісаньня;"
 
-#: common/config.cpp:1071
+#: common/config.cpp:1070
 msgid "extra dictionaries to use"
 msgstr "дадатковыя слоўнікі для выкарыстаньня"
 
-#: common/config.cpp:1073
+#: common/config.cpp:1072
 msgid "location for personal files"
 msgstr "разьмяшчэньне для асабістых файлаў"
 
-#: common/config.cpp:1075
+#: common/config.cpp:1074
 msgid "ignore words <= n chars"
 msgstr "ігнараваньне словаў <= n сымбаляў"
 
-#: common/config.cpp:1077
+#: common/config.cpp:1076
 msgid "ignore accents when checking words"
 msgstr "ігнараваньне акцэнтаў у часе праверкі словаў"
 
-#: common/config.cpp:1079
+#: common/config.cpp:1078
 msgid "ignore case when checking words"
 msgstr "ігнараваньне рэгістра ў працэсе праверкі словаў"
 
-#: common/config.cpp:1081
+#: common/config.cpp:1080
 msgid "ignore commands to store replacement pairs"
 msgstr "ігнараваньне камандаў у захаваньні параў замены"
 
-#: common/config.cpp:1083
+#: common/config.cpp:1082
 msgid "extra information for the word list"
 msgstr "дадатковыя зьвесткі для сьпісу словаў"
 
-#: common/config.cpp:1085
+#: common/config.cpp:1084
 msgid "keyboard definition to use for typo analysis"
 msgstr "вызначэньне клявіятуры ў выкарыстаньні для тыповага аналізу"
 
-#: common/config.cpp:1087
+#: common/config.cpp:1086
 msgid "language code"
 msgstr "код мовы"
 
-#: common/config.cpp:1089
+#: common/config.cpp:1088
 msgid "deprecated, use lang instead"
 msgstr "асуджана, замест гэтага выкарыстоўвайце lang"
 
-#: common/config.cpp:1091
+#: common/config.cpp:1090
 msgid "location of local language data files"
 msgstr "разьмяшчэньне файлаў даньняў бягучае мовы"
 
-#: common/config.cpp:1093
+#: common/config.cpp:1092
 msgid "base name of the main dictionary to use"
 msgstr "асноўная назва слоўніка"
 
-#: common/config.cpp:1097
+#: common/config.cpp:1096
 msgid "Set module name"
 msgstr "Усталяваньне назвы модуля"
 
-#: common/config.cpp:1099
+#: common/config.cpp:1098
 msgid "Search order for modules"
 msgstr "Накірунак пошуку для модуляў"
 
-#: common/config.cpp:1101
+#: common/config.cpp:1100
 msgid "personal configuration file"
 msgstr "пэрсанальны канфігурацыйны файл"
 
-#: common/config.cpp:1104
+#: common/config.cpp:1103
 msgid "personal word list file name"
 msgstr "назва асабістага файла сьпісу словаў"
 
-#: common/config.cpp:1107
+#: common/config.cpp:1106
 msgid "prefix directory"
 msgstr "каталёг"
 
-#: common/config.cpp:1109
+#: common/config.cpp:1108
 msgid "replacements list file name"
 msgstr "назва файла сьпісу зьменаў"
 
-#: common/config.cpp:1112
+#: common/config.cpp:1111
 msgid "consider run-together words legal"
 msgstr "разгледзеныя складаныя словы правільныя"
 
-#: common/config.cpp:1114
+#: common/config.cpp:1113
 msgid "maxium numbers that can be strung together"
 msgstr "максымальная колькасьць якая мусіць зьвязана разам"
 
-#: common/config.cpp:1116
+#: common/config.cpp:1115
 msgid "minimal length of interior words"
 msgstr "мінімальная даўжыня нутраных словаў"
 
-#: common/config.cpp:1119
+#: common/config.cpp:1118
 msgid "save replacement pairs on save all"
 msgstr "захаваньне параў замены ў часе захаваньня"
 
-#: common/config.cpp:1121
+#: common/config.cpp:1120
 msgid "set the prefix based on executable location"
 msgstr "усталяваньне прэфікса са знаходжаньня запускнога файла"
 
-#: common/config.cpp:1123
+#: common/config.cpp:1122
 msgid "size of the word list"
 msgstr "памер сьпісу файлаў"
 
-#: common/config.cpp:1125
+#: common/config.cpp:1124
 msgid "no longer used"
 msgstr "шмат не выкрыстоўваўся"
 
-#: common/config.cpp:1127
+#: common/config.cpp:1126
 msgid "strip accents from word lists"
 msgstr "выразаць акцэнты са сьпісу словаў"
 
-#: common/config.cpp:1129
+#: common/config.cpp:1128
 msgid "suggestion mode"
 msgstr "рэжым прапанаваньня"
 
-#: common/config.cpp:1131
+#: common/config.cpp:1130
 msgid "Search path for word list information files"
 msgstr "Шлях пошуку для сьпісаў словаў"
 
-#: common/config.cpp:1138
+#: common/config.cpp:1137
 msgid "create a backup file by appending \".bak\""
 msgstr "стварае рэзэрвовы файл праз даданьне пашырэньня \".bak\""
 
-#: common/config.cpp:1140
+#: common/config.cpp:1139
 msgid "reverse the order of the suggest list"
 msgstr "адваротны накірунак у сьпісе прапановаў"
 
-#: common/config.cpp:1142
+#: common/config.cpp:1141
 msgid "time load time and suggest time in pipe mode"
 msgstr "час загрузкі й час прапановы ў рэжыме канала"
 
-#: common/config.cpp:1144
+#: common/config.cpp:1143
 msgid "keymapping for check mode, one of aspell ispell"
 msgstr "мапаваньне клявішаў для рэжыма праверкі, адно з aspell ispell"
 
@@ -489,7 +489,7 @@ msgstr "Выбачайце, трэба перазапісаць \"%s\""
 msgid "Sorry \"create/merge repl\" is currently unimplemented.\n"
 msgstr "Выбачайце пакуль гэтая апэрацыя непрацаздольная.\n"
 
-#: prog/aspell.cpp:1366
+#: prog/aspell.cpp:1367
 #, c-format
 msgid ""
 "\n"
@@ -544,7 +544,7 @@ msgstr ""
 "[выбары] адзін з наступных выбараў:\n"
 "\n"
 
-#: prog/aspell.cpp:1395
+#: prog/aspell.cpp:1396
 #, c-format
 msgid ""
 "\n"
