@@ -1,5 +1,5 @@
 \input texinfo   @c -*-texinfo-*-
-@comment $Id: aspell.texi,v 1.12 2004/02/19 11:01:46 kevina Exp $
+@comment $Id: aspell.texi,v 1.13 2004/02/24 15:25:47 kevina Exp $
 @comment %**start of header
 @setfilename aspell.info
 @settitle GNU Aspell 0.51
@@ -1474,20 +1474,20 @@ they need to be @emph{multi} dictionaries.  Where aspell looks for
 dictionaries depends on the value of the @option{dict-dir} and
 @option{word-list-path} option.
  
-@option{dict-dir} is generally @file{@i{prefix}/lib/aspell}, and 
+@option{dict-dir} is generally @file{@var{prefix}/lib/aspell}, and 
 @option{word-list-path} is generally empty.
 
 Each dictionary that you expect Aspell to be able to find needs to
 have a name in the following format:
 
 @example
-@i{language}[@i{region}][-@i{jargon}][-@i{size}].multi
+@var{language}[@var{region}][-@var{jargon}][-@var{size}].multi
 @end example
 
-where @option{language} is the two letter language code,
-@option{region} is the two letter region code, @option{jargon} is any
+where @var{language} is the two letter language code,
+@var{region} is the two letter region code, @var{jargon} is any
 extra information to distinguish the word list from other ones with
-the same language and spelling, and @option{size} is the size of the
+the same language and spelling, and @var{size} is the size of the
 dictionary.  If no size is specified that the default size of 60 will
 be assumed.
 
@@ -1513,12 +1513,12 @@ Aspell can find it.
 Each AWLI file has a name in the following format:
 
 @example
-@i{language}[@i{region}][-@i{jargon}][-@i{size}]-@i{module}.awli
+@var{language}[@var{region}][-@var{jargon}][-@var{size}]-@var{module}.awli
 @end example
 
 Where the names have the same meaning as in @ref{Dictionary Naming},
-and @option{module} is the speller module to use, which should be set
-to @option{default} for now since there is only one speller module.
+and @var{module} is the speller module to use, which should be set
+to @var{default} for now since there is only one speller module.
 
 Each @file{awli} file for an Aspell word list should then contain
 exactly one line which contains the full path of the main word list.
@@ -1527,7 +1527,7 @@ exactly one line which contains the full path of the main word list.
 @chapter Writing programs to use Aspell
 
 There are two main ways to use aspell from within your application.
-Through the external @acronym{C API} or through a pipe.  The internal
+Through the external C API or through a pipe.  The internal
 Aspell API can be used directly but that is not recommended as the
 actual Aspell API is constantly changing.
 
@@ -1982,7 +1982,7 @@ Non-letter characters that can appear in your language such as the
 spaces.  Each item of the list has the following format.
 
 @example
-@var{char}  @var{begin} @var{middle} @var{end}
+<char> <begin><middle><end>
 @end example
 
 @var{char} is the non letter character in question.
@@ -2356,10 +2356,10 @@ important to write exceptions in front of the more general rules
 
 If you think you have set up a number of rules that may produce some
 good results try them out! If you run Aspell as @command{aspell
---lang=@i{your_language} pipe} you get a prompt at which you can type
+--lang=@var{your_language} pipe} you get a prompt at which you can type
 in words.  If you just type words Aspell checks them and eventually
 makes suggestions if they are misspelled.  If you type in @code{$$Sw
-@i{word}} you will see the phonetic transformation and you can test
+@var{word}} you will see the phonetic transformation and you can test
 out if your work does what you want.
 
 Another good way to check that changes you make to your rules don't
@@ -2368,7 +2368,7 @@ list which contains not only the word of the word list but also the
 corresponding phonetic version of this word on the same line.  If you
 do this once before the change and once after the change you can make
 a diff (see @command{man diff}) to see what @emph{really} changed.  To
-do this use the command @command{aspell --lang=@i{your_language}
+do this use the command @command{aspell --lang=@var{your_language}
 soundslike}.  In this mode aspell will output the the original word
 and then its soundslike separated by a tab character for each word you
 give it.  If you are interested in seeing how the algorithm works you
@@ -2446,7 +2446,7 @@ affix-compress true
 @end example
 
 Soundslike must be turned off as it is not compatable with affix
-compression.  The line @samp{affix @var{lanf}} adds support for recognizing
+compression.  The line @samp{affix @var{lang}} adds support for recognizing
 affix information, and the line @samp{affix-compress true} enables
 affix compression.
 
@@ -2471,6 +2471,116 @@ slower.  @xref{Notes on the Different Suggestion Modes}.
 It is possible to have both soundslike and affix support but without
 the affix compression.  In this case all words are expanded when
 creating a dictionary from a word list with affix compression.
+
+@subsection Format of the Affix File
+
+(as written in affix.readme)
+
+An affix is either a  prefix or a suffix attached to root words to make 
+other words.  For example supply -> supplied by dropping the "y" and
+adding an "ied" (the suffix). 
+
+Here is an example of how to define one specific suffix borrowed 
+from the English affix file.
+
+@example
+SFX D Y 4
+SFX D   0     d          e
+SFX D   y     ied        [^aeiou]y
+SFX D   0     ed         [^ey]
+SFX D   0     ed         [aeiou]y
+@end example
+
+This file is space delimited and case sensitive.  So this information
+can be interpreted as follows:
+
+The first line has 4 fields:
+
+@multitable @columnfractions .05 .15 .80
+@item 
+1 @tab @t{SFX} @tab indicates this is a suffix
+@item 
+2 @tab @t{D} @tab is the name of the character which represents this suffix
+@item
+3 @tab @t{Y} @tab indicates it can be combined with prefixes (cross product)
+@item
+4 @tab @t{4} @tab indicates that sequence of 4 affix entries are needed to
+properly store the affix information
+@end multitable
+
+The remaining lines describe the unique information for the 4 affix
+entries that make up this affix.  Each line can be interpreted
+as follows: (note fields 1 and 2 are used as a check against line 1 info)
+
+@multitable @columnfractions .05 .15 .80
+@item
+1 @tab @t{SFX} @tab indicates this is a suffix
+@item
+2 @tab @t{D} @tab is the name of the character which represents this affix
+@item
+3 @tab @t{y} @tab the string of chars to strip off before adding affix (a 0
+here indicates the NULL string)
+@item
+4 @tab @t{ied} @tab the string of affix characters to add (a 0 here
+indicates the NULL string)
+@item
+5 @tab @t{[^aeiou]y} @tab the conditions which must be met before the affix
+can be applied
+@end multitable
+
+Field 5 is interesting.  Since this is a suffix, field 5 tells us that
+there are 2 conditions that must be met.  The first condition is that 
+the next to the last character in the word must @emph{not} be any of the 
+following "a", "e", "i", "o" or "u".  The second condition is that
+the last character of the word must end in "y".
+
+@subsection When Compared With Ispell
+
+Now for comparison purposes, here is the same information from the 
+Ispell @file{english.aff} compression file which was used as the basis
+for the OOo one.
+
+@example
+flag *D:
+    E           >       D               # As in create > created
+    [^AEIOU]Y   >       -Y,IED          # As in imply > implied
+    [^EY]       >       ED              # As in cross > crossed
+    [AEIOU]Y    >       ED              # As in convey > conveyed
+@end example
+
+The Ispell information has exactly the same information but in a 
+slightly different (case-insensitive) format:
+
+Here are the ways to see the mapping from Ispell .aff format to our
+OOo format.
+
+@enumerate
+@item
+The ispell english.aff has flag D under the "suffix" section so 
+you know it is a suffix.
+
+@item
+The D is the character assigned to this suffix
+
+@item
+@samp{*} indicates that it can be combined with prefixes
+
+@item
+Each line following the : describes the affix entries needed
+to define this suffix
+
+@itemize @bullet
+@item
+The first field is the conditions that must be met.
+@item
+The second field is after the > if a "-" occurs is the string to strip
+off (can be blank).
+@item
+The third field is the string to add (the affix)
+@end itemize
+@end enumerate
+
+In addition all chars in ispell aff files are in uppercase.
 
 @node Controlling the Behavior of Run-together Words
 @section Controlling the Behavior of Run-together Words
@@ -2520,7 +2630,7 @@ the instructions in the @file{README} file.
 
 @menu
 * Aspell Suggestion Strategy::  
-* Notes on 8-bit Characters::   
+* Notes on 8-bit Characters::
 @end menu
 
 @node Aspell Suggestion Strategy
