@@ -18,12 +18,18 @@ namespace acommon {
 
   public:
 
-    explicit StackPtr(T * p) : ptr(p) {}
+    explicit StackPtr(T * p = 0) : ptr(p) {}
 
     T & operator*  () const {return *ptr;}
     T * operator-> () const {return ptr;}
-    T * get()         const {return ptrl;}
+    T * get()         const {return ptr;}
     operator T * ()   const {return ptr;}
+
+    T * release () {T * p = ptr; ptr = 0; return p;}
+
+    void del() {delete ptr;}
+    void reset(T * p) {del(); ptr = p;}
+    StackPtr & operator=(T * p) {reset(p); return *this;}
     
   };
   

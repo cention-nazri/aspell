@@ -15,6 +15,7 @@
 #include "getdata.hpp"
 #include "config.hpp"
 #include "errors.hpp"
+#include "stack_ptr.hpp"
 
 namespace acommon {
 
@@ -181,7 +182,7 @@ namespace acommon {
   public:
     StraightThrough(ParmString e)
       : Convert(e,e) {}
-    void convert_until_null (const char   * in, 
+    void convert (const char   * in, 
 			     OStream & out) const;
     const char * convert_until (const char   * in, const char * stop, 
 				OStream & out) const;
@@ -189,7 +190,7 @@ namespace acommon {
 			    OStream & out) const;
   };
 
-  void StraightThrough::convert_until_null(const char * in, 
+  void StraightThrough::convert(const char * in, 
 					   OStream & out) const
   {
     out.write(in);
@@ -311,7 +312,7 @@ namespace acommon {
       && strcmp(rhs.out_code(), lhs.out_code()) == 0;
   }
 
-  void Convert::convert_until_null(const char *  in, 
+  void Convert::convert(const char *  in, 
 				   OStream & out) const
   {
     while (convert_next_char(in, out));
@@ -663,9 +664,9 @@ namespace acommon {
   // new_aspell_convert
   //
 
-  PosibErr<Convert *> new_aspell_convert(Config & c,
-					 ParmString in, 
-					 ParmString out) 
+  PosibErr<Convert *> new_convert(Config & c,
+				  ParmString in, 
+				  ParmString out) 
   {
     String in_s  = in;
     String out_s = out;
@@ -683,7 +684,7 @@ namespace acommon {
     if (out == "ascii") 
       out = "iso8859-1";
 
-    Convert * conv;
+    StackPtr<Convert> conv;
 
     if (in == out)
       conv = new StraightThrough(in);
@@ -703,7 +704,7 @@ namespace acommon {
       conv = new Char_Char(in, out);
 
     RET_ON_ERR(conv->init(c));
-    return conv;
+    return conv.release();
   }
 
 }

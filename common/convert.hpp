@@ -19,6 +19,8 @@ namespace acommon {
   private:
     String in_code_;
     String out_code_;
+    
+    static const unsigned int null_len_ = 4; // POSIB FIXME: Be more precise
 
   protected:
     Convert(ParmString incode, ParmString outcode);
@@ -31,22 +33,30 @@ namespace acommon {
     
     const char * in_code() const   {return in_code_.c_str();}
     const char * out_code() const  {return out_code_.c_str();}
+
+    void append_null(OStream & out) const
+    {
+      const char nul[8] = {0}; // 8 should be more than enough
+      out.write(nul, null_len_);
+    }
+
+    unsigned int null_len() const {return null_len_;}
   
-   // converts and make sure a null character is at the end
+    // this filters will generally not translate null characters
+    // if you need a null character at the end, add it yourself
+    // with append_null
+
     void convert(ParmString in, int size, OStream & out) const
     {
       if (size == -1)
-	convert_until_null(in,out);
+	convert(in,out);
       else
 	convert_until(in, in + size, out);
       const char buf[4] = {0};
       out.write(buf, 4);
     }
 
-    // this filters will generally not translate null characters
-    // if you need a null character at the end, add it yourself
-
-    virtual void convert_until_null(const char * in, OStream & out) const;
+    virtual void convert(const char * in, OStream & out) const;
 
     virtual const char * convert_until (const char * in, const char * stop,
 					OStream & out) const;

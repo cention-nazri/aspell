@@ -556,8 +556,7 @@ class: word list
 	c impl headers => string enumeration
 	/
 	cxx member: to encoded
-		headers => parm string, vector
-		what => void (* to_encoded_)(ParmString, Vector<char> &)
+		what => class Convert * to_encoded_
 		default => 0
 
 	method: empty
@@ -583,6 +582,7 @@ group: string enumeration
 {
 /
 class: string enumeration
+	c impl headers => convert
 	/
 	copyable methods
 	method: at end
@@ -597,7 +597,8 @@ class: string enumeration
 			  return s;
 			\} else \{
 			  ths->temp_str.clear();
-			  (*ths->to_encoded_)(ths->next(),ths->temp_str);
+			  ths->to_encoded_->convert(ths->next(),ths->temp_str);
+			  ths->to_encoded_->append_null(ths->temp_str);
 			  return ths->temp_str.data();
 			\}
 		/

@@ -736,15 +736,13 @@ INIT {
 	    my $n = to_lower($_->{name});
 	    if ($_->{type} eq 'encoded string') {
 	      $accum->{headers}{'mutable string'} = true;
-	      $ret .= "  if (${n}_size == -1) ${n}_size = strlen($n);\n";
+	      $accum->{headers}{'convert'} = true;
 	      $ret .= "  ths->temp_str_$snum.clear();\n";
-	      $ret .= "  if (ths->from_encoded_ != 0) {\n";
-              $ret .= "    (*ths->from_encoded_)($n, ths->temp_str_$snum);\n";
-	      $ret .= "  } else {\n";
-	      $ret .= "    ths->temp_str_$snum.append(${n}, ${n}_size);\n";
-              $ret .= "  }\n";
+	      $ret .= "  ths->from_encoded_->convert($n, ${n}_size, ths->temp_str_$snum);\n";
 	      $ret .= "  ths->temp_str_$snum.append('\\0');\n";
-	      $_ = "MutableString(ths->temp_str_$snum.data(), ths->temp_str_$snum.size()-1)";
+	      $ret .= "  unsigned int s$snum = ths->temp_str_$snum.size();\n";
+	      $ret .= "  ths->from_encoded_->append_null(ths->temp_str_$snum);\n";
+	      $_ = "MutableString(ths->temp_str_$snum.data(), s$snum)";
 	      $snum++;
 	    } else {
 	      $_ = $n;

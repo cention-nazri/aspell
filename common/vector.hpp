@@ -4,11 +4,10 @@
 // license along with this library if you did not you can find
 // it at http://www.gnu.org/.
 
-#ifndef PCOMMON_VECTOR__HPP
-#define PCOMMON_VECTOR__HPP
+#ifndef ACOMMON_VECTOR__HPP
+#define ACOMMON_VECTOR__HPP
 
 #include <vector>
-#include <string.h>
 
 namespace acommon 
 {

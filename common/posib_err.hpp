@@ -97,13 +97,13 @@ namespace acommon {
     {
       return set(inf, p1, p2, p3, p4);
     }
-    PosibErrBase & with_file(ParmString fn)
-    {
-      return *this;
-    }
+
+    // This should only be called _after_ set is called
+    PosibErrBase & with_file(ParmString fn);
+    
     PosibErrBase & set(const ErrorInfo *, 
 		       ParmString, ParmString, ParmString, ParmString);
-
+    
     ~PosibErrBase() {
       destroy();
     }

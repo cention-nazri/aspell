@@ -591,6 +591,20 @@ namespace aspeller {
       change_id(temp, personal_repl_id);
     }
 
+
+    const char * sys_enc = lang_->charset();
+    if (!config_->have("encoding"))
+      config_->replace("encoding", sys_enc);
+    String user_enc = config_->retrieve("encoding");
+
+    PosibErr<Convert *> conv;
+    conv = new_convert(*c, user_enc, sys_enc);
+    if (conv.has_err()) return conv;
+    to_encoded_.reset(conv);
+    conv = new_convert(*c, sys_enc, user_enc);
+    if (conv.has_err()) return conv;
+    from_encoded_.reset(conv);
+
     unconditional_run_together_ = config_->retrieve_bool("run-together");
     run_together_specified_     = config_->retrieve_bool("run-together-specified");
     run_together_middle_        = lang().mid_chars();

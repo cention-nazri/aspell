@@ -69,6 +69,25 @@ namespace acommon {
     err_ = new ErrPtr(e);
     return *this;
   }
+
+  PosibErrBase & PosibErrBase::with_file(ParmString fn)
+  {
+    assert(err_ != 0);
+    assert(err_->refcount == 1);
+    char * & m = const_cast<char *>(err_->err->mesg);
+    unsigned int orig_len = strlen(m);
+    unsigned int new_len = fn.size() + 2 + orig_len + 1;
+    char * s = new char[new_len];
+    char * p = s;
+    memcpy(p, fn.str(), fn.size());
+    p += fn.size();
+    memcpy(p, ": ", 2);
+    p += 2;
+    memcpy(p, m, orig_len + 1);
+    delete[] m;
+    m = s;
+    return *this;
+  }
   
   void PosibErrBase::handle_err() const {
     assert (err_);

@@ -17,10 +17,13 @@
 
 #include "can_have_error.hpp"
 #include "copy_ptr.hpp"
+#include "clone_ptr.hpp"
 #include "mutable_string.hpp"
 #include "posib_err.hpp"
 #include "parm_string.hpp"
-#include "vector.hpp"
+#include "char_vector.hpp"
+
+#include "convert.hpp" //FIXME: Should't be necessary
 
 namespace acommon {
 
@@ -28,6 +31,7 @@ namespace acommon {
 
   class Config;
   class WordList;
+  //class Convert;
 
   class Speller : public CanHaveError
   {
@@ -36,13 +40,13 @@ namespace acommon {
     Speller(const Speller &);
     Speller & operator= (const Speller &);
   public:
-    Vector<char> temp_str_0;
-    Vector<char> temp_str_1;
-    void (* from_encoded_)(ParmString, Vector<char> &);
-    void (* to_encoded_  )(ParmString, Vector<char> &);
+    CharVector temp_str_0;
+    CharVector temp_str_1;
+    ClonePtr<Convert> from_encoded_;
+    ClonePtr<Convert> to_encoded_;
   protected:
     CopyPtr<Config> config_;
-    Speller(SpellerLtHandle h) : lt_handle_(h), from_encoded_(0), to_encoded_(0) {}
+    Speller(SpellerLtHandle h) : lt_handle_(h) {}
   public:
     SpellerLtHandle lt_handle() const {return lt_handle_;}
 

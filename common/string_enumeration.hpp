@@ -9,11 +9,12 @@
 
 #include "parm_string.hpp"
 #include "type_id.hpp"
-#include "vector.hpp"
+#include "char_vector.hpp"
 
 namespace acommon {
 
   class StringEnumeration;
+  class Convert;
 
   class StringEnumeration {
   public:
@@ -27,8 +28,8 @@ namespace acommon {
     int copyable() { return copyable_; }
     virtual StringEnumeration * clone() const = 0;
     virtual void assign(const StringEnumeration * other) = 0;
-    Vector<char> temp_str;
-    void (* to_encoded_)(ParmString, Vector<char> &);
+    CharVector temp_str;
+    Convert * to_encoded_;
     StringEnumeration() : ref_count_(0), copyable_(2), to_encoded_(0) {}
     virtual ~StringEnumeration() {}
   };
