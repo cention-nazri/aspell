@@ -226,7 +226,7 @@ namespace {
     void convert(const char * w, WordEntry & o) const {
       o.what = WordEntry::Word;
       o.word = w;
-      o.aff  = !have_soundslike ? get_affix(w) : w - 2; // w - 2 is NULL
+      o.aff  = !have_soundslike ? get_affix(w) :  "";
     }
     
     ReadOnlyDict() 
