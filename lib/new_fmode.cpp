@@ -3,6 +3,7 @@
 // license version 2.0 or 2.1.  You should have received a copy of the
 // LGPL license along with this library if you did not you can find it
 // at http://www.gnu.org/.
+
 #include "settings.h"
 
 #ifdef USE_POSIX_REGEX
@@ -10,6 +11,7 @@
 #  include <regex.h>
 #endif
 
+#include "gettext.h"
 #include "stack_ptr.hpp"
 #include "cache-t.hpp"
 #include "string.hpp"

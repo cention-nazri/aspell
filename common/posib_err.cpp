@@ -8,10 +8,11 @@
 #include <stdio.h>
 #include <assert.h>
 
-#include "iostream.hpp"
+//#include "iostream.hpp"
 
 #include "settings.h" // needed for NLS support
 
+#include "gettext.h"
 #include "posib_err.hpp"
 
 namespace acommon {

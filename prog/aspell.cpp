@@ -34,6 +34,7 @@
 # include <fcntl.h>
 #endif
 
+#include "gettext.h"
 #include "asc_ctype.hpp"
 #include "check_funs.hpp"
 #include "config.hpp"

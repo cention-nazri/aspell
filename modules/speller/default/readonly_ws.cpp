@@ -37,6 +37,7 @@ using std::pair;
 
 #include "settings.h"
 
+#include "gettext.h"
 #include "block_vector.hpp"
 #include "config.hpp"
 #include "data.hpp"

@@ -12,6 +12,7 @@
 
 #include "dirs.h"
 #include "settings.h"
+#include "gettext.h"
 
 #ifdef USE_LOCALE
 # include <locale.h>

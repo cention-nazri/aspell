@@ -16,9 +16,11 @@
    All these macros need to have a true value and not just be defined
 */
 
-#define _XOPEN_SOURCE_EXTENDED 1
-
 #include "settings.h"
+
+#ifdef DEFINE_XOPEN_SOURCE_EXTENDED
+#  define _XOPEN_SOURCE_EXTENDED 1
+#endif
 
 #ifdef CURSES_NON_POSIX
 #define CURSES_ONLY 1
@@ -26,6 +28,7 @@
 
 #include <signal.h>
 
+#include "gettext.h"
 #include "asc_ctype.hpp"
 #include "check_funs.hpp"
 #include "convert.hpp"

@@ -126,8 +126,11 @@ dnl GETTEXT
 
 AM_GNU_GETTEXT([external])
 AM_GNU_GETTEXT_VERSION(0.14.1)
-AH_BOTTOM([#include "gettext.h"])
+
+AH_TOP([#ifndef ASPELL_SETTINGS__H
+#define ASPELL_SETTINGS__H])
 AH_BOTTOM([#define C_EXPORT extern "C"])
+AH_BOTTOM([#endif /* ASPELL_SETTINGS__H */])
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                                                                 #
@@ -374,6 +377,16 @@ then
      if test -n "$have_mblen"
      then
        AC_TRY_LINK(
+         [#include <wchar.h>
+          #include CURSES_HEADER
+         ],
+         [wchar_t wch = 0;
+          addnwstr(&wch, 1);],
+         [AC_MSG_RESULT(yes)
+          AC_DEFINE(HAVE_WIDE_CURSES, 1, [Defined if curses libraray includes wide character support])],
+         [
+       dnl ELSE IF
+       AC_TRY_LINK(
          [#define _XOPEN_SOURCE_EXTENDED 1
           #include <wchar.h>
           #include CURSES_HEADER
@@ -381,9 +394,13 @@ then
          [wchar_t wch = 0;
           addnwstr(&wch, 1);],
          [AC_MSG_RESULT(yes)
-          AC_DEFINE(HAVE_WIDE_CURSES, 1, [Defined if curses libraray includes wide character support])],
+          AC_DEFINE(HAVE_WIDE_CURSES, 1)
+          AC_DEFINE(DEFINE_XOPEN_SOURCE_EXTENDED, 1, 
+                    [Defined if _XOPEN_SOURCE_EXTENDED needs to be defined. 
+                     (Can't define globally as that will cause problems with some systems)])
+         ],
          [AC_MSG_RESULT(no)
-          AC_MSG_WARN([Aspell will not be able to Display UTF-8 characters correctly.])])
+          AC_MSG_WARN([Aspell will not be able to Display UTF-8 characters correctly.])])])
      else
        AC_MSG_RESULT([no, because "mblen" is not supported])
        AC_MSG_WARN([Aspell will not be able to Display UTF-8 characters correctly.])
@@ -391,7 +408,9 @@ then
  
      AC_MSG_CHECKING(if standard curses include sequence will work)
      AC_TRY_LINK(
-       [#define _XOPEN_SOURCE_EXTENDED 1
+       [#ifdef DEFINE_XOPEN_SOURCE_EXTENDED
+        #  define _XOPEN_SOURCE_EXTENDED 1
+        #endif
         #include <termios.h>
 	#include <unistd.h>
         #include CURSES_HEADER
@@ -409,7 +428,9 @@ then
      dnl else if
      AC_MSG_CHECKING(if curses workaround I will work)
      AC_TRY_LINK(
-       [#define _XOPEN_SOURCE_EXTENDED 1
+       [#ifdef DEFINE_XOPEN_SOURCE_EXTENDED
+        #  define _XOPEN_SOURCE_EXTENDED 1
+        #endif
         #include <termios.h>
 	#include <unistd.h>
         #include CURSES_HEADER
@@ -425,8 +446,7 @@ then
      dnl else if
      AC_MSG_CHECKING(if curses without Unix stuff will work)
      AC_TRY_LINK(
-       [#define _XOPEN_SOURCE_EXTENDED 1
-        #include CURSES_HEADER
+       [#include CURSES_HEADER
        ],
        [initscr();],
        [AC_MSG_RESULT(yes)

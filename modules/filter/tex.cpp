@@ -4,6 +4,7 @@
 // license along with this library if you did not you can find
 // it at http://www.gnu.org/.
 
+#include "gettext.h"
 #include "asc_ctype.hpp"
 #include "config.hpp"
 #include "string.hpp"

@@ -7,6 +7,7 @@
 
 #include <iostream.hpp>
 
+#include "gettext.h"
 #include "asc_ctype.hpp"
 #include "clone_ptr-t.hpp"
 #include "config.hpp"

@@ -261,7 +261,7 @@ by an incorrect @file{libstdc++.la} in the @file{/lib} directory.
 After removing or renaming this file, the build progress should work
 (GCC-2.95 and GCC-3.x should work).
 
-@appendixsubsubsec Building Aspell using MinGW:
+@appendixsubsubsec Building Aspell using MinGW
 
 There are several different ways to build Aspell using MinGW.  The
 easiest way is to use a Cygwin compiler but instruct it to build a

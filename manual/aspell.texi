@@ -254,6 +254,9 @@ Perhaps better support for spell checking (La)TeX files.
 
 @end itemize
 
+For a detailed description of how Aspell differs from Ispell, @xref{Differences
+From Ispell}.
+
 @node Support
 @chapter Support
 
@@ -409,6 +412,7 @@ The old method of mapping Ispell to Aspell is discouraged because it
 can create compatibility problems with programs that actually require
 Ispell such as Ispell's own scripts.
 
+@anchor{Differences From Ispell}
 @subsection Differences From Ispell
 
 Nevertheless, Aspell is not Ispell, nor is it meant to completely
@@ -1287,7 +1291,7 @@ default, 'alt' (<img> alternate text) is a member of the check list
 since it is text that is seen by a web page viewer. You may also want
 'value' to be on the check list since that is the text put on buttons:
 @example
-add-filter-sgml-check value
+add-sgml-check value
 @end example
 @noindent
 In this case @samp{<input type=button value="Donr">} will be flagged as a

@@ -1,5 +1,5 @@
 
-#include "settings.h"
+#include "gettext.h"
 
 #if ENABLE_NLS
 

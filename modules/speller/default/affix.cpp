@@ -45,8 +45,9 @@
 #include <cstring>
 #include <cstdio>
 
-#include "iostream.hpp"
+//#include "iostream.hpp"
 
+#include "gettext.h"
 #include "affix.hpp"
 #include "errors.hpp"
 #include "getdata.hpp"

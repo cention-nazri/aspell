@@ -11,6 +11,7 @@
 #include <sys/types.h>
 #include <dirent.h>
 
+#include "gettext.h"
 #include "asc_ctype.hpp"
 #include "can_have_error.hpp"
 #include "config.hpp"

@@ -4,6 +4,7 @@
 // LGPL license along with this library if you did not you can find it
 // at http://www.gnu.org/.
 
+#include "gettext.h"
 #include "config.hpp"
 #include "convert.hpp"
 #include "data.hpp"

@@ -8,6 +8,8 @@
 #include <string.h>
 #include <math.h>
 
+#include "gettext.h"
+
 #include "asc_ctype.hpp"
 #include "convert.hpp"
 #include "fstream.hpp"

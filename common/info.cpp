@@ -10,6 +10,8 @@
 #include <ctype.h>
 #include <dirent.h>
 
+#include "gettext.h"
+
 // POSIX includes
 #ifdef __bsdi__
  /* BSDi defines u_intXX_t types in machine/types.h */
