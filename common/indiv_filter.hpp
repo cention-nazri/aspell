@@ -82,7 +82,7 @@ namespace acommon {
 
     virtual ~IndividualFilter() {}
 
-    const char * name() const {return name_;}
+    const char * name() const {return name_.str();}
     double order_num() const {return order_num_;}
 
     FilterHandle handle;
@@ -91,7 +91,7 @@ namespace acommon {
 
     IndividualFilter() : name_(0), order_num_(0.50) {}
     
-    const char * name_; // must consist of 'a-z|-|0-9'
+    String name_; // must consist of 'a-z|0-9'
     double order_num_; // between 0 and 1 exclusive
   };
 

@@ -57,7 +57,7 @@ MAGIC /<empty>/pl/pm
 #       thus if missing mode will be rejected by aspell.
 #       keep it as short as possible allthough line wrapping will be done implicitly
 #       possible abreviations are `des' and `desc' 
-DESCRIPTION perl filter mode: spells perl comments and string literals only
+DESCRIPTION mode for checking perl comments and string literals
 
 # the mode file body 
 # the following lines may appear as often as needed in the below.

@@ -68,10 +68,10 @@ AC_ARG_ENABLE(pspell-compatibility,
 [  --disable-pspell-compatibility  don't install pspell compatibility libraries])
 
 AC_ARG_ENABLE(incremented-soname,
-[  --disable-incremented-soname    don't break aspell 0.50 binary compatibility])
+[  --incremented-soname            break aspell 0.50 binary compatibility])
 
-AC_ARG_ENABLE(aspell5-compatibility,
-[  --enable-aspell5-compatibility  install aspell 0.50 compatibility libraries])
+dnl AC_ARG_ENABLE(aspell5-compatibility,
+dnl [  --enable-aspell5-compatibility  install aspell 0.50 compatibility libraries])
 
 dnl
 
@@ -117,7 +117,7 @@ AM_CONDITIONAL(COMPILE_IN_FILTERS,
 AM_CONDITIONAL(PSPELL_COMPATIBILITY,  
   [test "$enable_pspell_compatibility" != "no"])
 AM_CONDITIONAL(INCREMENTED_SONAME,    
-  [test "$enable_incremented_soname" != "no"])
+  [test "$enable_incremented_soname" == "yes"])
 dnl AM_CONDITIONAL(ASPELL5_COMPATIBILITY,
 dnl   [test "$enable_incremented_soname" != "no" -a \
 dnl         "$enable_aspell5_compatibility" == "yes"])

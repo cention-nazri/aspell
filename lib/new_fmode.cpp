@@ -59,9 +59,9 @@ namespace acommon {
     PosibErr<bool> addModeExtension(const String & ext, String toMagic);
     PosibErr<bool> remModeExtension(const String & ext, String toMagic);
     bool lockFileToMode(const String & fileName,FILE * in = NULL);
-    const String modeName() const;
+    const String & modeName() const;
     void setDescription(const String & desc) {desc_ = desc;}
-    const String & getDescription() {return desc_;}
+    const String & getDescription() const {return desc_;}
     PosibErr<void> expand(Config * config);
     PosibErr<void> build(FStream &, int line = 1, 
                          const char * name = "mode file");
@@ -253,7 +253,7 @@ namespace acommon {
     return false;
   }
 
-  const String FilterMode::modeName() const {
+  const String & FilterMode::modeName() const {
     return name_;
   }
 
@@ -593,9 +593,10 @@ namespace acommon {
       
       while ( getdata_pair(toParse,dp,buf) ) {
         to_lower(dp.key);
-        if (    ( dp.key == "des" )
-             || ( dp.key == "desc" ) 
-             || ( dp.key == "description" ) ) {
+        if (   ( dp.key == "desc" ) 
+            || ( dp.key == "description" ) ) 
+        {
+          unescape(dp.value);
           collect.setDescription(dp.value);
           break;
         }
@@ -726,23 +727,22 @@ namespace acommon {
     config->add_notifier(new ModeNotifierImpl(config));
   }
 
-  PosibErr<void> print_mode_help(const Config * config, FILE * helpScreen) {
+  PosibErr<void> print_mode_help(const Config * config, OStream & out) {
 
     RET_ON_ERR_SET(static_cast<ModeNotifierImpl *>(config->filter_mode_notifier)
                    ->get_filter_modes(), FilterModeList *, fm);
     
-    fprintf(helpScreen,
-      "\n\n[Filter Modes] reconfigured combinations filters optimized for files of\n"
-          "               a specific type. A mode is selected by Aspell's `--mode\n"
-          "               parameter. This will happen implicitly if Aspell is able\n"
-          "               to identify the file type form the extension of the\n"
-          "               filename.\n"
-          "         Note: If the file type can not be identified uniquely by the\n"
-          "               file extension Aspell will in addition test the file\n"
-          "               content to ensure proper mode selection.\n\n");
+    out.write(
+      _("\n\n"
+        "[Filter Modes] reconfigured combinations of filters optimized for files of\n"
+        "               a specific type. A mode is selected by Aspell's \"--mode\"\n"
+        "               parameter. This will happen implicitly if Aspell is able\n"
+        "               to identify the file type from the extension, and possibility\n"
+        "               the contents, of the file.\n"
+        "\n"));
     for (Vector<FilterMode>::iterator it = fm->begin(); it != fm->end(); it++)
     {
-      fprintf(helpScreen,"  %-10s ",(*it).modeName().str());
+      out.printf("  %-10s ",(*it).modeName().str());
 
       String desc = (*it).getDescription();
       int preLength = (*it).modeName().size() + 4;
@@ -767,7 +767,7 @@ namespace acommon {
         String prDesc(desc);
 
         prDesc.erase(locate,prDesc.size() - locate);
-        fprintf(helpScreen,"%s\n             ",prDesc.str());
+        out.printf("%s\n             ",prDesc.str());
         desc.erase(0,locate);
         if (    ( desc.size() > 0 )
              && (    ( desc[0] == ' ' )
@@ -777,10 +777,43 @@ namespace acommon {
         }
         preLength = 13;
       }
-      fprintf(helpScreen,desc.str());
-      fprintf(helpScreen,"\n");
+      out.write(desc);
+      out.write('\n');
     }
     return no_err;
   }
+
+  class FilterModesEnumeration : public StringPairEnumeration
+  {
+  public:
+    typedef Vector<FilterMode>::const_iterator Itr;
+  private:
+    Itr it;
+    Itr end;
+  public:
+    FilterModesEnumeration(Itr i, Itr e) : it(i), end(e) {}
+    bool at_end() const {return it == end;}
+    StringPair next()
+    {
+      if (it == end) return StringPair();
+      StringPair res = StringPair(it->modeName().str(), it->getDescription().str());
+      ++it;
+      return res;
+    }
+    StringPairEnumeration * clone() const {return new FilterModesEnumeration(*this);}
+    void assign(const StringPairEnumeration * other0)
+    {
+      const FilterModesEnumeration * other = (const FilterModesEnumeration *)other0;
+      *this = *other;
+    }
+  };
+
+  PosibErr<StringPairEnumeration *> available_filter_modes(Config * config)
+  {
+    RET_ON_ERR_SET(static_cast<ModeNotifierImpl *>(config->filter_mode_notifier)
+                   ->get_filter_modes(), FilterModeList *, fm);
+    return new FilterModesEnumeration(fm->begin(), fm->end());
+  }
+
 }
 

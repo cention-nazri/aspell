@@ -4,6 +4,6 @@
 ASPELL >=0.50
 
 #This line will be printed when typing `aspell help url'
-DESCRIPTION Filter for hiding urls/paths and similar from Aspell
+DESCRIPTION filter to skip URL like constructs
 
 STATIC filter

@@ -546,8 +546,6 @@ errors:
 		/
 		mode option name
 			mesg => Empty option specifier.
-		empty non bool
-			mesg => Empty value; only bool type option and "rem-all" list prefix.
 		no filter to option 
 			mesg => Option "%option" possibly specified prior to filter.
 			parms => option

@@ -327,6 +327,28 @@ namespace acommon {
     return cur ? cur->value : get_default(ki);
   }
 
+  PosibErr<String> Config::retrieve_any(ParmStr key) const
+  {
+    RET_ON_ERR_SET(keyinfo(key), const KeyInfo *, ki);
+
+    if (ki->type != KeyInfoList) {
+      const Entry * cur = lookup(ki->name);
+      return cur ? cur->value : get_default(ki);
+    } else {
+      StringList sl;
+      RET_ON_ERR(retrieve_list(key, &sl));
+      StringListEnumeration els = sl.elements_obj();
+      const char * s;
+      String val;
+      while ( (s = els.next()) != 0 ) {
+        val += s;
+        val += '\n';
+      }
+      val.pop_back();
+      return val;
+    }
+  }
+
   PosibErr<bool> Config::retrieve_bool(ParmStr key) const
   {
     RET_ON_ERR_SET(keyinfo(key), const KeyInfo *, ki);
@@ -465,7 +487,7 @@ namespace acommon {
 					     filter_modules.pend());
       
       if (j == filter_modules.pend() && load_filter_hook && committed_) {
-        // FIXME: This isn't quite write
+        // FIXME: This isn't quite right
         PosibErrBase pe = load_filter_hook(const_cast<Config *>(this), k);
         pe.ignore_err();
         j = acommon::find(k,
@@ -1140,7 +1162,10 @@ namespace acommon {
   {
     KeyInfoEnumeration * els = possible_elements(include_extra);
     const KeyInfo * i;
-    CharVector buf;
+    String buf;
+    String obuf;
+    String def;
+    bool have_value;
 
     while ((i = els->next()) != 0) {
       if (i->desc == 0) continue;
@@ -1158,25 +1183,40 @@ namespace acommon {
                    _(els->active_filter_module_desc()));
       }
 
-      out.printf("# %s (%s)\n#   %s\n",
-                 i->name, _(keyinfo_type_name[i->type]), _(i->desc));
+      obuf.clear();
+      have_value = false;
+
+      obuf.printf("# %s (%s)\n#   %s\n",
+                  i->name, _(keyinfo_type_name[i->type]), _(i->desc));
       if (i->def != 0) {
 	if (i->type != KeyInfoList) {
           buf.resize(strlen(i->def) * 2 + 1);
           escape(buf.data(), i->def);
-          out.printf(_("# default: %s\n"), buf.data());
+          obuf.printf("# default: %s", buf.data());
+          def = get_default(i);
+          if (def != i->def) {
+            buf.resize(def.size() * 2 + 1);
+            escape(buf.data(), def.str());
+            obuf.printf(" = %s", buf.data());
+          }
+          obuf << '\n';
           const Entry * entry = lookup(i->name);
 	  if (entry) {
+            have_value = true;
             buf.resize(entry->value.size() * 2 + 1);
             escape(buf.data(), entry->value.str());
-	    out.printf("%s %s\n", i->name, buf.data());
+	    obuf.printf("%s %s\n", i->name, buf.data());
           }
 	} else {
-          ListDump ld(out, i->name);
+          unsigned s = obuf.size();
+          ListDump ld(obuf, i->name);
           lookup_list(i, ld, false);
+          have_value = s != obuf.size();
 	}
       }
-      out << "\n";
+      obuf << '\n';
+      if (!(i->flags & KEYINFO_HIDDEN) || have_value)
+        out.write(obuf);
     }
     delete els;
   }
@@ -1295,8 +1335,6 @@ namespace acommon {
 #  define REPL     ".aspell.<lang>.prepl"
 #endif
 
-  // FIXME: CANT_CHANGE should be the default once attached
-
   static const KeyInfo config_keys[] = {
     // the description should be under 50 chars
     {"actual-dict-dir", KeyInfoString, "<dict-dir^master>", 0}
@@ -1318,9 +1356,9 @@ namespace acommon {
     , {"filter",   KeyInfoList  , "url",
        N_("add or removes a filter"), KEYINFO_MAY_CHANGE}
     , {"filter-path", KeyInfoList, DICT_DIR,
-       N_("path(es) aspell looks for filters")}
+       N_("path(s) aspell looks for filters")}
     //, {"option-path", KeyInfoList, DATA_DIR,
-    //   N_("path(es) aspell looks for options descriptions")}
+    //   N_("path(s) aspell looks for options descriptions")}
     , {"mode",     KeyInfoString, "url",
        N_("filter mode")}
     , {"extra-dicts", KeyInfoList, "",
@@ -1344,7 +1382,7 @@ namespace acommon {
     , {"lang", KeyInfoString, "<language-tag>",
        N_("language code")}
     , {"language-tag", KeyInfoString, "!lang",
-       N_("deprecated, use lang instead")}
+       N_("deprecated, use lang instead"), KEYINFO_HIDDEN}
     , {"local-data-dir", KeyInfoString, "<actual-dict-dir>",
        N_("location of local language data files")     }
     , {"master",        KeyInfoString, "<lang>",
@@ -1352,9 +1390,9 @@ namespace acommon {
     , {"master-flags",  KeyInfoString, "", 0}
     , {"master-path",   KeyInfoString, "<dict-dir/master>",   0}
     , {"module",        KeyInfoString, "default",
-       N_("set module name")}
+       N_("set module name"), KEYINFO_HIDDEN}
     , {"module-search-order", KeyInfoList, "",
-       N_("search order for modules")}
+       N_("search order for modules"), KEYINFO_HIDDEN}
     , {"per-conf", KeyInfoString, ".aspell.conf",
        N_("personal configuration file")}
     , {"per-conf-path", KeyInfoString, "<home-dir/per-conf>", 0}
@@ -1379,7 +1417,7 @@ namespace acommon {
     , {"size",          KeyInfoString, "+60",
        N_("size of the word list")}
     , {"spelling",   KeyInfoString, "",
-       N_("no longer used")}
+       N_("no longer used"), KEYINFO_HIDDEN}
     , {"sug-mode",   KeyInfoString, "normal",
        N_("suggestion mode"), KEYINFO_MAY_CHANGE}
     , {"sug-edit-dist", KeyInfoInt, "1",
@@ -1393,9 +1431,9 @@ namespace acommon {
     , {"sug-split-char", KeyInfoList, "\\ :-",
        N_("characters to insert when a word is split"), KEYINFO_UTF8}
     , {"word-list-path", KeyInfoList, DATA_DIR,
-       N_("search path for word list information files")}
+       N_("search path for word list information files"), KEYINFO_HIDDEN}
     , {"affix-char",          KeyInfoString, "/", // FIXME: Implement
-       N_("indicator for affix flags in word lists"), KEYINFO_UTF8}
+       N_("indicator for affix flags in word lists"), KEYINFO_UTF8 | KEYINFO_HIDDEN}
     , {"use-other-dicts", KeyInfoBool, "true",
        N_("use personal, replacement & session dictionaries")}
     , {"warn", KeyInfoBool, "true",
@@ -1403,7 +1441,7 @@ namespace acommon {
     , {"normalize", KeyInfoBool, "true",
        N_("enable Unicode normalization")}
     , {"norm-required", KeyInfoBool, "false",
-       N_("Unicode normalization required for the current lang")}
+       N_("Unicode normalization required for current lang")}
     , {"norm-form", KeyInfoString, "nfc",
        /* TRANSLATORS: the values after the ':' are literal
           values and should not be translated. */
@@ -1419,7 +1457,7 @@ namespace acommon {
     // and may also be specified in the language data file
     //
     , {"invisible-soundslike", KeyInfoBool, "false",
-       N_("compute the soundslike on demand rather than storing")} 
+       N_("compute soundslike on demand rather than storing")} 
     , {"affix-compress", KeyInfoBool, "false",
        N_("use affix compression when creating dictionaries")}
     , {"partially-expand",  KeyInfoBool, "false",

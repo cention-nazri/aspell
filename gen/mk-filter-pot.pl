@@ -14,13 +14,15 @@ print OUT <<'---';
 #. not include any trailing punctuation marks.
 ---
 
-foreach $f (<modules/filter/*-filter.opt>)
+@files = (<modules/filter/*-filter.info>, <modules/filter/modes/*.amf>);
+
+foreach $f (@files)
 {
   open IN, $f;
   while (<IN>) 
   {
-    next unless /^\s*description\s+(.+?)\s*$/i;
-    $_ = prep_str($1);
+    next unless /^\s*(description|desc)\s+(.+?)\s*$/i;
+    $_ = prep_str($2);
     print OUT "\#: $f:$.\n";
     print OUT "msgid \"$_\"\n";
     print OUT "msgstr \"\"\n";

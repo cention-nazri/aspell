@@ -58,7 +58,7 @@ MAGIC /0:256:^[ \t]*\\documentclass\[[^\[\]]*\]\{[^\{\}]*\}/tex
 #       thus if missing mode will be rejected by aspell.
 #       keep it as short as possible allthough line wrapping will be done implicitly
 #       possible abreviations are `des' and `desc' 
-DESCRIPTION tex filter mode: properly handles tex commands (most of them). 
+DESCRIPTION mode for checking TeX/LaTeX documents
 
 # the mode file body 
 # the following lines may appear as often as needed in the below.

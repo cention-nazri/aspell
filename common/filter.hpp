@@ -12,6 +12,7 @@
 #include "filter_char.hpp"
 #include "posib_err.hpp"
 #include "vector.hpp"
+#include "string_pair_enumeration.hpp"
 
 #include <stdio.h>
 
@@ -51,11 +52,17 @@ namespace acommon {
 			      bool use_encoder);
   void activate_dynamic_filteroptions(Config *c);
   void activate_filter_modes(Config * config);
-  PosibErr<void> print_mode_help(const Config *, FILE * helpScreen);
+  PosibErr<void> print_mode_help(const Config *, OStream &);
+
+  void load_all_filters(Config * config);
 
   PosibErr<bool> verify_version(const char * relOp, const char * actual,
                                 const char * required);
   PosibErr<void> check_version(char * requirement);
+
+  PosibErr<StringPairEnumeration *> available_filters(Config *);
+  PosibErr<StringPairEnumeration *> available_filter_modes(Config *);
+
 };
 
 #endif /* ASPELL_FILTER__HPP */

@@ -23,9 +23,6 @@
 #endif
 
 #include "aspell.h"
-//FIXME if Win(dos) is different
-#include <sys/types.h>
-#include <regex.h>
 
 #ifdef USE_FILE_INO
 # include <sys/types.h>
@@ -64,7 +61,6 @@ using aspeller::Conv;
 
 void print_ver();
 void print_help();
-void expand_expression(Config * config);
 void config();
 
 void check();
@@ -74,6 +70,8 @@ void normlz();
 void filter();
 void list();
 void dicts();
+void modes();
+void filters();
 
 void clean();
 void master();
@@ -170,6 +168,8 @@ const PossibleOption possible_options[] = {
   COMMAND("combine",   '\0', 0),
   COMMAND("list",      '\0', 0),
   COMMAND("dicts",     '\0', 0),
+  COMMAND("filters",   '\0', 0),
+  COMMAND("modes",     '\0', 0),
   COMMAND("clean",     '\0', 0),
 
   COMMAND("dump",   '\0', 1),
@@ -191,7 +191,7 @@ struct ModeAbrv {
 };
 static const ModeAbrv mode_abrvs[] = {
   {'e', "mode=email", N_("enter Email mode.")},
-  {'H', "mode=sgml",  N_("enter Html/Sgml mode.")},
+  {'H', "mode=html",  N_("enter HTML mode.")},
   {'t', "mode=tex",   N_("enter TeX mode.")},
 };
 
@@ -419,6 +419,10 @@ int main (int argc, const char *argv[])
       config();
     else if (what_str == "dicts")
       dicts();
+    else if (what_str == "filters")
+      filters();
+    else if (what_str == "modes")
+      modes();
     else if (what_str == "master")
       master();
     else if (what_str == "personal")
@@ -484,20 +488,11 @@ static Convert * setup_conv(Config * config,
 
 void config ()
 {
-  if ((args.size() > 0) &&
-      (args[0] == "+e")) {
-    args.pop_front();
-    if (args.size() == 0) {
-      args.push_front("all");
-    }
-    expand_expression(options);
-    args.pop_front();
-  }
   if (args.size() == 0) {
+    load_all_filters(options);
     options->write_to_stream(COUT);
-  }
-  else {
-    EXIT_ON_ERR_SET(options->retrieve(args[0]), String, value);
+  } else {
+    EXIT_ON_ERR_SET(options->retrieve_any(args[0]), String, value);
     COUT << value << "\n";
   }
 }
@@ -1784,68 +1779,32 @@ namespace acommon {
   PosibErr<ConfigModule *> get_dynamic_filter(Config * config, ParmStr value);
 }
 
-void expand_expression(Config * config) {
-  StringList filter_path;
-  String toload;
-//FIXME if Win(dos) is different
-  regex_t seekfor;
-  
-  if (args.size() != 0) {
-    if (args[0] == "all") {
-      args[0]=".*";
-    }
-    config->retrieve_list("filter-path", &filter_path);
-    PathBrowser els(filter_path, "-filter.info");
-
-    if (regcomp(&seekfor,args[0].c_str(),REG_NEWLINE|REG_NOSUB|REG_EXTENDED)) {
-      make_err(invalid_expression, args[0]);
-      return;
-    }
-    const char * file;
-    while ((file = els.next()) != NULL) {
-
-      const char * name = strrchr(file, '/');
-      if (!name) name = file;
-      else name++;
-      unsigned len = strlen(name) - 12;
-
-      toload.assign(name, len);
-
-      if (regexec(&seekfor,toload.c_str(),0,NULL,0) != 0) continue;
-
-      get_dynamic_filter(config, toload);
-    }
-    regfree(&seekfor);
-  }
-}
-
 static const char * help_text[] = 
 {
   /* TRANSLATORS: This should be formated to fit on an 80 column
      terminal.*/
   N_("<command> is one of:"),
-  N_("  -?|help [<expr>] display this help message"),
-  N_("                    and help for filters matching <expr> if installed"),
+  N_("  -?|help          display this help message"),
   N_("  -c|check <file>  to check a file"),
   N_("  -a|pipe          \"ispell -a\" compatibility mode"),
   N_("  list             produce a list of misspelled words from standard input"),
-  N_("  [dump] config [+e <expr>]  dumps the current configuration to stdout"),
-  N_("  config [+e <expr>] <key>   prints the current value of an option"),
-  N_("  [dump] dicts     lists available dictionaries"),
+  N_("  [dump] config    dumps the current configuration to stdout"),
+  N_("  config <key>     prints the current value of an option"),
   N_("  soundslike       returns the sounds like equivalent for each word entered"),
   N_("  munch            generate possible root words and affixes"),
   N_("  expand [1-4]     expands affix flags"),
   N_("  clean [strict]   cleans a word list so that every line is a valid word"),
-  N_("  filter           passes standard input through filters"),
+  //N_("  filter           passes standard input through filters"),
   N_("  -v|version       prints a version line"),
   N_("  conv <from> <to> [<norm-form>]"),
   N_("    converts from one encoding to another"),
   N_("  norm (<norm-map> | <from> <norm-map> <to>) [<norm-form>]"),
   N_("    perform unicode normlization"),
+  N_("  [dump] dicts | filters | modes")
+  N_("    lists available dictionaries / filters / filter modes"),
   N_("  dump|create|merge master|personal|repl [word list]"),
   N_("    dumps, creates or merges a master, personal, or replacement word list."),
   "",
-  N_("  <expr>           regular expression matching filtername(s) or \"all\""),
   N_("  <norm-form>      normalization form to use, either none, internal, or strict"),
   "",
   N_("[options] is any of the following:"),
@@ -1855,7 +1814,7 @@ static const unsigned help_text_size =
             sizeof(help_text)/sizeof(const char *);
 
 void print_help () {
-  expand_expression(options);
+  load_all_filters(options);
   printf(_("\n"
            "Aspell %s alpha.  Copyright 2000-2004 by Kevin Atkinson.\n"
            "\n"), VERSION);
@@ -1866,17 +1825,21 @@ void print_help () {
   }
   StackPtr<KeyInfoEnumeration> els(options->possible_elements());
   const KeyInfo * k;
+  bool in_filter_module = false;
   while (k = els->next(), k) {
-    if (k->desc == 0) continue;
+    if (k->desc == 0 || k->flags & KEYINFO_HIDDEN) continue;
     if (els->active_filter_module_changed()) {
       printf(_("\n"
-               "  %s filter: %s\n"
-               "    NOTE: in ambiguous case prefix following options by \"filter-\"\n"),
+               "  %s filter: %s\n"),
              els->active_filter_module_name(),els->active_filter_module_desc());
+      in_filter_module = true;
     }
     const PossibleOption * o = find_option(k->name);
     const char * name = k->name;
-    if (strncmp(name, "filter-", 7) == 0) name += 7;
+    if (in_filter_module) {
+      const KeyInfo * ok = options->keyinfo(name + 7);
+      if (k == ok) name += 7;
+    }
     print_help_line(o->abrv, 
 		    strncmp((o+1)->name, "dont-", 5) == 0 ? (o+1)->abrv : '\0',
 		    name, k->type, k->desc);
@@ -1889,6 +1852,33 @@ void print_help () {
       }
     }
   }
-  EXIT_ON_ERR(print_mode_help(options,stdout));
+  EXIT_ON_ERR(print_mode_help(options,COUT));
+}
+
+///////////////////////////
+//
+// list available (filters/filter modes)
+//
+
+void list_available(PosibErr<StringPairEnumeration *> (*fun)(Config *))
+{
+  EXIT_ON_ERR_SET(fun(options), StringPairEnumeration *, els);
+  StringPair sp;
+  while (!els->at_end()) {
+    sp = els->next();
+    printf("%-14s %s\n", sp.first, gettext(sp.second));
+  }
+  delete els;
+}
+
+void filters()
+{
+  load_all_filters(options);
+  list_available(available_filters);
+}
+
+void modes()
+{
+  list_available(available_filter_modes);
 }
 

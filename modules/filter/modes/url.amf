@@ -58,7 +58,7 @@ ASPELL >=0.51
 #       thus if missing mode will be rejected by aspell.
 #       keep it as short as possible allthough line wrapping will be done implicitly
 #       possible abreviations are `des' and `desc' 
-DESCRIPTION filters any url (default). 
+DESCRIPTION mode to skip URL like constructs (default mode)
 
 
 FILTER url

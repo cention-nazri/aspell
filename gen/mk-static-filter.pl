@@ -50,6 +50,7 @@ while ($filename=shift) {
       ( $_=~s/^STATIC[ \t]+//i) && (($feature=uc $_ ) || 1) &&
        (${$filter}{$feature}="new_aspell_".$filtername."_".(lc $_)) && next;
       ( $_=~s/^ASPELL[ \t]+//i) && next;
+      ( $_=~/^LIB-FILE/i) && next;
       ( $_=~/^OPTION[ \t]+/i) || 
        (die "Invalid general key in $filename on line $.");
     }

@@ -58,10 +58,11 @@ ASPELL >=0.51
 #       thus if missing mode will be rejected by Aspell.
 #       keep it as short as possible although line wrapping will be done implicitly
 #       possible abbreviations are `des' and `desc' 
-DESCRIPTION limit checking to \# started commentary parts
+DESCRIPTION mode to check any lines starting with a \#
 
 
 FILTER context
 OPTION clear-context-delimiters
 OPTION add-context-delimiters \# \0
 
+FILTER url

@@ -57,7 +57,7 @@ MAGIC /0:256:^[ \t]*<[h][Tt][Mm][Ll]([ \t]*(<[^>]*>|[^<>]*))*>/HTM/HTML
 #       thus if missing mode will be rejected by Aspell.
 #       keep it as short as possible although line wrapping will be done implicitly
 #       possible abbreviations are `des' and `desc' 
-DESCRIPTION HTML filter mode: removes any html specific stuff. 
+DESCRIPTION mode for checking HTML documents
 
 # the mode file body 
 # the following lines may appear as often as needed in the below.
@@ -65,7 +65,7 @@ DESCRIPTION HTML filter mode: removes any html specific stuff.
 # states an additional filter to load it has to precede all OPTION keys dealing
 # with options specific to FILTER
 # NOTE: if FILTER key is preceded by `!' filter will be removed from mode
-FILTER sgml
+FILTER html
 
 # this selects proper values for the filters options.
 # its Value consists of the following two space separated fields
@@ -74,3 +74,5 @@ FILTER sgml
 #
 # option value may be empty if entire option is boolean or in case of list options
 # prefixed by `rem-all'
+
+FILTER url

@@ -14,10 +14,13 @@ namespace acommon {
   
   extern void activate_filter_modes(Config *config);
   extern PosibErr<ConfigModule *> get_dynamic_filter(Config * config, ParmStr value);
+  extern const ConfigModule * filter_modules_begin;
+  extern const ConfigModule * filter_modules_end;
 
   Config * new_config() 
   {
     Config * config = new_basic_config();
+    config->set_filter_modules(filter_modules_begin, filter_modules_end);
     activate_filter_modes(config);
     config->load_filter_hook = get_dynamic_filter;
     return config;

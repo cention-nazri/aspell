@@ -46,10 +46,10 @@ namespace acommon {
       if (res < 0) {
         reserve_i(); goto loop;
       } else if (res > avail) {
-        reserve_i(size() + res - 1); goto loop;
+        reserve_i(size() + res); goto loop;
       }
     }
-    end_ += res - 1;
+    end_ += res;
     return res;
   }
   

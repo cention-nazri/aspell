@@ -119,9 +119,13 @@ namespace {
     StringMap check_attribs; // list of attribs that we *should* spell check.
     StringMap skip_tags;   // list of tags that start a no-check-at-all zone.
 
+    String which;
+
     bool process_char(FilterChar::Chr c);
  
-    public:
+  public:
+
+    SgmlFilter(const char * n) : which(n) {}
 
     PosibErr<bool> setup(Config *);
     void reset();
@@ -130,12 +134,12 @@ namespace {
 
   PosibErr<bool> SgmlFilter::setup(Config * opts) 
   {
-    name_ = "sgml-filter";
+    name_ = which + "-filter";
     order_num_ = 0.35;
     check_attribs.clear();
     skip_tags.clear();
-    opts->retrieve_list("filter-sgml-skip", &skip_tags);
-    opts->retrieve_list("filter-sgml-check", &check_attribs);
+    opts->retrieve_list("filter-" + which + "-skip",  &skip_tags);
+    opts->retrieve_list("filter-" + which + "-check", &check_attribs);
     reset();
     return true;
   }
@@ -409,7 +413,9 @@ namespace {
   class SgmlDecoder : public IndividualFilter 
   {
     FilterCharVector buf;
+    String which;
   public:
+    SgmlDecoder(const char * n) : which(n) {}
     PosibErr<bool> setup(Config *);
     void reset() {}
     void process(FilterChar * &, FilterChar * &);
@@ -417,7 +423,7 @@ namespace {
 
   PosibErr<bool> SgmlDecoder::setup(Config *) 
   {
-    name_ = "sgml-decoder";
+    name_ = which + "-decoder";
     order_num_ = 0.65;
     return true;
   }
@@ -466,7 +472,9 @@ namespace {
   class SgmlEncoder : public IndividualFilter 
   {
     FilterCharVector buf;
+    String which;
   public:
+    SgmlEncoder(const char * n) : which(n) {}
     PosibErr<bool> setup(Config *);
     void reset() {}
     void process(FilterChar * &, FilterChar * &);
@@ -474,7 +482,7 @@ namespace {
 
   PosibErr<bool> SgmlEncoder::setup(Config *) 
   {
-    name_ = "sgml-encoder";
+    name_ = which + "-encoder";
     order_num_ = 0.99;
     return true;
   }
@@ -502,12 +510,32 @@ namespace {
   }
 }
 
-C_EXPORT 
-IndividualFilter * new_aspell_sgml_filter() {return new SgmlFilter;}
-C_EXPORT 
-IndividualFilter * new_aspell_sgml_decoder() {return new SgmlDecoder;}
-//C_EXPORT 
-//IndividualFilter * new_aspell_sgml_encoder() {return new SgmlEncoder;}
+C_EXPORT IndividualFilter * new_aspell_sgml_filter() 
+{
+  return new SgmlFilter("sgml");
+}
+C_EXPORT IndividualFilter * new_aspell_sgml_decoder() 
+{
+  return new SgmlDecoder("sgml");
+}
+C_EXPORT IndividualFilter * new_aspell_sgml_encoder() 
+{
+  return new SgmlEncoder("sgml");
+}
+
+C_EXPORT IndividualFilter * new_aspell_html_filter() 
+{
+  return new SgmlFilter("html");
+}
+C_EXPORT IndividualFilter * new_aspell_html_decoder() 
+{
+  return new SgmlDecoder("html");
+}
+C_EXPORT IndividualFilter * new_aspell_html_encoder() 
+{
+  return new SgmlEncoder("html");
+}
+
 
 /* Example HTML:
 

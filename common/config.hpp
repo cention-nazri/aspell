@@ -204,6 +204,9 @@ namespace acommon {
     PosibErr<String> get_default(ParmStr) const;
 
     PosibErr<String> retrieve(ParmStr key) const;
+
+    // will also retrive a list, with one value per line
+    PosibErr<String> retrieve_any(ParmStr key) const;
   
     bool have (ParmStr key) const;
 
@@ -258,8 +261,9 @@ namespace acommon {
     virtual ~KeyInfoEnumeration() {}
   };
 
-  static const int KEYINFO_MAY_CHANGE = 1 << 0;
-  static const int KEYINFO_UTF8       = 1 << 1;
+  static const unsigned KEYINFO_MAY_CHANGE = 1 << 0;
+  static const unsigned KEYINFO_UTF8       = 1 << 1;
+  static const unsigned KEYINFO_HIDDEN     = 1 << 2;
   
   class AddableContainer;
   class StringList;

@@ -53,8 +53,14 @@ namespace acommon
     bool cache_key_eq(const String & okey) const {
       return name == okey;
     }
+    ConfigFilterModule() : in_option(0) {}
     ~ConfigFilterModule();
-    KeyInfo * new_option() {options.push_back(KeyInfo()); return &options.back();}
+    bool in_option;
+    KeyInfo * new_option() {
+      options.push_back(KeyInfo()); 
+      in_option = true; 
+      return &options.back();}
+    PosibErr<void> end_option();
   };
 
   static GlobalCache<ConfigFilterModule> filter_module_cache("filters");
@@ -228,8 +234,7 @@ namespace acommon
     StackPtr<ConfigFilterModule> module(new ConfigFilterModule);
     module->name = filter_name;
     KeyInfo * cur_opt = NULL;
-    int active_option = 0;
-    
+
     String option_file = filter_name;
     option_file += "-filter.info";
     if (!find_file(config, "filter-path", option_file))
@@ -262,6 +267,8 @@ namespace acommon
       //
       if (d.key == "option" ) {
 
+        RET_ON_ERR(module->end_option());
+
         to_lower(d.value.str);
 
         cur_opt = module->new_option();
@@ -283,7 +290,6 @@ namespace acommon
             return make_err(identical_option).with_file(option_file,d.line_num);
         }
 
-        active_option = 1;
         continue;
       }
 
@@ -291,7 +297,7 @@ namespace acommon
       // key == static
       //
       if (d.key == "static") {
-        active_option = 0;
+        RET_ON_ERR(module->end_option());
         continue;
       }
 
@@ -306,7 +312,7 @@ namespace acommon
         //
         // filter description
         // 
-        if (!active_option) {
+        if (!module->in_option) {
           module->desc = d.value;
         } 
         //
@@ -332,7 +338,7 @@ namespace acommon
       //
       // !active_option
       //
-      if (!active_option) {
+      if (!module->in_option) {
         return make_err(options_only).with_file(option_file,d.line_num);
       }
 
@@ -413,7 +419,7 @@ namespace acommon
       // key == endoption
       //
       if (d.key=="endoption") {
-        active_option = 0;
+        RET_ON_ERR(module->end_option());
         continue;
       }
 
@@ -423,7 +429,7 @@ namespace acommon
       return make_err(invalid_option_modifier).with_file(option_file,d.line_num);
         
     } // end while getdata_pair_c
-
+    RET_ON_ERR(module->end_option());
     const char * slash = strrchr(option_file.str(), '/');
     assert(slash);
     if (module->file.empty()) {
@@ -440,5 +446,71 @@ namespace acommon
     return module.release();
   }
 
+  PosibErr<void>  ConfigFilterModule::end_option()
+  {
+    if (in_option) 
+    {
+      // FIXME: Check to make sure there is a name and desc.
+      KeyInfo * cur_opt = &options.back();
+      if (!cur_opt->def) cur_opt->def = strdup("");
+    }
+    in_option = false;
+    return no_err;
+  }
+
 #endif
+
+  void load_all_filters(Config * config) {
+    StringList filter_path;
+    String toload;
+    
+    config->retrieve_list("filter-path", &filter_path);
+    PathBrowser els(filter_path, "-filter.info");
+    
+    const char * file;
+    while ((file = els.next()) != NULL) {
+      
+      const char * name = strrchr(file, '/');
+      if (!name) name = file;
+      else name++;
+      unsigned len = strlen(name) - 12;
+      
+      toload.assign(name, len);
+      
+      get_dynamic_filter(config, toload);
+    }
+  }
+
+
+  class FiltersEnumeration : public StringPairEnumeration
+  {
+  public:
+    typedef Vector<ConfigModule>::const_iterator Itr;
+  private:
+    Itr it;
+    Itr end;
+  public:
+    FiltersEnumeration(Itr i, Itr e) : it(i), end(e) {}
+    bool at_end() const {return it == end;}
+    StringPair next()
+    {
+      if (it == end) return StringPair();
+      StringPair res = StringPair(it->name, it->desc);
+      ++it;
+      return res;
+    }
+    StringPairEnumeration * clone() const {return new FiltersEnumeration(*this);}
+    void assign(const StringPairEnumeration * other0)
+    {
+      const FiltersEnumeration * other = (const FiltersEnumeration *)other0;
+      *this = *other;
+    }
+  };
+
+  PosibErr<StringPairEnumeration *> available_filters(Config * config)
+  {
+    return new FiltersEnumeration(config->filter_modules.begin(),
+                                  config->filter_modules.end());
+  }
+
 }

@@ -34,12 +34,29 @@ namespace acommon {
     char * begin_;
     char * end_;
     char * storage_end_;
-    void assign_only(const char * b, size_t size) 
+
+    void assign_only_nonnull(const char * b, unsigned size)
     {
       begin_ = (char *)malloc(size + 1);
       memmove(begin_, b, size);
       end_   = begin_ + size;
       storage_end_ = end_ + 1;
+    }
+    void zero() 
+    {
+      begin_ = 0;
+      end_ = 0;
+      storage_end_ = 0;
+    }
+    void assign_only(const char * b)
+    {
+      if (b && *b) assign_only_nonnull(b, strlen(b));
+      else zero();
+    }
+    void assign_only(const char * b, unsigned size) 
+    {
+      if (b && size > 0) assign_only_nonnull(b, size);
+      else zero();
     }
     void reserve_i(size_t s = 0);
   public:
@@ -111,8 +128,8 @@ namespace acommon {
     //
 
     String() : begin_(0), end_(0), storage_end_(0) {}
-    String(const char * s) {assign_only(s, strlen(s));}
-    String(const char * s, unsigned int size) {assign_only(s, size);}
+    String(const char * s) {assign_only(s);}
+    String(const char * s, unsigned size) {assign_only(s, size);}
     String(ParmStr s) {assign_only(s, s.size());}
     String(MutableString s) {assign_only(s.str, s.size);}
     String(const String & other) {assign_only(other.begin_, other.end_-other.begin_);}
@@ -132,7 +149,7 @@ namespace acommon {
     }
     void assign(const char * b) 
     {
-      assign(b, strlen(b));
+      if (b) assign(b, strlen(b));
     }
     String & operator= (const char * s) {
       assign(s);

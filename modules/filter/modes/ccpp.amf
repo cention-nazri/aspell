@@ -57,7 +57,7 @@ MAGIC /<empty>/h/hpp
 #       thus if missing mode will be rejected by Aspell.
 #       keep it as short as possible although line wrapping will be done implicitly
 #       possible abbreviations are `des' and `desc' 
-DESCRIPTION C/C++ filter mode: spells of C/C++ comments and string literals only
+DESCRIPTION mode for checking C++ comments and string literals
 
 # the mode file body 
 # the following lines may appear as often as needed in the below.

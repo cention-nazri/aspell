@@ -4,7 +4,7 @@
 ASPELL >=0.51
 
 #This line will be printed when typing `Aspell help email'
-DESCRIPTION Filter for skipping quoted text in email messages
+DESCRIPTION filter for skipping quoted text in email messages
 
 STATIC filter
 

@@ -157,6 +157,7 @@ optfiles = \
   modules/filter/email-filter.info\
   modules/filter/tex-filter.info\
   modules/filter/sgml-filter.info\
+  modules/filter/html-filter.info\
   modules/filter/context-filter.info
 
 ### Add all your aspell mode files ###

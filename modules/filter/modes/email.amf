@@ -58,7 +58,7 @@ ASPELL >=0.51
 #       thus if missing mode will be rejected by Aspell.
 #       keep it as short as possible although line wrapping will be done implicitly
 #       possible abbreviations are `des' and `desc' 
-DESCRIPTION email filter mode: removes skips mail header and others. 
+DESCRIPTION mode for skipping quoted text in email messages
 
 # the mode file body 
 # the following lines may appear as often as needed in the below.
