@@ -334,9 +334,15 @@ int main (int argc, const char *argv[])
 
 void config () 
 {
-  StackPtr<Config> config(new_basic_config());
+  StackPtr<Config> config(new_config());
   EXIT_ON_ERR(config->read_in_settings(options));
-  config->write_to_stream(COUT);
+
+  if (args.size() == 0)
+    config->write_to_stream(COUT);
+  else {
+    EXIT_ON_ERR_SET(config->retrieve(args[0]), String, value);
+    COUT << value << "\n";
+  }
 }
 
 ///////////////////////////
@@ -961,6 +967,7 @@ void print_help () {
     "  -a|pipe          \"ispell -a\" compatibility mode\n"
     "  -l|list          produce a list of misspelled words from standard input\n"
     "  [dump] config    dumps the current configuration to stdout\n"
+    "  config <key>     prints the current value of an option\n"
     "  filter           passes standard input through filters\n"
     "  -v|version       prints a version line\n"
     "\n"
