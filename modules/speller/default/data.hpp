@@ -105,7 +105,6 @@ namespace aspeller {
     virtual PosibErr<void> save_as(ParmString);
     virtual PosibErr<void> clear();
 
-  public:
     bool affix_compressed;
     bool have_soundslike; // only true when there is true phonet data
     bool fast_scan;  // can effectly scan for all soundslikes (or
@@ -116,7 +115,7 @@ namespace aspeller {
     
     typedef WordEntryEnumeration        Enum;
     typedef const char *                Value;
-    typedef unsigned int                Size;
+    typedef size_t                      Size;
 
     StringEnumeration * elements() const;
 
@@ -141,11 +140,15 @@ namespace aspeller {
     virtual PosibErr<void> add(ParmString w, ParmString s);
     PosibErr<void> add(ParmString w);
 
+    virtual PosibErr<void> remove(ParmString w);
+
     virtual bool repl_lookup(const WordEntry &, WordEntry &) const;
     virtual bool repl_lookup(ParmString, WordEntry &) const;
 
     virtual PosibErr<void> add_repl(ParmString mis, ParmString cor, ParmString s);
     PosibErr<void> add_repl(ParmString mis, ParmString cor);
+
+    virtual PosibErr<void> remove_repl(ParmString mis, ParmString cor);
 
     virtual DictsEnumeration * dictionaries() const;
   };

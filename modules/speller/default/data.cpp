@@ -231,12 +231,13 @@ namespace aspeller {
   
   Dict::Size   Dictionary::size()     const
   {
-    return 1;
+    if (empty()) return 0;
+    else         return 1;
   }
   
   bool Dictionary::empty()    const 
   {
-    return !size();
+    return false;
   }
   
   bool Dictionary::lookup (ParmString word, WordEntry &,
@@ -270,6 +271,11 @@ namespace aspeller {
     return make_err(unimplemented_method, "add", class_name);
   }
   
+  PosibErr<void> Dictionary::remove(ParmString w) 
+  {
+    return make_err(unimplemented_method, "remove", class_name);
+  }
+  
   bool Dictionary::repl_lookup(const WordEntry &, WordEntry &) const 
   {
     return false;
@@ -283,6 +289,11 @@ namespace aspeller {
   PosibErr<void> Dictionary::add_repl(ParmString mis, ParmString cor, ParmString s) 
   {
     return make_err(unimplemented_method, "add_repl", class_name);
+  }
+  
+  PosibErr<void> Dictionary::remove_repl(ParmString mis, ParmString cor) 
+  {
+    return make_err(unimplemented_method, "remove_repl", class_name);
   }
   
   Enumeration<const LocalDict *> * Dictionary::dictionaries() const 
