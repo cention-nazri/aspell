@@ -85,7 +85,7 @@ namespace acommon {
       ++cur;
     }
     if (in_quote)
-      for (FilterChar * i = line_begin; i != cur; ++)
+      for (FilterChar * i = line_begin; i != cur; ++i)
 	*i = ' ';
   }
   
