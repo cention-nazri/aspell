@@ -1,5 +1,5 @@
 #!/bin/sh
 
 ./configure --enable-maintainer-mode \
-  --prefix=`pwd`/inst CFLAGS='-g -O -Wall' CXXFLAGS='-g -O -Wall -fno-exceptions' "$@"
+  --prefix=`pwd`/inst CFLAGS='-g -O -Wall' CXXFLAGS='-g -O -Wall' "$@"
 

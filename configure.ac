@@ -64,6 +64,11 @@ AC_ARG_ENABLE(compile-in-filters,
 dnl
 
 AC_PROG_CXX
+if test "$GXX" == "yes"
+then
+  CXXFLAGS="$CXXFLAGS -fno-exceptions"
+fi
+
 AC_LANG([C++])
 
 AM_PROG_CC_C_O
@@ -80,13 +85,7 @@ AC_CHECK_LIB(dl, dlopen)
 dnl
 
 AC_CHECK_PROG(SED,sed,sed)
-AC_CHECK_PROGS(TEXT_DUMP,w3m lynx)
 AC_PATH_PROG(PERLPROG,perl)
-DUMP_WIDTH="cols"
-if test "$TEXT_DUMP" == "lynx" ;then 
-  DUMP_WIDTH="width"
-fi
-AC_SUBST( DUMP_WIDTH )
 
 dnl
 
