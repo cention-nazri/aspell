@@ -519,7 +519,7 @@ errors:
 		identical option
 			mesg => Filter option already exists.
 		options only
-			mesg => Use option modifiers only within named Option.
+			mesg => Use option modifiers only within named option.
 		invalid option modifier
 			mesg => Option modifier unknown.
 		cant describe filter
@@ -529,7 +529,7 @@ errors:
 		mode option name
 			mesg => Empty option specifier.
 		empty non bool
-			mesg => Empty value; only  bool type option and "rem-all" list prefix.
+			mesg => Empty value; only bool type option and "rem-all" list prefix.
 		no filter to option 
 			mesg => Option "%option" possibly specified prior to filter.
 			parms => option
@@ -537,25 +537,25 @@ errors:
 			mesg => Unknown mode description key "%key".
 			parms => key
 		expect mode key
-			mesg => Expecting "%modekey" key 
+			mesg => Expecting "%modekey" key.
 			parms => modekey
 		mode version requirement
-			mesg => Version specifier missing key: "aspell"
+			mesg => Version specifier missing key: "aspell".
 		confusing mode version
-			mesg => Confused by version control
+			mesg => Confused by version control.
 		bad mode version
 			mesg => Aspell version does not match mode's requirement.
 		missing magic expression
-			mesg => Missing magic mode expression
+			mesg => Missing magic mode expression.
 		empty file ext
-			mesg => Empty extension at char %char
+			mesg => Empty extension at char %char.
 			parms => char
 	filter mode expand
 		mesg => "%mode" error
 		parms => mode
 		/
 		unknown mode
-			mesg => ignoring unknown mode: "%mode"
+			mesg => ignoring unknown mode: "%mode".
 		mode extend expand
 			mesg => "%mode" error while extend Aspell modes. (out of memory?)
 	filter mode magic
@@ -563,14 +563,13 @@ errors:
 		parms => mode, magic
 		/
 		file magic pos
-			mesg => "%mode": no start for magic search given for magic "%magic"
+			mesg => "%mode": no start for magic search given for magic "%magic".
 		file magic range
-			mesg => "%mode": no range for magic search given for magic "%magic"
+			mesg => "%mode": no range for magic search given for magic "%magic".
 		missing magic 
-			mesg => "%mode": no magic expression available for magic "%magic"
+			mesg => "%mode": no magic expression available for magic "%magic".
 		bad magic
-			mesg => "%mode": Magic "%magic": bad regular expression after location specifier;\
-				\n\t regexp reports: "%regerr"
+			mesg => "%mode": Magic "%magic": bad regular expression after location specifier; regexp reports: "%regerr".
 			parms => regerr
 
 	expression
@@ -578,7 +577,7 @@ errors:
 		parms => action
 		/
 		invalid expression
-			mesg => "%action": `"%expression"' is not a valid regular expression.
+			mesg => "%action": "%expression" is not a valid regular expression.
 			parms => expression
 }
 group: speller
