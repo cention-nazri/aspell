@@ -698,7 +698,7 @@ void pipe()
   bool include_guesses = options->retrieve_bool("guess");
   clock_t start,finish;
 
-  if (!options->have("mode")) {
+  if (!options->have("mode") && !options->have("filter")) {
     PosibErrBase err(options->replace("mode", "nroff"));
     if (err.has_err()) 
       CERR.printf(_("WARNING: Unable to enter Nroff mode: %s\n"),
