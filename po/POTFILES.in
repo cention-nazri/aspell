@@ -9,5 +9,6 @@ prog/check_funs.cpp
 modules/speller/default/language.cpp
 modules/speller/default/affix.cpp
 modules/speller/default/readonly_ws.cpp
+modules/speller/default/data.cpp
 modules/filter/tex.cpp
 gen/filter.pot
