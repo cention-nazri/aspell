@@ -10,14 +10,14 @@
 
 namespace acommon {
 
-// only use this on types with a trivial destructor
-  
+// only use this on types with a trivial constructors destructor
 #define VARARRAY(type, name, num) type name[num]
+#define VARARRAYM(type, name, num, max) type name[num]
 
 #if 0
 
 #define VARARRAY(type, name, num) \
-  type * name = (type *)alloca(sizeof(type) * num)
+  type * name = (type *)alloca(sizeof(type) * (num))
 
   struct MallocPtr {
     void * ptr; 
@@ -27,8 +27,14 @@ namespace acommon {
 
 #define VARARRAY(type, name, num) \
   MallocPtr name##_data;\
-  name##_data = malloc(sizeof(type) * num);\
+  name##_data = malloc(sizeof(type) * (num)); \
   type * name = (type *)name##_data.ptr
+
+
+#define VARARRAYM(type, name, num, max) \
+  type * name = (type *)alloca(sizeof(type) * (num))
+
+#define VARARRAYM(type, name, num, max) type name[max]
 
 #endif
 

@@ -12,18 +12,18 @@
 
 namespace aspeller {
 
-  short edit_distance(const char * a, const char * b,
+  short edit_distance(ParmString a0, ParmString b0,
 		      const EditDistanceWeights & w) 
   {
-    int a_size = strlen(a) + 1;
-    int b_size = strlen(b) + 1;
+    int a_size = a0.size() + 1;
+    int b_size = b0.size() + 1;
     VARARRAY(short, e_d, a_size * b_size);
     ShortMatrix e(a_size,b_size,e_d);
     e(0, 0) = 0;
     for (int j = 1; j != b_size; ++j)
       e(0, j) = e(0, j-1) + w.del1;
-    --a;
-    --b;
+    const char * a = a0.str() - 1;
+    const char * b = b0.str() - 1;
     short te;
     for (int i = 1; i != a_size; ++i) {
       e(i, 0) = e(i-1, 0) + w.del2;

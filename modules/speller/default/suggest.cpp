@@ -714,6 +714,7 @@ namespace {
       for (j = 0; j != original_word.word.size(); ++j)
           original[j] = lang->to_normalized(original_word.word[j]);
       original[j] = 0;
+      ParmString orig(original.data(), j);
       word.resize(max_word_length + 1);
       
       for (i = scored_near_misses.begin();
@@ -724,7 +725,7 @@ namespace {
 	  word[j] = lang->to_normalized((i->word)[j]);
 	word[j] = 0;
 	int word_score 
-	  = typo_edit_distance(word.data(), original.data(),
+	  = typo_edit_distance(ParmString(word.data(), j), orig,
 			       *parms->typo_edit_distance_weights);
 	i->score = weighted_average(i->soundslike_score, word_score);
 	if (max < i->score) max = i->score;

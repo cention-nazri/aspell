@@ -21,7 +21,7 @@
 
 #define SETSIZE         256
 #define MAXAFFIXES      256
-#define MAXWORDLEN      100
+#define MAXWORDLEN      255
 #define XPRODUCT        (1 << 0)
 
 #define MAXLNLEN        1024

@@ -20,6 +20,7 @@
 #include "parm_string.hpp"
 #include "check_list.hpp"
 #include "speller_impl.hpp"
+#include "vararray.hpp"
 
 using namespace std;
 
@@ -1030,8 +1031,7 @@ bool PfxEntry::check(const LookupInfo & linf, ParmString word,
   int	                tmpl;   // length of tmpword
   WordEntry             wordinfo;     // hash entry of root word or NULL
   byte *	cp;		
-  char	        tmpword[MAXWORDLEN+1];
-
+  VARARRAYM(char, tmpword, word.size()+1, MAXWORDLEN+1);
 
   // on entry prefix is 0 length or already matches the beginning of the word.
   // So if the remaining root word has positive length
@@ -1142,7 +1142,7 @@ bool SfxEntry::check(const LookupInfo & linf, ParmString word,
   int			cond;		 // condition beng examined
   WordEntry             wordinfo;        // hash entry pointer
   byte *	cp;
-  char	        tmpword[MAXWORDLEN+1];
+  VARARRAYM(char, tmpword, word.size()+1, MAXWORDLEN+1);
   PfxEntry* ep = (PfxEntry *) ppfx;
 
 

@@ -1,9 +1,12 @@
 #ifndef __aspeller_edit_distance_hh__
 #define __aspeller_edit_distance_hh__
 
+#include "parm_string.hpp"
 #include "weights.hpp"
 
 namespace aspeller {
+
+  using acommon::ParmString;
 
   // edit_distance finds the shortest edit distance.  The edit distance is 
   // (cost of swap)(# of swaps) + (cost of deletion)(# of deletions) 
@@ -18,7 +21,7 @@ namespace aspeller {
 
   // the running time is tightly asymptotically bounded by strlen(a)*strlen(b)
 
-  short edit_distance(const char * a, const char * b,
+  short edit_distance(ParmString a, ParmString b,
 		      const EditDistanceWeights & w = EditDistanceWeights());
 }
 

@@ -5,7 +5,7 @@
 #include <cassert>
 
 namespace aspeller {
-  inline int edit_distance(const char * a, const char * b, 
+  inline int edit_distance(ParmString a, ParmString b, 
 			   int level, // starting level
 			   int limit, // maximum level
 			   const EditDistanceWeights & w 
