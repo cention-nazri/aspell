@@ -8,6 +8,7 @@
 #define ASPELL_GET_DATA__HPP
 
 #include <stddef.h>
+#include <limits.h>
 #include "mutable_string.hpp"
 
 namespace acommon {
@@ -24,7 +25,13 @@ namespace acommon {
 
   bool getdata_pair(IStream & in, DataPair & d, char * buf, size_t len);
 
-  void unescape(char *);
+  void unescape(char * dest, const char * src);
+  static inline void unescape(char * dest) {unescape(dest, dest);}
+
+  // if limit is not given than dest should have enough space for 
+  // twice the number of characters of src
+  bool escape(char * dest, const char * src, 
+	      size_t limit = INT_MAX, const char * others = 0);
 
   void to_lower(char *);
 

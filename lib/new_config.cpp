@@ -70,7 +70,7 @@ namespace acommon {
 
   Config * new_config() {
     Config * config = new_basic_config();
-    config->set_modules(filter_modules_begin, filter_modules_end);
+    config->set_filter_modules(filter_modules_begin, filter_modules_end);
     config->add_notifier(new ModeNotifierImpl(config));
     activate_dynamic_filteroptions(config);
     return config;

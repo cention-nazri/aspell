@@ -140,8 +140,8 @@ const PossibleOption possible_options[] = {
   OPTION("dont-backup",      'x' , 0),
   OPTION("run-together",     'C',  0),
   OPTION("dont-run-together",'B',  0),
-  OPTION("include-guesses",      'm', 0),
-  OPTION("dont-include-guesses", 'P', 0),
+  OPTION("guess",            'm', 0),
+  OPTION("dont-guess",       'P', 0),
   
   COMMAND("version",   'v', 0),
   COMMAND("help",      '?', 0),
@@ -513,7 +513,7 @@ void pipe()
   bool terse_mode = true;
   bool do_time = options->retrieve_bool("time");
   bool suggest = options->retrieve_bool("suggest");
-  bool include_guesses = options->retrieve_bool("include-guesses");
+  bool include_guesses = options->retrieve_bool("guess");
   clock_t start,finish;
   start = clock();
 
@@ -968,77 +968,80 @@ abort_loop:
   }
 }
 
+#define U (unsigned char)
+
 void Mapping::to_aspell() 
 {
   memset(this, 0, sizeof(Mapping));
   primary[Ignore    ] = 'i';
-  reverse['i'] = Ignore;
-  reverse[' '] = Ignore;
-  reverse['\n'] = Ignore;
+  reverse[U'i'] = Ignore;
+  reverse[U' '] = Ignore;
+  reverse[U'\n'] = Ignore;
 
   primary[IgnoreAll ] = 'I';
-  reverse['I'] = IgnoreAll;
+  reverse[U'I'] = IgnoreAll;
 
   primary[Replace   ] = 'r';
-  reverse['r'] = Replace;
+  reverse[U'r'] = Replace;
 
   primary[ReplaceAll] = 'R';
-  reverse['R'] = ReplaceAll;
+  reverse[U'R'] = ReplaceAll;
 
   primary[Add       ] = 'a';
-  reverse['A'] = Add;
-  reverse['a'] = Add;
+  reverse[U'A'] = Add;
+  reverse[U'a'] = Add;
 
   primary[AddLower  ] = 'l';
-  reverse['L'] = AddLower;
-  reverse['l'] = AddLower;
+  reverse[U'L'] = AddLower;
+  reverse[U'l'] = AddLower;
 
   primary[Abort     ] = 'b';
-  reverse['b'] = Abort;
-  reverse['B'] = Abort;
+  reverse[U'b'] = Abort;
+  reverse[U'B'] = Abort;
   reverse[control('c')] = Abort;
 
   primary[Exit      ] = 'x';
-  reverse['x'] = Exit;
-  reverse['X'] = Exit;
+  reverse[U'x'] = Exit;
+  reverse[U'X'] = Exit;
 }
 
 void Mapping::to_ispell() 
 {
   memset(this, 0, sizeof(Mapping));
   primary[Ignore    ] = ' ';
-  reverse[' '] = Ignore;
-  reverse['\n'] = Ignore;
+  reverse[U' '] = Ignore;
+  reverse[U'\n'] = Ignore;
 
   primary[IgnoreAll ] = 'A';
-  reverse['A'] = IgnoreAll;
-  reverse['a'] = IgnoreAll;
+  reverse[U'A'] = IgnoreAll;
+  reverse[U'a'] = IgnoreAll;
 
   primary[Replace   ] = 'R';
-  reverse['R'] = ReplaceAll;
-  reverse['r'] = Replace;
+  reverse[U'R'] = ReplaceAll;
+  reverse[U'r'] = Replace;
 
   primary[ReplaceAll] = 'E';
-  reverse['E'] = ReplaceAll;
-  reverse['e'] = Replace;
+  reverse[U'E'] = ReplaceAll;
+  reverse[U'e'] = Replace;
 
   primary[Add       ] = 'I';
-  reverse['I'] = Add;
-  reverse['i'] = Add;
+  reverse[U'I'] = Add;
+  reverse[U'i'] = Add;
 
   primary[AddLower  ] = 'U';
-  reverse['U'] = AddLower;
-  reverse['u'] = AddLower;
+  reverse[U'U'] = AddLower;
+  reverse[U'u'] = AddLower;
 
   primary[Abort     ] = 'Q';
-  reverse['Q'] = Abort;
-  reverse['q'] = Abort;
+  reverse[U'Q'] = Abort;
+  reverse[U'q'] = Abort;
   reverse[control('c')] = Abort;
 
   primary[Exit      ] = 'X';
-  reverse['X'] = Exit;
-  reverse['x'] = Exit;
+  reverse[U'X'] = Exit;
+  reverse[U'x'] = Exit;
 }
+#undef U
 
 ///////////////////////////
 //
@@ -1396,7 +1399,8 @@ void print_help_line(char abrv, char dont_abrv, const char * name,
     command += "=<str>";
   if (type == KeyInfoInt)
     command += "=<int>";
-  printf("  %-27s %s\n", command.c_str(), gettext (desc));
+  const char * tdesc = gettext(desc);
+  printf("  %-27s %s\n", command.c_str(), tdesc); // FIXME: consider word wrapping
 }
 
 void expand_expression(Config * config){
@@ -1473,14 +1477,10 @@ void expand_expression(Config * config){
 }
 
 void print_help () {
-  char * expandedoptionname=NULL;
-  char * tempstring=NULL;
-  size_t expandedsize=0;
-
   expand_expression(options);
   printf(_(
     "\n"
-    "Aspell %s alpha.  Copyright 2000 by Kevin Atkinson.\n"
+    "Aspell %s alpha.  Copyright 2000-2004 by Kevin Atkinson.\n"
     "\n"
     "Usage: aspell [options] <command>\n"
     "\n"
@@ -1508,49 +1508,20 @@ void print_help () {
   const KeyInfo * k;
   while (k = els->next(), k) {
     if (k->desc == 0) continue;
-    if ((k->type == KeyInfoDescript) &&
-        !strncmp(k->name,"filter-",7)){
+    if (k->type == KeyInfoDescript && !strncmp(k->name,"filter-",7)) {
       printf(_("\n"
-               "  %s Filter: %s\n"
-               "\tNOTE: in ambiguous case prefix following options by `filter-'\n"),
+               "  %s filter: %s\n"
+               "    NOTE: in ambiguous case prefix following options by `filter-'\n"),
                &(k->name)[7],k->desc);
-      if (expandedoptionname != NULL) {
-        free(expandedoptionname);
-        expandedsize=0;
-      }
-      if (!strncmp(k->name,"filter-",7)) {
-        expandedoptionname=strdup(&(k->name[7]));
-        expandedsize=strlen(k->name)-7;
-      }
-      else {
-        expandedoptionname=strdup(k->name);
-        expandedsize=strlen(k->name);
-      }
       continue;
     }
-    else if (k->type == KeyInfoDescript) {
-      if (expandedoptionname != NULL) {
-        free(expandedoptionname);
-        expandedsize=0;
-        expandedoptionname=NULL;
-      }
-    }
-    if ((tempstring=(char*)malloc(expandedsize+strlen(k->name)+2)) == NULL) {
-      expandedoptionname=NULL;
-      continue;
-    }
-    tempstring[0]='\0';
-    if ((strlen(k->name) < expandedsize) ||
-        (expandedsize && strncmp(k->name,expandedoptionname,expandedsize))) {
-      tempstring=strncat(tempstring,expandedoptionname,expandedsize);
-      tempstring=strncat(tempstring,"-",1);
-    }
-    tempstring=strncat(tempstring,k->name,strlen(k->name));
-    const PossibleOption * o = find_option(tempstring);
+    const PossibleOption * o = find_option(k->name);
+    const char * name = k->name;
+    if (strncmp(name, "filter-", 7) == 0) name += 7;
     print_help_line(o->abrv, 
 		    strncmp((o+1)->name, "dont-", 5) == 0 ? (o+1)->abrv : '\0',
-		    tempstring, k->type, k->desc);
-    if (strcmp(tempstring, "mode") == 0) {
+		    name, k->type, k->desc);
+    if (strcmp(name, "mode") == 0) {
       for (const ModeAbrv * j = mode_abrvs;
            j != mode_abrvs_end;
            ++j)
@@ -1558,14 +1529,6 @@ void print_help () {
         print_help_line(j->abrv, '\0', j->mode, KeyInfoBool, j->desc, true);
       }
     }
-    if (tempstring != NULL) {
-      free(tempstring);
-      tempstring=NULL;
-    }
   }
-  if (expandedoptionname!=NULL) {
-    free(expandedoptionname);
-  }
-
 }
 

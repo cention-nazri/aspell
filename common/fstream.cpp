@@ -100,7 +100,7 @@ namespace acommon {
     *str = static_cast<char>(c);
     ++str;
     s -= 2; // leave room for the null char
-    while (c = getc(file_), c != EOF && (c != d || *str == '\\')) {
+    while (c = getc(file_), c != EOF && (c != d || str[-1] == '\\')) {
       *str = static_cast<char>(c);
       ++str;
       --s;

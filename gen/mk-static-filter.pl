@@ -110,7 +110,7 @@ while ($filter = shift @filterhashes) {
                                         ${$filter}{"DESCRIPTION"}."\"}";
   while (($name,$option)=each %{$filter}) {
     ($name=~/(?:NAME|(?:DE|EN)CODER|FILTER|DESCRIPTION)/) && next;
-    printf STATICFILTERS ",\n    {\"$name\",";
+    printf STATICFILTERS ",\n    {\"filter-${$filter}{NAME}-$name\",";
     ((lc ${$option}{"TYPE"}) eq "bool") && printf STATICFILTERS "KeyInfoBool,";
     ((lc ${$option}{"TYPE"}) eq "int") && printf STATICFILTERS "KeyInfoInt,";
     ((lc ${$option}{"TYPE"}) eq "string") && printf STATICFILTERS "KeyInfoString,";

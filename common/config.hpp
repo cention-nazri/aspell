@@ -67,8 +67,8 @@ namespace acommon {
     const KeyInfo       * main_end;
     const KeyInfo       * extra_begin;
     const KeyInfo       * extra_end;
-    const ConfigModule  * modules_begin;
-    const ConfigModule  * modules_end;
+    const ConfigModule  * filter_modules_begin;
+    const ConfigModule  * filter_modules_end;
   };
 
   class Config : public CanHaveError {
@@ -89,6 +89,9 @@ namespace acommon {
 
     void copy_notifiers(const Config & other);
     void del_notifiers();
+
+    // prefix the key name with  "filter-" if needed
+    PosibErr<const char *> expand_key(ParmString k) const; 
 
   public:
     
@@ -118,7 +121,7 @@ namespace acommon {
 
     void set_extra(const KeyInfo * begin, const KeyInfo * end);
 
-    void set_modules(const ConfigModule * modbegin, const ConfigModule * modend);
+    void set_filter_modules(const ConfigModule * modbegin, const ConfigModule * modend);
 
     static const char * base_name(ParmString name);
   
@@ -181,7 +184,7 @@ namespace acommon {
     virtual void assign(const KeyInfoEnumeration *) = 0;
     virtual bool at_end() const = 0;
     virtual const KeyInfo * next() = 0;
-    virtual const char * active_module_name(void) = 0;
+    virtual const char * active_filter_module_name(void) = 0;
     virtual ~KeyInfoEnumeration() {}
   };
 

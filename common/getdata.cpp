@@ -59,23 +59,55 @@ namespace acommon {
     return true;
   }
 
-  void unescape(char * str)
+  void unescape(char * dest, const char * src)
   {
-    char * i = str;
-    char * j = i;
-    while (*j) {
-      if (*j == '\\') ++j;
-      *i = *j;
-      ++i;
-      ++j;
+    while (*src) {
+      if (*src == '\\') {
+	++src;
+	switch (*src) {
+	case 'n': *dest = '\n'; break;
+	case 'r': *dest = '\r'; break;
+	case 't': *dest = '\t'; break;
+	case 'f': *dest = '\f'; break;
+	case 'v': *dest = '\v'; break;
+	default: *dest = *src;
+	}
+      } else {
+	*dest = *src;
+      }
+      ++src;
+      ++dest;
     }
-    *i = '\0';
+    *dest = '\0';
+  }
+
+  bool escape(char * dest, const char * src, size_t limit, const char * others)
+  {
+    const char * end = dest + limit;
+    while (*src) {
+      if (dest == end) return false;
+      switch (*src) {
+      case '\n': *dest++ = '\\'; *dest = 'n'; break;
+      case '\r': *dest++ = '\\'; *dest = 'r'; break;
+      case '\t': *dest++ = '\\'; *dest = 't'; break;
+      case '\f': *dest++ = '\\'; *dest = 'f'; break;
+      case '\v': *dest++ = '\\'; *dest = 'v'; break;
+      case '\\': *dest++ = '\\'; *dest = '\\'; break;
+      case '#' : *dest++ = '\\'; *dest = '#'; break;
+      default:
+	if (others && strchr(others, *src)) *dest++ = '\\';
+	*dest = *src;
+      }
+      ++src;
+      ++dest;
+    }
+    *dest = '\0';
+    return true;
   }
 
   void to_lower(char * str)
   {
     for (; *str; str++) *str = asc_tolower(*str);
   }
-
 
 }

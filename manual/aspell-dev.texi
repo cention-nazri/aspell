@@ -1,5 +1,5 @@
 \input texinfo   @c -*-texinfo-*-
-@comment $Id: aspell-dev.texi,v 1.1.2.1 2004/01/24 22:42:19 kevina Exp $
+@comment $Id: aspell-dev.texi,v 1.2 2004/01/25 01:24:05 kevina Exp $
 @comment %**start of header
 @setfilename aspell-dev.info
 @settitle Aspell Developer's Manual
@@ -8,7 +8,7 @@
 @comment %**end of header
 @copying
 This is the developer's manual for Aspell
-($Revision: 1.1.2.1 $, $Date: 2004/01/24 22:42:19 $).
+($Revision: 1.2 $, $Date: 2004/01/25 01:24:05 $).
 
 This manual is designed for those who wish to develop Aspell.
 It is currently very sketchy.
@@ -35,7 +35,7 @@ Documentation License".
 
 @titlepage
 @title Aspell Developer's Manual
-@subtitle for $Revision: 1.1.2.1 $, $Date: 2004/01/24 22:42:19 $
+@subtitle for $Revision: 1.2 $, $Date: 2004/01/25 01:24:05 $
 @author Kevin Atkinson (@email{kevina@@gnu.org})
 @page
 @vskip 0pt plus 1filll
@@ -525,7 +525,7 @@ loadable object.
 This file contains the description of a filter which is loaded by
 aspell immediately when the @option{add-filter} option is invoked.  If
 this file is missing aspell will complain about it.  It consists of
-lines containing comments which must be started by a `@kbd{#}'
+lines containing comments which must be started by a @kbd{#}
 character and lines containing key value pairs describing the filter.
 Each file at least has to contain the following two lines in the given
 order.
@@ -537,14 +537,12 @@ DESCRIPTION this is short filter description
 
 The first non blank, non comment line has to contain the keyword
 @code{ASPELL} followed by the version of aspell which the filter is
-usable with.  To denote multiple Aspell versions the version number
-may be prefixed by `@kbd{<}', `@kbd{<=}', `@kbd{=}', `@kbd{>=}' or
-`@kbd{>}.  If the range prefix is omitted `@kbd{=}' is assumed.  The
-line containing the @code{DESCRIPTION} of the filter may float freely
-in the description file unless it occurs inside a description of an
-option.  Whitespaces which occur inside the descriptive text have to
-escaped by `@kbd{\}' character.  The keyword @code{DESCRIPTION} may be
-abbreviated by @code{DESC}.
+usable with.  To denote multiple Aspell versions the version number may
+be prefixed by `@kbd{<}', `@kbd{<=}', `@kbd{=}', `@kbd{>=}' or `@kbd{>}.
+If the range prefix is omitted `@kbd{=}' is assumed.  The
+@code{DESCRIPTION} of the filter should be under 50, begin in lower
+case, and note include any trailing punctuation characters.
+The keyword @code{DESCRIPTION} may be abbreviated by @code{DESC}.
 
 If the filter description contains the following line
 @example
@@ -567,7 +565,7 @@ aspell if requested by the user or by the system aspell is built for.
 
 @example
 OPTION newoption
-DESCRIPTION this\ is\ a\ short\ description\ of\ newoption
+DESCRIPTION this is a short description of newoption
 TYPE bool
 DEFAULT false
 ENDOPTION
