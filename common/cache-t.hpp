@@ -44,7 +44,7 @@ private:
     }
     void del(Data * d) {
       assert(d->refcount == 0);
-      Cacheable * * cur = &static_cast<Cacheable *>(first);
+      Cacheable * * cur = (Cacheable * *)(&first);
       while (*cur && *cur != d) cur = &((*cur)->next);
       assert(*cur);
       *cur = (*cur)->next;

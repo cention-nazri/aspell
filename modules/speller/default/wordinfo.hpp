@@ -3,6 +3,7 @@
 #ifndef __aspeller_wordinfo__
 #define __aspeller_wordinfo__
 
+#include <assert.h>
 #include "string.hpp"
 
 namespace acommon {
