@@ -57,8 +57,8 @@ To run the debugger on these programs if there are not installed use
   libtool gdb <debugger parms>
 or
   libtool --mode execute <your debugger> <debugger parms>
-For example to debug speller-util with ddd use
-  libtool --mode execute ddd modules/speller/default/speller-util
+For example to debug aspell with ddd use
+  libtool --mode execute ddd prog/.libs/aspell
 
 Using libtool is necessary to make sure the shared libraries get loaded
 right. If you debug them after they are installed this will not be

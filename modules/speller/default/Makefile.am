@@ -1,12 +1,6 @@
 
 INCLUDES = -I${top_builddir}/common
 
-bin_PROGRAMS = speller-util
-
-speller_util_SOURCES = aspell-util.cpp
-
-speller_util_LDADD = ${top_builddir}/common/libaspell-common.la libaspell-speller-default.la
-
 noinst_LTLIBRARIES = libaspell-speller-default.la
 
 libaspell_speller_default_la_SOURCES = \

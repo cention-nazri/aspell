@@ -7,11 +7,6 @@ However, the New Aspell is still in a pre-alpha state and has not been
 tested that well at all.  So, only use it if you plan to help in some
 way with the testing or development of the new Aspell.
 
-The functionally of the old Aspell utility is now broken up into to
-utilities.  "aspell" and "speller-util".  The "aspell" program handles
-the checking of documents while "speller-util" handles the management
-of dictionaries.
-
 If different prefixes are specified for the New Aspell and the old
 Aspell/Pspell the two should be able to peacefully coexist.  However,
 the two both use ASPELL_CONF and the .aspell.conf file for reading

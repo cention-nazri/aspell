@@ -272,8 +272,8 @@ make install
 \end{quote}
 After Aspell is installed at least one dictionary needs to be installed.
 You can find them at \url{http://www.gnu.org/software/aspell/}. The
-\char`\"{}speller-util\char`\"{} program must be in your path in order
-for the dictionaries to install correctly.
+\char`\"{}aspell\char`\"{} program must be in your path in order for
+the dictionaries to install correctly.
 
 If you do not have Ispell or the traditional Unix {}``spell'' utility
 installed on your system than you should also copy the compatibly
@@ -348,11 +348,6 @@ previous Aspell/Pspell release. For one thing Pspell has been merged
 with Aspell so there in no longer two separate libraries you have
 to worry about.
 
-The functionally of the old Aspell utility is now broken up into to
-utilities. {}``aspell'' and {}``speller-util''. The \char`\"{}aspell\char`\"{}
-program handles the checking of documents while {}``speller-util''
-handles the management of dictionaries.
-
 The way dictionaries are handled has also changed. For one thing the
 language names have changed to the two letter iso code. This means
 that your old personal word lists won't work without some minor changes.
@@ -385,11 +380,8 @@ So you will need to recompile them for the new Aspell.
 
 \chapter{Basic Usage}
 
-Two separate utilities are now used to control Aspell, \char`\"{}aspell\char`\"{}
-and \char`\"{}speller-util\char`\"{}. The \char`\"{}aspell\char`\"{}
-program handles the checking of documents while \char`\"{}speller-util\char`\"{}
-handles the management of dictionaries. For a quick reference on either
-utility use {}``--help''.
+For a quick reference on the Aspell utility use the command {}``aspell
+--help''.
 
 
 \section{Spellchecking Individual Files\label{check}}
@@ -1107,15 +1099,15 @@ when a dictionary is not specifically given.
 
 \section{Dumping the contents of the word list}
 
-The dump command in \textbf{speller-util} will simply dump the contents
+The dump command in \textbf{aspell} will simply dump the contents
 of a word list to stdout in a format than can be read back in with
-\textbf{speller-util create}.
+\textbf{aspell create}.
 
 If no word list is specified the command will act on the default one.
 For example the command 
 
 \begin{quote}
-speller-util dump personal
+aspell dump personal
 \end{quote}
 will simply dump the contents of the current personal word list to
 stdout.
@@ -1127,8 +1119,8 @@ To create an individual main word list from a list of words use the
 command
 
 \begin{quote}
-speller-util --lang=<\,{}<lang>\,{}>
-create master ./<\,{}<base>\,{}> < <\,{}<wordlist>\,{}>
+aspell --lang=<\,{}<lang>\,{}> create
+master ./<\,{}<base>\,{}> < <\,{}<wordlist>\,{}>
 \end{quote}
 where <\,{}<base>\,{}> is the name of
 the word list and <\,{}<word list>\,{}>

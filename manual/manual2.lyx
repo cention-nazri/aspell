@@ -592,7 +592,7 @@ After Aspell is installed at least one dictionary needs to be installed.
 \end_inset 
 
 .
- The "speller-util" program must be in your path in order for the dictionaries
+ The "aspell" program must be in your path in order for the dictionaries
  to install correctly.
 \layout Standard
 
@@ -785,35 +785,6 @@ Aspell has undergone an extremely large number of changes since the previous
  two separate libraries you have to worry about.
 \layout Standard
 
-The functionally of the old Aspell utility is now broken up into to utilities.
- 
-\begin_inset Quotes eld
-\end_inset 
-
-aspell
-\begin_inset Quotes erd
-\end_inset 
-
- and 
-\begin_inset Quotes eld
-\end_inset 
-
-speller-util
-\begin_inset Quotes erd
-\end_inset 
-
-.
- The "aspell" program handles the checking of documents while 
-\begin_inset Quotes eld
-\end_inset 
-
-speller-util
-\begin_inset Quotes erd
-\end_inset 
-
- handles the management of dictionaries.
-\layout Standard
-
 The way dictionaries are handled has also changed.
  For one thing the language names have changed to the two letter iso code.
  This means that your old personal word lists won't work without some minor
@@ -862,15 +833,11 @@ The format of the complied dictionaries has almost certainly changed.
 Basic Usage
 \layout Standard
 
-Two separate utilities are now used to control Aspell, "aspell" and "speller-uti
-l".
- The "aspell" program handles the checking of documents while "speller-util"
- handles the management of dictionaries.
- For a quick reference on either utility use 
+For a quick reference on the Aspell utility use the command 
 \begin_inset Quotes eld
 \end_inset 
 
---help
+aspell --help
 \begin_inset Quotes erd
 \end_inset 
 
@@ -2941,12 +2908,12 @@ Dumping the contents of the word list
 
 The dump command in 
 \series bold 
-speller-util
+aspell
 \series default 
  will simply dump the contents of a word list to stdout in a format than
  can be read back in with 
 \series bold 
-speller-util create
+aspell create
 \series default 
 .
 \layout Standard
@@ -2955,7 +2922,7 @@ If no word list is specified the command will act on the default one.
  For example the command 
 \layout Quote
 
-speller-util dump personal
+aspell dump personal
 \layout Standard
 
 will simply dump the contents of the current personal word list to stdout.
@@ -2967,7 +2934,7 @@ Creating an Individual Word List
 To create an individual main word list from a list of words use the command
 \layout Quote
 
-speller-util --lang=<<lang>> create master ./<<base>> < <<wordlist>>
+aspell --lang=<<lang>> create master ./<<base>> < <<wordlist>>
 \layout Standard
 
 where <<base>> is the name of the word list and <<word list>> is the list

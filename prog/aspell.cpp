@@ -5,12 +5,7 @@
 // it at http://www.gnu.org/.
 
 //
-// NOTE: There is a lot of duplicate code between proj/aspell.cpp and
-//       modules/speller/default/aspell-util.cpp.  So when fixing bugs
-//       check if the same bug is present in the other file and fix 
-//       them both at the same time.
-// 
-//       This program currently uses a very ugly mix of the internal
+// NOTE: This program currently uses a very ugly mix of the internal
 //       API and the external C interface.  The eventual goal is to
 //       use only the external C++ interface, however, the external
 //       C++ interface is currently incomplete.  The C interface is
@@ -43,6 +38,9 @@
 #include "string_map.hpp"
 #include "word_list.hpp"
 
+#include "speller_impl.hpp"
+#include "data.hpp"
+
 using namespace acommon;
 
 // action functions declarations
@@ -57,6 +55,10 @@ void filter();
 void list();
 void dicts();
 
+void master();
+void personal();
+void repl();
+void soundslike();
 
 #define EXIT_ON_ERR(command) \
   do{PosibErrBase pe(command);\
@@ -120,10 +122,13 @@ const PossibleOption possible_options[] = {
   COMMAND("check",     'c', 0),
   COMMAND("pipe",      'a', 0),
   COMMAND("filter",    '\0', 0),
+  COMMAND("soundslike",'\0', 0),
   COMMAND("list",      'l', 0),
   COMMAND("dicts",     '\0', 0),
 
   COMMAND("dump",   '\0', 1),
+  COMMAND("create", '\0', 1),
+  COMMAND("merge",  '\0', 1),
 
   ISPELL_COMP('n',0), ISPELL_COMP('P',0), ISPELL_COMP('m',0),
   ISPELL_COMP('S',0), ISPELL_COMP('w',1), ISPELL_COMP('T',1),
@@ -295,8 +300,14 @@ int main (int argc, const char *argv[])
     check(false);
   else if (action_str == "filter")
     filter();
+  else if (action_str == "soundslike")
+    soundslike();
   else if (action_str == "dump")
     action = do_dump;
+  else if (action_str == "create")
+    action = do_create;
+  else if (action_str == "merge")
+    action = do_merge;
   else {
     CERR << "Error: Unknown Action: " << action_str << "\n";
     return 1;
@@ -313,6 +324,12 @@ int main (int argc, const char *argv[])
       config();
     else if (what_str == "dicts")
       dicts();
+    else if (what_str == "master")
+      master();
+    else if (what_str == "personal")
+      personal();
+    else if (what_str == "repl")
+      repl();
     else {
       CERR << "Error: Unknown Action: " << action_str 
 	   << " " << what_str << "\n";
@@ -944,7 +961,6 @@ void filter()
 {
   assert(setvbuf(stdin, 0, _IOLBF, 0) == 0);
   assert(setvbuf(stdout, 0, _IOLBF, 0) == 0);
-  
 }
 
 
@@ -957,6 +973,224 @@ void print_ver () {
   COUT << "@(#) International Ispell Version 3.1.20 " 
        << "(but really Aspell " << VERSION << ")" << "\n";
 }
+
+///////////////////////////////////////////////////////////////////////
+
+///////////////////////////
+//
+// master
+//
+
+class IstreamVirEnumeration : public StringEnumeration {
+  FStream * in;
+  String data;
+public:
+  IstreamVirEnumeration(FStream & i) : in(&i) {}
+  IstreamVirEnumeration * clone() const {
+    return new IstreamVirEnumeration(*this);
+  }
+  void assign (const StringEnumeration * other) {
+    *this = *static_cast<const IstreamVirEnumeration *>(other);
+  }
+  Value next() {
+    *in >> data;
+    if (!*in) return 0;
+    else return data.c_str();
+  }
+  bool at_end() const {return *in;}
+};
+
+void dump (aspeller::LocalWordSet lws) 
+{
+  using namespace aspeller;
+
+  switch (lws.word_set->basic_type) {
+  case DataSet::basic_word_set:
+    {
+      BasicWordSet  * ws = static_cast<BasicWordSet *>(lws.word_set);
+      BasicWordSet::Emul els = ws->detailed_elements();
+      BasicWordInfo wi;
+      while (wi = els.next(), wi)
+	wi.write(COUT,*(ws->lang()), lws.local_info.convert) << "\n";
+    }
+    break;
+  case DataSet::basic_multi_set:
+    {
+      BasicMultiSet::Emul els 
+	= static_cast<BasicMultiSet *>(lws.word_set)->detailed_elements();
+      LocalWordSet ws;
+      while (ws = els.next(), ws) 
+	dump (ws);
+    }
+    break;
+  default:
+    abort();
+  }
+}
+
+void master () {
+  using namespace aspeller;
+
+  if (args.size() != 0) {
+    options->replace("master", args[0].c_str());
+  }
+
+  StackPtr<Config> config(new_basic_config());
+  EXIT_ON_ERR(config->read_in_settings(options));
+
+  if (action == do_create) {
+    
+    EXIT_ON_ERR(create_default_readonly_word_set
+                (new IstreamVirEnumeration(CIN),
+                 *config));
+
+  } else if (action == do_merge) {
+    
+    CERR << "Can't merge a master word list yet.  Sorry\n";
+    exit (1);
+  
+  } else if (action == do_dump) {
+
+    EXIT_ON_ERR_SET(add_data_set(config->retrieve("master-path"), 
+                                 *config),
+                    LoadableDataSet *, mas);
+    LocalWordSetInfo wsi;
+    wsi.set(mas->lang(), config);
+    dump(LocalWordSet(mas,wsi));
+    delete mas;
+    
+  }
+}
+
+///////////////////////////
+//
+// personal
+//
+
+void personal () {
+  using namespace aspeller;
+
+  if (args.size() != 0) {
+    EXIT_ON_ERR(options->replace("personal", args[0].c_str()));
+  }
+  options->replace("module", "aspeller");
+  if (action == do_create || action == do_merge) {
+    abort(); // FIXME
+#if 0
+    StackPtr<Speller> speller(new_speller(options));
+
+    if (action == do_create) {
+      if (file_exists(speller->config()->retrieve("personal-path"))) {
+        CERR << "Sorry I won't overwrite \"" 
+             << speller->config()->retrieve("personal-path") << "\"" << "\n";
+        exit (1);
+      }
+      speller->personal_word_list().data->clear();
+    }
+
+    String word;
+    while (CIN >> word) 
+      speller->add_to_personal(word);
+
+    speller->save_all_word_lists();
+#endif
+
+  } else { // action == do_dump
+
+    StackPtr<Config> config(new_basic_config());
+    EXIT_ON_ERR(config->read_in_settings(options));
+
+    WritableWordSet * per = new_default_writable_word_set();
+    per->load(config->retrieve("personal-path"), config);
+    WritableWordSet::Emul els = per->detailed_elements();
+    LocalWordSetInfo wsi;
+    wsi.set(per->lang(), config);
+    BasicWordInfo wi;
+    while (wi = els.next(), wi) {
+      wi.write(COUT,*(per->lang()), wsi.convert);
+      COUT << "\n";
+    }
+    delete per;
+  }
+}
+
+///////////////////////////
+//
+// repl
+//
+
+void repl() {
+  using namespace aspeller;
+
+  if (args.size() != 0) {
+    options->replace("repl", args[0].c_str());
+  }
+
+  if (action == do_create || action == do_merge) {
+    abort(); //fixme
+#if 0
+    SpellerImpl speller(options);
+
+    if (action == do_create) {
+      if (file_exists(speller->config()->retrieve("repl-path"))) {
+        CERR << "Sorry I won't overwrite \"" 
+             << speller->config()->retrieve("repl-path") << "\"" << "\n";
+        exit (1);
+      }
+      speller->personal_repl().clear();
+    }
+    
+    try {
+      String word,repl;
+
+      while (true) {
+	get_word_pair(word,repl,':');
+	EXIT_ON_ERR(speller->store_repl(word,repl,false));
+      }
+
+    } catch (bad_cin) {}
+
+    EXIT_ON_ERR(speller->personal_repl().synchronize());
+#endif
+  } else if (action == do_dump) {
+
+    StackPtr<Config> config(new_basic_config());
+    EXIT_ON_ERR(config->read_in_settings());
+
+    WritableReplacementSet * repl = new_default_writable_replacement_set();
+    repl->load(config->retrieve("repl-path"), config);
+    WritableReplacementSet::Emul els = repl->elements();
+ 
+    ReplacementList rl;
+    while ( !(rl = els.next()).empty() ) {
+      while (!rl.elements->at_end()) {
+	COUT << rl.misspelled_word << ": " << rl.elements->next() << "\n";
+      }
+      delete rl.elements;
+    }
+    delete repl;
+  }
+
+}
+
+//////////////////////////
+//
+// soundslike
+//
+
+void soundslike() {
+  using namespace aspeller;
+
+  Language lang;
+  EXIT_ON_ERR(lang.setup("",options));
+  String word;
+  while (CIN >> word) {
+    COUT << word << '\t' << lang.to_soundslike(word) << "\n";
+  } 
+}
+
+///////////////////////////////////////////////////////////////////////
+
 
 ///////////////////////////
 //
@@ -1002,8 +1236,10 @@ void print_help () {
     "  -l|list          produce a list of misspelled words from standard input\n"
     "  [dump] config    dumps the current configuration to stdout\n"
     "  config <key>     prints the current value of an option\n"
+    "  soundslike       returns the soundslike equivalent for each word entered\n"
     "  filter           passes standard input through filters\n"
     "  -v|version       prints a version line\n"
+    "    dumps, creates or merges a master, personal, or replacement word list.\n"
     "\n"
     "[options] is any of the following:\n"
     "\n");
