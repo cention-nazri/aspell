@@ -277,6 +277,9 @@ fi
 #                                                                 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
+AC_DEFINE(_XOPEN_SOURCE_EXTENDED, 1, 
+          [Needed to enable wide curses support on some platforms])
+
 AC_MSG_CHECKING(if mblen is supported)
 AC_TRY_LINK(
   [#include <wchar.h>
