@@ -57,6 +57,10 @@ static void append_aff(LookupBookkepping & s, WordEntry & o)
   s.alloc = true;
 }
 
+// FIXME: There are some problems with stripped lookup when accents
+//   are in the word AND the affix conditions depends on those accents
+//   being there as they WONT BE in the stripped word.
+
 inline bool LookupInfo::lookup (ParmString word, WordEntry & o) const
 {
   SpellerImpl::WS::const_iterator i = begin;

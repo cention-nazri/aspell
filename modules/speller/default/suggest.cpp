@@ -57,7 +57,7 @@
 #include "stack_ptr.hpp"
 #include "suggest.hpp"
 
-#include "iostream.hpp"
+//#include "iostream.hpp"
 //#define DEBUG_SUGGEST
 
 using namespace aspeller;
@@ -79,17 +79,15 @@ namespace aspeller_default_suggest {
   //
   struct OriginalWord {
     String   word;
-    String   word_stripped;
+    String   stripped;
     String   soundslike;
-    String   phoneme;
     CasePattern  case_pattern;
     OriginalWord() {}
-    OriginalWord (const String &w, const String &sl, const String &p)
-      : word(w), soundslike(sl), phoneme(p) {}
-    OriginalWord (const String &w, const String &sl, const String &p,
+    OriginalWord (const String &w, const String &sl)
+      : word(w), soundslike(sl) {}
+    OriginalWord (const String &w, const String &sl,
 		 const String &l, CasePattern cp)
-      : word(w), word_stripped(l), soundslike(sl), phoneme(p), case_pattern(cp)
-    {}
+      : word(w), stripped(l), soundslike(sl), case_pattern(cp) {}
   };
 
   //
@@ -136,15 +134,14 @@ namespace aspeller_default_suggest {
   class Score {
   protected:
     const Language * lang;
-    OriginalWord      original_word;
+    OriginalWord     original_word;
     SuggestParms     parms;
 
   public:
     Score(const Language *l, const String &w, const SuggestParms & p)
       : lang(l), original_word(w, l->to_soundslike(w.c_str()), 
-			      l->to_phoneme(w.c_str()),
-			      to_stripped(*l, w),
-			      case_pattern(*l, w)),
+			       to_stripped(*l, w),
+			       case_pattern(*l, w)),
       parms(p)
     {}
     String fix_case(const String & word) {
@@ -165,10 +162,20 @@ namespace aspeller_default_suggest {
 
     BasicList<String>      strings;
 
+    bool use_soundslike, fast_scan, fast_lookup, affix_compress_soundslike;
+
     static const bool do_count = true;
     static const bool dont_count = false;
     static const bool do_need_alloc = true;
     static const bool dont_need_alloc = false;
+
+    const String & active_soundslike() {
+      return use_soundslike ? original_word.soundslike : original_word.stripped;
+    };
+    const char * soundslike_chars() {
+      return use_soundslike ? lang->soundslike_chars() : lang->stripped_chars();
+    }
+    
 
     void try_sound(const char *, int ms);
     void add_nearmiss(const char * word, int ms, bool count, 
@@ -238,9 +245,11 @@ namespace aspeller_default_suggest {
   public:
     Working(SpellerImpl * m, const Language *l,
 	    const String & w, const SuggestParms & p)
-      : Score(l,w,p), threshold(1), max_word_length(0), speller(m) {}
+      : Score(l,w,p), threshold(1), max_word_length(0), speller(m) ,
+        use_soundslike(m->use_soundslike),
+        fast_scan(m->fast_scan), fast_lookup(m->fast_lookup),
+	affix_compress_soundslike(!m->suggest_affix_ws.empty()) {}
     void get_suggestions(NearMissesFinal &sug);
-    void get_suggestions_ultra(NearMissesFinal &sug);
   };
 
   //
@@ -248,16 +257,24 @@ namespace aspeller_default_suggest {
   //    the possable words to near_misses
   //
 
+  void Working::get_suggestions(NearMissesFinal & sug) {
+    near_misses_final = & sug;
+    if (active_soundslike().empty()) return;
+    try_others();
+    score_list();
+    transfer();
+  }
+  
   void Working::try_sound (const char * m, int ms)  
   {
     String word;
+    WordEntry sw;
     for (SpellerImpl::WS::const_iterator i = speller->suggest_ws.begin();
          i != speller->suggest_ws.end();
          ++i) 
     {
-      WordEntry sw;
       i->ws->soundslike_lookup(m, sw);
-      while (!sw.at_end()) {
+      for (;!sw.at_end(); sw.adv()) {
         word.clear();
         i->convert.convert(sw.word, word);
         WordEntry * repl = 0;
@@ -270,6 +287,27 @@ namespace aspeller_default_suggest {
         add_nearmiss(word.c_str(), ms, do_count, do_need_alloc, repl);
       }
     }
+    if (affix_compress_soundslike) {
+      CheckInfo ci; memset(&ci, 0, sizeof(ci));
+      bool res = lang->affix()->affix_check(LookupInfo(speller, LookupInfo::Soundslike),
+					    m, ci, 0);
+      if (!res) return;
+
+      // FIXME: This is not completely correct when there are multiple
+      //   words for a single stripped word.
+      for (SpellerImpl::WS::const_iterator i = speller->suggest_affix_ws.begin();
+	   i != speller->suggest_affix_ws.end();
+	   ++i) 
+      {
+	i->ws->soundslike_lookup(ci.word, sw);
+	for (;!sw.at_end(); sw.adv()) {
+	  word.clear();
+	  i->convert.convert(sw.word, word);
+	  lang->affix()->get_word(word, ci);
+	  add_nearmiss(word.c_str(), ms, do_count, do_need_alloc);
+	}
+      }
+    }
   }
 
   //
@@ -280,15 +318,15 @@ namespace aspeller_default_suggest {
 
     try_space_hyphen();
 
-    if (false && parms.soundslike_level == 1) {
-
+    if (parms.soundslike_level == 1 && !fast_scan)
       try_one_edit();
-
-    } else {
-
+    else
       try_scan();
+    
+    //try_repl();
 
-    }
+    //try_ngram();
+
   }
 
   void Working::try_space_hyphen() {
@@ -321,12 +359,16 @@ namespace aspeller_default_suggest {
   }
 
   void Working::try_one_edit() {
-    const String & soundslike = original_word.soundslike;
-    const char * replace_list = lang->stripped_chars();
+    const String & soundslike = active_soundslike();
+    const char * replace_list = soundslike_chars();
     char a,b;
     const char * c;
     String new_soundslike;
     size_t i;
+
+    // First try the soundslike as is
+
+    try_sound(soundslike.c_str(), 0);
 
     // Change one letter
     
@@ -386,7 +428,7 @@ namespace aspeller_default_suggest {
   }
 
   void Working::try_scan() {
-    const char * original_soundslike = original_word.soundslike.c_str();
+    const char * original_soundslike = active_soundslike().c_str();
     //unsigned int original_soundslike_len = strlen(original_soundslike);
     
     EditDist (* edit_dist_fun)(const char *, const char *, 
@@ -415,8 +457,6 @@ namespace aspeller_default_suggest {
       
       while ( (sw = els->next(stopped_at)) ) {
 
-        CERR << sw->word << "\n";
-        
         if (sw->what != WordEntry::Word) {
           sl = sw->word;
         } else if (!*sw->aff) {
@@ -468,7 +508,6 @@ namespace aspeller_default_suggest {
   void Working::score_list() {
     if (near_misses.empty()) return;
 
-    bool no_soundslike = strcmp(speller->lang().soundslike_name(), "none") == 0;
     parms.set_original_word_size(original_word.word.size());
       
     NearMisses::iterator i;
@@ -496,10 +535,10 @@ namespace aspeller_default_suggest {
 
 	int level = needed_level(try_for, i->soundslike_score);
 	
-	if (no_soundslike)
+	if (!use_soundslike)
 	  word_score = i->soundslike_score;
 	else if (level >= int(i->soundslike_score/parms.edit_distance_weights.min))
-	  word_score = edit_distance(original_word.word_stripped.c_str(),
+	  word_score = edit_distance(original_word.stripped.c_str(),
 				     i->word_stripped,
 				     level, level,
 				     parms.edit_distance_weights);
@@ -557,10 +596,10 @@ namespace aspeller_default_suggest {
       int initial_level = needed_level(try_for, i->soundslike_score);
       int max_level = needed_level(threshold, i->soundslike_score);
 	
-      if (no_soundslike)
+      if (!use_soundslike)
 	word_score = i->soundslike_score;
       else if (initial_level < max_level)
-	word_score = edit_distance(original_word.word_stripped.c_str(),
+	word_score = edit_distance(original_word.stripped.c_str(),
 				   i->word_stripped,
 				   initial_level+1,max_level,
 				   parms.edit_distance_weights);
@@ -593,7 +632,7 @@ namespace aspeller_default_suggest {
       CharVector original, word;
       original.resize(original_word.word.size() + 1);
       for (j = 0; j != original_word.word.size(); ++j)
-        original[j] = lang->to_normalized(original_word.word[j]);
+          original[j] = lang->to_normalized(original_word.word[j]);
       original[j] = 0;
       word.resize(max_word_length + 1);
       
@@ -655,14 +694,6 @@ namespace aspeller_default_suggest {
 	  near_misses_final->push_back(*dup_pair.first);
       }
     }
-  }
-  
-  void Working::get_suggestions(NearMissesFinal & sug) {
-    near_misses_final = & sug;
-    if (original_word.soundslike.empty()) return;
-    try_others();
-    score_list();
-    transfer();
   }
   
   class SuggestionListImpl : public SuggestionList {

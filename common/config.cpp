@@ -1128,6 +1128,17 @@ namespace acommon {
        N_("suggestion mode")}
     , {"word-list-path", KeyInfoList, DATA_DIR,
        N_("Search path for word list information files")}
+
+    //
+    // These options are only used when creating dictionaries
+    // and may also be specified in the language data file
+    //
+    , {"use-soundslike", KeyInfoBool, "true",
+       ""}
+    , {"use-jump-tables", KeyInfoBool, "true",
+       ""}
+    , {"affix-compress", KeyInfoBool, "false",
+       ""}
     
     //
     // These options are specific to the "aspell" utility.  They are

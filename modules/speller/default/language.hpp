@@ -4,12 +4,12 @@
 #define __aspeller_language__
 
 #include "affix.hpp"
-#include "string.hpp"
+#include "cache.hpp"
+#include "config.hpp"
+#include "phonetic.hpp"
 #include "posib_err.hpp"
 #include "stack_ptr.hpp"
-#include "cache.hpp"
-
-#include "phonetic.hpp"
+#include "string.hpp"
 
 using namespace acommon;
 
@@ -40,7 +40,6 @@ namespace aspeller {
     String   dir_;
     String   name_;
     String   charset_;
-    String   mid_chars_;
 
     unsigned char to_uchar(char c) const {return static_cast<unsigned char>(c);}
 
@@ -62,8 +61,7 @@ namespace aspeller {
 
     StackPtr<Soundslike> soundslike_;
     StackPtr<AffixMgr>   affix_;
-
-    bool affix_compress_;
+    StackPtr<Config>     lang_config_;
 
     Language(const Language &);
     void operator=(const Language &);
@@ -71,11 +69,11 @@ namespace aspeller {
   public:
     Language() {}
     PosibErr<void> setup(const String & lang, Config * config);
+    void set_lang_defaults(Config & config);
 
     const char * data_dir() const {return dir_.c_str();}
     const char * name() const {return name_.c_str();}
     const char * charset() const {return charset_.c_str();}
-    const char * mid_chars() const {return mid_chars_.c_str();}
 
     char to_upper(char c) const {return to_upper_[to_uchar(c)];}
     bool is_upper(char c) const {return to_upper(c) == c;}
@@ -115,22 +113,12 @@ namespace aspeller {
       return soundslike_->version();
     }
     
-    bool have_phoneme() const {return false;}
-    String to_phoneme(const char * word) const 
-    {
-      return "";
-    }
-    String to_phoneme(ParmString word) const 
-    {
-      return "";
-    }
-
     const char * soundslike_chars() const {return soundslike_chars_.c_str();}
     const char * stripped_chars() const {return stripped_chars_.c_str();}
 
-    const AffixMgr * affix() const {return affix_;}
+    bool have_soundslike() const {return soundslike_;}
 
-    bool affix_compress() const {return affix_compress_;}
+    const AffixMgr * affix() const {return affix_;}
 
     static inline PosibErr<Language *> get_new(const String & lang, Config * config) {
       StackPtr<Language> l(new Language());
@@ -324,10 +312,10 @@ namespace aspeller {
       return word;
     }
   }
+
+  String get_stripped_chars(const Language & l);
   
   PosibErr<void> check_if_valid(const Language & l, ParmString word);
-
-  void normalize_mid_characters(const Language & l, String & s);
 
   PosibErr<Language *> new_language(Config &, ParmString lang = 0);
   

@@ -15,13 +15,13 @@ namespace acommon
   class CharVector : public Vector<char>, public OStream
   {
   public:
-    void write (char c) {append(c);}
-    void write (ParmString str) {append(str, str.size());}
-    void write (const void * str, unsigned int size) {append(str, size);}
-
     void append (char c) {Vector<char>::append(c);}
     void append (const void * d, unsigned int size) 
       {Vector<char>::append(static_cast<const char *>(d), size);}
+
+    void write (char c) {CharVector::append(c);}
+    void write (ParmString str) {CharVector::append(str, str.size());}
+    void write (const void * str, unsigned int size) {CharVector::append(str, size);}
 
     unsigned short & at16(unsigned int pos) 
       {return reinterpret_cast<unsigned short &>(operator[](pos));}
@@ -29,7 +29,7 @@ namespace acommon
       {return reinterpret_cast<unsigned int &>(operator[](pos));}
 
     //FIXME: Make this more efficent by rewriting the implemenation
-    //       to work with more memory rather than using vector<char>
+    //       to work with raw memory rather than using vector<char>
     template <typename Itr>
     void replace(iterator start, iterator stop, Itr rstart, Itr rstop) {
       iterator i = erase(start,stop);

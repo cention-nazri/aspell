@@ -145,6 +145,8 @@ namespace aspeller {
   
     virtual bool lookup (ParmString word, WordEntry &,
                          const SensitiveCompare &) const = 0;
+    
+    virtual bool stripped_lookup(const char * sondslike, WordEntry &) const {return false;}
 
     // garanteed to be constant time
     virtual bool soundslike_lookup(const WordEntry &, WordEntry &) const = 0;

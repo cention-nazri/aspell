@@ -68,20 +68,7 @@ namespace aspeller {
     PosibErr<void> setup() {return no_err;}
     
     String soundslike_chars() const {
-      bool chars_set[256] = {0};
-      String     chars_list;
-      for (int i = 0; i != 256; ++i) 
-      {
-	char c = static_cast<char>(i);
-	if (lang->is_alpha(c) || lang->special(c).any())
-	  chars_set[static_cast<unsigned char>(lang->to_stripped(c))] = true;
-      }
-      for (int i = 0; i != 256; ++i) 
-      {
-	if (chars_set[i]) 
-	  chars_list += static_cast<char>(i);
-      }
-      return chars_list;
+      return get_stripped_chars(*lang);
     }
 
     String to_soundslike(ParmString str) const 

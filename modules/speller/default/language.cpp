@@ -23,19 +23,20 @@ namespace aspeller {
   //   work on a policy to avoid that such resering the first half
   //   for ConfigData's use and the otehr for users.
   static const KeyInfo lang_config_keys[] = {
-    {"charset",             KeyInfoString, "iso8859-1", ""}
-    , {"name",                KeyInfoString, "", ""}
+    {"charset",             KeyInfoString, "iso8859-1", "", ""}
+    , {"name",                KeyInfoString, "", "", ""}
     , {"run-together",        KeyInfoBool,   "", "", "c"}
     , {"run-together-limit",  KeyInfoInt,    "", "", "c"}
-    , {"run-together-middle", KeyInfoString, "", ""}
+    , {"run-together-middle", KeyInfoString, "", "", ""}
     , {"run-together-min",    KeyInfoInt,    "", "", "c"}
-    , {"soundslike",          KeyInfoString, "none", ""}
-    , {"special",             KeyInfoString, "", ""}
+    , {"soundslike",          KeyInfoString, "none", "", ""}
+    , {"special",             KeyInfoString, "", "", ""}
     , {"ignore-accents" ,     KeyInfoBool, "", "", "c"}
-    //, {"use-soundslike" ,     KeyInfoBool, "",  ""}
+    , {"use-soundslike" ,     KeyInfoBool, "", "", "c"}
+    , {"use-jump-tables",     KeyInfoBool, "", "", "c"}
     , {"keyboard",            KeyInfoString, "standard", "", "c"} 
-    , {"affix",               KeyInfoString, "none", ""}
-    , {"affix-compress",      KeyInfoBool, "false", "c"}
+    , {"affix",               KeyInfoString, "none", "", ""}
+    , {"affix-compress",      KeyInfoBool, "false", "", "c"}
   };
 
   static GlobalCache<Language> language_cache;
@@ -50,10 +51,13 @@ namespace aspeller {
 
     fill_data_dir(config, dir1, dir2);
     dir_ = find_file(path,dir1,dir2,lang,".dat");
-    
-    Config data("aspeller-lang",
-		lang_config_keys, 
-		lang_config_keys + sizeof(lang_config_keys)/sizeof(KeyInfo));
+
+    lang_config_ = 
+      new Config("speller-lang",
+                 lang_config_keys, 
+                 lang_config_keys + sizeof(lang_config_keys)/sizeof(KeyInfo));
+    Config & data = *lang_config_;
+
     {
       PosibErrBase pe = data.read_in_file(path);
       if (pe.has_err(cant_read_file)) {
@@ -70,7 +74,6 @@ namespace aspeller {
 
     name_         = data.retrieve("name");
     charset_      = data.retrieve("charset");
-    mid_chars_    = data.retrieve("run-together-middle");
 
     std::vector<String> special_data = split(data.retrieve("special"));
     for (std::vector<String>::iterator i = special_data.begin();
@@ -82,18 +85,6 @@ namespace aspeller {
 	special_[to_uchar(c)] = 
 	  SpecialChar ((*i)[0] == '*',(*i)[1] == '*',(*i)[2] == '*');
       }
-
-    //
-    //
-    //
-
-    Enumeration<KeyInfoEnumeration> els = data.possible_elements(false);
-    const KeyInfo * k;
-    while ((k = els.next()) != 0) {
-      if (k->otherdata[0] == 'c' 
-	  && data.have(k->name) && !config->have(k->name))
-	config->replace(k->name, data.retrieve(k->name));
-    }
   
     //
     // fill_in_tables
@@ -149,12 +140,6 @@ namespace aspeller {
     max_normalized_ = c;
 
     //
-    // 
-    // 
-
-    normalize_mid_characters(*this,mid_chars_);
-
-    //
     // prep phonetic code
     //
 
@@ -163,12 +148,24 @@ namespace aspeller {
     if (pe.has_err()) return pe;
     soundslike_.reset(pe);
     soundslike_chars_ = soundslike_->soundslike_chars();
-    //stripped_chars_   = NoSoundslike(this).soundslike_chars();
+    stripped_chars_   = get_stripped_chars(*this);
 
     affix_.reset(new_affix_mgr(data.retrieve("affix"), this));
-    affix_compress_ = data.retrieve_bool("affix-compress");
     
     return no_err;
+  }
+
+  void Language::set_lang_defaults(Config & config)
+  {
+    Enumeration<KeyInfoEnumeration> els = lang_config_->possible_elements(false);
+    const KeyInfo * k;
+    while ((k = els.next()) != 0) {
+      if (k->otherdata[0] == 'c' 
+	  && lang_config_->have(k->name) && !config.have(k->name))
+      {
+	config.replace(k->name, lang_config_->retrieve(k->name));
+      }
+    }
   }
 
   bool SensitiveCompare::operator() (const char * word, 
@@ -306,28 +303,23 @@ namespace aspeller {
     return no_err;
   }
 
-  void normalize_mid_characters(const Language & l, String & s) 
-  {
-    assert (s.size() < 4);
-    for (unsigned int i = 0; i != s.size(); ++i) 
+  String get_stripped_chars(const Language & lang) {
+    bool chars_set[256] = {0};
+    String     chars_list;
+    for (int i = 0; i != 256; ++i) 
     {
-      s[i] = l.to_lower(s[i]);
+      char c = static_cast<char>(i);
+	if (lang.is_alpha(c) || lang.special(c).any())
+	  chars_set[static_cast<unsigned char>(lang.to_stripped(c))] = true;
     }
-    // now sort it
-    if (s.size() == 3) 
+    for (int i = 0; i != 256; ++i) 
     {
-      if (s[0] < s[1])
-	std::swap(s[0], s[1]);
-      if (s[1] < s[2])
-	std::swap(s[1], s[2]);
-    } 
-    if (s.size() >= 2) 
-    {
-      if (s[0] < s[1])
-	std::swap(s[0], s[1]);
+      if (chars_set[i]) 
+	chars_list += static_cast<char>(i);
     }
-    
+    return chars_list;
   }
+
 
   PosibErr<Language *> new_language(Config & config, ParmString lang)
   {

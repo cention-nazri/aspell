@@ -185,7 +185,7 @@ namespace aspeller {
     bool res = check_simple(word, w);
     if (res) {ci.word = w.word; return true;}
     if (affix_compress) {
-      res = lang_->affix()->affix_check(LookupInfo(this, LookupInfo::Word), word, ci, gi);
+      res = lang_->affix()->affix_check(LookupInfo(this, LookupInfo::Word), word, ci, 0);
       if (res) return true;
     }
     if (affix_info && gi) {
@@ -604,7 +604,6 @@ namespace aspeller {
 
     unconditional_run_together_ = config_->retrieve_bool("run-together");
     run_together_specified_     = config_->retrieve_bool("run-together-specified");
-    run_together_middle_        = lang().mid_chars();
 
     run_together_limit_  = config_->retrieve_int("run-together-limit");
     if (run_together_limit_ > 8) {
@@ -618,9 +617,6 @@ namespace aspeller {
 	&& run_together_min_ < run_together_start_len_)
       run_together_start_len_ = run_together_min_;
       
-    suggest_.reset(new_default_suggest(this));
-    intr_suggest_.reset(new_default_suggest(this));
-
     config_->add_notifier(new ConfigNotifier(this));
 
     config_->set_attached(true);
@@ -678,6 +674,14 @@ namespace aspeller {
     fast_scan   = suggest_ws.front().ws->fast_scan;
     fast_lookup = suggest_ws.front().ws->fast_lookup;
     affix_compress = !affix_ws.empty();
+
+    //
+    // Setup suggest
+    //
+
+    suggest_.reset(new_default_suggest(this));
+    intr_suggest_.reset(new_default_suggest(this));
+
     return no_err;
   }
 

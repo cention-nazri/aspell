@@ -1,5 +1,5 @@
 \input texinfo   @c -*-texinfo-*-
-@comment $Id: aspell.texi,v 1.1.2.1 2004/01/24 22:42:19 kevina Exp $
+@comment $Id: aspell.texi,v 1.2 2004/01/25 01:24:05 kevina Exp $
 @comment %**start of header
 @setfilename aspell.info
 @settitle GNU Aspell 0.51
@@ -8,7 +8,7 @@
 @comment %**end of header
 @copying
 This is the user's manual for Aspell
-($Revision: 1.1.2.1 $ $Date: 2004/01/24 22:42:19 $).
+($Revision: 1.2 $ $Date: 2004/01/25 01:24:05 $).
 
 Copyright @copyright{} 2000--2004 Kevin Atkinson.
 
@@ -39,7 +39,7 @@ are LGPL Compatible.
 
 @titlepage
 @title GNU Aspell 0.51
-@subtitle for $Revision: 1.1.2.1 $ $Date: 2004/01/24 22:42:19 $
+@subtitle for $Revision: 1.2 $ $Date: 2004/01/25 01:24:05 $
 @author Kevin Atkinson (@email{kevina@@gnu.org})
 @page
 @vskip 0pt plus 1filll
@@ -2735,11 +2735,8 @@ creating a dictionary from a word list with affix compression.
 @node Controlling the Behavior of Run-together Words,  , Affix Compression, Adding Support For Other Languages
 @section Controlling the Behavior of Run-together Words
 
-Aspell has support for either unconditionally accepting run-together
-words or only accepting certain words in compound formation.
-
-@emph{Note: Support for only accepting certain words in compound formation
-is currently broken in Aspell 0.51}.
+Aspell currently has support for unconditionally accepting run-together
+words.
 
 Support for unconditionally accepting run-together words can either be
 turned on in the language data file or as a normal option via the
@@ -2753,78 +2750,6 @@ be specified in both the language data file or as a normal option.
 The @option{run-together-mid} option, which may only be specified in
 the language data file, may be used to specify up to three optional
 characters that may appear between individual words.
-
-In order for Aspell to conditionally only accept certain words in
-compounds those words must be flagged when the compiled word list is
-being created.  The format for each entry is
-
-@example
-@i{word}:C[1][2][3]@i{middle char}
-@end example
-
-The 1, 2, and 3 control if the word is allowed to appear in the
-beginning, middle, or end of the compound, respectively.  More than
-one position flag may be specified.  If none of them are specified it
-as assumed that the word may appear anywhere.  The @code{C} is
-optional if 1, 2, or 3 is specified.  The @code{@i{middle char}}
-represents an optional character that may appear after the word in the
-formation of the compound if the word is not at the end of the
-compound.  If the letter is lowercase than the character may appear
-after the word, if it is in uppercase then that letter must appear
-after the compound.  Only one letter may be specified and it must also
-be in the list of middle letters specified via the
-@option{run-together-mid }option.
-
-The @option{run-together-limit} option may also be used to specify the
-maximum number of words to string together.
- 
-For example the word list:
-
-@example
-beg:1
-mid:2 
-end:3 
-any:C 
-never 
-must:CM 
-maybe:Cm
-@end example
-
-Means that the word @code{beg} may only appear at the beginning of a
-word, the word @code{mid} at the middle, the word @code{end} at the
-end, and the word @code{any} any place.  The word @code{never} is
-never accepted in a compound unless the @strong{run-together} option
-is set.  The word @code{must} may appear anywhere however it must be
-followed by an @code{m}, while the word ``maybe'' may be followed by
-an @code{m}.  Given the above word list the following compounds or
-legal:
-
-@example
-begmidend
-begany
-mustmend 
-maybeend 
-maybemend
-@end example
-
-are all legal, but the following are not:
-
-@example
-begmid
-mustend
-neverany
-@end example
-
-Individual words such as @code{beg} are always accepted.
-
-When the @option{run-together} option is not set Aspell will only
-accept words that have been flagged in a run-together word.  When the
-@option{run-together} option is set Aspell will accept words which are
-as least as long as the value specified in the
-@option{run-together-min} option.  If the word's length is less than
-@option{run-together-min} then it will only accept the word if it has
-been flagged.  When the @option{run-together} option is not set the
-@option{run-together-min} option is ignored altogether.
 
 Currently Aspell only supports run-together words when checking if a
 word is in the dictionary.  When coming up with suggestions Aspell
@@ -4109,6 +4034,15 @@ will get to implementing them if ever.
 @item
 Use Lawrence Philips' new Double Metaphone algorithm.  See
 @uref{http://aspell.sourceforge.net/metaphone/}.
+
+@item
+Use frequency information to help rank suggestions.  Both global
+frequency and document specific frequency can be used.  The latter will
+require that the whole document be made available to the spell checker.
+
+Also use frequency information to flag words which are found in the
+dictionary but not in common usage, and thus might not be what was
+intended.
 
 @item
 Come up with a plug-in for @command{gEdit} the gnome text editor.

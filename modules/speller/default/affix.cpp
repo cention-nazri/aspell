@@ -129,6 +129,8 @@ PosibErr<void> AffixMgr::parse_file(const char * affpath)
   // step one is to parse the affix file building up the internal
   // affix data structures
 
+  // FIXME: Make sure that the encoding used for the affix file
+  //   is the same as the internal encoding used for the language
 
   // read in each line ignoring any that do not
   // start with a known line type indicator
@@ -607,6 +609,29 @@ bool AffixMgr::affix_check(const LookupInfo & linf, ParmString word,
   // if still not found check all suffixes
   return suffix_check(linf, sword, ci, gi, 0, NULL);
 }
+
+void AffixMgr::get_word(String & word, const CheckInfo & ci) const
+{
+  CasePattern cp = case_pattern(*lang,word);
+  if (ci.pre_add) {
+    if (cp == FirstUpper) word[0] = lang->to_lower(word[0]);
+    size_t s = strlen(ci.pre_add);
+    word.replace(0, strlen(ci.pre_strip), ci.pre_add, s);
+    if (cp == FirstUpper) word[0] = lang->to_title(word[0]);
+    else if (cp == AllUpper)
+      for (size_t i = 0; i != s; ++i) word[i] = lang->to_upper(word[i]);
+  }
+  if (ci.suf_add) {
+    size_t strip = strlen(ci.suf_strip);
+    size_t s     = strlen(ci.suf_add);
+    size_t start = word.size() - strip;
+    word.replace(start, strip, ci.suf_add, s);
+    if (cp == AllUpper)
+      for (size_t i = start; i != start + s; ++i) 
+	word[i] = lang->to_upper(word[i]);
+  }
+}
+
 
 void AffixMgr::munch(ParmString word, CheckList * cl) const
 {
