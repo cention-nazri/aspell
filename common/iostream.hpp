@@ -9,6 +9,12 @@
 
 #include "fstream.hpp"
 
+#if defined(__CYGWIN__) || defined (_WIN32)
+#define DLLIMPORT __declspec(dllimport)
+#else
+#define DLLIMPORT
+#endif
+
 namespace acommon {
 
   // These streams for the time being will be based on stdin, stdout,
@@ -16,9 +22,9 @@ namespace acommon {
   // functions.  It is also safe to assume that modifcations to the
   // state of the standard streams will effect these.
 
-  extern FStream CIN;
-  extern FStream COUT;
-  extern FStream CERR;
+  extern DLLIMPORT FStream CIN;
+  extern DLLIMPORT FStream COUT;
+  extern DLLIMPORT FStream CERR;
 }
 
 #endif
