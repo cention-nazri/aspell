@@ -1,0 +1,50 @@
+
+This is still rather incomplete so only use for development purposes.
+
+The following packages need to be installed to use this package:
+  perl (I use v5.6.0 but other versions may work)
+  libtool (CVS version, HEAD branch)
+  autoconf 2.50 or better
+  automake 1.5 (earlier versions *might* work)
+
+Before the build:
+
+  tar xfz data.tgz # this should be checked out with the other files
+  ./autogen
+  ./config-opt # or ./config-debug
+
+Use ./config-* instead of configure as the ./config-* will add the
+necessary options so that things build right with this very limited
+version of Pspell.  Any parameters specified will be passed to
+configure.
+
+Than to build:
+
+  make
+  ./mk-dict # to build the dictionary
+ 
+You can then optionally due a "make install" to install the programs in
+the inst/ directory.
+
+To test things out use either pspell or aspell-util. If yoy did a make
+install both of these programs are in inst/bin otherwise they are in
+example/ and modules/aspell/ respectfully.  pspell is a slightly modified
+version of the example program distributed with the released version of
+Aspell.  Aspell-util is a skimmed down version of Aspell which can be
+used for creating or dumping dictionaries.
+
+To run the debugger on these programs if there are not installed use
+  libtool gdb <debugger parms>
+or
+  libtool --mode execute <your debugger> <debugger parms>
+For example to debug aspell-util with ddd use
+libtool --mode execute ddd modules/aspell/aspell-util
+
+Using libtool is necessary to make sure the shared libraries get loaded
+right. If you use them after they are installed this will not be
+necessary.
+
+Using static libraries will NOT work due to the mixing of C and C++.
+
+Autogen should be run when ever anything but the source files or
+Makefile.am files are modifed by either yourself or a cvs update.
