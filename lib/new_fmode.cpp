@@ -8,8 +8,8 @@
 #include <sys/types.h>
 #include <regex.h>
 
-#include <string.hpp>
-#include <vector.hpp>
+#include "string.hpp"
+#include "vector.hpp"
 #include "config.hpp"
 #include "errors.hpp"
 #include "filter.hpp"
@@ -30,71 +30,63 @@
 
 namespace acommon {
 
-using namespace std;//needed for vector
-
   class FilterMode {
   public:
     class MagicString {
     public:
-      MagicString(const String & mode):_magic(),_mode(mode),fileExtensions() {}
-      MagicString(const String & magic,const String & mode)
-        :_magic(magic),_mode(mode),fileExtensions() {} 
-      MagicString(const MagicString & m)
-        :_magic(m._magic),_mode(m._mode),fileExtensions(m.fileExtensions) {}
-      MagicString & operator = (const MagicString & m) {
-        _magic = m._magic;
-        _mode  = m._mode;
-        return *this;
-      }
-      bool matchFile(FILE * in,const String & ext);
-      static PosibErr<bool> testMagic(FILE * seekIn,String & magic,const String mode);
+      MagicString(const String & mode) : mode_(mode), fileExtensions() {}
+      MagicString(const String & magic, const String & mode)
+        : magic_(magic), mode_(mode) {} 
+      bool matchFile(FILE * in, const String & ext);
+      static PosibErr<bool> testMagic(FILE * seekIn, String & magic, const String & mode);
       void addExtension(const String & ext) { fileExtensions.push_back(ext); }
       bool hasExtension(const String & ext);
       void remExtension(const String & ext);
-      MagicString & operator += (const String ext) {addExtension(ext);return *this;}
-      MagicString & operator -= (const String ext) {remExtension(ext);return *this;}
-      MagicString & operator = (const String ext) { 
+      MagicString & operator += (const String & ext) {addExtension(ext);return *this;}
+      MagicString & operator -= (const String & ext) {remExtension(ext);return *this;}
+      MagicString & operator = (const String & ext) { 
         fileExtensions.clear();
         addExtension(ext);
         return *this; 
       }
-      const String & magic() const { return _magic; }
-      const String & magicMode() const { return _mode; }
+      const String & magic() const { return magic_; }
+      const String & magicMode() const { return mode_; }
       ~MagicString() {}
     private:
-      String _magic;
-      String _mode;
-      vector<String> fileExtensions;
+      String magic_;
+      String mode_;
+      Vector<String> fileExtensions;
     };
 
-    FilterMode(const FilterMode & b)
-      :_name(b._name),_desc(b._desc),magicKeys(b.magicKeys),expansion(b.expansion) {}
     FilterMode(const String & name);
-    PosibErr<bool> addModeExtension(const String & ext,String toMagic);
-    PosibErr<bool> remModeExtension(const String & ext,String toMagic);
+    PosibErr<bool> addModeExtension(const String & ext, String toMagic);
+    PosibErr<bool> remModeExtension(const String & ext, String toMagic);
     bool lockFileToMode(const String & fileName,FILE * in = NULL);
     const String modeName() const;
-    void setDescription(const String & desc) {_desc = desc;}
-    const String & getDescription() {return _desc;}
+    void setDescription(const String & desc) {desc_ = desc;}
+    const String & getDescription() {return desc_;}
     PosibErr<void> expand(Config * config);
-    PosibErr<void> build(FILE * in,Config * config,int line = 1,const char * name = "mode file");
+    PosibErr<void> build(FILE * in, Config * config, int line = 1, 
+                         const char * name = "mode file");
 
     ~FilterMode();
   private:
-     //map extensions to magic keys 
-     String _name;
-     String _desc;
-     vector<MagicString> magicKeys;
-     vector< vector< String > > expansion;
+    //map extensions to magic keys 
+    String name_;
+    String desc_;
+    String file_;
+    Vector<MagicString> magicKeys;
+    struct KeyValue {
+      String key;
+      String value;
+      KeyValue() {}
+      KeyValue(ParmStr k, ParmStr v) : key(k), value(v) {}
+    };
+    Vector<KeyValue> expansion;
   };
 
   FilterMode::FilterMode(const String & name)
-  : _name(name),
-    _desc(),
-    magicKeys(),
-    expansion()
-  {
-  }
+  : name_(name) {}
 
   PosibErr<bool> FilterMode::addModeExtension(const String & ext, String toMagic) {
 
@@ -107,20 +99,17 @@ using namespace std;//needed for vector
     }
     else {
 
-      PosibErr<bool> pe = FilterMode::MagicString::testMagic(NULL,toMagic,_name);
+      RET_ON_ERR(FilterMode::MagicString::testMagic(NULL,toMagic,name_));
 
-      if ( pe.has_err() ) {
-        return PosibErrBase(pe);
-      }
     } 
 
-    vector<MagicString>::iterator it;
+    Vector<MagicString>::iterator it;
 
     for ( it = magicKeys.begin() ; it != magicKeys.end() ; it++ ) {
       if (    (    extOnly
                 && ( it->magic() == "" ) )
            || ( it->magic() == toMagic ) ) {
-        (*it) += ext;
+        *it += ext;
         return true;
       }
     }
@@ -128,20 +117,20 @@ using namespace std;//needed for vector
       return false;
     }
     if ( extOnly ) {
-      magicKeys.push_back(MagicString(_name));
+      magicKeys.push_back(MagicString(name_));
     }
     else {
-      magicKeys.push_back(MagicString(toMagic,_name));
+      magicKeys.push_back(MagicString(toMagic,name_));
     }
     for ( it = magicKeys.begin() ; it != magicKeys.end() ; it++ ) {
       if (    (    extOnly
                 && ( it->magic() == "" ) )
            || ( it->magic() == toMagic ) ) {
-        (*it) += ext;
+        *it += ext;
         return true;
       }
     }
-    return make_err(mode_extend_expand,_name.c_str());
+    return make_err(mode_extend_expand,name_.str());
   }
 
   PosibErr<bool> FilterMode::remModeExtension(const String & ext, String toMagic) {
@@ -155,19 +144,19 @@ using namespace std;//needed for vector
     }
     else {
 
-      PosibErr<bool> pe = FilterMode::MagicString::testMagic(NULL,toMagic,_name);
+      PosibErr<bool> pe = FilterMode::MagicString::testMagic(NULL,toMagic,name_);
 
       if ( pe.has_err() ) {
         return PosibErrBase(pe);
       }
     }
 
-    for ( vector<MagicString>::iterator it = magicKeys.begin() ;
+    for ( Vector<MagicString>::iterator it = magicKeys.begin() ;
           it != magicKeys.end() ; it++ ) {
       if (    (    extOnly
                 && ( it->magic() == "" ) )
            || ( it->magic() == toMagic ) ) {
-        (*it) -= ext;
+        *it -= ext;
         return true;
       }
     }
@@ -176,7 +165,7 @@ using namespace std;//needed for vector
 
   bool FilterMode::lockFileToMode(const String & fileName,FILE * in) {
 
-    vector<unsigned int> extStart;
+    Vector<unsigned int> extStart;
     int first_point = fileName.length();
 
     while ( first_point > 0 ) {
@@ -195,16 +184,16 @@ using namespace std;//needed for vector
     bool closeFile = false;
 
     if ( in == NULL ) {
-      in = fopen(fileName.c_str(),"rb");
+      in = fopen(fileName.str(),"rb");
       closeFile= true;
     }
-    for ( vector<unsigned int>::iterator extSIt = extStart.begin() ;
+    for ( Vector<unsigned int>::iterator extSIt = extStart.begin() ;
           extSIt != extStart.end() ; extSIt ++ ) {
     
       String ext(fileName);
 
       ext.erase(0,*extSIt);
-      for ( vector<MagicString>::iterator it = magicKeys.begin() ;
+      for ( Vector<MagicString>::iterator it = magicKeys.begin() ;
             it != magicKeys.end() ; it++ ) {
         PosibErr<bool> magicMatch = it->matchFile(in,ext);
         if (    magicMatch 
@@ -227,14 +216,14 @@ using namespace std;//needed for vector
   }
 
   const String FilterMode::modeName() const {
-    return _name;
+    return name_;
   }
 
   FilterMode::~FilterMode() {
   }
 
   bool FilterMode::MagicString::hasExtension(const String & ext) {
-    for ( vector<String>::iterator it = fileExtensions.begin() ;
+    for ( Vector<String>::iterator it = fileExtensions.begin() ;
           it != fileExtensions.end() ; it++ ) {
       if ( *it == ext ) {
         return true;
@@ -244,7 +233,7 @@ using namespace std;//needed for vector
   }
 
   void FilterMode::MagicString::remExtension(const String & ext) {
-    for ( vector<String>::iterator it = fileExtensions.begin() ;
+    for ( Vector<String>::iterator it = fileExtensions.begin() ;
           it != fileExtensions.end() ; it++ ) {
       if ( *it == ext ) {
         fileExtensions.erase(it);
@@ -255,7 +244,7 @@ using namespace std;//needed for vector
 
   bool FilterMode::MagicString::matchFile(FILE * in,const String & ext) {
 
-    vector<String>::iterator extIt;
+    Vector<String>::iterator extIt;
 
     for ( extIt = fileExtensions.begin() ; 
           extIt != fileExtensions.end() ; extIt ++ ) {
@@ -267,7 +256,7 @@ using namespace std;//needed for vector
       return false;
     }
 
-    PosibErr<bool> pe = testMagic(in,_magic,_mode);
+    PosibErr<bool> pe = testMagic(in,magic_,mode_);
 
     if ( pe.has_err() ) {
       pe.ignore_err();
@@ -277,7 +266,7 @@ using namespace std;//needed for vector
   }
 
 
-  PosibErr<bool> FilterMode::MagicString::testMagic(FILE * seekIn,String & magic,const String mode) {
+  PosibErr<bool> FilterMode::MagicString::testMagic(FILE * seekIn,String & magic,const String & mode) {
 
     if ( magic.length() == 0 ) {
       return true;
@@ -294,7 +283,7 @@ using namespace std;//needed for vector
 
     number.erase(magicFilePosition,magic.length() - magicFilePosition);
 
-    char * num = (char *)number.c_str();
+    char * num = (char *)number.str();
     char * numEnd = num + number.length();
     char * endHere = numEnd;
     long position = 0;
@@ -302,7 +291,7 @@ using namespace std;//needed for vector
     if (    ( number.length() == 0 ) 
          || ( (position = strtoi_c(num,&numEnd)) < 0 )
          || ( numEnd != endHere ) ) {
-      return make_err(file_magic_pos,"",magic.c_str());
+      return make_err(file_magic_pos,"",magic.str());
     }
     if (    ( magicFilePosition >= magic.length() )
          || (    ( seekIn != NULL )
@@ -328,13 +317,13 @@ using namespace std;//needed for vector
       if ( seekIn != NULL ) {
         rewind(seekIn);
       }
-      return make_err(missing_magic,mode.c_str(),magic.c_str()); //no regular expression given
+      return make_err(missing_magic,mode.str(),magic.str()); //no regular expression given
     }
     
     number = magic;
     number.erase(magicFilePosition,magic.length() - magicFilePosition);
     number.erase(0,seekRangePos);//already incremented by one see above
-    num = (char*)number.c_str();
+    num = (char*)number.str();
     endHere = numEnd = num + number.length();
 
     if (    ( number.length() == 0 )
@@ -343,22 +332,22 @@ using namespace std;//needed for vector
       if ( seekIn != NULL ) {
         rewind(seekIn);
       }
-      return make_err(file_magic_range,mode.c_str(),magic.c_str());//no magic range given
+      return make_err(file_magic_range,mode.str(),magic.str());//no magic range given
     }
 
     regex_t seekMagic;
     int regsucess = 0;
 
-    if ( (regsucess = regcomp(&seekMagic,magicRegExp.c_str(),
+    if ( (regsucess = regcomp(&seekMagic,magicRegExp.str(),
                               REG_NEWLINE|REG_NOSUB|REG_EXTENDED)) ){
       if ( seekIn != NULL ) {
         rewind(seekIn);
       }
 
       char regError[256];
-      CERR.printl(magicRegExp.c_str());
+      CERR.printl(magicRegExp.str());
       regerror(regsucess,&seekMagic,&regError[0],256);
-      return make_err(bad_magic,mode.c_str(),magic.c_str(),regError);
+      return make_err(bad_magic,mode.str(),magic.str(),regError);
     }
     if ( seekIn == NULL ) {
       regfree(&seekMagic);
@@ -394,52 +383,13 @@ using namespace std;//needed for vector
   PosibErr<void> FilterMode::expand(Config * config) {
 
     config->replace("rem-all-filter","");
-    for ( vector< vector< String > >::iterator it = expansion.begin() ;
+    for ( Vector<KeyValue>::iterator it = expansion.begin() ;
           it != expansion.end() ; it++ ) {
 
-      String key((*it)[0]);
-      String value((*it)[1]);
-      String occursInAt((*it)[2]);
-      String lineNumber(occursInAt);
-      unsigned int split = occursInAt.rfind(':');
-
-      occursInAt.erase(split,occursInAt.length() - split);
-      lineNumber.erase(0,split);
-
-      if ( value == "" ) {
-
-        bool haveremall = false;
-        String rmKey(key);
-
-        if (rmKey.prefix("rem-all-")) {
-          rmKey.erase(0,8);
-          haveremall = true;
-        }
-        else if (rmKey.prefix("rem-") || rmKey.prefix("add-")) {
-          rmKey.erase(0,4);
-        }
-        else if (rmKey.prefix("dont-")) {
-          rmKey.erase(0,5);
-        }
-
-        PosibErr<const KeyInfo *> kte = config->keyinfo(rmKey.c_str());
-
-        if ( kte.has_err() ) {
-          return make_err(error_on_line,occursInAt.c_str(),lineNumber.c_str(),
-                          kte.get_err()->mesg);
-        }
-        if (    kte.data->type != KeyInfoBool
-             && (    kte.data->type != KeyInfoList
-                  || !haveremall ) ) {
-          return make_err(empty_non_bool,occursInAt.c_str(),lineNumber.c_str());
-        }
-      }
-
-      PosibErr<void> repErr = config->replace(key.c_str(),value.c_str());
+      PosibErr<void> repErr = config->replace(it->key, it->value);
 
       if ( repErr.has_err() ) {
-        return make_err(error_on_line,occursInAt.c_str(),lineNumber.c_str(),
-                        repErr.get_err()->mesg);
+        return repErr.with_file(file_);
       }      
     }
     return no_err;  
@@ -450,191 +400,43 @@ using namespace std;//needed for vector
     String buf;
     DataPair dp;
     dp.line_num = line0;
-    vector<String> filters;
     FStream toParse(in,false);
 
     while ( getdata_pair(toParse, dp, buf) ) {
+
       to_lower(dp.key);
+
       if ( dp.key == "filter" ) {
+
         to_lower(dp.value);
-        filters.push_back(dp.value.str);
-            
-        char lineNumber[12];
+        expansion.push_back(KeyValue("add-filter", dp.value));
 
-        sprintf(&lineNumber[0],"%i",dp.line_num);
+      } else if ( dp.key == "option" ) {
 
-        String line_and_file(name);
+        split(dp);
+        // FIXME: Add check for empty key
 
-        line_and_file += ":";
-        line_and_file += lineNumber;
+        expansion.push_back(KeyValue(dp.key, dp.value));
 
-        vector<String> expander;
-
-        expander.push_back("add-filter");
-        expander.push_back(dp.value);
-        expander.push_back(line_and_file);
-        expansion.push_back(expander);
-        continue;
-      }
-      if ( dp.key == "!filter" ) {
-        to_lower(dp.value);
-        for ( vector<String>::iterator it = filters.begin() ;
-              it != filters.end() ; it ++ ) {
-          if ( *it == dp.value.str ) {
-            filters.erase(it);
-            
-            char lineNumber[12];
-
-            sprintf(&lineNumber[0],"%i",dp.line_num);
-
-            String line_and_file(name);
-
-            line_and_file += ":";
-            line_and_file += lineNumber;
-
-
-            vector<String> expander;
-
-            expander.push_back("rem-filter");
-            expander.push_back(dp.value);
-            expander.push_back(line_and_file);
-            expansion.push_back(expander);
-            break;
-          }
-        }
-        continue;
-      }
-      if ( dp.key == "option" ) {
-
-        char * optionBegin = dp.value;
-        char * option = optionBegin;
-        char * optionEnd = dp.value + dp.value.size;
-
-        while (    ( option != optionEnd )
-                && ( *option != '\0' )
-                && !asc_isspace(*option) ) {
-          option++;
-        }
-        if ( option == optionBegin ) {
-
-          char lineNumber[12];
-
-          sprintf(&lineNumber[0],"%i",dp.line_num);
-          return make_err(mode_option_name,name,lineNumber);
-        }
-
-        char * optVal = option;
-
-        if ( *option != '\0' ) {
-          *option = '\0';
-          optVal ++;
-        }
-
-        char * optValBegin = optVal;
-        char * optValEnd = optionEnd;
-
-        optionEnd = option;
-            
-        String optFilter(optionBegin);
-        String optSubstValue;
-
-        if ( optFilter.prefix("rem-") ) { 
-          optFilter.erase(0,4);
-          optSubstValue = "rem";
-        }
-        else if ( optFilter.prefix("add-") ) {
-          optFilter.erase(0,4);
-          optSubstValue = "add";
-        }
-        else if ( optFilter.prefix("dont-") ) {
-          optFilter.erase(0,5);
-          optSubstValue = "dont";
-        }
-        if ( optFilter.prefix("all-") ) {
-          optFilter.erase(0,4);
-          optSubstValue += "-all";
-        }
-        if ( optFilter.prefix("filter-") ) {
-          optFilter.erase(0,7);
-        }
+      } else {
         
-        for ( vector<String>::iterator filtNIt = filters.begin() ;
-              filtNIt != filters.end() ; filtNIt++ ) {
-          if ( optFilter.prefix(*filtNIt) ) {
-            while (    ( optVal != optValEnd )
-                    && ( *optVal != '\0' )
-                    && asc_isspace(*optVal) ) {
-              optVal++;
-            }
-/*            if (    ( optVal == optValEnd )
-                 || ( *optVal == '\0' ) ) {
-
-              StringList dum;
-              PosibErr<void> pl = config->retrieve_list(optionBegin,&dum);
-              PosibErr<bool> pb = config->retrieve_bool(optionBegin);
-              if (    (    pl.has_err() 
-                        && Fixme remove this comment.has_err() )
-                   || (    !pl.has_err() 
-                        && ( FIXME remove this comment != "rem-all" ) ) ) {
-
-                pl.ignore_err();
-                Fixme remove this comment.ignore_err();
-                char lineNumber[12];
-
-                sprintf(&lineNumber[0],"%i",line);
-                return make_err(empty_non_bool,name,lineNumber);
-              }
-              pl.ignore_err();
-              Fixme remove this comment.ignore_err();
-            }*/
-            
-            char lineNumber[12];
-
-            sprintf(&lineNumber[0],"%i",dp.line_num);
-
-            String line_and_file(name);
-
-            line_and_file += ":";
-            line_and_file += lineNumber;
-
-            String optionValue(optVal);
-            unescape(optionValue);
-
-            vector<String> expander;
-            expander.push_back(optionBegin);
-            expander.push_back(optionValue);
-            expander.push_back(line_and_file);
-            expansion.push_back(expander);
-            goto fine_next_line;//hm ok breaking continue;
-          }
-        }
-
-        char lineNumber[12];
-
-        sprintf(&lineNumber[0],"%i",dp.line_num);
-        return make_err(no_filter_to_option,name,lineNumber,optionBegin);
-fine_next_line:
-        continue;
+        return make_err(bad_mode_key,dp.key).with_file(name,dp.line_num);
       }
-
-      char lineNumber[12];
-
-      sprintf(&lineNumber[0],"%i",dp.line_num);
-      return make_err(bad_mode_key,name,lineNumber,dp.key);
     }
+
     return no_err;
   }
     
-  static vector<FilterMode> filterModes;
+  static Vector<FilterMode> filterModes;
   int filterModesRef = 0;
 
-  
+
 
   void set_mode_from_extension (Config * config, ParmString filename, FILE * in) {
-    for ( vector<FilterMode>::iterator it = filterModes.begin() ;
+    for ( Vector<FilterMode>::iterator it = filterModes.begin() ;
          it != filterModes.end() ; it++ ) {
-      if ( (*it).lockFileToMode(filename,in) ) {
-        config->replace("mode", (*it).modeName().c_str());
+      if ( it->lockFileToMode(filename,in) ) {
+        config->replace("mode", it->modeName().str());
         break;
       }
     }
@@ -722,11 +524,11 @@ fine_next_line:
       return (config->replace("mode","email"));
     }
     if ( strcmp(ki->name, "mode") == 0 ) {
-      for ( vector<FilterMode>::iterator it = filterModes.begin() ;
+      for ( Vector<FilterMode>::iterator it = filterModes.begin() ;
             it != filterModes.end() ; it++ ) {
-        if ( (*it).modeName() == value ) {
+        if ( it->modeName() == value ) {
           config->replace("rem-all-filter","");
-          return (*it).expand(config);
+          return it->expand(config);
         }
       }
       return make_err(unknown_mode,value); 
@@ -759,15 +561,9 @@ fine_next_line:
     int reerr = 0;
 
 //FIXME reset regexp to default possix 
-    if ( ( reerr = regcomp(&seekfor,"\\w+\\.amf$",REG_NEWLINE|REG_NOSUB|REG_ICASE|REG_EXTENDED) ) ){
-
-
-      char lineNumber[12];
-
-      sprintf(&lineNumber[0],"%i",__LINE__);
-      return make_err(ooups,__FILE__,lineNumber);//remove if no oops debugging desired
-                                               //better enclose in some debug ifdef
-    }
+    reerr = regcomp(&seekfor,"\\w+\\.amf$",
+                    REG_NEWLINE|REG_NOSUB|REG_ICASE|REG_EXTENDED);
+    assert(reerr == 0);
 
     String possMode;
 
@@ -786,7 +582,7 @@ fine_next_line:
       }
       possMode.erase(0,pathPos);
 
-      vector<FilterMode>::iterator fmIt = filterModes.begin();
+      Vector<FilterMode>::iterator fmIt = filterModes.begin();
 
       for ( fmIt = filterModes.begin() ; 
             fmIt != filterModes.end() ; fmIt++ ) {
@@ -800,7 +596,7 @@ fine_next_line:
 
       FILE * in = NULL;
 
-      if ( (in = fopen(possModeFile.c_str(),"rb")) == NULL ) {
+      if ( (in = fopen(possModeFile.str(),"rb")) == NULL ) {
         //FIXME is it desired to issue an warning if file can not be read ?
         //      don't think so.
         continue;
@@ -817,14 +613,11 @@ fine_next_line:
       to_lower(dp.value);
       if (    !get_sucess
            || ( dp.key != "mode" ) 
-           || ( dp.value != possMode.lower().c_str() ) ) {
+           || ( dp.value != possMode.lower().str() ) ) {
         fclose(in);
         regfree(&seekfor);
 
-          char lineNumber[12];
-
-          sprintf(&lineNumber[0],"%i",dp.line_num);
-        return make_err(exspect_mode_key,possModeFile.c_str(),lineNumber,"mode");
+        return make_err(expect_mode_key,"mode").with_file(possModeFile, dp.line_num);
       }
       get_sucess = getdata_pair(toParse, dp, buf);
       to_lower(dp.key);
@@ -835,10 +628,7 @@ fine_next_line:
         fclose(in);
         regfree(&seekfor);
 
-          char lineNumber[12];
-
-          sprintf(&lineNumber[0],"%i",dp.line_num);
-        return make_err(mode_version_requirement,possModeFile.c_str(),lineNumber);
+        return make_err(mode_version_requirement).with_file(possModeFile, dp.line_num);
       }
 
       char * requirement = dp.value.str;
@@ -890,27 +680,21 @@ fine_next_line:
         *seek = '\0';
       }
 
-      PosibErr<bool> peb = verifyVersion(relOp.c_str(),act,requirement,"add_filter");
+      PosibErr<bool> peb = verifyVersion(relOp.str(),act,requirement,"add_filter");
 
       if ( peb.has_err() ) {
         peb.ignore_err();
         fclose(in);
         regfree(&seekfor);
 
-        char lineNumber[12];
-
-        sprintf(&lineNumber[0],"%i",dp.line_num);
-        return make_err(confusing_mode_version,possModeFile.c_str(),lineNumber);
+        return make_err(confusing_mode_version).with_file(possModeFile, dp.line_num);
       }
       if ( peb == false ) {
         peb.ignore_err();
         fclose(in);
         regfree(&seekfor);
 
-        char lineNumber[12];
-
-        sprintf(&lineNumber[0],"%i",dp.line_num);
-        return make_err(bad_mode_version,possModeFile.c_str(),lineNumber);
+        return make_err(bad_mode_version).with_file(possModeFile, dp.line_num);
       }
       
       FilterMode collect(possMode);
@@ -938,10 +722,7 @@ fine_next_line:
             fclose(in);
             regfree(&seekfor);
 
-            char lineNumber[12];
-
-            sprintf(&lineNumber[0],"%i",dp.line_num);
-            return make_err(missing_magic_expression,possModeFile.c_str(),lineNumber);
+            return make_err(missing_magic_expression).with_file(possModeFile, dp.line_num);
           }
           
 
@@ -964,10 +745,7 @@ fine_next_line:
             fclose(in);
             regfree(&seekfor);
 
-            char lineNumber[12];
-
-            sprintf(&lineNumber[0],"%i",dp.line_num);
-            return make_err(missing_magic_expression,possModeFile.c_str(),lineNumber);
+            return make_err(missing_magic_expression).with_file(possModeFile, dp.line_num);
           }
 
           char swap = *regend;
@@ -992,12 +770,10 @@ fine_next_line:
               fclose(in);
               regfree(&seekfor);
 
-              char lineNumber[12];
               char charCount[64];
 
-              sprintf(&lineNumber[0],"%i",dp.line_num);
               sprintf(&charCount[0],"%i",regbegin - (char *)dp.value);
-              return  make_err(empty_file_ext,possModeFile.c_str(),lineNumber,charCount);
+              return  make_err(empty_file_ext,charCount).with_file(possModeFile,dp.line_num);
             }
 
             bool remove = false;
@@ -1015,12 +791,10 @@ fine_next_line:
               fclose(in);
               regfree(&seekfor);
 
-              char lineNumber[12];
               char charCount[64];
 
-              sprintf(&lineNumber[0],"%i",dp.line_num);
               sprintf(&charCount[0],"%i",regbegin - (char *)dp.value);
-              return  make_err(empty_file_ext,possModeFile.c_str(),lineNumber,charCount);
+              return  make_err(empty_file_ext,charCount).with_file(possModeFile,dp.line_num);
             }
             swap = *regend;
             *regend = '\0';
@@ -1053,11 +827,7 @@ fine_next_line:
               fclose(in);
               regfree(&seekfor);
 
-              char lineNumber[12];
-
-              sprintf(&lineNumber[0],"%i",dp.line_num);
-              return make_err(error_on_line,possModeFile.c_str(),lineNumber,
-                              pe.get_err()->mesg);
+              return pe.with_file(possModeFile, dp.line_num);
             }
           }
           if ( extCount > 0 ) {
@@ -1066,24 +836,20 @@ fine_next_line:
           fclose(in);
           regfree(&seekfor);
           
-          char lineNumber[12];
           char charCount[64];
 
-          sprintf(&lineNumber[0],"%i",dp.line_num);
           sprintf(&charCount[0],"%i",strlen((char *)dp.value));
-          return  make_err(empty_file_ext,possModeFile.c_str(),lineNumber,charCount);
+          return  make_err(empty_file_ext,charCount).with_file(possModeFile,dp.line_num);
         }
         fclose(in);
         regfree(&seekfor);
 
-        char lineNumber[12];
-
-        sprintf(&lineNumber[0],"%i",dp.line_num);
-        return make_err(exspect_mode_key,possModeFile.c_str(),lineNumber,
-                        "ext[tension]/magic/desc[ription]/rel[ation]");
+        return make_err(expect_mode_key,"ext[tension]/magic/desc[ription]/rel[ation]")
+          .with_file(possModeFile,dp.line_num);
+      
       }//while getdata_pair
       
-      PosibErr<void> pe = collect.build(in,config,dp.line_num,possMode.c_str());
+      PosibErr<void> pe = collect.build(in,config,dp.line_num,possMode.str());
 
       fclose(in);
       if ( pe.has_err() ) {
@@ -1114,9 +880,9 @@ fine_next_line:
           "         Note: If the file type can not be identified uniquely by the\n"
           "               file extension Aspell will in addition test the file\n"
           "               content to ensure proper mode selection.\n\n");
-    for ( vector<FilterMode>::iterator it = filterModes.begin() ;
+    for ( Vector<FilterMode>::iterator it = filterModes.begin() ;
           it != filterModes.end() ; it++ ) {
-      fprintf(helpScreen,"  %-10s ",(*it).modeName().c_str());
+      fprintf(helpScreen,"  %-10s ",(*it).modeName().str());
 
       String desc = (*it).getDescription();
       int preLength = (*it).modeName().length() + 4;
@@ -1141,7 +907,7 @@ fine_next_line:
         String prDesc(desc);
 
         prDesc.erase(locate,prDesc.length() - locate);
-        fprintf(helpScreen,"%s\n             ",prDesc.c_str());
+        fprintf(helpScreen,"%s\n             ",prDesc.str());
         desc.erase(0,locate);
         if (    ( desc.length() > 0 )
              && (    ( desc[0] == ' ' )
@@ -1151,7 +917,7 @@ fine_next_line:
         }
         preLength = 13;
       }
-      fprintf(helpScreen,desc.c_str());
+      fprintf(helpScreen,desc.str());
       fprintf(helpScreen,"\n");
     }
   }

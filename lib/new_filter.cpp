@@ -159,7 +159,7 @@ namespace acommon
         if (((filterhandle[0] = dlopen(current_filter->load,RTLD_NOW)) == NULL) ||
             ((filterhandle[1] = dlopen(current_filter->load,RTLD_NOW)) == NULL) ||
             ((filterhandle[2] = dlopen(current_filter->load,RTLD_NOW)) == NULL)) {
-          return make_err(cant_dlopen_file,"filter setup",filter_name,dlerror());
+          return make_err(cant_dlopen_file,dlerror()).with_file(filter_name);
         }
         dynamic_filter.decoder = (FilterFun *)dlsym(filterhandle[0].val(),"new_decoder");
         dynamic_filter.encoder = (FilterFun *)dlsym(filterhandle[1].val(),"new_encoder");
@@ -167,7 +167,7 @@ namespace acommon
         if (!dynamic_filter.decoder && 
 	    !dynamic_filter.encoder &&
 	    !dynamic_filter.filter) {
-          return make_err(empty_filter,"filter setup",filter_name);
+          return make_err(empty_filter,filter_name);
 	}
         dynamic_filter.name = filter_name;
         f = &dynamic_filter;
@@ -359,7 +359,6 @@ namespace acommon
     int modsize = filter_modules_end-filter_modules_begin;
     StringList filt_path;
     StringList opt_path;
-    char line_number[9]="0";
     int active_option = 0;
     String expand = "filter-";
     String buf; DataPair d;
@@ -382,12 +381,10 @@ namespace acommon
         option_name += "-filter.opt";
         filter_name += value;
         filter_name += "-filter.so";
-        if (!filter_path.expand_filename(filter_name)) {
-          return make_err(no_such_filter, "add-filter", value);
-        }
-        if (!option_path.expand_filename(option_name)) {
-          return make_err(no_options,"add_filter",option_name,"Options missing");
-        }
+        if (!filter_path.expand_filename(filter_name))
+          return make_err(no_such_filter, value);
+        if (!option_path.expand_filename(option_name))
+          return make_err(no_option_file, option_name);
         if (config->have(value)) {
 //FEATURE ? rescale priority instead and continue ???
           fprintf(stderr,"warning: specifying filter twice makes no sense\n");
@@ -399,16 +396,14 @@ namespace acommon
 	{
 	  to_lower(d.key);
 	  option_value = d.value;
-          sprintf(line_number,"%i",d.line_num);
 
 	  //
 	  // key == aspell
 	  //
           if (d.key == "aspell") 
 	  {
-            if ( d.value == NULL || *(d.value) == '\0' ) {
-              return make_err(confusing_version,"add_filter",option_name,line_number);
-            }
+            if ( d.value == NULL || *(d.value) == '\0' )
+              return make_err(confusing_version).with_file(option_name,d.line_num);
 
             char * requirement = d.value.str;
             char * relop = requirement;
@@ -462,11 +457,11 @@ namespace acommon
 
             if ( peb.has_err() ) {
               peb.ignore_err();
-              return make_err(confusing_version,"add_filter",option_name,line_number);
+              return make_err(confusing_version).with_file(option_name,d.line_num);
             }
 	    if ( peb == false ) {
               peb.ignore_err();
-              return make_err(bad_version,"add_filter",option_name,line_number); 
+              return make_err(bad_version).with_file(option_name,d.line_num);
             }
             continue;
 	  } 
@@ -483,22 +478,11 @@ namespace acommon
                 free(begin);
               }
               option_value.insert(0,"(filter-)", 9);
-              return make_err(identical_option,"add_filter",option_name,line_number);
+              return make_err(identical_option).with_file(option_name,d.line_num);
             }
 
-            KeyInfo * expandopt = NULL;
-
-            if (    (    ( begin == NULL )
-                      && (     (expandopt = (KeyInfo *)malloc(sizeof(KeyInfo) * (optsize + 1)))
-                           == NULL ) )
-                 || (    (expandopt = (KeyInfo *) realloc(begin,sizeof(KeyInfo) * (optsize + 1)))
-                      == NULL ) ) {
-              if ( begin != NULL ) {
-                release_options(begin,begin + optsize);
-                free(begin);
-              }
-              return make_err(cant_extend_options,"add_filter",value);
-            }
+            // this is safe even if begin is null
+            KeyInfo * expandopt = (KeyInfo *)realloc(begin,sizeof(KeyInfo) * (optsize + 1));
             begin = expandopt;
 
             // let cur_opt point to newly generated last element 
@@ -574,7 +558,7 @@ namespace acommon
             if (begin != NULL) {
               free(begin);
             }
-            return make_err(options_only,"add_filter",option_name,line_number);
+            return make_err(options_only).with_file(option_name,d.line_num);
           }
 
 	  //
@@ -614,16 +598,9 @@ namespace acommon
             //if ( cur_opt->type == KeyInfoInt ) {
             //  check for valid integer or double and issue error if not
             //}
-            if ( ( (cur_opt->def)=strdup(option_value.c_str()) ) == NULL ) {
-              if (begin != NULL) {
-                release_options(begin,begin+optsize);
-                free(begin);
-              }
-              return make_err(cant_extend_options,"add_filter",value);
-            }
+            cur_opt->def = strdup(option_value.c_str());
             continue;
           }
-
           
  	  //
  	  // key == flags
@@ -649,34 +626,21 @@ namespace acommon
             release_options(begin,begin+optsize);
             free(begin);
           }
-          return make_err(invalid_option_modifier,"add_filter",option_name,line_number);
+          return make_err(invalid_option_modifier).with_file(option_name,d.line_num);
         
 	} // end while getdata_pair_c
      
         if ( filter_modules_begin == filter_modules ) {
-          //avoid memory leaks
-          if ( (mbegin = (ConfigModule*)malloc(modsize*sizeof(ConfigModule))) == NULL ) {     
-            if ( begin != NULL ) {
-              release_options(begin,begin+optsize);
-              free(begin);
-            }
-            return make_err(cant_extend_options,"add_filter",value);
-          }
+          mbegin = (ConfigModule*)malloc(modsize*sizeof(ConfigModule));
           memcpy(mbegin,filter_modules_begin,(modsize)*sizeof(ConfigModule));
           filter_modules_begin = mbegin;
           filter_modules_end   = mbegin + modsize;
           config->set_filter_modules(filter_modules_begin,filter_modules_end);
         }
 
-        //avoid memory leaks
-        if ( (mbegin = (ConfigModule*)realloc((ConfigModule*)filter_modules_begin,
-                                              ++modsize*sizeof(ConfigModule))) == NULL) {     
-          if (begin != NULL) {
-            release_options(begin,begin+optsize);
-            free(begin);
-          }
-          return make_err(cant_extend_options,"add_filter",value);
-        }
+        mbegin = (ConfigModule*)realloc((ConfigModule*)filter_modules_begin,
+                                        ++modsize*sizeof(ConfigModule));
+
         mbegin[modsize-1].name  = strdup(value);
         mbegin[modsize-1].load  = strdup(filter_name.c_str());
         mbegin[modsize-1].desc  = strdup(filter_description.c_str());

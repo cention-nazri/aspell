@@ -213,7 +213,6 @@ namespace acommon {
 				      ParmString p1 = 0, ParmString p2 = 0,
 				      ParmString p3 = 0, ParmString p4 = 0)
   {
-    if (inf == cant_extend_options) abort();
     return PosibErrBase().prim_err(inf, p1, p2, p3, p4);
   }
 
