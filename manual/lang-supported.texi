@@ -171,7 +171,7 @@
 @item te @tab Telugu @tab Telugu @tab Maybe @tab -
 @item tet @tab Tetum @tab Latin @tab Yes @tab -
 @item tg @tab Tajik @tab Cyrillic @tab Planned @tab Yes
-@item ti @tab Tigrinya @tab Ethiopic @tab Planned @tab -
+@item ti @tab Tigrinya @tab Ethiopic @tab Maybe @tab -
 @item tk @tab Turkmen @tab Latin @tab - @tab -
 @item tl @tab Tagalog @tab Latin @tab Planned @tab -
 @item tn @tab Tswana @tab Latin @tab Yes @tab -

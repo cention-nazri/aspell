@@ -447,11 +447,14 @@ errors:
 	affix
 		/
 		corrupt affix
-			mesg => Affix '%aff' is corrupt
+			mesg => Affix '%aff' is corrupt.
 			parms => aff
 		invalid cond
 			mesg => The condition "%cond" is invalid.
 			parms => cond
+		invalid cond strip
+			mesg => The condition "%cond" does not guarantee that "%strip" can always be stripped.
+			parms => cond, strip
 		incorrect encoding
 			mesg => The file "%file" is not in the proper format. Expected the file to be in "%exp" not "%got".
 			parms => file, exp, got

@@ -199,21 +199,38 @@ struct CondsLookupParms {
 
 typedef HashTable<CondsLookupParms> CondsLookup;
 
-static bool check_cond_str(const char * s)
+// normalizes and checks the cond_str
+// returns the lenth of the new string or -1 if invalid
+static int normalize_cond_str(char * str)
 {
-  for (; *s; ++s) {
-    if (*s == '[') {
-      ++s;
-      if (*s == '\0' || *s == ']') return false;
-      for (;;) {
-        if (*s == '\0') return false;
-        if (*s == '[') return false;
-        if (*s == ']') break;
+  char * s = str;
+  char * d = str;
+  while (*s) {
+    if (*s != '[') {
+      *d++ = *s++;
+    } else if (s[1] == '\0' || s[1] == ']') {
+      return -1;
+    } else if (s[2] == ']') {
+      *d++ = s[1];
+      s += 3;
+    } else {
+      *d++ = *s++;
+      if (*s == '^') *d++ = *s++;
+      while (*s != ']') {
+        if (*s == '\0' || *s == '[') return -1;
+        char * min = s;
+        for (char * i = s + 1; *i != ']'; ++i) {
+          if ((byte)*i < (byte)*min) min = i;}
+        char c = *s;
+        *d++ = *min;
+        *min = c;
         ++s;
       }
+      *d++ = *s++;
     }
   }
-  return true;
+  *d = '\0';
+  return d - str;
 }
 
 static void encodeit(CondsLookup &, ObjStack &, 
@@ -268,6 +285,8 @@ PosibErr<void> AffixMgr::parse_file(const char * affpath, Conv & iconv)
   // read in each line ignoring any that do not
   // start with a known line type indicator
 
+  char prev_aff = '\0';
+
   while (getdata_pair(afflst,dp,buf)) {
     char affix_type = ' ';
 
@@ -308,16 +327,22 @@ PosibErr<void> AffixMgr::parse_file(const char * affpath, Conv & iconv)
       split(dp);
       if (dp.key.empty()) goto error;
       // key is affix char
-      achar = iconv(dp.key)[0];
+      const char * astr = iconv(dp.key);
+      if (astr[0] == '\0' || astr[1] != '\0') goto error;
+      achar = astr[0];
+      if (achar == prev_aff) goto error_count;
+      prev_aff = achar;
 
       split(dp);
-      if (dp.key.empty()) goto error;
+      if (dp.key.size != 1 || 
+          !(dp.key[0] == 'Y' || dp.key[0] == 'N')) goto error;
       // key is cross product indicator 
       if (dp.key[0] == 'Y') xpflg = XPRODUCT;
     
       split(dp);
       if (dp.key.empty()) goto error;
       // key is number of affentries
+      
       numents = atoi(dp.key); 
   
       for (int j = 0; j < numents; j++) {
@@ -336,9 +361,7 @@ PosibErr<void> AffixMgr::parse_file(const char * affpath, Conv & iconv)
         split(dp);
         if (dp.key.empty()) goto error;
         // key is affix charter
-        if (iconv(dp.key)[0] != achar)
-          return make_err(corrupt_affix, MsgConv(lang)(achar), 
-                          _("Possibly incorrect count.")).with_file(affix_file, dp.line_num);
+        if (iconv(dp.key)[0] != achar) goto error_count;
         nptr->achar = achar;
  
         split(dp);
@@ -369,10 +392,21 @@ PosibErr<void> AffixMgr::parse_file(const char * affpath, Conv & iconv)
         split(dp);
         if (dp.key.empty()) goto error;
         // key is the conditions descriptions
-        if (!check_cond_str(dp.key)) 
-          return (make_err(invalid_cond, MsgConv(lang)(dp.key))
+        char * cond = iconv(dp.key);
+        int cond_len = normalize_cond_str(cond);
+        if (cond_len < 0)
+          return (make_err(invalid_cond, MsgConv(lang)(cond))
                   .with_file(affix_file, dp.line_num));
-        encodeit(conds_lookup, data_buf, nptr, iconv(dp.key));
+        if (nptr->stripl != 0) {
+          char * cc = cond;
+          if (affix_type == 'S') cc += cond_len - nptr->stripl;
+          if (cond_len < nptr->stripl || 
+              memcmp(cc, nptr->strip, nptr->stripl) != 0)
+            return (make_err(invalid_cond_strip, 
+                             MsgConv(lang)(cond), MsgConv(lang)(nptr->strip))
+                    .with_file(affix_file, dp.line_num));
+        }
+        encodeit(conds_lookup, data_buf, nptr, cond);
     
         // now create SfxEntry or PfxEntry objects and use links to
         // build an ordered (sorted by affix string) list
@@ -385,6 +419,9 @@ PosibErr<void> AffixMgr::parse_file(const char * affpath, Conv & iconv)
     continue;
   error:
     return make_err(corrupt_affix, MsgConv(lang)(achar)).with_file(affix_file, dp.line_num);
+  error_count:
+    return make_err(corrupt_affix, MsgConv(lang)(achar), 
+                    _("Possibly incorrect count.")).with_file(affix_file, dp.line_num);
   }
   afflst.close();
 
@@ -596,35 +633,6 @@ PosibErr<void> AffixMgr::process_sfx_order()
   return no_err;
 }
 
-// assumes the cond string is valid
-static void normalize_cond_str(char * str)
-{
-  char * s = str;
-  char * d = str;
-  while (*s) {
-    if (*s != '[') {
-      *d++ = *s++;
-    } else if (s[2] == ']') {
-      *d++ = s[1];
-      s += 3;
-    } else {
-      *d++ = *s++;
-      if (*s == '^') *d++ = *s++;
-      while (*s != ']') {
-        char * min = s;
-        for (char * i = s + 1; *i != ']'; ++i) {
-          if ((byte)*i < (byte)*min) min = i;}
-        char c = *s;
-        *d++ = *min;
-        *min = c;
-        ++s;
-      }
-      *d++ = *s++;
-    }
-  }
-  *d = '\0';
-}
-
 // takes aff file condition string and creates the
 // conds array - please see the appendix at the end of the
 // file affentry.cxx which describes what is going on here
@@ -638,7 +646,6 @@ static void encodeit(CondsLookup & l, ObjStack & buf,
 
   // see if we already have this conds matrix
 
-  normalize_cond_str(cs);
   CondsLookup::iterator itr = l.find(cs);
   if (itr != l.end()) {
     ptr->conds = *itr;
