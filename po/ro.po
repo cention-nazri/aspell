@@ -7,10 +7,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: aspell 0.60-b20040424\n"
+"Project-Id-Version: aspell 0.60-b20040526\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-06-01 05:39-0400\n"
-"PO-Revision-Date: 2004-04-25 12:00-0500\n"
+"POT-Creation-Date: 2004-06-08 13:09-0400\n"
+"PO-Revision-Date: 2004-06-02 12:00-0500\n"
 "Last-Translator: Laurentiu Buzdugan <lbuz@rolix.org>\n"
 "Language-Team: Romanian <translation-team-ro@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -206,9 +206,8 @@ msgid "enable Unicode normalization"
 msgstr "permite normalizarea Unicode"
 
 #: common/config.cpp:1155
-#, fuzzy
 msgid "Unicode normalization required for the current lang"
-msgstr "Tipuri de normalizare Unicode: none, nfd, nfc, comp"
+msgstr "Normalizare Unicode necesarã pentru limba curentã"
 
 #: common/config.cpp:1157
 msgid "Unicode normalization form: none, nfd, nfc, comp"
@@ -217,7 +216,7 @@ msgstr "Tipuri de normalizare Unicode: none, nfd, nfc, comp"
 #: common/config.cpp:1159
 #, fuzzy
 msgid "avoid lossy conversions when normalization"
-msgstr "permite normalizarea Unicode"
+msgstr "evitã conversii cu pierderi"
 
 #: common/config.cpp:1161
 #, fuzzy
@@ -226,7 +225,7 @@ msgstr "nume fiºier dicþionar personal"
 
 #: common/config.cpp:1169
 msgid "compute the soundslike on demand rather than storing"
-msgstr ""
+msgstr "calculeazã variantele \"sunã ca\" la nevoie, nu le stoca"
 
 #: common/config.cpp:1171
 msgid "use affix compression when creating dictionaries"
@@ -234,7 +233,7 @@ msgstr "foloseºte compresia affix-elor la crearea dicþionarelor"
 
 #: common/config.cpp:1173
 msgid "partially expand affixes for better suggestions"
-msgstr ""
+msgstr "expandeazã parþial affix-ele pentru sugestii mai bune"
 
 #: common/config.cpp:1181
 msgid "check if words are valid"
@@ -261,9 +260,8 @@ msgid "create a backup file by appending \".bak\""
 msgstr "creazã un fiºier de rezervã adãugând \".bak\""
 
 #: common/config.cpp:1198
-#, fuzzy
 msgid "create missing root/affix combinations"
-msgstr "fã posibile combinaþiile rãdãcinã/affix ce nu sunt în dictionar"
+msgstr "creazã combinaþiile rãdãcinã/affix ce lipsesc"
 
 #: common/config.cpp:1200
 msgid "keymapping for check mode, aspell or ispell"
@@ -295,85 +293,75 @@ msgstr ""
 "deschis pentru citire sau cã nu existã."
 
 #: common/convert.cpp:537 common/convert.cpp:643 common/convert.cpp:689
-#, fuzzy, c-format
+#, c-format
 msgid "The Unicode code point U+%04X is unsupported."
-msgstr "Codul unicode punct U+%04X nu este suportat."
+msgstr "Codul Unicode punct U+%04X nu este suportat."
 
 #: common/convert.cpp:813
 #, c-format
 msgid "Invalid UTF-8 sequence at position %d."
 msgstr "Secvenþã UTF-8 invalidã la poziþia %d."
 
-#: common/errors.cpp:18
-msgid "Some error"
-msgstr ""
-
 #: common/errors.cpp:26
-#, c-format
-msgid ""
-"Ooups? you really got this message from \"%file:1\"(%line:2) are you sure?"
-msgstr ""
-
-#: common/errors.cpp:34
 msgid "Operation Not Supported: %what:1"
 msgstr "Operaþie Nesuportatã: %what:1"
 
-#: common/errors.cpp:50
+#: common/errors.cpp:42
 msgid "The method \"%what:1\" is unimplemented in \"%where:2\"."
 msgstr "Metoda \"%what:1\" nu este implementatã în \"%where:2\"."
 
-#: common/errors.cpp:58
+#: common/errors.cpp:50
 #, c-format
 msgid "%file:1:"
 msgstr "%fiºier:1:"
 
-#: common/errors.cpp:66
+#: common/errors.cpp:58
 #, c-format
 msgid "The file \"%file:1\" can not be opened"
 msgstr "Fiºierul \"%file:1\" nu poate fi deschis"
 
-#: common/errors.cpp:74
+#: common/errors.cpp:66
 #, c-format
 msgid "The file \"%file:1\" can not be opened for reading."
 msgstr "Fiºierul \"%file:1\" nu poate fi deschis pentru citire."
 
-#: common/errors.cpp:82
+#: common/errors.cpp:74
 #, c-format
 msgid "The file \"%file:1\" can not be opened for writing."
 msgstr "Fiºierul \"%file:1\" nu poate fi deschis pentru scriere."
 
-#: common/errors.cpp:90
+#: common/errors.cpp:82
 #, c-format
 msgid "The file name \"%file:1\" is invalid."
 msgstr "Numele fiºierului \"%file:1\" este invalid."
 
-#: common/errors.cpp:98
+#: common/errors.cpp:90
 #, c-format
 msgid "The file \"%file:1\" is not in the proper format."
 msgstr "Fiºierul \"%file:1\" nu este în formatul potrivit."
 
-#: common/errors.cpp:114
+#: common/errors.cpp:106
 #, c-format
 msgid "The directory \"%dir:1\" can not be opened for reading."
 msgstr "Directorul \"%dir:1\" nu poate fi deschis pentru citire."
 
-#: common/errors.cpp:130
+#: common/errors.cpp:122
 msgid "The key \"%key:1\" is unknown."
 msgstr "Cheia \"%key:1\" este necunoscutã."
 
-#: common/errors.cpp:138
+#: common/errors.cpp:130
 msgid "lis key `\"%key:1\"' requires one of [add|rem|rem-all]-"
 msgstr ""
 
-#: common/errors.cpp:146
+#: common/errors.cpp:138
 msgid "The value for option \"%key:1\" can not be changed."
 msgstr "Valoarea pentru opþiunea \"%key:1\" nu poate fi schimbatã."
 
-#: common/errors.cpp:154
+#: common/errors.cpp:146
 msgid "The key \"%key:1\" is not %accepted:2 and is thus invalid."
 msgstr "Cheia \"%key:1\" nu este %accepted:2 ºi de aceea este invalidã."
 
-#: common/errors.cpp:162
+#: common/errors.cpp:154
 msgid ""
 "The value \"%value:2\" is not %accepted:3 and is thus invalid for the key \"%"
 "key:1\"."
@@ -381,242 +369,239 @@ msgstr ""
 "Valoarea \"%value:2\" nu este %accepted:3 ºi de aceea este invalidã pentru "
 "\"%key:1\"."
 
-#: common/errors.cpp:186
+#: common/errors.cpp:178
 #, c-format
 msgid "The language \"%lang:1\" is not known."
 msgstr "Limba \"%lang:1\" nu este cunoscutã."
 
-#: common/errors.cpp:194
+#: common/errors.cpp:186
 #, c-format
 msgid "The soundslike \"%sl:2\" is not known."
 msgstr "Sunã-ca \"%sl:2\" nu este cunoscut."
 
-#: common/errors.cpp:202
+#: common/errors.cpp:194
 #, c-format
 msgid "The language \"%lang:1\" is not supported."
 msgstr "Limba \"%lang:1\" nu este suportatã."
 
-#: common/errors.cpp:210
+#: common/errors.cpp:202
 #, c-format
 msgid "No word lists can be found for the language \"%lang:1\"."
 msgstr "Nu poate fi gãsitã nici o listã de cuvinte pentru limba \"%lang:1\"."
 
-#: common/errors.cpp:218
+#: common/errors.cpp:210
 #, c-format
 msgid "Expected language \"%lang:1\" but got \"%prev:2\"."
 msgstr "Limba aºteptatã \"%lang:1\" dat am primit \"%prev:2\"."
 
+#: common/errors.cpp:226
+#, fuzzy, c-format
+msgid "Affix '%aff:1' is corrupt."
+msgstr "Affix-ul '%s' este corupt"
+
 #: common/errors.cpp:234
+#, fuzzy, c-format
+msgid "The condition \"%cond:1\" is invalid."
+msgstr "Cuvântul \"%word:1\" este invalid."
+
+#: common/errors.cpp:242
+#, c-format
+msgid ""
+"The condition \"%cond:1\" does not guarantee that \"%strip:2\" can always be "
+"stripped."
+msgstr ""
+
+#: common/errors.cpp:250
+#, fuzzy, c-format
+msgid ""
+"The file \"%file:1\" is not in the proper format. Expected the file to be in "
+"\"%exp:2\" not \"%got:3\"."
+msgstr "Fiºierul \"%file:1\" nu este în formatul potrivit."
+
+#: common/errors.cpp:266
 #, c-format
 msgid "The encoding \"%encod:1\" is not known."
 msgstr "Encoding-ul \"%encod:1\" nu este cunoscut."
 
-#: common/errors.cpp:242
+#: common/errors.cpp:274
 #, c-format
 msgid "The encoding \"%encod:1\" is not supported."
 msgstr "Encoding-ul \"%encod:1\" nu este suportat."
 
-#: common/errors.cpp:250
+#: common/errors.cpp:282
 #, c-format
 msgid "The conversion from \"%encod:1\" to \"%encod2:2\" is not supported."
 msgstr "Conversia de la \"%encod:1\" la \"%encod2:2\" nu este suportat."
 
-#: common/errors.cpp:290
+#: common/errors.cpp:322
 #, c-format
 msgid "The string \"%str:1\" is invalid."
 msgstr "ªirul \"%str:1\" este invalid."
 
-#: common/errors.cpp:298
+#: common/errors.cpp:330
 msgid "The word \"%word:1\" is invalid."
 msgstr "Cuvântul \"%word:1\" este invalid."
 
-#: common/errors.cpp:306
+#: common/errors.cpp:338
 msgid "The affix flag '%aff:1' is invalid for word \"%word:2\"."
 msgstr ""
 
-#: common/errors.cpp:314
+#: common/errors.cpp:346
 #, fuzzy
 msgid "The affix flag '%aff:1' can not be applied to word \"%word:2\"."
 msgstr "Fiºierul \"%file:1\" nu poate fi deschis pentru scriere."
 
-#: common/errors.cpp:362
+#: common/errors.cpp:394
 msgid "not a version number"
 msgstr ""
 
-#: common/errors.cpp:370
-msgid "%where:1: \"%filter:2\":"
-msgstr "%where:1: \"%filter:2\":"
+#: common/errors.cpp:402
+#, fuzzy, c-format
+msgid "\"%filter:1\":"
+msgstr "%fiºier:1:"
 
-#: common/errors.cpp:378
-msgid "%where:1: \"%filter:2\" dlopen returned \"%return:3\"."
+#: common/errors.cpp:410
+#, fuzzy
+msgid "dlopen returned \"%return:2\"."
 msgstr "%where:1: \"%filter:2\" dlopen a returnat \"%return:3\"."
 
-#: common/errors.cpp:386
-msgid "%where:1: The file \"%filter:2\" does not contain any filter."
+#: common/errors.cpp:418
+#, fuzzy, c-format
+msgid "The file \"%filter:1\" does not contain any filter."
 msgstr "%where:1: Fiºierul \"%filter:2\" nu conþine nici un filtru."
 
-#: common/errors.cpp:394
-msgid "%where:1: Filter \"%filter:2\" could not be found in filter paths."
+#: common/errors.cpp:426
+#, fuzzy, c-format
+msgid "Filter \"%filter:1\" could not be found in filter paths."
 msgstr ""
 "%where:1: Filtrul \"%filter:2\" nu a putut fi gãsit în calea de filtre."
 
-#: common/errors.cpp:402
-msgid "%where:1: %filter:2: can't find option description."
-msgstr "%where:1: %filter:2: nu pot gãsi descrierea opþiunii."
+#: common/errors.cpp:434
+#, c-format
+msgid "Can't find the option file \"%option:2\"."
+msgstr ""
 
-#: common/errors.cpp:410
-msgid "%where:1: \"%filter:2\" Line %line:3 confused by version control"
-msgstr "%where:1: \"%filter:2\" Linia %line:3 confuzatã de controlul versiunii"
+#: common/errors.cpp:442 common/errors.cpp:546
+msgid "Confused by version control."
+msgstr ""
 
-#: common/errors.cpp:418
-msgid ""
-"%where:1: \"%filter:2\": Line %line:3 Aspell version does not match filter's "
-"requirement."
+#: common/errors.cpp:450
+#, fuzzy
+msgid "Aspell version does not match filter's requirement."
 msgstr ""
 "%where:1: \"%filter:2\": Linia %line:3 Versiunea Aspell nu se potriveºte cu "
 "cerinþele filtrului."
 
-#: common/errors.cpp:426
-msgid ""
-"%where:1: \"%filter:2\" error while extending Aspell options. (out of "
-"memory?)"
-msgstr ""
-"%where:1: \"%filter:2\" eroare la extinderea opþiunilor Aspell. (nu mai e "
-"memorir?)"
-
-#: common/errors.cpp:434
-msgid "%where:1: \"%filter:2\" Line %line:3 Filter option already exists."
+#: common/errors.cpp:458
+#, fuzzy
+msgid "Filter option already exists."
 msgstr "%where:1: \"%filter:2\" Linia %line:3 Opþiune fitru existã deja."
 
-#: common/errors.cpp:442
-msgid ""
-"%where:1: \"%filter:2\" %line:3 Use option modifiers only within named "
-"Option."
+#: common/errors.cpp:466
+#, fuzzy
+msgid "Use option modifiers only within named option."
 msgstr ""
 "%where:1: \"%filter:2\" %line:3 Foloseºte modificatori opþiune numai în "
 "opþiunea numitã."
 
-#: common/errors.cpp:450
-msgid "%where:1: \"%filter:2\" %line:3 Option modifier unknown."
+#: common/errors.cpp:474
+#, fuzzy
+msgid "Option modifier unknown."
 msgstr "%where:1: \"%filter:2\" %line:3 Modificator opþiune necunoscut."
 
-#: common/errors.cpp:458
-msgid "%where:1: \"%filter:2\" error setting filter description."
+#: common/errors.cpp:482
+#, fuzzy
+msgid "Error setting filter description."
 msgstr "%where:1: \"%filter:2\" eroare la setarea descrierii filtrului."
 
-#: common/errors.cpp:466
-#, fuzzy, c-format
-msgid "\"%file:1: \"%line:2:"
-msgstr "%where:1: \"%filter:2\":"
-
-#: common/errors.cpp:474
-#, c-format
-msgid "\"%file:1\": Line %line:2: empty option specifier."
-msgstr ""
-
-#: common/errors.cpp:482
-#, c-format
-msgid ""
-"\"%file:1\": Line %line:2: empty value; only  bool type option and `rem-all' "
-"list prefix."
-msgstr ""
-
-#: common/errors.cpp:490
-#, c-format
-msgid ""
-"\"%file:1\": Line %line:2: option `\"%option:3\"' possibly specified prior "
-"to filter."
-msgstr ""
-
 #: common/errors.cpp:498
-msgid "\"%file:1\": Line %line:2: unknown mode description key `\"%key:3\"'."
+msgid "Empty option specifier."
 msgstr ""
 
 #: common/errors.cpp:506
-#, c-format
-msgid "\"%file:1\": Line %line:2: exspecting \"%modekey:3\" key"
+msgid "Empty value; only bool type option and \"rem-all\" list prefix."
 msgstr ""
 
 #: common/errors.cpp:514
 #, c-format
-msgid "\"%file:1\": Line %line:2: version specifier missing key: `aspell'"
+msgid "Option \"%option:1\" possibly specified prior to filter."
 msgstr ""
 
 #: common/errors.cpp:522
-#, fuzzy, c-format
-msgid "\"%file:1\": Line %line:2: confused by version control"
-msgstr "%where:1: \"%filter:2\" Linia %line:3 confuzatã de controlul versiunii"
+msgid "Unknown mode description key \"%key:1\"."
+msgstr ""
 
 #: common/errors.cpp:530
-#, fuzzy, c-format
-msgid ""
-"\"%file:1\": Line %line:2: Aspell version does not match mode's requirement."
+#, c-format
+msgid "Expecting \"%modekey:1\" key."
+msgstr ""
+
+#: common/errors.cpp:538
+msgid "Version specifier missing key: \"aspell\"."
+msgstr ""
+
+#: common/errors.cpp:554
+#, fuzzy
+msgid "Aspell version does not match mode's requirement."
 msgstr ""
 "%where:1: \"%filter:2\": Linia %line:3 Versiunea Aspell nu se potriveºte cu "
 "cerinþele filtrului."
 
-#: common/errors.cpp:538
-#, c-format
-msgid "\"%file:1\": Line %line:2: missing magic mode expression"
-msgstr ""
-
-#: common/errors.cpp:546
-#, c-format
-msgid "\"%file:1\": Line %line:2: empty extension at char %char:3"
-msgstr ""
-
-#: common/errors.cpp:554
-#, c-format
-msgid "\"%errortext:3\" caused by line %line:2 in \"%file:1\""
-msgstr ""
-
 #: common/errors.cpp:562
-#, c-format
-msgid "\"%mode:1\" error"
+msgid "Missing magic mode expression."
 msgstr ""
 
 #: common/errors.cpp:570
 #, c-format
-msgid "ignoring unknown mode: \"%mode:1\""
+msgid "Empty extension at char %char:1."
 msgstr ""
 
 #: common/errors.cpp:578
+#, c-format
+msgid "\"%mode:1\" error"
+msgstr ""
+
+#: common/errors.cpp:586
+#, c-format
+msgid "ignoring unknown mode: \"%mode:1\"."
+msgstr ""
+
+#: common/errors.cpp:594
 #, fuzzy, c-format
 msgid "\"%mode:1\" error while extend Aspell modes. (out of memory?)"
 msgstr ""
 "%where:1: \"%filter:2\" eroare la extinderea opþiunilor Aspell. (nu mai e "
 "memorir?)"
 
-#: common/errors.cpp:594
-#, c-format
-msgid "\"%mode:1\": no start for magic search given for magic \"%magic:2\""
-msgstr ""
-
-#: common/errors.cpp:602
-#, c-format
-msgid "\"%mode:1\": no range for magic search given for magic \"%magic:2\""
-msgstr ""
-
 #: common/errors.cpp:610
 #, c-format
-msgid "\"%mode:1\": no magic expression available for magic \"%magic:2\""
+msgid "\"%mode:1\": no start for magic search given for magic \"%magic:2\"."
 msgstr ""
 
 #: common/errors.cpp:618
-msgid ""
-"\"%mode:1\": Magic \"%magic:2\": bad regular expression after location "
-"specifier;\n"
-"\t regexp reports: \"%regerr:3\""
+#, c-format
+msgid "\"%mode:1\": no range for magic search given for magic \"%magic:2\"."
 msgstr ""
 
-#: common/errors.cpp:627
+#: common/errors.cpp:626
+#, c-format
+msgid "\"%mode:1\": no magic expression available for magic \"%magic:2\"."
+msgstr ""
+
+#: common/errors.cpp:634
+msgid ""
+"\"%mode:1\": Magic \"%magic:2\": bad regular expression after location "
+"specifier; regexp reports: \"%regerr:3\"."
+msgstr ""
+
+#: common/errors.cpp:642
 #, fuzzy, c-format
 msgid "\"%action:1\": invalid regular expression."
 msgstr "%action:1: expresie regularã invalidã."
 
-#: common/errors.cpp:635
+#: common/errors.cpp:650
 #, fuzzy, c-format
-msgid "\"%action:1\": `\"%expression:2\"' is not a valid regular expression."
+msgid "\"%action:1\": \"%expression:2\" is not a valid regular expression."
 msgstr "%action:1: `%expression:2' nu este o expresie regularã validã."
 
 #: common/posib_err.cpp:98
@@ -765,7 +750,7 @@ msgid "Sorry \"create/merge repl\" is currently unimplemented.\n"
 msgstr "Îmi pare rãu, \"create/merge repl\" nu este încã implementat.\n"
 
 #: prog/aspell.cpp:1847
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "\n"
 "Aspell %s alpha.  Copyright 2000-2004 by Kevin Atkinson.\n"
@@ -805,28 +790,37 @@ msgstr ""
 "\n"
 "Folosire: aspell [opþiuni] <comandã>\n"
 "\n"
-"<comandã> este una din:\n"
+"<comandã> este una dintre:\n"
 "  -?|help [<expr>]  afiºeazã acest mesaj de ajutor\n"
 "                     ºi ajutor pentru filtrele ce se potrivesc cu <expr>\n"
 "                     dacã acestea sunt instalate\n"
 "  -c|check <fiºier> pentru a verifica un fiºier\n"
 "  -a|pipe           mod compatibilitate \"ispell -a\"\n"
-"  -l|list           genereazã o listã de cuvinte scrise greºit la intrarea "
-"standard\n"
+"  list              genereazã o listã de cuvinte scrise greºit de la "
+"intrarea standard\n"
 "  [dump] config [-e <expr>]  scrie configuraþia curentã la stdout\n"
 "  config [+e <expr>] <key>   afiºeazã valoarea curentã pentru o opþiune\n"
 "  soundslike        întoarce echivalentul \"sunã ca\" pentru fiecare cuvânt "
 "introdus\n"
 "  munch             genereazã cuvintele rãdãcinã posibile ºi affix-ele\n"
 "  expand [1-4]      expandeazã marcajele affix\n"
+"  clean [strict]    curãþã o listã de cuvinte pentru ca fiecare linie sã "
+"fie\n"
+"                     un cuvânt valid\n"
 "  filter            paseazã intrarea standard prin filtre\n"
 "  -v|version        afiºeazã o linie de versiune\n"
+"  conv <din> <în> [<norm-form>]\n"
+"    converteºte dintr-un encodin într-altul\n"
+"  norm (<norm-map> | <din> <norm-map> <în>) [<norm-form>]\n"
+"    realizeazã normalizare unicode\n"
 "  dump|create|merge master|personal|repl [listã cuvinte]\n"
-"    scrie, creazã sau combinã o lisþ de cuvinte principalã, personalã, sau "
-"de înlocuiri.\n"
+"    scrie, creazã sau combinã o listã de cuvinte principalã, personalã, \n"
+"    sau de înlocuiri.\n"
 "\n"
-"  <expr>            expresii regulare ce se potrivesc cu numefiltre sau \"all"
+"  <expr>           expresii regulare ce se potrivesc cu numefiltre sau \"all"
 "\"\n"
+"  <norm-form>      forma de normalizare de folosit, fie none, internal \n"
+"                    sau strict\n"
 "\n"
 "[opþiuni] este oricare dintre urmãtoarele:\n"
 "\n"
@@ -851,82 +845,74 @@ msgstr "Aceasta probabil deoarece: "
 msgid "The required field \"name\" is missing."
 msgstr "Câmpul necesar \"name\" lipseºte."
 
-#: modules/speller/default/language.cpp:445
+#: modules/speller/default/language.cpp:450
 msgid "Empty string."
 msgstr "ªir de caractere gol."
 
-#: modules/speller/default/language.cpp:449
-#, fuzzy, c-format
+#: modules/speller/default/language.cpp:454
+#, c-format
 msgid "The character '%s' (U+%02X) may not appear at the beginning of a word."
-msgstr "Caracterul '%s' nu poate apare la începutul unui cuvânt."
+msgstr "Caracterul '%s' (U+%02X) nu poate apare la începutul unui cuvânt."
 
-#: modules/speller/default/language.cpp:451
-#: modules/speller/default/language.cpp:460
+#: modules/speller/default/language.cpp:456
+#: modules/speller/default/language.cpp:465
 #, c-format
 msgid ""
 "The character '%s' (U+%02X) must be followed by an alphabetic character."
-msgstr ""
-
-#: modules/speller/default/language.cpp:453
-#, fuzzy
-msgid "Does not contain any alphabetic characters."
-msgstr "Nu conþine nici o literã."
+msgstr "Caracterul '%s' (U+%02X) trebuie urmat de o literã din alfabet."
 
 #: modules/speller/default/language.cpp:458
-#, fuzzy, c-format
-msgid "The character '%s' (U+%02X) may not appear in the middle of a word."
-msgstr "Caracterul '%s' nu poate apare la mijlocul unui cuvânt."
+msgid "Does not contain any alphabetic characters."
+msgstr "Nu conþine nici o literã din alfabet"
 
-#: modules/speller/default/language.cpp:465
+#: modules/speller/default/language.cpp:463
+#, c-format
+msgid "The character '%s' (U+%02X) may not appear in the middle of a word."
+msgstr "Caracterul '%s' (U+%02X) nu poate apare la mijlocul unui cuvânt."
+
+#: modules/speller/default/language.cpp:470
 msgid ""
 "The character '\\r' (U+0D) may not appear at the end of a word. This "
 "probably means means that the file is using MS-DOS EOL instead of Unix EOL. "
 msgstr ""
+"Caracterul '\\r' (U+0D) nu poate apare la sfârºitul unui cuvânt. Aceasta "
+"înseamnã probabil cã fiºierul foloseºte EOL din MS-DOS în loc de EOL din "
+"Unix. "
 
-#: modules/speller/default/language.cpp:468
-#, fuzzy, c-format
+#: modules/speller/default/language.cpp:473
+#, c-format
 msgid "The character '%s' (U+%02X) may not appear at the end of a word."
-msgstr "Caracterul '%s' nu poate apare la sfârºitul unui cuvânt."
+msgstr "Caracterul '%s' (U+%02X) nu poate apare la sfârºitul unui cuvânt."
 
-#: modules/speller/default/language.cpp:500
+#: modules/speller/default/language.cpp:505
 #, c-format
 msgid "Warning: Removing invalid affix '%s' from word %s.\n"
 msgstr ""
 
-#: modules/speller/default/language.cpp:501
+#: modules/speller/default/language.cpp:506
 #, c-format
 msgid "Warning: Removing inapplicable affix '%s' from word %s.\n"
 msgstr ""
 
-#: modules/speller/default/language.cpp:632
+#: modules/speller/default/language.cpp:637
 #, c-format
 msgid "Warning: %s Skipping string.\n"
 msgstr ""
 
-#: modules/speller/default/language.cpp:690
+#: modules/speller/default/language.cpp:695
 #, fuzzy
 msgid "The total length is larger than 240 characters."
 msgstr "Lungimea totalã a cuvântului e mai mare de 240 caractere."
 
-#: modules/speller/default/language.cpp:694
+#: modules/speller/default/language.cpp:699
 #, c-format
 msgid "Warning: %s Skipping word.\n"
 msgstr ""
 
-#: modules/speller/default/affix.cpp:263
-#, c-format
-msgid "Expected the file to be in \"%s\" not \"%s\"."
-msgstr "M-am aºteptat ca fiºierul sã fie în \"%s\" nu în \"%s\"."
-
-#: modules/speller/default/affix.cpp:327
-#, c-format
-msgid "affix '%s' is corrupt, possible incorrect count"
+#: modules/speller/default/affix.cpp:424
+#, fuzzy
+msgid "Possibly incorrect count."
 msgstr "affix-ul '%s' este corupt, numãrãtoare posibil incorectã"
-
-#: modules/speller/default/affix.cpp:374
-#, c-format
-msgid "Affix '%s' is corrupt"
-msgstr "Affix-ul '%s' este corupt"
 
 #: modules/speller/default/readonly_ws.cpp:358
 msgid "Wrong endian order."
@@ -945,10 +931,11 @@ msgid "Affix flags found in word but no affix file given."
 msgstr "Marcaje affix gãsie în cuvânt dar nici un fiºier de affix-e dat."
 
 #: modules/speller/default/readonly_ws.cpp:854
-#, fuzzy
 msgid ""
 "The total word length, with soundslike data, is larger than 240 characters."
-msgstr "Lungimea totalã a cuvântului e mai mare de 240 caractere."
+msgstr ""
+"Lungimea totalã a cuvântului, cu datele \"sunã ca\", e mai mare de 240 "
+"caractere."
 
 #. TRANSLATORS: Like the strings in config.cpp, all strings in *-filter.opt
 #. should be under 50 characters, begin with a lower case character and 
@@ -982,13 +969,12 @@ msgid "Filters for encoding, filtering and decoding sgml characters"
 msgstr "Filtre pentru encodare, aplicabile caracterelor sgml"
 
 #: modules/filter/sgml-filter.opt:13
-#, fuzzy
 msgid "sgml attributes to always check"
 msgstr "atribute sgml de verificat întotdeauna"
 
 #: modules/filter/sgml-filter.opt:19
 msgid "sgml tags to always skip the contents of"
-msgstr ""
+msgstr "marcaje sgml ale cãror conþinut sã fie ignorat"
 
 #: modules/filter/tex-filter.opt:7
 msgid "Filter for recognizing TeX/LaTeX commands"
@@ -1017,15 +1003,15 @@ msgstr "Filtru pentru ascundere cãilor/url-urilor ºi similar din Aspell"
 #~ msgid "indicator for additional flags in word lists"
 #~ msgstr "indicator pentru marcaje adiþionale în listele de cuvinte"
 
-#~ msgid "strip accents from word lists"
-#~ msgstr "eliminã accentele din listele de cuvinte"
+#~ msgid "%where:1: \"%filter:2\":"
+#~ msgstr "%where:1: \"%filter:2\":"
 
-#~ msgid "encode soundslike infomation when creating dicts"
-#~ msgstr "encodeazã informaþii despre cum sunã la crearea dicþionarelor"
+#~ msgid "%where:1: %filter:2: can't find option description."
+#~ msgstr "%where:1: %filter:2: nu pot gãsi descrierea opþiunii."
 
-#~ msgid "use jump tables when creating dictionaries"
-#~ msgstr "foloseºte tabele de sãrituri la crearea dicþionarelor"
-
-#~ msgid "Affix compression is currently incompatible with soundslike lookup."
+#~ msgid "%where:1: \"%filter:2\" Line %line:3 confused by version control"
 #~ msgstr ""
-#~ "Compresie affix este în prezent incompatibilã cu cãutarea \"Sunã ca\"."
+#~ "%where:1: \"%filter:2\" Linia %line:3 confuzatã de controlul versiunii"
+
+#~ msgid "Expected the file to be in \"%s\" not \"%s\"."
+#~ msgstr "M-am aºteptat ca fiºierul sã fie în \"%s\" nu în \"%s\"."

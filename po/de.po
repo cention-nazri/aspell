@@ -5,10 +5,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: aspell 0.60-b20040402\n"
+"Project-Id-Version: aspell 0.60-b20040526\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-06-01 05:39-0400\n"
-"PO-Revision-Date: 2004-04-02 22:23+0100\n"
+"POT-Creation-Date: 2004-06-08 13:09-0400\n"
+"PO-Revision-Date: 2004-06-05 09:25+0100\n"
 "Last-Translator: Roland Illig <roland.illig@gmx.de>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -206,19 +206,20 @@ msgstr "Aktiviere Warnungen"
 
 #: common/config.cpp:1153
 msgid "enable Unicode normalization"
-msgstr ""
+msgstr "Unicodenormalisierung aktivieren"
 
 #: common/config.cpp:1155
 msgid "Unicode normalization required for the current lang"
-msgstr ""
+msgstr "Unicodenormalisierung wird für die aktuelle Sprache benötigt"
 
 #: common/config.cpp:1157
 msgid "Unicode normalization form: none, nfd, nfc, comp"
-msgstr ""
+msgstr "Form der Unicodenormalisierung: none, nfd, nfc, comp"
 
 #: common/config.cpp:1159
+#, fuzzy
 msgid "avoid lossy conversions when normalization"
-msgstr ""
+msgstr "Verlustbehaftete Umwandlungen vermeiden"
 
 #: common/config.cpp:1161
 #, fuzzy
@@ -227,7 +228,7 @@ msgstr "Name des persönlichen Wörterbuchs"
 
 #: common/config.cpp:1169
 msgid "compute the soundslike on demand rather than storing"
-msgstr ""
+msgstr "Ähnlichklingende Zeichen bei Bedarf berechnen statt zu speichern"
 
 #: common/config.cpp:1171
 msgid "use affix compression when creating dictionaries"
@@ -235,7 +236,7 @@ msgstr "Endungen beim Erzeugen von Wörterbüchern komprimieren"
 
 #: common/config.cpp:1173
 msgid "partially expand affixes for better suggestions"
-msgstr ""
+msgstr "Anhänge für bessere Vorschläge teilweise erweitern"
 
 #: common/config.cpp:1181
 msgid "check if words are valid"
@@ -262,9 +263,8 @@ msgid "create a backup file by appending \".bak\""
 msgstr "Backupdatei mit der Erweiterung ».bak« anlegen"
 
 #: common/config.cpp:1198
-#, fuzzy
 msgid "create missing root/affix combinations"
-msgstr "Stamm-Endung-Kombinationen ermöglichen, die nicht im Wörterbuch stehen"
+msgstr "Fehlende Stamm-Endung-Kombinationen erzeugen"
 
 #: common/config.cpp:1200
 msgid "keymapping for check mode, aspell or ispell"
@@ -284,7 +284,7 @@ msgstr "Zeit für das Laden und Vorschlagen im Pipe-Modus messen"
 
 #: common/config.cpp:1208
 msgid "use byte offsets instead of character offsets"
-msgstr ""
+msgstr "Byteoffsets statt Zeichenoffsets verwenden"
 
 #: common/convert.cpp:288 common/convert.cpp:414
 #, c-format
@@ -296,7 +296,7 @@ msgstr ""
 "konnte oder nicht existiert."
 
 #: common/convert.cpp:537 common/convert.cpp:643 common/convert.cpp:689
-#, fuzzy, c-format
+#, c-format
 msgid "The Unicode code point U+%04X is unsupported."
 msgstr "Das Unicodezeichen an der Stelle U+%04X wird nicht unterstützt."
 
@@ -305,76 +305,66 @@ msgstr "Das Unicodezeichen an der Stelle U+%04X wird nicht unterstützt."
 msgid "Invalid UTF-8 sequence at position %d."
 msgstr "Falsche UTF-8-Folge an Position %d."
 
-#: common/errors.cpp:18
-msgid "Some error"
-msgstr ""
-
 #: common/errors.cpp:26
-#, c-format
-msgid ""
-"Ooups? you really got this message from \"%file:1\"(%line:2) are you sure?"
-msgstr ""
-
-#: common/errors.cpp:34
 msgid "Operation Not Supported: %what:1"
 msgstr "Operation nicht unterstützt: %what:1"
 
-#: common/errors.cpp:50
+#: common/errors.cpp:42
 msgid "The method \"%what:1\" is unimplemented in \"%where:2\"."
 msgstr "Die Methode »%what:1« ist in »%where:2« nicht implementiert."
 
-#: common/errors.cpp:58
+#: common/errors.cpp:50
 #, c-format
 msgid "%file:1:"
 msgstr "%file:1:"
 
-#: common/errors.cpp:66
+#: common/errors.cpp:58
 #, c-format
 msgid "The file \"%file:1\" can not be opened"
 msgstr "Die Datei »%file:1« kann nicht geöffnet werden"
 
-#: common/errors.cpp:74
+#: common/errors.cpp:66
 #, c-format
 msgid "The file \"%file:1\" can not be opened for reading."
 msgstr "Die Datei »%file:1« kann nicht zum Lesen geöffnet werden."
 
-#: common/errors.cpp:82
+#: common/errors.cpp:74
 #, c-format
 msgid "The file \"%file:1\" can not be opened for writing."
 msgstr "Die Datei »%file:1« kann nicht zum Schreiben geöffnet werden."
 
-#: common/errors.cpp:90
+#: common/errors.cpp:82
 #, c-format
 msgid "The file name \"%file:1\" is invalid."
 msgstr "Der Dateiname »%file:1« ist ungültig."
 
-#: common/errors.cpp:98
+#: common/errors.cpp:90
 #, c-format
 msgid "The file \"%file:1\" is not in the proper format."
 msgstr "Die Datei »%file:1« hat nicht das richtige Format."
 
-#: common/errors.cpp:114
+#: common/errors.cpp:106
 #, c-format
 msgid "The directory \"%dir:1\" can not be opened for reading."
 msgstr "Das Verzeichnis »%dir:1« kann nicht zum Lesen geöffnet werden."
 
-#: common/errors.cpp:130
+#: common/errors.cpp:122
 msgid "The key \"%key:1\" is unknown."
 msgstr "Der Schlüssel »%key:1« ist unbekannt."
 
-#: common/errors.cpp:138
+#: common/errors.cpp:130
 msgid "lis key `\"%key:1\"' requires one of [add|rem|rem-all]-"
 msgstr ""
 
-#: common/errors.cpp:146
+#: common/errors.cpp:138
 msgid "The value for option \"%key:1\" can not be changed."
 msgstr "Der Wert der Option »%key:1« kann nicht geändert werden."
 
-#: common/errors.cpp:154
+#: common/errors.cpp:146
 msgid "The key \"%key:1\" is not %accepted:2 and is thus invalid."
 msgstr "Der Schlüssel »%key:1« wird nicht %accepted:2 und ist daher ungültig."
 
-#: common/errors.cpp:162
+#: common/errors.cpp:154
 msgid ""
 "The value \"%value:2\" is not %accepted:3 and is thus invalid for the key \"%"
 "key:1\"."
@@ -382,242 +372,239 @@ msgstr ""
 "Der Wert »%value:2« wird nicht %accepted:3 und ist daher für den Schlüssel »%"
 "key:1« ungültig."
 
-#: common/errors.cpp:186
+#: common/errors.cpp:178
 #, c-format
 msgid "The language \"%lang:1\" is not known."
 msgstr "Die Sprache »%lang:1« ist unbekannt."
 
-#: common/errors.cpp:194
+#: common/errors.cpp:186
 #, c-format
 msgid "The soundslike \"%sl:2\" is not known."
 msgstr "Der Wortklang »%sl:2« ist nicht bekannt."
 
-#: common/errors.cpp:202
+#: common/errors.cpp:194
 #, c-format
 msgid "The language \"%lang:1\" is not supported."
 msgstr "Die Sprache »%lang:1« wird nicht unterstützt."
 
-#: common/errors.cpp:210
+#: common/errors.cpp:202
 #, c-format
 msgid "No word lists can be found for the language \"%lang:1\"."
 msgstr "Für die Sprache »%lang:1« können keine Wortlisten gefunden werden."
 
-#: common/errors.cpp:218
+#: common/errors.cpp:210
 #, c-format
 msgid "Expected language \"%lang:1\" but got \"%prev:2\"."
 msgstr "Sprache »%lang:1« erwartet, aber »%prev:2« bekommen."
 
+#: common/errors.cpp:226
+#, fuzzy, c-format
+msgid "Affix '%aff:1' is corrupt."
+msgstr "Endung »%s« ist kaputt"
+
 #: common/errors.cpp:234
+#, fuzzy, c-format
+msgid "The condition \"%cond:1\" is invalid."
+msgstr "Das Wort »%word:1« ist ungültig."
+
+#: common/errors.cpp:242
+#, c-format
+msgid ""
+"The condition \"%cond:1\" does not guarantee that \"%strip:2\" can always be "
+"stripped."
+msgstr ""
+
+#: common/errors.cpp:250
+#, fuzzy, c-format
+msgid ""
+"The file \"%file:1\" is not in the proper format. Expected the file to be in "
+"\"%exp:2\" not \"%got:3\"."
+msgstr "Die Datei »%file:1« hat nicht das richtige Format."
+
+#: common/errors.cpp:266
 #, c-format
 msgid "The encoding \"%encod:1\" is not known."
 msgstr "Die Codierung »%encod:1« ist nicht bekannt."
 
-#: common/errors.cpp:242
+#: common/errors.cpp:274
 #, c-format
 msgid "The encoding \"%encod:1\" is not supported."
 msgstr "Die Codierung »%encod:1« wird nicht unterstützt."
 
-#: common/errors.cpp:250
+#: common/errors.cpp:282
 #, c-format
 msgid "The conversion from \"%encod:1\" to \"%encod2:2\" is not supported."
 msgstr "Die Umwandlung von »%encod:1« nach »%encod:2« wird nicht unterstützt."
 
-#: common/errors.cpp:290
+#: common/errors.cpp:322
 #, c-format
 msgid "The string \"%str:1\" is invalid."
 msgstr "Die Zeichenkette »%str:1« ist ungültig."
 
-#: common/errors.cpp:298
+#: common/errors.cpp:330
 msgid "The word \"%word:1\" is invalid."
 msgstr "Das Wort »%word:1« ist ungültig."
 
-#: common/errors.cpp:306
+#: common/errors.cpp:338
 msgid "The affix flag '%aff:1' is invalid for word \"%word:2\"."
 msgstr ""
 
-#: common/errors.cpp:314
+#: common/errors.cpp:346
 #, fuzzy
 msgid "The affix flag '%aff:1' can not be applied to word \"%word:2\"."
 msgstr "Die Datei »%file:1« kann nicht zum Schreiben geöffnet werden."
 
-#: common/errors.cpp:362
+#: common/errors.cpp:394
 msgid "not a version number"
 msgstr ""
 
-#: common/errors.cpp:370
-msgid "%where:1: \"%filter:2\":"
-msgstr "%where:1: »%filter:2«:"
+#: common/errors.cpp:402
+#, fuzzy, c-format
+msgid "\"%filter:1\":"
+msgstr "%file:1:"
 
-#: common/errors.cpp:378
-msgid "%where:1: \"%filter:2\" dlopen returned \"%return:3\"."
+#: common/errors.cpp:410
+#, fuzzy
+msgid "dlopen returned \"%return:2\"."
 msgstr "%where:1: »%filter:2« dlopen returned »%return:3«."
 
-#: common/errors.cpp:386
-msgid "%where:1: The file \"%filter:2\" does not contain any filter."
+#: common/errors.cpp:418
+#, fuzzy, c-format
+msgid "The file \"%filter:1\" does not contain any filter."
 msgstr "%where:1: Die Datei »%filter:2« enthält keine Filter."
 
-#: common/errors.cpp:394
-msgid "%where:1: Filter \"%filter:2\" could not be found in filter paths."
+#: common/errors.cpp:426
+#, fuzzy, c-format
+msgid "Filter \"%filter:1\" could not be found in filter paths."
 msgstr ""
 "%where:1: Filter »%filter:2« konnte nicht im Filterpfad gefunden werden."
 
-#: common/errors.cpp:402
-msgid "%where:1: %filter:2: can't find option description."
-msgstr "%where:1: %filter:2: Kann die Optionsbeschreibung nicht finden."
+#: common/errors.cpp:434
+#, c-format
+msgid "Can't find the option file \"%option:2\"."
+msgstr ""
 
-#: common/errors.cpp:410
-msgid "%where:1: \"%filter:2\" Line %line:3 confused by version control"
-msgstr "%where:1: »%filter:2« Zeile %line:3 verwirrt durch Versionskontrolle"
+#: common/errors.cpp:442 common/errors.cpp:546
+msgid "Confused by version control."
+msgstr ""
 
-#: common/errors.cpp:418
-msgid ""
-"%where:1: \"%filter:2\": Line %line:3 Aspell version does not match filter's "
-"requirement."
+#: common/errors.cpp:450
+#, fuzzy
+msgid "Aspell version does not match filter's requirement."
 msgstr ""
 "%where:1: »%filter:2«: Zeile %line:3 Aspell-Version passt nicht zu den "
 "Anforderungen des Filters."
 
-#: common/errors.cpp:426
-msgid ""
-"%where:1: \"%filter:2\" error while extending Aspell options. (out of "
-"memory?)"
-msgstr ""
-"%where:1: »%filter:2« Fehler beim Erweitern der Aspell-Optionen. (Zu wenig "
-"Speicher?)"
-
-#: common/errors.cpp:434
-msgid "%where:1: \"%filter:2\" Line %line:3 Filter option already exists."
+#: common/errors.cpp:458
+#, fuzzy
+msgid "Filter option already exists."
 msgstr "%where:1: »%filter:2« Zeile %line:3 Filteroption existiert bereits."
 
-#: common/errors.cpp:442
-msgid ""
-"%where:1: \"%filter:2\" %line:3 Use option modifiers only within named "
-"Option."
+#: common/errors.cpp:466
+#, fuzzy
+msgid "Use option modifiers only within named option."
 msgstr ""
 "%where:1: »%filter:2« Zeile %line:3 Benutzen Sie Optionsmodifikatoren nur "
 "innerhalb benannter Optionen."
 
-#: common/errors.cpp:450
-msgid "%where:1: \"%filter:2\" %line:3 Option modifier unknown."
+#: common/errors.cpp:474
+#, fuzzy
+msgid "Option modifier unknown."
 msgstr "%where:1: »%filter:2« Zeile %line:3 Optionsmodifikator unbekannt."
 
-#: common/errors.cpp:458
-msgid "%where:1: \"%filter:2\" error setting filter description."
+#: common/errors.cpp:482
+#, fuzzy
+msgid "Error setting filter description."
 msgstr "%where:1: »%filter:2« Fehler beim Festlegen der Filterbeschreibung."
 
-#: common/errors.cpp:466
-#, fuzzy, c-format
-msgid "\"%file:1: \"%line:2:"
-msgstr "%where:1: »%filter:2«:"
-
-#: common/errors.cpp:474
-#, c-format
-msgid "\"%file:1\": Line %line:2: empty option specifier."
-msgstr ""
-
-#: common/errors.cpp:482
-#, c-format
-msgid ""
-"\"%file:1\": Line %line:2: empty value; only  bool type option and `rem-all' "
-"list prefix."
-msgstr ""
-
-#: common/errors.cpp:490
-#, c-format
-msgid ""
-"\"%file:1\": Line %line:2: option `\"%option:3\"' possibly specified prior "
-"to filter."
-msgstr ""
-
 #: common/errors.cpp:498
-msgid "\"%file:1\": Line %line:2: unknown mode description key `\"%key:3\"'."
+msgid "Empty option specifier."
 msgstr ""
 
 #: common/errors.cpp:506
-#, c-format
-msgid "\"%file:1\": Line %line:2: exspecting \"%modekey:3\" key"
+msgid "Empty value; only bool type option and \"rem-all\" list prefix."
 msgstr ""
 
 #: common/errors.cpp:514
 #, c-format
-msgid "\"%file:1\": Line %line:2: version specifier missing key: `aspell'"
+msgid "Option \"%option:1\" possibly specified prior to filter."
 msgstr ""
 
 #: common/errors.cpp:522
-#, fuzzy, c-format
-msgid "\"%file:1\": Line %line:2: confused by version control"
-msgstr "%where:1: »%filter:2« Zeile %line:3 verwirrt durch Versionskontrolle"
+msgid "Unknown mode description key \"%key:1\"."
+msgstr ""
 
 #: common/errors.cpp:530
-#, fuzzy, c-format
-msgid ""
-"\"%file:1\": Line %line:2: Aspell version does not match mode's requirement."
+#, c-format
+msgid "Expecting \"%modekey:1\" key."
+msgstr ""
+
+#: common/errors.cpp:538
+msgid "Version specifier missing key: \"aspell\"."
+msgstr ""
+
+#: common/errors.cpp:554
+#, fuzzy
+msgid "Aspell version does not match mode's requirement."
 msgstr ""
 "%where:1: »%filter:2«: Zeile %line:3 Aspell-Version passt nicht zu den "
 "Anforderungen des Filters."
 
-#: common/errors.cpp:538
-#, c-format
-msgid "\"%file:1\": Line %line:2: missing magic mode expression"
-msgstr ""
-
-#: common/errors.cpp:546
-#, c-format
-msgid "\"%file:1\": Line %line:2: empty extension at char %char:3"
-msgstr ""
-
-#: common/errors.cpp:554
-#, c-format
-msgid "\"%errortext:3\" caused by line %line:2 in \"%file:1\""
-msgstr ""
-
 #: common/errors.cpp:562
-#, c-format
-msgid "\"%mode:1\" error"
+msgid "Missing magic mode expression."
 msgstr ""
 
 #: common/errors.cpp:570
 #, c-format
-msgid "ignoring unknown mode: \"%mode:1\""
+msgid "Empty extension at char %char:1."
 msgstr ""
 
 #: common/errors.cpp:578
+#, c-format
+msgid "\"%mode:1\" error"
+msgstr ""
+
+#: common/errors.cpp:586
+#, c-format
+msgid "ignoring unknown mode: \"%mode:1\"."
+msgstr ""
+
+#: common/errors.cpp:594
 #, fuzzy, c-format
 msgid "\"%mode:1\" error while extend Aspell modes. (out of memory?)"
 msgstr ""
 "%where:1: »%filter:2« Fehler beim Erweitern der Aspell-Optionen. (Zu wenig "
 "Speicher?)"
 
-#: common/errors.cpp:594
-#, c-format
-msgid "\"%mode:1\": no start for magic search given for magic \"%magic:2\""
-msgstr ""
-
-#: common/errors.cpp:602
-#, c-format
-msgid "\"%mode:1\": no range for magic search given for magic \"%magic:2\""
-msgstr ""
-
 #: common/errors.cpp:610
 #, c-format
-msgid "\"%mode:1\": no magic expression available for magic \"%magic:2\""
+msgid "\"%mode:1\": no start for magic search given for magic \"%magic:2\"."
 msgstr ""
 
 #: common/errors.cpp:618
-msgid ""
-"\"%mode:1\": Magic \"%magic:2\": bad regular expression after location "
-"specifier;\n"
-"\t regexp reports: \"%regerr:3\""
+#, c-format
+msgid "\"%mode:1\": no range for magic search given for magic \"%magic:2\"."
 msgstr ""
 
-#: common/errors.cpp:627
+#: common/errors.cpp:626
+#, c-format
+msgid "\"%mode:1\": no magic expression available for magic \"%magic:2\"."
+msgstr ""
+
+#: common/errors.cpp:634
+msgid ""
+"\"%mode:1\": Magic \"%magic:2\": bad regular expression after location "
+"specifier; regexp reports: \"%regerr:3\"."
+msgstr ""
+
+#: common/errors.cpp:642
 #, fuzzy, c-format
 msgid "\"%action:1\": invalid regular expression."
 msgstr "%action:1: Ungültiger regulärer Ausdruck."
 
-#: common/errors.cpp:635
+#: common/errors.cpp:650
 #, fuzzy, c-format
-msgid "\"%action:1\": `\"%expression:2\"' is not a valid regular expression."
+msgid "\"%action:1\": \"%expression:2\" is not a valid regular expression."
 msgstr "%action:1: »%expression:2« ist kein gültiger regulärer Ausdruck."
 
 #: common/posib_err.cpp:98
@@ -769,7 +756,7 @@ msgstr ""
 "Sorry, »Ersetzungsliste anlegen/vereinigen« ist noch nicht implementiert.\n"
 
 #: prog/aspell.cpp:1847
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "\n"
 "Aspell %s alpha.  Copyright 2000-2004 by Kevin Atkinson.\n"
@@ -814,19 +801,27 @@ msgstr ""
 "                    Filtern, die zu <expr> passen\n"
 "  -c|check <file>  Eine Datei überprüfen\n"
 "  -a|pipe          Kompatibilitätsmodus für »ispell -a«\n"
-"  -l|list          Falsch geschriebene Wörter von stdin auflisten\n"
+"  list             Falsch geschriebene Wörter von stdin auflisten\n"
 "  [dump] config [-e <expr>]  Aktuelle Konfiguration nach stdout schreiben\n"
 "  config [+e <expr>] <key>   Aktuellen Wert einer Option ausgeben\n"
 "  soundslike       Gibt den Wortklang zu allen eingegebenen Wörtern aus\n"
 "  munch            Mögliche Stammformen und Endungen generieren\n"
 "  expand [1-4]     Endungsflags erweitern\n"
+"  clean [strict]   Räumt eine Wortliste auf, so dass jede Zeile ein gültiges "
+"Wort ist\n"
 "  filter           Leitet stdin durch Filter\n"
 "  -v|version       Gibt eine Zeile mit der Versionsnummer aus\n"
+"  conv <von> <nach> [<norm-form>]\n"
+"    Von einer Kodierung in eine andere konvertieren\n"
+"  norm (<norm-map> | <from> <norm-map> <to>) [<norm-form>]\n"
+"    Unicodenormalisierung durchführen\n"
 "  dump|create|merge master|personal|repl [word list]\n"
 "    gibt aus, erzeugt oder vereinigt eine Master-, persönliche oder "
 "Ersetzungswortliste.\n"
 "\n"
 "  <expr>           Regulärer Ausdruck für die passenden Filter oder »all«\n"
+"  <norm-form>      Zu benutzende Normalisierungsform: none, internal oder "
+"strict\n"
 "\n"
 "[Optionen] sind beliebige der folgenden:\n"
 "\n"
@@ -851,81 +846,74 @@ msgstr "Der Grund ist wahrscheinlich: "
 msgid "The required field \"name\" is missing."
 msgstr "Das benötigte Feld »name« fehlt."
 
-#: modules/speller/default/language.cpp:445
+#: modules/speller/default/language.cpp:450
 msgid "Empty string."
 msgstr "Leerer String."
 
-#: modules/speller/default/language.cpp:449
-#, fuzzy, c-format
+#: modules/speller/default/language.cpp:454
+#, c-format
 msgid "The character '%s' (U+%02X) may not appear at the beginning of a word."
-msgstr "Das Zeichen »%s« darf nicht am Anfang eines Wortes stehen."
+msgstr "Das Zeichen »%s« (U+%02X) darf nicht am Anfang eines Wortes stehen."
 
-#: modules/speller/default/language.cpp:451
-#: modules/speller/default/language.cpp:460
+#: modules/speller/default/language.cpp:456
+#: modules/speller/default/language.cpp:465
 #, c-format
 msgid ""
 "The character '%s' (U+%02X) must be followed by an alphabetic character."
-msgstr ""
+msgstr "Nach dem Zeichen »%s« (U+%02X) muss ein alphabetisches Zeichen folgen."
 
-#: modules/speller/default/language.cpp:453
-#, fuzzy
+#: modules/speller/default/language.cpp:458
 msgid "Does not contain any alphabetic characters."
 msgstr "Enthält keine Buchstaben."
 
-#: modules/speller/default/language.cpp:458
-#, fuzzy, c-format
+#: modules/speller/default/language.cpp:463
+#, c-format
 msgid "The character '%s' (U+%02X) may not appear in the middle of a word."
-msgstr "Das Zeichen »%s« darf nicht in der Mitte eines Wortes stehen."
+msgstr "Das Zeichen »%s« (U+%02X) darf nicht in der Mitte eines Wortes stehen."
 
-#: modules/speller/default/language.cpp:465
+#: modules/speller/default/language.cpp:470
 msgid ""
 "The character '\\r' (U+0D) may not appear at the end of a word. This "
 "probably means means that the file is using MS-DOS EOL instead of Unix EOL. "
 msgstr ""
+"Das Zeichen »\\r« (U+0D) darf nicht am Ende eines Wortes vorkommen. Das "
+"könnte daran liegen, dass die Datei den MS-DOS-Zeilenumbruch anstelle des "
+"UNIX-Zeilenumbruchs benutzt. "
 
-#: modules/speller/default/language.cpp:468
-#, fuzzy, c-format
+#: modules/speller/default/language.cpp:473
+#, c-format
 msgid "The character '%s' (U+%02X) may not appear at the end of a word."
-msgstr "Das Zeichen »%s« darf nicht am Ende eines Wortes stehen."
+msgstr "Das Zeichen »%s« (U+%02X) darf nicht am Ende eines Wortes stehen."
 
-#: modules/speller/default/language.cpp:500
+#: modules/speller/default/language.cpp:505
 #, c-format
 msgid "Warning: Removing invalid affix '%s' from word %s.\n"
 msgstr ""
 
-#: modules/speller/default/language.cpp:501
+#: modules/speller/default/language.cpp:506
 #, c-format
 msgid "Warning: Removing inapplicable affix '%s' from word %s.\n"
 msgstr ""
 
-#: modules/speller/default/language.cpp:632
+#: modules/speller/default/language.cpp:637
 #, c-format
 msgid "Warning: %s Skipping string.\n"
 msgstr ""
 
-#: modules/speller/default/language.cpp:690
+#: modules/speller/default/language.cpp:695
+#, fuzzy
 msgid "The total length is larger than 240 characters."
-msgstr ""
+msgstr "Das Wort ist insgesamt länger als 240 Zeichen."
 
-#: modules/speller/default/language.cpp:694
+#: modules/speller/default/language.cpp:699
 #, c-format
 msgid "Warning: %s Skipping word.\n"
 msgstr ""
 
-#: modules/speller/default/affix.cpp:263
-#, c-format
-msgid "Expected the file to be in \"%s\" not \"%s\"."
-msgstr "Die Datei wurde in »%s« erwartet, nicht in »%s«."
-
-#: modules/speller/default/affix.cpp:327
-#, c-format
-msgid "affix '%s' is corrupt, possible incorrect count"
+#: modules/speller/default/affix.cpp:424
+#, fuzzy
+msgid "Possibly incorrect count."
 msgstr "Endung »%s« ist kaputt, möglicherweise falsche Anzahl"
-
-#: modules/speller/default/affix.cpp:374
-#, c-format
-msgid "Affix '%s' is corrupt"
-msgstr "Endung »%s« ist kaputt"
 
 #: modules/speller/default/readonly_ws.cpp:358
 msgid "Wrong endian order."
@@ -947,6 +935,8 @@ msgstr "Endungsflags im Wort gefunden, aber keine Endungsdatei angegeben."
 msgid ""
 "The total word length, with soundslike data, is larger than 240 characters."
 msgstr ""
+"Die Gesamtlänge des Wortes, inclusive Ähnlichkeitsdaten, ist größer als 240 "
+"Zeichen."
 
 #. TRANSLATORS: Like the strings in config.cpp, all strings in *-filter.opt
 #. should be under 50 characters, begin with a lower case character and 
@@ -980,13 +970,12 @@ msgid "Filters for encoding, filtering and decoding sgml characters"
 msgstr "Filter zum Codieren, Filtern und Decodieren von SGML-Zeichen"
 
 #: modules/filter/sgml-filter.opt:13
-#, fuzzy
 msgid "sgml attributes to always check"
 msgstr "SGML-Attribute, die immer überprüft werden."
 
 #: modules/filter/sgml-filter.opt:19
 msgid "sgml tags to always skip the contents of"
-msgstr ""
+msgstr "SGML-Tags, deren Inhalt immer übersprungen wird"
 
 #: modules/filter/tex-filter.opt:7
 msgid "Filter for recognizing TeX/LaTeX commands"
@@ -1015,15 +1004,15 @@ msgstr "Filter, um URLs, Pfade und ähnliches vor Aspell zu verstecken"
 #~ msgid "indicator for additional flags in word lists"
 #~ msgstr "Indikator für zusätzliche Flags in Wortlisten"
 
-#~ msgid "strip accents from word lists"
-#~ msgstr "Akzente aus Wortlisten entfernen"
+#~ msgid "%where:1: \"%filter:2\":"
+#~ msgstr "%where:1: »%filter:2«:"
 
-#~ msgid "encode soundslike infomation when creating dicts"
-#~ msgstr "Wortklang beim Erzeugen der Wörterbücher mitcodieren"
+#~ msgid "%where:1: %filter:2: can't find option description."
+#~ msgstr "%where:1: %filter:2: Kann die Optionsbeschreibung nicht finden."
 
-#~ msgid "use jump tables when creating dictionaries"
-#~ msgstr "Benutze Sprungtabellen beim Anlegen der Wörterbücher"
-
-#~ msgid "Affix compression is currently incompatible with soundslike lookup."
+#~ msgid "%where:1: \"%filter:2\" Line %line:3 confused by version control"
 #~ msgstr ""
-#~ "Die Endungskompression ist momentan inkompatibel zur Wortklangsuche."
+#~ "%where:1: »%filter:2« Zeile %line:3 verwirrt durch Versionskontrolle"
+
+#~ msgid "Expected the file to be in \"%s\" not \"%s\"."
+#~ msgstr "Die Datei wurde in »%s« erwartet, nicht in »%s«."
