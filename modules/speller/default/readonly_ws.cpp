@@ -871,7 +871,7 @@ namespace {
           // the words 
           for (WordAff * p = exp_list; p; p = p->next)
           {
-            //CERR << p->word << '/' << p->af << '\n';
+            //CERR.printf("%s/%s\n", p->word.str, p->aff);
             s = p->word.size;
             const char * w = p->word.str;
             bool dup = false;
@@ -1110,8 +1110,8 @@ namespace {
         if (word_hash->parms().is_nonexistent(value)) continue;
 
         data.write(value->total_size + 3);
-        data.write(value->word_size);
         data.write((byte)lang.get_word_info(value->data));
+        data.write(value->word_size);
 
         final_hash[i] = data.size();
 
