@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/sh
 
 # Copyright (c) 2004
 # Kevin Atkinson
@@ -14,18 +14,18 @@
 
 cmd=`basename $0`
 
-function warn () 
+warn () 
 {
   if test -z "$quite"; then echo "$cmd: $1" >&2 ; fi
 }
 
-function error () 
+error () 
 {
   echo "$cmd: $1" >&2
   errors=t
 }
 
-function zip2 ()
+zip2 ()
 {
   case $1 in
   d) 
@@ -49,7 +49,7 @@ function zip2 ()
   fi
 }
 
-function zip ()
+zip ()
 {
   if test -e "$3" -a ! "$force"
   then
@@ -79,7 +79,7 @@ for p
 do
   case $p in
   --*)
-    parm=`expr substr x"$p" 4 \( length x"$p" \)`
+    parm=`expr "x$p" : '...\(.*\)'`
     case $parm in
     decompress ) mode=d ;;
     compress   ) mode=z ;;
@@ -96,11 +96,11 @@ do
     esac
     ;;
   -* ) 
-    len=`expr length x"$p"`
-    i=3
-    while test $i -le $len
+    p=`expr "x$p" : '..\(.*\)'`
+    while test "$p"
     do
-      parm=`expr substr x"$p" $i 1`
+      parm=`expr "$p" : '\(.\)'`
+      p=`expr "$p" : '.\(.*\)'`
       case $parm in
       d ) mode=d ;;
       z ) mode=z ;;
@@ -115,7 +115,6 @@ do
       q ) quiet=t ;;
       * ) error "invalid option -- $parm";;
       esac
-      i=`expr $i + 1`
     done
     ;;
   * )
