@@ -38,7 +38,6 @@ public: // but don't use
 private:
   HashTable<Parms> lookup_;
   ObjStack buffer_;
-  const char empty_str[1];
 
   void copy(const StringMap & other);
   
@@ -46,8 +45,8 @@ private:
 public:
   PosibErr<void> clear() {lookup_.clear(); buffer_.reset(); return no_err;}
   
-  StringMap() : empty_str() {}
-  StringMap(const StringMap & other) : empty_str() {copy(other);}
+  StringMap() {}    
+  StringMap(const StringMap & other) {copy(other);}
   StringMap & operator= (const StringMap & o) {clear(); copy(o); return *this;}
   ~StringMap() {}
   
@@ -76,7 +75,7 @@ public:
     pair<Iter_,bool> res = lookup_.insert(Value_(key,0));
     if (res.second) {
       res.first->first  = buffer_.dup(key);
-      res.first->second = empty_str;
+      res.first->second = "";
       return true;
     } else {
       return false;
