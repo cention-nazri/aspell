@@ -975,6 +975,10 @@ void print_ver () {
 }
 
 ///////////////////////////////////////////////////////////////////////
+//
+// These functions use implementation details of the default speller
+// module
+//
 
 ///////////////////////////
 //
@@ -1239,6 +1243,7 @@ void print_help () {
     "  soundslike       returns the soundslike equivalent for each word entered\n"
     "  filter           passes standard input through filters\n"
     "  -v|version       prints a version line\n"
+    "  dump|create|merge master|personal|repl [word list]\n"
     "    dumps, creates or merges a master, personal, or replacement word list.\n"
     "\n"
     "[options] is any of the following:\n"
