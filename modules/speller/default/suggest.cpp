@@ -854,9 +854,9 @@ namespace aspeller {
 	}
       }
 
-      char buf[64];
+      FixedBuffer<64> buf;
       DataPair d;
-      while (getdata_pair(in, d, buf, 64)) {
+      while (getdata_pair(in, d, buf)) {
 	if (d.key.size() != 2)
 	  return make_err(bad_file_format, file);
 	w.repl (l.to_normalized(d.key[0]),

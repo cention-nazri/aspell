@@ -68,7 +68,7 @@ namespace aspeller {
   };
   
   PosibErr<PhonetParms *> load_phonet_rules(const String & file) {
-    char buf[256]; DataPair dp;
+    FixedBuffer<> buf; DataPair dp;
 
     FStream in;
     RET_ON_ERR(in.open(file, "r"));
@@ -81,7 +81,7 @@ namespace aspeller {
     int size = 0;
     int num = 0;
     while (true) {
-      if (!getdata_pair(in, dp, buf, 256)) break;
+      if (!getdata_pair(in, dp, buf)) break;
       if (dp.key != "followup" && dp.key != "collapse_result" &&
 	  dp.key != "version") {
 	++num;
@@ -101,7 +101,7 @@ namespace aspeller {
     in.restart();
 
     while (true) {
-      if (!getdata_pair(in, dp, buf, 256)) break;
+      if (!getdata_pair(in, dp, buf)) break;
       if (dp.key == "followup") {
 	parms->followup = to_bool(dp.value);
       } else if (dp.key == "collapse_result") {

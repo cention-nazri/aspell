@@ -860,9 +860,9 @@ namespace acommon {
 
   PosibErr<void> Config::read_in(IStream & in) 
   {
-    char buf[256];
+    FixedBuffer<> buf;
     DataPair dp;
-    while (getdata_pair(in, dp, buf, 256)) {
+    while (getdata_pair(in, dp, buf)) {
       unescape(dp.value);
       RET_ON_ERR(replace(dp.key, dp.value));
     }

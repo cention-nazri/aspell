@@ -391,7 +391,7 @@ namespace acommon
     int active_option = 0;
     String expand="filter-";
     int norealoption = 0;
-    char buf[256]; DataPair d;
+    FixedBuffer<> buf; DataPair d;
 
     if ((name_len == 6) &&
         !strncmp(key->name,"filter",6)){
@@ -419,7 +419,7 @@ namespace acommon
 
 	  bool empty_file = true;
 
-          while (getdata_pair(options,d,buf,256)) {
+          while (getdata_pair(options,d,buf)) {
             if ((d.key == "add-filter" || d.key == "rem-filter") 
 		&& value == value.str())
 	    {
@@ -448,7 +448,7 @@ namespace acommon
         RET_ON_ERR(options.open(option_name,"r"));
         greater = equal = less = false;
 
-        while (getdata_pair(options,d,buf,256)) 
+        while (getdata_pair(options,d,buf))
 	{
 	  to_lower(d.key);
 	  unescape(d.value);

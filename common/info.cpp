@@ -216,8 +216,8 @@ namespace acommon {
     
     PosibErr<void> err;
 
-    char buf[256]; DataPair d;
-    while (getdata_pair(in, d, buf, 256)) {
+    FixedBuffer<> buf; DataPair d;
+    while (getdata_pair(in, d, buf)) {
       if (d.key == "order-num") {
 	to_add->c_struct.order_num = strtod_c(d.value.str(), NULL);
 	if (!(0 < to_add->c_struct.order_num && 
@@ -448,8 +448,8 @@ namespace acommon {
     } else {
       FStream f;
       RET_ON_ERR(f.open(node->info_file, "r"));
-      char buf[256]; DataPair dp; // FIXME
-      bool res = getdata_pair(f, dp, buf, 256);
+      FixedBuffer<> buf; DataPair dp; // FIXME
+      bool res = getdata_pair(f, dp, buf);
       main_wl = dp.key; flags = dp.value;
       f.close();
       if (!res)

@@ -12,17 +12,16 @@
 
 namespace acommon {
 
-  bool getdata_pair(IStream & in, DataPair & d,
-                    char * buf, size_t len)
+  bool getdata_pair(IStream & in, DataPair & d, const Buffer & buf)
   {
-    buf[0] = '\0'; // to avoid some special cases
+    buf.data[0] = '\0'; // to avoid some special cases
     char * p;
     char * end;
 
     // get first non blank line
     do {
-        p = buf + 1;
-        end = in.getline(p, len-1);
+        p = buf.data + 1;
+        end = in.getline(p, buf.size-1);
         if (end == 0) return false;
         while (*p == ' ' || *p == '\t') ++p;
     } while (*p == '#' || *p == '\0');

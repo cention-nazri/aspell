@@ -116,7 +116,7 @@ AffixMgr::~AffixMgr()
 PosibErr<void> AffixMgr::parse_file(const char * affpath)
 {
   // io buffers
-  char buf[256]; DataPair d;
+  FixedBuffer<> buf; DataPair d;
  
   // affix type
   char ft;
@@ -135,7 +135,7 @@ PosibErr<void> AffixMgr::parse_file(const char * affpath)
   // read in each line ignoring any that do not
   // start with a known line type indicator
 
-  while (getdata_pair(afflst,d,buf,256)) {
+  while (getdata_pair(afflst,d,buf)) {
     ft = ' ';
 
     /* parse in the name of the character set used by the .dict and .aff */
@@ -869,11 +869,11 @@ PosibErr<void> AffixMgr::parse_affix(ParmString data,
     return make_err(bad_file_format, affix_file, msg);
   }
  
-  char buf[256];
+  FixedBuffer<> buf;
   DataPair datapair;
   // now parse numents affentries for this affix
   for (int j=0; j < numents; j++) {
-    getdata_pair(af, datapair, buf, 256);
+    getdata_pair(af, datapair, buf);
     tp = datapair.value;
     i = 0;
     np = 0;
