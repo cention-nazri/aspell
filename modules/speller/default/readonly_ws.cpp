@@ -30,8 +30,6 @@
 //   '-'.
 
 #include <map>
-// FIXME: There is NO real need to use a map here.  Simpily use a vector or list
-//   and then sort when done
 
 using std::pair;
 
@@ -317,13 +315,13 @@ namespace {
       f.read(word.data(), data_head.soundslike_name_size);
 
       if (strcmp(word.data(), lang()->soundslike_name()) != 0)
-        return make_err(bad_file_format, fn, _("Wrong soundslike"));
+        return make_err(bad_file_format, fn, _("Wrong soundslike."));
 
       word.resize(data_head.soundslike_version_size);
       f.read(word.data(), data_head.soundslike_version_size);
 
       if (strcmp(word.data(), lang()->soundslike_version()) != 0)
-        return make_err(bad_file_format, fn, _("Wrong soundslike version"));
+        return make_err(bad_file_format, fn, _("Wrong soundslike version."));
     }
 
     affix_compressed = data_head.affix_info;
@@ -673,7 +671,9 @@ namespace {
     //     << (use_jump_tables ? "  USING JUMP TABLES" : "")
     //     << "\n";
 
-    assert(!(affix_compress && use_soundslike)); // FIXME: return error
+    if (affix_compress && use_soundslike)
+      return make_err(other_error, 
+                      _("Affix compression is currently incompatible with soundslike lookup."));
 
     String base = config.retrieve("master-path");
 
@@ -750,10 +750,11 @@ namespace {
 
         const char * affixes = p0;
 
-	check_if_valid(lang,w);
+	RET_ON_ERR(check_if_valid(lang,w));
 
         if (affixes && !lang.affix())
-          abort(); // FIXME return error
+          return make_err(other_error, 
+                          _("Affix flags found in word but no affix file given."));
 
         if (!affixes || (affixes && !affix_compress)) {
 

@@ -465,6 +465,7 @@ namespace acommon {
 
   const char * fix_encoding_str(ParmString enc, String & buf)
   {
+    buf.clear();
     buf.reserve(enc.size() + 1);
     for (size_t i = 0; i != enc.size(); ++i)
       buf.push_back(asc_tolower(enc[i]));
@@ -472,7 +473,7 @@ namespace acommon {
     if (strncmp(buf.c_str(), "iso8859", 7) == 0)
       buf.insert(3, 1, '-'); // For backwards compatibility
     
-    if (buf == "ascii")
+    if (buf == "ascii" || buf == "ansi_x3.4-1968")
       return "iso-8859-1";
     else if (buf == "machine unsigned 16")
       return "utf-16";

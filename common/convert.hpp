@@ -226,6 +226,7 @@ namespace acommon {
     {
       RET_ON_ERR(conv_obj.setup(c,from,to));
       conv = conv_obj.ptr;
+      return no_err;
     }
   };
 

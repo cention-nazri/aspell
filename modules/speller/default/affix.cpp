@@ -233,8 +233,13 @@ PosibErr<void> AffixMgr::parse_file(const char * affpath, Conv & iconv)
     /* parse in the name of the character set used by the .dict and .aff */
 
     if (dp.key == "SET") {
-      encoding = strings.dup(dp.value);
-      // FIXME: check if match
+      String buf;
+      encoding = strings.dup(fix_encoding_str(dp.value, buf));
+      char msg[96];
+      snprintf(msg, 96, _("Expected the file to be in \"%s\" not \"%s\"."),
+               lang->data_encoding(), encoding);
+      if (strcmp(encoding, lang->data_encoding()) != 0)
+        return make_err(bad_file_format, affix_file, msg);
     }
 
     /* parse in the flag used by the controlled compound words */

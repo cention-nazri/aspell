@@ -75,12 +75,10 @@ namespace aspeller {
     if (!data.have("name"))
       return make_err(bad_file_format, path, _("The required field \"name\" is missing."));
 
+    String sbuf;
     name_          = data.retrieve("name");
-    charset_       = data.retrieve("charset");
-    data_encoding_ = data.retrieve("data-encoding");
-
-    if (strncmp(charset_.c_str(), "iso8859", 7) == 0)
-      charset_.insert(3, 1, '-'); // For backwards compatibility
+    charset_       = fix_encoding_str(data.retrieve("charset"), sbuf);
+    data_encoding_ = fix_encoding_str(data.retrieve("data-encoding"), sbuf);
 
     {
 #ifdef ENABLE_NLS
