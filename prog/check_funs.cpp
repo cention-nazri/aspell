@@ -16,6 +16,8 @@
    All these macros need to have a true value and not just be defined
 */
 
+#define _XOPEN_SOURCE_EXTENDED 1
+
 #include "settings.h"
 
 #ifdef CURSES_NON_POSIX

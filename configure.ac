@@ -277,8 +277,8 @@ fi
 #                                                                 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-AC_DEFINE(_XOPEN_SOURCE_EXTENDED, 1, 
-          [Needed to enable wide curses support on some platforms])
+dnl AC_DEFINE(_XOPEN_SOURCE_EXTENDED, 1, 
+dnl          [Needed to enable wide curses support on some platforms])
 
 AC_MSG_CHECKING(if mblen is supported)
 AC_TRY_LINK(
@@ -374,7 +374,8 @@ then
      if test -n "$have_mblen"
      then
        AC_TRY_LINK(
-         [#include <wchar.h>
+         [#define _XOPEN_SOURCE_EXTENDED 1
+          #include <wchar.h>
           #include CURSES_HEADER
          ],
          [wchar_t wch = 0;
@@ -390,7 +391,8 @@ then
  
      AC_MSG_CHECKING(if standard curses include sequence will work)
      AC_TRY_LINK(
-       [#include <termios.h>
+       [#define _XOPEN_SOURCE_EXTENDED 1
+        #include <termios.h>
 	#include <unistd.h>
         #include CURSES_HEADER
 	#include <term.h>
@@ -407,7 +409,8 @@ then
      dnl else if
      AC_MSG_CHECKING(if curses workaround I will work)
      AC_TRY_LINK(
-       [#include <termios.h>
+       [#define _XOPEN_SOURCE_EXTENDED 1
+        #include <termios.h>
 	#include <unistd.h>
         #include CURSES_HEADER
 	extern "C" {char * tigetstr(char * capname);}],
@@ -422,7 +425,8 @@ then
      dnl else if
      AC_MSG_CHECKING(if curses without Unix stuff will work)
      AC_TRY_LINK(
-       [#include CURSES_HEADER
+       [#define _XOPEN_SOURCE_EXTENDED 1
+        #include CURSES_HEADER
        ],
        [initscr();],
        [AC_MSG_RESULT(yes)
