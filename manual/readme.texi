@@ -11,16 +11,16 @@ Unix-like environment (@file{sh}, @file{grep}, @file{sed}, @file{tr},
 @dots{}), and Perl in order to build.  Aspell also uses a few POSIX
 functions when necessary.
 
-The latest version can always be found at GNU Aspell's home page at 
+The latest version can always be found at GNU Aspell's home page at
 @uref{http://aspell.net}.
 
 @menu
-* Generic Install Instructions::  
-* Curses Notes::                
-* Upgrading from Aspell 0.50::  
-* Upgrading from Aspell .33/Pspell .12::  
-* Upgrading from a pre-0.50 snapshot::  
-* WIN32 Notes::                 
+* Generic Install Instructions::
+* Curses Notes::
+* Upgrading from Aspell 0.50::
+* Upgrading from Aspell .33/Pspell .12::
+* Upgrading from a pre-0.50 snapshot::
+* WIN32 Notes::
 @end menu
 
 @node Generic Install Instructions
@@ -57,7 +57,7 @@ installed.  You can find them at @uref{http://aspell.net/}.  The
 dictionaries to install correctly.
 
 If you do not have Ispell or the traditional Unix @code{spell} utility
-installed on your system than you should also copy the compatibly
+installed on your system then you should also copy the compatibility
 scripts @code{ispell} and @code{spell} located in the @file{scripts/}
 directory into your binary directory which is usually
 @file{/usr/local/bin} so that programs that expect the
@@ -66,9 +66,9 @@ directory into your binary directory which is usually
 @node Curses Notes
 @appendixsec Curses Notes
 
-If you are having problems compiling @file{check_funs.cpp} than the most
+If you are having problems compiling @file{check_funs.cpp} then the most
 likely reason is due to incompatibilities with the curses implementation
-on your system.  If this is the case than you can explicitly disable the
+on your system.  If this is the case then you can explicitly disable the
 curses library with @option{--disable-curses}.  By doing this you will
 lose the nice full screen interface but hopefully you will be able to at
 least get Aspell to compile correctly.
@@ -77,18 +77,18 @@ If the curses library is installed in a non-standard location than you
 can specify the library and include directory with
 @option{--enable-curses=@var{lib}} and
 @option{--enable-curses-include=@var{dir}}.
- 
+
 @option{@var{lib}} can either be the complete path of the library---for
 example
 
-@example 
+@example
 /usr/local/curses/libcurses.a
 @end example
 
-or the name of the library (for example 
-@file{ncurses}) or a combined location and library in the form 
+or the name of the library (for example
+@file{ncurses}) or a combined location and library in the form
 @option{-L@var{libdir} -l@var{lib}}
- (for example 
+ (for example
 @option{-L/usr/local/@/ncurses/lib -lncurses}).
 
 @var{dir} is the location of the curses header files (for example
@@ -98,15 +98,15 @@ or the name of the library (for example
 
 In order for Aspell to correctly spell check UTF-8 documents the "wide"
 version of the curses library must be installed.  This is different from
-the normal version of curses library, the and is normally named
+the normal version of curses library, and is normally named
 @file{libcursesw} (with a @samp{w} at the end) or @file{libncursesw}.
-With out the right curses version installed UTF-8 documents will not
-display correctly.
+UTF-8 documents will not display correctly without the right curses
+version installed.
 
 In addition your system must also support the @code{mblen} function.
 Although this function was defined in the ISO C89 standard (ANSI
 X3.159-1989), not all systems have it.
- 
+
 @node Upgrading from Aspell 0.50
 @appendixsec Upgrading from Aspell 0.50
 
@@ -119,8 +119,8 @@ included both the dictionaries and the language data files which were
 stored in @file{@var{sharedir}/aspell} before Aspell 0.60.
 
 The format of the character data files has changed.  The new character
-data files are installed with Aspell so you shouldn't have to worry about
-it unless you made a custom one.
+data files are installed with Aspell so you should not have to worry
+about it unless you made a custom one.
 
 The dictionary option @option{strip-accents} has been removed.  For this
 reason the old English dictionary (up to 0.51) will no longer work.  A
@@ -136,21 +136,21 @@ version number of the shared (so-name) library by default which means
 programs that were compiled for Aspell 0.50 will also work for Aspell
 0.60.  However, this means that having both Aspell 0.50 and Aspell 0.60
 installed at the same time can be pragmatic.  If you wish to allow both
-Aspell 0.50 and 0.60 to be installed at the same time than you can use
+Aspell 0.50 and 0.60 to be installed at the same time then you can use
 the configure option @option{--incremented-soname} which will increment
 so-name.  You should only use this option if you know what you are
-doing.  It is up to you to some how insure that both the Aspell 0.50 and
+doing.  It is up to you to somehow ensure that both the Aspell 0.50 and
 0.60 executables can coexist.
 
 If after incrementing the so-name you wish to allow programs compiled
 for Aspell 0.50 to use Aspell 0.60 instead (thus implying that Aspell
-0.50 is not installed) than you can use a special compatibility library
+0.50 is not installed) then you can use a special compatibility library
 which can be found in the @file{lib5} directory.  This directory will
 not be entered when building or installing Aspell so you must manually
 build and install this library.  You should build it after the rest of
 Aspell is built.  The order in which this library is installed, with
 relation to the rest of Aspell, is also important.  If it is installed
-@emph{after} the rest of Aspell than new programs will link to the old
+@emph{after} the rest of Aspell then new programs will link to the old
 library (which will work for Aspell 0.50 or 0.60) when built, if
 installed @emph{before}, new programs will link with the new library
 (Aspell 0.60 only).
@@ -163,7 +163,7 @@ previous Aspell/Pspell release.  For one thing Pspell has been merged
 with Aspell so there in no longer two separate libraries you have to
 worry about.
 
-Because of the massive changes between Aspell/Pspell and aspell 0.50
+Because of the massive changes between Aspell/Pspell and Aspell 0.50
 you may want to clean out the old files before installing the the new
 Aspell.  To do so do a @code{make uninstall} in the original Aspell
 and Pspell source directories.
@@ -198,7 +198,7 @@ Pspell with the new Aspell as a backward compatibility header file is
 provided.
 
 Due to a change in the way dictionaries are handled, scanning for
-@file{.pwli} files in order to get find out which dictionaries are
+@file{.pwli} files in order to find out which dictionaries are
 available will no longer work.  This means that programs that relied
 on this technique may have problems finding dictionaries.
 Fortunately, GNU Aspell now provided a uniform way to list all
@@ -216,16 +216,16 @@ into the main @file{aspell} program.  You may wish to remove that
 @file{speller-util} program to avoid confusion.  This also means that
 dictionaries designed to work with the snapshot will no longer work
 with the official release.
- 
+
 @node WIN32 Notes
 @appendixsec WIN32 Notes
 
 @appendixsubsec Getting the WIN32 version
 
 The latest version of the native Aspell/WIN32 port
-can be found at  
+can be found at
 @uref{http://aspell.net/win32}.
- 
+
 @appendixsubsec Building the WIN32 version
 
 There are two basically different ways of building Aspell using GCC
@@ -263,15 +263,15 @@ If set to "1", the binaries will include debugging information
 @item CURSESDIR
 Enter the path to the pdcurses library here, in order to get a nicer
 console interface (see below).
- 
+
 @item MSVCLIB
 Enter the filename of MS @file{lib.exe} here, if you want to build
 libraries that can be imported from MS Visual C++.
- 
+
 @item WIN32_RELOCATABLE
 If set to "1", Aspell will detect the prefix from the path where the
 DLL resides (see below for further datails).
- 
+
 @item TARGET
 Sets a prefix to be used for cross compilation (e.g.
 @file{/usr/local/bin/@/i586-mingw32msvc-} to cross compile from Linux).
@@ -325,7 +325,7 @@ personal wordlists will be saved in the @file{@var{prefix}} directory with
 their names changed from @file{.aspell.@var{lang}.*} to @file{@var{lang}.*}
 (you can override the path by setting the @env{HOME} environment
 variable).
- 
+
 @appendixsubsec Installer
 
 The installer registers the DLLs as shared libraries, you should
