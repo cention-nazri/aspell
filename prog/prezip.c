@@ -4,8 +4,8 @@
  *
  * Permission to use, copy, modify, distribute and sell this software
  * and its documentation for any purpose is hereby granted without
- * fee, provided that the above copyright notice appear in all copies  
- * and that both that copyright notice and this permission notice 
+ * fee, provided that the above copyright notice appear in all copies
+ * and that both that copyright notice and this permission notice
  * appear in supporting documentation.  Kevin Atkinson makes no
  * representations about the suitability of this software for any
  * purpose.  It is provided "as is" without express or implied
@@ -73,9 +73,9 @@ int main (int argc, const char *argv[]) {
   if (argc < 2) {
 
     goto usage;
-    
+
   } else if (strcmp(argv[1], "-z") == 0) {
-    
+
     Word w1,w2;
     Word * prev = &w1;
     Word * cur  = &w2;
@@ -115,7 +115,7 @@ int main (int argc, const char *argv[]) {
       /* get the length of the prefix */
       l = 0;
       while (p[l] != '\0' && w[l] != '\0' && p[l] == w[l]) ++l;
-      
+
       /* prefix compress, and write word */
       if (l < 30) {
         putc(l, stdout);
@@ -124,7 +124,7 @@ int main (int argc, const char *argv[]) {
         putc(30, stdout);
         while (i >= 255) {putc(255, stdout); i -= 255;}
 	putc(i, stdout);
-      } 
+      }
       fputs(w+l, stdout);
 
       /* swap prev and next */
@@ -134,7 +134,7 @@ int main (int argc, const char *argv[]) {
         prev = tmp;
       }
     }
-    
+
     putc(31, stdout);
     putc(255, stdout);
 
@@ -142,7 +142,7 @@ int main (int argc, const char *argv[]) {
     free(w2.str);
 
   } else if (strcmp(argv[1], "-d") == 0) {
-    
+
     int ret = 0;
 
     Word cur;
@@ -158,7 +158,7 @@ int main (int argc, const char *argv[]) {
 
     c = getc(stdin);
 
-    if (c == 2) 
+    if (c == 2)
     {
       while (c != EOF && ret <= 0) {
         ret = -1;
@@ -198,7 +198,7 @@ int main (int argc, const char *argv[]) {
         }
       }
     }
-    else if (c == 1) 
+    else if (c == 1)
     {
       while (c != -1) {
         if (c == 0)
