@@ -93,7 +93,7 @@
 @item kw @tab Cornish @tab Latin @tab Maybe @tab -
 @item ky @tab Kirghiz @tab Cyrillic @tab - @tab -
 @item
-@item la @tab Latin @tab Latin @tab Planned @tab -
+@item la @tab Latin @tab Latin @tab Experimental @tab -
 @item lb @tab Luxembourgish @tab Latin @tab Maybe @tab -
 @item lg @tab Ganda @tab Latin @tab - @tab -
 @item li @tab Limburgian @tab Latin @tab Maybe @tab -

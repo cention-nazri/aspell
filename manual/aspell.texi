@@ -1,5 +1,5 @@
 \input texinfo   @c -*-texinfo-*-
-@comment $Id: aspell.texi,v 1.31 2004/05/11 21:39:59 kevina Exp $
+@comment $Id: aspell.texi,v 1.32 2004/05/15 19:43:32 kevina Exp $
 @comment %**start of header
 @setfilename aspell.info
 @settitle GNU Aspell 0.60
@@ -3170,13 +3170,12 @@ support.
 @node Planned Dictionaries
 @appendixsec Notes on Planned Dictionaries
 
-MySpell or Ispell dictionaries are available for the following languages:
+Ispell dictionaries are available for the following languages:
 
 @itemize
 @item Belarusian (be)
 @item Estonian (et)
 @item Finnish (fi)
-@item Latin (la)
 @item Albanian (sq)
 @end itemize
 
