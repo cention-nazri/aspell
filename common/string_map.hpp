@@ -29,6 +29,7 @@ class StringMap : public MutableContainer {
   virtual bool insert(ParmString key, ParmString value) = 0;
   virtual bool replace(ParmString key, ParmString value) = 0;
   virtual const char * lookup(ParmString key) const = 0;
+  bool have(ParmString key) const {return lookup(key) != 0;}
   StringMap() {}
   virtual ~StringMap() {}
 };
