@@ -273,7 +273,8 @@ namespace aspeller {
 					   ParmString dir,
 					   DataType allowed)
   {
-    static const char * suffix_list[] = {"", ".multi", ".pws", ".prepl"};
+    static const char * suffix_list[] = {"", ".multi", ".alias", ".spcl", ".special",
+					 ".pws", ".prepl"};
     FStream in;
     const char * * suffix;
     const char * * suffix_end 
@@ -299,9 +300,17 @@ namespace aspeller {
       return make_err(cant_read_file, true_file_name);
     }
     DataType actual_type;
-    if (true_file_name.size() > 6 
-	&& true_file_name.substr(true_file_name.size() - 6, 6) == ".multi") {
-      
+    if ((true_file_name.size() > 5
+	 && true_file_name.substr(true_file_name.size() - 6, 6) == ".spcl") 
+	||
+	(true_file_name.size() > 6 
+	 && (true_file_name.substr(true_file_name.size() - 6, 6) == ".multi" 
+	     || true_file_name.substr(true_file_name.size() - 6, 6) == ".alias")) 
+	||
+	(true_file_name.size() > 8
+	 && true_file_name.substr(true_file_name.size() - 6, 6) == ".special")) 
+    {
+
       actual_type = DT_Multi;
 
     } else {

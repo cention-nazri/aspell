@@ -227,6 +227,11 @@ namespace acommon {
   PosibErr<Config *> find_word_list(Config * c) 
   {
     Config * config = c->clone();
+
+    if (config->have("master")) {  // dictionary is already specifed
+      return config;
+    }
+
     ////////////////////////////////////////////////////////////////////
     //
     // Give first prefrence to an exect match for the language-country

@@ -885,7 +885,7 @@ namespace acommon {
     , {"master",        KeyInfoString, "", "base name of the main dictionary to use"}
     , {"master-flags",  KeyInfoString, "", 0}
     , {"master-path",   KeyInfoString, "<dict-dir/master>",   0}
-    , {"module",        KeyInfoString, "", ""}
+    , {"module",        KeyInfoString, "default", ""}
     , {"module-search-order", KeyInfoList, "", ""}
     , {"per-conf", KeyInfoString, ".aspell.conf", "personal configuration file",{0, CANT_CHANGE}}
     , {"per-conf-path", KeyInfoString, "<home-dir/per-conf>", 0}
