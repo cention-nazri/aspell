@@ -734,11 +734,11 @@ this option is specifed than Aspell with either use this dictionary
 or die.
 \item [dict-dir]\textit{(dir)} location of the main word list
 \item [lang]\textit{(string)} language to use, it follows the same format
-of the LANG environmental variable on most systems. In fact it defaults
-to the value of the LANG environmental variable if it is set. It consists
-of the two letter ISO 639 language code and an optional two letter
-ISO 3166 country code after a dash or underscore.
-\item [size]\textit{(string)} the perfered size of the word list
+of the LANG environmental variable on most systems. It consists of
+the two letter ISO 639 language code and an optional two letter ISO
+3166 country code after a dash or underscore. The default value is
+based on the value of the LC\_MESSAGES locale.
+\item [size]\textit{(string)} the preferred size of the word list
 \item [jargon]\textit{(string)} an extra information to distinguish two
 different words lists that have the same lang and size.
 \item [word-list-path]\textit{(list)} search path for word list information
@@ -1060,27 +1060,32 @@ suggestions. This mode gets 98\% of the words.
 
 \section{How Aspell Selects an Appropriate Dictionary}
 
-Aspell will go through the following steps to find an appropriate
-dictionary:
-
-\begin{enumerate}
-\item If the \textbf{master} options is set in any fashion (via the command
+If the \textbf{master} options is set in any fashion (via the command
 line, the ASPELL\_CONF environmental variable, or a configuration
-file) look for a dictionary of that name. If one could not be found
-complain.
-\item If the \textbf{lang} option or LANG environmental variable is set
-and master option is not then use it (giving preference to \textbf{lang}
-over LANG) to search for an appropriate dictionary. If more than one
-dictionary is found for the given language string than it will look
-for a dictionary with a matching jargon if the \textbf{jargon} option
-is set. If it is not set it will look for a dictionary with no jargon.
-If after matching the lang and jargon there is still more than one
-dictionary available it will find one with the size closest to the
-value of the \textbf{size} option. The default size is 60.
-\item Finally, if all else fails, complain.
-\end{enumerate}
+file) Aspell will look for a dictionary of that name. If one could
+not be found complain.
 
-\section{Listing Availabe Dictionaries}
+Otherwise it will use the value of the \textbf{lang} option to search
+for an appropriate dictionary. If more than one dictionary is found
+for the given language string than it will look for a dictionary with
+a matching jargon if the \textbf{jargon} option is set. If it is not
+set it will look for a dictionary with no jargon. If after matching
+the lang and jargon there is still more than one dictionary available
+it will find one with the size closest to the value of the \textbf{size}
+option. The default size is 60. If Aspell can not find a dictionary
+based on \textbf{lang} option than it will give up and complain.
+
+If the \textbf{lang} option is not explicitly set its value will be
+based on the LC\_MESSAGES locale. This locale is generally taken from
+the LC\_MESSAGES environmental variable or the LANG environmental
+variable if LC\_MESSAGES is not set. However, if Aspell is being used
+as a library from within another program which already explicitly
+set the locale then it will use the locale of the library rather than
+the environmental variables. If Aspell can not determine the language
+from the LC\_MESSAGES locale than it will default to {}``en\_US''.
+
+
+\section{Listing Available Dictionaries}
 
 For a list of available dictionaries use the command {}``aspell dump
 dicts''. This will form a list of dictionaries that aspell will search
@@ -1276,11 +1281,11 @@ Aspell{*}Enumeration classes are used for iterating through a list.
 
 \subsection{Usage}
 
-To use Aspell your application should include {}``aspell/aspell.h''.
-In order to insure that all the necessary libraries are linked in
-libtool should be used to perform the linking. When using libtool
-simply linking with {}``-laspell'' should be all that is necessary.
-When using shared libraries you might be able to simply link {}``-laspell'',
+To use Aspell your application should include {}``aspell.h''. In
+order to insure that all the necessary libraries are linked in libtool
+should be used to perform the linking. When using libtool simply linking
+with {}``-laspell'' should be all that is necessary. When using
+shared libraries you might be able to simply link {}``-laspell'',
 but this is not recommended. This version of Aspell uses the CVS version
 of libtool however released versions of libtool should also work.
 

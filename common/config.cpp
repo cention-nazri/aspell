@@ -321,11 +321,12 @@ namespace acommon {
 	  final_str = "<unknown>";
 	  break;
 	}
+	// NOTE: THIS IS NOT THREAD SAFE
 	final_str = DEFAULT_LANG;
-	const char * lang = getenv("LANGUAGE");
-	if (lang == 0)
-	  lang = getenv("LANG");
-	if (lang == 0) break;
+        String locale = setlocale (LC_ALL, NULL);
+	if (locale == "C")
+	  setlocale (LC_ALL, "");
+	const char * lang = setlocale (LC_MESSAGES, NULL);
 	i = lang;
 	if (! (asc_islower(i[0]) && asc_islower(i[1])) ) break;
 	final_str.assign(i, 2);
@@ -335,7 +336,9 @@ namespace acommon {
 	if (! (asc_isupper(i[0]) && asc_isupper(i[1])) ) break;
 	final_str += '_';
 	final_str.append(i, 2);
-
+	if (locale == "C")
+	  setlocale(LC_MESSAGES, locale.c_str());
+	
       } while (false); else if (strcmp(i, "special") == 0) {
 
 	// do nothing
@@ -880,7 +883,7 @@ namespace acommon {
     , {"jargon",     KeyInfoString, "", "extra information for the word list"}
     , {"keyboard", KeyInfoString, "standard", "keyboard definition to use for typo analysis"}
     , {"lang", KeyInfoString, "<language-tag>", "language code"}
-    , {"language-tag", KeyInfoString, "<$LANG|en_US>", "deprecated, use lang instead"}
+    , {"language-tag", KeyInfoString, "!lang", "deprecated, use lang instead"}
     , {"local-data-dir", KeyInfoString, "<actual-dict-dir>",        "location of local language data files"     }
     , {"master",        KeyInfoString, "", "base name of the main dictionary to use"}
     , {"master-flags",  KeyInfoString, "", 0}

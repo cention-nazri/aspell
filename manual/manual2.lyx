@@ -1753,17 +1753,16 @@ lang
 \shape default 
  language to use, it follows the same format of the LANG environmental variable
  on most systems.
- In fact it defaults to the value of the LANG environmental variable if
- it is set.
  It consists of the two letter ISO 639 language code and an optional two
  letter ISO 3166 country code after a dash or underscore.
+ The default value is based on the value of the LC_MESSAGES locale.
 \layout Description
 
 size 
 \shape italic 
 (string)
 \shape default 
- the perfered size of the word list
+ the preferred size of the word list
 \layout Description
 
 jargon 
@@ -2821,28 +2820,21 @@ Working With Dictionaries
 How Aspell Selects an Appropriate Dictionary
 \layout Standard
 
-Aspell will go through the following steps to find an appropriate dictionary:
-\layout Enumerate
-
 If the 
 \series bold 
 master
 \series default 
  options is set in any fashion (via the command line, the ASPELL_CONF environmen
-tal variable, or a configuration file) look for a dictionary of that name.
+tal variable, or a configuration file) Aspell will look for a dictionary
+ of that name.
  If one could not be found complain.
-\layout Enumerate
+\layout Standard
 
-If the 
+Otherwise it will use the value of the 
 \series bold 
 lang
 \series default 
- option or LANG environmental variable is set and master option is not then
- use it (giving preference to
-\series bold 
- lang
-\series default 
- over LANG) to search for an appropriate dictionary.
+ option to search for an appropriate dictionary.
  If more than one dictionary is found for the given language string than
  it will look for a dictionary with a matching jargon if the 
 \series bold 
@@ -2857,12 +2849,37 @@ size
 \series default 
  option.
  The default size is 60.
-\layout Enumerate
+ If Aspell can not find a dictionary based on 
+\series bold 
+lang
+\series default 
+ option than it will give up and complain.
+\layout Standard
 
-Finally, if all else fails, complain.
+If the 
+\series bold 
+lang
+\series default 
+ option is not explicitly set its value will be based on the LC_MESSAGES
+ locale.
+ This locale is generally taken from the LC_MESSAGES environmental variable
+ or the LANG environmental variable if LC_MESSAGES is not set.
+ However, if Aspell is being used as a library from within another program
+ which already explicitly set the locale then it will use the locale of
+ the library rather than the environmental variables.
+ If Aspell can not determine the language from the LC_MESSAGES locale than
+ it will default to 
+\begin_inset Quotes eld
+\end_inset 
+
+en_US
+\begin_inset Quotes erd
+\end_inset 
+
+.
 \layout Section
 
-Listing Availabe Dictionaries
+Listing Available Dictionaries
 \layout Standard
 
 For a list of available dictionaries use the command 
@@ -3263,7 +3280,7 @@ To use Aspell your application should include
 \begin_inset Quotes eld
 \end_inset 
 
-aspell/aspell.h
+aspell.h
 \begin_inset Quotes erd
 \end_inset 
 
