@@ -31,7 +31,7 @@
 namespace {
   using namespace acommon;
 
-  class NroffFilter : public IndividualFilter
+  class NroffFilter : public NormalFilter
   {
   private:
     enum filter_state {

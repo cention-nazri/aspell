@@ -29,7 +29,7 @@ namespace {
 
   using namespace acommon;
 
-  class TexFilter : public IndividualFilter 
+  class TexFilter : public NormalFilter 
   {
   private:
     enum InWhat {Name, Opt, Parm, Other, Swallow};
@@ -277,14 +277,14 @@ C_EXPORT IndividualFilter * new_aspell_tex_filter()
 
 C_EXPORT IndividualFilter * new_aspell_tex_decoder() 
 {
-  ConvertFilterParms parms("tex");
+  GenConvFilterParms parms("tex");
   parms.file = "tex";
   return new_convert_filter_decoder(parms);
 }
 
 C_EXPORT IndividualFilter * new_aspell_tex_encoder() 
 {
-  ConvertFilterParms parms("tex");
+  GenConvFilterParms parms("tex");
   parms.file = "tex";
   return new_convert_filter_encoder(parms);
 }

@@ -27,7 +27,7 @@ namespace {
 
   enum filterstate {hidden=0, visible=1};
   
-  class ContextFilter : public IndividualFilter {
+  class ContextFilter : public NormalFilter {
     filterstate state;
     Vector<String> opening;
     Vector<String> closing;

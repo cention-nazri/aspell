@@ -16,7 +16,7 @@ namespace {
 
   using namespace acommon;
 
-  class EmailFilter : public IndividualFilter 
+  class EmailFilter : public NormalFilter 
   {
     bool prev_newline;
     bool in_quote;

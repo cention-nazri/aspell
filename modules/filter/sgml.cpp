@@ -57,7 +57,7 @@ namespace {
     }
   };
 
-  class SgmlFilter : public IndividualFilter 
+  class SgmlFilter : public NormalFilter 
   {
     // State enum. These states track where we are in the HTML/tag/element constructs.
     // This diagram shows the main states. The marked number is the state we enter
@@ -409,7 +409,7 @@ namespace {
   //
   //
 
-  class SgmlDecoder : public IndividualFilter 
+  class SgmlDecoder : public ConversionFilter 
   {
     FilterCharVector buf;
     String which;

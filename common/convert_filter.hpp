@@ -12,26 +12,26 @@
 
 namespace acommon {
 
-  struct ConvertFilterParms {
+  struct GenConvFilterParms {
     String name;
     String file; // if empty than the file will be retrieved via the
                  // "f-<name>-file" config keyword
     String form;  // if empty "f-<name>-form" config keyword will be used
     double order_num; // if not set an appropriate order number will be used
-    ConvertFilterParms(ParmStr n) : name(n), order_num(-1) {}
+    GenConvFilterParms(ParmStr n) : name(n), order_num(-1) {}
   };
 
   IndividualFilter * new_convert_filter(bool decoder, // otherwise encoder
-                                        const ConvertFilterParms & parms);
+                                        const GenConvFilterParms & parms);
 
   static inline IndividualFilter * 
-  new_convert_filter_decoder(const ConvertFilterParms & parms)
+  new_convert_filter_decoder(const GenConvFilterParms & parms)
   {
     return new_convert_filter(true, parms);
   }
 
   static inline IndividualFilter *
-  new_convert_filter_encoder(const ConvertFilterParms & parms)
+  new_convert_filter_encoder(const GenConvFilterParms & parms)
   {
     return new_convert_filter(false, parms);
   }

@@ -86,8 +86,6 @@ namespace acommon {
     // encoding specified by encoding()
     //
 
-    
-
     virtual PosibErr<bool> check(MutableString) = 0;
 
     // these functions return information about the last word checked
@@ -117,6 +115,10 @@ namespace acommon {
 					     MutableString) = 0;
 
     virtual ~Speller();
+
+    // Reload the conversion filters.  Bit of a hack, I hope to find a
+    // better way
+    virtual PosibErr<void> reload_conv() = 0;
 
   };
 

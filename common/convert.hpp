@@ -225,8 +225,6 @@ namespace acommon {
 
   public:
     
-    void clear_filters() {filter_.clear();}
-
     PosibErr<void> add_filters(Config * c, 
                                bool use_encoder, 
                                bool use_filter, 
@@ -236,6 +234,12 @@ namespace acommon {
       add_filter_codes();
       return no_err;
     }
+    void add_filter(IndividualFilter * f) {
+      filter_.add_filter(f);
+      add_filter_codes();
+    }
+
+    Filter * shallow_copy_filter() {return filter_.shallow_copy();}
       
     // convert has the potential to use internal buffers and
     // is therefore not const.  It is also not thread safe

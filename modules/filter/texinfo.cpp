@@ -16,7 +16,7 @@ namespace {
 
   using namespace acommon;
 
-  class TexInfoFilter : public IndividualFilter 
+  class TexInfoFilter : public NormalFilter 
   {
   private:
     struct Command {
@@ -234,14 +234,14 @@ C_EXPORT IndividualFilter * new_aspell_texinfo_filter()
 
 C_EXPORT IndividualFilter * new_aspell_texinfo_decoder() 
 {
-  ConvertFilterParms parms("texinfo");
+  GenConvFilterParms parms("texinfo");
   parms.file = "texinfo";
   return new_convert_filter_decoder(parms);
 }
 
 C_EXPORT IndividualFilter * new_aspell_texinfo_encoder() 
 {
-  ConvertFilterParms parms("texinfo");
+  GenConvFilterParms parms("texinfo");
   parms.file = "texinfo";
   return new_convert_filter_encoder(parms);
 }

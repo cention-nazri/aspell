@@ -31,9 +31,11 @@ namespace acommon {
     void clear();
     void reset();
     void process(FilterChar * & start, FilterChar * & stop);
-    void add_filter(IndividualFilter * filter);
-    // setup the filter where the string list is the list of 
-    // filters to use.
+    void add_filter(IndividualFilter * filter, bool own = true);
+
+    // 
+    Filter * shallow_copy();
+
     Filter();
     ~Filter();
 
@@ -41,6 +43,7 @@ namespace acommon {
 
     typedef Vector<IndividualFilter *> Filters;
     Filters filters_;
+    Filters own_;
 
   public:
 

@@ -247,24 +247,25 @@ namespace {
   // convert filter
   //
 
-  class ConvertFilter : public IndividualFilter
+  class GenConvFilter : public ConversionFilter
   {
   public:
     CachePtr<GenConvTables> tables;
     bool decoder;
-    ConvertFilterParms parms;
+    GenConvFilterParms parms;
     typedef GenConvEntry E;
     NormTable<E> * data;
     FilterCharVector buf;
     PosibErr<bool> setup(Config *);
+    IndividualFilter * clone() const;
     void reset() {}
     void process(FilterChar * & start, FilterChar * & stop);
-    ConvertFilter(bool decoder0, // otherwise decoder
-                  const ConvertFilterParms & parms0)
+    GenConvFilter(bool decoder0, // otherwise decoder
+                  const GenConvFilterParms & parms0)
       : decoder(decoder0), parms(parms0) {}
   };
 
-  PosibErr<bool> ConvertFilter::setup(Config * c)
+  PosibErr<bool> GenConvFilter::setup(Config * c)
   {
     set_name(parms.name, decoder ? Decoder : Encoder);
     if (parms.order_num == -1)
@@ -294,8 +295,13 @@ namespace {
     }
     return true;
   }
+
+  IndividualFilter * GenConvFilter::clone() const
+  {
+    return new GenConvFilter(*this);
+  }
   
-  void ConvertFilter::process(FilterChar * & start, FilterChar * & stop)
+  void GenConvFilter::process(FilterChar * & start, FilterChar * & stop)
   {
     buf.clear();
     const FilterChar * cur = start;
@@ -324,9 +330,9 @@ namespace {
 
 namespace acommon {
 
-  IndividualFilter * new_convert_filter(bool d, const ConvertFilterParms & p)
+  IndividualFilter * new_convert_filter(bool d, const GenConvFilterParms & p)
   {
-    return new ConvertFilter(d, p);
+    return new GenConvFilter(d, p);
   }
   
 }

@@ -461,8 +461,7 @@ namespace acommon {
 
   PosibErr<void> reload_filters(Speller * m) 
   {
-    m->to_internal_->clear_filters();
-    m->from_internal_->clear_filters();
+    RET_ON_ERR(m->reload_conv());
     // Add enocder and decoder filters if any
     RET_ON_ERR(m->to_internal_->add_filters(m->config(), true, false, false));
     RET_ON_ERR(m->from_internal_->add_filters(m->config(), false, false, true));
@@ -477,7 +476,9 @@ namespace acommon {
     StackPtr<Speller> m(get_speller_class(c));
     RET_ON_ERR(m->setup(c));
 
-    RET_ON_ERR(reload_filters(m));
+    // Add enocder and decoder filters if any
+    RET_ON_ERR(m->to_internal_->add_filters(m->config(), true, false, false));
+    RET_ON_ERR(m->from_internal_->add_filters(m->config(), false, false, true));
     
     return m.release();
   }

@@ -11,7 +11,7 @@
 namespace {
   using namespace acommon;
 
-  class UrlFilter : public IndividualFilter {
+  class UrlFilter : public NormalFilter {
   public:
     PosibErr<bool> setup(Config *);
     void reset() {}

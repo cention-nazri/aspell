@@ -33,6 +33,7 @@ namespace acommon {
     // will take ownership of tokenizer and filter (even if there is an error)
     // config only used for this method.
     // speller expected to stick around.
+
     PosibErr<void> setup(Tokenizer *, Speller *, Filter *);
     void reset();
     void process(const char * str, int size);

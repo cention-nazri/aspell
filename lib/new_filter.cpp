@@ -127,7 +127,7 @@ namespace acommon
 
     StackPtr<IndividualFilter> ifilter;
 
-    filter.clear();
+    //filter.clear();
 
     while ((filter_name = els.next()) != 0) {
       //fprintf(stderr, "Loading %s ... \n", filter_name);

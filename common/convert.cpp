@@ -21,6 +21,7 @@
 #include "file_util.hpp"
 #include "file_data_util.hpp"
 #include "objstack.hpp"
+#include "convert_filter.hpp"
 
 #include "indiv_filter.hpp"
 
@@ -487,7 +488,7 @@ namespace acommon {
       }
     }
 
-    //printf("%s => %s\n", in_code_.str(), out_code_.str());
+    //printf("%p: %s >> %s\n", this, in_code_.str(), out_code_.str());
   }
 
   //////////////////////////////////////////////////////////////////////
@@ -1050,11 +1051,31 @@ namespace acommon {
         RET_ON_ERR(conv->init_norm_to(c, in.base, out.base, out.norm_form));
     }
 
-    //printf("%s => %s\n", conv->in_code(),  conv->out_code());
-    
     if (simple) return conv.release();
+    FullConvert * fc = (FullConvert *)conv.get();
 
-    // now add conv filters to the data stream
+    Vector<String>::const_iterator i;
+    for (i = in.extra.begin(); i != in.extra.end(); ++i) 
+    {
+      GenConvFilterParms p(*i);
+      p.file = p.name;
+      p.form = "multi";
+      StackPtr<IndividualFilter> f(new_convert_filter_decoder(p));
+      RET_ON_ERR(f->setup((Config *)&c)); // FIXME: Cast should not be
+                                          // necessary
+      fc->add_filter(f.release());
+    }
+    for (i = out.extra.begin(); i != out.extra.end(); ++i)
+    {
+      GenConvFilterParms p(*i);
+      p.file = p.name;
+      p.form = "multi";
+      StackPtr<IndividualFilter> f(new_convert_filter_encoder(p));
+      RET_ON_ERR(f->setup((Config *)&c));
+      fc->add_filter(f.release());
+    }
+
+    //printf("%s => %s\n", conv->in_code(),  conv->out_code());
 
     return conv.release();
   }

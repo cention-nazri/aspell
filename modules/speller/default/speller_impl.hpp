@@ -53,6 +53,7 @@ namespace aspeller {
     ~SpellerImpl();
 
     PosibErr<void> setup(Config *);
+    PosibErr<void> reload_conv();
 
     void setup_tokenizer(Tokenizer *);
 

@@ -518,20 +518,7 @@ namespace aspeller {
       RET_ON_ERR(add_dict(new SpellerDict(temp, *config_, personal_repl_id)));
     }
 
-    const char * sys_enc = lang_->charmap();
-    String user_enc = config_->retrieve("encoding");
-    if (user_enc == "none") {
-      config_->replace("encoding", sys_enc);
-      user_enc = sys_enc;
-    }
-
-    PosibErr<FullConvert *> conv;
-    conv = new_full_convert(*c, user_enc, sys_enc, NormFrom);
-    if (conv.has_err()) return conv;
-    to_internal_.reset(conv);
-    conv = new_full_convert(*c, sys_enc, user_enc, NormTo);
-    if (conv.has_err()) return conv;
-    from_internal_.reset(conv);
+    RET_ON_ERR(reload_conv());
 
     unconditional_run_together_ = config_->retrieve_bool("run-together");
     run_together = unconditional_run_together_;
@@ -613,6 +600,26 @@ namespace aspeller {
 
     return no_err;
   }
+
+  PosibErr<void> SpellerImpl::reload_conv()
+  {
+    const char * sys_enc = lang_->charmap();
+    String user_enc = config_->retrieve("encoding");
+    if (user_enc == "none") {
+      config_->replace("encoding", sys_enc);
+      user_enc = sys_enc;
+    }
+
+    PosibErr<FullConvert *> conv;
+    conv = new_full_convert(*config_, user_enc, sys_enc, NormFrom);
+    if (conv.has_err()) return conv;
+    to_internal_.reset(conv);
+    conv = new_full_convert(*config_, sys_enc, user_enc, NormTo);
+    if (conv.has_err()) return conv;
+    from_internal_.reset(conv);
+    return no_err;
+  }
+
 
   //////////////////////////////////////////////////////////////////////
   //

@@ -12,11 +12,11 @@ using namespace acommon;
 
 C_EXPORT IndividualFilter * new_aspell_genconv_decoder() 
 {
-  ConvertFilterParms parms("genconv");
+  GenConvFilterParms parms("genconv");
   return new_convert_filter_decoder(parms);
 }
 C_EXPORT IndividualFilter * new_aspell_genconv_encoder() 
 {
-  ConvertFilterParms parms("genconv");
+  GenConvFilterParms parms("genconv");
   return new_convert_filter_encoder(parms);
 }
