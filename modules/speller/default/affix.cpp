@@ -1180,7 +1180,6 @@ bool SfxEntry::check(const LookupInfo & linf, ParmString word,
           lci = &ci;
         } else if (gi) {
           lci = gi->add();
-          CERR.printf(">>%s %s\n", word.str(), wordinfo.word);
         }
 
         if (lci) {
