@@ -24,6 +24,7 @@ namespace acommon {
   class StringList;
   struct StringListImpl;
   class FStream;
+  class StringMap;
 
   struct ModuleInfo {
     const char * name;
@@ -94,6 +95,8 @@ namespace acommon {
 
   const DictInfoList * get_dict_info_list(Config *);
 
+  const StringMap * get_dict_aliases(Config *);
+
   class ModuleInfoEnumeration {
   public:
     typedef const ModuleInfo * Value;
@@ -135,6 +138,8 @@ namespace acommon {
     DictInfoEnumeration() : ref_count_(0), copyable_(2) {}
     virtual ~DictInfoEnumeration() {}
   };
+
+
 
 
 }

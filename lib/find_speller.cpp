@@ -238,8 +238,8 @@ namespace acommon {
   };
 
   void BetterVariety::init() {
-    worst_rank = 2;
-    best_rank = 2;
+    worst_rank = 3;
+    best_rank = 3;
   }
 
   void BetterVariety::set_best_from_cur() 
@@ -251,187 +251,199 @@ namespace acommon {
   void BetterVariety::set_cur_rank() 
   {
     if (strlen(cur) == 0) {
-      cur_rank = 1; 
+      cur_rank = 2; 
     } else {
       StringListEnumeration es = list.elements_obj();
       const char * m;
-      cur_rank = 2;
+      cur_rank = 3;
+      unsigned num;
       while ( (m = es.next()) != 0 ) {
         unsigned s = strlen(m);
         const char * c = cur;
         unsigned p;
         bool match = false;
+        num = 0;
         for (; *c != '\0'; c += p) {
+          ++num;
           p = strcspn(c, "-");
           if (p == s && memcmp(m, c, s) == 0) {match = true; break;}
         }
         if (!match) goto fail;
         cur_rank = 0;
       }
+      if (cur_rank == 0 && num != list.size()) cur_rank = 1;
     }
     return;
   fail:
-    cur_rank = 2;
+    cur_rank = 3;
   }
 
   PosibErr<Config *> find_word_list(Config * c) 
   {
     Config * config = c->clone();
+    String dict_name;
 
-    if (config->have("master")) {  // dictionary is already specifed
-      return config;
-    }
+    if (config->have("master")) {
+      dict_name = config->retrieve("master");
 
-    ////////////////////////////////////////////////////////////////////
-    //
-    // Give first prefrence to an exect match for the language-country
-    // code, then give prefrence to those in the alternate code list
-    // in the order they are presented, then if there is no match
-    // look for one for just language.  If that fails give up.
-    // Once the best matching code is found, try to find a matching
-    // variety if one exists, other wise look for one with no variety.
-    //
+    } else {
 
-    BetterList b_code;
-    //BetterList b_jargon;
-    BetterVariety b_variety;
-    BetterList b_module;
-    BetterSize b_size;
-    Better * better[4] = {&b_code,&b_variety,&b_module,&b_size};
-    const DictInfo * best = 0;
+      ////////////////////////////////////////////////////////////////////
+      //
+      // Give first prefrence to an exect match for the language-country
+      // code, then give prefrence to those in the alternate code list
+      // in the order they are presented, then if there is no match
+      // look for one for just language.  If that fails give up.
+      // Once the best matching code is found, try to find a matching
+      // variety if one exists, other wise look for one with no variety.
+      //
 
-    //
-    // retrieve and normalize code
-    //
-    const char * p;
-    String code;
-    PosibErr<String> str = config->retrieve("lang");
-    p = str.data.c_str();
-    code += asc_tolower(*p++); code += asc_tolower(*p++);
-    String lang = code;
-    bool have_country = false;
-    if (*p == '-' || *p == '_') {
-      ++p;
-      have_country = true;
-      code += '_'; code += asc_toupper(*p++); code += asc_toupper(*p++);
-    }
+      BetterList b_code;
+      //BetterList b_jargon;
+      BetterVariety b_variety;
+      BetterList b_module;
+      BetterSize b_size;
+      Better * better[4] = {&b_code,&b_variety,&b_module,&b_size};
+      const DictInfo * best = 0;
+
+      //
+      // retrieve and normalize code
+      //
+      const char * p;
+      String code;
+      PosibErr<String> str = config->retrieve("lang");
+      p = str.data.c_str();
+      code += asc_tolower(*p++); code += asc_tolower(*p++);
+      String lang = code;
+      bool have_country = false;
+      if (*p == '-' || *p == '_') {
+        ++p;
+        have_country = true;
+        code += '_'; code += asc_toupper(*p++); code += asc_toupper(*p++);
+      }
   
-    //
-    // Retrive acceptable code search orders
-    //
-    String lang_country_list;
-    if (have_country) {
-      lang_country_list = code;
-      lang_country_list += ' ';
-    }
-    String lang_only_list = lang;
-    lang_only_list += ' ';
+      //
+      // Retrive acceptable code search orders
+      //
+      String lang_country_list;
+      if (have_country) {
+        lang_country_list = code;
+        lang_country_list += ' ';
+      }
+      String lang_only_list = lang;
+      lang_only_list += ' ';
 
-    // read retrive lang_country_list and lang_only_list from file(s)
-    // FIXME: Write Me
-
-    //
-    split_string_list(b_code.list, lang_country_list);
-    split_string_list(b_code.list, lang_only_list);
-    b_code.init();
-
-    //
-    // Retrieve Variety
-    // 
-    config->retrieve_list("variety", &b_variety.list);
-    if (b_variety.list.empty() && config->have("jargon")) 
-      b_variety.list.add(config->retrieve("jargon"));
-    b_variety.init();
-    str.data.clear();
-
-    //
-    // Retrive module list
-    //
-    if (config->have("module"))
-      b_module.list.add(config->retrieve("module"));
-    else if (config->have("module-search-order"))
-      config->retrieve_list("module-search-order", &b_module.list);
-    {
-      StackPtr<ModuleInfoEnumeration> els(get_module_info_list(config)->elements());
-      const ModuleInfo * entry;
-      while ( (entry = els->next()) != 0)
-	b_module.list.add(entry->name);
-    }
-    b_module.init();
-
-    //
-    // Retrive size
-    //
-    str = config->retrieve("size");
-    p = str.data.c_str();
-    if (p[0] == '+' || p[0] == '-' || p[0] == '<' || p[0] == '>') {
-      b_size.req_type = p[0];
-      ++p;
-    } else {
-      b_size.req_type = '+';
-    }
-    if (!asc_isdigit(p[0]) || !asc_isdigit(p[1]) || p[2] != '\0')
-      abort(); //FIXME: create an error condition here
-    b_size.requested = atoi(p);
-    b_size.init();
-
-    //
-    // 
-    //
-
-    const DictInfoList * dlist = get_dict_info_list(config);
-    DictInfoEnumeration * dels = dlist->elements();
-    const DictInfo * entry;
-
-    while ( (entry = dels->next()) != 0) {
-
-      b_code  .cur = entry->code;
-      b_module.cur = entry->module->name;
-
-      b_variety.cur = entry->variety;
-    
-      b_size.cur_str = entry->size_str;
-      b_size.cur     = entry->size;
+      // read retrive lang_country_list and lang_only_list from file(s)
+      // FIXME: Write Me
 
       //
-      // check to see if we got a better match than the current
-      // best_match if any
+      split_string_list(b_code.list, lang_country_list);
+      split_string_list(b_code.list, lang_only_list);
+      b_code.init();
+
+      //
+      // Retrieve Variety
+      // 
+      config->retrieve_list("variety", &b_variety.list);
+      if (b_variety.list.empty() && config->have("jargon")) 
+        b_variety.list.add(config->retrieve("jargon"));
+      b_variety.init();
+      str.data.clear();
+
+      //
+      // Retrive module list
+      //
+      if (config->have("module"))
+        b_module.list.add(config->retrieve("module"));
+      else if (config->have("module-search-order"))
+        config->retrieve_list("module-search-order", &b_module.list);
+      {
+        StackPtr<ModuleInfoEnumeration> els(get_module_info_list(config)->elements());
+        const ModuleInfo * entry;
+        while ( (entry = els->next()) != 0)
+          b_module.list.add(entry->name);
+      }
+      b_module.init();
+
+      //
+      // Retrive size
+      //
+      str = config->retrieve("size");
+      p = str.data.c_str();
+      if (p[0] == '+' || p[0] == '-' || p[0] == '<' || p[0] == '>') {
+        b_size.req_type = p[0];
+        ++p;
+      } else {
+        b_size.req_type = '+';
+      }
+      if (!asc_isdigit(p[0]) || !asc_isdigit(p[1]) || p[2] != '\0')
+        abort(); //FIXME: create an error condition here
+      b_size.requested = atoi(p);
+      b_size.init();
+
+      //
+      // 
       //
 
-      IsBetter is_better = SameMatch;
-      for (int i = 0; i != 4; ++i)
-	is_better = better[i]->better_match(is_better);
+      const DictInfoList * dlist = get_dict_info_list(config);
+      DictInfoEnumeration * dels = dlist->elements();
+      const DictInfo * entry;
+
+      while ( (entry = dels->next()) != 0) {
+
+        b_code  .cur = entry->code;
+        b_module.cur = entry->module->name;
+
+        b_variety.cur = entry->variety;
     
-      if (is_better == BetterMatch) {
-	for (int i = 0; i != 4; ++i)
-	  better[i]->set_best_from_cur();
-	best = entry;
+        b_size.cur_str = entry->size_str;
+        b_size.cur     = entry->size;
+
+        //
+        // check to see if we got a better match than the current
+        // best_match if any
+        //
+
+        IsBetter is_better = SameMatch;
+        for (int i = 0; i != 4; ++i)
+          is_better = better[i]->better_match(is_better);
+    
+        if (is_better == BetterMatch) {
+          for (int i = 0; i != 4; ++i)
+            better[i]->set_best_from_cur();
+          best = entry;
+        }
+      }
+
+      delete dels;
+
+      //
+      // set config to best match
+      //
+      if (best != 0) {
+        String main_wl,flags;
+        PosibErrBase ret = get_dict_file_name(best, main_wl, flags);
+        if (ret.has_err()) {
+          delete config;
+          return ret;
+        }
+        dict_name = best->name;
+        config->replace("lang", b_code.best);
+        config->replace("language-tag", b_code.best);
+        config->replace("master", main_wl.c_str());
+        config->replace("master-flags", flags.c_str());
+        config->replace("module", b_module.best);
+        config->replace("jargon", b_variety.best); // FIXME
+        config->replace("size", b_size.best_str);
+      } else {
+        delete config;
+        return make_err(no_wordlist_for_lang, code);
       }
     }
 
-    delete dels;
-
-    //
-    // set config to best match
-    //
-    if (best != 0) {
-      String main_wl,flags;
-      PosibErrBase ret = get_dict_file_name(best, main_wl, flags);
-      if (ret.has_err()) {
-	delete config;
-	return ret;
-      }
-      config->replace("lang", b_code.best);
-      config->replace("language-tag", b_code.best);
-      config->replace("master", main_wl.c_str());
-      config->replace("master-flags", flags.c_str());
-      config->replace("module", b_module.best);
-      config->replace("jargon", b_variety.best); // FIXME
-      config->replace("size", b_size.best_str);
-    } else {
-      delete config;
-      return make_err(no_wordlist_for_lang, code);
-    }
+    const StringMap * dict_aliases = get_dict_aliases(config);
+    const char * val = dict_aliases->lookup(dict_name);
+    if (val) config->replace("master", val);
     return config;
   }
 

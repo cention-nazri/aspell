@@ -71,11 +71,10 @@ static char EMPTY[1] = {0};
 
 struct Conds
 {
-  unsigned num;
   char * str;
+  unsigned num;
   char conds[SETSIZE];
   char get(byte i) const {return conds[i];}
-  static void normalize(char *);
 };
 
 struct AffEntry
@@ -86,7 +85,7 @@ struct AffEntry
   unsigned int   stripl;
   int            xpflg;
   char           achar;
-  const Conds * conds;
+  const Conds *  conds;
   //unsigned int numconds;
   //char         conds[SETSIZE];
 };
@@ -563,7 +562,7 @@ PosibErr<void> AffixMgr::process_sfx_order()
 }
 
 // assumes the cond string is valid
-void Conds::normalize(char * str)
+static void normalize_cond_str(char * str)
 {
   char * s = str;
   char * d = str;
@@ -604,15 +603,13 @@ static void encodeit(CondsLookup & l, ObjStack & buf,
 
   // see if we already have this conds matrix
 
-  Conds::normalize(cs);
+  normalize_cond_str(cs);
   CondsLookup::iterator itr = l.find(cs);
   if (itr != l.end()) {
-    //CERR.printf("FOUND %s\n", cs);
     ptr->conds = *itr;
     return;
   }
 
-  //CERR.printf("NOT FOUND %s\n", cs);
   Conds * cds = (Conds *)buf.alloc_bottom(sizeof(Conds));
   cds->str = buf.dup(cs);
   l.insert(cds);
@@ -622,7 +619,7 @@ static void encodeit(CondsLookup & l, ObjStack & buf,
   VARARRAYM(byte, mbr, nc + 1, MAXLNLEN);
 
   // now clear the conditions array
-  for (i=0;i<SETSIZE;i++) cds->conds[i] = (byte) 0;
+  memset(cds->conds, 0, sizeof(cds->conds));
 
   // now parse the string to create the conds array
   

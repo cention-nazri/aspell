@@ -72,15 +72,18 @@ namespace acommon {
   // this is in an invalid state if some of the lists
   // has data but others don't
   {
+    StringList key;
     StringList for_dirs;
     ModuleInfoList module_info_list;
     StringList dict_dirs;
     DictExtList    dict_exts;
     DictInfoList   dict_info_list;
+    StringMap      dict_aliases;
     void clear();
     PosibErr<void> fill(Config *, StringList &);
     bool has_data() const {return module_info_list.head_ != 0;}
     void fill_helper_lists(const StringList &);
+    PosibErr<void> fill_dict_aliases(Config *);
   };
 
   class MDInfoListofLists
@@ -224,7 +227,7 @@ namespace acommon {
 	      to_add->c_struct.order_num < 1)) 
 	  {
 	    err.prim_err(bad_value, d.key, d.value,
-			 "a number between 0 and 1");
+			 _("a number between 0 and 1"));
 	    goto RETURN_ERROR;
 	  }
       } else if (d.key == "lib-dir") {
@@ -296,10 +299,42 @@ namespace acommon {
     }
   }
 
+  const DictExt * find_dict_ext(const DictExtList & l, ParmStr name)
+  {
+    DictExtList::const_iterator   i = l.begin();
+    DictExtList::const_iterator end = l.end();
+    for (; i != end; ++i) 
+    {
+      if (i->ext_size <= name.size() 
+          && strncmp(name + (name.size() - i->ext_size),
+                     i->ext, i->ext_size) == 0)
+        break;
+    }
+    
+    if (i == end) // does not end in one of the extensions in list
+      return 0;
+    else
+      return &*i;
+  }
+
+
   PosibErr<void> DictInfoList::fill(MDInfoListAll & list_all,
 				    Config * config)
   {
-    StringListEnumeration els = list_all.dict_dirs.elements_obj();
+    StringList aliases;
+    config->retrieve_list("dict-alias", &aliases);
+    StringListEnumeration els = aliases.elements_obj();
+    const char * str;
+    while ( (str = els.next()) != 0) {
+      const char * end = strchr(str, ' ');
+      assert(end != 0); // FIXME: Return error
+      String name(str, end - str);
+      RET_ON_ERR(proc_file(list_all, config,
+                           0, name.str(), name.size(), 
+                           find_dict_ext(list_all.dict_exts, ".alias")->module));
+    }
+
+    els = list_all.dict_dirs.elements_obj();
     const char * dir;
     while ( (dir = els.next()) != 0) {
       Dir d(opendir(dir));
@@ -310,17 +345,9 @@ namespace acommon {
 	const char * name = entry->d_name;
 	unsigned int name_size = strlen(name);
 
-	DictExtList::const_iterator   i = list_all.dict_exts.begin();
-	DictExtList::const_iterator end = list_all.dict_exts.end();
-	for (; i != end; ++i) 
-	{
-	  if (i->ext_size < name_size 
-	      && strncmp(name + (name_size - i->ext_size),
-			 i->ext, i->ext_size) == 0)
-	    break;
-	}
-
-	if (i == end) // does not end in one of the extensions in list
+	const DictExt * i = find_dict_ext(list_all.dict_exts, 
+                                          ParmString(name, name_size));
+	if (i == 0) // does not end in one of the extensions in list
 	  continue;
 
 	name_size -= i->ext_size;
@@ -408,8 +435,10 @@ namespace acommon {
     to_add->c_struct.size_str = to_add->size_str.c_str();
     to_add->c_struct.size = atoi(to_add->c_struct.size_str);
 
-    to_add->info_file  = dir;
-    to_add->info_file += '/';
+    if (dir) {
+      to_add->info_file  = dir;
+      to_add->info_file += '/';
+    }
     to_add->info_file += name;
   
     while (*prev != 0 && *(DictInfoNode *)*prev < *to_add)
@@ -487,9 +516,13 @@ namespace acommon {
     dict_info_list.clear();
   }
 
-  PosibErr<void> MDInfoListAll::fill(Config * c, StringList & dirs)
+  PosibErr<void> MDInfoListAll::fill(Config * c, 
+                                     StringList & dirs)
   {
     PosibErr<void> err;
+
+    err = fill_dict_aliases(c);
+    if (err.has_err()) goto RETURN_ERROR;
 
     for_dirs = dirs;
     err = module_info_list.fill(*this, c);
@@ -527,6 +560,24 @@ namespace acommon {
     }
   }
 
+  PosibErr<void> MDInfoListAll::fill_dict_aliases(Config * c)
+  {
+    StringList aliases;
+    c->retrieve_list("dict-alias", &aliases);
+    StringListEnumeration els = aliases.elements_obj();
+    const char * str;
+    while ( (str = els.next()) != 0) {
+      const char * end = strchr(str, ' ');
+      if (!end) return make_err(bad_value, "dict-alias", str, 
+                                _("in the form \"<name> <value>\""));
+      String name(str, end - str);
+      while (asc_isspace(*end)) ++end;
+      dict_aliases.insert(name.str(), end);
+    }
+    return no_err;
+  }
+
+
   MDInfoListofLists::MDInfoListofLists()
     : data(0), offset(0), size(0)
   {
@@ -548,10 +599,10 @@ namespace acommon {
     }
   }
 
-  int MDInfoListofLists::find(const StringList & dirs)
+  int MDInfoListofLists::find(const StringList & key)
   {
     for (int i = 0; i != size; ++i) {
-      if (data[i].for_dirs == dirs)
+      if (data[i].key == key)
 	return i + offset;
     }
     return -1;
@@ -564,9 +615,13 @@ namespace acommon {
     Config * config = (Config *)c; // FIXME: WHY?
     int & pos = config->md_info_list_index;
     StringList dirs;
+    StringList key;
     if (!valid_pos(pos)) {
       get_data_dirs(config, dirs);
-      pos = find(dirs);
+      key = dirs;
+      key.add("////////");
+      config->retrieve_list("dict-alias", &key);
+      pos = find(key);
     }
     if (!valid_pos(pos)) {
       MDInfoListAll * new_data = new MDInfoListAll[size + 1];
@@ -582,6 +637,7 @@ namespace acommon {
     if (list_all.has_data())
       return &list_all;
 
+    list_all.key = key;
     RET_ON_ERR(list_all.fill(config, dirs));
 
     return &list_all;
@@ -678,6 +734,13 @@ namespace acommon {
     const MDInfoListAll * la = md_info_list_of_lists.get_lists(c);
     if (la == 0) return 0;
     else return &la->dict_info_list;
+  }
+
+  const StringMap * get_dict_aliases(Config * c)
+  {
+    const MDInfoListAll * la = md_info_list_of_lists.get_lists(c);
+    if (la == 0) return 0;
+    else return &la->dict_aliases;
   }
 
   DictInfoEnumeration * DictInfoList::elements() const
