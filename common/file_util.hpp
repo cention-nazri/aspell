@@ -8,7 +8,9 @@
 #define ASPELL_FILE_UTIL__HPP
 
 #include <time.h>
-
+#ifdef WIN32PORT
+#include <windows.h> //HANDLE
+#endif
 #include "string.hpp"
 #include "posib_err.hpp"
 
@@ -48,7 +50,12 @@ namespace acommon {
     String suffix;
     String path;
     StringEnumeration * els;
+#ifndef WIN32PORT
     void * dir_handle;
+#else
+    HANDLE dir_handle; //keeps track of where we are while browsing.13-Sep-04 
+    WIN32_FIND_DATA BrowseData;
+#endif
     const char * dir;
     PathBrowser(const PathBrowser &);
     void operator= (const PathBrowser &);
@@ -56,6 +63,10 @@ namespace acommon {
     PathBrowser(const StringList &, const char * suf = "");
     ~PathBrowser();
     const char * next();
+#ifdef WIN32PORT
+    bool GetNextDir();
+    bool GetNextFile();
+#endif
   };
 
 }

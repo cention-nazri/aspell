@@ -34,6 +34,8 @@
 # include <fcntl.h>
 #endif
 
+#include "file_util.hpp"
+#include "fstream.hpp"
 #include "asc_ctype.hpp"
 #include "check_funs.hpp"
 #include "config.hpp"
@@ -41,8 +43,6 @@
 #include "checker.hpp"
 #include "enumeration.hpp"
 #include "errors.hpp"
-#include "file_util.hpp"
-#include "fstream.hpp"
 #include "info.hpp"
 #include "iostream.hpp"
 #include "posib_err.hpp"

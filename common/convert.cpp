@@ -29,6 +29,10 @@
 
 #include "gettext.h"
 
+//If the max macro was defined, undefine it. We use max as a field name.
+#ifdef max
+#undef max
+#endif
 namespace acommon {
 
   //////////////////////////////////////////////////////////////////////

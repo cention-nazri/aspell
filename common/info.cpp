@@ -8,7 +8,9 @@
 #include <assert.h>
 #include <string.h>
 #include <ctype.h>
+#ifndef WIN32
 #include <dirent.h>
+#endif
 
 // POSIX includes
 #ifdef __bsdi__
@@ -41,6 +43,7 @@
 
 namespace acommon {
 
+#ifndef WIN32
   class Dir {
     DIR * d_;
     Dir(const Dir &);
@@ -50,7 +53,17 @@ namespace acommon {
     Dir(DIR * d) : d_(d) {}
     ~Dir() {if (d_) closedir(d_);}
   };
-
+#else
+  class Dir {
+    HANDLE d_;
+    Dir(const Dir &);
+    Dir & operator=(const Dir &);
+  public:
+    operator HANDLE () {return d_;}
+    Dir(HANDLE * d) : d_(d) {}
+    ~Dir() {if (d_) CloseHandle(d_);}
+  };
+#endif
   /////////////////////////////////////////////////////////////////
   //
   // Lists of Info Lists
@@ -177,6 +190,9 @@ namespace acommon {
 
     StringListEnumeration els = list_all.for_dirs.elements_obj();
     const char * dir;
+#ifndef WIN32
+
+    //unix version
     while ( (dir = els.next()) != 0) {
       Dir d(opendir(dir));
       if (d==0) continue;
@@ -200,6 +216,40 @@ namespace acommon {
 	RET_ON_ERR(proc_info(list_all, config, name, name_size, in));
       }
     }
+#else
+    //windows version
+    while ( (dir = els.next()) != 0) {
+      String pattern = dir;
+      pattern += "\\*.*";
+      WIN32_FIND_DATA data;
+      HANDLE hFind = FindFirstFile(pattern.c_str(),&data);
+      if (INVALID_HANDLE_VALUE == hFind)
+         continue;
+
+      do {
+        if ((strcmp(".", data.cFileName)==0) ||
+         (strcmp("..", data.cFileName) == 0))
+        continue; //special directories
+
+        const char * name = data.cFileName;
+        const char * dot_loc = strrchr(name, '.');
+        unsigned int name_size = dot_loc == 0 ? strlen(name) :  dot_loc - name;
+   
+        // check if it ends in suffix
+        if (strcmp(name + name_size, ".asmi") != 0)
+          continue;
+   
+        String path;
+        path += dir;
+        path += '/';
+        path += name;
+        FStream in;
+        RET_ON_ERR(in.open(path, "r"));
+        RET_ON_ERR(proc_info(list_all, config, name, name_size, in));
+      } while (FindNextFile(hFind,&data));
+      FindClose(hFind);
+    } //while
+#endif
     return no_err;
   }
 
@@ -338,6 +388,8 @@ namespace acommon {
 
     els = list_all.dict_dirs.elements_obj();
     const char * dir;
+#ifndef WIN32
+    //unix version
     while ( (dir = els.next()) != 0) {
       Dir d(opendir(dir));
       if (d==0) continue;
@@ -358,6 +410,36 @@ namespace acommon {
 			     dir, name, name_size, i->module));
       }
     }
+#else
+    //windows version
+    while ( (dir = els.next()) != 0) {
+      String pattern = dir;
+      pattern += "\\*.*";
+      WIN32_FIND_DATA data;
+      HANDLE hFind = FindFirstFile(pattern.c_str(),&data);
+      if (INVALID_HANDLE_VALUE == hFind)
+         continue;
+    
+      do {
+        const char * name = data.cFileName;
+        unsigned int name_size = strlen(name);
+
+        if ((strcmp(".", name)==0) || (strcmp("..", name) == 0))
+          continue; //special directories
+
+        const DictExt * i = find_dict_ext(list_all.dict_exts,
+                ParmString(name, name_size));
+        if (i == 0) // does not end in one of the extensions in list
+           continue;
+
+        name_size -= i->ext_size;
+   
+        RET_ON_ERR(proc_file(list_all, config, 
+           dir, name, name_size, i->module));
+      } while (FindNextFile(hFind,&data));
+      FindClose(hFind);
+    }
+#endif
     return no_err;
   }
 

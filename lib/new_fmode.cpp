@@ -581,7 +581,7 @@ namespace acommon {
 
       FStream toParse;
 
-      RET_ON_ERR(toParse.open(possModeFile.str(),"rb"));
+      RET_ON_ERR(toParse.open(possModeFile.str(),"r"));
 
       String buf;
       DataPair dp;

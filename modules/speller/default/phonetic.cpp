@@ -1,12 +1,13 @@
 // Copyright 2000 by Kevin Atkinson under the terms of the LGPL
 
-#include "language.hpp"
-#include "phonetic.hpp"
-#include "phonet.hpp"
-
 #include "file_util.hpp"
 #include "file_data_util.hpp"
 #include "clone_ptr.hpp"
+#include "posib_err.hpp"
+
+#include "language.hpp"
+#include "phonetic.hpp"
+#include "phonet.hpp"
 
 namespace aspeller {
   

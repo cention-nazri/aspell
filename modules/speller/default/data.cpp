@@ -6,11 +6,11 @@
 
 #include "config.hpp"
 #include "convert.hpp"
+#include "file_util.hpp"
+#include "fstream.hpp"
 #include "data.hpp"
 #include "data_id.hpp"
 #include "errors.hpp"
-#include "file_util.hpp"
-#include "fstream.hpp"
 #include "language.hpp"
 #include "speller_impl.hpp"
 #include "cache-t.hpp"

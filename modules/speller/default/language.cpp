@@ -7,6 +7,7 @@
 
 #include <iostream.hpp>
 
+#include "file_util.hpp"
 #include "asc_ctype.hpp"
 #include "clone_ptr.hpp"
 #include "config.hpp"
@@ -18,7 +19,6 @@
 #include "string.hpp"
 #include "cache-t.hpp"
 #include "getdata.hpp"
-#include "file_util.hpp"
 
 #ifdef ENABLE_NLS
 #  include <langinfo.h>

@@ -37,13 +37,13 @@ using std::pair;
 
 #include "settings.h"
 
+#include "file_util.hpp"
+#include "fstream.hpp"
 #include "block_vector.hpp"
 #include "config.hpp"
 #include "data.hpp"
 #include "data_util.hpp"
 #include "errors.hpp"
-#include "file_util.hpp"
-#include "fstream.hpp"
 #include "language.hpp"
 #include "stack_ptr.hpp"
 #include "objstack.hpp"
