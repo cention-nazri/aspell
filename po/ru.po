@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60-b20040402\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-04-14 04:23-0400\n"
+"POT-Creation-Date: 2004-04-17 08:37-0400\n"
 "PO-Revision-Date: 2004-04-02 16:21+0300\n"
 "Last-Translator: Pavel Maryanov <acid_jack@ukr.net>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -253,12 +253,12 @@ msgstr ""
 "Это также может означать, что файл  \"%s\" не может быть открыт для чтения "
 "или он не существует."
 
-#: common/convert.cpp:607 common/convert.cpp:652
+#: common/convert.cpp:607 common/convert.cpp:653
 #, c-format
 msgid "The unicode code point U+%04X is unsupported."
 msgstr "Символ юникода U+%04X не поддерживается."
 
-#: common/convert.cpp:776
+#: common/convert.cpp:777
 #, c-format
 msgid "Invalid UTF-8 sequence at position %d."
 msgstr "Неверная последовательность UTF-8 по адресу %d."

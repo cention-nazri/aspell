@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60-b20040402\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-04-14 04:23-0400\n"
+"POT-Creation-Date: 2004-04-17 08:37-0400\n"
 "PO-Revision-Date: 2004-04-02 20:13+0200\n"
 "Last-Translator: Elros Cyriatan <cyriatan@fastmail.fm>\n"
 "Language-Team: Dutch <vertaling@nl.linux.org>\n"
@@ -258,12 +258,12 @@ msgstr ""
 "Dit kan ook betekenen dat het bestand \"%s\" niet kon worden geopend om te "
 "lezen, of niet bestaat."
 
-#: common/convert.cpp:607 common/convert.cpp:652
+#: common/convert.cpp:607 common/convert.cpp:653
 #, c-format
 msgid "The unicode code point U+%04X is unsupported."
 msgstr "Het unicode codepunt U+%04X wordt niet ondersteund."
 
-#: common/convert.cpp:776
+#: common/convert.cpp:777
 #, c-format
 msgid "Invalid UTF-8 sequence at position %d."
 msgstr "Ongeldige UTF-8 reeks op positie %d."

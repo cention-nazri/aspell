@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Aspell 0.50.1\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-04-14 04:23-0400\n"
+"POT-Creation-Date: 2004-04-17 08:37-0400\n"
 "PO-Revision-Date: 2002-09-08 14:18+0300\n"
 "Last-Translator: Sergey Poznyakoff <gray@gnu.org>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -264,12 +264,12 @@ msgid ""
 "does not exist."
 msgstr ""
 
-#: common/convert.cpp:607 common/convert.cpp:652
+#: common/convert.cpp:607 common/convert.cpp:653
 #, fuzzy, c-format
 msgid "The unicode code point U+%04X is unsupported."
 msgstr "Codificación «%encod:1» no soportada."
 
-#: common/convert.cpp:776
+#: common/convert.cpp:777
 #, c-format
 msgid "Invalid UTF-8 sequence at position %d."
 msgstr ""

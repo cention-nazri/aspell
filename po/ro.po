@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60-b20040402\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-04-14 04:23-0400\n"
+"POT-Creation-Date: 2004-04-17 08:37-0400\n"
 "PO-Revision-Date: 2004-04-02 12:00-0500\n"
 "Last-Translator: Laurentiu Buzdugan <lbuz@rolix.org>\n"
 "Language-Team: Romanian <translation-team-ro@lists.sourceforge.net>\n"
@@ -254,12 +254,12 @@ msgstr ""
 "Aceasta ar putea de asemenea însemna cã fiºierul \"%s\" nu a putut fi "
 "deschis pentru citire sau cã nu existã."
 
-#: common/convert.cpp:607 common/convert.cpp:652
+#: common/convert.cpp:607 common/convert.cpp:653
 #, c-format
 msgid "The unicode code point U+%04X is unsupported."
 msgstr "Codul unicode punct U+%04X nu este suportat."
 
-#: common/convert.cpp:776
+#: common/convert.cpp:777
 #, c-format
 msgid "Invalid UTF-8 sequence at position %d."
 msgstr "Secvenþã UTF-8 invalidã la poziþia %d."

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60-b20040402\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-04-14 04:23-0400\n"
+"POT-Creation-Date: 2004-04-17 08:37-0400\n"
 "PO-Revision-Date: 2004-04-07 11:12-0600\n"
 "Last-Translator: Kevin Patrick Scannell <scannell@SLU.EDU>\n"
 "Language-Team: Irish <ga@li.org>\n"
@@ -253,12 +253,12 @@ msgstr ""
 "Is féidir fosta nach bhfuil an comhad \"%s\" ar fáil le haghaidh léamh, nó "
 "níl sé ann ar chor ar bith."
 
-#: common/convert.cpp:607 common/convert.cpp:652
+#: common/convert.cpp:607 common/convert.cpp:653
 #, c-format
 msgid "The unicode code point U+%04X is unsupported."
 msgstr "Ní ghlactar leis an gcarachtar Unicode U+%04X."
 
-#: common/convert.cpp:776
+#: common/convert.cpp:777
 #, c-format
 msgid "Invalid UTF-8 sequence at position %d."
 msgstr "Sraith UTF-8 neamhbhailí san ionad %d."
