@@ -42,7 +42,9 @@ namespace aspeller {
     operator int () const {return score;}
   };
 
-  static const int LARGE_NUM = 0xFFFFF;
+  static const int LARGE_NUM = 0xFFFFF; 
+  // this needs to be SMALLER than INT_MAX since it may be incremented 
+  // a few times
 
   int limit_edit_distance(const char * a, const char * b, int limit, 
 			  const EditDistanceWeights & w 

@@ -438,7 +438,7 @@ namespace {
     const char * sl = 0;
     String sl_buf;
     EditDist score;
-    unsigned int limit = LARGE_NUM;
+    unsigned int stopped_at = LARGE_NUM;
     ObjStack exp_buf;
     WordAff * exp_list;
     WordAff single;
@@ -450,7 +450,7 @@ namespace {
     {
       StackPtr<SoundslikeEnumeration> els(i->ws->soundslike_elements());
       
-      while ( (sw = els->next(limit)) ) {
+      while ( (sw = els->next(stopped_at)) ) {
 
         if (sw->what != WordEntry::Word) {
           sl = sw->word;
@@ -463,9 +463,9 @@ namespace {
         }
 
         score = edit_dist_fun(sl, original_soundslike, parms.edit_distance_weights);
-        limit = score.stopped_at - sl;
+        stopped_at = score.stopped_at - sl;
         if (score >= LARGE_NUM) continue;
-        limit = LARGE_NUM;
+        stopped_at = LARGE_NUM;
         i->ws->soundslike_lookup(*sw, w);
 	//CERR << sw->word << "\n";
         for (; !w.at_end(); w.adv()) {
@@ -491,11 +491,10 @@ namespace {
         // FIXME: enhance expand to only used stripped words and
         //        prefixes so that only the root word needs to be
         //        stripped.  BUT this could cause a problem if there
-        //        is a different expansion depending on if the the 
-        //        accent
+        //        is a different expansion depending on the accent
 
         // first expand any prefixes
-        if (fast_scan) {
+        if (fast_scan) { // if fast_scan than no prefixes
           single.word.str = sw->word;
           single.word.size = strlen(sw->word);
           single.aff = (const unsigned char *)sw->aff;
@@ -505,14 +504,14 @@ namespace {
         }
 
         // iterate through each semi-expanded word, any affix flags
-        // are now suffixes
+        // are now guaranteed to be suffixes
         for (WordAff * p = exp_list; p; p = p->next)
         {
           // try the root word
           sl_buf.clear();
           to_stripped(*lang, p->word, sl_buf);
           score = edit_dist_fun(sl_buf.c_str(), original_soundslike, parms.edit_distance_weights);
-          limit = score.stopped_at - sl_buf.c_str();
+          stopped_at = score.stopped_at - sl_buf.c_str();
 
           if (score < LARGE_NUM) {
             char * wf = (char *)buffer.alloc(p->word.size + 1);
@@ -520,15 +519,19 @@ namespace {
             add_nearmiss(ParmString(wf, p->word.size), score, do_count);
           }
 
-          // expand any suffixes, using limit as a hint to avoid
-          // unneeded expansions
-          if (p->word.size - lang->affix()->max_strip() >= limit)
+          // expand any suffixes, using stopped_at as a hint to avoid
+          // unneeded expansions.  Note stopped_at is the last character
+          // looked at by limit_edit_dist.  Thus if the character
+          // at stopped_at is changed it might effect the result
+          // hence the "limit" is stopped_at + 1
+          if (p->word.size - lang->affix()->max_strip() > stopped_at)
             exp_list = 0;
           else
-            exp_list = lang->affix()->expand_suffix(p->word, p->aff, exp_buf, limit);
+            exp_list = lang->affix()->expand_suffix(p->word, p->aff, 
+                                                    exp_buf, stopped_at + 1);
 
-          // reset limit if necessary
-          if (score < LARGE_NUM) limit = LARGE_NUM;
+          // reset stopped_at if necessary
+          if (score < LARGE_NUM) stopped_at = LARGE_NUM;
 
           // iterate through fully expanded words, if any
           for (WordAff * q = exp_list; q; q = q->next) {
