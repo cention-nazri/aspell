@@ -8,7 +8,7 @@
 @item ak @tab Akan @tab Latin @tab - @tab -
 @item am @tab Amharic @tab Ethiopic @tab Maybe @tab -
 @item an @tab Aragonese @tab Latin @tab - @tab -
-@item ar @tab Arabic @tab Arabic @tab - @tab -
+@item ar @tab Arabic @tab Arabic @tab Maybe @tab -
 @item as @tab Assamese @tab Bengali @tab - @tab -
 @item ast @tab Asturian / Bable @tab Latin @tab Maybe @tab -
 @item av @tab Avar @tab Cyrillic @tab - @tab -
