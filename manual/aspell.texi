@@ -1,5 +1,5 @@
 \input texinfo   @c -*-texinfo-*-
-@comment $Id: aspell.texi,v 1.2 2004/01/25 01:24:05 kevina Exp $
+@comment $Id: aspell.texi,v 1.3 2004/02/01 11:09:24 kevina Exp $
 @comment %**start of header
 @setfilename aspell.info
 @settitle GNU Aspell 0.51
@@ -8,7 +8,7 @@
 @comment %**end of header
 @copying
 This is the user's manual for Aspell
-($Revision: 1.2 $ $Date: 2004/01/25 01:24:05 $).
+($Revision: 1.3 $ $Date: 2004/02/01 11:09:24 $).
 
 Copyright @copyright{} 2000--2004 Kevin Atkinson.
 
@@ -39,7 +39,7 @@ are LGPL Compatible.
 
 @titlepage
 @title GNU Aspell 0.51
-@subtitle for $Revision: 1.2 $ $Date: 2004/01/25 01:24:05 $
+@subtitle for $Revision: 1.3 $ $Date: 2004/02/01 11:09:24 $
 @author Kevin Atkinson (@email{kevina@@gnu.org})
 @page
 @vskip 0pt plus 1filll
@@ -2302,6 +2302,9 @@ and I will look into adding support for it.
 The optional fields are @code{special}, @code{soundslike},
 @code{keyboard} and a bunch of options to specify how run-together
 words are handled.
+
+FIXME: Add note about use-soundslike, use-jump-tables, and affix
+compression options.
  
 @code{special} is for non letter characters that can appear in your
 language such as the @kbd{'} and @kbd{-}. The format for the value is
@@ -2706,13 +2709,13 @@ To add support for affix compression add the following lines to the
 language data file.
 
 @example
-soundslike none
-affix      <lang>
+use-soundslike false
+affix          <lang>
 affix-compress true
 @end example
 
 Soundslike must be turned off as it is not compatable with affix
-compression.  The line @samp{affix <lanf>} add support for recognizing
+compression.  The line @samp{affix <lanf>} adds support for recognizing
 affix information, and the line @samp{affix-compress true} enables
 affix compression.
 
@@ -2721,12 +2724,12 @@ the exact same format as those used by MySpell.  More information can
 be found at
 @url{http://lingucomponent.openoffice.org/dictionary.html}.
 
-Due to the way Aspell currently works when coming up with suggestions
-words are partially expanded when creating a dictionary.  They are
-expanded so that any affix flags do not effect the first 3 letters of
-the word.  This effectively means that all prefixes are expanded.  A
-future version will support an alternate suggestion mode which does
-not have this limitation.
+In order for Aspell to efficiently come up with with suggestions words
+are partially expanded when creating a dictionary.  They are expanded so
+that any affix flags do not effect the first 3 letters of the word.
+This effectively means that all prefixes are expanded.  If you find this
+unacceptable you can turn off this feature by adding the line
+@samp{use-jump-tables false} to the language data file.  This will ....
 
 It is possible to have both soundslike and affix support but without
 the affix compression.  In this case all words are expanded when

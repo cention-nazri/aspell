@@ -25,6 +25,11 @@ namespace acommon {
 
 namespace aspeller {
 
+  static const bool USE_LOCK = true;
+  static const bool DONT_LOCK = false;
+  static const bool USE_SOUNDSLIKE = true;
+  static const bool NO_SOUNDSLIKE = false;
+
   class DataSet {
     friend class SpellerImpl;
   private:
@@ -90,6 +95,7 @@ namespace aspeller {
 
   class WritableDataSet {
   public:
+    WritableDataSet() {}
     virtual PosibErr<void> merge(ParmString) = 0;
     virtual PosibErr<void> synchronize() = 0;
     virtual PosibErr<void> save_noupdate() = 0;

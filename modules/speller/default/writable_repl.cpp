@@ -31,9 +31,8 @@ namespace aspeller_default_writable_repl {
   //                     end()   | Correct spelling(s) for misspelled word.
   //                     size()  |
 
-
   class RealReplacementList {
-      vector<String> info;
+    vector<String> info;
   public:
     typedef vector<String>::const_iterator const_iterator;
     typedef const_iterator                 iterator;
@@ -45,9 +44,9 @@ namespace aspeller_default_writable_repl {
     
     RealReplacementList(ParmString mis, ParmString cor) 
       : info(2) 
-      {
-	info[0] = mis; info[1] = cor;
-      }
+    {
+      info[0] = mis; info[1] = cor;
+    }
     
     const String & misspelled_word() const {return info[0];}
     const_iterator begin() const {return info.begin()+1;}

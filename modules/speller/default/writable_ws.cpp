@@ -47,7 +47,7 @@ namespace aspeller_default_writable_wl {
     typedef Vector<const char *>                       RealSoundslikeWordList;
     typedef hash_map<SimpleString,RealSoundslikeWordList> SoundslikeLookup;
     SoundslikeLookup                                      soundslike_lookup_;
-    
+
     PosibErr<void> save(FStream &, ParmString);
     PosibErr<void> merge(FStream &, ParmString, Config * config = 0);
 
@@ -61,23 +61,27 @@ namespace aspeller_default_writable_wl {
     struct ElementsParms;
     struct SoundslikeWordsParms;
 
-    VirEnum * detailed_elements() const;
-
-    Size   size()     const;
-    bool   empty()    const;
-  
     WritableWS() : WritableBase<WritableWordSet>(".pws", ".per") {
       have_soundslike = true; fast_lookup = true;
     }
 
+    Size   size()     const;
+    bool   empty()    const;
+  
     PosibErr<void> add(ParmString w);
     PosibErr<void> add(ParmString w, ParmString s);
     PosibErr<void> clear();
+
     bool lookup (ParmString word, WordEntry &, const SensitiveCompare &) const;
+
+    bool lookup_unlocked (ParmString word, WordEntry &, const SensitiveCompare &) const;
+    bool stripped_lookup(const char * sondslike, WordEntry &) const;
 
     bool soundslike_lookup(const char * soundslike, WordEntry &) const;
     bool soundslike_lookup(const WordEntry & soundslike, WordEntry &) const;
-  
+
+    VirEnum * detailed_elements() const;
+
     struct SoundslikeElements;
     SoundslikeEnumeration * soundslike_elements() const;
   };
@@ -164,33 +168,35 @@ namespace aspeller_default_writable_wl {
   }
   
   PosibErr<void> WritableWS::add(ParmString w) {
-    return add(w, lang()->to_soundslike(w));
+    return WritableWS::add(w, have_soundslike ? lang()->to_soundslike(w) : "");
   }
 
   PosibErr<void> WritableWS::add(ParmString w, ParmString s) {
     RET_ON_ERR(check_if_valid(*lang(),w));
     SensitiveCompare c(lang());
     WordEntry we;
-    if (lookup(w,we,c)) return no_err;
+    if (WritableWS::lookup(w,we,c)) return no_err;
     const char * w2 = word_lookup->insert(w.str()).first->c_str();
-    soundslike_lookup_[s.str()].push_back(w2);
+    if (have_soundslike)
+      soundslike_lookup_[s.str()].push_back(w2);
     return no_err;
   }
-    
+
   PosibErr<void> WritableWS::clear() {
     word_lookup->clear(); 
     soundslike_lookup_.clear();
     return no_err;
   }
 
-  bool WritableWS::lookup (ParmString word, WordEntry & o,
-                           const SensitiveCompare & c) const
+  bool WritableWS::lookup(ParmString word, WordEntry & o,
+			  const SensitiveCompare & c) const
   {
     o.clear();
     pair<WordLookup::iterator, WordLookup::iterator> 
       p(word_lookup->equal_range(SimpleString(word,1)));
     while (p.first != p.second) {
       if (c(word,p.first->c_str())) {
+	o.what = WordEntry::Word;
 	o.word = p.first->c_str();
         return true;
       }
@@ -198,6 +204,18 @@ namespace aspeller_default_writable_wl {
     }
     return false;
   }
+
+  bool WritableWS::stripped_lookup(const char * sl, WordEntry & o) const
+  {
+    o.clear();
+    pair<WordLookup::iterator, WordLookup::iterator> 
+      p(word_lookup->equal_range(SimpleString(sl,1)));
+    if (p.first != p.second) return false;
+    o.what = WordEntry::Word;
+    o.word = p.first->c_str();
+    return true;
+    // FIXME: Deal with multiple entries
+  }  
 
   static void soundslike_next(WordEntry * w)
   {
@@ -208,7 +226,7 @@ namespace aspeller_default_writable_wl {
     if (i == end) w->adv_ = 0;
   }
 
-  static inline void sl_init(const WritableWS::RealSoundslikeWordList * tmp, WordEntry & o)
+  static void sl_init(const WritableWS::RealSoundslikeWordList * tmp, WordEntry & o)
   {
     o.what = WordEntry::Word;
     const char * const * i   = tmp->pbegin();
@@ -222,24 +240,33 @@ namespace aspeller_default_writable_wl {
     }
   }
 
-  bool WritableWS::soundslike_lookup(const WordEntry & word, WordEntry & o) const {
-    const RealSoundslikeWordList * tmp 
-      = (const RealSoundslikeWordList *)(word.intr[0]);
-    o.clear();
-    sl_init(tmp, o);
+  bool WritableWS::soundslike_lookup(const WordEntry & word, WordEntry & o) const 
+  {
+    if (have_soundslike) {
+      const RealSoundslikeWordList * tmp 
+	= (const RealSoundslikeWordList *)(word.intr[0]);
+      o.clear();
+      sl_init(tmp, o);
+    } else {
+      o.what = WordEntry::Word;
+      o.word = word.word;
+    }
     return true;
   }
 
   bool WritableWS::soundslike_lookup(const char * soundslike, WordEntry & o) const {
-    o.clear();
-    SoundslikeLookup::const_iterator i = 
-      soundslike_lookup_.find(SimpleString(soundslike,1));
-    
-    if (i == soundslike_lookup_.end()) {
-      return false;
+    if (have_soundslike) {
+      o.clear();
+      SoundslikeLookup::const_iterator i = 
+	soundslike_lookup_.find(SimpleString(soundslike,1));
+      if (i == soundslike_lookup_.end()) {
+	return false;
+      } else {
+	sl_init(&(i->second), o);
+	return true;
+      }
     } else {
-      sl_init(&(i->second), o);
-      return true;
+      return WritableWS::stripped_lookup(soundslike, o);
     }
   }
 

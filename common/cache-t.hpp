@@ -53,7 +53,7 @@ private:
   List list;
 public:
   PosibErr<Data *> get(const Key & key, Config * config) {
-    Lock l(lock);
+    LOCK(&lock);
     //CERR << "Getting " << key << "\n";
     Data * n = list.find(key);
     if (n) {/*CERR << "FOUND IN CACHE\n";*/ goto ret;}
@@ -69,7 +69,7 @@ public:
   }
   void release(Data * d) {
     //CERR << "RELEASE\n";
-    Lock l(lock);
+    LOCK(&lock);
     d->refcount--;
     assert(d->refcount >= 0);
     if (d->refcount != 0) return;

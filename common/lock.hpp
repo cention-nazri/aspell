@@ -24,7 +24,7 @@ namespace acommon {
 #define __attribute__(x)
 #endif
 
-#define LOCK(l) const Lock l(l) __attribute__((__unused__))
+#define LOCK(l) const Lock __attribute__((__unused__)) the_lock(l) 
 
 #ifdef USE_POSIX_MUTEX
   class Mutex {
@@ -33,9 +33,7 @@ namespace acommon {
     Mutex(const Mutex &);
     void operator=(const Mutex &);
   public:
-    Mutex() {
-      pthread_mutex_init(&l_, 0);
-    }
+    Mutex() {pthread_mutex_init(&l_, 0);}
     ~Mutex() {pthread_mutex_destroy(&l_);}
     void lock() {pthread_mutex_lock(&l_);}
     void unlock() {pthread_mutex_unlock(&l_);}
@@ -57,10 +55,10 @@ namespace acommon {
   private:
     Lock(const Lock &);
     void operator= (const Lock &);
-    Mutex & lock_;
+    Mutex * lock_;
   public:
-    Lock(Mutex & l) : lock_(l) {}
-    ~Lock() {lock_.unlock();}
+    Lock(Mutex * l) : lock_(l) {if (lock_) lock_->lock();}
+    ~Lock() {if (lock_) lock_->unlock();}
   };
 }
 
