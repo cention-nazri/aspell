@@ -830,7 +830,6 @@ WordAff * AffixMgr::expand(ParmString word, ParmString aff,
       cur = cur->next;
       cur->word = newword;
       cur->aff = p->allow_cross() ? csuf : empty;
-      break;
     }
   }
 
@@ -861,22 +860,23 @@ WordAff * AffixMgr::expand_suffix(ParmString word, const byte * aff,
   WordAff * head = 0;
   if (l) head = **l;
   WordAff * * cur = l ? *l : &head;
+  bool expanded     = false;
+  bool not_expanded = false;
 
   while (*aff) {
-    if ((int)word.size() - max_strip_f[*aff] >= limit) goto not_expanded;
-    for (SfxEntry * p = sFlag[*aff]; p; p = p->flag_next) {
-      SimpleString newword = p->add(word, buf, limit);
-      if (!newword) continue;
-      if (newword == EMPTY) goto not_expanded;
-      *cur = (WordAff *)buf.alloc_bottom(sizeof(WordAff));
-      (*cur)->word = newword;
-      (*cur)->aff  = (const byte *)EMPTY;
-      cur = &(*cur)->next;
-      goto expanded;
+    if ((int)word.size() - max_strip_f[*aff] < limit) {
+      for (SfxEntry * p = sFlag[*aff]; p; p = p->flag_next) {
+        SimpleString newword = p->add(word, buf, limit);
+        if (!newword) continue;
+        if (newword == EMPTY) {not_expanded = true; continue;}
+        *cur = (WordAff *)buf.alloc_bottom(sizeof(WordAff));
+        (*cur)->word = newword;
+        (*cur)->aff  = (const byte *)EMPTY;
+        cur = &(*cur)->next;
+        expanded = true;
+      }
     }
-  not_expanded:
-    if (new_aff) *new_aff++ = *aff;
-  expanded:
+    if (!expanded || not_expanded) *new_aff++ = *aff;
     ++aff;
   }
   *cur = 0;
