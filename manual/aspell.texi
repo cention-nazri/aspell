@@ -1795,8 +1795,6 @@ A personal and replacement word list can be created in a similar fashion.
 @c FIXME: add notes about how affix compression works when creating
 @c dictionaries.
 
-FIXME: Writeme
-
 @subsection Format of the Replacement Word List
 
 The replacement word list has each replacement pair on its own line in
@@ -1854,13 +1852,16 @@ both/R bother
 Levels larger than 3 may also be supported, but should not used as
 they may eventually be removed.
 
-@var{limit} ...
+If a @var{limit} parameter is given than only expansions which effect
+the first @var{limit} letters will be expanded.  If a base word is not
+completely expanded for a given affix flag that flag will be left on
+the word.  Note that prefixes are always expanded.
 
 @subsection The Munch-list Command
 
 The @command{munch-list} command will reduce the size of word list via
-affix compression.  It will attempt to reduce the a list of words to a
-minimal set of roots and affixes that will match the same list of
+affix compression.  It will reduce a list of words to a minimal (or
+close to it) set of roots and affixes that will match the same list of
 words.  The list of words is read from standard input and writes the
 ``munched'' list to standard out.  It's usage is:
 
