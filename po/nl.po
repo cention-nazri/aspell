@@ -6,10 +6,10 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: aspell 0.60-pre3\n"
+"Project-Id-Version: aspell 0.60\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-09-25 07:34-0600\n"
-"PO-Revision-Date: 2004-08-22 19:50-0400\n"
+"POT-Creation-Date: 2004-10-17 16:19-0600\n"
+"PO-Revision-Date: 2004-10-03 12:26+0200\n"
 "Last-Translator: Elros Cyriatan <cyriatan@fastmail.fm>\n"
 "Language-Team: Dutch <vertaling@nl.linux.org>\n"
 "MIME-Version: 1.0\n"
@@ -137,7 +137,7 @@ msgstr "accenten negeren bij controleren woorden -- WORDT NU GENEGEERD"
 
 #: common/config.cpp:1379
 msgid "ignore case when checking words"
-msgstr "hoofdletter/kleine letter verschil negeren bij controleren woorden"
+msgstr "niet-hoofdlettergevoelig woorden controleren"
 
 #: common/config.cpp:1381
 msgid "ignore commands to store replacement pairs"
@@ -692,16 +692,21 @@ msgstr "Fout: %s\n"
 msgid "Error: "
 msgstr "Fout: "
 
-#: prog/aspell.cpp:197
+#: prog/aspell.cpp:196
 msgid "enter Email mode."
 msgstr "E-mail modus binnengaan."
 
-#: prog/aspell.cpp:198
+#: prog/aspell.cpp:197
 msgid "enter HTML mode."
 msgstr "HTML-modus binnengaan."
 
-#: prog/aspell.cpp:199
+#: prog/aspell.cpp:198
 msgid "enter TeX mode."
+msgstr "TeX modus binnengaan."
+
+#: prog/aspell.cpp:199
+#, fuzzy
+msgid "enter Nroff mode."
 msgstr "TeX modus binnengaan."
 
 #: prog/aspell.cpp:297
@@ -1274,6 +1279,11 @@ msgstr "HTML-attributen om altijd te controleren"
 msgid "HTML tags to always skip the contents of"
 msgstr "HTML-tags waarvan inhoud moet worden overgeslagen"
 
+#: modules/filter/nroff-filter.info:7
+#, fuzzy
+msgid "filter for processing Nroff documents"
+msgstr "filter om om te gaan met HTML-documenten"
+
 #: modules/filter/sgml-filter.info:9
 msgid "filter for dealing with generic SGML/XML documents"
 msgstr "filter voor omgaan met algemene SGML/XML-documenten"
@@ -1322,9 +1332,13 @@ msgstr "modus om HTML-documenten te controleren"
 msgid "mode to disable all filters"
 msgstr "modus om alle filters uit te schakelen"
 
-#: modules/filter/modes/perl.amf:60
+#: modules/filter/modes/nroff.amf:59
 #, fuzzy
-msgid "mode for checking perl comments and string literals"
+msgid "mode for checking Nroff documents"
+msgstr "modus om HTML-documenten te controleren"
+
+#: modules/filter/modes/perl.amf:60
+msgid "mode for checking Perl comments and string literals"
 msgstr "modus voor controleren Perl-opm. en tekenreeksen"
 
 #: modules/filter/modes/sgml.amf:60

@@ -180,8 +180,7 @@ const PossibleOption possible_options[] = {
   COMMAND("create", '\0', 1),
   COMMAND("merge",  '\0', 1),
 
-  ISPELL_COMP('n',0), ISPELL_COMP('S',0), 
-  ISPELL_COMP('w',1), ISPELL_COMP('T',1),
+  ISPELL_COMP('S',0), ISPELL_COMP('w',1), ISPELL_COMP('T',1),
 
   {"",'\0'}, {"",'\0'}
 };
@@ -197,9 +196,10 @@ static const ModeAbrv mode_abrvs[] = {
   {'e', "mode=email", N_("enter Email mode.")},
   {'H', "mode=html",  N_("enter HTML mode.")},
   {'t', "mode=tex",   N_("enter TeX mode.")},
+  {'n', "mode=nroff", N_("enter Nroff mode.")}
 };
 
-static const ModeAbrv *  mode_abrvs_end = mode_abrvs + 3;
+static const ModeAbrv *  mode_abrvs_end = mode_abrvs + 4;
 
 const PossibleOption * find_option(char c) {
   const PossibleOption * i = possible_options;

@@ -158,7 +158,8 @@ optfiles = \
   modules/filter/tex-filter.info\
   modules/filter/sgml-filter.info\
   modules/filter/html-filter.info\
-  modules/filter/context-filter.info
+  modules/filter/context-filter.info\
+  modules/filter/nroff-filter.info
 
 ### Add all your aspell mode files ###
 fltfiles = \
@@ -170,8 +171,8 @@ fltfiles = \
   modules/filter/modes/none.amf \
   modules/filter/modes/perl.amf \
   modules/filter/modes/url.amf \
-  modules/filter/modes/comment.amf
-
+  modules/filter/modes/comment.amf \
+  modules/filter/modes/nroff.amf
 
 if COMPILE_IN_FILTERS
 
@@ -184,7 +185,8 @@ libaspell_la_SOURCES +=\
   modules/filter/email.cpp\
   modules/filter/tex.cpp\
   modules/filter/sgml.cpp\
-  modules/filter/context.cpp
+  modules/filter/context.cpp\
+  modules/filter/nroff.cpp
 
 else # not COMPILE_IN_FILTERS
 
@@ -194,7 +196,8 @@ filter_ldflags = -module -avoid-version
 ### Add name of filter library containing your filter. Name always
 ### must look like lib<filtername>-filter.la see development manual
 filter_LTLIBRARIES = email-filter.la tex-filter.la\
-	             sgml-filter.la context-filter.la
+	             sgml-filter.la context-filter.la\
+                     nroff-filter.la
 
 email_filter_la_SOURCES = modules/filter/email.cpp
 email_filter_la_LIBADD = libaspell.la 
@@ -211,6 +214,10 @@ sgml_filter_la_LDFLAGS  = ${filter_ldflags}
 context_filter_la_SOURCES  = modules/filter/context.cpp
 context_filter_la_LIBADD = libaspell.la
 context_filter_la_LDFLAGS  = ${filter_ldflags}
+
+nroff_filter_la_SOURCES  = modules/filter/nroff.cpp
+nroff_filter_la_LIBADD = libaspell.la
+nroff_filter_la_LDFLAGS  = ${filter_ldflags}
 
 ### Before this line add the corresponding <yourfilterlibrary>_SOURCES and
 ### <yourfilterlibrary>_LIBADD lines.  The later at least has to look

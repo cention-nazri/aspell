@@ -8,10 +8,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: aspell 0.60-pre3\n"
+"Project-Id-Version: aspell 0.60\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-09-25 07:34-0600\n"
-"PO-Revision-Date: 2004-08-22 19:52-0400\n"
+"POT-Creation-Date: 2004-10-17 16:19-0600\n"
+"PO-Revision-Date: 2004-10-03 21:47+0200\n"
 "Last-Translator: Thierry Thomas <thierry@pompo.net>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -142,8 +142,7 @@ msgstr ""
 
 #: common/config.cpp:1379
 msgid "ignore case when checking words"
-msgstr ""
-"ignorer la casse lors de la vérification -- NON PRIS EN COMPTE ACTUELLEMENT"
+msgstr "ignorer la casse lors de la vérification"
 
 #: common/config.cpp:1381
 msgid "ignore commands to store replacement pairs"
@@ -702,16 +701,21 @@ msgstr "Erreur : %s\n"
 msgid "Error: "
 msgstr "Erreur : "
 
-#: prog/aspell.cpp:197
+#: prog/aspell.cpp:196
 msgid "enter Email mode."
 msgstr "entrer en mode courrier."
 
-#: prog/aspell.cpp:198
+#: prog/aspell.cpp:197
 msgid "enter HTML mode."
 msgstr "entrer en mode HTML."
 
-#: prog/aspell.cpp:199
+#: prog/aspell.cpp:198
 msgid "enter TeX mode."
+msgstr "entrer en mode TeX."
+
+#: prog/aspell.cpp:199
+#, fuzzy
+msgid "enter Nroff mode."
 msgstr "entrer en mode TeX."
 
 #: prog/aspell.cpp:297
@@ -1275,6 +1279,11 @@ msgstr "attributs HTML à vérifier systématiquement"
 msgid "HTML tags to always skip the contents of"
 msgstr "balises HTML dont on ignore le contenu"
 
+#: modules/filter/nroff-filter.info:7
+#, fuzzy
+msgid "filter for processing Nroff documents"
+msgstr "filtre pour les documents HTML"
+
 #: modules/filter/sgml-filter.info:9
 msgid "filter for dealing with generic SGML/XML documents"
 msgstr "filtre pour les documents SGML/XML"
@@ -1323,9 +1332,13 @@ msgstr "mode de vérif. des pages HTML"
 msgid "mode to disable all filters"
 msgstr "mode sans aucun filtre"
 
-#: modules/filter/modes/perl.amf:60
+#: modules/filter/modes/nroff.amf:59
 #, fuzzy
-msgid "mode for checking perl comments and string literals"
+msgid "mode for checking Nroff documents"
+msgstr "mode de vérif. des pages HTML"
+
+#: modules/filter/modes/perl.amf:60
+msgid "mode for checking Perl comments and string literals"
 msgstr "mode de vérif. des commentaires et chaînes Perl"
 
 #: modules/filter/modes/sgml.amf:60

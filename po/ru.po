@@ -1,5 +1,4 @@
-# Translation of aspell-0.60-pre1.po to Russian
-# Translation of aspell-0.60-b20040628.po to Russian
+# Translation of aspell-0.60.po to Russian
 # Copyright (C) 2004 Free Software Foundation, Inc.
 # This file is distributed under the same license as the aspell package.
 # Copyright (C) 2004 Kevin Atkinson.
@@ -7,10 +6,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: aspell-0.60-pre1\n"
+"Project-Id-Version: aspell-0.60\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-09-25 07:34-0600\n"
-"PO-Revision-Date: 2004-08-22 18:15-0400\n"
+"POT-Creation-Date: 2004-10-17 16:19-0600\n"
+"PO-Revision-Date: 2004-10-04 09:23+0300\n"
 "Last-Translator: Pavel Maryanov <acid_jack@ukr.net>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -135,7 +134,7 @@ msgstr "игнорирование слов <= n символов"
 #. TRANSLATORS: It is OK if this is longer than 50 chars
 #: common/config.cpp:1377
 msgid "ignore accents when checking words -- CURRENTLY IGNORED"
-msgstr "игнорирование ударений при проверке слов - СЕЙЧАС ИГНОРИРУЕТСЯ"
+msgstr "игнорирование ударений при проверке слов -- СЕЙЧАС ИГНОРИРУЕТСЯ"
 
 #: common/config.cpp:1379
 msgid "ignore case when checking words"
@@ -686,16 +685,21 @@ msgstr "Ошибка: %s\n"
 msgid "Error: "
 msgstr "Ошибка: "
 
-#: prog/aspell.cpp:197
+#: prog/aspell.cpp:196
 msgid "enter Email mode."
 msgstr "переход в режим Email."
 
-#: prog/aspell.cpp:198
+#: prog/aspell.cpp:197
 msgid "enter HTML mode."
 msgstr "переход в режим HTML."
 
-#: prog/aspell.cpp:199
+#: prog/aspell.cpp:198
 msgid "enter TeX mode."
+msgstr "переход в режим TeX."
+
+#: prog/aspell.cpp:199
+#, fuzzy
+msgid "enter Nroff mode."
 msgstr "переход в режим TeX."
 
 #: prog/aspell.cpp:297
@@ -793,7 +797,7 @@ msgstr "Вы уверены, что хотите прервать (y/n)?"
 #. MUST ONLY CONSIST OF ASCII CHARACTERS.
 #: prog/aspell.cpp:1078
 msgid "Yy"
-msgstr ""
+msgstr "Yy"
 
 #: prog/aspell.cpp:1099
 msgid "With: "
@@ -1244,6 +1248,11 @@ msgstr "всегда проверяемые атрибуты HTML"
 msgid "HTML tags to always skip the contents of"
 msgstr "всегда пропускаемые теги HTML с содержимым"
 
+#: modules/filter/nroff-filter.info:7
+#, fuzzy
+msgid "filter for processing Nroff documents"
+msgstr "фильтр для работы с документами HTML"
+
 #: modules/filter/sgml-filter.info:9
 msgid "filter for dealing with generic SGML/XML documents"
 msgstr "фильтр для работы с обычными документами SGML/XML"
@@ -1292,9 +1301,13 @@ msgstr "режим для проверки документов HTML"
 msgid "mode to disable all filters"
 msgstr "режим для отключения всех фильтров"
 
-#: modules/filter/modes/perl.amf:60
+#: modules/filter/modes/nroff.amf:59
 #, fuzzy
-msgid "mode for checking perl comments and string literals"
+msgid "mode for checking Nroff documents"
+msgstr "режим для проверки документов HTML"
+
+#: modules/filter/modes/perl.amf:60
+msgid "mode for checking Perl comments and string literals"
 msgstr "режим для проверки комментариев Perl и строковых литералов"
 
 #: modules/filter/modes/sgml.amf:60

@@ -6,10 +6,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: aspell 0.60-pre1\n"
+"Project-Id-Version: aspell 0.60\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-09-25 07:34-0600\n"
-"PO-Revision-Date: 2004-08-22 20:00-0400\n"
+"POT-Creation-Date: 2004-10-17 16:19-0600\n"
+"PO-Revision-Date: 2004-10-06 18:35+0200\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -673,16 +673,21 @@ msgstr "Chyba: %s\n"
 msgid "Error: "
 msgstr "Chyba: "
 
-#: prog/aspell.cpp:197
+#: prog/aspell.cpp:196
 msgid "enter Email mode."
 msgstr "přejít do režimu E-mail."
 
-#: prog/aspell.cpp:198
+#: prog/aspell.cpp:197
 msgid "enter HTML mode."
 msgstr "přejít do režimu HTML."
 
-#: prog/aspell.cpp:199
+#: prog/aspell.cpp:198
 msgid "enter TeX mode."
+msgstr "přejít do režimu TeX."
+
+#: prog/aspell.cpp:199
+#, fuzzy
+msgid "enter Nroff mode."
 msgstr "přejít do režimu TeX."
 
 #: prog/aspell.cpp:297
@@ -772,15 +777,16 @@ msgstr "Přerušit"
 msgid "Exit"
 msgstr "Ukončit"
 
+# FIXME: "to abort"
 #: prog/aspell.cpp:1074
 msgid "Are you sure you want to abort (y/n)? "
-msgstr "Jste si jisti, že chcete přerušit (y/n)? "
+msgstr "Jste si jisti, že chcete přerušit (a/n)? "
 
 #. TRANSLATORS: The user may input any of these characters to say "yes".
 #. MUST ONLY CONSIST OF ASCII CHARACTERS.
 #: prog/aspell.cpp:1078
 msgid "Yy"
-msgstr ""
+msgstr "Aa"
 
 #: prog/aspell.cpp:1099
 msgid "With: "
@@ -1232,6 +1238,11 @@ msgstr "atributy HTML, které vždy kontrolovat"
 msgid "HTML tags to always skip the contents of"
 msgstr "tagy HTML, jejichž obsah vždy přeskakovat"
 
+#: modules/filter/nroff-filter.info:7
+#, fuzzy
+msgid "filter for processing Nroff documents"
+msgstr "filtr pro práci s dokumenty HTML"
+
 #: modules/filter/sgml-filter.info:9
 msgid "filter for dealing with generic SGML/XML documents"
 msgstr "filtr pro práci s obecnými dokumenty SGML/XML"
@@ -1280,10 +1291,14 @@ msgstr "režim pro kontrolu dokumentů HTML"
 msgid "mode to disable all filters"
 msgstr "režim pro zakázání všech filtrů"
 
-#: modules/filter/modes/perl.amf:60
+#: modules/filter/modes/nroff.amf:59
 #, fuzzy
-msgid "mode for checking perl comments and string literals"
-msgstr "režim pro kontrolu komentářů a řetězcových literálů v perlu"
+msgid "mode for checking Nroff documents"
+msgstr "režim pro kontrolu dokumentů HTML"
+
+#: modules/filter/modes/perl.amf:60
+msgid "mode for checking Perl comments and string literals"
+msgstr "režim pro kontrolu komentářů a řetězcových literálů v Perlu"
 
 #: modules/filter/modes/sgml.amf:60
 msgid "mode for checking generic SGML/XML documents"
@@ -1296,3 +1311,42 @@ msgstr "režim pro kontrolu dokumentů v TeXu/LaTeXu"
 #: modules/filter/modes/url.amf:61
 msgid "mode to skip URL like constructs (default mode)"
 msgstr "režim pro přeskakování konstrukcí podobných URL (implicitní režim)"
+
+#~ msgid "Empty value; only bool type option and \"rem-all\" list prefix."
+#~ msgstr ""
+#~ "Prázdná hodnota; jen přepínač typu bool a předpona seznamu \"rem-all\"."
+
+#~ msgid "Filter \"%filter:1\" could not be found in filter paths."
+#~ msgstr "Filtr \"%filter:1\" nelze najít v cestě filtrů."
+
+#~ msgid "Can't find the option file \"%option:2\"."
+#~ msgstr "Nemohu najít soubor přepínačů \"%option:2\"."
+
+#~ msgid "Filter for eliminating email quote characters"
+#~ msgstr "Filtr pro eliminaci znaků citací z e-mailu"
+
+#~ msgid "Filters for encoding, filtering and decoding sgml characters"
+#~ msgstr "Filtry pro kódování, filtrování a dekódování znaků sgml"
+
+#~ msgid "multi character coded letters (<char>:<rep>[:<rep>[...]])"
+#~ msgstr "písmena kódovaná více znaky (<znak>:<náhr>[:<náhr>[...]])"
+
+#~ msgid "characters used to encode hyphenation locations"
+#~ msgstr "znaky používané pro kódování umístění dělení slov"
+
+#~ msgid "Filter for hiding urls/paths and similar from Aspell"
+#~ msgstr "Filtr pro skrývání url/cest a podobně před Aspellem"
+
+#~ msgid "indicator for additional flags in word lists"
+#~ msgstr "indikátor dalších příznaků v seznamech slov"
+
+#~ msgid "strip accents from word lists"
+#~ msgstr "odstranit ze seznamu slov diakritiku"
+
+#~ msgid "use jump tables when creating dictionaries"
+#~ msgstr "při tvorbě slovníků používat tabulky skoků"
+
+#~ msgid "Affix compression is currently incompatible with soundslike lookup."
+#~ msgstr ""
+#~ "Komprese přípon momentálně není kompatibilní s vyhledáváním podle "
+#~ "podobnosti zvuku."

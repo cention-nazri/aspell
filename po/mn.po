@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60-pre1\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-09-25 07:34-0600\n"
+"POT-Creation-Date: 2004-10-17 16:15-0600\n"
 "PO-Revision-Date: 2004-08-22 20:01-0400\n"
 "Last-Translator: Sanlig Badral <badral@users.sourceforge.net>\n"
 "Language-Team: Mongolian <openmn-translation@lists.sourceforge.net>\n"
@@ -686,16 +686,21 @@ msgstr "Алдаа: %s\n"
 msgid "Error: "
 msgstr "Алдаа: "
 
-#: prog/aspell.cpp:197
+#: prog/aspell.cpp:196
 msgid "enter Email mode."
 msgstr "Э-шуудан оруулах горим."
 
-#: prog/aspell.cpp:198
+#: prog/aspell.cpp:197
 msgid "enter HTML mode."
 msgstr "TML горим оруулах."
 
-#: prog/aspell.cpp:199
+#: prog/aspell.cpp:198
 msgid "enter TeX mode."
+msgstr "TeX горим оруулах."
+
+#: prog/aspell.cpp:199
+#, fuzzy
+msgid "enter Nroff mode."
 msgstr "TeX горим оруулах."
 
 #: prog/aspell.cpp:297
@@ -1247,6 +1252,11 @@ msgstr "HTML аттрибутыг үргэлж шалгах"
 msgid "HTML tags to always skip the contents of"
 msgstr "HTML тагуудын агуулгыг үргэлж алгасах "
 
+#: modules/filter/nroff-filter.info:7
+#, fuzzy
+msgid "filter for processing Nroff documents"
+msgstr "HTML баримтуудтай холбоотой шүүлтүүр"
+
 #: modules/filter/sgml-filter.info:9
 msgid "filter for dealing with generic SGML/XML documents"
 msgstr "ерөнхий SGML/XML баримтуудтай холбоотой шүүлтүүр"
@@ -1295,9 +1305,14 @@ msgstr "HTML баримтуудыг алгасах горим"
 msgid "mode to disable all filters"
 msgstr "бүх шүүлтүүрийг хаах горим"
 
+#: modules/filter/modes/nroff.amf:59
+#, fuzzy
+msgid "mode for checking Nroff documents"
+msgstr "HTML баримтуудыг алгасах горим"
+
 #: modules/filter/modes/perl.amf:60
 #, fuzzy
-msgid "mode for checking perl comments and string literals"
+msgid "mode for checking Perl comments and string literals"
 msgstr "Perl тайлбар ба стринг литериалуудыг шалгах горим"
 
 #: modules/filter/modes/sgml.amf:60

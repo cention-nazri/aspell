@@ -308,7 +308,7 @@ namespace acommon {
         return str;
       }
     }
-    const char * operator() (char c)
+    char * operator() (char c)
     {
       buf.clear();
       if (conv) {

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-09-25 07:34-0600\n"
+"POT-Creation-Date: 2004-10-17 16:19-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -658,16 +658,20 @@ msgstr ""
 msgid "Error: "
 msgstr ""
 
-#: prog/aspell.cpp:197
+#: prog/aspell.cpp:196
 msgid "enter Email mode."
 msgstr ""
 
-#: prog/aspell.cpp:198
+#: prog/aspell.cpp:197
 msgid "enter HTML mode."
 msgstr ""
 
-#: prog/aspell.cpp:199
+#: prog/aspell.cpp:198
 msgid "enter TeX mode."
+msgstr ""
+
+#: prog/aspell.cpp:199
+msgid "enter Nroff mode."
 msgstr ""
 
 #: prog/aspell.cpp:297
@@ -1192,6 +1196,10 @@ msgstr ""
 msgid "HTML tags to always skip the contents of"
 msgstr ""
 
+#: modules/filter/nroff-filter.info:7
+msgid "filter for processing Nroff documents"
+msgstr ""
+
 #: modules/filter/sgml-filter.info:9
 msgid "filter for dealing with generic SGML/XML documents"
 msgstr ""
@@ -1240,8 +1248,12 @@ msgstr ""
 msgid "mode to disable all filters"
 msgstr ""
 
+#: modules/filter/modes/nroff.amf:59
+msgid "mode for checking Nroff documents"
+msgstr ""
+
 #: modules/filter/modes/perl.amf:60
-msgid "mode for checking perl comments and string literals"
+msgid "mode for checking Perl comments and string literals"
 msgstr ""
 
 #: modules/filter/modes/sgml.amf:60

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.51\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-09-25 07:34-0600\n"
+"POT-Creation-Date: 2004-10-17 16:15-0600\n"
 "PO-Revision-Date: 2004-01-06 16:34+0200\n"
 "Last-Translator: Vital khilko <dojlid@mova.org>\n"
 "Language-Team: Belarusian <i18n@mova.org>\n"
@@ -693,17 +693,22 @@ msgstr "Памылка: "
 msgid "Error: "
 msgstr "Памылка: "
 
-#: prog/aspell.cpp:197
+#: prog/aspell.cpp:196
 msgid "enter Email mode."
 msgstr "рэжым э-пошты."
 
-#: prog/aspell.cpp:198
+#: prog/aspell.cpp:197
 #, fuzzy
 msgid "enter HTML mode."
 msgstr "рэжым TeX."
 
-#: prog/aspell.cpp:199
+#: prog/aspell.cpp:198
 msgid "enter TeX mode."
+msgstr "рэжым TeX."
+
+#: prog/aspell.cpp:199
+#, fuzzy
+msgid "enter Nroff mode."
 msgstr "рэжым TeX."
 
 #: prog/aspell.cpp:297
@@ -1236,6 +1241,11 @@ msgstr "атрыбуты sgml для сталае праверкі."
 msgid "HTML tags to always skip the contents of"
 msgstr ""
 
+#: modules/filter/nroff-filter.info:7
+#, fuzzy
+msgid "filter for processing Nroff documents"
+msgstr "Фільтар для вызначэньня камандаў TeX/LaTeX"
+
 #: modules/filter/sgml-filter.info:9
 msgid "filter for dealing with generic SGML/XML documents"
 msgstr ""
@@ -1286,8 +1296,13 @@ msgstr ""
 msgid "mode to disable all filters"
 msgstr ""
 
+#: modules/filter/modes/nroff.amf:59
+#, fuzzy
+msgid "mode for checking Nroff documents"
+msgstr "Фільтар для вызначэньня камандаў TeX/LaTeX"
+
 #: modules/filter/modes/perl.amf:60
-msgid "mode for checking perl comments and string literals"
+msgid "mode for checking Perl comments and string literals"
 msgstr ""
 
 #: modules/filter/modes/sgml.amf:60

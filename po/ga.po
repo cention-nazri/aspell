@@ -6,10 +6,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: aspell 0.60-pre3\n"
+"Project-Id-Version: aspell 0.60\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-09-25 07:34-0600\n"
-"PO-Revision-Date: 2004-08-22 18:06-0400\n"
+"POT-Creation-Date: 2004-10-17 16:19-0600\n"
+"PO-Revision-Date: 2004-10-02 06:24-0500\n"
 "Last-Translator: Kevin Patrick Scannell <scannell@SLU.EDU>\n"
 "Language-Team: Irish <ga@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -135,8 +135,7 @@ msgstr "déan neamhshuim ar focail <= n carachtar"
 #. TRANSLATORS: It is OK if this is longer than 50 chars
 #: common/config.cpp:1377
 msgid "ignore accents when checking words -- CURRENTLY IGNORED"
-msgstr ""
-"déan neamhshuim ar síntí fada agus ag seiceáil -- NACH IN ÚSÁID FAOI LÁTHAIR"
+msgstr "déan neamhshuim ar síntí fada -- NACH IN ÚSÁID FAOI LÁTHAIR"
 
 #: common/config.cpp:1379
 msgid "ignore case when checking words"
@@ -395,7 +394,7 @@ msgstr "Níl an t-ainm comhaid \"%file:1\" bailí."
 #: common/errors.cpp:90
 #, c-format
 msgid "The file \"%file:1\" is not in the proper format."
-msgstr "Níl an comhad \"%file:1\" sa fhormáid chuí."
+msgstr "Níl an comhad \"%file:1\" san fhormáid chuí."
 
 #: common/errors.cpp:106
 #, c-format
@@ -519,7 +518,7 @@ msgid ""
 "The file \"%file:1\" is not in the proper format. Expected the file to be in "
 "\"%exp:2\" not \"%got:3\"."
 msgstr ""
-"Níl an comhad \"%file:1\" sa fhormáid chuí.  Rabhthas ag súil leis an "
+"Níl an comhad \"%file:1\" san fhormáid chuí.  Rabhthas ag súil leis an "
 "bhformáid \"%exp:2\", ní \"%got:3\"."
 
 #: common/errors.cpp:322
@@ -690,16 +689,21 @@ msgstr "Earráid: %s\n"
 msgid "Error: "
 msgstr "Earráid: "
 
-#: prog/aspell.cpp:197
+#: prog/aspell.cpp:196
 msgid "enter Email mode."
 msgstr "bain úsáid as an mhodh R-phoist."
 
-#: prog/aspell.cpp:198
+#: prog/aspell.cpp:197
 msgid "enter HTML mode."
 msgstr "bain úsáid as an mhodh HTML."
 
-#: prog/aspell.cpp:199
+#: prog/aspell.cpp:198
 msgid "enter TeX mode."
+msgstr "bain úsáid as an mhodh TeX."
+
+#: prog/aspell.cpp:199
+#, fuzzy
+msgid "enter Nroff mode."
 msgstr "bain úsáid as an mhodh TeX."
 
 #: prog/aspell.cpp:297
@@ -1252,6 +1256,11 @@ msgstr "aitreabúidí HTML le seiceáil i gcónaí"
 msgid "HTML tags to always skip the contents of"
 msgstr "clibeanna HTML le scipeáil i gcónaí"
 
+#: modules/filter/nroff-filter.info:7
+#, fuzzy
+msgid "filter for processing Nroff documents"
+msgstr "scagaire le haghaidh cáipéisí HTML"
+
 #: modules/filter/sgml-filter.info:9
 msgid "filter for dealing with generic SGML/XML documents"
 msgstr "scagaire le haghaidh cáipéisí SGML/XML ginearálta"
@@ -1300,9 +1309,13 @@ msgstr "modh le haghaidh cáipéisí HTML"
 msgid "mode to disable all filters"
 msgstr "dí-chumasaigh gach scagaire"
 
-#: modules/filter/modes/perl.amf:60
+#: modules/filter/modes/nroff.amf:59
 #, fuzzy
-msgid "mode for checking perl comments and string literals"
+msgid "mode for checking Nroff documents"
+msgstr "modh le haghaidh cáipéisí HTML"
+
+#: modules/filter/modes/perl.amf:60
+msgid "mode for checking Perl comments and string literals"
 msgstr "modh le haghaidh nótaí tráchta agus teaghráin i bPerl"
 
 #: modules/filter/modes/sgml.amf:60

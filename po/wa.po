@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell-0.60-b20040628\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-09-25 07:34-0600\n"
+"POT-Creation-Date: 2004-10-17 16:15-0600\n"
 "PO-Revision-Date: 2004-07-16 16:42+0200\n"
 "Last-Translator: Pablo Saratxaga <pablo@walon.org>\n"
 "Language-Team: Walloon <linux-wa@walon.org>\n"
@@ -667,16 +667,20 @@ msgstr "Aroke: %s\n"
 msgid "Error: "
 msgstr "Aroke: "
 
-#: prog/aspell.cpp:197
+#: prog/aspell.cpp:196
 msgid "enter Email mode."
 msgstr ""
 
-#: prog/aspell.cpp:198
+#: prog/aspell.cpp:197
 msgid "enter HTML mode."
 msgstr ""
 
-#: prog/aspell.cpp:199
+#: prog/aspell.cpp:198
 msgid "enter TeX mode."
+msgstr ""
+
+#: prog/aspell.cpp:199
+msgid "enter Nroff mode."
 msgstr ""
 
 #: prog/aspell.cpp:297
@@ -1207,6 +1211,11 @@ msgstr "atributs HTML a tofer verifyî"
 msgid "HTML tags to always skip the contents of"
 msgstr ""
 
+#: modules/filter/nroff-filter.info:7
+#, fuzzy
+msgid "filter for processing Nroff documents"
+msgstr "passete po les documints TeX/LaTeX"
+
 #: modules/filter/sgml-filter.info:9
 msgid "filter for dealing with generic SGML/XML documents"
 msgstr ""
@@ -1255,8 +1264,13 @@ msgstr ""
 msgid "mode to disable all filters"
 msgstr ""
 
+#: modules/filter/modes/nroff.amf:59
+#, fuzzy
+msgid "mode for checking Nroff documents"
+msgstr "môde pol erifiaedje des documints TeX/LaTeX"
+
 #: modules/filter/modes/perl.amf:60
-msgid "mode for checking perl comments and string literals"
+msgid "mode for checking Perl comments and string literals"
 msgstr ""
 
 #: modules/filter/modes/sgml.amf:60

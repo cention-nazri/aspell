@@ -6,10 +6,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: aspell 0.60-pre1\n"
+"Project-Id-Version: aspell 0.60-pre3\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-09-25 07:34-0600\n"
-"PO-Revision-Date: 2004-08-22 18:12-0400\n"
+"POT-Creation-Date: 2004-10-17 16:19-0600\n"
+"PO-Revision-Date: 2004-09-24 19:03+0200\n"
 "Last-Translator: Maxim V. Dziumanenko <mvd@mylinux.com.ua>\n"
 "Language-Team: Ukrainian <translation-team-uk@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -132,10 +132,12 @@ msgstr "ігнорування слів <= n символів"
 
 #. TRANSLATORS: It is OK if this is longer than 50 chars
 #: common/config.cpp:1377
+#, fuzzy
 msgid "ignore accents when checking words -- CURRENTLY IGNORED"
 msgstr "ігнорування регістру при перевірці слів -- НАРАЗІ ІГНОРУЄТЬСЯ"
 
 #: common/config.cpp:1379
+#, fuzzy
 msgid "ignore case when checking words"
 msgstr "ігнорування наголосів при перевірці слів"
 
@@ -681,16 +683,21 @@ msgstr "Помилка: %s\n"
 msgid "Error: "
 msgstr "Помилка: "
 
-#: prog/aspell.cpp:197
+#: prog/aspell.cpp:196
 msgid "enter Email mode."
 msgstr "перехід у режим Email."
 
-#: prog/aspell.cpp:198
+#: prog/aspell.cpp:197
 msgid "enter HTML mode."
 msgstr "перехід у режим HTML."
 
-#: prog/aspell.cpp:199
+#: prog/aspell.cpp:198
 msgid "enter TeX mode."
+msgstr "перехід у режим TeX."
+
+#: prog/aspell.cpp:199
+#, fuzzy
+msgid "enter Nroff mode."
 msgstr "перехід у режим TeX."
 
 #: prog/aspell.cpp:297
@@ -788,7 +795,7 @@ msgstr "Ви впевнені, що бажаєте перервати (y/n)?"
 #. MUST ONLY CONSIST OF ASCII CHARACTERS.
 #: prog/aspell.cpp:1078
 msgid "Yy"
-msgstr ""
+msgstr "Yy"
 
 #: prog/aspell.cpp:1099
 msgid "With: "
@@ -1241,6 +1248,11 @@ msgstr "атрибути HTML, що завжди перевіряються"
 msgid "HTML tags to always skip the contents of"
 msgstr "HTML теги, вміст яких завжди пропускається"
 
+#: modules/filter/nroff-filter.info:7
+#, fuzzy
+msgid "filter for processing Nroff documents"
+msgstr "фільтр для роботи з документами HTML"
+
 #: modules/filter/sgml-filter.info:9
 msgid "filter for dealing with generic SGML/XML documents"
 msgstr "фільтр для роботи зі звичайними SGML/XML документами"
@@ -1289,10 +1301,14 @@ msgstr "режим для перевірки документів HTML"
 msgid "mode to disable all filters"
 msgstr "режим для відключення усіх фільтрів"
 
-#: modules/filter/modes/perl.amf:60
+#: modules/filter/modes/nroff.amf:59
 #, fuzzy
-msgid "mode for checking perl comments and string literals"
-msgstr "режим для перевірки коментарів Perl та символьних літералів"
+msgid "mode for checking Nroff documents"
+msgstr "режим для перевірки документів HTML"
+
+#: modules/filter/modes/perl.amf:60
+msgid "mode for checking Perl comments and string literals"
+msgstr "режим для перевірки коментарів perl та символьних літералів"
 
 #: modules/filter/modes/sgml.amf:60
 msgid "mode for checking generic SGML/XML documents"

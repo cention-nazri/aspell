@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-09-25 07:34-0600\n"
+"POT-Creation-Date: 2004-10-17 16:15-0600\n"
 "PO-Revision-Date: 2004-05-22 19:33+0000\n"
 "Last-Translator: Marina Kolucheva <youth_opportunities@tajik.net>\n"
 "Language-Team: Tajik\n"
@@ -709,17 +709,22 @@ msgstr "Хато: %s\n"
 msgid "Error: "
 msgstr "Хато: "
 
-#: prog/aspell.cpp:197
+#: prog/aspell.cpp:196
 msgid "enter Email mode."
 msgstr "гузаштан ба тартиботи Email."
 
-#: prog/aspell.cpp:198
+#: prog/aspell.cpp:197
 #, fuzzy
 msgid "enter HTML mode."
 msgstr "гузаштан ба тартиботи TeX"
 
-#: prog/aspell.cpp:199
+#: prog/aspell.cpp:198
 msgid "enter TeX mode."
+msgstr "гузаштан ба тартиботи TeX"
+
+#: prog/aspell.cpp:199
+#, fuzzy
+msgid "enter Nroff mode."
 msgstr "гузаштан ба тартиботи TeX"
 
 #: prog/aspell.cpp:297
@@ -1258,6 +1263,11 @@ msgstr "хусусиятҳои sgml барои тафтишоти доимӣ."
 msgid "HTML tags to always skip the contents of"
 msgstr "ҳадафи sgml он аст, ки барои доим партоиши оканае мебошад аз "
 
+#: modules/filter/nroff-filter.info:7
+#, fuzzy
+msgid "filter for processing Nroff documents"
+msgstr "филтр барои дарёфти фармоноти TeX/LaTeX"
+
 #: modules/filter/sgml-filter.info:9
 msgid "filter for dealing with generic SGML/XML documents"
 msgstr ""
@@ -1310,9 +1320,14 @@ msgstr "филтр барои дарёфти фармоноти TeX/LaTeX"
 msgid "mode to disable all filters"
 msgstr ""
 
+#: modules/filter/modes/nroff.amf:59
+#, fuzzy
+msgid "mode for checking Nroff documents"
+msgstr "филтр барои дарёфти фармоноти TeX/LaTeX"
+
 #: modules/filter/modes/perl.amf:60
 #, fuzzy
-msgid "mode for checking perl comments and string literals"
+msgid "mode for checking Perl comments and string literals"
 msgstr "филтр барои дарёфти фармоноти TeX/LaTeX"
 
 #: modules/filter/modes/sgml.amf:60
