@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60-pre1\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-12-18 20:45-0700\n"
+"POT-Creation-Date: 2005-01-21 19:14-0700\n"
 "PO-Revision-Date: 2004-08-22 20:15-0400\n"
 "Last-Translator: Gareth Owen <gowen72@yahoo.com>\n"
 "Language-Team: English (British) <en_gb@li.org>\n"
@@ -1140,33 +1140,33 @@ msgstr "This is probably because: "
 msgid "The required field \"name\" is missing."
 msgstr "The required field \"name\" is missing."
 
-#: modules/speller/default/language.cpp:475
+#: modules/speller/default/language.cpp:488
 msgid "Empty string."
 msgstr "Empty string."
 
-#: modules/speller/default/language.cpp:479
+#: modules/speller/default/language.cpp:492
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear at the beginning of a word."
 msgstr "The character '%s' (U+%02X) may not appear at the beginning of a word."
 
-#: modules/speller/default/language.cpp:481
-#: modules/speller/default/language.cpp:490
+#: modules/speller/default/language.cpp:494
+#: modules/speller/default/language.cpp:503
 #, c-format
 msgid ""
 "The character '%s' (U+%02X) must be followed by an alphabetic character."
 msgstr ""
 "The character '%s' (U+%02X) must be followed by an alphabetic character."
 
-#: modules/speller/default/language.cpp:483
+#: modules/speller/default/language.cpp:496
 msgid "Does not contain any alphabetic characters."
 msgstr "Does not contain any alphabetic characters."
 
-#: modules/speller/default/language.cpp:488
+#: modules/speller/default/language.cpp:501
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear in the middle of a word."
 msgstr "The character '%s' (U+%02X) may not appear in the middle of a word."
 
-#: modules/speller/default/language.cpp:495
+#: modules/speller/default/language.cpp:508
 msgid ""
 "The character '\\r' (U+0D) may not appear at the end of a word. This "
 "probably means means that the file is using MS-DOS EOL instead of Unix EOL."
@@ -1174,31 +1174,31 @@ msgstr ""
 "The character '\\r' (U+0D) may not appear at the end of a word. This "
 "probably means means that the file is using MS-DOS EOL instead of Unix EOL."
 
-#: modules/speller/default/language.cpp:498
+#: modules/speller/default/language.cpp:511
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear at the end of a word."
 msgstr "The character '%s' (U+%02X) may not appear at the end of a word."
 
-#: modules/speller/default/language.cpp:530
+#: modules/speller/default/language.cpp:543
 #, c-format
 msgid "Warning: Removing invalid affix '%s' from word %s.\n"
 msgstr "Warning: Removing invalid affix '%s' from word %s.\n"
 
-#: modules/speller/default/language.cpp:531
+#: modules/speller/default/language.cpp:544
 #, c-format
 msgid "Warning: Removing inapplicable affix '%s' from word %s.\n"
 msgstr "Warning: Removing inapplicable affix '%s' from word %s.\n"
 
-#: modules/speller/default/language.cpp:661
+#: modules/speller/default/language.cpp:674
 #, c-format
 msgid "Warning: %s Skipping string.\n"
 msgstr "Warning: %s Skipping string.\n"
 
-#: modules/speller/default/language.cpp:719
+#: modules/speller/default/language.cpp:732
 msgid "The total length is larger than 240 characters."
 msgstr "The total length is larger than 240 characters."
 
-#: modules/speller/default/language.cpp:723
+#: modules/speller/default/language.cpp:736
 #, c-format
 msgid "Warning: %s Skipping word.\n"
 msgstr "Warning: %s Skipping word.\n"
@@ -1229,12 +1229,24 @@ msgid ""
 msgstr ""
 "The total word length, with soundslike data, is larger than 240 characters."
 
-#: modules/speller/default/suggest.cpp:1393
+#: modules/speller/default/suggest.cpp:1394
 msgid "one of ultra, fast, normal, slow, or bad-spellers"
 msgstr ""
 
-#: modules/speller/default/data.cpp:402
+#: modules/speller/default/data.cpp:405
 msgid "is not one of the allowed types"
+msgstr ""
+
+#: modules/speller/default/speller_impl.cpp:233
+msgid "The personal word list is unavailable."
+msgstr ""
+
+#: modules/speller/default/speller_impl.cpp:240
+msgid "The session word list is unavailable."
+msgstr ""
+
+#: modules/speller/default/speller_impl.cpp:247
+msgid "The main word list is unavailable."
 msgstr ""
 
 #: modules/filter/tex.cpp:251 modules/filter/tex.cpp:258

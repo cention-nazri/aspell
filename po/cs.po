@@ -6,10 +6,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: aspell 0.60.1\n"
+"Project-Id-Version: aspell 0.60.2-b20041203\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-12-18 20:45-0700\n"
-"PO-Revision-Date: 2004-11-13 12:02+0100\n"
+"POT-Creation-Date: 2005-01-21 19:14-0700\n"
+"PO-Revision-Date: 2004-12-27 17:24+0100\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -829,7 +829,7 @@ msgstr "Lituji, \"vytvořit/sloučit náhr\" momentálně není implementováno.
 #: prog/aspell.cpp:1851
 #, c-format
 msgid "\"%s\" is not a valid flag for the \"munch-list\" command."
-msgstr ""
+msgstr "\"%s\" není platný přepínač pro příkaz \"munch-list\"."
 
 #. TRANSLATORS: These should all be formated to fit in 80 column or
 #. less
@@ -910,11 +910,11 @@ msgstr "  -v|version       vypíše řádek o verzi"
 
 #: prog/aspell.cpp:2802
 msgid "  munch-list [simple] [single|multi] [keep]\n"
-msgstr ""
+msgstr "  munch-list [simple] [single|multi] [keep]\n"
 
 #: prog/aspell.cpp:2803
 msgid "    reduce the size of a word list via affix compression"
-msgstr ""
+msgstr "    zmenšit seznam slov kompresí přípon"
 
 #: prog/aspell.cpp:2804
 msgid "  conv <from> <to> [<norm-form>]"
@@ -933,12 +933,10 @@ msgid "    perform Unicode normalization"
 msgstr "   provést normalizaci Unicode"
 
 #: prog/aspell.cpp:2810
-#, fuzzy
 msgid "  dump|create|merge master|personal|repl [<name>]"
-msgstr "  dump|create|merge master|personal|repl [seznam slov]"
+msgstr "  dump|create|merge master|personal|repl [<název>]"
 
 #: prog/aspell.cpp:2811
-#, fuzzy
 msgid ""
 "    dumps, creates or merges a master, personal, or replacement dictionary."
 msgstr ""
@@ -1132,32 +1130,32 @@ msgstr "To je pravděpodobně protože: "
 msgid "The required field \"name\" is missing."
 msgstr "Vyžadované pole \"name\" chybí."
 
-#: modules/speller/default/language.cpp:475
+#: modules/speller/default/language.cpp:488
 msgid "Empty string."
 msgstr "Prázdný řetězec."
 
-#: modules/speller/default/language.cpp:479
+#: modules/speller/default/language.cpp:492
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear at the beginning of a word."
 msgstr "Znak '%s' (U+%02X) nesmí být na začátku slova."
 
-#: modules/speller/default/language.cpp:481
-#: modules/speller/default/language.cpp:490
+#: modules/speller/default/language.cpp:494
+#: modules/speller/default/language.cpp:503
 #, c-format
 msgid ""
 "The character '%s' (U+%02X) must be followed by an alphabetic character."
 msgstr "Znak '%s' (U+%02X) musí být následován písmenem."
 
-#: modules/speller/default/language.cpp:483
+#: modules/speller/default/language.cpp:496
 msgid "Does not contain any alphabetic characters."
 msgstr "Neobsahuje žádná písmena."
 
-#: modules/speller/default/language.cpp:488
+#: modules/speller/default/language.cpp:501
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear in the middle of a word."
 msgstr "Znak '%s' (U+%02X) nesmí být uprostřed slova."
 
-#: modules/speller/default/language.cpp:495
+#: modules/speller/default/language.cpp:508
 msgid ""
 "The character '\\r' (U+0D) may not appear at the end of a word. This "
 "probably means means that the file is using MS-DOS EOL instead of Unix EOL."
@@ -1165,31 +1163,31 @@ msgstr ""
 "Znak '\\r' (U+0D) nesmí být na konci slova. Toto pravděpodobně znamená, že "
 "soubor používá konce řádků MS-DOS místo unixových."
 
-#: modules/speller/default/language.cpp:498
+#: modules/speller/default/language.cpp:511
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear at the end of a word."
 msgstr "Znak '%s' (U+%02X) nesmí být na konci slova."
 
-#: modules/speller/default/language.cpp:530
+#: modules/speller/default/language.cpp:543
 #, c-format
 msgid "Warning: Removing invalid affix '%s' from word %s.\n"
 msgstr "Varování: Odstraňuji neplatnou příponu '%s' ze slova %s.\n"
 
-#: modules/speller/default/language.cpp:531
+#: modules/speller/default/language.cpp:544
 #, c-format
 msgid "Warning: Removing inapplicable affix '%s' from word %s.\n"
 msgstr "Varování: Odstraňuji nepoužitelnou příponu '%s' ze slova %s.\n"
 
-#: modules/speller/default/language.cpp:661
+#: modules/speller/default/language.cpp:674
 #, c-format
 msgid "Warning: %s Skipping string.\n"
 msgstr "Varování: %s Přeskakuji řetězec.\n"
 
-#: modules/speller/default/language.cpp:719
+#: modules/speller/default/language.cpp:732
 msgid "The total length is larger than 240 characters."
 msgstr "Celková délka je větší než 240 znaků."
 
-#: modules/speller/default/language.cpp:723
+#: modules/speller/default/language.cpp:736
 #, c-format
 msgid "Warning: %s Skipping word.\n"
 msgstr "Varování: %s Přeskakuji slovo.\n"
@@ -1219,12 +1217,24 @@ msgid ""
 "The total word length, with soundslike data, is larger than 240 characters."
 msgstr "Celková délka slova s daty o podobnosti zvuku je větší než 240 znaků."
 
-#: modules/speller/default/suggest.cpp:1393
+#: modules/speller/default/suggest.cpp:1394
 msgid "one of ultra, fast, normal, slow, or bad-spellers"
+msgstr "jedno z ultra, fast, normal, slow nebo bad-spellers"
+
+#: modules/speller/default/data.cpp:405
+msgid "is not one of the allowed types"
+msgstr "není jeden z povolených typů"
+
+#: modules/speller/default/speller_impl.cpp:233
+msgid "The personal word list is unavailable."
 msgstr ""
 
-#: modules/speller/default/data.cpp:402
-msgid "is not one of the allowed types"
+#: modules/speller/default/speller_impl.cpp:240
+msgid "The session word list is unavailable."
+msgstr ""
+
+#: modules/speller/default/speller_impl.cpp:247
+msgid "The main word list is unavailable."
 msgstr ""
 
 #: modules/filter/tex.cpp:251 modules/filter/tex.cpp:258
