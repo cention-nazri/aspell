@@ -44,34 +44,25 @@ namespace acommon {
   };
 #elif defined(WIN32PORT)
   class Mutex {
+    HANDLE hMutex;
   private:
     Mutex(const Mutex &);
     void operator=(const Mutex &);
-    HANDLE hMutex;
-    SECURITY_ATTRIBUTES sec;
   public:
-    Mutex() { 
-      sec.nLength= sizeof(sec);
-      sec.lpSecurityDescriptor = 0;
-      sec.bInheritHandle = false;
-      hMutex = 0;
-    }
-    ~Mutex() {
-      if (hMutex) unlock();
-    }
+    Mutex() {hMutex = CreateMutex(NULL,FALSE,NULL);}
+    ~Mutex() {CloseHandle(hMutex);}
     void lock() {
-      hMutex =  CreateMutex(&sec,0,0);
-#ifdef _DEBUG
-      if (!hMutex) {
+      long rc = WaitForSingleObject(hMutex,INFINITE);
+      #ifdef _DEBUG
+      if (rc == WAIT_ABANDONED) {
         DWORD err = GetLastError();
         char buff[131];
         FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM,0,err,0,buff,sizeof(buff),0);
         printf(buff);
       }
-#endif
+      #endif
     }
-    void unlock() {
-      ReleaseMutex(hMutex); hMutex = 0;}
+    void unlock() {ReleaseMutex(hMutex);}
   };
 
 #else

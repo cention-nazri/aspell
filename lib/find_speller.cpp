@@ -9,7 +9,6 @@
 
 // POSIX includes
 #include <sys/types.h>
-#include <dirent.h>
 
 #include "asc_ctype.hpp"
 #include "can_have_error.hpp"

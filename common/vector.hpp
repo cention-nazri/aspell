@@ -16,7 +16,7 @@ namespace acommon
   {
   public:
 
-#ifdef _MSC_VER
+#if defined _MSC_VER && _MSC_VER < 1300
     // Bring type definitions from the std::vector class to acommon::Vector
     typedef T value_type;
     typedef std::vector<T>::size_type size_type;
