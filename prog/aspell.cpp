@@ -673,6 +673,12 @@ void pipe()
   bool suggest = options->retrieve_bool("suggest");
   bool include_guesses = options->retrieve_bool("guess");
   clock_t start,finish;
+
+  if (!options->have("mode")) {
+    PosibErrBase err(options->replace("mode", "nroff"));
+    if (err.get_err()) CERR << "WARNING: Unable to enter nroff mode.\n";
+  }
+
   start = clock();
   
   AspellCanHaveError * ret 

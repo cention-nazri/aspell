@@ -444,19 +444,17 @@ underlying language.
 @item
 The expand or -e mode.  Again, when an affix file is availably for the
 underlying language.
+
+@item
+The ability to dump the affix file when called with '-D'.  However the
+format of the affix file is diffrent.  Furthermore, not all languages
+have an affix file.
+
 @end itemize
 
-However the Ispell script currently unable to emmulate the following Ispell
-functionaly:
-
-@itemize @bullet
-@item
-The '-A' pipe mode.  This is different from the normal pipe mode in
+However the Ispell script currently unable to emmulate the 
+the '-A' pipe mode.  This is different from the normal pipe mode in
 that the special @code{&Include_File&} is recognized.
-
-@item
-The ability to dump the affix file when called with '-D'
-@end itemize
 
 @subsubsection Recognized Options
 
@@ -2110,6 +2108,7 @@ immediately by a valid mode will cause Aspell to parse future input
 according the syntax of that formatter.  A line consisting solely of a
 @samp{+} will place Aspell in @TeX{}/LaTeX mode (similar to the
 @option{-t} option) and @samp{-} returns Aspell to its default mode
+(which is Nroff unless otherwise specified).
 (but these commands are obsolete).  A line @samp{~}, is ignored for
 Ispell compatibility.  A line prefixed with @samp{#} will cause the
 personal dictionaries to be saved.  A line prefixed with @samp{!}
@@ -4006,7 +4005,10 @@ Lots of compile fixes for various platforms.
 @item
 Nroff filter thanks to Sergey Poznyakoff.
 @item
-Added a section detailes the differnesed between Ispell and Aspell.
+The default filter mode when in pipe mode is now nroff for compatibility with
+Ispell.
+@item
+Added a section detailes the differences between Ispell and Aspell.
 @item
 Updated the section on thread safety.
 @end itemize
@@ -5261,7 +5263,7 @@ Aspell.
 
 @item Silicon Graphics Computer Systems, Inc.
 @itemx Hewlett-Packard Company
-Parts of the SGI STL code were used in various places throught the
+Parts of the SGI STL code were used in various places throughout the
 Aspell source.
 
 @end table
