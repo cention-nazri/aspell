@@ -321,10 +321,10 @@ PosibErr<void> AffixMgr::parse_file(const char * affpath, Conv & iconv)
         getdata_pair(afflst, dp, buf);
 
         if (affix_type == 'P') {
-          nptr = (AffEntry *) data_buf.alloc_top(sizeof(PfxEntry));
+          nptr = (AffEntry *) data_buf.alloc_bottom(sizeof(PfxEntry));
           new (nptr) PfxEntry(this);
         } else {
-          nptr = (AffEntry *) data_buf.alloc_top(sizeof(SfxEntry));
+          nptr = (AffEntry *) data_buf.alloc_bottom(sizeof(SfxEntry));
           new (nptr) SfxEntry(this);
         }
 
