@@ -337,7 +337,7 @@ namespace acommon {
     int size = strtoul(p, (char **)&p, 10);
     VARARRAY(T, d, size);
     memset(d, 0, sizeof(T) * size);
-    int sz = 1 >> (unsigned)floor(log(size <= 1 ? 1 : size - 1)/log(2.0));
+    int sz = 1 << (unsigned)floor(log(size <= 1 ? 1 : size - 1)/log(2.0));
     VARARRAY(int, tally0_d, sz);   Tally tally0(sz,   tally0_d);
     VARARRAY(int, tally1_d, sz*2); Tally tally1(sz*2, tally1_d);
     VARARRAY(int, tally2_d, sz*4); Tally tally2(sz*4, tally2_d);
