@@ -211,17 +211,6 @@ namespace {
       commit_temp(sl);
       return sl;}
 
-    char * convert(SpellerImpl::WS::const_iterator i, const WordEntry & sw) {
-      char * w = (char *)buffer.alloc(sw.word_size + 1);
-      i->convert.convert(sw.word, w);
-      return w;
-    }
-    char * convert(SpellerImpl::WS::const_iterator i, ParmString w) {
-      char * t = (char *)buffer.alloc(w.size() + 1);
-      i->convert.convert(w, t);
-      return t;
-    }
-
     char * Working::form_word(CheckInfo & ci);
     void try_word_n(ParmString str, int score);
     bool check_word_s(ParmString word, CheckInfo * ci);
@@ -540,16 +529,17 @@ namespace {
         = static_cast<const ReplacementDict *>(i->dict);
       repl_dict->repl_lookup(w, *repl);
     }
-    add_nearmiss(convert(i, w.word), w.word_size, w.word_info, 
+    add_nearmiss(buffer.dup(ParmString(w.word, w.word_size)), 
+                 w.word_size, w.word_info, 
                  sl,
                  w_score, sl_score, count);
   }
-
+  
   void Working::add_nearmiss(SpellerImpl::WS::const_iterator i,
                              const WordAff * w, const char * sl,
                              int w_score, int sl_score, bool count)
   {
-    add_nearmiss(convert(i, w->word.str), w->word.size, 0, 
+    add_nearmiss(buffer.dup(w->word), w->word.size, 0, 
                  sl,
                  w_score, sl_score, count);
   }

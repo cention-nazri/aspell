@@ -322,13 +322,11 @@ namespace aspeller {
 
   OStream & WordEntry::write (OStream & o,
                               const Language & l,
-                              const ConvertWord & cw,
                               Convert * c) const
   {
     String w;
     CharVector buf;
-    cw.convert(word, w);
-    write_conv(w);
+    write_conv(word);
     if (aff && *aff) {
       o << '/';
       write_conv(aff);
@@ -472,20 +470,13 @@ namespace aspeller {
   void LocalDictInfo::set_language(const Language * l)
   {
     compare.lang = l;
-    convert.lang = l;
   }
 
-  void LocalDictInfo::set(const Language * l, const Config & c, bool strip)
+  void LocalDictInfo::set(const Language * l, const Config & c)
   {
-    if (c.have("strip-accents"))
-      strip = c.retrieve_bool("strip-accents");
-
     compare.lang = l;
     compare.case_insensitive = c.retrieve_bool("ignore-case");
     compare.ignore_accents   = c.retrieve_bool("ignore-accents");
-    compare.strip_accents    = strip;
-    convert.lang = l;
-    convert.strip_accents = strip;
   }
   
 }

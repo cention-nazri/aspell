@@ -38,30 +38,13 @@ namespace {
     FStream in;
     RET_ON_ERR(in.open(fn, "r"));
     set_file_name(fn);
-    bool strip_accents;
-    if (config.have("strip-accents"))
-      strip_accents = config.retrieve_bool("strip-accents");
-    else if (li == 0)
-      strip_accents = false;
-    else
-      strip_accents = li->convert.strip_accents;
     String buf; DataPair d;
     while(getdata_pair(in, d, buf)) 
     {
-      if (d.key == "strip-accents") {
-	if (config.have("strip-accents")) {
-	  // do nothing
-	} if (d.value == "true") {
-	  strip_accents = true;
-	} else if (d.value == "false") {
-	  strip_accents = false;
-	} else {
-	  return make_err(bad_value, "strip-accents", d.value, "true or false").with_file(fn, d.line_num);
-	}
-      } else if (d.key == "add") {
+      if (d.key == "add") {
 
 	LocalDict res;
-	res.set(0, config, strip_accents);
+	res.set(0, config);
         RET_ON_ERR(add_data_set(d.value, config, res, new_dicts, speller, &res, dir));
         RET_ON_ERR(set_check_lang(res.dict->lang()->name(), config));
 	wss.push_back(res);

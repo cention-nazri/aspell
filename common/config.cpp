@@ -1081,8 +1081,6 @@ namespace acommon {
        N_("size of the word list")}
     , {"spelling",   KeyInfoString, "",
        N_("no longer used")}
-    , {"strip-accents" , KeyInfoBool, "false",
-       N_("strip accents from word lists")}
     , {"sug-mode",   KeyInfoString, "normal",
        N_("suggestion mode"), KEYINFO_MAY_CHANGE}
     , {"sug-edit-dist", KeyInfoInt, "1",

@@ -174,9 +174,8 @@ namespace aspeller {
   struct LocalDictInfo 
   {
     SensitiveCompare compare;
-    ConvertWord      convert;
     void set_language(const Language * l);
-    void set(const Language * l, const Config & c, bool strip = false);
+    void set(const Language * l, const Config & c);
     void set(const LocalDictInfo & li) {operator=(li);}
   };
 

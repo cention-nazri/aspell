@@ -392,102 +392,32 @@ namespace aspeller {
       return str;
     }
   }
-    
-  bool SensitiveCompare::operator() (const char * word, 
-				     const char * inlist) const
+  
+  bool SensitiveCompare::operator() (const char * word0, 
+				     const char * inlist0) const
   {
-   // this will fail if word or inlist is empty
-    assert (*word != '\0' && *inlist != '\0');
-    
-    // if begin inlist is a begin char then it must match begin word
-    // chop all begin chars from the begin of word and inlist  
-    if (lang->special(*inlist).begin) {
-      if (*word != *inlist)
-	return false;
-      ++word, ++inlist;
-    } else if (lang->special(*word).begin) {
-      ++word;
-    }
-    
-    // this will fail if word or inlist only contain a begin char
-    assert (*word != '\0' && *inlist != '\0');
-    
-    if (case_insensitive) {
-      if (ignore_accents) {
-
-	while (*word != '\0' && *inlist != '\0') 
-	  ++word, ++inlist;
-
-      } else if (strip_accents) {
-
-	while (*word != '\0' && *inlist != '\0') {
-	  if (lang->to_lower(*word) != lang->to_plain(lang->to_lower(*inlist)))
-	    return false;
-	  ++word, ++inlist;
-	}
-
-      } else {
-
-	while (*word != '\0' && *inlist != '\0') {
-	  if (lang->to_lower(*word) != lang->to_lower(*inlist))
-	    return false;
-	  ++word, ++inlist;
-	}
-
-      }
-    } else {
-      //   (note: there are 3 possible casing lower, upper and title)
-      //   if is lower begin inlist then begin word can be any casing
-      //   if not                   then begin word must be the same case
-      bool case_compatible = true;
-      if (!ignore_accents) {
-	if (strip_accents) {
-	  if (lang->to_lower(*word) != lang->to_plain(lang->to_lower(*inlist)))
-	    return false;
-	} else {
-	  if (lang->to_lower(*word) != lang->to_lower(*inlist))
-	    return false;
-	}
-      }
-      if (!lang->is_lower(*inlist) && lang->to_plain(*word) != lang->to_plain(*inlist))
-	case_compatible = false;
-      bool all_upper = lang->is_upper(*word);
-      ++word, ++inlist;
-      while (*word != '\0' && *inlist != '\0') {
-        if (!lang->is_upper(*word))
-          all_upper = false;
-        if (ignore_accents) {
-          if (lang->to_plain(*word) != lang->to_plain(*inlist))
-            if (lang->to_stripped(*word) != lang->to_stripped(*inlist))
-              return false;
-            else
-              case_compatible = false;
-        } else if (strip_accents) {
-          if (*word != lang->to_plain(*inlist))
-            if (lang->to_lower(*word) != lang->to_plain(lang->to_lower(*inlist)))
-              return false;
-            else // accents match case does not
-              case_compatible = false;
-        } else {
-          if (*word != *inlist)
-            if (lang->to_lower(*word) != lang->to_lower(*inlist))
-              return false;
-            else // accents match case does not
-              case_compatible = false;
-        }
-        ++word, ++inlist;
-      }
-      //   if word is all upper than the casing of inlist can be anything
-      //   otherwise the casing of tail begin and tail inlist must match
-      if (all_upper) 
-	case_compatible = true;
-      if (!case_compatible) 
-	return false;
-    }
-
+    assert(*word0 && *inlist0);
+  try_again:
+    const char * word = word0;
+    const char * inlist = inlist0;
+    if (*word == *inlist || *word == lang->to_title(*inlist)) ++word, ++inlist;
+    else                                                      goto try_upper;
+    while (*word && *inlist && *word == *inlist) ++word, ++inlist;
+    if (*inlist) goto try_upper;
     if (lang->special(*word).end) ++word;
-
-    return (*word == '\0' && *inlist == '\0');
+    if (*word) goto try_upper;
+    return true;
+  try_upper:
+    word = word0;
+    inlist = inlist0;
+    while (*word && *inlist && *word == lang->to_upper(*inlist)) ++word, ++inlist;
+    if (*inlist) goto fail;
+    if (lang->special(*word).end) ++word;
+    if (*word) goto fail;
+    return true;
+  fail:
+    if (lang->special(*word0).begin) {++word0; goto try_again;}
+    return false;
   }
 
   PosibErr<void> check_if_valid(const Language & l, ParmString word) {

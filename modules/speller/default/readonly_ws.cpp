@@ -432,6 +432,7 @@ namespace {
     WordLookup::ConstFindIterator i = word_lookup.multi_find(word);
     for (; !i.at_end(); i.adv()) {
       const char * w = word_block + i.deref();
+      CERR.printl(w);
       if (c(word, w)) {
         convert(w,o);
         return true;

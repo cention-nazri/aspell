@@ -1299,7 +1299,7 @@ void dump (aspeller::LocalDict lws, Convert * conv)
       StackPtr<WordEntryEnumeration> els(ws->detailed_elements());
       WordEntry * wi;
       while (wi = els->next(), wi) {
-        wi->write(COUT,*ws->lang(), lws.convert, conv);
+        wi->write(COUT,*ws->lang(), conv);
         COUT << '\n';
       }
     }
@@ -1399,7 +1399,7 @@ void personal () {
 
     WordEntry * wi;
     while (wi = els->next(), wi) {
-      wi->write(COUT,*(per->lang()), wsi.convert, conv);
+      wi->write(COUT,*(per->lang()), conv);
       COUT.put('\n');
     }
     delete per;

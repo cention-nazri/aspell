@@ -402,54 +402,10 @@ namespace aspeller {
     const Language * lang;
     bool case_insensitive;
     bool ignore_accents;
-    bool strip_accents;
     SensitiveCompare(const Language * l = 0) 
       : lang(l), case_insensitive(false)
-      , ignore_accents(false), strip_accents(false) {}
+      , ignore_accents(false) {}
     bool operator() (const char * word, const char * inlist) const;
-    // Pre:
-    //   word == to_find as given by Language::InsensitiveEqual 
-    //   both word and inlist contain at least one letter as given by
-    //     lang->char_type
-    // Rules:
-    //   if begin inlist is a begin char then it must match begin word
-    //   if end   inlist is a end   char then it must match end word
-    //   chop all begin/end chars from the begin/end of word and inlist
-    //  unless ignore_accents
-    //   accents must match
-    //  unless case_insensitive
-    //   (note: there are 3 posssible casings lower, upper and title)
-    //   if is lower begin inlist then begin word can be any casing
-    //   if not                   then begin word must be the same case
-    //   if word is all upper than casing of inlist can be anything
-    //   otherwise the casing of tail begin and tail inlist must match
-  };
-
-  struct ConvertWord {
-    const Language * lang;
-    bool strip_accents;
-    ConvertWord(const Language * l = 0)
-      : lang(l), strip_accents(false) {}
-    void convert(ParmString in, String & out) const
-    {
-      if (!strip_accents) {
-	out += in;
-      } else {
-	for (unsigned int i = 0; i != in.size(); ++i)
-	  out += lang->de_accent(in[i]);
-      }
-    }
-    void convert(ParmString in, char * out) const
-    {
-      if (!strip_accents) {
-        memcpy(out, in, in.size() + 1);
-      } else {
-        unsigned int i = 0;
-	for (; i != in.size(); ++i)
-	  out[i] = lang->de_accent(in[i]);
-        out[i] = '\0';
-      }
-    }
   };
 
   String get_stripped_chars(const Language & l);
