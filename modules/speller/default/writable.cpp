@@ -696,8 +696,8 @@ bool WritableReplDict::repl_lookup(const WordEntry & w, WordEntry & o) const
     SensitiveCompare c(lang()); // FIXME: This is not exactly right
     WordEntry tmp;
     WritableReplDict::lookup(w.word, &c, tmp);
+    if (!tmp) return false;
     repls = get_vector(tmp.word);
-    if (!repls) return false;
   }
   o.clear();
   repl_init(repls, o);

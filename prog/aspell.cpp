@@ -38,7 +38,7 @@
 #include "check_funs.hpp"
 #include "config.hpp"
 #include "convert.hpp"
-#include "document_checker.hpp"
+#include "checker.hpp"
 #include "enumeration.hpp"
 #include "errors.hpp"
 #include "file_util.hpp"
@@ -653,32 +653,10 @@ void print_elements(const AspellWordList * wl) {
   COUT.printf("%u: %s\n", count, line.c_str());
 }
 
-struct StatusFunInf 
+Checker * new_checker(AspellSpeller * speller)
 {
-  aspeller::SpellerImpl * real_speller;
-  bool verbose;
-};
-
-void status_fun(void * d, Token, int correct)
-{
-  StatusFunInf * p = static_cast<StatusFunInf *>(d);
-  if (p->verbose && correct) {
-    const CheckInfo * ci = p->real_speller->check_info();
-    if (ci->compound)
-      COUT.put("-\n");
-    else if (ci->pre_flag || ci->suf_flag)
-      COUT.printf("+ %s\n", ci->word.str());
-    else
-      COUT.put("*\n");
-  }
-}
-
-DocumentChecker * new_checker(AspellSpeller * speller, 
-			      StatusFunInf & status_fun_inf) 
-{
-  EXIT_ON_ERR_SET(new_document_checker(reinterpret_cast<Speller *>(speller)),
-		  StackPtr<DocumentChecker>, checker);
-  checker->set_status_fun(status_fun, &status_fun_inf);
+  EXIT_ON_ERR_SET(new_checker(reinterpret_cast<Speller *>(speller)),
+		  StackPtr<Checker>, checker);
   return checker.release();
 }
 
@@ -695,7 +673,7 @@ void pipe()
   assert(setvbuf(stdout, 0, _IOLBF, 0) == 0);
 #endif
 
-  bool terse_mode = true;
+  bool terse_mode = false;
   bool do_time = options->retrieve_bool("time");
   bool suggest = options->retrieve_bool("suggest");
   bool include_guesses = options->retrieve_bool("guess");
@@ -727,11 +705,7 @@ void pipe()
   if (do_time)
     COUT << _("Time to load word list: ")
          << (clock() - start)/(double)CLOCKS_PER_SEC << "\n";
-  StatusFunInf status_fun_inf;
-  status_fun_inf.real_speller = real_speller;
-  bool & print_star = status_fun_inf.verbose;
-  print_star = true;
-  StackPtr<DocumentChecker> checker(new_checker(speller, status_fun_inf));
+  StackPtr<Checker> checker(new_checker(speller));
   int c;
   const char * w;
   CharVector buf;
@@ -793,11 +767,9 @@ void pipe()
       goto reload_filters;
     case '!':
       terse_mode = true;
-      print_star = false;
       break;
     case '%':
       terse_mode = false;
-      print_star = true;
       break;
     case '$':
       if (line[1] == '$') {
@@ -853,73 +825,87 @@ void pipe()
       line0 = line;
       line += ignore;
       checker->process(line, strlen(line));
-      while (Token token = checker->next_misspelling()) {
-	word = line + token.offset;
-	word[token.len] = '\0';
-        const char * cword = iconv(word);
-        String guesses, guess;
-        const CheckInfo * ci = real_speller->check_info();
-        aspeller::CasePattern casep 
-          = real_speller->lang().case_pattern(cword);
-        while (ci) {
-          guess.clear();
-          if (ci->pre_add && ci->pre_add[0])
-            guess.append(ci->pre_add, ci->pre_add_len).append('+');
-          guess.append(ci->word);
-          if (ci->pre_strip_len > 0) 
-            guess.append('-').append(ci->word.str(), ci->pre_strip_len);
-          if (ci->suf_strip_len > 0) 
-            guess.append('-').append(ci->word.str() - ci->suf_strip_len, ci->suf_strip_len);
-          if (ci->suf_add && ci->suf_add[0])
-            guess.append('+').append(ci->suf_add, ci->suf_add_len);
-          real_speller->lang().fix_case(casep, guess.data(), guess.data());
-          guesses << ", " << oconv(guess.str());
-          ci = ci->next;
+      const Token * token = 0;
+      while (token = checker->next(), token) {
+        if (token->correct) {
+          if (!terse_mode) {
+            const CheckInfo * ci = real_speller->check_info();
+            if (ci->compound)
+              COUT.put("-\n");
+            else if (ci->pre_flag || ci->suf_flag)
+              COUT.printf("+ %s\n", ci->word.str());
+            else
+              COUT.put("*\n");
+          }
+        } else {
+          word = line + token->begin.offset;
+          unsigned word_len = token->end.offset - token->begin.offset;
+          word[word_len] = '\0';
+          const char * cword = iconv(word);
+          String guesses, guess;
+          const CheckInfo * ci = real_speller->check_info();
+          aspeller::CasePattern casep 
+            = real_speller->lang().case_pattern(cword);
+          while (ci) {
+            guess.clear();
+            if (ci->pre_add && ci->pre_add[0])
+              guess.append(ci->pre_add, ci->pre_add_len).append('+');
+            guess.append(ci->word);
+            if (ci->pre_strip_len > 0) 
+              guess.append('-').append(ci->word.str(), ci->pre_strip_len);
+            if (ci->suf_strip_len > 0) 
+              guess.append('-').append(ci->word.str() - ci->suf_strip_len, ci->suf_strip_len);
+            if (ci->suf_add && ci->suf_add[0])
+              guess.append('+').append(ci->suf_add, ci->suf_add_len);
+            real_speller->lang().fix_case(casep, guess.data(), guess.data());
+            guesses << ", " << oconv(guess.str());
+            ci = ci->next;
+          }
+          start = clock();
+          const AspellWordList * suggestions = 0;
+          if (suggest) 
+            suggestions = aspell_speller_suggest(speller, word, -1);
+          finish = clock();
+          unsigned offset = mb_len(line0, token->begin.offset + ignore);
+          if (suggestions && !aspell_word_list_empty(suggestions)) 
+          {
+            COUT.printf("& %s %u %u:", word, 
+                        aspell_word_list_size(suggestions), offset);
+            AspellStringEnumeration * els 
+              = aspell_word_list_elements(suggestions);
+            if (options->retrieve_bool("reverse")) {
+              Vector<String> sugs;
+              sugs.reserve(aspell_word_list_size(suggestions));
+              while ( ( w = aspell_string_enumeration_next(els)) != 0)
+                sugs.push_back(w);
+              Vector<String>::reverse_iterator i = sugs.rbegin();
+              while (true) {
+                COUT.printf(" %s", i->c_str());
+                ++i;
+                if (i == sugs.rend()) break;
+                COUT.put(',');
+              }
+            } else {
+              while ( ( w = aspell_string_enumeration_next(els)) != 0) {
+                COUT.printf(" %s%s", w, 
+                            aspell_string_enumeration_at_end(els) ? "" : ",");
+              }
+            }
+            delete_aspell_string_enumeration(els);
+            if (include_guesses)
+              COUT.put(guesses);
+            COUT.put('\n');
+          } else {
+            if (guesses.empty())
+              COUT.printf("# %s %u\n", word, offset);
+            else
+              COUT.printf("? %s 0 %u: %s", word, offset,
+                          guesses.c_str() + 2);
+          }
+          if (do_time)
+            COUT.printf(_("Suggestion Time: %f\n"), 
+                        (finish-start)/(double)CLOCKS_PER_SEC);
         }
-	start = clock();
-        const AspellWordList * suggestions = 0;
-        if (suggest) 
-          suggestions = aspell_speller_suggest(speller, word, -1);
-	finish = clock();
-        unsigned offset = mb_len(line0, token.offset + ignore);
-	if (suggestions && !aspell_word_list_empty(suggestions)) 
-        {
-          COUT.printf("& %s %u %u:", word, 
-                      aspell_word_list_size(suggestions), offset);
-	  AspellStringEnumeration * els 
-	    = aspell_word_list_elements(suggestions);
-	  if (options->retrieve_bool("reverse")) {
-	    Vector<String> sugs;
-	    sugs.reserve(aspell_word_list_size(suggestions));
-	    while ( ( w = aspell_string_enumeration_next(els)) != 0)
-	      sugs.push_back(w);
-	    Vector<String>::reverse_iterator i = sugs.rbegin();
-	    while (true) {
-              COUT.printf(" %s", i->c_str());
-	      ++i;
-	      if (i == sugs.rend()) break;
-              COUT.put(',');
-	    }
-	  } else {
-	    while ( ( w = aspell_string_enumeration_next(els)) != 0) {
-              COUT.printf(" %s%s", w, 
-                          aspell_string_enumeration_at_end(els) ? "" : ",");
-	    }
-	  }
-	  delete_aspell_string_enumeration(els);
-          if (include_guesses)
-            COUT.put(guesses);
-	  COUT.put('\n');
-	} else {
-          if (guesses.empty())
-            COUT.printf("# %s %u\n", word, offset);
-          else
-            COUT.printf("? %s 0 %u: %s", word, offset,
-                        guesses.c_str() + 2);
-	}
-	if (do_time)
-          COUT.printf(_("Suggestion Time: %f\n"), 
-                      (finish-start)/(double)CLOCKS_PER_SEC);
       }
       COUT.put('\n');
     }
@@ -929,7 +915,7 @@ void pipe()
     BREAK_ON_ERR(config->replace("encoding", word));
     BREAK_ON_ERR(reload_filters(real_speller));
     checker.del();
-    checker = new_checker(speller, status_fun_inf);
+    //checker = new_checker(speller, status_fun_inf);
     iconv.reset(real_speller->to_internal_);
     oconv.reset(real_speller->from_internal_);
     continue;

@@ -30,9 +30,9 @@ namespace acommon {
   class Config;
   class WordList;
   class FullConvert;
-  class Tokenizer;
   class Filter;
   class DocumentChecker;
+  class Checker;
 
   struct CheckInfo {
     const CheckInfo * next;
@@ -76,9 +76,7 @@ namespace acommon {
     // the setup class will take over for config
     virtual PosibErr<void> setup(Config *) = 0;
 
-    // sets up the tokenizer class
-    // should be called only after this class is setup
-    virtual void setup_tokenizer(Tokenizer *) = 0;
+    virtual Checker * new_checker() = 0;
 
     ////////////////////////////////////////////////////////////////
     // 

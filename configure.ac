@@ -553,7 +553,7 @@ AC_TRY_COMPILE(
 
 AC_CONFIG_FILES([Makefile gen/Makefile common/Makefile lib/Makefile data/Makefile 
                  m4/Makefile 
-                 auto/Makefile modules/Makefile modules/tokenizer/Makefile
+                 auto/Makefile modules/Makefile 
                  modules/speller/Makefile modules/speller/default/Makefile
 		 interfaces/Makefile interfaces/cc/Makefile
 		 scripts/Makefile examples/Makefile

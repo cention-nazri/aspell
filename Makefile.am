@@ -49,9 +49,8 @@ libaspell_la_SOURCES =\
   common/can_have_error.cpp\
   common/convert.cpp\
   common/convert_filter.cpp\
-  common/tokenizer.cpp\
   common/speller.cpp\
-  common/document_checker.cpp\
+  common/checker.cpp\
   common/filter.cpp\
   common/objstack.cpp \
   common/strtonum.cpp\
@@ -64,6 +63,7 @@ libaspell_la_SOURCES =\
   modules/speller/default/phonetic.cpp\
   modules/speller/default/writable.cpp\
   modules/speller/default/speller_impl.cpp\
+  modules/speller/default/checker_impl.cpp\
   modules/speller/default/phonet.cpp\
   modules/speller/default/typo_editdist.cpp\
   modules/speller/default/editdist.cpp\
@@ -71,13 +71,11 @@ libaspell_la_SOURCES =\
   modules/speller/default/language.cpp\
   modules/speller/default/leditdist.cpp\
   modules/speller/default/affix.cpp\
-  modules/tokenizer/basic.cpp\
   lib/filter-c.cpp\
   lib/word_list-c.cpp\
   lib/info-c.cpp\
   lib/mutable_container-c.cpp\
   lib/error-c.cpp\
-  lib/document_checker-c.cpp\
   lib/string_map-c.cpp\
   lib/new_config.cpp\
   lib/config-c.cpp\

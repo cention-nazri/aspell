@@ -55,7 +55,7 @@ namespace aspeller {
     PosibErr<void> setup(Config *);
     PosibErr<void> reload_conv();
 
-    void setup_tokenizer(Tokenizer *);
+    Checker * new_checker();
 
     //
     // Low level Word List Management methods

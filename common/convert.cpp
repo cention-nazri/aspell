@@ -541,8 +541,9 @@ namespace acommon {
       }
       return no_err;
     }
-    bool encode(FilterChar * &, FilterChar * &, FilterCharVector &) const {
-      return true;
+    void encode(const FilterChar * b, const FilterChar * e, 
+                FilterCharVector & out) const {
+      out.append(b, e - b);
     }
   };
 
@@ -647,12 +648,10 @@ namespace acommon {
       }
       return no_err;
     }
-    bool encode(FilterChar * & in0, FilterChar * & stop,
+    void encode(const FilterChar * in, const FilterChar * stop,
                 FilterCharVector & out) const {
-      FilterChar * in = in0;
       for (; in != stop; ++in)
-        *in = lookup(*in);
-      return true;
+        out.append(lookup(*in));
     }
   };
 
@@ -696,28 +695,23 @@ namespace acommon {
       }
       return no_err;
     }
-    bool encode(FilterChar * & in, FilterChar * & stop,
-                FilterCharVector & buf) const {
-      buf.clear();
+    void encode(const FilterChar * in, const FilterChar * stop,
+                FilterCharVector & out) const {
       while (in < stop) {
         if (*in == 0) {
-          buf.append(FilterChar(0));
+          out.append(FilterChar(0));
           ++in;
         } else {
           NormLookupRet<E,FilterChar> ret = norm_lookup<E>(data, in, stop, (const byte *)"?", in);
           const FilterChar * end = ret.last + 1;
           unsigned width = 0;
           for (; in != end; ++in) width += in->width;
-          buf.append(FilterChar(ret.to[0], width));
+          out.append(FilterChar(ret.to[0], width));
           for (unsigned i = 1; i < E::max_to && ret.to[i]; ++i) {
-            buf.append(FilterChar(ret.to[i],0));
+            out.append(FilterChar(ret.to[i],0));
           }
         }
       }
-      buf.append(0);
-      in = buf.pbegin();
-      stop = buf.pend();
-      return true;
     }
   };
 
@@ -834,6 +828,10 @@ namespace acommon {
         to_utf8(*in, out);
       }
       return no_err;
+    }
+    void encode(const FilterChar * in, const FilterChar * stop, 
+                FilterCharVector & out) const {
+      abort();
     }
   };
 

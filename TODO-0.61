@@ -28,7 +28,7 @@ Also need to update the manual to reflect the changes.
 
 3)
 Rewrite the document checker interface to correctly handle the case
-when the replacement is more than one word.
+when the replacement is more than one word. [DONE]
 
 4) 
 Create a special pipe mode that ignores special charaters at the

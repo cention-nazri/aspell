@@ -49,9 +49,9 @@ namespace acommon {
                         CharVector & out) const = 0;
     virtual PosibErr<void> encode_ec(const FilterChar * in, const FilterChar * stop, 
                                      CharVector & out, ParmStr orig) const = 0;
-    // may convert inplace
-    virtual bool encode(FilterChar * & in, FilterChar * & stop, 
-                        FilterCharVector & buf) const {return false;}
+    virtual void encode(const FilterChar * in, const FilterChar * stop, 
+                        FilterCharVector & buf) const = 0;
+
     static PosibErr<Encode *> get_new(const String &, const Config *);
     virtual ~Encode() {}
   };
@@ -150,9 +150,9 @@ namespace acommon {
 		CharVector & out) const
       {encode_->encode(in,stop,out);}
 
-    bool encode(FilterChar * & in, FilterChar * & stop, 
+    void encode(const FilterChar * in, const FilterChar * stop, 
                 FilterCharVector & buf) const
-      {return encode_->encode(in,stop,buf);}
+      {encode_->encode(in,stop,buf);}
 
     // convert has the potential to use internal buffers and
     // is therefore not const.  It is also not thread safe
