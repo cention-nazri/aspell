@@ -423,9 +423,9 @@ void new_line(int & l, int height) {
 
 void display_misspelled_word() {
 
-  const char * word_begin = &*state->word_begin_;
-  const char * word_end   = word_begin + state->word_size_;
-  CheckerString::Lines::iterator cur_line = state->cur_line_;  
+  const char * word_begin = state->word_begin();
+  const char * word_end   = state->word_end();
+  LineIterator cur_line = state->cur_line();
 
 #if   HAVE_LIBCURSES
 
@@ -435,26 +435,25 @@ void display_misspelled_word() {
     getmaxyx(text_w,height,width);
     assert(height > 0 && width > 0);
 
-    //CheckerString::Iterator i = word_begin;
-
-    CheckerString::Lines::iterator i = cur_line;
+    LineIterator i = cur_line;
     
     //
     // backup height/3 lines
     //
     int l = height/3;
-    while (i > state->lines_.begin() && l > 0) {
+    while (!i.off_end() && l > 0) {
       --l;
       --i;
     }
-    
+    if (i.off_end()) ++i;
+
     while (l != 0)
       new_line(l,height);
 
     l = -1;
 
     const char * j = i->pbegin();
-    while (i != state->lines_.end()) {
+    while (!i.off_end()) {
 
       int y,x;
       getyx(text_w,y,x);
