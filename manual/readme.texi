@@ -18,6 +18,7 @@ The latest version can always be found at GNU Aspell's home page at
 * Generic Install Instructions::  
 * Curses Notes::                
 * Loadable Filter Notes::       
+* Upgrading from Aspell 0.60::  
 * Upgrading from Aspell 0.50::  
 * Upgrading from Aspell .33/Pspell .12::  
 * Upgrading from a Pre-0.50 snapshot::  
@@ -120,6 +121,22 @@ get Aspell to work correctly you will need to avoid compiling the
 filters as individual modules by using the
 @option{--disable-compile-in-filters} when configuring Aspell with
 @command{./configure}.
+
+@node Upgrading from Aspell 0.60
+@appendixsec Upgrading from Aspell 0.60
+
+The dictionary format has NOT changes however the filter interface
+HAS.  For this reasons things are now, by default, installed in
+lib/aspel-0.61 (instead of lib/aspell-0.60) you can just copy the dict
+files....
+
+@appendixsubsec Binary Compatibility
+
+The binary interface is mostly compatible.... should not cause a
+problem unless ... document_checker or filter ...
+
+If chose to incremenet than binary will not be binary with either
+Aspell 0.60 or 0.50. ...
 
 @node Upgrading from Aspell 0.50
 @appendixsec Upgrading from Aspell 0.50
