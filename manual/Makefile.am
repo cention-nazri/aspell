@@ -4,7 +4,7 @@ info_TEXINFOS = aspell.texi aspell-dev.texi
 MAKEINFOFLAGS = --enable-encoding
 
 aspell_TEXINFOS = readme.texi fdl.texi lgpl.texi \
-  lang-supported.texi lang-unsupported.texi
+  lang-supported.texi lang-unsupported.texi crubadan.texi
 aspell_dev_TEXINFOS = mksrc.texi fdl.texi
 
 man_MANS = aspell.1         pspell-config.1    word-list-compress.1\

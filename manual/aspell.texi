@@ -1,5 +1,5 @@
 \input texinfo   @c -*-texinfo-*-
-@comment $Id: aspell.texi,v 1.5.2.6 2004/06/02 10:34:32 kevina Exp $
+@comment $Id: aspell.texi,v 1.39 2004/06/02 15:07:34 kevina Exp $
 @comment %**start of header
 @setfilename aspell.info
 @settitle GNU Aspell 0.60
@@ -3240,49 +3240,22 @@ support.
 @node Planned Dictionaries
 @appendixsec Notes on Planned Dictionaries
 
-Ispell dictionaries are available for the following languages:
-
-@itemize
-@item Estonian (et)
-@end itemize
-
 Kevin Patrick Scannell has word lists available for the following
 languages based on his web crawling software
 (@uref{http://borel.slu.edu/crubadan/}) but needs someone to proofread
 them:
 
-@itemize
-@item Asturian (ast)
-@item Basque (eu)
-@item Cebuano (ceb)
-@item Chamorro (ch)
-@item Cornish (kw)
-@item Frisian (fy)
-@item Ganda (lg)
-@item Haitian Creole (ht)
-@item Hawaiian (haw)
-@item Kalaallisut (kl)
-@item Limburgish (li)
-@item Low Saxon (nds)
-@item Luganda (lg)
-@item Northern Sotho (nso)
-@item Occitan (oc)
-@item Southern Sotho (st)
-@item Tok Pisin (tpi)
-@item Venda (ve)
-@end itemize
+@include crubadan.texi
 
 @noindent
 If you are interested please contact him at scannell at slu edu.
 
-An Ispell hash table has been discovered for Sardinian (sc) at
-@uref{http://@/www.ditzionariu.org/@/correttore.asp} and
-Albanian (sq) at @uref{http://@/www.7kosova.com/kde-shqip/@/ispell/ispell.html}.
-However, the raw
-word lists are not provided and the authors has not been responding to
-emails.  If you know how to disassemble a Ispell hash table or
-the wear abouts of the word lists used to create the hash tables I
-would appreciate hearing from you.
+An Ispell hash table has been discovered for Albanian (sq) at
+@uref{http://@/www.7kosova.com/kde-shqip/@/ispell/ispell.html}.
+However, the raw word list is not provided and the author has not
+been responding to emails.  If you know how to disassemble a Ispell hash
+table or the wear abouts of the word list used to create the hash
+table I would appreciate hearing from you.
 
 A dictionary marked as "Planned" or "Maybe" but not listed in
 the section means that someone has expressed an interest in creating
