@@ -1,0 +1,22 @@
+/* common/settings.h.in.  Generated automatically from configure.ac by autoheader.  */
+
+/* Define if you have the <dlfcn.h> header file. */
+#undef HAVE_DLFCN_H
+
+/* Defined if mmap and friends is supported */
+#undef HAVE_MMAP
+
+/* Name of package */
+#undef PACKAGE
+
+/* Defined if STL rel_ops polute the global namespace */
+#undef REL_OPS_POLLUTION
+
+/* Defined if file ino is supported */
+#undef USE_FILE_INO
+
+/* Defined if file locking and truncating is supported */
+#undef USE_FILE_LOCKS
+
+/* Version number of package */
+#undef VERSION
