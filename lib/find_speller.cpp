@@ -314,13 +314,16 @@ namespace acommon {
       String code;
       PosibErr<String> str = config->retrieve("lang");
       p = str.data.c_str();
-      code += asc_tolower(*p++); code += asc_tolower(*p++);
+      while (asc_isalpha(*p))
+        code += asc_tolower(*p++);
       String lang = code;
       bool have_country = false;
       if (*p == '-' || *p == '_') {
         ++p;
         have_country = true;
-        code += '_'; code += asc_toupper(*p++); code += asc_toupper(*p++);
+        code += '_'; 
+        while (asc_isalpha(*p))
+          code += asc_toupper(*p++);
       }
   
       //

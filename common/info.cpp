@@ -394,22 +394,17 @@ namespace acommon {
     if (to_add->code.size() >= 2 
 	&& asc_isalpha(to_add->code[0]) && asc_isalpha(to_add->code[1])) 
     {
-      to_add->name[0] = asc_tolower(to_add->name[0]);
-      to_add->name[1] = asc_tolower(to_add->name[1]);
-      to_add->code[0] = asc_tolower(to_add->code[0]);
-      to_add->code[1] = asc_tolower(to_add->code[1]);
-      if (to_add->code.size() == 2); // do nothing
-      else if (to_add->code.size() == 5 && to_add->code[2] == '_' 
-	       && asc_isalpha(to_add->code[3]) 
-	       && asc_isalpha(to_add->code[4])) {
-	to_add->name[3] = asc_toupper(to_add->name[3]);
-	to_add->name[4] = asc_toupper(to_add->name[4]);
-	to_add->code[3] = asc_toupper(to_add->code[3]);
-	to_add->code[4] = asc_toupper(to_add->code[4]);
-      } else
-	return no_err;
-    } else
+      int s = strcspn(to_add->code.str(), "_");
+      if (s > 3) return no_err;
+      int i = 0;
+      for (; i != s; ++i)
+        to_add->name[i] = to_add->code[i] = asc_tolower(to_add->code[i]);
+      i++;
+      for (; i < to_add->code.size(); ++i)
+        to_add->name[i] = to_add->code[i] = asc_toupper(to_add->code[i]);
+    } else {
       return no_err;
+    }
     
     // Need to do it here as module is about to get a value
     // if it is null

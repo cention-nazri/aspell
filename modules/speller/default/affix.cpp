@@ -66,7 +66,7 @@ static char EMPTY[1] = {0};
 
 //////////////////////////////////////////////////////////////////////
 //
-//*Entry struct definations
+// Entry struct definations
 //
 
 struct Conds
