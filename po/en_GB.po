@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60-pre1\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-10-17 16:15-0600\n"
+"POT-Creation-Date: 2004-10-25 11:11-0600\n"
 "PO-Revision-Date: 2004-08-22 20:15-0400\n"
 "Last-Translator: Gareth Owen <gowen72@yahoo.com>\n"
 "Language-Team: English (British) <en_gb@li.org>\n"
@@ -726,202 +726,207 @@ msgstr "Unknown Action: %s"
 msgid "Invalid Input"
 msgstr "Invalid Input"
 
-#: prog/aspell.cpp:693
+#: prog/aspell.cpp:679
+#, fuzzy
+msgid "WARNING: Unable to enter Nroff mode.\n"
+msgstr "enter TeX mode."
+
+#: prog/aspell.cpp:699
 msgid "Time to load word list: "
 msgstr "Time to load word list: "
 
-#: prog/aspell.cpp:890
+#: prog/aspell.cpp:896
 #, c-format
 msgid "Suggestion Time: %f\n"
 msgstr "Suggestion Time: %f\n"
 
-#: prog/aspell.cpp:933
+#: prog/aspell.cpp:939
 msgid "You must specify a file name."
 msgstr "You must specify a file name."
 
-#: prog/aspell.cpp:943
+#: prog/aspell.cpp:949
 #, c-format
 msgid "Could not open the file \"%s\" for reading"
 msgstr "Could not open the file \"%s\" for reading"
 
-#: prog/aspell.cpp:958
+#: prog/aspell.cpp:964
 #, c-format
 msgid "Could not open the file \"%s\" for writing. File not saved."
 msgstr "Could not open the file \"%s\" for writing. File not saved."
 
-#: prog/aspell.cpp:971
+#: prog/aspell.cpp:977
 #, c-format
 msgid "Invalid keymapping: %s"
 msgstr "Invalid keymapping: %s"
 
-#: prog/aspell.cpp:991
+#: prog/aspell.cpp:997
 msgid "Ignore"
 msgstr "Ignore"
 
-#: prog/aspell.cpp:992
+#: prog/aspell.cpp:998
 msgid "Ignore all"
 msgstr "Ignore all"
 
-#: prog/aspell.cpp:993
+#: prog/aspell.cpp:999
 msgid "Replace"
 msgstr "Replace"
 
-#: prog/aspell.cpp:994
+#: prog/aspell.cpp:1000
 msgid "Replace all"
 msgstr "Replace all"
 
-#: prog/aspell.cpp:995
+#: prog/aspell.cpp:1001
 msgid "Add"
 msgstr "Add"
 
-#: prog/aspell.cpp:996
+#: prog/aspell.cpp:1002
 msgid "Add Lower"
 msgstr "Add Lower"
 
-#: prog/aspell.cpp:997
+#: prog/aspell.cpp:1003
 msgid "Abort"
 msgstr "Abort"
 
-#: prog/aspell.cpp:998
+#: prog/aspell.cpp:1004
 msgid "Exit"
 msgstr "Exit"
 
-#: prog/aspell.cpp:1074
+#: prog/aspell.cpp:1080
 msgid "Are you sure you want to abort (y/n)? "
 msgstr "Are you sure you want to abort (y/n)? "
 
 #. TRANSLATORS: The user may input any of these characters to say "yes".
 #. MUST ONLY CONSIST OF ASCII CHARACTERS.
-#: prog/aspell.cpp:1078
+#: prog/aspell.cpp:1084
 msgid "Yy"
 msgstr "Yy"
 
-#: prog/aspell.cpp:1099
+#: prog/aspell.cpp:1105
 msgid "With: "
 msgstr "With: "
 
-#: prog/aspell.cpp:1116
+#: prog/aspell.cpp:1122
 msgid "Sorry that is an invalid choice!"
 msgstr "Sorry that is an invalid choice!"
 
-#: prog/aspell.cpp:1337
+#: prog/aspell.cpp:1343
 msgid "Sorry \"filter\" is currently unimplemented.\n"
 msgstr "Sorry \"filter\" is currently not implemented.\n"
 
-#: prog/aspell.cpp:1471
+#: prog/aspell.cpp:1477
 msgid "Can't merge a master word list yet. Sorry."
 msgstr "Can't merge a master word list yet. Sorry."
 
-#: prog/aspell.cpp:1495
+#: prog/aspell.cpp:1501
 msgid "Sorry \"create/merge personal\" is currently unimplemented.\n"
 msgstr "Sorry \"create/merge personal\" is currently not implemented.\n"
 
-#: prog/aspell.cpp:1504 prog/aspell.cpp:1560
+#: prog/aspell.cpp:1510 prog/aspell.cpp:1566
 #, c-format
 msgid "Sorry I won't overwrite \"%s\""
 msgstr "Sorry I won't overwrite \"%s\""
 
-#: prog/aspell.cpp:1551
+#: prog/aspell.cpp:1557
 msgid "Sorry \"create/merge repl\" is currently unimplemented.\n"
 msgstr "Sorry \"create/merge repl\" is currently not implemented.\n"
 
 #. TRANSLATORS: These should all be formated to fit in 80 column or
 #. less
-#: prog/aspell.cpp:1857
+#: prog/aspell.cpp:1863
 msgid "Usage: aspell [options] <command>"
 msgstr "Usage: aspell [options] <command>"
 
-#: prog/aspell.cpp:1858
+#: prog/aspell.cpp:1864
 msgid "<command> is one of:"
 msgstr "<command> is one of:"
 
-#: prog/aspell.cpp:1859
+#: prog/aspell.cpp:1865
 msgid "  -?|usage         display a brief usage message"
 msgstr "  -?|usage         display a brief usage message"
 
-#: prog/aspell.cpp:1860
+#: prog/aspell.cpp:1866
 msgid "  help             display a detailed help message"
 msgstr "  help             display a detailed help message"
 
-#: prog/aspell.cpp:1861
+#: prog/aspell.cpp:1867
 msgid "  -c|check <file>  to check a file"
 msgstr "  -c|check <file>  to check a file"
 
-#: prog/aspell.cpp:1862
+#: prog/aspell.cpp:1868
 msgid "  -a|pipe          \"ispell -a\" compatibility mode"
 msgstr "  -a|pipe          \"ispell -a\" compatibility mode"
 
-#: prog/aspell.cpp:1863
+#: prog/aspell.cpp:1869
 msgid "  [dump] config    dumps the current configuration to stdout"
 msgstr "  [dump] config    dumps the current configuration to stdout"
 
-#: prog/aspell.cpp:1864
+#: prog/aspell.cpp:1870
 msgid "  config <key>     prints the current value of an option"
 msgstr "  config <key>     prints the current value of an option"
 
-#: prog/aspell.cpp:1865
+#: prog/aspell.cpp:1871
 msgid "  [dump] dicts | filters | modes"
 msgstr "  [dump] dicts | filters | modes"
 
-#: prog/aspell.cpp:1866
+#: prog/aspell.cpp:1872
 msgid "    lists available dictionaries / filters / filter modes"
 msgstr "    lists available dictionaries / filters / filter modes"
 
-#: prog/aspell.cpp:1867
+#: prog/aspell.cpp:1873
 msgid "[options] is any of the following:"
 msgstr "[options] is any of the following:"
 
-#: prog/aspell.cpp:1880
+#: prog/aspell.cpp:1886
 msgid ""
 "  list             produce a list of misspelled words from standard input"
 msgstr ""
 "  list             produce a list of misspelled words from standard input"
 
-#: prog/aspell.cpp:1883
+#: prog/aspell.cpp:1889
 msgid ""
 "  soundslike       returns the sounds like equivalent for each word entered"
 msgstr ""
 "  soundslike       returns the sounds like equivalent for each word entered"
 
-#: prog/aspell.cpp:1884
+#: prog/aspell.cpp:1890
 msgid "  munch            generate possible root words and affixes"
 msgstr "  munch            generate possible root words and affixes"
 
-#: prog/aspell.cpp:1885
+#: prog/aspell.cpp:1891
 msgid "  expand [1-4]     expands affix flags"
 msgstr "  expand [1-4]     expands affix flags"
 
-#: prog/aspell.cpp:1886
+#: prog/aspell.cpp:1892
 msgid ""
 "  clean [strict]   cleans a word list so that every line is a valid word"
 msgstr ""
 "  clean [strict]   cleans a word list so that every line is a valid word"
 
-#: prog/aspell.cpp:1888
+#: prog/aspell.cpp:1894
 msgid "  -v|version       prints a version line"
 msgstr "  -v|version       prints a version line"
 
-#: prog/aspell.cpp:1889
+#: prog/aspell.cpp:1895
 msgid "  conv <from> <to> [<norm-form>]"
 msgstr "  conv <from> <to> [<norm-form>]"
 
-#: prog/aspell.cpp:1890
+#: prog/aspell.cpp:1896
 msgid "    converts from one encoding to another"
 msgstr "    converts from one encoding to another"
 
-#: prog/aspell.cpp:1891
+#: prog/aspell.cpp:1897
 msgid "  norm (<norm-map> | <from> <norm-map> <to>) [<norm-form>]"
 msgstr "  norm (<norm-map> | <from> <norm-map> <to>) [<norm-form>]"
 
-#: prog/aspell.cpp:1892
+#: prog/aspell.cpp:1898
 msgid "    perform Unicode normalization"
 msgstr "    perform Unicode normalisation"
 
-#: prog/aspell.cpp:1895
+#: prog/aspell.cpp:1901
 msgid "  dump|create|merge master|personal|repl [word list]"
 msgstr "  dump|create|merge master|personal|repl [word list]"
 
-#: prog/aspell.cpp:1896
+#: prog/aspell.cpp:1902
 msgid ""
 "    dumps, creates or merges a master, personal, or replacement word list."
 msgstr ""
@@ -929,7 +934,7 @@ msgstr ""
 
 #. TRANSLATORS: "none", "internal" and "strict" are literal values
 #. and should not be translated.
-#: prog/aspell.cpp:1900
+#: prog/aspell.cpp:1906
 msgid ""
 "  <norm-form>      normalization form to use, either none, internal, or "
 "strict"
@@ -937,7 +942,7 @@ msgstr ""
 "  <norm-form>      normalisation form to use, either none, internal, or "
 "strict"
 
-#: prog/aspell.cpp:1910
+#: prog/aspell.cpp:1916
 #, c-format
 msgid ""
 "\n"
@@ -948,7 +953,7 @@ msgstr ""
 "Aspell %s.  Copyright 2000-2004 by Kevin Atkinson.\n"
 "\n"
 
-#: prog/aspell.cpp:1944
+#: prog/aspell.cpp:1950
 msgid ""
 "Available Dictionaries:\n"
 "    Dictionaries can be selected directly via the \"-d\" or \"master\"\n"
@@ -960,7 +965,7 @@ msgstr ""
 "    option.  They can also be selected indirectly via the \"lang\",\n"
 "    \"variety\", and \"size\" options.\n"
 
-#: prog/aspell.cpp:1965
+#: prog/aspell.cpp:1971
 msgid ""
 "Available Filters (and associated options):\n"
 "    Filters can be added or removed via the \"filter\" option.\n"
@@ -968,7 +973,7 @@ msgstr ""
 "Available Filters (and associated options):\n"
 "    Filters can be added or removed via the \"filter\" option.\n"
 
-#: prog/aspell.cpp:1972
+#: prog/aspell.cpp:1978
 #, c-format
 msgid ""
 "\n"
@@ -978,7 +983,7 @@ msgstr ""
 "  %s filter: %s\n"
 
 #. TRANSLATORS: This should be formated to fit in 80 column or less
-#: prog/aspell.cpp:1989
+#: prog/aspell.cpp:1995
 msgid ""
 "Available Filter Modes:\n"
 "    Filter Modes are reconfigured combinations of filters optimized for\n"
