@@ -15,7 +15,8 @@ done
 
 case $command in
 -A|-D       ) echo "Aspell does not support the $command mode.";;
--a|-l|-v*   ) exec aspell "$@" ;;
+-a|-v*      ) exec aspell "$@" ;;
+-l          ) shift; exec aspell list "$@" ;;
 -c          ) shift; exec aspell munch "$@" ;;
 -e          ) shift; exec aspell expand "$@" ;;
 -e?         ) shift; exec aspell expand `expr substr $command 3 1` "$@" ;;
