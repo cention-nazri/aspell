@@ -7,7 +7,7 @@ from CVS.
   libtool 1.5 or better
   gettext 0.13
   autoconf 2.50 or better
-  automake 1.7 (earlier versions *might* work)
+  automake 1.7 or better
   makeinfo
 
 Before the build:
