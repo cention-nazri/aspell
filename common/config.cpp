@@ -1062,9 +1062,9 @@ namespace acommon {
     , {"filter",   KeyInfoList  , "url",
        N_("add or removes a filter")}
     , {"filter-path", KeyInfoList, FILTER_DIR,
-       N_("path(es) aspell looks for filters (.so/.dll/.flt);")}
+       N_("path(es) aspell looks for filters (.so/.dll/.flt)")}
     , {"option-path", KeyInfoList, FILTER_OPT_DIR,
-       N_("path(es) aspell looks for options descriptions;")}
+       N_("path(es) aspell looks for options descriptions")}
     , {"mode",     KeyInfoString, "url",             mode_string }
     , {"extra-dicts", KeyInfoList, "",
        N_("extra dictionaries to use")}
@@ -1135,6 +1135,8 @@ namespace acommon {
     //
     , {"backup",  KeyInfoBool, "true",
        N_("create a backup file by appending \".bak\"")}
+    , {"include-guesses", KeyInfoBool, "false",
+       N_("Make possible root/affix combinations not in the dictionary")}
     , {"keymapping", KeyInfoString, "aspell",
        N_("keymapping for check mode, one of aspell ispell")}
     , {"reverse", KeyInfoBool, "false",

@@ -68,6 +68,8 @@ void master();
 void personal();
 void repl();
 void soundslike();
+void munch();
+void expand();
 
 void print_error(ParmString msg)
 {
@@ -138,7 +140,9 @@ const PossibleOption possible_options[] = {
   OPTION("dont-backup",      'x' , 0),
   OPTION("run-together",     'C',  0),
   OPTION("dont-run-together",'B',  0),
-
+  OPTION("include-guesses",      'm', 0),
+  OPTION("dont-include-guesses", 'P', 0),
+  
   COMMAND("version",   'v', 0),
   COMMAND("help",      '?', 0),
   COMMAND("config",    '\0', 0),
@@ -146,6 +150,8 @@ const PossibleOption possible_options[] = {
   COMMAND("pipe",      'a', 0),
   COMMAND("filter",    '\0', 0),
   COMMAND("soundslike",'\0', 0),
+  COMMAND("munch",     '\0', 0),
+  COMMAND("expand",    '\0', 0),
   COMMAND("list",      'l', 0),
   COMMAND("dicts",     '\0', 0),
 
@@ -153,8 +159,8 @@ const PossibleOption possible_options[] = {
   COMMAND("create", '\0', 1),
   COMMAND("merge",  '\0', 1),
 
-  ISPELL_COMP('n',0), ISPELL_COMP('P',0), ISPELL_COMP('m',0),
-  ISPELL_COMP('S',0), ISPELL_COMP('w',1), ISPELL_COMP('T',1),
+  ISPELL_COMP('n',0), ISPELL_COMP('S',0), 
+  ISPELL_COMP('w',1), ISPELL_COMP('T',1),
 
   {"",'\0'}, {"",'\0'}
 };
@@ -332,6 +338,10 @@ int main (int argc, const char *argv[])
     filter();
   else if (action_str == "soundslike")
     soundslike();
+  else if (action_str == "munch")
+    munch();
+  else if (action_str == "expand")
+    expand();
   else if (action_str == "dump")
     action = do_dump;
   else if (action_str == "create")
@@ -503,6 +513,7 @@ void pipe()
   bool terse_mode = true;
   bool do_time = options->retrieve_bool("time");
   bool suggest = options->retrieve_bool("suggest");
+  bool include_guesses = options->retrieve_bool("include-guesses");
   clock_t start,finish;
   start = clock();
 
@@ -641,6 +652,23 @@ void pipe()
       while (Token token = checker->next_misspelling()) {
 	word = line + token.offset;
 	word[token.len] = '\0';
+        String guesses, guess;
+        const CheckInfo * ci = reinterpret_cast<Speller *>(speller)->check_info();
+        aspeller::CasePattern casep 
+          = aspeller::case_pattern(reinterpret_cast<aspeller::SpellerImpl *>
+                                   (speller)->lang(), word);
+        while (ci) {
+          guess.clear();
+          if (ci->pre_add && ci->pre_add[0])      guess << ci->pre_add << "+";
+          guess << ci->word;
+          if (ci->pre_strip && ci->pre_strip[0]) guess << "-" << ci->pre_strip;
+          if (ci->suf_strip && ci->suf_strip[0]) guess << "-" << ci->suf_strip;
+          if (ci->suf_add   && ci->suf_add[0])   guess << "+" << ci->suf_add;
+          guesses << ", " 
+                  << aspeller::fix_case(reinterpret_cast<aspeller::SpellerImpl * >(speller)->lang(),
+                                        casep, guess);
+          ci = ci->next;
+        }
 	start = clock();
         const AspellWordList * suggestions = 0;
         if (suggest) 
@@ -674,15 +702,22 @@ void pipe()
 	    }
 	  }
 	  delete_aspell_string_enumeration(els);
+          if (include_guesses)
+            COUT << guesses;
 	  COUT << "\n";
 	} else {
-	  COUT << "# " << word << " " 
-	       << token.offset + ignore
-	       << "\n";
+          if (guesses.empty())
+            COUT << "# " << word << " " 
+                 << token.offset + ignore
+                 << "\n";
+          else
+            COUT << "? " << word << " 0 " 
+                 << token.offset + ignore
+                 << ": " << guesses.c_str() + 2;
 	}
 	if (do_time)
-	  COUT << _("Suggestion Time: ")
-	       << (finish-start)/(double)CLOCKS_PER_SEC << "\n";
+          COUT << _("Suggestion Time: ")
+               << (finish-start)/(double)CLOCKS_PER_SEC << "\n";
       }
       COUT << "\n";
     }
@@ -1256,6 +1291,79 @@ void soundslike() {
   } 
 }
 
+//////////////////////////
+//
+// munch
+//
+
+void munch() 
+{
+  using namespace aspeller;
+  CachePtr<Language> lang;
+  PosibErr<Language *> res = new_language(*options);
+  if (!res) {print_error(res.get_err()->mesg); exit(1);}
+  lang.reset(res.data);
+  String word;
+  CheckList * cl = new_check_list();
+  while (CIN >> word) {
+    lang->affix()->munch(word, cl);
+    COUT << word;
+    for (const aspeller::CheckInfo * ci = check_list_data(cl); ci; ci = ci->next)
+    {
+      COUT << ' ' << ci->word << '/';
+      if (ci->pre_flag != 0) COUT << static_cast<char>(ci->pre_flag);
+      if (ci->suf_flag != 0) COUT << static_cast<char>(ci->suf_flag);
+    }
+    COUT << '\n';
+  }
+  delete_check_list(cl);
+}
+
+//////////////////////////
+//
+// expand
+//
+
+void expand() 
+{
+  int level = 1;
+  if (args.size() != 0)
+    level = atoi(args[0].c_str());
+  
+  using namespace aspeller;
+  CachePtr<Language> lang;
+  PosibErr<Language *> res = new_language(*options);
+  if (!res) {print_error(res.get_err()->mesg); exit(1);}
+  lang.reset(res.data);
+  String word;
+  CheckList * cl = new_check_list();
+  while (CIN >> word) {
+    CharVector buf; buf.append(word.c_str(), word.size() + 1);
+    char * w = buf.data();
+    char * af = strchr(w, '/');
+    af[0] = '\0';
+    lang->affix()->expand(ParmString(w, af-w), ParmString(af + 1), cl);
+    const aspeller::CheckInfo * ci = check_list_data(cl);
+    if (level <= 2) {
+      if (level == 2) 
+        COUT << word << ' ';
+      while (ci) {
+        COUT << ci->word;
+        ci = ci->next;
+        if (ci) COUT << ' ';
+      }
+      COUT << '\n';
+    } else if (level >= 3) {
+      while (ci) {
+        COUT << word << ' ' << ci->word << '\n';
+        ci = ci->next;
+      }
+    }
+  }
+  delete_check_list(cl);
+}
+
+
 ///////////////////////////////////////////////////////////////////////
 
 
@@ -1383,6 +1491,8 @@ void print_help () {
     "  [dump] config [-e <expr>]  dumps the current configuration to stdout\n"
     "  config [+e <expr>] <key>   prints the current value of an option\n"
     "  soundslike       returns the sounds like equivalent for each word entered\n"
+    "  munch            generate possible root words and affixes\n"
+    "  expand [1-4]     expands affix flags\n"
     "  filter           passes standard input through filters\n"
     "  -v|version       prints a version line\n"
     "  dump|create|merge master|personal|repl [word list]\n"

@@ -11,6 +11,7 @@
 #include "data.hpp"
 #include "enumeration.hpp"
 #include "speller.hpp"
+#include "check_list.hpp"
 
 using namespace acommon;
 
@@ -28,7 +29,7 @@ namespace aspeller {
   class Language;
   class SensitiveCompare;
   class Suggest;
-  
+
   class SpellerImpl : public Speller
   {
   public:
@@ -95,15 +96,15 @@ namespace aspeller {
     PosibErr<bool> check(char * word, char * word_end, /* it WILL modify word */
 			 unsigned int run_together_limit,
 			 CompoundInfo::Position pos,
-			 SingleWordInfo * words);
+			 CheckInfo *, GuessInfo *);
 
     PosibErr<bool> check(MutableString word) {
-      WordInfo wi;
+      guess_info.reset(guesses);
       return check(word.begin(), 
 		   word.end(), 
 		   run_together_limit_,
 		   CompoundInfo::Orig,
-		   wi.words);
+		   check_inf, &guess_info);
     }
     PosibErr<bool> check(ParmString word)
     {
@@ -114,7 +115,27 @@ namespace aspeller {
 
     PosibErr<bool> check(const char * word) {return check(ParmString(word));}
 
+    BasicWordInfo check_affix(ParmString word, CheckInfo & ci, GuessInfo * gi)
+    {
+      BasicWordInfo w = check_simple(word);
+      if (w) ci.word = w.word;
+      if (w || !lang_->affix()) return w;
+      // FIXME: Create special list of word lists which have
+      //        affix information to avoid checking for root words
+      //        in the personal dictionary and the like
+      return lang_->affix()->affix_check(LookupInfo(this), word, ci, gi);
+    }
+
     BasicWordInfo check_simple(ParmString);
+
+    const CheckInfo * check_info() {
+      if (check_inf[0].word)
+        return check_inf;
+      else if (guess_info.num > 0)
+        return guesses + 1;
+      else
+        return 0;
+    }
     
     //
     // High level Word List management methods
@@ -136,6 +157,10 @@ namespace aspeller {
 
     PosibErr<void> store_replacement(const String & mis, const String & cor,
 				     bool memory);
+
+
+    
+
     //
     // Private Stuff (from here to the end of the class)
     //
@@ -176,6 +201,10 @@ namespace aspeller {
   
     double distance (const char *, const char *, 
 		     const char *, const char *) const;
+
+    CheckInfo check_inf[8];
+    CheckInfo guesses[8];
+    GuessInfo guess_info;;
   };
 
 }

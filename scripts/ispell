@@ -14,10 +14,13 @@ do
 done
 
 case $command in
--A|-c|-e*|-d) echo "Aspell does not support the $command mode.";;
+-A|-D       ) echo "Aspell does not support the $command mode.";;
 -a|-l|-v*   ) exec aspell "$@" ;;
+-c          ) shift; exec aspell munch "$@" ;;
+-e          ) shift; exec aspell expand "$@" ;;
+-e?         ) shift; exec aspell expand `expr substr $command 3 1` "$@" ;;
 "-"         ) exec aspell check "$@" ;;
 *           ) echo "Ispell compatibility script for Aspell."
-              echo "Usage: $0 [options] -a|-l|-v[v]|<file>"
+              echo "Usage: $0 [options] -a|-l|-v[v]|-c|-e[1-4]|<file>"
               exit 1 ;;
 esac

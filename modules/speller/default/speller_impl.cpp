@@ -164,47 +164,57 @@ namespace aspeller {
 
   BasicWordInfo SpellerImpl::check_simple (ParmString w) {
     const char * x = w;
+    BasicWordInfo w1;
     BasicWordInfo w0;
     while (*x != '\0' && (x-w) < static_cast<int>(ignore_count)) ++x;
     if (*x == '\0') return w.str();
     DataSetCollection::ConstIterator i   = wls_->begin();
     DataSetCollection::ConstIterator end = wls_->end();
     for (; i != end; ++i) {
+      // FIXME: Create special list of word lists which should be used to
+      //        check for performance reasons
       if  (i->use_to_check && 
 	   i->data_set->basic_type == DataSet::basic_word_set &&
 	   (w0 = static_cast<const BasicWordSet *>(i->data_set)
-	    ->lookup(w,i->local_info.compare))
-	   )
-	return w0;
+	    ->lookup(w,i->local_info.compare)) )
+      {
+        if (w1 && w0.affixes && w1.affixes) {
+          // FIXME: THIS WILL LEAK MEMORY
+          //        affixes is not normally dynamically allocated 
+          //        except in this case
+          size_t s0 = strlen(w0.affixes);
+          size_t s1 = strlen(w1.affixes);
+          char * str = (char *)malloc(s0 + s1 + 1);
+          memcpy(str, w0.affixes, s0);
+          memcpy(str + s0, w1.affixes, s1 + 1);
+          w1.affixes = str;
+        } else {
+          w1 = w0;
+        }
+      }
     }
-    return 0;
+    return w1;
   };
 
   PosibErr<bool> SpellerImpl::check(char * word, char * word_end, 
                                     /* it WILL modify word */
 				    unsigned int run_together_limit,
 				    CompoundInfo::Position pos,
-				    SingleWordInfo * words)
+				    CheckInfo * ci, GuessInfo * gi)
   {
     assert(run_together_limit <= 8); // otherwise it will go above the 
                                      // bounds of the word array
-    words[0].clear();
-    BasicWordInfo w = check_simple(word);
+    clear_check_info(*ci);
+    BasicWordInfo w = check_affix(word, *ci, gi);
     if (w) {
-      if (pos == CompoundInfo::Orig) {
-	words[0] = w.word;
-	words[1].clear();
+      if (pos == CompoundInfo::Orig)
 	return true;
-      }
       bool check_if_valid = !(unconditional_run_together_ 
 			      && strlen(word) >= run_together_min_);
-      if (!check_if_valid || w.compound.compatible(pos)) { 
-	words[0] = w.word;
-	words[1].clear();
+      if (!check_if_valid || w.compound.compatible(pos))
 	return true;
-      } else {
+      else
 	return false;
-      }
     }
     
     if (run_together_limit <= 1 
@@ -216,7 +226,8 @@ namespace aspeller {
       {
 	char t = *i;
 	*i = '\0';
-	BasicWordInfo s = check_simple(word);
+        //FIXME: clear ci, gi?
+	BasicWordInfo s = check_affix(word, *ci, gi);
 	*i = t;
 	if (!s) continue;
 	CompoundInfo c = s.compound;
@@ -237,20 +248,21 @@ namespace aspeller {
 	  if (c.mid_required() && *i != m)
 	    continue;
 	}
-	words[0].set(s.word, *i == m ? m : '\0');
-	words[1].clear();
 	if ((!check_if_valid || !c.mid_required()) // if check then !s.mid_required() 
-	    && check(i, word_end, run_together_limit - 1, end_pos, words + 1))
+	    && check(i, word_end, run_together_limit - 1, end_pos, ci + 1, 0)) {
+          ci->next = ci + 1;
 	  return true;
+        }
 	if ((check_if_valid ? *i == m : strchr(run_together_middle_, *i) != 0) 
 	    && word_end - (i + 1) >= static_cast<int>(run_together_min_)) {
-	  if (check(i+1, word_end, run_together_limit - 1, end_pos, words + 1))
+	  if (check(i+1, word_end, run_together_limit - 1, end_pos, ci + 1, 0)) {
+            ci->next = ci + 1;
 	    return true;
-	  else // already checked word (i+1) so no need to check it again
-	    ++i;
+          }
+          // already checked word (i+1) so no need to check it again
+          ++i;
 	}
       }
-    words[0].clear();
     return false;
   }
   
@@ -565,7 +577,7 @@ namespace aspeller {
   //
 
   SpellerImpl::SpellerImpl() 
-    : Speller(0) /* FIXME */, ignore_repl(true)
+    : Speller(0) /* FIXME */, ignore_repl(true), guess_info(7)
   {}
 
   PosibErr<void> SpellerImpl::setup(Config * c) {

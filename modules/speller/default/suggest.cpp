@@ -342,6 +342,7 @@ namespace aspeller_default_suggest {
 	SoundslikeWord sw;	
 	EditDist score;
         unsigned int stopped_at = LARGE_NUM;
+        //CERR << "\\" << original_soundslike << '\n';
 	while ( (sw = els->next(stopped_at)) == true) 
 	{
 	  score = edit_dist_fun(sw.soundslike,
@@ -349,6 +350,7 @@ namespace aspeller_default_suggest {
 				parms.edit_distance_weights);
 	  stopped_at = score.stopped_at - sw.soundslike;
 	  if (score < LARGE_NUM) {
+            //CERR << "//" << sw.soundslike << ' ' << score << '\n';
 	    stopped_at = LARGE_NUM;
 	    BasicWordSet::Emul e = data_set->words_w_soundslike(sw);
 	    BasicWordInfo bw;

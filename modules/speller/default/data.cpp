@@ -89,7 +89,7 @@ namespace aspeller {
   PosibErr<void> DataSet::set_check_lang (ParmString l, Config * config)
   {
     if (lang_ == 0) {
-      PosibErr<Language *> res = new_language(*config);
+      PosibErr<Language *> res = new_language(*config, l);
       if (!res) return res;
       lang_.reset(res.data);
       set_lang_hook(config);
@@ -269,18 +269,7 @@ namespace aspeller {
     abort();
   }
 
-  //
-  // SingleWordInfo impl
-  //
-
-  void SingleWordInfo::append_word(String & w, const Language &, 
-				   const ConvertWord & c) const
-  {
-    c.convert(word,w);
-    if (middle_char != '\0')
-      w += middle_char;
-  }
-  
+/*
   //
   // [Basic]WordInfo impl
   //
@@ -293,6 +282,7 @@ namespace aspeller {
       i->append_word(word,l,c);
     }
   }
+*/
 
   OStream & BasicWordInfo::write (OStream & o,
 				  const Language & l,
@@ -301,10 +291,13 @@ namespace aspeller {
     String w;
     c.convert(word, w);
     o << w;
+    if (*affixes)
+      o << '/' << affixes;
     compound.write(o,l);
     return o;
   }
 
+/*
   OStream & WordInfo::write(OStream & o, 
 			    const Language & l, 
 			    const ConvertWord & c) const
@@ -318,6 +311,7 @@ namespace aspeller {
   //
   // add_data_set
   //
+*/
 
   PosibErr<LoadableDataSet *> add_data_set(ParmString fn,
 					   Config & config,

@@ -1,5 +1,5 @@
 \input texinfo   @c -*-texinfo-*-
-@comment $Id: aspell-dev.texi,v 1.15 2004/01/18 11:48:50 chris Exp $
+@comment $Id: aspell-dev.texi,v 1.1.2.1 2004/01/24 22:42:19 kevina Exp $
 @comment %**start of header
 @setfilename aspell-dev.info
 @settitle Aspell Developer's Manual
@@ -8,7 +8,7 @@
 @comment %**end of header
 @copying
 This is the developer's manual for Aspell
-($Revision: 1.15 $, $Date: 2004/01/18 11:48:50 $).
+($Revision: 1.1.2.1 $, $Date: 2004/01/24 22:42:19 $).
 
 This manual is designed for those who wish to develop Aspell.
 It is currently very sketchy.
@@ -35,7 +35,7 @@ Documentation License".
 
 @titlepage
 @title Aspell Developer's Manual
-@subtitle for $Revision: 1.15 $, $Date: 2004/01/18 11:48:50 $
+@subtitle for $Revision: 1.1.2.1 $, $Date: 2004/01/24 22:42:19 $
 @author Kevin Atkinson (@email{kevina@@gnu.org})
 @page
 @vskip 0pt plus 1filll

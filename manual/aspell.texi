@@ -1,5 +1,5 @@
 \input texinfo   @c -*-texinfo-*-
-@comment $Id: aspell.texi,v 1.12 2004/01/18 11:21:40 chris Exp $
+@comment $Id: aspell.texi,v 1.1.2.1 2004/01/24 22:42:19 kevina Exp $
 @comment %**start of header
 @setfilename aspell.info
 @settitle GNU Aspell 0.51
@@ -8,7 +8,7 @@
 @comment %**end of header
 @copying
 This is the user's manual for Aspell
-($Revision: 1.12 $ $Date: 2004/01/18 11:21:40 $).
+($Revision: 1.1.2.1 $ $Date: 2004/01/24 22:42:19 $).
 
 Copyright @copyright{} 2000--2004 Kevin Atkinson.
 
@@ -39,7 +39,7 @@ are LGPL Compatible.
 
 @titlepage
 @title GNU Aspell 0.51
-@subtitle for $Revision: 1.12 $ $Date: 2004/01/18 11:21:40 $
+@subtitle for $Revision: 1.1.2.1 $ $Date: 2004/01/24 22:42:19 $
 @author Kevin Atkinson (@email{kevina@@gnu.org})
 @page
 @vskip 0pt plus 1filll
@@ -50,7 +50,7 @@ are LGPL Compatible.
 
 @ifnottex
 @node Top, Introduction, (dir), (dir)
-@top Notes
+@top GNU Aspell
 GNU Aspell is a spell checker designed to eventually replace Ispell.
 It can either be used as a library or as an independent spell checker.
 Its main feature is that it does a much better job of coming up with
@@ -101,6 +101,8 @@ Customizing Aspell
 
 * Specifying Options::          
 * The Options::                 
+* Dumping Configuration Values::  
+* Printing Help screen::        
 * Notes on Various Options::    
 
 Notes on Various Options
@@ -128,6 +130,7 @@ Adding Support For Other Languages
 * The Language Data File::      
 * Compiling the Word List::     
 * Phonetic Code::               
+* Affix Compression::           
 * Controlling the Behavior of Run-together Words::  
 
 To Do
@@ -155,16 +158,14 @@ Using the Libraries
 @node Introduction, Getting Started, Top, Top
 @chapter Introduction
 
-GNU Aspell is a spell checker designed to
- eventually replace Ispell.
- It can either be used as a library or as an independent spell checker.
- Its main feature is that it does a much better job of coming up with possible
- suggestions than just about any other spell checker out there for the English
- language, including Ispell and Microsoft Word.
- It also has many other technical enhancements over Ispell
- such as using
- shared memory for dictionaries and intelligently handling personal
- dictionaries when more than one Aspell process is open at once.
+GNU Aspell is a spell checker designed to eventually replace Ispell.
+It can either be used as a library or as an independent spell checker.
+Its main feature is that it does a much better job of coming up with
+possible suggestions than just about any other spell checker out there
+for the English language, including Ispell and Microsoft Word.  It
+also has many other technical enhancements over Ispell such as using
+shared memory for dictionaries and intelligently handling personal
+dictionaries when more than one Aspell process is open at once.
 
 @menu
 * Comparison to other spell checker engines::  
@@ -628,11 +629,6 @@ For a quick reference on the Aspell utility use the command
 @menu
 * Spellchecking Individual Files::  
 * Using Aspell with other Applications::  
-* Specifying Options::          
-* The Options::                 
-* Dumping Configuration Values::  
-* Printing Help screen::        
-* Notes on Various Options::    
 @end menu
 
 @node Spellchecking Individual Files, Using Aspell with other Applications, Basic Usage, Basic Usage
@@ -2271,6 +2267,7 @@ create the language data file, and compile a new word list.
 * The Language Data File::      
 * Compiling the Word List::     
 * Phonetic Code::               
+* Affix Compression::           
 * Controlling the Behavior of Run-together Words::  
 @end menu
 
@@ -2376,7 +2373,7 @@ place you are ready to compile the main word list.  To find out what
 to do, see @ref{Working With Dictionaries}.  This section also
 includes instructions for creating the AWLI file.
 
-@node Phonetic Code, Controlling the Behavior of Run-together Words, Compiling the Word List, Adding Support For Other Languages
+@node Phonetic Code, Affix Compression, Compiling the Word List, Adding Support For Other Languages
 @section Phonetic Code
 
 
@@ -2699,11 +2696,50 @@ If you think that this section helped you or if you think that this is
 just a waste of time you can send any feedback to
 @email{bjoern.jacke@@gmx.de}.
 
-@node Controlling the Behavior of Run-together Words,  , Phonetic Code, Adding Support For Other Languages
+@node Affix Compression, Controlling the Behavior of Run-together Words, Phonetic Code, Adding Support For Other Languages
+@section Affix Compression
+
+Aspell, as of version 0.51, now has support for affix compression.
+The codebase comes from MySpell found in OpenOffice.
+
+To add support for affix compression add the following lines to the
+language data file.
+
+@example
+soundslike none
+affix      <lang>
+affix-compress true
+@end example
+
+Soundslike must be turned off as it is not compatable with affix
+compression.  The line @samp{affix <lanf>} add support for recognizing
+affix information, and the line @samp{affix-compress true} enables
+affix compression.
+
+The affix file is expected to be named @file{<lang>_affix.dat}.  It is
+the exact same format as those used by MySpell.  More information can
+be found at
+@url{http://lingucomponent.openoffice.org/dictionary.html}.
+
+Due to the way Aspell currently works when coming up with suggestions
+words are partially expanded when creating a dictionary.  They are
+expanded so that any affix flags do not effect the first 3 letters of
+the word.  This effectively means that all prefixes are expanded.  A
+future version will support an alternate suggestion mode which does
+not have this limitation.
+
+It is possible to have both soundslike and affix support but without
+the affix compression.  In this case all words are expanded when
+creating a dictionary from a word list with affix compression.
+
+@node Controlling the Behavior of Run-together Words,  , Affix Compression, Adding Support For Other Languages
 @section Controlling the Behavior of Run-together Words
 
 Aspell has support for either unconditionally accepting run-together
 words or only accepting certain words in compound formation.
+
+@emph{Note: Support for only accepting certain words in compound formation
+is currently broken in Aspell 0.51}.
 
 Support for unconditionally accepting run-together words can either be
 turned on in the language data file or as a normal option via the
@@ -2853,7 +2889,6 @@ algorithm please see the data file @file{english_phonet.dat}.
 @node Changelog, To Do, How Aspell Works, Top
 @appendix Changelog
 
-@c Start of Ediff section 29/32
 @heading Changes from 0.50.? to 0.51
 
 @itemize @bullet
@@ -2879,9 +2914,10 @@ of the code.
 @item
 Converted manual to texinfo format thanks to Chris Martin
 
-@end itemize
+@item
+Added support for affix compression.
 
-@c End of Ediff section 29/32
+@end itemize
 
 @heading Changes from 0.50.4 to 0.50.4.1 (Oct 11, 2003)
 

@@ -68,6 +68,8 @@ libaspell_la_SOURCES =\
   modules/speller/default/language.cpp\
   modules/speller/default/leditdist.cpp\
   modules/speller/default/split.cpp\
+  modules/speller/default/affix.cpp\
+  modules/speller/default/affentry.cpp\
   modules/tokenizer/basic.cpp\
   lib/filter-c.cpp\
   lib/word_list-c.cpp\

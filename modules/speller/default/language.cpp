@@ -32,8 +32,10 @@ namespace aspeller {
     , {"soundslike",          KeyInfoString, "generic", ""}
     , {"special",             KeyInfoString, "", ""}
     , {"ignore-accents" ,     KeyInfoBool, "", "", "c"}
-    , {"use-soundslike" ,     KeyInfoBool, "",  ""}
+    //, {"use-soundslike" ,     KeyInfoBool, "",  ""}
     , {"keyboard",            KeyInfoString, "standard", "", "c"} 
+    , {"affix",               KeyInfoString, "none", ""}
+    , {"affix-compress",      KeyInfoBool, "false", "c"}
   };
 
   static GlobalCache<Language> language_cache;
@@ -161,6 +163,9 @@ namespace aspeller {
     if (pe.has_err()) return pe;
     soundslike_.reset(pe);
     soundslike_chars_ = soundslike_->soundslike_chars();
+
+    affix_.reset(new_affix_mgr(data.retrieve("affix"), this));
+    affix_compress_ = data.retrieve_bool("affix-compress");
     
     return no_err;
   }
@@ -323,10 +328,12 @@ namespace aspeller {
     
   }
 
-  PosibErr<Language *> new_language(Config & config)
+  PosibErr<Language *> new_language(Config & config, ParmString lang)
   {
-    return language_cache.get(config.retrieve("actual-lang"),
-                              &config);
+    if (!lang)
+      return language_cache.get(config.retrieve("actual-lang"), &config);
+    else
+      return language_cache.get(lang, &config);
   }
 
 }

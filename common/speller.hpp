@@ -34,6 +34,20 @@ namespace acommon {
   class Filter;
   class DocumentChecker;
 
+  struct CheckInfo {
+    const CheckInfo * next;
+    const char * word; // generally the root
+    const char * pre_strip;
+    const char * pre_add;
+    const char * suf_strip;
+    const char * suf_add;
+    int pre_flag;
+    int suf_flag;
+    int guess;
+    int compound;
+    int middle_char;
+  };
+
   class Speller : public CanHaveError
   {
   private:
@@ -72,6 +86,9 @@ namespace acommon {
     //
 
     virtual PosibErr<bool> check(MutableString) = 0;
+
+    // these functions return information about the last word checked
+    virtual const CheckInfo * check_info() = 0;
   
     virtual PosibErr<void> add_to_personal(MutableString) = 0;
     virtual PosibErr<void> add_to_session (MutableString) = 0;
