@@ -288,8 +288,7 @@ namespace acommon {
     // Retrieve Jargon
     // 
     str = config->retrieve("jargon");
-    if (str.get_err() != 0)
-      b_jargon.list.add(str);
+    b_jargon.list.add(str);
     b_jargon.list.add("");
     b_jargon.init();
     str.data.clear();

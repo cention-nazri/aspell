@@ -28,10 +28,10 @@ int main(int argc, const char *argv[])
 
   dels = aspell_dict_info_list_elements(dlist);
 
-  printf("%-20s%-6s%-10s%-6s%-10s\n", "NAME", "CODE", "JARGON", "SIZE", "MODULE");
+  printf("%-30s%-8s%-20s%-6s%-10s\n", "NAME", "CODE", "JARGON", "SIZE", "MODULE");
   while ( (entry = aspell_dict_info_enumeration_next(dels)) != 0) 
   {
-    printf("%-20s%-6s%-10s%-6s%-10s\n",
+    printf("%-30s%-8s%-20s%-6s%-10s\n",
 	   entry->name,
 	   entry->code, entry->jargon, 
 	   entry->size_str, entry->module->name);
