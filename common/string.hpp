@@ -388,6 +388,52 @@ namespace acommon {
     return tmp;
   }
 
+  inline bool operator== (const String & x, const String & y)
+  {
+    if (x.size() != y.size()) return false;
+    if (x.size() == 0) return true;
+    return memcmp(x.data(), y.data(), x.size()) == 0;
+  }
+  inline bool operator== (const String & x, const char * y)
+  {
+    return strcmp(x.c_str(), y) == 0;
+  }
+  inline bool operator== (const char * x, const String & y)
+  {
+    return strcmp(x, y.c_str()) == 0;
+  }
+  inline bool operator== (const String & x, ParmString y)
+  {
+    if (y == 0) return x.size() == 0;
+    return strcmp(x.c_str(), y) == 0;
+  }
+  inline bool operator== (ParmString x, const String & y)
+  {
+    if (x == 0) return y.size() == 0;
+    return strcmp(x, y.c_str()) == 0;
+  }
+
+  inline bool operator!= (const String & x, const String & y)
+  {
+    return !(x == y);
+  }
+  inline bool operator!= (const String & x, const char * y)
+  {
+    return strcmp(x.c_str(), y) != 0;
+  }
+  inline bool operator!= (const char * x, const String & y)
+  {
+    return strcmp(x, y.c_str()) != 0;
+  }
+  inline bool operator!= (const String & x, ParmString y)
+  {
+    return !(x == y);
+  }
+  inline bool operator!= (ParmString x, const String & y)
+  {
+    return !(x == y);
+  }
+
   inline ParmString::ParmString(const String & s) : str_(s.c_str()), size_(s.size()) {}
 
   class StringIStream : public IStream {

@@ -233,11 +233,15 @@ namespace acommon {
     *this = s.data;
     return *this;
   }
-  //inline String & String::operator= (const PosibErr<String> & s)
-  //{
-  //  std::string::operator=(s.data);
-  //  return *this;
-  //}
+
+  inline bool operator== (const PosibErr<String> & x, const char * y)
+  {
+    return x.data == y;
+  }
+  inline bool operator!= (const PosibErr<String> & x, const char * y)
+  {
+    return x.data != y;
+  }
 
   inline ParmString::ParmString(const PosibErr<const char *> & s)
     : str_(s.data) {}
