@@ -1,4 +1,4 @@
-AC_INIT(GNU Aspell, 0.60-cvs)
+AC_INIT(GNU Aspell, 0.60)
 AC_CONFIG_SRCDIR(prog/aspell.cpp)
 AC_CANONICAL_SYSTEM
 AM_INIT_AUTOMAKE
@@ -125,7 +125,7 @@ dnl         "$enable_aspell5_compatibility" = "yes"])
 dnl GETTEXT
 
 AM_GNU_GETTEXT([external])
-AM_GNU_GETTEXT_VERSION(0.13)
+AM_GNU_GETTEXT_VERSION(0.14.1)
 AH_BOTTOM([#include "gettext.h"])
 AH_BOTTOM([#define C_EXPORT extern "C"])
 

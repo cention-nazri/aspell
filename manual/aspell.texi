@@ -156,13 +156,15 @@ Copying
 @node Introduction
 @chapter Introduction
 
-GNU Aspell is a spell checker designed to eventually replace Ispell.
-It can either be used as a library or as an independent spell checker.
-Its main feature is that it does a much better job of coming up with
-possible suggestions than just about any other spell checker out there
-for the English language, including Ispell and Microsoft Word.  It
-also has many other technical enhancements over Ispell such as using
-shared memory for dictionaries and intelligently handling personal
+GNU Aspell is a spell checker designed to eventually replace Ispell.  It
+can either be used as a library or as an independent spell checker.  Its
+main feature is that it does a much better job of suggesting possible
+replacements for a misspelled word than just about any other spell
+checker out there for the English language.  Unlike Ispell, Aspell can
+also easily check documents in UTF-8 without having to use a special
+dictionary.  Aspell will also do its best to respect the current locale
+setting.  Other advantages over Ispell include support for using
+multiple dictionaries at once and intelligently handling personal
 dictionaries when more than one Aspell process is open at once.
 
 The latest version of Aspell can always be found at @uref{http://aspell.net}
@@ -199,16 +201,24 @@ please contact me at @email{kevina@@gnu.org}.
 
 @itemize @bullet
 @item
-Does a much better job with coming up with suggestions than Ispell
-does or for that matter any other spell checker I have seen.  If you
-know a spell checker that does a better job please let me know.
-
-@item
-Can learn from users' misspellings.
-
-@item
 Is an actual library that other programs can link to instead of
 having to use it through a pipe.
+
+@item
+Does a much better job of suggesting possible replacements for a
+misspelled word than Ispell does or for that matter any other spell
+checker I have seen.  If you know a spell checker that does a better job
+please let me know.
+
+@item
+Can learn from user's misspellings.
+
+@item
+Can easily check documents in UTF-8 without having to use a special
+dictionary.
+
+@item
+Has support for using multiple dictionaries at once.
 
 @item
 Is multiprocess intelligent.  When a personal dictionary (or
@@ -217,21 +227,6 @@ the dictionary on disk in case another process modified it.
 
 @item
 Can share the memory used in the main word list between processes.
-
-@item
-Support for detachable dictionaries so that more than one aspell class
-can use the same dictionary.
-
-@item
-Support for multiple personal dictionaries as well as support for
-special auxiliary dictionaries.
-
-@item
-Better support for run-together words.
-
-@item
-Ability to use multiple dictionaries by simply specifying it on the
-command line or in the configuration files.
 
 @item
 A better, more complete word list for the English language.  Word
@@ -2903,7 +2898,8 @@ If your language has no more than 210 distinct symbols, including
 different capitalizations and accents, than Aspell can support it.
 
 In order to create a new character set you will need to download
-@url{ftp://alpha.gnu.org/@/gnu/aspell/@/aspell-lang-@var{version}.tar.bz2} and follow
+the file @file{aspell-lang-@var{version}.tar.bz2} from 
+@uref{ftp://ftp.gnu.org/@/gnu/aspell/} and follow
 the instructions in the @file{README} file.  Version 0.1, and 0.2 of
 mkchardata @emph{will not} work as the format of the character data file
 has changed.
@@ -3076,12 +3072,7 @@ based on h@`anzi which includes Chinese, Japanese, and sometimes Korean.
 @node Supported
 @appendixsec Supported
 
-Aspell 0.60 should be able to support the following languages as, to the
-best of my knowledge, they all contain 210 or fewer symbols and can
-thus, fit within an 8-bit character set. If an existing character set
-does not exists than a new one can be invented. This is true even if the
-script is not yet supported by Unicode as the private use area can be
-used.
+Aspell 0.60 should be able to support the following languages:
 
 @include lang-supported.texi
 
@@ -3176,14 +3167,7 @@ symbols Aspell can still support them by breaking them up.
 
 Even though the Ethiopic script has more than 210 distinct characters
 Aspell can still handle it.  The idea is to split each character into
-two parts based on the matrix representation.  The first 3 bits will be
-the first part and could be mapped to @samp{10110???}.  The next 6 bits
-will be the second part and could be mapped to @samp{11??????}.  The
-combined character will then be mapped with the upper bits coming first.
-Thus each Ethiopic syllabary will have the form @samp{11??????
-10110???}.  By mapping the first and second parts to separate 8-bit
-characters it is easy to tell which part represents the consonant and
-which part represents the vowel of the syllabary.  This encoding of the
+two parts based on the Consonant and Vowel parts.  This encoding of the
 syllabary is far more useful to Aspell than if they were stored in UTF-8
 or UTF-16.  In fact, the exiting suggestion strategy of Aspell will work
 well with this encoding with out any additional modifications.  However,
@@ -3881,7 +3865,7 @@ a C++ program.
 @node ChangeLog
 @appendix ChangeLog
 
-@heading Changes from 0.50.5 to 0.60
+@heading Changes from 0.50.5 to 0.60 (August 27, 2004)
 
 @itemize @bullet
 @item
@@ -3889,7 +3873,8 @@ Added support for Affix Compression.  Affix compression stores the root
 word and then a list of prefixes and suffixes that the word can take,
 and thus saves a lot of space.  The codebase comes from MySpell found in
 OpenOffice.  It uses the same affix file that OpenOffice (and Mozilla)
-use.
+use.  Affix compression will even work with soundslike lookup to a
+limited extent.
 @item
 Added support for accepting all input and printing all output in UTF-8
 or some other encoding different from the one Aspell uses.  This
@@ -3922,12 +3907,23 @@ Chris Martin.
 Reworked the build system so that a single Makefile is used for most
 of the code.
 @item
-Lots of other minor changes due to another massive overhaul of the
-source code.
+All data, by default, is now included in
+@file{@var{libdir}/aspell-0.60}.  Also added a built time option to
+increment the major version number of the shared library.  This should
+allow both Aspell version 0.50 and 0.60 to coexist.  The major version
+number is @emph{not} incremented by default as Aspell 0.60 is binary
+compatible with Aspell 0.50.  @xref{Binary Compatibility}.
+@item
+The code to handle dictionaries has been rewritten.  Because of this
+support for the dictionary option @option{strip-accents} has been
+removed.  In addition the @option{ignore-accents} option is currently
+unimplemented.
+@item
+Lots of other minor changes due to massive overhaul of the source code.
 
 @end itemize
 
-@heading Changes from 0.50.4.1 to 0.50.5 (Feb 10, 2003)
+@heading Changes from 0.50.4.1 to 0.50.5 (Feb 10, 2004)
 
 @itemize @bullet
 @item

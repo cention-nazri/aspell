@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60-b20040608\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-08-13 12:52-0400\n"
+"POT-Creation-Date: 2004-08-22 21:23-0400\n"
 "PO-Revision-Date: 2004-06-17 12:00-0500\n"
 "Last-Translator: Laurentiu Buzdugan <lbuz@rolix.org>\n"
 "Language-Team: Romanian <translation-team-ro@lists.sourceforge.net>\n"
@@ -966,6 +966,7 @@ msgid ""
 "  %s filter: %s\n"
 msgstr ""
 
+#. TRANSLATORS: This should be formated to fit in 80 column or less
 #: prog/aspell.cpp:1989
 msgid ""
 "Available Filter Modes:\n"

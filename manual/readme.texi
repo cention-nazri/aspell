@@ -122,6 +122,12 @@ The format of the character data files has changed.  The new character
 data files are installed with Aspell so you shouldn't have to worry about
 it unless you made a custom one.
 
+The dictionary option @option{strip-accents} has been removed.  For this
+reason the old English dictionary (up to 0.51) will no longer work.  A
+new English dictionary is now available which avoids using this option.
+In addition the @option{ignore-accents} is currently unimplemented.
+
+@anchor{Binary Compatibility}
 @appendixsubsec Binary Compatibility
 
 The Aspell 0.60 library is binary compatible with the Aspell 0.50
@@ -136,7 +142,7 @@ so-name.  You should only use this option if you know what you are
 doing.  It is up to you to some how insure that both the Aspell 0.50 and
 0.60 executables can coexist.
 
-If after incrementing the so-name you wish to allow programs complied
+If after incrementing the so-name you wish to allow programs compiled
 for Aspell 0.50 to use Aspell 0.60 instead (thus implying that Aspell
 0.50 is not installed) than you can use a special compatibility library
 which can be found in the @file{lib5} directory.  This directory will
