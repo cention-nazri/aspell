@@ -741,7 +741,6 @@ void pipe()
                   << oconv(aspeller::fix_case(real_speller->lang(),casep, guess));
           ci = ci->next;
         }
-        CERR << (do_time ? "TIMMING\n" : "");
 	start = clock();
         const AspellWordList * suggestions = 0;
         if (suggest) 
