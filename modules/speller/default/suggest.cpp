@@ -393,7 +393,7 @@ namespace {
          i != sp->suggest_ws.end();
          ++i)
     {
-      i->dict->clean_lookup(str, sw);
+      (*i)->clean_lookup(str, sw);
       for (;!sw.at_end(); sw.adv())
         add_nearmiss(i, sw, 0, score, -1, do_count);
     }
@@ -415,7 +415,7 @@ namespace {
          i != sp->suggest_ws.end();
          ++i)
     {
-      i->dict->clean_lookup(word, sw);
+      (*i)->clean_lookup(word, sw);
       if (!sw.at_end()) {
         ci->word = sw.word;
         return true;
@@ -520,7 +520,7 @@ namespace {
     if (w.what == WordEntry::Misspelled) {
       repl = new WordEntry;
       const ReplacementDict * repl_dict
-        = static_cast<const ReplacementDict *>(i->dict);
+        = static_cast<const ReplacementDict *>(*i);
       repl_dict->repl_lookup(w, *repl);
     }
     add_nearmiss(buffer.dup(ParmString(w.word, w.word_size)), 
@@ -646,7 +646,7 @@ namespace {
                           WordEntry * sw, const char * sl, int score)
   {
     WordEntry w;
-    i->dict->soundslike_lookup(*sw, w);
+    (*i)->soundslike_lookup(*sw, w);
 
     for (; !w.at_end(); w.adv()) {
       
@@ -681,7 +681,7 @@ namespace {
          i != sp->suggest_ws.end();
          ++i) 
     {
-      StackPtr<SoundslikeEnumeration> els(i->dict->soundslike_elements());
+      StackPtr<SoundslikeEnumeration> els((*i)->soundslike_elements());
 
       while ( (sw = els->next(stopped_at)) ) {
 
@@ -802,7 +802,7 @@ namespace {
          i != sp->suggest_ws.end();
          ++i) 
     {
-      StackPtr<SoundslikeEnumeration> els(i->dict->soundslike_elements());
+      StackPtr<SoundslikeEnumeration> els((*i)->soundslike_elements());
 
       while ( (sw = els->next(stopped_at)) ) {
           
@@ -923,7 +923,7 @@ namespace {
          i != sp->suggest_ws.end();
          ++i) 
     {
-      StackPtr<SoundslikeEnumeration> els(i->dict->soundslike_elements());
+      StackPtr<SoundslikeEnumeration> els((*i)->soundslike_elements());
       
       while ( (sw = els->next(LARGE_NUM)) ) {
 

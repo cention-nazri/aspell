@@ -930,7 +930,7 @@ bool LookupInfo::lookup (ParmString word, WordEntry & o) const
   LookupBookkepping s;
   if (mode == Word) {
     do {
-      if (i->dict->lookup(word, o, i->compare)) {
+      if ((*i)->lookup(word, o, lang)) {
         w = o.word;
         if (s.aff == 0) s.aff = o.aff;
         else append_aff(s, o); // this should not be a very common case
@@ -939,7 +939,7 @@ bool LookupInfo::lookup (ParmString word, WordEntry & o) const
     } while (i != end);
   } else if (mode == Clean) {
     do {
-      if (i->dict->clean_lookup(word, o)) {
+      if ((*i)->clean_lookup(word, o)) {
         w = o.word;
         if (s.aff == 0) s.aff = o.aff;
         else append_aff(s, o); // this should not be a very common case

@@ -203,8 +203,7 @@ namespace aspeller {
   //
 
   PosibErr<void> Dictionary::load(ParmString, Config &, 
-                                  LocalDictList *, 
-                                  SpellerImpl *, const LocalDictInfo *) 
+                                  DictList *, SpellerImpl *) 
   {
     return make_err(unimplemented_method, "load", class_name);
   }
@@ -311,7 +310,7 @@ namespace aspeller {
     return make_err(unimplemented_method, "remove_repl", class_name);
   }
   
-  Enumeration<const LocalDict *> * Dictionary::dictionaries() const 
+  DictsEnumeration * Dictionary::dictionaries() const 
   {
     return 0;
   }
@@ -335,15 +334,14 @@ namespace aspeller {
     return o;
   }
 
-  PosibErr<void> add_data_set(ParmString fn,
-                              Config & config,
-                              LocalDict & res,
-                              LocalDictList * new_dicts,
-                              SpellerImpl * speller,
-                              const LocalDictInfo * local_info,
-                              ParmString dir,
-                              DataType allowed)
+  PosibErr<Dict *> add_data_set(ParmString fn,
+                                Config & config,
+                                DictList * new_dicts,
+                                SpellerImpl * speller,
+                                ParmString dir,
+                                DataType allowed)
   {
+    Dict * res = 0;
     static const char * suffix_list[] = {"", ".multi", ".alias", 
 					 ".spcl", ".special",
 					 ".pws", ".prepl"};
@@ -407,20 +405,19 @@ namespace aspeller {
     Dict::Id id(0,Dict::FileName(true_file_name));
 
     if (speller != 0) {
-      const LocalDict * d = speller->locate(id);
+      const SpellerDict * d = speller->locate(id);
       if (d != 0) {
-        res = *d;
-        return no_err;
+        return d->dict;
       }
     }
 
-    res.dict = 0;
+    res = 0;
 
     if (actual_type == DT_ReadOnly) { // try to get it from the cache
-      res.dict = dict_cache.find(id);
+      res = dict_cache.find(id);
     }
 
-    if (!res.dict) {
+    if (!res) {
 
       StackPtr<Dict> w;
       switch (actual_type) {
@@ -440,45 +437,24 @@ namespace aspeller {
         abort();
       }
 
-      RET_ON_ERR(w->load(true_file_name, config, new_dicts, speller, local_info));
+      RET_ON_ERR(w->load(true_file_name, config, new_dicts, speller));
 
       if (actual_type == DT_ReadOnly)
         dict_cache.add(w);
       
-      res.dict = w.release();
+      res = w.release();
 
     } else {
       
-      res.dict->copy();
+      res->copy();
       
     }
 
-    if (local_info) {
-      res.set(*local_info);
-      res.set_language(res.dict->lang());
-    } else
-      res.set(res.dict->lang(), config);
     if (new_dicts)
       new_dicts->add(res);
     
-    return no_err;
+    return res;
   }
 
-  //
-  // LocalDictInfo
-  //
-  
-  void LocalDictInfo::set_language(const Language * l)
-  {
-    compare.lang = l;
-  }
-
-  void LocalDictInfo::set(const Language * l, const Config & c)
-  {
-    compare.lang = l;
-    compare.case_insensitive = c.retrieve_bool("ignore-case");
-    compare.ignore_accents   = c.retrieve_bool("ignore-accents");
-  }
-  
 }
 

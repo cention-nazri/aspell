@@ -249,8 +249,7 @@ namespace {
       }
     }
     
-    PosibErr<void> load(ParmString, Config &, LocalDictList *, 
-                        SpellerImpl *, const LocalDictInfo *);
+    PosibErr<void> load(ParmString, Config &, DictList *, SpellerImpl *);
 
     bool lookup(ParmString word, WordEntry &, const SensitiveCompare &) const;
 
@@ -333,8 +332,7 @@ namespace {
   };
 
   PosibErr<void> ReadOnlyDict::load(ParmString f0, Config & config, 
-                                    LocalDictList *, 
-                                    SpellerImpl *, const LocalDictInfo *)
+                                    DictList *, SpellerImpl *)
   {
     set_file_name(f0);
     const char * fn = file_name();

@@ -26,11 +26,10 @@ namespace acommon {
 
 namespace aspeller {
 
-  struct LocalDict;
-  struct LocalDictInfo;
-  class LocalDictList;
+  class Dictionary;
+  class DictList;
   typedef Enumeration<WordEntry *> WordEntryEnumeration;
-  typedef Enumeration<const LocalDict *> DictsEnumeration;
+  typedef Enumeration<Dictionary *> DictsEnumeration;
 
   class SoundslikeEnumeration 
   {
@@ -98,8 +97,8 @@ namespace aspeller {
 
     const char * file_name() const {return file_name_.path.c_str();}
     // returns any additional dictionaries that are also used
-    virtual PosibErr<void> load(ParmString, Config &, LocalDictList * = 0, 
-                                SpellerImpl * = 0, const LocalDictInfo * = 0);
+    virtual PosibErr<void> load(ParmString, Config &, DictList * = 0, 
+                                SpellerImpl * = 0);
 
     virtual PosibErr<void> merge(ParmString);
     virtual PosibErr<void> synchronize();
@@ -171,37 +170,21 @@ namespace aspeller {
     return !(rhs == lhs);
   }
 
-  struct LocalDictInfo 
-  {
-    SensitiveCompare compare;
-    void set_language(const Language * l);
-    void set(const Language * l, const Config & c);
-    void set(const LocalDictInfo & li) {operator=(li);}
-  };
-
-  struct LocalDict : public LocalDictInfo {
-    Dict * dict;
-    LocalDict(Dict * d = 0) : dict(d) {}
-    LocalDict(Dict * d, LocalDictInfo li)
-      : LocalDictInfo(li), dict(d) {}
-    operator bool () const {return dict != 0;}
-  };
-
-  class LocalDictList {
+  class DictList {
     // well a stack at the moment but it may eventually become a list
     // NOT necessarily first in first out
-    Vector<LocalDict> data;
+    Vector<Dict *> data;
   private:
-    LocalDictList(const LocalDictList &);
-    void operator= (const LocalDictList &);
+    DictList(const DictList &);
+    void operator= (const DictList &);
   public:
     // WILL take ownership of the dict
-    LocalDictList() {}
-    void add(const LocalDict & o) {data.push_back(o);}
-    LocalDict & last() {return data.back();}
+    DictList() {}
+    void add(Dict * o) {data.push_back(o);}
+    Dict * last() {return data.back();}
     void pop() {data.pop_back();}
     bool empty() {return data.empty();}
-    ~LocalDictList() {for (; !empty(); pop()) last().dict->release();}
+    ~DictList() {for (; !empty(); pop()) last()->release();}
   };
 
   typedef unsigned int DataType;
@@ -211,16 +194,13 @@ namespace aspeller {
   static const DataType DT_Multi        = 1<<3;
   static const DataType DT_Any          = 0xFF;
 
-  // stores result in LocalDict
   // any new extra dictionaries that were loaded will be ii
-  PosibErr<void> add_data_set(ParmString file_name,
-                              Config &,
-                              LocalDict &,
-                              LocalDictList * other_dicts = 0,
-                              SpellerImpl * = 0,
-                              const LocalDictInfo * local_info = 0,
-                              ParmString dir = 0,
-                              DataType allowed = DT_Any);
+  PosibErr<Dict *> add_data_set(ParmString file_name,
+                                Config &,
+                                DictList * other_dicts = 0,
+                                SpellerImpl * = 0,
+                                ParmString dir = 0,
+                                DataType allowed = DT_Any);
   
   // implemented in readonly_ws.cc
   Dictionary * new_default_readonly_dict();

@@ -33,15 +33,16 @@ namespace aspeller {
   enum SpecialId {main_id, personal_id, session_id, 
                   personal_repl_id, none_id};
 
-  struct SpellerDict : public LocalDict
+  struct SpellerDict
   {
+    Dict *            dict;
     bool              use_to_check;
     bool              use_to_suggest;
     bool              save_on_saveall;
     SpecialId         special_id;
     SpellerDict     * next;
-    SpellerDict(LocalDict &);
-    SpellerDict(Dict *, const Language *, const Config &, SpecialId id = none_id);
+    SpellerDict(Dict *);
+    SpellerDict(Dict *, const Config &, SpecialId id = none_id);
     ~SpellerDict() {if (dict) dict->release();}
   };
 
@@ -196,12 +197,7 @@ namespace aspeller {
     CheckInfo guesses[8];
     GuessInfo guess_info;
 
-    struct WSInfo : public LocalDictInfo
-    {
-      const Dictionary * dict;
-    };
-
-    typedef Vector<WSInfo> WS;
+    typedef Vector<const Dict *> WS;
     WS check_ws, affix_ws, suggest_ws, suggest_affix_ws;
 
     bool                    unconditional_run_together_;
@@ -224,6 +220,7 @@ namespace aspeller {
 
   struct LookupInfo {
     SpellerImpl * sp;
+    const LangImpl * lang;
     enum Mode {Word, Guess, Clean, Soundslike, AlwaysTrue} mode;
     SpellerImpl::WS::const_iterator begin;
     SpellerImpl::WS::const_iterator end;
@@ -231,7 +228,7 @@ namespace aspeller {
     bool lookup (ParmString word, WordEntry & o) const;
   };
 
-  inline LookupInfo::LookupInfo(SpellerImpl * s, Mode m) : sp(s), mode(m) {
+  inline LookupInfo::LookupInfo(SpellerImpl * s, Mode m) : sp(s), lang(&s->lang()), mode(m) {
     switch (m) { 
     case Word: 
       begin = sp->affix_ws.begin(); 

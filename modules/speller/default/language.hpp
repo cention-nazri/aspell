@@ -398,8 +398,7 @@ namespace aspeller {
     bool case_insensitive;
     bool ignore_accents;
     SensitiveCompare(const Language * l = 0) 
-      : lang(l), case_insensitive(false)
-      , ignore_accents(false) {}
+      : lang(l), case_insensitive(false), ignore_accents(false) {}
     bool operator() (const char * word, const char * inlist) const;
   };
 

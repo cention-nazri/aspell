@@ -67,8 +67,7 @@ protected:
   PosibErr<void> update(FStream &, ParmString);
   PosibErr<void> save(bool do_update);
   PosibErr<void> update_file_date_info(FStream &);
-  PosibErr<void> load(ParmString, Config &, LocalDictList *,
-                      SpellerImpl *, const LocalDictInfo *);
+  PosibErr<void> load(ParmString, Config &, DictList *, SpellerImpl *);
   PosibErr<void> merge(ParmString);
   PosibErr<void> save_as(ParmString);
 
@@ -99,8 +98,7 @@ PosibErr<void> WritableBase::update_file_date_info(FStream & f) {
 }
   
 PosibErr<void> WritableBase::load(ParmString f0, Config & config,
-                                  LocalDictList *,
-                                  SpellerImpl *, const LocalDictInfo *)
+                                  DictList *, SpellerImpl *)
 {
   set_file_name(f0);
   const String f = file_name();

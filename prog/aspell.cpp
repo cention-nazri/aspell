@@ -1288,14 +1288,14 @@ public:
   bool at_end() const {return *in;}
 };
 
-void dump (aspeller::LocalDict lws, Convert * conv) 
+void dump (aspeller::Dict * lws, Convert * conv) 
 {
   using namespace aspeller;
 
-  switch (lws.dict->basic_type) {
+  switch (lws->basic_type) {
   case Dict::basic_dict:
     {
-      Dictionary * ws = static_cast<Dictionary *>(lws.dict);
+      Dictionary * ws = static_cast<Dictionary *>(lws);
       StackPtr<WordEntryEnumeration> els(ws->detailed_elements());
       WordEntry * wi;
       while (wi = els->next(), wi) {
@@ -1306,10 +1306,10 @@ void dump (aspeller::LocalDict lws, Convert * conv)
     break;
   case Dict::multi_dict:
     {
-      StackPtr<DictsEnumeration> els(lws.dict->dictionaries());
-      const LocalDict * ws;
+      StackPtr<DictsEnumeration> els(lws->dictionaries());
+      Dict * ws;
       while (ws = els->next(), ws) 
-	dump (*ws, conv);
+	dump (ws, conv);
     }
     break;
   default:
@@ -1341,9 +1341,8 @@ void master () {
     
   } else if (action == do_dump) {
 
-    LocalDict d;
-    EXIT_ON_ERR(add_data_set(config->retrieve("master-path"), *config, d));
-    StackPtr<Convert> conv(setup_conv(d.dict->lang(), config));
+    EXIT_ON_ERR_SET(add_data_set(config->retrieve("master-path"), *config), Dict *, d);
+    StackPtr<Convert> conv(setup_conv(d->lang(), config));
     dump(d, conv);
   }
 }
@@ -1393,8 +1392,6 @@ void personal () {
     Dictionary * per = new_default_writable_dict();
     per->load(config->retrieve("personal-path"), *config);
     StackPtr<WordEntryEnumeration> els(per->detailed_elements());
-    LocalDictInfo wsi;
-    wsi.set(per->lang(), *config);
     StackPtr<Convert> conv(setup_conv(per->lang(), config));
 
     WordEntry * wi;
