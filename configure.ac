@@ -209,7 +209,7 @@ AC_TRY_COMPILE(
    AC_DEFINE(USE_LOCALE, 1, [Defined if Posix locales are supported])],
   [AC_MSG_RESULT(no)] )
 
-if test "$enable_regex" = "yes"
+if test "$enable_regex" != "no"
 then
   AC_MSG_CHECKING(if posix regex are supported)
   AC_TRY_LINK(
