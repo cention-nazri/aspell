@@ -1331,6 +1331,8 @@ void personal () {
 
   } else { // action == do_dump
 
+    // FIXME: This is currently broken
+
     StackPtr<Config> config(new_basic_config());
     EXIT_ON_ERR(config->read_in_settings(options));
     Dictionary * per = new_default_writable_dict();
@@ -1394,6 +1396,8 @@ void repl() {
 #endif
 
   } else if (action == do_dump) {
+
+    // FIXME: This is currently broken
 
     StackPtr<Config> config(new_basic_config());
     EXIT_ON_ERR(config->read_in_settings());
