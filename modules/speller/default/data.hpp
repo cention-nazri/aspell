@@ -129,8 +129,8 @@ namespace aspeller {
     virtual Size   size()     const;
     virtual bool   empty()    const;
   
-    virtual bool lookup (ParmString word, WordEntry &,
-                         const SensitiveCompare &) const;
+    virtual bool lookup (ParmString word, const SensitiveCompare *, 
+                         WordEntry &) const;
     
     virtual bool clean_lookup(ParmString, WordEntry &) const;
 

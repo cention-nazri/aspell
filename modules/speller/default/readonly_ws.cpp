@@ -120,8 +120,14 @@ static inline void mmap_free(char *, unsigned int)
 
 #endif
 
-static byte HAVE_AFFIX_FLAGS = 1 << 7;
-static byte HAVE_CATEGORY_FLAGS = 1 << 6;
+static byte HAVE_AFFIX_FLAG = 1 << 7;
+static byte HAVE_CATEGORY_FLAG = 1 << 6;
+
+static byte DUPLICATE_FLAG = 1 << 4;
+// this flag is set when there is is more than one word for a
+// particulear "clean" word such as "jello" "Jello".  It is set on all
+// but the last word of the group.  Ie, if it is set than the next
+// word when converted to its "clean" form equals the same value.
 
 static byte WORD_INFO_MASK = 0x0F;
 
@@ -159,7 +165,7 @@ static inline const char * get_sl_words_end(const char * d) {
 
 static inline const char * get_affix(const char * d) {
   int word_size = get_word_size(d);
-  if (get_flags(d) & HAVE_AFFIX_FLAGS) 
+  if (get_flags(d) & HAVE_AFFIX_FLAG) 
     return d + word_size +  1;
   else
     return d + word_size;
@@ -167,13 +173,18 @@ static inline const char * get_affix(const char * d) {
 
 static inline const char * get_category(const char * d) {
   int word_size = get_word_size(d);
-  if (get_flags(d) & HAVE_AFFIX_FLAGS & HAVE_CATEGORY_FLAGS) 
+  if (get_flags(d) & HAVE_AFFIX_FLAG & HAVE_CATEGORY_FLAG) 
     return d + strlen(d + word_size +  1) + 1;
-  else if (get_flags(d) & HAVE_CATEGORY_FLAGS)
+  else if (get_flags(d) & HAVE_CATEGORY_FLAG)
     return d + word_size +  1;
   else
     return d + word_size;
 }
+
+static inline bool duplicate_flag(const char * d) {
+  return get_flags(d) & DUPLICATE_FLAG;
+}
+
 
 namespace {
 
@@ -193,7 +204,7 @@ namespace {
   
   class ReadOnlyDict : public Dictionary
   {
-      
+
   public: //but don't use
 
     struct WordLookupParms {
@@ -202,7 +213,7 @@ namespace {
       typedef BlockVector<const u32int> Vector;
       typedef u32int                    Value;
       typedef const char *              Key;
-      static const bool is_multi = true;
+      static const bool is_multi = false;
       Key key(Value v) const {assert (v != u32int_max);
 				return block_begin + v;}
       InsensitiveHash  hash;
@@ -251,7 +262,7 @@ namespace {
     
     PosibErr<void> load(ParmString, Config &, DictList *, SpellerImpl *);
 
-    bool lookup(ParmString word, WordEntry &, const SensitiveCompare &) const;
+    bool lookup(ParmString word, const SensitiveCompare *, WordEntry &) const;
 
     bool clean_lookup(ParmString, WordEntry &) const;
 
@@ -299,7 +310,7 @@ namespace {
     return word_lookup.empty();
   }
 
-  static const char * const cur_check_word = "aspell default speller rowl 1.9";
+  static const char * const cur_check_word = "aspell default speller rowl 1.10";
 
   struct DataHead {
     // all sizes except the last four must to divisible by:
@@ -422,18 +433,49 @@ namespace {
     return no_err;
   }
 
-  bool ReadOnlyDict::lookup(ParmString word, WordEntry & o,
-                            const SensitiveCompare & c) const 
+  void lookup_adv(WordEntry * wi);
+
+  static inline void prep_next(WordEntry * wi, 
+                               const char * w,
+                               const SensitiveCompare * c, 
+                               const char * orig) 
+  {
+  loop:
+    if (!duplicate_flag(w)) return;
+    w = get_next(w);
+    if (!(*c)(orig, w)) goto loop;
+    wi->intr[0] = (void *)w;
+    wi->intr[1] = (void *)c;
+    wi->intr[2] = (void *)orig;
+    wi->adv_ = lookup_adv;
+  }
+
+  void lookup_adv(WordEntry * wi) 
+  {
+    const char * w = (const char *)wi->intr[0];
+    const SensitiveCompare * c = (const SensitiveCompare *)wi->intr[1];
+    const char * orig = (const char *)wi->intr[2];
+    wi->word = w;
+    wi->adv_ = 0;
+    prep_next(wi, w, c, orig);
+  }
+
+  bool ReadOnlyDict::lookup(ParmString word, const SensitiveCompare * c,
+                            WordEntry & o) const 
   {
     o.clear();
-    o.what = WordEntry::Word;
-    WordLookup::ConstFindIterator i = word_lookup.multi_find(word);
-    for (; !i.at_end(); i.adv()) {
-      const char * w = word_block + i.deref();
-      if (c(word, w)) {
+    WordLookup::const_iterator i = word_lookup.find(word);
+    if (i == word_lookup.end()) return false;
+    const char * w = word_block + *i;
+    for (;;) {
+      if ((*c)(word, w)) {
+        o.what = WordEntry::Word;
         convert(w,o);
+        prep_next(&o, w, c, word);
         return true;
       }
+      if (!duplicate_flag(w)) break;
+      w = get_next(w);
     }
     return false;
   }
@@ -550,7 +592,6 @@ namespace {
     data.intr[0] = (void *)tmp;
     convert(tmp, data);
     return &data;
-
   }
 
   SoundslikeEnumeration * ReadOnlyDict::soundslike_elements() const {
@@ -572,18 +613,23 @@ namespace {
     if (cur >= end) w->adv_ = 0;
   }
 
-  //static 
-  //void ReadOnlyDict::clean_next(WordEntry * w) {}
-
-  bool ReadOnlyDict::clean_lookup(ParmString sl, WordEntry & w) const
+  static void clean_lookup_adv(WordEntry * wi) 
   {
-    w.clear();
-    WordLookup::ConstFindIterator i = word_lookup.multi_find(sl);
-    if (i.at_end()) return false;
-    convert(word_block + i.deref(), w);
+    const char * w = wi->word;
+    w = get_next(w);
+    convert(w,*wi);
+    if (!duplicate_flag(w)) wi->adv_ = 0;
+  }
+
+  bool ReadOnlyDict::clean_lookup(ParmString sl, WordEntry & o) const
+  {
+    o.clear();
+    WordLookup::const_iterator i = word_lookup.find(sl);
+    if (i == word_lookup.end()) return false;
+    const char * w = word_block + *i;
+    convert(w, o);
+    if (duplicate_flag(w)) o.adv_ = clean_lookup_adv;
     return true;
-    // FIXME deal with multiple words 
-    //   the lookup should point to the first one of the kind ....
   }
     
   bool ReadOnlyDict::soundslike_lookup(const WordEntry & s, WordEntry & w) const 
@@ -661,8 +707,12 @@ namespace {
   };
 
   struct SoundslikeLess {
+    InsensitiveCompare icomp;
+    SoundslikeLess(const Language * l) : icomp(l) {}
     bool operator() (WordData * x, WordData * y) const {
       int res = strcmp(x->sl, y->sl);
+      if (res != 0) return res < 0;
+      res = icomp(x->word, y->word);
       if (res != 0) return res < 0;
       return strcmp(x->word, y->word) < 0;
     }
@@ -674,7 +724,7 @@ namespace {
     typedef Vector<u32int>      Vector;
     typedef u32int              Value;
     typedef const char *        Key;
-    static const bool is_multi = true;
+    static const bool is_multi = false;
     Key key(Value v) const {assert (v != u32int_max);
                             return block_begin + v;}
     InsensitiveHash  hash;
@@ -765,6 +815,7 @@ namespace {
     String temp;
 
     int num_entries = 0;
+    int uniq_entries = 0;
     
     ObjStack buf(16*1024);
     String sl_buf;
@@ -865,7 +916,7 @@ namespace {
           z += s + 1;
 
           if (aff_size > 0) {
-            b->flags |= HAVE_AFFIX_FLAGS;
+            b->flags |= HAVE_AFFIX_FLAG;
             b->aff = z;
             memcpy(z, p->aff, aff_size + 1);
             z += aff_size + 1;
@@ -880,7 +931,6 @@ namespace {
             b->sl = b->word;
           }
 
-          ++num_entries;
         }
       }
       delete els;
@@ -890,18 +940,19 @@ namespace {
     // sort WordData linked list based on (sl, word)
     //
 
-    first = sort(first, SoundslikeLess());
+    first = sort(first, SoundslikeLess(&lang));
 
     //
     // duplicate check
     // 
     WordData * prev = first;
     WordData * cur = first->next;
+    InsensitiveEqual ieq(&lang);
     while (cur) {
       if (strcmp(prev->word, cur->word) == 0) {
         // merge affix info if necessary
         if (!prev->aff && cur->aff) {
-          prev->flags |= HAVE_AFFIX_FLAGS;
+          prev->flags |= HAVE_AFFIX_FLAG;
           prev->aff = cur->aff;
           prev->data_size += strlen(prev->aff) + 1;
         } else if (prev->aff && cur->aff) {
@@ -921,6 +972,9 @@ namespace {
         }
         prev->next = cur->next;
       } else {
+        if (ieq(prev->word, cur->word)) prev->flags |= DUPLICATE_FLAG;
+        else ++uniq_entries;
+        ++num_entries;
         prev = cur;
       }
       cur = cur->next;
@@ -969,7 +1023,7 @@ namespace {
     unsigned int prev_pos = data.size();
     data.write32(0);
 
-    WordLookup lookup(num_entries * 4 / 5);
+    WordLookup lookup;
     lookup.parms().block_begin = data.begin();
     lookup.parms().hash .lang     = &lang;
     lookup.parms().equal.cmp.lang = &lang;
@@ -979,6 +1033,7 @@ namespace {
 
     const int head_size = invisible_soundslike ? 3 : 2;
 
+    unsigned prev_w_pos = data.size();
     const char * prev_sl = "";
     p = first;
     while (p)
@@ -1028,6 +1083,7 @@ namespace {
       if (invisible_soundslike) {
         
         unsigned pos = data.size();
+        prev_w_pos = data.size();
         data.write(p->word, p->word_size + 1);
         if (p->aff) data.write(p->aff, p->data_size - p->word_size - 1);
         lookup.insert(pos);
@@ -1040,23 +1096,23 @@ namespace {
 
         // write all word entries with the same soundslike
 
-        const char * prev;
-
         do {
           data.write(p->flags);
           data.write(p->data_size + 3);
           data.write(p->word_size);
 
           unsigned pos = data.size();
+          data[prev_w_pos - NEXT_O] = (byte)(pos - prev_w_pos);
           data.write(p->word, p->word_size + 1);
           if (p->aff) data.write(p->aff, p->data_size - p->word_size - 1);
           lookup.insert(pos);
 
-          prev = p->sl;
+          prev_w_pos = pos;
+          prev_sl = p->sl;
 
           p = p->next;
 
-        } while (p && prev == p->sl); // yes I really mean to use pointer compare here
+        } while (p && prev_sl == p->sl); // yes I really mean to use pointer compare here
       }
     }
 
@@ -1073,8 +1129,12 @@ namespace {
     data.write(0);
     data.write(0);
     data.write(0);
+    
+    //CERR.printf("%d == %d\n", lookup.size(), uniq_entries);
+    //assert(lookup.size() == uniq_entries);
+    lookup.resize(lookup.size() * 5 / 4);
 
-    data_head.word_count   = lookup.size();
+    data_head.word_count   = num_entries;
     data_head.word_buckets = lookup.bucket_count();
 
     FStream out;

@@ -851,14 +851,15 @@ WordAff * AffixMgr::expand_suffix(ParmString word, const byte * aff,
 // LookupInfo
 //
 
-int LookupInfo::lookup (ParmString word, char achar, 
+int LookupInfo::lookup (ParmString word, const SensitiveCompare * c, 
+                        char achar, 
                         WordEntry & o, GuessInfo * gi) const
 {
   SpellerImpl::WS::const_iterator i = begin;
   const char * g = 0;
   if (mode == Word) {
     do {
-      (*i)->lookup(word, o, lang);
+      (*i)->lookup(word, c, o);
       for (;!o.at_end(); o.adv()) {
         if (TESTAFF(o.aff, achar))
           return 1;
@@ -960,7 +961,7 @@ bool PfxEntry::check(const LookupInfo & linf, ParmString word,
       CheckInfo * guess = 0;
       tmpl += stripl;
 
-      int res = linf.lookup(tmpword, achar, wordinfo, gi);
+      int res = linf.lookup(tmpword, &linf.sp->s_cmp_end, achar, wordinfo, gi);
 
       if (res == 1) {
 
@@ -1101,7 +1102,9 @@ bool SfxEntry::check(const LookupInfo & linf, ParmString word,
     if (cond < 0) {
       CheckInfo * lci = 0;
       tmpl += stripl;
-      int res = linf.lookup(tmpword, achar, wordinfo, gi);
+      const SensitiveCompare * cmp = 
+        optflags & XPRODUCT ? &linf.sp->s_cmp_middle : &linf.sp->s_cmp_end;
+      int res = linf.lookup(tmpword, cmp, achar, wordinfo, gi);
       if (res == 1
           && ((optflags & XPRODUCT) == 0 || TESTAFF(wordinfo.aff, ep->achar)))
       {

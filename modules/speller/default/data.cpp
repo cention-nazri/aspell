@@ -254,8 +254,8 @@ namespace aspeller {
     return false;
   }
   
-  bool Dictionary::lookup (ParmString word, WordEntry &,
-                           const SensitiveCompare &) const
+  bool Dictionary::lookup (ParmString word, const SensitiveCompare *,
+                           WordEntry &) const
   {
     return false;
   }

@@ -133,7 +133,7 @@ namespace aspeller {
     WS::const_iterator i   = check_ws.begin();
     WS::const_iterator end = check_ws.end();
     do {
-      if ((*i)->lookup(w, w0, lang_.get())) return true; // FIXME
+      if ((*i)->lookup(w, &s_cmp, w0)) return true;
       ++i;
     } while (i != end);
     return false;
@@ -449,6 +449,18 @@ namespace aspeller {
     DictList to_add;
     RET_ON_ERR(add_data_set(config_->retrieve("master-path"), *config_, &to_add, this));
     add_dicts(this, to_add);
+
+    s_cmp.lang = lang_;
+
+    s_cmp_begin.lang = lang_;
+    s_cmp_begin.end = false;
+
+    s_cmp_middle.lang = lang_;
+    s_cmp_middle.begin = false;
+    s_cmp_middle.end   = false;
+
+    s_cmp_end.lang = lang_;
+    s_cmp_end.begin = false;
 
     StringList extra_dicts;
     config_->retrieve_list("extra-dicts", &extra_dicts);

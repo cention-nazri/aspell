@@ -354,7 +354,7 @@ namespace aspeller {
     operator bool () const {return lang;}
     int operator() (const char * a, const char * b) const
     { 
-      char x,y;
+      char x, y;
       for (;;)
       {
         while (x = lang->to_clean(*a++), !x);
@@ -396,9 +396,12 @@ namespace aspeller {
   struct SensitiveCompare {
     const Language * lang;
     bool case_insensitive;
-    bool ignore_accents;
+    bool ignore_accents;    
+    bool begin;
+    bool end;
     SensitiveCompare(const Language * l = 0) 
-      : lang(l), case_insensitive(false), ignore_accents(false) {}
+      : lang(l), case_insensitive(false), ignore_accents(false),
+        begin(true), end(true) {}
     bool operator() (const char * word, const char * inlist) const;
   };
 
@@ -413,7 +416,6 @@ namespace aspeller {
   PosibErr<Language *> new_language(const Config &, ParmString lang = 0);
 
   PosibErr<void> open_affix_file(const Config &, FStream & o);
-  
 }
 
 

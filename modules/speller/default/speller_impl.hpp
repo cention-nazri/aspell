@@ -196,6 +196,11 @@ namespace aspeller {
     CheckInfo check_inf[8];
     GuessInfo guess_info;
 
+    SensitiveCompare s_cmp;
+    SensitiveCompare s_cmp_begin;
+    SensitiveCompare s_cmp_middle;
+    SensitiveCompare s_cmp_end;
+
     typedef Vector<const Dict *> WS;
     WS check_ws, affix_ws, suggest_ws, suggest_affix_ws;
 
@@ -219,7 +224,6 @@ namespace aspeller {
 
   struct LookupInfo {
     SpellerImpl * sp;
-    const LangImpl * lang;
     enum Mode {Word, Guess, Clean, Soundslike, AlwaysTrue} mode;
     SpellerImpl::WS::const_iterator begin;
     SpellerImpl::WS::const_iterator end;
@@ -227,12 +231,12 @@ namespace aspeller {
     // returns 0 if nothing found
     // 1 if a match is found
     // -1 if a word is found but affix doesn't match and "gi"
-    int lookup (ParmString word, char aff, 
+    int lookup (ParmString word, const SensitiveCompare * c, char aff, 
                 WordEntry & o, GuessInfo * gi) const;
   };
 
   inline LookupInfo::LookupInfo(SpellerImpl * s, Mode m) 
-    : sp(s), lang(s ? &s->lang() : 0), mode(m) 
+    : sp(s), mode(m) 
   {
     switch (m) { 
     case Word: 

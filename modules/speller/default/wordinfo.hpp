@@ -41,7 +41,7 @@ namespace aspeller {
     const char * aff;
     const char * catg;
     void (* adv_)(WordEntry *);
-    void * intr[2];
+    void * intr[3];
     unsigned word_size;
     enum What {Other, Word, Soundslike, Clean, Misspelled} what;
     WordInfo word_info;

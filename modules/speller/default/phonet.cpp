@@ -115,12 +115,18 @@ namespace aspeller {
       } else if (dp.key == "version") {
 	parms->version = dp.value;
       } else {
-	*r = parms->strings.dup(iconv(dp.key));
+        const char * str = iconv(dp.key);
+        char * res = (char *)parms->strings.alloc(strlen(str) + 1);
+        lang->LangImpl::to_clean(res, str);
+	*r = res;
 	++r;
 	if (dp.value == "_") {
 	  *r = empty_str;
 	} else {
-	  *r = parms->strings.dup(iconv(dp.value));
+          str = iconv(dp.value);
+          res = (char *)parms->strings.alloc(strlen(str) + 1);
+          lang->LangImpl::to_clean(res, str);
+	  *r = res;
 	}
 	++r;
       }
@@ -187,8 +193,8 @@ namespace aspeller {
 
     typedef unsigned char uchar;
     
-    /**  to_upperize string  **/
-    parms.lang->LangImpl::to_upper(word, inword);
+    /**  to clean string  **/
+    parms.lang->LangImpl::to_clean(word, inword);
 
     /**  check word  **/
     i = j = z = 0;

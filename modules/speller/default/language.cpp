@@ -405,11 +405,13 @@ namespace aspeller {
   try_again:
     const char * word = word0;
     const char * inlist = inlist0;
-    if (*word == *inlist || *word == lang->to_title(*inlist)) ++word, ++inlist;
-    else                                                      goto try_upper;
+    if (begin) {
+      if (*word == *inlist || *word == lang->to_title(*inlist)) ++word, ++inlist;
+      else                                                      goto try_upper;
+    }
     while (*word && *inlist && *word == *inlist) ++word, ++inlist;
     if (*inlist) goto try_upper;
-    if (lang->special(*word).end) ++word;
+    if (end && lang->special(*word).end) ++word;
     if (*word) goto try_upper;
     return true;
   try_upper:
@@ -417,11 +419,11 @@ namespace aspeller {
     inlist = inlist0;
     while (*word && *inlist && *word == lang->to_upper(*inlist)) ++word, ++inlist;
     if (*inlist) goto fail;
-    if (lang->special(*word).end) ++word;
+    if (end && lang->special(*word).end) ++word;
     if (*word) goto fail;
     return true;
   fail:
-    if (lang->special(*word0).begin) {++word0; goto try_again;}
+    if (begin && lang->special(*word0).begin) {++word0; goto try_again;}
     return false;
   }
 

@@ -336,7 +336,7 @@ public:
   PosibErr<void> add(ParmString w) {return Dictionary::add(w);}
   PosibErr<void> add(ParmString w, ParmString s);
 
-  bool lookup (ParmString word, WordEntry &, const SensitiveCompare &) const;
+  bool lookup(ParmString word, const SensitiveCompare *, WordEntry &) const;
 
   bool clean_lookup(const char * sondslike, WordEntry &) const;
 
@@ -358,13 +358,13 @@ bool WritableDict::empty() const
   return word_lookup->empty();
 }
 
-bool WritableDict::lookup(ParmString word, WordEntry & o,
-                          const SensitiveCompare & c) const
+bool WritableDict::lookup(ParmString word, const SensitiveCompare * c,
+                          WordEntry & o) const
 {
   o.clear();
   pair<WordLookup::iterator, WordLookup::iterator> p(word_lookup->equal_range(word));
   while (p.first != p.second) {
-    if (c(word,*p.first)) {
+    if ((*c)(word,*p.first)) {
       o.what = WordEntry::Word;
       set_word(o, *p.first);
       return true;
@@ -447,7 +447,7 @@ PosibErr<void> WritableDict::add(ParmString w, ParmString s) {
   RET_ON_ERR(check_if_valid(*lang(),w));
   SensitiveCompare c(lang());
   WordEntry we;
-  if (WritableDict::lookup(w,we,c)) return no_err;
+  if (WritableDict::lookup(w,&c,we)) return no_err;
   byte * w2;
   w2 = (byte *)buffer.alloc(w.size() + 3);
   *w2++ = lang()->get_word_info(w);
@@ -557,7 +557,7 @@ public:
   Size   size()     const;
   bool   empty()    const;
 
-  bool lookup(ParmString, WordEntry &, const SensitiveCompare &) const;
+  bool lookup(ParmString, const SensitiveCompare *, WordEntry &) const;
 
   bool clean_lookup(ParmString sondslike, WordEntry &) const;
 
@@ -589,13 +589,13 @@ bool WritableReplDict::empty() const
   return word_lookup->empty();
 }
     
-bool WritableReplDict::lookup(ParmString word, WordEntry & o,
-                           const SensitiveCompare & c) const
+bool WritableReplDict::lookup(ParmString word, const SensitiveCompare * c,
+                              WordEntry & o) const
 {
   o.clear();
   pair<WordLookup::iterator, WordLookup::iterator> p(word_lookup->equal_range(word));
   while (p.first != p.second) {
-    if (c(word,*p.first)) {
+    if ((*c)(word,*p.first)) {
       o.what = WordEntry::Misspelled;
       set_word(o, *p.first);
       o.intr[0] = (void *)*p.first;
@@ -696,7 +696,7 @@ bool WritableReplDict::repl_lookup(const WordEntry & w, WordEntry & o) const
   } else {
     SensitiveCompare c(lang()); // FIXME: This is not exactly right
     WordEntry tmp;
-    WritableReplDict::lookup(w.word, tmp, c);
+    WritableReplDict::lookup(w.word, &c, tmp);
     repls = get_vector(tmp.word);
     if (!repls) return false;
   }
