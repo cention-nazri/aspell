@@ -588,8 +588,7 @@ namespace aspeller {
   bool find_language(Config & c)
   {
     String l_data = c.retrieve("lang");
-    l_data.ensure_null_end();
-    char * l = l_data.data();
+    char * l = l_data.mstr();
 
     String dir1,dir2,path;
     fill_data_dir(&c, dir1, dir2);

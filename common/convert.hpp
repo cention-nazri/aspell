@@ -266,8 +266,7 @@ namespace acommon {
       if (conv) {
         buf.clear();
         conv->convert(str, sz, buf, buf0);
-        buf.ensure_null_end();
-        return buf.data();
+        return buf.mstr();
       } else {
         return str;
       }
@@ -291,8 +290,7 @@ namespace acommon {
       if (conv) {
         buf.clear();
         conv->convert(str, -1, buf, buf0);
-        buf.ensure_null_end();
-        return buf.data();
+        return buf.mstr();
       } else {
         return str;
       }
@@ -302,8 +300,7 @@ namespace acommon {
       if (conv) {
         buf.clear();
         conv->convert(str, -1, buf, buf0);
-        buf.ensure_null_end();
-        return buf.data();
+        return buf.mstr();
       } else {
         return str;
       }
@@ -317,8 +314,7 @@ namespace acommon {
       } else {
         buf.append(c);
       }
-      buf.ensure_null_end();
-      return buf.data();
+      return buf.mstr();
     }
   };
 
@@ -357,8 +353,7 @@ namespace acommon {
       if (conv) {
         buf.clear();
         RET_ON_ERR(conv->convert_ec(str, sz, buf, buf0, str));
-        buf.ensure_null_end();
-        return buf.data();
+        return buf.mstr();
       } else {
         return str;
       }
@@ -372,8 +367,7 @@ namespace acommon {
       if (conv) {
         buf.clear();
         RET_ON_ERR(conv->convert_ec(str, -1, buf, buf0, str));
-        buf.ensure_null_end();
-        return buf.data();
+        return buf.mstr();
       } else {
         return str;
       }
@@ -384,8 +378,7 @@ namespace acommon {
       if (conv) {
         buf.clear();
         RET_ON_ERR(conv->convert_ec(str, -1, buf, buf0, str));
-        buf.ensure_null_end();
-        return buf.data();
+        return buf.mstr();
       } else {
         return str.str();
       }

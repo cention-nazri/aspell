@@ -846,8 +846,7 @@ namespace acommon {
       default:
         ;
       }
-      entry->value.ensure_null_end();
-      if (do_unescape) unescape(entry->value.data());
+      if (do_unescape) unescape(entry->value.mstr());
 
       entry->next = *insert_point_;
       *insert_point_ = entry;

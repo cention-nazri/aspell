@@ -24,9 +24,11 @@
 // in a continues areas of memory but is not guaranteed to be null
 // terminated.  However, space is always allocated for the null
 // characters.  Thus, the c_str() method will never invalided any
-// exiting pointers.  The method ensure_null_end() will null terminate
-// the string.  Once null terminated the string will remain as such
-// until the length of the string changes.
+// exiting pointers.  The string is also null terminated when accesed
+// via the str() and mstr() methods.  In addition the method
+// ensure_null_end() will null terminate the string.  Once null
+// terminated the string will remain as such until the length of the
+// string changes.
 //
 
 namespace acommon {
