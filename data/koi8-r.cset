@@ -5,37 +5,37 @@
 # <char> <uni> <type> <display> <upper> <lower> <title> <plain>
 #                                                         <sl-first> <sl-rest>
 00 0000 - N 00 00 00 00 00 00 # <control>
-01 0001 - N 01 01 01 00 00 00 # <control>
-02 0002 - N 02 02 02 00 00 00 # <unused control>
-03 0003 - N 03 03 03 00 00 00 # <unused control>
-04 0004 - N 04 04 04 00 00 00 # <unused control>
-05 0005 - N 05 05 05 00 00 00 # <unused control>
-06 0006 - N 06 06 06 00 00 00 # <unused control>
-07 0007 - N 07 07 07 00 00 00 # <unused control>
-08 0008 - N 08 08 08 00 00 00 # <unused control>
-09 0009 - N 09 09 09 00 00 00 # <unused control>
-0A 000A - N 0A 0A 0A 00 00 00 # <unused control>
-0B 000B - N 0B 0B 0B 00 00 00 # <unused control>
-0C 000C - N 0C 0C 0C 00 00 00 # <unused control>
-0D 000D - N 0D 0D 0D 00 00 00 # <unused control>
-0E 000E - N 0E 0E 0E 00 00 00 # <unused control>
-0F 000F - N 0F 0F 0F 00 00 00 # <unused control>
-10 0010 - N 10 10 10 00 00 00 # <unused control>
-11 0011 - N 11 11 11 00 00 00 # <unused control>
-12 0012 - N 12 12 12 00 00 00 # <unused control>
-13 0013 - N 13 13 13 00 00 00 # <unused control>
-14 0014 - N 14 14 14 00 00 00 # <unused control>
-15 0015 - N 15 15 15 00 00 00 # <unused control>
-16 0016 - N 16 16 16 00 00 00 # <unused control>
-17 0017 - N 17 17 17 00 00 00 # <unused control>
-18 0018 - N 18 18 18 00 00 00 # <unused control>
-19 0019 - N 19 19 19 00 00 00 # <unused control>
-1A 001A - N 1A 1A 1A 00 00 00 # <unused control>
-1B 001B - N 1B 1B 1B 00 00 00 # <unused control>
-1C 001C - N 1C 1C 1C 00 00 00 # <unused control>
-1D 001D - N 1D 1D 1D 00 00 00 # <unused control>
-1E 001E - N 1E 1E 1E 00 00 00 # <unused control>
-1F 001F - N 1F 1F 1F 00 00 00 # <unused control>
+01 0001 . N 01 01 01 00 00 00 # <unused control>
+02 0002 . N 02 02 02 00 00 00 # <unused control>
+03 0003 . N 03 03 03 00 00 00 # <unused control>
+04 0004 . N 04 04 04 00 00 00 # <unused control>
+05 0005 . N 05 05 05 00 00 00 # <unused control>
+06 0006 . N 06 06 06 00 00 00 # <unused control>
+07 0007 . N 07 07 07 00 00 00 # <unused control>
+08 0008 . N 08 08 08 00 00 00 # <unused control>
+09 0009 . N 09 09 09 00 00 00 # <unused control>
+0A 000A . N 0A 0A 0A 00 00 00 # <unused control>
+0B 000B . N 0B 0B 0B 00 00 00 # <unused control>
+0C 000C . N 0C 0C 0C 00 00 00 # <unused control>
+0D 000D . N 0D 0D 0D 00 00 00 # <unused control>
+0E 000E . N 0E 0E 0E 00 00 00 # <unused control>
+0F 000F . N 0F 0F 0F 00 00 00 # <unused control>
+10 0010 - N 10 10 10 00 00 00 # <control>
+11 0011 . N 11 11 11 00 00 00 # <unused control>
+12 0012 . N 12 12 12 00 00 00 # <unused control>
+13 0013 . N 13 13 13 00 00 00 # <unused control>
+14 0014 . N 14 14 14 00 00 00 # <unused control>
+15 0015 . N 15 15 15 00 00 00 # <unused control>
+16 0016 . N 16 16 16 00 00 00 # <unused control>
+17 0017 . N 17 17 17 00 00 00 # <unused control>
+18 0018 . N 18 18 18 00 00 00 # <unused control>
+19 0019 . N 19 19 19 00 00 00 # <unused control>
+1A 001A . N 1A 1A 1A 00 00 00 # <unused control>
+1B 001B . N 1B 1B 1B 00 00 00 # <unused control>
+1C 001C . N 1C 1C 1C 00 00 00 # <unused control>
+1D 001D . N 1D 1D 1D 00 00 00 # <unused control>
+1E 001E . N 1E 1E 1E 00 00 00 # <unused control>
+1F 001F . N 1F 1F 1F 00 00 00 # <unused control>
 20 0020 W Y 20 20 20 00 00 00 # SPACE
 21 0021 - Y 21 21 21 00 00 00 # EXCLAMATION MARK
 22 0022 - Y 22 22 22 00 00 00 # QUOTATION MARK
@@ -132,69 +132,69 @@
 7D 007D - Y 7D 7D 7D 00 00 00 # RIGHT CURLY BRACKET
 7E 007E - Y 7E 7E 7E 00 00 00 # TILDE
 7F 007F - N 7F 7F 7F 00 00 00 # <control>
-80 2500 - N 80 80 80 00 00 00 # <unused special>
-81 2502 - N 81 81 81 00 00 00 # <unused special>
-82 250C - N 82 82 82 00 00 00 # <unused special>
-83 2510 - N 83 83 83 00 00 00 # <unused special>
-84 2514 - N 84 84 84 00 00 00 # <unused special>
-85 2518 - N 85 85 85 00 00 00 # <unused special>
-86 251C - N 86 86 86 00 00 00 # <unused special>
-87 2524 - N 87 87 87 00 00 00 # <unused special>
-88 252C - N 88 88 88 00 00 00 # <unused special>
-89 2534 - N 89 89 89 00 00 00 # <unused special>
-8A 253C - N 8A 8A 8A 00 00 00 # <unused special>
-8B 2580 - N 8B 8B 8B 00 00 00 # <unused special>
-8C 2584 - N 8C 8C 8C 00 00 00 # <unused special>
-8D 2588 - N 8D 8D 8D 00 00 00 # <unused special>
-8E 258C - N 8E 8E 8E 00 00 00 # <unused special>
-8F 2590 - N 8F 8F 8F 00 00 00 # <unused special>
-90 2591 - N 90 90 90 00 00 00 # <unused special>
-91 2592 - N 91 91 91 00 00 00 # <unused special>
-92 2593 - N 92 92 92 00 00 00 # <unused special>
-93 2320 - N 93 93 93 00 00 00 # <unused special>
-94 25A0 - N 94 94 94 00 00 00 # <unused special>
+80 2500 . N 80 80 80 00 00 00 # <unused special>
+81 2502 . N 81 81 81 00 00 00 # <unused special>
+82 250C . N 82 82 82 00 00 00 # <unused special>
+83 2510 . N 83 83 83 00 00 00 # <unused special>
+84 2514 . N 84 84 84 00 00 00 # <unused special>
+85 2518 . N 85 85 85 00 00 00 # <unused special>
+86 251C . N 86 86 86 00 00 00 # <unused special>
+87 2524 . N 87 87 87 00 00 00 # <unused special>
+88 252C . N 88 88 88 00 00 00 # <unused special>
+89 2534 . N 89 89 89 00 00 00 # <unused special>
+8A 253C . N 8A 8A 8A 00 00 00 # <unused special>
+8B 2580 . N 8B 8B 8B 00 00 00 # <unused special>
+8C 2584 . N 8C 8C 8C 00 00 00 # <unused special>
+8D 2588 . N 8D 8D 8D 00 00 00 # <unused special>
+8E 258C . N 8E 8E 8E 00 00 00 # <unused special>
+8F 2590 . N 8F 8F 8F 00 00 00 # <unused special>
+90 2591 . N 90 90 90 00 00 00 # <unused special>
+91 2592 . N 91 91 91 00 00 00 # <unused special>
+92 2593 . N 92 92 92 00 00 00 # <unused special>
+93 2320 . N 93 93 93 00 00 00 # <unused special>
+94 25A0 . N 94 94 94 00 00 00 # <unused special>
 95 2022 - Y 95 95 95 00 00 00 # BULLET
-96 221A - N 96 96 96 00 00 00 # <unused special>
-97 2248 - N 97 97 97 00 00 00 # <unused special>
-98 2264 - N 98 98 98 00 00 00 # <unused special>
-99 2265 - N 99 99 99 00 00 00 # <unused special>
+96 221A . N 96 96 96 00 00 00 # <unused special>
+97 2248 . N 97 97 97 00 00 00 # <unused special>
+98 2264 . N 98 98 98 00 00 00 # <unused special>
+99 2265 . N 99 99 99 00 00 00 # <unused special>
 9A 00A0 W Y 9A 9A 9A 00 00 00 # NO-BREAK SPACE
-9B 2321 - N 9B 9B 9B 00 00 00 # <unused special>
+9B 2321 . N 9B 9B 9B 00 00 00 # <unused special>
 9C 00B0 - Y 9C 9C 9C 00 00 00 # DEGREE SIGN
 9D 00B2 - Y 9D 9D 9D 00 00 00 # SUPERSCRIPT TWO
 9E 00B7 - Y 9E 9E 9E 00 00 00 # MIDDLE DOT
 9F 00F7 - Y 9F 9F 9F 00 00 00 # DIVISION SIGN
-A0 2550 - N A0 A0 A0 00 00 00 # <unused special>
-A1 2551 - N A1 A1 A1 00 00 00 # <unused special>
-A2 2552 - N A2 A2 A2 00 00 00 # <unused special>
-A3 0451 L Y B3 A3 B3 C5 2A 00 # CYRILLIC SMALL LETTER IO
-A4 2553 - N A4 A4 A4 00 00 00 # <unused special>
-A5 2554 - N A5 A5 A5 00 00 00 # <unused special>
-A6 2555 - N A6 A6 A6 00 00 00 # <unused special>
-A7 2556 - N A7 A7 A7 00 00 00 # <unused special>
-A8 2557 - N A8 A8 A8 00 00 00 # <unused special>
-A9 2558 - N A9 A9 A9 00 00 00 # <unused special>
-AA 2559 - N AA AA AA 00 00 00 # <unused special>
-AB 255A - N AB AB AB 00 00 00 # <unused special>
-AC 255B - N AC AC AC 00 00 00 # <unused special>
-AD 255C - N AD AD AD 00 00 00 # <unused special>
-AE 255D - N AE AE AE 00 00 00 # <unused special>
-AF 255E - N AF AF AF 00 00 00 # <unused special>
-B0 255F - N B0 B0 B0 00 00 00 # <unused special>
-B1 2560 - N B1 B1 B1 00 00 00 # <unused special>
-B2 2561 - N B2 B2 B2 00 00 00 # <unused special>
-B3 0401 L Y B3 A3 B3 E5 2A 00 # CYRILLIC CAPITAL LETTER IO
-B4 2562 - N B4 B4 B4 00 00 00 # <unused special>
-B5 2563 - N B5 B5 B5 00 00 00 # <unused special>
-B6 2564 - N B6 B6 B6 00 00 00 # <unused special>
-B7 2565 - N B7 B7 B7 00 00 00 # <unused special>
-B8 2566 - N B8 B8 B8 00 00 00 # <unused special>
-B9 2567 - N B9 B9 B9 00 00 00 # <unused special>
-BA 2568 - N BA BA BA 00 00 00 # <unused special>
-BB 2569 - N BB BB BB 00 00 00 # <unused special>
-BC 256A - N BC BC BC 00 00 00 # <unused special>
-BD 256B - N BD BD BD 00 00 00 # <unused special>
-BE 256C - N BE BE BE 00 00 00 # <unused special>
+A0 2550 . N A0 A0 A0 00 00 00 # <unused special>
+A1 2551 . N A1 A1 A1 00 00 00 # <unused special>
+A2 2552 . N A2 A2 A2 00 00 00 # <unused special>
+A3 0451 L Y B3 A3 B3 A3 A3 A3 # CYRILLIC SMALL LETTER IO
+A4 2553 . N A4 A4 A4 00 00 00 # <unused special>
+A5 2554 . N A5 A5 A5 00 00 00 # <unused special>
+A6 2555 . N A6 A6 A6 00 00 00 # <unused special>
+A7 2556 . N A7 A7 A7 00 00 00 # <unused special>
+A8 2557 . N A8 A8 A8 00 00 00 # <unused special>
+A9 2558 . N A9 A9 A9 00 00 00 # <unused special>
+AA 2559 . N AA AA AA 00 00 00 # <unused special>
+AB 255A . N AB AB AB 00 00 00 # <unused special>
+AC 255B . N AC AC AC 00 00 00 # <unused special>
+AD 255C . N AD AD AD 00 00 00 # <unused special>
+AE 255D . N AE AE AE 00 00 00 # <unused special>
+AF 255E . N AF AF AF 00 00 00 # <unused special>
+B0 255F . N B0 B0 B0 00 00 00 # <unused special>
+B1 2560 . N B1 B1 B1 00 00 00 # <unused special>
+B2 2561 . N B2 B2 B2 00 00 00 # <unused special>
+B3 0401 L Y B3 A3 B3 B3 A3 A3 # CYRILLIC CAPITAL LETTER IO
+B4 2562 . N B4 B4 B4 00 00 00 # <unused special>
+B5 2563 . N B5 B5 B5 00 00 00 # <unused special>
+B6 2564 . N B6 B6 B6 00 00 00 # <unused special>
+B7 2565 . N B7 B7 B7 00 00 00 # <unused special>
+B8 2566 . N B8 B8 B8 00 00 00 # <unused special>
+B9 2567 . N B9 B9 B9 00 00 00 # <unused special>
+BA 2568 . N BA BA BA 00 00 00 # <unused special>
+BB 2569 . N BB BB BB 00 00 00 # <unused special>
+BC 256A . N BC BC BC 00 00 00 # <unused special>
+BD 256B . N BD BD BD 00 00 00 # <unused special>
+BE 256C . N BE BE BE 00 00 00 # <unused special>
 BF 00A9 - Y BF BF BF 00 00 00 # COPYRIGHT SIGN
 C0 044E L Y E0 C0 E0 C0 2A 00 # CYRILLIC SMALL LETTER YU
 C1 0430 L Y E1 C1 E1 C1 2A 00 # CYRILLIC SMALL LETTER A
@@ -206,7 +206,7 @@ C6 0444 L Y E6 C6 E6 C6 C6 C6 # CYRILLIC SMALL LETTER EF
 C7 0433 L Y E7 C7 E7 C7 C7 C7 # CYRILLIC SMALL LETTER GHE
 C8 0445 L Y E8 C8 E8 C8 C8 C8 # CYRILLIC SMALL LETTER HA
 C9 0438 L Y E9 C9 E9 C9 2A 00 # CYRILLIC SMALL LETTER I
-CA 0439 L Y EA CA EA C9 2A 00 # CYRILLIC SMALL LETTER SHORT I
+CA 0439 L Y EA CA EA CA CA CA # CYRILLIC SMALL LETTER SHORT I
 CB 043A L Y EB CB EB CB CB CB # CYRILLIC SMALL LETTER KA
 CC 043B L Y EC CC EC CC CC CC # CYRILLIC SMALL LETTER EL
 CD 043C L Y ED CD ED CD CD CD # CYRILLIC SMALL LETTER EM
@@ -238,7 +238,7 @@ E6 0424 L Y E6 C6 E6 E6 C6 C6 # CYRILLIC CAPITAL LETTER EF
 E7 0413 L Y E7 C7 E7 E7 C7 C7 # CYRILLIC CAPITAL LETTER GHE
 E8 0425 L Y E8 C8 E8 E8 C8 C8 # CYRILLIC CAPITAL LETTER HA
 E9 0418 L Y E9 C9 E9 E9 2A 00 # CYRILLIC CAPITAL LETTER I
-EA 0419 L Y EA CA EA E9 2A 00 # CYRILLIC CAPITAL LETTER SHORT I
+EA 0419 L Y EA CA EA EA CA CA # CYRILLIC CAPITAL LETTER SHORT I
 EB 041A L Y EB CB EB EB CB CB # CYRILLIC CAPITAL LETTER KA
 EC 041B L Y EC CC EC EC CC CC # CYRILLIC CAPITAL LETTER EL
 ED 041C L Y ED CD ED ED CD CD # CYRILLIC CAPITAL LETTER EM
