@@ -72,7 +72,7 @@
 
 \layout Title
 
-GNU Aspell 0.50
+GNU Aspell 0.50.1
 \layout Author
 
 Copyright (c) 2000-2002
@@ -93,7 +93,7 @@ kevina@gnu.org
 Introduction
 \layout Standard
 
-GNU Aspell is a Free and Open Source spell checker designed to eventually
+GNU Aspell is a free (as in Freedom) spell checker designed to eventually
  replace Ispell.
  It can either be used as a library or as an independent spell checker.
  Its main feature is that it does a much better job of coming up with possible
@@ -493,8 +493,6 @@ Aspell requires gcc 2.95 (or better) as the C++ compiler.
  Aspell at very least requires a Unix-like environment (sh, grep, sed, tr,
  etc...) in order to build.
  Aspell also uses a few POSIX functions when necessary.
- Nevertheless, Aspell will compile and run using the MinGW version of gcc
- provided that the CygWin environment is used to to build it.
 \layout Section
 
 Obtaining
@@ -720,81 +718,6 @@ Dir
  
 \layout Subsection
 
-Win32 Notes
-\layout Standard
-
-Aspell should be able to compile on Win32 platforms using the Win32 version
- of gcc which can either be the Cgiwin or the Mingw version of Gcc 2.95 using
- the Cgiwin development environment.
- The Mingw version of Aspell will have slightly less functionality, but
- none of which is noticeable to the end user.
- In order to get the nice full screen interface with Mingw when spell checking
- files a curses implementation that does not require Cygwin is required.
- The PDCurses (
-\begin_inset LatexCommand \url{http://www.lightlink.com/hessling/PDCurses/}
-
-\end_inset 
-
-) implementation is known to work, other implementations may work however
- they have not been tested.
- See the previous section for information on specifying the location of
- the curses library and include file.
-\layout Standard
-
-If Aspell is compiled with --enable-win32-relocatable and the 
-\series bold 
-bindir
-\series default 
- is set to the same value as 
-\series bold 
-prefix
-\series default 
- (ie not <<prefix>>/bin) then the Aspell directory (what prefix is set to)
- can be relocated anywhere provided that none of the data files are moved
- around within the Aspell directory.
-\layout Standard
-
-The default paths for Aspell are designed for a Unix system and not a Win32
- system so you might want to specify different ones when compiling Aspell.
- Also if the HOME environmental variable is not set Aspell will assume it
- is the current working directly.
- This may lead to your personal word lists being saved in unpredictable
- locations.
- To solve this either compile with --enable-win32-relocatable (see above)
- or specify the complete path of the personal and replacement word lists
- in aspell.conf.
- If Aspell is compiled with --enable-win32-relocatable than the personal
- word lists are saved in the 
-\series bold 
-prefix
-\series default 
- directory and the name is changed from 
-\begin_inset Quotes eld
-\end_inset 
-
-
-\family typewriter 
-.aspell.<lang>.*
-\family default 
-
-\begin_inset Quotes erd
-\end_inset 
-
- to
-\begin_inset Quotes erd
-\end_inset 
-
- 
-\family typewriter 
-<lang>.*
-\family default 
-
-\begin_inset Quotes erd
-\end_inset 
-
-.
-\layout Subsection
-
 Upgrading from Aspell .33/Pspell .12
 \layout Standard
 
@@ -917,6 +840,118 @@ aspell
  This also means that dictionaries designed to work with the snapshot will
  no longer work with the official release.
  
+\layout Subsection
+
+Win32 Notes
+\layout Standard
+
+Due to limited time and my general dislike for Microsoft Windows, Win32
+ is not an officially supported platform for Aspell.
+ However, with a little effort, it should be possible for someone with experienc
+e with the Cgiwin development environment to create an Aspell binary and
+ library (dll) using gcc.
+ The library in theory should be able to be used by any Win32 compiler if
+ it is compiled right, but this theory has never been tested.
+\layout Standard
+
+If you have experience with using Cgiwin or a Unix like environment and
+ are willing to maintain an Aspell binary and/or library I would be willing
+ to work with you to get Aspell to compile.
+ If you are seriously interested please post to aspell-devel@gnu.org after
+ you have given it an initial try.
+ However, if, after reading this section, you do not know how to start then
+ you most likely do not have the necessary experience to be able to get
+ Aspell to compile.
+ Please do not bother me with questions such as 
+\begin_inset Quotes eld
+\end_inset 
+
+I would like to use Aspell on Win32 but I have no idea what to do.
+\begin_inset Quotes erd
+\end_inset 
+
+, as I am not willing to teach you the basics of working with a Unix like
+ environment.
+\layout Standard
+
+Aspell requires Gcc 2.95 (or better) and the Cgiwin development environment
+ in order to compile on Win32.
+ Both the Cgiwin or the Mingw version of Gcc should work.
+ The Mingw version of Aspell will have slightly less functionality, but
+ none of which is noticeable to the end user.
+ Microsoft Visual C++, however, will not work as the compiler is far to
+ buggy as far as C++ compliance goes.
+ You are more than welcome to try but be warned that others in the past
+ have tried and given up.
+\layout Standard
+
+In order to get the nice full screen interface with Mingw when spell checking
+ files a curses implementation that does not require Cygwin is required.
+ The PDCurses (
+\begin_inset LatexCommand \url{http://www.lightlink.com/hessling/PDCurses/}
+
+\end_inset 
+
+) implementation is known to work, other implementations may work however
+ they have not been tested.
+ See the previous section for information on specifying the location of
+ the curses library and include file.
+\layout Standard
+
+If Aspell is compiled with --enable-win32-relocatable and the 
+\series bold 
+bindir
+\series default 
+ is set to the same value as 
+\series bold 
+prefix
+\series default 
+ (ie not <<prefix>>/bin) then the Aspell directory (what prefix is set to)
+ can be relocated anywhere provided that none of the data files are moved
+ around within the Aspell directory.
+ Please not that this feature has not been tested with GNU Aspell 0.50 so
+ it may or may not work.
+\layout Standard
+
+The default paths for Aspell are designed for a Unix system and not a Win32
+ system so you might want to specify different ones when compiling Aspell.
+ Also if the HOME environmental variable is not set Aspell will assume it
+ is the current working directly.
+ This may lead to your personal word lists being saved in unpredictable
+ locations.
+ To solve this either compile with --enable-win32-relocatable (see above)
+ or specify the complete path of the personal and replacement word lists
+ in aspell.conf.
+ If Aspell is compiled with --enable-win32-relocatable than the personal
+ word lists are saved in the 
+\series bold 
+prefix
+\series default 
+ directory and the name is changed from 
+\begin_inset Quotes eld
+\end_inset 
+
+
+\family typewriter 
+.aspell.<lang>.*
+\family default 
+
+\begin_inset Quotes erd
+\end_inset 
+
+ to
+\begin_inset Quotes erd
+\end_inset 
+
+ 
+\family typewriter 
+<lang>.*
+\family default 
+
+\begin_inset Quotes erd
+\end_inset 
+
+.
 \layout Section
 
 Using aspell-import
@@ -5557,6 +5592,15 @@ appendix
 \layout Chapter
 
 Changelog
+\layout Section*
+
+Changes from 0.50 to 0.50.1 (Sep ??, 2002)
+\layout Itemize
+
+Lots of portability fixes for non GNU/Linux platforms.
+\layout Itemize
+
+Updated note on Win32 support
 \layout Section*
 
 Changes from .33.7.1 to 0.50 (Aug 23, 2002)
