@@ -4,6 +4,10 @@
 // license along with this library if you did not you can find
 // it at http://www.gnu.org/.
 
+#ifndef ACOMMON_STRING_BUFFER__HPP
+#define ACOMMON_STRING_BUFFER__HPP
+
+#include "parm_string.hpp"
 #include "basic_list.hpp"
 
 namespace acommon {
@@ -18,9 +22,13 @@ namespace acommon {
     static const Buf sbuf;
     BasicList<Buf> bufs;
     unsigned int fill;
+    char * alloc(unsigned int size, const char * str);
   public:
     StringBuffer();
-    char * alloc(unsigned int size);
+    char * alloc(unsigned int size) {return alloc(size, 0);}
+    char * dup(ParmString str) {return alloc(str.size() + 1, str.str());}
   };
 
 }
+
+#endif // ACOMMON_STRING_BUFFER__HPP

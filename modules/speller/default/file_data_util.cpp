@@ -1,4 +1,3 @@
-
 #include "config.hpp"
 #include "file_util.hpp"
 #include "file_data_util.hpp"
@@ -26,5 +25,40 @@ namespace aspeller {
     file = dir2 + name + extension;
     return dir2;
   }
+
+  bool find_file(String & file,
+                 const String & dir1, const String & dir2, 
+                 const String & name, 
+                 ParmString preext, ParmString ext)
+  {
+    bool try_name_only = false;
+    if (name.size() > ext.size() 
+        && memcmp(name.c_str() + name.size() - ext.size(), 
+                  ext, ext.size()) == 0) try_name_only = true;
+    if (!try_name_only) {
+      String n = name; n += preext; n += ext;
+      file = dir1 + n;
+      if (file_exists(file)) return true;
+      file = dir2 + n;
+      if (file_exists(file)) return true;
+
+      n = name; n += ext;
+      file = dir1 + n;
+      if (file_exists(file)) return true;
+      file = dir2 + n;
+      if (file_exists(file)) return true;
+    }
+
+    file = dir1 + name;
+    if (file_exists(file)) return true;
+    file = dir2 + name;
+    if (file_exists(file)) return true;
+
+    if (try_name_only) {file = dir1 + name;}
+    else               {file = dir1 + name; file += preext; file += ext;}
+    
+    return false;
+  }
+  
   
 }

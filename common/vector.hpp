@@ -27,6 +27,9 @@ namespace acommon
     void append(const T * begin, unsigned int size) {
       insert(this->end(), begin, begin+size);
     }
+    void append(const T * begin, const T * end) {
+      insert(this->end(), begin, end);
+    }
     int alloc(int s) {
       int pos = this->size();
       this->resize(pos + s);

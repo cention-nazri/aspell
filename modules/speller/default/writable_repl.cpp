@@ -321,8 +321,7 @@ namespace aspeller_default_writable_repl {
     for (; p != p0.second && !cmp(mis,p->first); ++p);
 
     if (p == p0.second) {
-      m = buffer.alloc(mis.size() + 1);
-      memcpy((char *)m, mis.str(), mis.size() + 1);
+      m = buffer.dup(mis);
       p = word_lookup->insert(WordLookup::value_type(m,Vector<Str>())).first;
     } else {
       m = p->first;
@@ -331,13 +330,11 @@ namespace aspeller_default_writable_repl {
     for (Vector<Str>::iterator i = p->second.begin(); i != p->second.end(); ++i)
       if (cmp(cor, *i)) return no_err;
     
-    c = buffer.alloc(cor.size() + 1);
-    memcpy((char *)c, cor.str(), cor.size() + 1);
+    c = buffer.dup(cor);
     p->second.push_back(c);
 
     if (have_soundslike) {
-      s = buffer.alloc(sl.size() + 1);
-      memcpy((char *)s, sl.str(), sl.size() + 1);
+      s = buffer.dup(sl);
       soundslike_lookup_[s].push_back(m);
     }
 

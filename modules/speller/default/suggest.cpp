@@ -57,7 +57,7 @@
 #include "stack_ptr.hpp"
 #include "suggest.hpp"
 
-//#include "iostream.hpp"
+#include "iostream.hpp"
 //#define DEBUG_SUGGEST
 
 using namespace aspeller;
@@ -176,9 +176,10 @@ namespace aspeller_default_suggest {
       return use_soundslike ? lang->soundslike_chars() : lang->stripped_chars();
     }
 
-    void try_sound(const char *, int ms);
-    void add_nearmiss(const char * word, int ms, bool count, 
-		      bool need_alloc, WordEntry * rl = 0) {
+    void try_sound(ParmString, int score);
+    void add_nearmiss(ParmString word, int score, bool count, 
+		      bool need_alloc, WordEntry * rl = 0) 
+    {
       near_misses.push_front(ScoreWordSound());
       ScoreWordSound & d = near_misses.front();
       if (need_alloc) {
@@ -189,10 +190,8 @@ namespace aspeller_default_suggest {
       }
 
       if (parms.use_typo_analysis) {
-
 	unsigned int l = strlen(word);
 	if (l > max_word_length) max_word_length = l;
-	
       }
 
       if (!is_stripped(*lang,word)) {
@@ -202,7 +201,7 @@ namespace aspeller_default_suggest {
 	d.word_stripped = d.word;
       }
 
-      d.soundslike_score = ms;
+      d.soundslike_score = score;
       d.count = count;
       d.repl_list = rl;
     }
@@ -234,10 +233,10 @@ namespace aspeller_default_suggest {
     }
 
     void try_others();
-    void try_space_hyphen();
+    void try_split();
     void try_one_edit();
     void try_scan();
-
+    void try_repl();
 
     void score_list();
     void transfer();
@@ -264,15 +263,15 @@ namespace aspeller_default_suggest {
     transfer();
   }
   
-  void Working::try_sound (const char * m, int ms)  
+  void Working::try_sound(ParmString str, int score)  
   {
     String word;
     WordEntry sw;
     for (SpellerImpl::WS::const_iterator i = speller->suggest_ws.begin();
          i != speller->suggest_ws.end();
-         ++i) 
+         ++i)
     {
-      i->ws->soundslike_lookup(m, sw);
+      i->ws->soundslike_lookup(str, sw);
       for (;!sw.at_end(); sw.adv()) {
         word.clear();
         i->convert.convert(sw.word, word);
@@ -283,15 +282,14 @@ namespace aspeller_default_suggest {
             = static_cast<const BasicReplacementSet *>(i->ws);
           repl_set->repl_lookup(sw, *repl);
         }
-        add_nearmiss(word.c_str(), ms, do_count, do_need_alloc, repl);
+        add_nearmiss(word, score, do_count, do_need_alloc, repl);
       }
     }
     if (affix_compress_soundslike) {
       CheckInfo ci; memset(&ci, 0, sizeof(ci));
-      bool res = lang->affix()->affix_check(LookupInfo(speller, LookupInfo::Soundslike),
-					    m, ci, 0);
+      bool res = lang->affix()->affix_check(LookupInfo(speller, LookupInfo::Soundslike), str, ci, 0);
       if (!res) return;
-
+      
       // FIXME: This is not completely correct when there are multiple
       //   words for a single stripped word.
       for (SpellerImpl::WS::const_iterator i = speller->suggest_affix_ws.begin();
@@ -303,7 +301,7 @@ namespace aspeller_default_suggest {
 	  word.clear();
 	  i->convert.convert(sw.word, word);
 	  lang->affix()->get_word(word, ci);
-	  add_nearmiss(word.c_str(), ms, do_count, do_need_alloc);
+	  add_nearmiss(word.c_str(), score, do_count, do_need_alloc);
 	}
       }
     }
@@ -315,23 +313,24 @@ namespace aspeller_default_suggest {
 
   void Working::try_others () {
 
-    try_space_hyphen();
+    try_split();
 
     if (parms.soundslike_level == 1 && !fast_scan)
       try_one_edit();
     else
       try_scan();
     
-    //try_repl();
+    if (!use_soundslike && parms.use_repl_table)
+      try_repl();
 
     //try_ngram();
 
   }
 
-  void Working::try_space_hyphen() {
+  void Working::try_split() {
     const String & word       = original_word.word;
     
-    if (word.size() < 4) return;
+    if (word.size() < 4 || parms.split_chars.empty()) return;
     size_t i = 0;
     
     char * new_word = new char[word.size() + 2];
@@ -344,20 +343,20 @@ namespace aspeller_default_suggest {
       new_word[i] = '\0';
       
       if (speller->check(new_word) && speller->check(new_word + i + 1)) {
-        new_word[i] = ' ';
-        add_nearmiss(new_word, parms.edit_distance_weights.del2*3/2,
-                     dont_count, do_need_alloc);
-        
-        new_word[i] = '-';
-        add_nearmiss(new_word, parms.edit_distance_weights.del2*3/2,
-                     dont_count, do_need_alloc);
+        for (size_t j = 0; j != parms.split_chars.size(); ++j)
+        {
+          new_word[i] = parms.split_chars[j];
+          add_nearmiss(new_word, parms.edit_distance_weights.del2*3/2,
+                       dont_count, do_need_alloc);
+        }
       }
     }
     
     delete[] new_word;
   }
 
-  void Working::try_one_edit() {
+  void Working::try_one_edit() 
+  {
     const String & soundslike = active_soundslike();
     const char * replace_list = soundslike_chars();
     char a,b;
@@ -367,7 +366,7 @@ namespace aspeller_default_suggest {
 
     // First try the soundslike as is
 
-    try_sound(soundslike.c_str(), 0);
+    try_sound(soundslike, 0);
 
     // Change one letter
     
@@ -377,7 +376,7 @@ namespace aspeller_default_suggest {
       for (c = replace_list; *c; ++c) {
         if (*c == soundslike[i]) continue;
         new_soundslike[i] = *c;
-        try_sound(new_soundslike.c_str(),parms.edit_distance_weights.sub);
+        try_sound(new_soundslike, parms.edit_distance_weights.sub);
       }
       new_soundslike[i] = soundslike[i];
     }
@@ -389,7 +388,7 @@ namespace aspeller_default_suggest {
       b = new_soundslike[i+1];
       new_soundslike[i] = b;
       new_soundslike[i+1] = a;
-      try_sound(new_soundslike.c_str(),parms.edit_distance_weights.swap);
+      try_sound(new_soundslike,parms.edit_distance_weights.swap);
       new_soundslike[i] = a;
       new_soundslike[i+1] = b;
     }
@@ -401,7 +400,7 @@ namespace aspeller_default_suggest {
     while(true) {
       for (c=replace_list; *c; ++c) {
         new_soundslike[i] = *c;
-        try_sound(new_soundslike.c_str(),parms.edit_distance_weights.del1);
+        try_sound(new_soundslike,parms.edit_distance_weights.del1);
       }
       if (i == 0) break;
       new_soundslike[i] = new_soundslike[i-1];
@@ -416,7 +415,7 @@ namespace aspeller_default_suggest {
       new_soundslike.resize(new_soundslike.size() - 1);
       i = new_soundslike.size();
       while (true) {
-        try_sound(new_soundslike.c_str(),parms.edit_distance_weights.del2);
+        try_sound(new_soundslike,parms.edit_distance_weights.del2);
         if (i == 0) break;
         b = a;
         a = new_soundslike[i-1];
@@ -426,7 +425,8 @@ namespace aspeller_default_suggest {
     }
   }
 
-  void Working::try_scan() {
+  void Working::try_scan() 
+  {
     const char * original_soundslike = active_soundslike().c_str();
     //unsigned int original_soundslike_len = strlen(original_soundslike);
     
@@ -505,6 +505,40 @@ namespace aspeller_default_suggest {
       }
     }
   }
+
+  struct ReplTry 
+  {
+    const char * begin;
+    const char * end;
+    const char * repl;
+    size_t repl_len;
+    ReplTry(const char * b, const char * e, const char * r)
+      : begin(b), end(e), repl(r), repl_len(strlen(r)) {}
+  };
+
+  // only use when soundslike == stripped
+  void Working::try_repl() 
+  {
+    CharVector buf;
+    Vector<ReplTry> repl_try;
+    StackPtr<SuggestReplEnumeration> els(lang->repl());
+    const SuggestRepl * r = 0;
+    const char * word = original_word.stripped.c_str();
+    const char * wend = word + original_word.stripped.size();
+    while (r = els->next(), r) 
+    {
+      const char * p = word;
+      while ((p = strstr(p, r->substr))) {
+        buf.clear();
+        buf.append(word, p);
+        buf.append(r->repl, strlen(r->repl));
+        p += strlen(r->substr);
+        buf.append(p, wend + 1);
+        try_sound(buf.data(), parms.edit_distance_weights.sub*3/2);
+      }
+    }
+  }
+
   
   void Working::score_list() {
     if (near_misses.empty()) return;
@@ -728,12 +762,10 @@ namespace aspeller_default_suggest {
     SuggestionListImpl  suggestion_list;
     SuggestParms parms_;
   public:
-    SuggestImpl(SpellerImpl * m) 
-      : speller_(m), parms_(m->config()->retrieve("sug-mode")) 
-    {parms_.fill_distance_lookup(m->config(), m->lang());}
-    SuggestImpl(SpellerImpl * m, const SuggestParms & p) 
-      : speller_(m), parms_(p) 
-    {parms_.fill_distance_lookup(m->config(), m->lang());}
+    SuggestImpl(SpellerImpl * m);
+    //SuggestImpl(SpellerImpl * m, const SuggestParms & p)
+    //  : speller_(m), parms_(p) 
+    //{parms_.fill_distance_lookup(m->config(), m->lang());}
     PosibErr<void> set_mode(ParmString mode) {
       return parms_.set(mode);
     }
@@ -748,6 +780,24 @@ namespace aspeller_default_suggest {
     }
     SuggestionList & suggest(const char * word);
   };
+  
+  SuggestImpl::SuggestImpl(SpellerImpl * m)
+    : speller_(m), parms_(m->config()->retrieve("sug-mode")) 
+  {
+    if (m->config()->retrieve("sug-mode") == "normal" 
+        && !m->fast_scan) parms_.soundslike_level = 1;
+
+    if (m->config()->have("sug-edit-dist"))
+      parms_.soundslike_level = m->config()->retrieve_int("sug-edit-dist"); // FIXME: Make sure 1 or 2
+    if (m->config()->have("sug-typo-analysis"))
+      parms_.use_typo_analysis = m->config()->retrieve_bool("sug-typo-analysis");
+    if (m->config()->have("sug-repl-table"))
+      parms_.use_repl_table = m->config()->retrieve_bool("sug-repl-table");
+    
+    parms_.split_chars = m->config()->retrieve("sug-split-chars");
+
+    parms_.fill_distance_lookup(m->config(), m->lang());
+  }
 
   SuggestionList & SuggestImpl::suggest(const char * word) { 
 #   ifdef DEBUG_SUGGEST
@@ -770,14 +820,11 @@ namespace aspeller {
     return new aspeller_default_suggest::SuggestImpl(m);
   }
 
-  Suggest * new_default_suggest(SpellerImpl * m, const SuggestParms & p) {
-    return new aspeller_default_suggest::SuggestImpl(m,p);
-  }
+  //Suggest * new_default_suggest(SpellerImpl * m, const SuggestParms & p) {
+  //  return new aspeller_default_suggest::SuggestImpl(m,p);
+  //}
 
   PosibErr<void> SuggestParms::set(ParmString mode) {
-
-    if (mode != "normal" && mode != "fast" && mode != "ultra" && mode != "bad-spellers")
-      return make_err(bad_value, "sug-mode", mode, "one of ultra, fast, normal, or bad-spellers");
 
     edit_distance_weights.del1 =  95;
     edit_distance_weights.del2 =  95;
@@ -793,30 +840,41 @@ namespace aspeller {
 
     soundslike_weight = normal_soundslike_weight;
     word_weight       = 100 - normal_soundslike_weight;
-      
+
+    split_chars = " -";
+
     skip = 2;
     limit = 100;
     if (mode == "normal") {
       use_typo_analysis = true;
+      use_repl_table = true;
+      soundslike_level = 2; // either one or two
+      span = 50;
+    } else if (mode == "slow") {
+      use_typo_analysis = true;
+      use_repl_table = true;
       soundslike_level = 2; // either one or two
       span = 50;
     } else if (mode == "fast") {
       use_typo_analysis = true;
+      use_repl_table = true;
       soundslike_level = 1; // either one or two
       span = 50;
     } else if (mode == "ultra") {
       use_typo_analysis = false;
+      use_repl_table = false;
       soundslike_level = 1; // either one or two
       span = 50;
     } else if (mode == "bad-spellers") {
       use_typo_analysis = false;
+      use_repl_table = true;
       normal_soundslike_weight = 55;
       small_word_threshold = 0;
       soundslike_level = 2; // either one or two
       span = 125;
       limit = 1000;
     } else {
-      abort(); // this should NEVER happen.
+      return make_err(bad_value, "sug-mode", mode, "one of ultra, fast, normal, slow, or bad-spellers");
     }
 
     return no_err;

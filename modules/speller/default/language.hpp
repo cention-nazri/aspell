@@ -10,6 +10,7 @@
 #include "posib_err.hpp"
 #include "stack_ptr.hpp"
 #include "string.hpp"
+#include "string_buffer.hpp"
 
 using namespace acommon;
 
@@ -19,6 +20,25 @@ namespace acommon {
 }
 
 namespace aspeller {
+
+  struct SuggestRepl {
+    const char * substr;
+    const char * repl;
+  };
+  
+  class SuggestReplEnumeration
+  {
+    const SuggestRepl * i_;
+    const SuggestRepl * end_;
+  public:
+    SuggestReplEnumeration(const SuggestRepl * b, const SuggestRepl * e)
+      : i_(b), end_(e) {}
+    bool at_end() const {return i_ == end_;}
+    const SuggestRepl * next() {
+      if (i_ == end_) return 0;
+      return i_++;
+    }
+  };
 
   class Language : public Cacheable {
   public:
@@ -62,6 +82,9 @@ namespace aspeller {
     StackPtr<Soundslike> soundslike_;
     StackPtr<AffixMgr>   affix_;
     StackPtr<Config>     lang_config_;
+
+    StringBuffer buf_;
+    Vector<SuggestRepl> repls_;
 
     Language(const Language &);
     void operator=(const Language &);
@@ -119,6 +142,9 @@ namespace aspeller {
     bool have_soundslike() const {return soundslike_;}
 
     const AffixMgr * affix() const {return affix_;}
+
+    SuggestReplEnumeration * repl() const {
+      return new SuggestReplEnumeration(repls_.pbegin(), repls_.pend());}
 
     static inline PosibErr<Language *> get_new(const String & lang, Config * config) {
       StackPtr<Language> l(new Language());

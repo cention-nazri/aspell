@@ -17,6 +17,7 @@ namespace aspeller {
     TypoEditDistanceWeights typo_edit_distance_weights;
 
     bool use_typo_analysis;
+    bool use_repl_table;
 
     int normal_soundslike_weight; // percentage
 
@@ -31,6 +32,8 @@ namespace aspeller {
     int skip;
     int span;
     int limit;
+
+    String split_chars;
 
     SuggestParms(ParmString mode = "normal") {
       set(mode);

@@ -1,5 +1,5 @@
 \input texinfo   @c -*-texinfo-*-
-@comment $Id: aspell.texi,v 1.3 2004/02/01 11:09:24 kevina Exp $
+@comment $Id: aspell.texi,v 1.4 2004/02/02 01:30:49 kevina Exp $
 @comment %**start of header
 @setfilename aspell.info
 @settitle GNU Aspell 0.51
@@ -8,7 +8,7 @@
 @comment %**end of header
 @copying
 This is the user's manual for Aspell
-($Revision: 1.3 $ $Date: 2004/02/01 11:09:24 $).
+($Revision: 1.4 $ $Date: 2004/02/02 01:30:49 $).
 
 Copyright @copyright{} 2000--2004 Kevin Atkinson.
 
@@ -39,7 +39,7 @@ are LGPL Compatible.
 
 @titlepage
 @title GNU Aspell 0.51
-@subtitle for $Revision: 1.3 $ $Date: 2004/02/01 11:09:24 $
+@subtitle for $Revision: 1.4 $ $Date: 2004/02/02 01:30:49 $
 @author Kevin Atkinson (@email{kevina@@gnu.org})
 @page
 @vskip 0pt plus 1filll
@@ -130,6 +130,7 @@ Adding Support For Other Languages
 * The Language Data File::      
 * Compiling the Word List::     
 * Phonetic Code::               
+* Replacement Tables::          
 * Affix Compression::           
 * Controlling the Behavior of Run-together Words::  
 
@@ -379,10 +380,10 @@ correctly.
 
 If the curses library is installed in a non-standard location than you
 can specify the library and include directory with
-@option{--enable-curses=<lib>} and
-@option{--enable-curses-include=<dir>}.
+@option{--enable-curses=@var{lib}} and
+@option{--enable-curses-include=@var{dir}}.
  
-@option{<lib>} can either be the complete path of the library---for
+@option{@var{lib}} can either be the complete path of the library---for
 example
 
 @example 
@@ -391,19 +392,19 @@ example
 
 or the name of the library (for example 
 @file{ncurses}) or a combined location and library in the form 
-@option{-L<lib dir> -l<lib>}
+@option{-L@var{libdir} -l@var{lib}}
  (for example 
 @option{-L/usr/local/ncurses/lib -lncurses}).
  
-@option{<dir>} is the location of the curses header files (for example
+@option{@var{dir}} is the location of the curses header files (for example
 @file{/usr/local/ncurses/include}).
  
-@subsection Upgrading from @acronym{Aspell 0.50}
+@subsection Upgrading from Aspell 0.50
 
 The dictionary format has changed so dictionaries will need to be
 recompiled.
 
-@subsection Upgrading from @acronym{Aspell .33}/@acronym{Pspell .12}
+@subsection Upgrading from Aspell .33/Pspell .12
 
 Aspell has undergone an extremely large number of changes since the
 previous Aspell/Pspell release.  For one thing Pspell has been merged
@@ -565,10 +566,10 @@ for those purposes.
 @subsubsection Directories
 
 If Aspell is compiled with @option{WIN32_RELOCATABLE=1}, it can be run
-from any directory: it will set @option{<prefix>} according to its
-install location (assuming it resides in @file{<prefix>\\bin}).  Your
-personal wordlists will be saved in the @file{<prefix>} directory with
-their names changed from @file{.aspell.<lang>.*} to @file{<lang>.*}
+from any directory: it will set @option{@var{prefix}} according to its
+install location (assuming it resides in @file{@var{prefix}\\bin}).  Your
+personal wordlists will be saved in the @file{@var{prefix}} directory with
+their names changed from @file{.aspell.@var{lang}.*} to @file{@var{lang}.*}
 (you can override the path by setting the @env{HOME} environment
 variable).
  
@@ -608,7 +609,7 @@ The @command{aspell-import} Perl script will look for old personal
 dictionaries and will import them into GNU Aspell.  It will look for
 both Ispell and Aspell ones.  To use it just run it from the command
 prompt.  If you get an error about @file{/usr/bin/perl} not being
-found than instead try @kbd{perl <bindir>/aspell-import}.  When
+found than instead try @kbd{perl @var{bindir}/aspell-import}.  When
 running the script if you get a message like:
 
 @verbatim
@@ -624,7 +625,7 @@ better.
 @chapter Basic Usage
 
 For a quick reference on the Aspell utility use the command 
-@kbd{aspell --help}.
+@command{aspell --help}.
 
 @menu
 * Spellchecking Individual Files::  
@@ -637,15 +638,15 @@ For a quick reference on the Aspell utility use the command
 To use Aspell to spellcheck a file use:
 
 @example
-aspell check [<options>] <filename>
+aspell check [@var{options}] @var{filename}
 @end example
 
-at the command line where @code{<filename>} is the file you want to
-check and @code{<options>} is any number of optional options.  Some of
+at the command line where @code{@var{filename}} is the file you want to
+check and @code{@var{options}} is any number of optional options.  Some of
 the more useful ones include:
 
 @table @option
-@item --mode=<mode>
+@item --mode=@var{mode}
 the mode to use when checking files.  The available modes are
 @code{none}, @code{url}, @code{email}, @code{sgml}, or @code{tex}.
 for more information on the various modes see @ref{Notes on Various
@@ -654,16 +655,16 @@ Filters and Filter Modes}.
 @item --dont-backup
 don't create a backup file.
 
-@item --sug-mode=<mode>
+@item --sug-mode=@var{mode}
 the suggestion mode to use where mode is one of @code{ultra},
 @code{fast}, @code{normal}, or @code{bad-spellers}.  For more
 information on these modes see @ref{Notes on the Different Suggestion
 Modes}.
 
-@item --master=<name>
+@item --master=@var{name}
 the main dictionary to use.
 
-@item --keymapping=<name>
+@item --keymapping=@var{name}
 the keymapping to use.  Either @option{aspell} for the default mapping
 or @option{ispell} to use the same mapping that the Ispell utility
 uses.
@@ -732,14 +733,14 @@ calls the @command{ispell} command to check the file change
 @command{ispell} with @command{aspell check}.
 
 If that is impossible and the program uses Ispell through a pipe than
-the @code{run-with-aspell} script can be used for programs using
+the @command{run-with-aspell} script can be used for programs using
 Ispell in pipe mode.  The format of the script is:
 
 @example
-run-with-aspell <command>
+run-with-aspell @var{command}
 @end example
 
-where @samp{<command>} is the name of the program with any optional
+where @var{command} is the name of the program with any optional
 arguments.
 
 The old method of mapping Ispell to Aspell is discouraged because it
@@ -777,7 +778,7 @@ Version 1.0 of LyX provides support for Aspell's learning from user's
 mistakes feature.
 
 To use aspell with LyX 1.0 either change the @option{spell_command}
-option in the @file{.lyxrc} file or use the @file{run-with-aspell}
+option in the @file{.lyxrc} file or use the @command{run-with-aspell}
 utility.
 
 @subsection With VIM
@@ -847,11 +848,11 @@ configuration file.  Options specified in the environment variable
 configuration file will take effect no matter how Aspell is used which
 includes being used by other applications.
 
-Aspell has three basic type of options: @var{boolean}, @var{value},
-and @var{list}.
+Aspell has three basic type of options: @emph{boolean}, @emph{value},
+and @emph{list}.
  
-@var{Boolean} options are either enabled or disabled, @var{value}
-options take a specific value, and @var{list} options can either have
+@emph{Boolean} options are either enabled or disabled, @emph{value}
+options take a specific value, and @emph{list} options can either have
 entries added or removed from the list.
 
 @menu
@@ -870,7 +871,7 @@ entries added or removed from the list.
 All options specified at the command line have the following basic format:
 
 @example
---<option>[=<value>]
+--@var{option}[=@var{value}]
 @end example
 
 where the @kbd{=} can be replaced by whitespace.
@@ -929,16 +930,16 @@ values for your particular system use @command{aspell dump config}.
 
 Each line of the configuration file has the format:
 
-@verbatim
-<option> [<value>]
-@end verbatim
+@example
+@var{option} [@var{value}]
+@end example
 
 There may any number of spaces between the option and the value
 however it can only be spaces, i.e. there is no @kbd{=} between the
 option name and the value.
 
-Comments may also be included by preceding them with a @kbd{#} as
-anything from a @kbd{#} to a newline is ignored.  Blank lines are also
+Comments may also be included by preceding them with a @samp{#} as
+anything from a @samp{#} to a newline is ignored.  Blank lines are also
 allowed.
 
 Values set in the personal configuration file override those in the
@@ -990,8 +991,8 @@ The following is a list of available options broken down by category.
 Each entry has the following format:
 
 @example
-[@option{option}[,@option{single letter abbreviation}]] (@kbd{type})
-  @r{description}
+[@var{option}[,@var{single-letter-abbreviation}]] (@var{type})
+  @var{description}
 @end example
 
 Where single letter options are specified as they would appear at the
@@ -1002,10 +1003,10 @@ options are specified in the following format:
 -<abbreviation to enable>|-<abbreviation to disable>
 @end example
 
-<@code{option}> is one of the following: @var{boolean}, @var{string},
-@var{file}, @var{dir}, @var{integer}, or @var{list}.
+<@var{option}> is one of the following: @emph{boolean}, @emph{string},
+@emph{file}, @emph{dir}, @emph{integer}, or @emph{list}.
  
-@var{String}, @var{file}, @var{dir}, and @var{integer} types are all
+@emph{String}, @emph{file}, @emph{dir}, and @emph{integer} types are all
 value options which can only take a specific type of value.
 
 @subsection Dictionary Options
@@ -1595,7 +1596,9 @@ The suggestion modes are as follows.
 This method will use the fastest method available to come up with
 decent suggestions.  This currently means that it will look for
 soundslikes within one edit distance apart without doing any
-typo-analysis.  It is slower than Ispell by a factor of 1.5 to 2 when
+typo-analysis or using replacement tables.  
+FIXME: Update:
+It is slower than Ispell by a factor of 1.5 to 2 when
 a single word list is used.  Its speed is only minimally affected by
 the size of the word list, if at all, but it is strongly affected by
 the number of word lists used.  In this mode Aspell gets about 87% of
@@ -1606,18 +1609,22 @@ other spell checkers.)
 
 @item fast
 This method is like @option{ultra} except that it also performs
-typo-analysis unless it is turned off by setting the keyboard to none.
+typo-analysis and uses replacement tables.
 The typo-analysis brings words which are likely to be due to typos to
 the beginning of the list but slows things down by a factor of about
 two.  This mode should get around the same number of words that the
 @option{ultra} method does.
 
 @item normal
-This method looks for soundslikes within two edit distance apart and
-performs typo-analysis unless it is turned off.  Is is around 10 times
-slower than fast mode with the English word list but returns better
-suggestions.  Its speed is directly proportional to the size of the
-word list.  This mode gets 93% of the words.
+This method normally looks for soundslikes within two edit distance
+apart and performs typo-analysis unless it is turned off.  Is is around
+10 times slower than fast mode with the English word list but returns
+better suggestions.  Its speed is directly proportional to the size of
+the word list.  This mode gets 93% of the words.
+
+@item slow
+
+Normally identical to @option{normal}.
 
 @item bad-spellers
 This method also looks for soundslikes within two edit distances apart
@@ -1630,6 +1637,10 @@ be.  If the misspelled word looks anything like the correct spelling
 it is bound to be found @emph{somewhere} on the list of 100 or more
 suggestions.  This mode gets 98% of the words.
 @end table
+
+If jump tables where not used than the @option{normal} option is
+identical to @option{fast}.  And the @option{slow} option is identical
+to the @option{normal} if jump tables were used.
 
 
 @node Working With Dictionaries, Writing programs to use Aspell, Customizing Aspell, Top
@@ -1705,11 +1716,11 @@ To create an individual main word list from a list of words use the
 command
 
 @example
-aspell --lang=@i{lang} create master ./@i{base} < @i{wordlist}
+aspell --lang=@var{lang} create master ./@var{base} < @var{wordlist}
 @end example
 
-where @option{@i{base}} is the name of the word list and
-@option{@i{wordlist}} is the list of words separated by white space.
+where @var{base} is the name of the word list and
+@var{wordlist} is the list of words separated by white space.
 The name of the word list will automatically be converted to all
 lowercase.  The @code{./} is important because without it aspell will
 create the word list in the normal word list directory.  If you are
@@ -1720,17 +1731,17 @@ see if a language data file exists for your language.  If not you will
 need to create one.  For more information on using Aspell with other
 languages @ref{Adding Support For Other Languages}.
 
-This will create the file @file{@i{base}} in the current directory.
+This will create the file @file{@var{base}} in the current directory.
 To use the new word list copy the file to the normal word list
 directory (use @code{aspell config} to find out what it is) and use
-the option @option{--master=@i{base}}.
+the option @option{--master=@var{base}}.
 
-The compiled dictionary file is machine dependent.  It is dependent on
-endian order, and the page size for the machine because they are
-mmaped in.  Please do not distribute the compiled dictionaries unless
-you are only distributing them for a particular platform such as you
-would a binary.  That is why is normally installed in
-@code{lib/aspell} instead of @code{share/aspell}.
+The compiled dictionary file are endian order dependent.  When a
+dictionary is loaded the endian order is checked.  Please do not
+distribute the compiled dictionaries unless you are only distributing
+them for a particular platform such as you would a binary.  That is why
+is normally installed in @code{lib/aspell} instead of
+@code{share/aspell}.
 
 Aspell is now also able to use special @code{multi} dictionaries.  for
 more information @ref{How Aspell Selects an Appropriate Dictionary}.
@@ -1741,6 +1752,9 @@ Because Aspell does not support any sort of affix compression like
 Ispell does, Ispell word lists will not work as is.  In order to use
 Ispell's word lists simply pipe the word list through @command{ispell
 -e} to expand the munched word lists.
+
+FIXME: Add note about affix compression and use-soundslike,
+use-jump-tables, and affix-compress options.
 
 @subsection Format of the Replacement Word List
 
@@ -2131,17 +2145,17 @@ protect themselves against future changes in Aspell.
 To summarize these: 
 
 @multitable @columnfractions .1 .9
-@item @kbd{*@i{word}}
+@item @kbd{*@var{word}}
  @tab Add a word to the personal dictionary 
-@item @kbd{&@i{word}}
+@item @kbd{&@var{word}}
  @tab Insert the all-lowercase version of the word in the personal dictionary
-@item @kbd{@@@i{word}}
+@item @kbd{@@@var{word}}
  @tab Accept the word, but leave it out of the dictionary
 @item @kbd{#}
  @tab Save the current personal dictionary
 @item @kbd{~} @tab Ignored for Ispell compatibility.
 @item @kbd{+} @tab Enter @TeX{} mode.
-@item @kbd{+@i{mode}} @tab Enter the mode specified by @i{mode}.
+@item @kbd{+@var{mode}} @tab Enter the mode specified by @var{mode}.
 @item @kbd{-} @tab Enter the default mode.
 @item @kbd{!} @tab Enter terse mode 
 @item @kbd{%} @tab Exit terse mode
@@ -2165,14 +2179,14 @@ Where @kbd{@i{data}} may or may not be required depending on the
 particular command.  Aspell currently supports the following commands:
 
 @multitable @columnfractions .33 .67
-@item @code{cs @i{option},@i{value}} @tab Change a configuration option.
-@item @code{cr @i{option}} @tab Prints the value of a configuration option.
+@item @code{cs @var{option},@var{value}} @tab Change a configuration option.
+@item @code{cr @var{option}} @tab Prints the value of a configuration option.
 @item @code{pp}
  @tab Returns a list of all words in the current personal wordlist.
 @item @code{ps}
  @tab Returns a list of all words in the current session dictionary.
 @item @code{l} @tab Returns the current language name.
-@item @code{ra @i{mis},@i{cor}} @tab Add the word pair to the
+@item @code{ra @var{mis},@var{cor}} @tab Add the word pair to the
  replacement dictionary for later use. Returns nothing.
 @end multitable
 
@@ -2267,6 +2281,7 @@ create the language data file, and compile a new word list.
 * The Language Data File::      
 * Compiling the Word List::     
 * Phonetic Code::               
+* Replacement Tables::          
 * Affix Compression::           
 * Controlling the Behavior of Run-together Words::  
 @end menu
@@ -2309,7 +2324,9 @@ compression options.
 @code{special} is for non letter characters that can appear in your
 language such as the @kbd{'} and @kbd{-}. The format for the value is
 a list separated by spaces.  Each item of the list has the following
-format
+format.
+
+FIXME: Add not about affix-char and flag-char.
 
 @example
 @i{char}  @i{begin}@i{middle}@i{end}
@@ -2360,9 +2377,12 @@ notice much of a difference for a language with non-phonetic spelling
 that is a good indication that the soundslike data is not rough
 enough---or the words you are trying are not that badly misspelled.
 
-The @code{keyboard} option specifies the base name of the keyboard
+The @option{keyboard} option specifies the base name of the keyboard
 definition file to use.  For more information see @ref{Notes on
 Typo-Analysis}.
+
+The @option{sug-split-chars} is a string of characters which specifies
+characters to insert between two words when a word is split.  FIXME
 
 The options to control how run-together words are handled the same way
 as they are in the normal configuration files.  for more information,
@@ -2376,7 +2396,7 @@ place you are ready to compile the main word list.  To find out what
 to do, see @ref{Working With Dictionaries}.  This section also
 includes instructions for creating the AWLI file.
 
-@node Phonetic Code, Affix Compression, Compiling the Word List, Adding Support For Other Languages
+@node Phonetic Code, Replacement Tables, Compiling the Word List, Adding Support For Other Languages
 @section Phonetic Code
 
 
@@ -2699,7 +2719,41 @@ If you think that this section helped you or if you think that this is
 just a waste of time you can send any feedback to
 @email{bjoern.jacke@@gmx.de}.
 
-@node Affix Compression, Controlling the Behavior of Run-together Words, Phonetic Code, Adding Support For Other Languages
+@node Replacement Tables, Affix Compression, Phonetic Code, Adding Support For Other Languages
+@section Replacement Tables
+
+When phonetic code is not used a replacement table can be used instead.
+To enable the use of a replacement table add the line @code{repl-table
+@var{lang}}, in which case the replacemnet table is excepted to be in
+the file @file{@var{lang}_repl.dat}.  A complete file name can also be
+specifed in place of @var{lang}.  For compatibility with MySpell the
+replacement table can also be part of the affix file, in which case
+@option{repl-table} will be @file{@var{lang}_affix.dat"}.
+
+Replacement table syntax:
+
+@example
+REP [number_of_replacement_definitions]
+REP [what] [replacement]
+REP [what] [replacement]
+@end example
+
+For example a possible English replacement table definition
+to handle misspelt consonants:
+
+@example
+REP 8
+REP f ph
+REP ph f
+REP f gh
+REP gh f
+REP j dg
+REP dg j
+REP k ch
+REP ch k
+@end example
+
+@node Affix Compression, Controlling the Behavior of Run-together Words, Replacement Tables, Adding Support For Other Languages
 @section Affix Compression
 
 Aspell, as of version 0.51, now has support for affix compression.
@@ -2710,16 +2764,16 @@ language data file.
 
 @example
 use-soundslike false
-affix          <lang>
+affix          @var{lang}
 affix-compress true
 @end example
 
 Soundslike must be turned off as it is not compatable with affix
-compression.  The line @samp{affix <lanf>} adds support for recognizing
+compression.  The line @samp{affix @var{lanf}} adds support for recognizing
 affix information, and the line @samp{affix-compress true} enables
 affix compression.
 
-The affix file is expected to be named @file{<lang>_affix.dat}.  It is
+The affix file is expected to be named @file{@var{lang}_affix.dat}.  It is
 the exact same format as those used by MySpell.  More information can
 be found at
 @url{http://lingucomponent.openoffice.org/dictionary.html}.

@@ -16,8 +16,12 @@ namespace acommon
   {
   public:
     void append (char c) {Vector<char>::append(c);}
-    void append (const void * d, unsigned int size) 
-      {Vector<char>::append(static_cast<const char *>(d), size);}
+    void append (const void * d, unsigned int size) {
+      Vector<char>::append(static_cast<const char *>(d), size);}
+    void append (const void * d, const void * e) {
+      Vector<char>::append(static_cast<const char *>(d), 
+                           static_cast<const char *>(e));}
+    
 
     void write (char c) {CharVector::append(c);}
     void write (ParmString str) {CharVector::append(str, str.size());}

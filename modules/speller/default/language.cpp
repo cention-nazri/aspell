@@ -16,6 +16,7 @@
 #include "split.hpp"
 #include "string.hpp"
 #include "cache-t.hpp"
+#include "getdata.hpp"
 
 namespace aspeller {
 
@@ -38,6 +39,8 @@ namespace aspeller {
     , {"affix-compress",      KeyInfoBool, "false", "", "c"}
     , {"affix-char",          KeyInfoString, "/", "", "c"}
     , {"flag-char",           KeyInfoString, ":", "", "c"}
+    , {"repl-table",          KeyInfoString, "none", "", ""}
+    , {"sug-split-chars",     KeyInfoString, "- ", "", "c"}
   };
 
   static GlobalCache<Language> language_cache;
@@ -151,7 +154,41 @@ namespace aspeller {
     soundslike_chars_ = soundslike_->soundslike_chars();
     stripped_chars_   = get_stripped_chars(*this);
 
+    //
+    // prep affix code
+    //
+
     affix_.reset(new_affix_mgr(data.retrieve("affix"), this));
+
+    //
+    // fill repl tables (if any)
+    //
+
+    String repl = data.retrieve("repl-table");
+    if (repl != "none") {
+
+      String repl_file;
+      FStream REPL;
+      find_file(repl_file, dir1, dir2, repl, "_repl", ".dat");
+      RET_ON_ERR(REPL.open(repl_file, "r"));
+      
+      FixedBuffer<> buf; DataPair d;
+
+      while (getdata_pair(REPL, d, buf), ::to_lower(d.key), d.key != "rep");
+      size_t num_repl = atoi(d.value); // FIXME make this more robust
+      repls_.resize(num_repl);
+
+      for (size_t i = 0; i != num_repl; ++i) {
+        bool res = getdata_pair(REPL, d, buf);
+        assert(res); // FIXME
+        ::to_lower(d.key);
+        assert(d.key == "rep"); // FIXME
+        split(d);
+        repls_[i].substr = buf_.dup(d.key);
+        repls_[i].repl   = buf_.dup(d.value);
+      }
+
+    }
     
     return no_err;
   }

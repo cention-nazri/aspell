@@ -13,6 +13,10 @@ namespace aspeller {
   const String & find_file(String & path,
                            const String & dir1, const String & dir2, 
                            const String & name, const char * extension);
+  bool find_file(String & file,
+                 const String & dir1, const String & dir2, 
+                 const String & name, 
+                 ParmString preext, ParmString ext);
 }
 
 #endif

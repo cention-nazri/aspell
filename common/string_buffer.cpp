@@ -16,13 +16,15 @@ namespace acommon {
     bufs.push_front(sbuf);
   }
 
-  char * StringBuffer::alloc(unsigned int size) {
+  char * StringBuffer::alloc(unsigned int size, const char * str) 
+  {
     if (fill + size > buf_size) {
       fill = 1;
       bufs.push_front(sbuf);
     }
     char * s = bufs.front().buf + fill;
     fill += size;
+    if (str) memcpy(s, str, size);
     return s;
   }
 

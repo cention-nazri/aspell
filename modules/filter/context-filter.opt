@@ -18,6 +18,6 @@ ENDOPTION
 
 OPTION visible-first
 TYPE bool
-DESCRIPTION swaps visible and invisible text;(starts invisible)
+DESCRIPTION swaps visible and invisible text
 DEFAULT false
 ENDOPTION

@@ -58,6 +58,24 @@ namespace acommon {
     return true;
   }
 
+  bool split(DataPair & d)
+  {
+    char * p   = d.value;
+    char * end = p + d.value.size();
+    d.key.str_ = p;
+    while (p != end) {
+      ++p;
+      if ((*p == ' ' || *p == '\t') && *(p-1) != '\\') break;
+    }
+    d.key.size_ = p - d.key.str_;
+    *p = 0;
+    ++p;
+    while (p < end && (*p == ' ' || *p == '\t')) ++p;
+    d.value.str_ = p;
+    d.value.size_ = end - p;
+    return d.key.size_ != 0;
+  }
+
   void unescape(char * dest, const char * src)
   {
     while (*src) {

@@ -987,6 +987,9 @@ namespace acommon {
     {"actual-dict-dir", KeyInfoString, "<dict-dir^master>", 0}
     , {"actual-lang",     KeyInfoString, "!actual-lang", 0}
     , {"conf",     KeyInfoString, "aspell.conf",
+       /* TRANSLATORS: The remaing strings in config.cpp should be kept
+          under 50 characters, begin with a lower case character and not
+          include any trailing punctuation marks. */
        N_("main configuration file")             , {0, CANT_CHANGE}}
     , {"conf-dir", KeyInfoString, CONF_DIR,
        N_("location of main configuration file") ,{0, CANT_CHANGE}}
@@ -1065,12 +1068,13 @@ namespace acommon {
        N_("suggestion mode")}
     , {"sug-edit-dist", KeyInfoInt, "1",
        N_("edit distance to use, override sug-mode default")}
+    , {"sug-typo-analysis", KeyInfoBool, "true",
+       N_("use typo analysis, override sug-mode default")}
     , {"sug-repl-table", KeyInfoBool, "true",
        N_("use replacement tables, override sug-mode default")}
     , {"sug-split-chars", KeyInfoString, " -",
        N_("characters to insert when a word is split")}
     , {"word-list-path", KeyInfoList, DATA_DIR,
-
        N_("search path for word list information files")}
     , {"affix-char",          KeyInfoString, "/", 
        N_("indicator for affix flags in word lists")}
