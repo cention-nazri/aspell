@@ -1017,8 +1017,8 @@ namespace {
 
         if (i->too_large) {
           // it is assumed that strlen(i->soundslike) <= i->word_score
-          if (i->word_score >= LARGE_NUM) i->word_score = LARGE_NUM - 1;
-          if (i->soundslike_score >= LARGE_NUM) i->soundslike_score = LARGE_NUM - 1;
+          i->word_score = LARGE_NUM - 1;
+          i->soundslike_score = LARGE_NUM - 1;
         }
 
         if (i->word_score >= LARGE_NUM) {
