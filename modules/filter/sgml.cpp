@@ -160,7 +160,7 @@ namespace acommon {
   }
   
   static const KeyInfo sgml_options[] = {
-    {"sgml-check", KeyInfoList, "alt", "sgml tags to always check."},
+    {"sgml-check", KeyInfoList, "alt", "sgml attributes to always check."},
     {"sgml-extension", KeyInfoList, "html,htm,php,sgml", "sgml file extensions"}
   };
   const KeyInfo * sgml_options_begin = sgml_options;

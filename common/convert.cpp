@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <stdlib.h>
-#include <stdint.h>
+#include <sys/types.h>
 
 #include "asc_ctype.hpp"
 #include "convert.hpp"
@@ -19,8 +19,8 @@
 
 namespace acommon {
 
-  typedef uint32_t Uni32;
-  typedef uint16_t Uni16;
+  typedef u_int32_t Uni32;
+  typedef u_int16_t Uni16;
 
 
   //////////////////////////////////////////////////////////////////////

@@ -136,7 +136,7 @@ static const ModeAbrv *  mode_abrvs_end = mode_abrvs + 3;
 static const KeyInfo extra[] = {
   {"backup",  KeyInfoBool, "true", "create a backup file by appending \".bak\""},
   {"reverse", KeyInfoBool, "false", "reverse the order of the suggest list"},
-  {"time"   , KeyInfoBool, "false", "time load time and suggest time in pipe mode"}
+  {"time"   , KeyInfoBool, "false", "time load time and suggest time in pipe mode"},
 };
 
 const PossibleOption * find_option(char c) {
@@ -568,6 +568,8 @@ void pipe()
 // check
 //
 
+enum UserChoices {Ignore, IgnoreAl, Replace, ReplaceAll, Add, Exit};
+
 void check(bool interactive)
 {
   FILE * in = 0;
@@ -737,9 +739,11 @@ void check(bool interactive)
  exit_loop:
 
   speller->save_all_word_lists();
-  state.del(); // not strictly needed, but to be safe as the
-               // CheckerString is also responsible for closing the
-               // files
+  state.del(); // to close the file handles
+
+  bool keep_backup = options->retrieve_bool("backup");
+  if (!keep_backup)
+    remove_file(backup_name);
   
   //end_check();
   
