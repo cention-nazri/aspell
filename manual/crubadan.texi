@@ -5,6 +5,7 @@
 @item Bislama (bi)
 @item Cebuano (ceb)
 @item Chamorro (ch)
+@item Chuukese (chk)
 @item Corsican (co)
 @item Basque (eu)
 @item Fijian (fj)
@@ -25,6 +26,7 @@
 @item Luganda (lg)
 @item Limburgish (li)
 @item Lingala (ln)
+@item Luba-Kasai (lua)
 @item Luo (luo)
 @item Marshallese (mh)
 @item Minangkabau (min)
@@ -50,4 +52,5 @@
 @item Tahitian (ty)
 @item Venda (ve)
 @item Xhosa (xh)
+@item Yoruba (yo)
 @end itemize

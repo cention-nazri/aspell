@@ -29,6 +29,7 @@
 @item ce @tab Chechen @tab Cyrillic @tab - @tab -
 @item ceb @tab Cebuano @tab Latin @tab Maybe @tab -
 @item ch @tab Chamorro @tab Latin @tab Maybe @tab -
+@item chk @tab Chuukese @tab Latin @tab Maybe @tab -
 @item co @tab Corsican @tab Latin @tab Maybe @tab -
 @item cs @tab Czech @tab Latin @tab 0.50 @tab Yes
 @item cv @tab Chuvash @tab Cyrillic @tab - @tab -
@@ -109,6 +110,7 @@
 @item ln @tab Lingala @tab Latin @tab Maybe @tab -
 @item lt @tab Lithuanian @tab Latin @tab 0.60 @tab -
 @item lu @tab Luba-Katanga @tab Latin @tab - @tab -
+@item lua @tab Luba-Lulua @tab Latin @tab Maybe @tab -
 @item luo @tab Luo (Kenya and Tanzania) @tab Latin @tab Maybe @tab -
 @item lv @tab Latvian @tab Latin @tab 0.60 @tab -
 @item
@@ -204,7 +206,7 @@
 @item xh @tab Xhosa @tab Latin @tab Maybe @tab -
 @item
 @item yi @tab Yiddish @tab Hebrew @tab 0.60 @tab -
-@item yo @tab Yoruba @tab Latin @tab - @tab -
+@item yo @tab Yoruba @tab Latin @tab Maybe @tab -
 @item
 @item za @tab Zhuang @tab Latin @tab - @tab -
 @item zu @tab Zulu @tab Latin @tab 0.50 @tab -
