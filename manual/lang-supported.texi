@@ -61,7 +61,7 @@
 @item gl @tab Gallegan @tab Latin @tab Yes @tab -
 @item gn @tab Guarani @tab Latin @tab - @tab -
 @item gu @tab Gujarati @tab Gujarati @tab - @tab -
-@item gv @tab Manx @tab Latin @tab Planned @tab -
+@item gv @tab Manx Gaelic @tab Latin @tab Planned @tab -
 @item
 @item ha @tab Hausa @tab Latin @tab - @tab -
 @item he @tab Hebrew @tab Hebrew @tab Planned @tab -
@@ -93,7 +93,7 @@
 @item kk @tab Kazakh @tab Cyrillic @tab - @tab -
 @item kl @tab Kalaallisut/Greenlandic @tab Latin @tab - @tab -
 @item kn @tab Kannada @tab Kannada @tab - @tab -
-@item ko @tab Korean @tab Hangeul @tab - @tab -
+@item ko @tab Korean @tab Hangul @tab - @tab -
 @item kr @tab Kanuri @tab Latin @tab - @tab -
 @item ks @tab Kashmiri @tab Arabic @tab - @tab -
 @item ks @tab @tab Devanagari @tab - @tab -
@@ -106,7 +106,7 @@
 @item ky @tab @tab Latin @tab - @tab -
 @item
 @item la @tab Latin @tab Latin @tab - @tab -
-@item lb @tab Luxembourgish @tab Latin @tab Planned @tab -
+@item lb @tab Luxembourgish @tab Latin @tab - @tab -
 @item lg @tab Ganda @tab Latin @tab - @tab -
 @item li @tab Limburgan @tab Latin @tab - @tab -
 @item ln @tab Lingala @tab Latin @tab - @tab -
@@ -126,7 +126,7 @@
 @item mo @tab Moldavian @tab Cyrillic @tab - @tab -
 @item mr @tab Marathi @tab Devanagari @tab - @tab -
 @item ms @tab Malay @tab Latin @tab Yes @tab -
-@item mt @tab Maltese @tab Latin @tab Planned @tab -
+@item mt @tab Maltese @tab Latin @tab Yes @tab -
 @item my @tab Burmese @tab Myanmar @tab - @tab -
 @item
 @item na @tab Nauruan @tab Latin @tab - @tab -
@@ -177,7 +177,7 @@
 @item st @tab Southern Sotho @tab Latin @tab - @tab -
 @item su @tab Sundanese @tab Latin @tab - @tab -
 @item sv @tab Swedish @tab Latin @tab Yes @tab -
-@item sw @tab Swahili @tab Latin @tab Planned @tab -
+@item sw @tab Swahili @tab Latin @tab Yes @tab -
 @item
 @item ta @tab Tamil @tab Tamil @tab Planned @tab -
 @item te @tab Telugu @tab Telugu @tab - @tab -
@@ -185,9 +185,9 @@
 @item tk @tab Turkmen @tab Latin @tab - @tab -
 @item tl @tab Tagalog @tab Latin @tab - @tab -
 @item tl @tab @tab Tagalog @tab - @tab -
-@item tn @tab Tswana @tab Latin @tab - @tab -
+@item tn @tab Tswana @tab Latin @tab Yes @tab -
 @item to @tab Tonga @tab Latin @tab - @tab -
-@item tr @tab Turkish @tab Latin @tab - @tab -
+@item tr @tab Turkish @tab Latin @tab Yes @tab -
 @item ts @tab Tsonga @tab Latin @tab - @tab -
 @item tt @tab Tatar @tab Cyrillic @tab - @tab -
 @item tw @tab Twi @tab Latin @tab - @tab -
@@ -205,7 +205,7 @@
 @item vi @tab Vietnamese @tab Latin @tab - @tab -
 @item vo @tab Volapuk @tab Latin @tab - @tab -
 @item
-@item wa @tab Walloon @tab Latin @tab Planned @tab Incomplete
+@item wa @tab Walloon @tab Latin @tab Yes @tab Incomplete
 @item wo @tab Wolof @tab Latin @tab - @tab -
 @item
 @item xh @tab Xhosa @tab Latin @tab - @tab -
@@ -214,6 +214,6 @@
 @item yo @tab Yoruba @tab Latin @tab - @tab -
 @item
 @item za @tab Zhuang @tab Latin @tab - @tab -
-@item zu @tab Zulu @tab Latin @tab Planned @tab -
+@item zu @tab Zulu @tab Latin @tab Yes @tab -
 
 @end multitable

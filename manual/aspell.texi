@@ -1,5 +1,5 @@
 \input texinfo   @c -*-texinfo-*-
-@comment $Id: aspell.texi,v 1.17 2004/03/23 02:29:38 kevina Exp $
+@comment $Id: aspell.texi,v 1.18 2004/03/23 21:37:05 kevina Exp $
 @comment %**start of header
 @setfilename aspell.info
 @settitle GNU Aspell 0.60
@@ -2906,11 +2906,11 @@ and 25 modifiers which is less than 220 and can thus fit in an Aspell
 language this special character set can be used to reperesnt any word
 written using the Latin script if so desired.
 
-@appendixsubsec Hangeul
+@appendixsubsec Hangul
 
-Koren in generally written in hangeul or a mixture of hanja and hangeul.
-Aspell should be able to spell check the hangeul part of the writing.
-In Hangeul letters individual letters, known as jamo, are grouped
+Koren in generally written in hangul or a mixture of han and hangul.
+Aspell should be able to spell check the hangul part of the writing.
+In Hangul letters individual letters, known as jamo, are grouped
 together in syllable blocks.  Unicode provided code points for both jamo
 and the combined syllable block.  The syllable blocks will need to be
 decomposed into jamo in order for Aspell to spell check it.
@@ -2919,7 +2919,7 @@ decomposed into jamo in order for Aspell to spell check it.
 @appendixsec Syllabic 
 
 Syllabic languages use a separate symbol for each syllable of the
-language.  Since most of them have more than 240 distinct characters
+language.  Since most of them have more than 220 distinct characters
 Aspell can not support them as is.  However, all hope is not lost as
 Aspell will most likely be able to support them in the future.
 
@@ -3066,35 +3066,17 @@ support.
 @tab MySpell dictionary expanded to over 500 MB.
 Will add once affix support is worked into the dictionary package system.
 
-@item lb @tab Luxembourgish
-@tab MySpell dictionary planned.
-
 @item lt @tab Lithuanian
 @tab MySpell dictionary expanded to over 500 MB.
 Will add once affix support is worked into the dictionary package system.
 
-@item mt @tab Maltese
-@tab Unofficial Aspell Dictionary available, but broken link to source.
-@uref{http://linux.org.mt/@/article/spellcheck}
-
-@item sw @tab Albanian
+@item sq @tab Albanian
 @tab Ispell Dictionary available
-
-@item sw @tab Swahili
-@tab Available at @uref{http://sourceforge.net/@/projects/translate}.  Offical 
-version comming soon.
 
 @item ta @tab Tamil
 @tab Word list available at
 @uref{http://www.developer.thamizha.com/@/spellchecker/index.html}.
 Working with them to create an Aspell dictionary.
-
-@item wa @tab Walloon
-@tab Ispell Dictionary available
-
-@item zu @tab Zulu
-@tab Available at @uref{http://sourceforge.net/@/projects/translate}.  Offical 
-version comming soon.
 
 @end multitable
 
@@ -3988,9 +3970,11 @@ included the original words found in ispell and eliminated the large
 size for now.
 
 @item
-Added three special variant add-on dictionaries.  \layout Itemize
+Added three special variant add-on dictionaries.
 
+@item
 Switched to the multi-language branch of the CVS version of libtool.
+
 @end itemize
 
 @heading Changes from .32.5 to .32.6 (Nov 8, 2000)
@@ -4209,8 +4193,9 @@ adding it to any dictionaries.  This might mean that you have to
 manually delete a few words from your personal word list.
 
 @item
-Added option to ignore case when checking a document.  \layout Itemize
+Added option to ignore case when checking a document.
 
+@item
 Adjusted the parameters of the @strong{normal} suggest mode to so that
 significantly less far fetched results are returned in cases such as
 tomatoe, which went from 100 suggestions down to 32, at the expense of

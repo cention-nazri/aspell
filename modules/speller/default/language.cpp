@@ -5,6 +5,8 @@
 #include <vector>
 #include <assert.h>
 
+#include <iostream.hpp>
+
 #include "asc_ctype.hpp"
 #include "clone_ptr-t.hpp"
 #include "config.hpp"
@@ -29,10 +31,10 @@ namespace aspeller {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 1
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 2
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 3
-    0, 4, 0, 0, 3, 0, 0, 0, 2, 0, 0, 0, 7, 5, 0, 0, // 4
-    0, 0, 0, 0, 0, 0, 6, 1, 0, 0, 0, 0, 0, 0, 0, 0, // 5
-    0, 4, 0, 0, 3, 0, 0, 0, 2, 0, 0, 0, 7, 5, 0, 0, // 6
-    0, 0, 0, 0, 0, 0, 6, 1, 0, 0, 0, 0, 0, 0, 0, 0, // 7
+    0, 4, 0, 0, 3, 0, 0, 0, 2, 0, 0, 0, 6, 5, 0, 0, // 4
+    0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, // 5
+    0, 4, 0, 0, 3, 0, 0, 0, 2, 0, 0, 0, 6, 5, 0, 0, // 6
+    0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, // 7
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 8
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 9
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // A
@@ -140,48 +142,46 @@ namespace aspeller {
   
     FStream char_data;
     String char_data_name;
-    find_file(char_data_name,dir1,dir2,charset_,".dat");
+    find_file(char_data_name,dir1,dir2,charset_,".cset");
     RET_ON_ERR(char_data.open(char_data_name, "r"));
     
     String temp;
-    char_data.getline(temp);
-    char_data.getline(temp);
+    char * p;
+    do {
+      p = get_nb_line(char_data, temp);
+    } while (*p != '/');
     
     for (unsigned int i = 0; i != 256; ++i) {
-      char_data.getline(temp);
-      char * p = const_cast<char *>(temp.str());
-      if (strtoul(p, &p, 16) != i) 
+      p = get_nb_line(char_data, temp);
+      if (!p || strtoul(p, &p, 16) != i) 
         return make_err(bad_file_format, char_data_name);
       to_uni_[i] = strtol(p, &p, 16);
-      ++p;
+      while (asc_isspace(*p)) ++p;
       char_type_[i] = static_cast<CharType>(TO_CHAR_TYPE[to_uchar(*p++)]);
-      if (char_type_[i] >= Vowel) {
-        CharInfo inf = LETTER;
-        to_upper_[i] = static_cast<char>(strtol(p, &p, 16));
-        inf |= to_uchar(to_upper_[i]) == i ? UPPER : 0;
-        to_lower_[i] = static_cast<char>(strtol(p, &p, 16));
-        inf |= to_uchar(to_lower_[i]) == i ? LOWER : 0;
-        to_title_[i] = static_cast<char>(strtol(p, &p, 16));
-        inf |= to_uchar(to_title_[i]) == i ? TITLE : 0;
-        to_plain_[i] = static_cast<char>(strtol(p, &p, 16));
-        inf |= to_uchar(to_plain_[i]) == i ? PLAIN : 0;
-        char_info_[i] = inf;
-        if (*p != '\0')
-          return make_err(bad_file_format, char_data_name);
-      } else {
-        to_upper_[i] = i;
-        to_lower_[i] = i;
-        to_title_[i] = i;
-        to_plain_[i] = i;
-        char_info_[i] = LOWER | UPPER | TITLE | PLAIN;
-      }
+      while (asc_isspace(*p)) ++p;
+      ++p; // display, ignored for now
+      CharInfo inf = char_type_[i] >= Letter ? LETTER : 0;
+      to_upper_[i] = static_cast<char>(strtol(p, &p, 16));
+      inf |= to_uchar(to_upper_[i]) == i ? UPPER : 0;
+      to_lower_[i] = static_cast<char>(strtol(p, &p, 16));
+      inf |= to_uchar(to_lower_[i]) == i ? LOWER : 0;
+      to_title_[i] = static_cast<char>(strtol(p, &p, 16));
+      inf |= to_uchar(to_title_[i]) == i ? TITLE : 0;
+      to_plain_[i] = static_cast<char>(strtol(p, &p, 16));
+      inf |= to_uchar(to_plain_[i]) == i ? PLAIN : 0;
+      inf |= to_uchar(to_plain_[i]) == 0 ? PLAIN : 0;
+      sl_first_[i] = static_cast<char>(strtol(p, &p, 16));
+      sl_rest_[i]  = static_cast<char>(strtol(p, &p, 16));
+      char_info_[i] = inf;
     }
+
+    to_plain_[0] = 1; // to make things slightly easier
+    to_plain_[1] = 1;
 
     for (unsigned int i = 0; i != 256; ++i) {
       to_stripped_[i] = to_plain_[(unsigned char)to_lower_[i]];
-      to_sl_[i]       = char_type_[i] <= Vowel ? '\0' : to_stripped_[i];
     }
-
+    
     //
     //
     //
@@ -463,51 +463,40 @@ namespace aspeller {
     return true;
   }
 
-  static inline PosibErr<void> invalid_char(ParmString word, ParmString letter, 
-                                            const char * where)
-  {
-    char m[70];
-    switch (where[0]) {
-    case 'b':
-      snprintf(m, 70, 
-               _("The character '%s' may not appear at the beginning of a word."),
-               letter.str());
-      break;
-    case 'm':
-      snprintf(m, 70, 
-               _("The character '%s' may not appear at the middle of a word."),
-               letter.str());
-      break;
-    case 'e':
-      snprintf(m, 70, 
-               _("The character '%s' may not appear at the end of a word."),
-               letter.str());
-      break;
-    default:
-      abort();
-    }
-    return make_err(invalid_word, word, m);
-  }
-
   PosibErr<void> check_if_valid(const Language & l, ParmString word) {
     if (*word == '\0') 
       return make_err(invalid_word, MsgConv(l)(word), _("Empty string."));
     const char * i = word;
     if (!l.is_alpha(*i)) {
-      if (!l.special(*i).begin)
-	return invalid_char(MsgConv(l)(word), MsgConv(l)(*i), "beg");
-      else if (!l.is_alpha(*(i+1)))
+      if (!l.special(*i).begin) {
+        char m[70];
+        snprintf(m, 70, 
+                 _("The character '%s' may not appear at the beginning of a word."),
+                 MsgConv(l)(*i));
+        return make_err(invalid_word, MsgConv(l)(word), m);
+      } else if (!l.is_alpha(*(i+1))) {
 	return make_err(invalid_word, MsgConv(l)(word), _("Does not contain any letters."));
+      }
     }
     for (;*(i+1) != '\0'; ++i) { 
       if (!l.is_alpha(*i)) {
-	if (!l.special(*i).middle)
-	  return invalid_char(MsgConv(l)(word), MsgConv(l)(*i), "middle");
+	if (!l.special(*i).middle) {
+          char m[70];
+          snprintf(m, 70, 
+                   _("The character '%s' may not appear at the middle of a word."),
+                   MsgConv(l)(*i));
+          return make_err(invalid_word, MsgConv(l)(word), m);
+        }
       }
     }
     if (!l.is_alpha(*i)) {
-      if (!l.special(*i).end)
-	return invalid_char(MsgConv(l)(word), MsgConv(l)(*i), "end");
+      if (!l.special(*i).end) {
+        char m[70];
+        snprintf(m, 70, 
+                 _("The character '%s' may not appear at the end of a word."),
+                 MsgConv(l)(*i));
+        return make_err(invalid_word, MsgConv(l)(word), m);
+      }
     }
     return no_err;
   }

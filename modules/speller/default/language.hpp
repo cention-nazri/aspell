@@ -1,4 +1,4 @@
-// Copyright 2000 by Kevin Atkinson under the terms of the LGPL
+// Copyright 2004 by Kevin Atkinson under the terms of the LGPL
 
 #ifndef ASPELLER_LANGUAGE__HPP
 #define ASPELLER_LANGUAGE__HPP
@@ -78,8 +78,8 @@ namespace aspeller {
     typedef String       CacheKey;
 
     enum CharType {Unknown, WhiteSpace, Hyphen, Digit, 
-                   NonLetter, Modifier, Vowel, Letter};
-
+                   NonLetter, Modifier, Letter};
+    
     struct SpecialChar {
       bool begin;
       bool middle;
@@ -110,7 +110,6 @@ namespace aspeller {
     char          to_stripped_[256];
     unsigned char to_normalized_[256];
     char          to_plain_[256];
-    char          to_sl_[256];
     int           to_uni_[256];
     CharType      char_type_[256];
     char *        to_clean_;
@@ -131,6 +130,11 @@ namespace aspeller {
 
     Language(const Language &);
     void operator=(const Language &);
+
+  public: // but don't use
+
+    char          sl_first_[256];
+    char          sl_rest_[256];
 
   public:
 
@@ -163,8 +167,6 @@ namespace aspeller {
     unsigned char max_normalized() const {return max_normalized_;}
     
     char to_plain(char c) const {return to_plain_[to_uchar(c)];}
-
-    char to_sl(char c) const {return to_sl_[to_uchar(c)];}
 
     char to_clean(char c) const {return to_clean_[to_uchar(c)];}
     bool is_clean(char c) const {return to_clean(c) == c;}
@@ -220,16 +222,16 @@ namespace aspeller {
       while (*str) *res++ = to_upper(*str++); *res = '\0'; return res;}
     char * to_stripped(char * res, const char * str) const {
       for (; *str; ++str) {
-        if (special(*str).any) ++str;
-        *res++ = to_stripped(*str);
+        char c = to_stripped(*str);
+        if (c) *res++ = c;
       }
       *res = '\0';
       return res;
     }
     char * to_clean(char * res, const char * str) const {
       for (; *str; ++str) {
-        if (special(*str).any) ++str;
-        *res++ = to_clean(*str);
+        char c = to_clean(*str);
+        if (c) *res++ = c;
       }
       *res = '\0';
       return res;
@@ -242,16 +244,16 @@ namespace aspeller {
     const char * to_stripped(String & res, const char * str) const {
       res.clear();
       for (; *str; ++str) {
-        if (special(*str).any) ++str;
-        res += to_stripped(*str);
+        char c = to_stripped(*str);
+        if (c) res += c;
       }
       return res.str();
     }
     const char * to_clean(String & res, const char * str) const {
       res.clear();
       for (; *str; ++str) {
-        if (special(*str).any) ++str;
-        res += to_clean(*str);
+        char c = to_clean(*str);
+        if (c) res += c;
       }
       return res.str();
     }
@@ -303,19 +305,14 @@ namespace aspeller {
     operator bool () const {return lang;}
     int operator() (const char * a, const char * b) const
     { 
-      if (lang->special(*a).begin) ++a;
-      if (lang->special(*b).begin) ++b;
-      while (*a != '\0' && *b != '\0' 
-	     && lang->to_clean(*a) == lang->to_clean(*b)) 
+      char x,y;
+      for (;;)
       {
-	++a, ++b;
-	if (lang->special(*a).middle) ++a;
-	if (lang->special(*b).middle) ++b;
+        while (x = lang->to_clean(*a++), !x);
+        while (y = lang->to_clean(*b++), !y);
+        if (x == 1 || y == 1 || x == y) break;
       }
-      if (lang->special(*a).end) ++a;
-      if (lang->special(*b).end) ++b;
-      return static_cast<unsigned char>(lang->to_clean(*a)) 
-	- static_cast<unsigned char>(lang->to_clean(*b));
+      return static_cast<unsigned char>(x) - static_cast<unsigned char>(y);
     }
   };
 
@@ -339,11 +336,9 @@ namespace aspeller {
     {
       size_t h = 0;
       for (;;) {
-	if (lang->special(*s).any) ++s;
 	if (*s == 0) break;
-	if (lang->char_type(*s) == Language::Letter)
-	  h=5*h + lang->to_clean(*s);
-	++s;
+        char c = lang->to_clean(*s++);
+	if (c) h=5*h + lang->to_clean(*s);
       }
       return h;
     }

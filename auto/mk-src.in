@@ -1,6 +1,6 @@
 #
 # mk-src.in -- Input file for the Perl program to automatically 
-#              generate interface code.
+#	       generate interface code.
 #
 # This file is part of The New Aspell
 # Copyright (C) 2001 by Kevin Atkinson under the GNU LGPL
@@ -50,7 +50,7 @@ methods: destructible
 #
 #	method: ref count
 #		desc => returns a pointer to an int which may be used
-#			for refrence counting.  It will default to 0.
+#			for refrence counting.	It will default to 0.
 #			This integer is not used by the actual library
 #			but may be used my some of the front ends.
 #		c only
@@ -212,7 +212,7 @@ struct: key info
 		desc => a brief description of the key or null if internal value
 	int: flags
 	int: other data
-}       
+}	
 group: config
 {
 no native
@@ -459,9 +459,14 @@ errors:
 		process died
 	bad input
 		/
+		invalid string
+			mesg => The string "%str" is invalid.
+			parms => str
 		invalid word
 			mesg => The word "%word" is invalid.
 			parms => word
+		unknown unichar
+			mesg => 
 		word list flags
 			/
 			invalid flag
@@ -546,7 +551,7 @@ class: speller
 	method: check
 
 		posib err
-		desc => returns  0 if it is not in the dictionary, 
+		desc => returns	 0 if it is not in the dictionary, 
 			1 if it is, or -1 on error.
 		/
 		bool
@@ -938,8 +943,8 @@ group: cache
 /
 func: reset cache
 	desc => Reset the global cache(s) so that cache queries will create a new
-		object.  If exiting objects are still in use they are not deleted.
-		If which is NULL than ALL caches will be reset.  Current caches are
+		object.	 If exiting objects are still in use they are not deleted.
+		If which is NULL than ALL caches will be reset.	 Current caches are
 		"encode", "decode", "dictionary", "language", and "keyboard".
 	/
 	bool

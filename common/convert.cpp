@@ -15,6 +15,8 @@
 #include "stack_ptr.hpp"
 #include "cache-t.hpp"
 
+#include "iostream.hpp"
+
 namespace acommon {
 
   typedef unsigned char  Uni8;
@@ -82,7 +84,6 @@ namespace acommon {
   class FromUniLookup 
   {
   private:
-    char unknown;
     static const Uni32 npos = (Uni32)(-1);
     UniItem * overflow_end;
   
@@ -91,9 +92,9 @@ namespace acommon {
     UniItem overflow[256]; // you can never be too careful;
   
   public:
-    FromUniLookup(char u = '?') : unknown(u) {}
+    FromUniLookup() {}
     void reset();
-    inline char operator[] (Uni32 key) const;
+    inline char operator() (Uni32 key, char unknown = '?') const;
     bool insert(Uni32 key, char value);
   };
 
@@ -104,7 +105,7 @@ namespace acommon {
     overflow_end = overflow;
   }
 
-  inline char FromUniLookup::operator[] (Uni32 k) const
+  inline char FromUniLookup::operator() (Uni32 k, char unknown) const
   {
     const UniItem * i = data + (unsigned char)k * 4;
 
@@ -186,7 +187,7 @@ namespace acommon {
     String file_name = config.retrieve("data-dir");
     file_name += '/';
     file_name += encoding;
-    file_name += ".dat";
+    file_name += ".cset";
     FStream data;
     PosibErrBase err = data.open(file_name, "r");
     if (err.get_err()) { 
@@ -198,11 +199,15 @@ namespace acommon {
     unsigned int chr;
     Uni32 uni;
     String line;
-    data.getline(line);
-    data.getline(line);
+    char * p;
+    do {
+      p = get_nb_line(data, line);
+    } while (*p != '/');
     for (chr = 0; chr != 256; ++chr) {
-      data.getline(line);
-      uni = strtol(line.str() + 3, 0, 16);
+      p = get_nb_line(data, line);
+      if (strtoul(p, 0, 16) != chr)
+        return make_err(bad_file_format, file_name);
+      uni = strtoul(p + 3, 0, 16);
       to.insert(chr, uni);
       from.insert(uni, chr);
     }
@@ -244,6 +249,11 @@ namespace acommon {
 	  out.append(*in);
       }
     }
+    PosibErr<void> decode_ec(const char * in0, int size, 
+                             FilterCharVector & out, ParmString) const {
+      DecodeDirect::decode(in0, size, out);
+      return no_err;
+    }
   };
 
   template <typename Chr>
@@ -255,6 +265,14 @@ namespace acommon {
 	Chr c = in->chr;
 	out.append(&c, sizeof(Chr));
       }
+    }
+    PosibErr<void> encode_ec(const FilterChar * in, const FilterChar * stop, 
+                             CharVector & out, ParmString) const {
+      for (; in != stop; ++in) {
+	Chr c = in->chr;
+	out.append(&c, sizeof(Chr));
+      }
+      return no_err;
     }
     bool encode_direct(FilterChar *, FilterChar *) const {
       return true;
@@ -273,6 +291,11 @@ namespace acommon {
 	out.append(in0, size);
       }
     }
+    PosibErr<void> convert_ec(const char * in0, int size, 
+                              CharVector & out, ParmString) const {
+      ConvDirect::convert(in0, size, out);
+      return no_err;
+    }
   };
 
   //////////////////////////////////////////////////////////////////////
@@ -283,9 +306,10 @@ namespace acommon {
   struct DecodeLookup : public Decode 
   {
     ToUniLookup lookup;
-    PosibErr<void> init(ParmString code, const Config & c) 
-      {FromUniLookup unused;
-      return read_in_char_data(c, code, lookup, unused);}
+    PosibErr<void> init(ParmString code, const Config & c) {
+      FromUniLookup unused;
+      return read_in_char_data(c, code, lookup, unused);
+    }
     void decode(const char * in, int size, FilterCharVector & out) const {
       if (size == -1) {
 	for (;*in; ++in)
@@ -295,6 +319,11 @@ namespace acommon {
 	for (;in != stop; ++in)
 	  out.append(lookup[*in]);
       }
+    }
+    PosibErr<void> decode_ec(const char * in, int size, 
+                             FilterCharVector & out, ParmString) const {
+      DecodeLookup::decode(in, size, out);
+      return no_err;
     }
   };
 
@@ -307,12 +336,25 @@ namespace acommon {
     void encode(const FilterChar * in, const FilterChar * stop, 
 		CharVector & out) const {
       for (; in != stop; ++in) {
-	out.append(lookup[*in]);
+	out.append(lookup(*in));
       }
+    }
+    PosibErr<void> encode_ec(const FilterChar * in, const FilterChar * stop, 
+                             CharVector & out, ParmString orig) const {
+      for (; in != stop; ++in) {
+        char c = lookup(*in, '\0');
+        if (c == '\0' && in->chr != 0) {
+          char m[70];
+          snprintf(m, 70, _("The unicode code point U+%04X is unsupported."), in->chr);
+          return make_err(invalid_string, orig, m);
+        }
+	out.append(c);
+      }
+      return no_err;
     }
     bool encode_direct(FilterChar * in, FilterChar * stop) const {
       for (; in != stop; ++in)
-	*in = lookup[*in];
+	*in = lookup(*in);
       return true;
     }
   };
@@ -331,7 +373,8 @@ namespace acommon {
   u |= c & 0x3F;                       \
   ++w;
 
-  static inline FilterChar from_utf8 (const char * & in, const char * stop)
+  static inline FilterChar from_utf8 (const char * & in, const char * stop, 
+                                      Uni32 err_char = '?')
   {
     Uni32 u = (Uni32)(-1);
     FilterChar::Width w = 1;
@@ -355,28 +398,15 @@ namespace acommon {
       get_check_next;
       get_check_next;
       get_check_next;
-    } else if ((c & 0xFC) == 0xF8) { // 5-byte wide
-      u  = c & 0x03;
-      get_check_next;
-      get_check_next;
-      get_check_next;
-      get_check_next;
-    } else if ((c & 0xFE) == 0xFC) { // 6-byte wide
-      u  = c & 0x03;
-      get_check_next;
-      get_check_next;
-      get_check_next;
-      get_check_next;
-      get_check_next;
     } else {
       goto error;
     }
 
     return FilterChar(u, w);
   error:
-    return FilterChar('?', w);
+    return FilterChar(err_char, w);
   }
-  
+
   static inline void to_utf8 (FilterChar in, CharVector & out)
   {
     FilterChar::Chr c = in;
@@ -399,21 +429,6 @@ namespace acommon {
       out.append(0x80 | c>>6 & 0x3F);
       out.append(0x80 | c & 0x3F);
     }
-    else if (c < 0x4000000) {
-      out.append(0xF8 | c>>24);
-      out.append(0x80 | c>>18 & 0x3F);
-      out.append(0x80 | c>>12 & 0x3F);
-      out.append(0x80 | c>>6 & 0x3F);
-      out.append(0x80 | c & 0x3F);
-    }
-    else if (c < 0x80000000) {
-      out.append(0xF8 | c>>30);
-      out.append(0x80 | c>>24 & 0x3F);
-      out.append(0x80 | c>>18 & 0x3F);
-      out.append(0x80 | c>>12 & 0x3F);
-      out.append(0x80 | c>>6 & 0x3F);
-      out.append(0x80 | c & 0x3F);
-    }
   }
   
   struct DecodeUtf8 : public Decode 
@@ -425,6 +440,21 @@ namespace acommon {
 	out.append(from_utf8(in, stop));
       }
     }
+    PosibErr<void> decode_ec(const char * in, int size, 
+                             FilterCharVector & out, ParmString orig) const {
+      const char * begin = in;
+      const char * stop = in + size; // this is OK even if size == -1
+      while (*in && in != stop) {
+        FilterChar c = from_utf8(in, stop, (Uni32)-1);
+        if (c == (Uni32)-1) {
+          char m[70];
+          snprintf(m, 70, _("Invalid UTF-8 sequence at position %d."), in - begin);
+          return make_err(invalid_string, orig, m);
+        }
+	out.append(c);
+      }
+      return no_err;
+    }
   };
 
   struct EncodeUtf8 : public Encode 
@@ -435,6 +465,13 @@ namespace acommon {
       for (; in != stop; ++in) {
 	to_utf8(*in, out);
       }
+    }
+    PosibErr<void> encode_ec(const FilterChar * in, const FilterChar * stop, 
+                             CharVector & out, ParmString) const {
+      for (; in != stop; ++in) {
+	to_utf8(*in, out);
+      }
+      return no_err;
     }
   };
 
@@ -478,10 +515,10 @@ namespace acommon {
     
     if (buf == "ascii" || buf == "ansi_x3.4-1968")
       return "iso-8859-1";
-    else if (buf == "machine unsigned 16")
-      return "utf-16";
-    else if (buf == "machine unsigned 32")
-      return "utf-32";
+    else if (buf == "machine unsigned 16" || buf == "utf-16")
+      return "ucs-2";
+    else if (buf == "machine unsigned 32" || buf == "ucs-4")
+      return "ucs-4";
     else
       return buf.c_str();
   }
@@ -517,9 +554,9 @@ namespace acommon {
     StackPtr<Decode> ptr;
     if (key == "iso-8859-1")
       ptr.reset(new DecodeDirect<Uni8>);
-    else if (key == "utf-16")
+    else if (key == "ucs-2")
       ptr.reset(new DecodeDirect<Uni16>);
-    else if (key == "utf-32")
+    else if (key == "ucs-4")
       ptr.reset(new DecodeDirect<Uni32>);
     else if (key == "utf-8")
       ptr.reset(new DecodeUtf8);
@@ -535,9 +572,9 @@ namespace acommon {
     StackPtr<Encode> ptr;
     if (key == "iso-8859-1")
       ptr.reset(new EncodeDirect<Uni8>);
-    else if (key == "utf-16")
+    else if (key == "ucs-2")
       ptr.reset(new EncodeDirect<Uni16>);
-    else if (key == "utf-32")
+    else if (key == "ucs-4")
       ptr.reset(new EncodeDirect<Uni32>);
     else if (key == "utf-8")
       ptr.reset(new EncodeUtf8);
@@ -554,9 +591,9 @@ namespace acommon {
     RET_ON_ERR(setup(encode_, &encode_cache, &c, out));
 
     if (in == out) {
-      if (in == "utf-16")
+      if (in == "ucs-2")
 	conv_ = new ConvDirect<Uni16>;
-      else if (in == "utf-32")
+      else if (in == "ucs-4")
 	conv_ = new ConvDirect<Uni32>;
       else
 	conv_ = new ConvDirect<char>;

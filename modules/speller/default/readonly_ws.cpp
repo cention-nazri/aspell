@@ -720,11 +720,11 @@ namespace {
    
     bool use_jump_tables = use_soundslike || config.retrieve_bool("use-jump-tables");
 
-    Conv iconv;
+    ConvEC iconv;
     if (config.have("encoding"))
-      iconv.setup(config, config.retrieve("encoding"), lang.charset());
+      RET_ON_ERR(iconv.setup(config, config.retrieve("encoding"), lang.charset()));
     else
-      iconv.setup(config, lang.data_encoding(), lang.charset());
+      RET_ON_ERR(iconv.setup(config, lang.data_encoding(), lang.charset()));
 
     //CERR << (affix_compress ? "  AFFIX COMPRESS" : "")
     //     << (use_soundslike ? "  USING SOUNDSLIKE" : "") 
@@ -797,7 +797,7 @@ namespace {
 	unsigned int s = strlen(w0);
 	CharVector tstr;
 	tstr.append(w0, s+1);
-	char * w = iconv(tstr.data(), tstr.size());
+	RET_ON_ERR_SET(iconv(tstr.data(), tstr.size()), char *, w);
         s = strlen(w);
 
         char * p0 = strchr(w, '/');
@@ -1176,10 +1176,10 @@ namespace aspeller {
   {
     CachePtr<Language> lang;
     PosibErr<Language *> res = new_language(config);
-    if (!res) return res;
+    if (res.has_err()) return res;
     lang.reset(res.data);
     lang->set_lang_defaults(config);
-    create(els,*lang,config);
+    RET_ON_ERR(create(els,*lang,config));
     return no_err;
   }
 }

@@ -290,7 +290,7 @@ pspell_include_HEADERS = interfaces/cc/pspell.h
 # Misc Top level
 #
 
-pkgdata_DATA = ${top_srcdir}/data/*.dat ${top_srcdir}/data/*.kbd
+pkgdata_DATA = ${top_srcdir}/data/*.cset ${top_srcdir}/data/*.kbd
 
 EXTRA_DIST += config.rpath  README ${pkgdata_DATA} m4/*.m4 \
               misc/po-filter.c

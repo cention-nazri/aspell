@@ -54,5 +54,7 @@ namespace acommon {
 
   bool getline(IStream & in, DataPair & d, String & buf);
 
+  char * get_nb_line(IStream & in, String & buf);
+
 }
 #endif

@@ -10,38 +10,52 @@
 
 namespace aspeller {
   
-  class GenericSoundslike : public Soundslike {
+  class SimpileSoundslike : public Soundslike {
   private:
     const Language * lang;
+    char first[256];
+    char rest[256];
   public:
-    GenericSoundslike(const Language * l) : lang(l) {}
+    SimpileSoundslike(const Language * l) : lang(l) {}
 
-    PosibErr<void> setup(Conv &) {return no_err;}
+    PosibErr<void> setup(Conv &) {
+      memcpy(first, lang->sl_first_, 256);
+      memcpy(rest,  lang->sl_rest_, 256);
+      return no_err;
+    }
     
     String soundslike_chars() const {
       bool chars_set[256] = {0};
+      for (int i = 0; i != 256; ++i) 
+      {
+        char c = first[i];
+        if (c) chars_set[static_cast<unsigned char>(c)] = true;
+        c = rest[i];
+        if (c) chars_set[static_cast<unsigned char>(c)] = true;
+      }
       String     chars_list;
       for (int i = 0; i != 256; ++i) 
-	{
-	  char c = lang->to_sl(static_cast<char>(i));
-	  if (c) chars_set[static_cast<unsigned char>(c)] = true;
-	}
-      for (int i = 0; i != 256; ++i) 
-	{
-	  if (chars_set[i]) 
-	    chars_list += static_cast<char>(i);
-	}
+      {
+        if (chars_set[i]) 
+          chars_list += static_cast<char>(i);
+      }
       return chars_list;
     }
-
+    
     char * to_soundslike(char * res, const char * str, int size) const 
     {
-      char prev = '\0';
-      char cur;
+      char prev, cur = '\0';
+
+      const char * i = str;
+      while (*i) {
+        cur = first[static_cast<unsigned char>(*i++)];
+        if (cur) {*res++ = cur; break;}
+      }
+      prev = cur;
       
-      for (const char * i = str; *i; ++i) {
-	cur = lang->to_sl(*i);
-	if (cur != '\0' && cur != prev) *res++ = cur;
+      while (*i) {
+	cur = rest[static_cast<unsigned char>(*i++)];
+	if (cur && cur != prev) *res++ = cur;
 	prev = cur;
       }
       *res = '\0';
@@ -49,10 +63,10 @@ namespace aspeller {
     }
 
     const char * name () const {
-      return "generic";
+      return "simple";
     }
     const char * version() const {
-      return "1.0";
+      return "2.0";
     }
   };
 
@@ -146,8 +160,8 @@ namespace aspeller {
                                         const Language * lang)
   {
     Soundslike * sl;
-    if (name == "generic") {
-      sl = new GenericSoundslike(lang);
+    if (name == "simple" || name == "generic") {
+      sl = new SimpileSoundslike(lang);
     } else if (name == "none") {
       sl = new NoSoundslike(lang);
     } else {
@@ -161,6 +175,5 @@ namespace aspeller {
       return sl;
     }
   }
-
 }
 

@@ -36,6 +36,8 @@ namespace acommon {
     virtual PosibErr<void> init(ParmString code, const Config &) {return no_err;}
     virtual void decode(const char * in, int size,
 			FilterCharVector & out) const = 0;
+    virtual PosibErr<void> decode_ec(const char * in, int size,
+                                     FilterCharVector & out, ParmString orig) const = 0;
     static PosibErr<Decode *> get_new(const String &, const Config *);
     virtual ~Decode() {}
   };
@@ -44,8 +46,10 @@ namespace acommon {
     // by the encoder.
     virtual PosibErr<void> init(ParmString, const Config &) {return no_err;}
     virtual void encode(const FilterChar * in, const FilterChar * stop, 
-			CharVector & out) const = 0;
-    // encodes the string by modifying the input, if it can't be done
+                        CharVector & out) const = 0;
+    virtual PosibErr<void> encode_ec(const FilterChar * in, const FilterChar * stop, 
+                                     CharVector & out, ParmString orig) const = 0;
+    // encodes the string by modifying the input, if it can't abe done
     // return false
     virtual bool encode_direct(FilterChar * in, FilterChar * stop) const
       {return false;}
@@ -60,6 +64,8 @@ namespace acommon {
 				const Config &) {return no_err;}
     virtual void convert(const char * in, int size, 
 			 CharVector & out) const = 0;
+    virtual PosibErr<void> convert_ec(const char * in, int size, 
+                                      CharVector & out, ParmString orig) const = 0;
     virtual ~DirectConv() {}
   };
 
@@ -126,6 +132,24 @@ namespace acommon {
         encode_->encode(buf.pbegin(), buf.pend(), out);
       }
     }
+
+    // does NOT pass it through filters
+    // DOES NOT use an internal state
+    PosibErr<void> convert_ec(const char * in, int size, CharVector & out, 
+                              ConvertBuffer & buf, ParmString orig) const
+    {
+      if (conv_) {
+	RET_ON_ERR(conv_->convert_ec(in,size,out, orig));
+      } else {
+        buf.clear();
+        RET_ON_ERR(decode_->decode_ec(in, size, buf, orig));
+        buf.append(0);
+        RET_ON_ERR(encode_->encode_ec(buf.pbegin(), buf.pend(), 
+                                      out, orig));
+      }
+      return no_err;
+    }
+
 
     // convert has the potential to use internal buffers and
     // is therefore not const.  It is also not thread safe
@@ -254,6 +278,79 @@ namespace acommon {
       return no_err;
     }
   };
+
+  struct ConvECP {
+    const Convert * conv;
+    ConvertBuffer buf0;
+    CharVector buf;
+    operator bool() const {return conv;}
+    ConvECP(const Convert * c = 0) : conv(c) {}
+    ConvECP(const ConvObj & c) : conv(c.ptr) {}
+    ConvECP(const ConvECP & c) : conv(c.conv) {}
+    void operator=(const ConvECP & c) { conv = c.conv; }
+    PosibErr<void> setup(const Config & c, ParmString from, ParmString to)
+    {
+      delete conv;
+      conv = 0;
+      PosibErr<Convert *> pe = new_convert_if_needed(c, from, to);
+      if (pe.has_err()) return pe;
+      conv = pe.data;
+      return no_err;
+    }
+    // assumes str is null terminated
+    PosibErr<char *> operator() (char * str, size_t sz)
+    {
+      if (conv) {
+        buf.clear();
+        RET_ON_ERR(conv->convert_ec(str, sz, buf, buf0, str));
+        return buf.data();
+      } else {
+        return str;
+      }
+    }
+    PosibErr<char *> operator() (MutableString str)
+    {
+      return operator()(str.str, str.size);
+    }
+    PosibErr<char *> operator() (char * str)
+    {
+      if (conv) {
+        buf.clear();
+        RET_ON_ERR(conv->convert_ec(str, strlen(str), buf, buf0, str));
+        return buf.data();
+      } else {
+        return str;
+      }
+    }
+    PosibErr<const char *> operator() (ParmString str)
+    {
+      if (conv) {
+        buf.clear();
+        RET_ON_ERR(conv->convert_ec(str, str.size(), buf, buf0, str));
+        return buf.data();
+      } else {
+        return str.str();
+      }
+    }
+    PosibErr<const char *> operator() (char c)
+    {
+      char buf2[2] = {c, 0};
+      return operator()(ParmString(buf2,1));
+    }
+  };
+
+  struct ConvEC : public ConvECP
+  {
+    ConvObj conv_obj;
+    ConvEC(Convert * c = 0) : ConvECP(c), conv_obj(c) {}
+    PosibErr<void> setup(const Config & c, ParmString from, ParmString to)
+    {
+      RET_ON_ERR(conv_obj.setup(c,from,to));
+      conv = conv_obj.ptr;
+      return no_err;
+    }
+  };
+
 
 
 }
