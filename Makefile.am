@@ -25,7 +25,7 @@ EXTRA_DIST =
 # libaspell and friends
 #
 
-lib_LTLIBRARIES = libaspell.la 
+lib_LTLIBRARIES = libaspell.la
 
 if PSPELL_COMPATIBILITY
 lib_LTLIBRARIES += libpspell.la
@@ -93,14 +93,23 @@ libaspell_la_SOURCES =\
 
 libaspell_la_LIBADD =  $(LIBINTL)
 
+if INCREMENTED_SONAME
+libaspell_la_LDFLAGS = -version-info 16:0:0
+else
 libaspell_la_LDFLAGS = -version-info 16:0:1
+endif
 
 if PSPELL_COMPATIBILITY
 libpspell_la_SOURCES = lib/dummy.cpp
 
 libpspell_la_LIBADD = libaspell.la
 
+if INCREMENTED_SONAME
+libpspell_la_LDFLAGS = -version-info 16:0:0
+else
 libpspell_la_LDFLAGS = -version-info 16:0:1
+endif
+
 endif
 
 EXTRA_DIST += common/*.hpp common/*.h\
@@ -174,7 +183,6 @@ libaspell_la_SOURCES +=\
   modules/filter/email.cpp\
   modules/filter/tex.cpp\
   modules/filter/sgml.cpp\
-  modules/filter/context.hpp\
   modules/filter/context.cpp
 
 else # not COMPILE_IN_FILTERS
@@ -183,24 +191,24 @@ dynamic_optfiles += ${optfiles}
 
 ### Add name of filter library containing your filter. Name always
 ### must look like lib<filtername>-filter.la see development manual
-filter_LTLIBRARIES = libemail-filter.la libtex-filter.la\
-	             libsgml-filter.la libcontext-filter.la
+filter_LTLIBRARIES = email-filter.la tex-filter.la\
+	             sgml-filter.la context-filter.la
 
-libemail_filter_la_SOURCES = modules/filter/email.cpp
-libemail_filter_la_LIBADD = libaspell.la 
-libemail_filter_la_LDFLAGS  = -avoid-version
+email_filter_la_SOURCES = modules/filter/email.cpp
+email_filter_la_LIBADD = libaspell.la 
+email_filter_la_LDFLAGS  = -module -avoid-version
 
-libtex_filter_la_SOURCES = modules/filter/tex.cpp
-libtex_filter_la_LIBADD = libaspell.la
-libtex_filter_la_LDFLAGS  = -avoid-version
+tex_filter_la_SOURCES = modules/filter/tex.cpp
+tex_filter_la_LIBADD = libaspell.la
+tex_filter_la_LDFLAGS  = -module -avoid-version
 
-libsgml_filter_la_SOURCES  = modules/filter/sgml.cpp
-libsgml_filter_la_LIBADD = libaspell.la
-libsgml_filter_la_LDFLAGS  = -avoid-version
+sgml_filter_la_SOURCES  = modules/filter/sgml.cpp
+sgml_filter_la_LIBADD = libaspell.la
+sgml_filter_la_LDFLAGS  = -module -avoid-version
 
-libcontext_filter_la_SOURCES  = modules/filter/context.hpp modules/filter/context.cpp
-libcontext_filter_la_LIBADD = libaspell.la
-libcontext_filter_la_LDFLAGS  = -avoid-version
+context_filter_la_SOURCES  = modules/filter/context.cpp
+context_filter_la_LIBADD = libaspell.la
+context_filter_la_LDFLAGS  = -module -avoid-version
 
 ### Before this line add the corresponding <yourfilterlibrary>_SOURCES and
 ### <yourfilterlibrary>_LIBADD lines.  The later at least has to look

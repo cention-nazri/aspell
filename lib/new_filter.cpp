@@ -428,7 +428,7 @@ namespace acommon
     assert(slash);
     if (module->file.empty()) {
       module->file.assign(option_file.str(), slash + 1 - option_file.str());
-      module->file += "lib";
+      //module->file += "lib";
       module->file += filter_name;
       module->file += "-filter.so";
     } else {

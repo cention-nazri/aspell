@@ -58,14 +58,20 @@ AC_ARG_ENABLE(curses,
 AC_ARG_ENABLE(curses-include,           
 [  --enable-curses-include=DIR])
 
+AC_ARG_ENABLE(regex,
+[  --disable-regex])
+
 AC_ARG_ENABLE(compile-in-filters,
 [  --enable-compile-in-filters])
 
 AC_ARG_ENABLE(pspell-compatibility,
-[  --disable-pspell-compatibility])
+[  --disable-pspell-compatibility  don't install pspell compatibility libraries])
 
-AC_ARG_ENABLE(regex,
-[  --disable-regex])
+AC_ARG_ENABLE(incremented-soname,
+[  --disable-incremented-soname    don't break aspell 0.50 binary compatibility])
+
+AC_ARG_ENABLE(aspell5-compatibility,
+[  --enable-aspell5-compatibility  install aspell 0.50 compatibility libraries])
 
 dnl
 
@@ -105,9 +111,16 @@ then
   AC_DEFINE(COMPILE_IN_FILTER, 1, [Defined if filters should be compiled in])
 fi
 
-AM_CONDITIONAL(COMPILE_IN_FILTERS, test "$enable_compile_in_filters" == "yes")
+AM_CONDITIONAL(COMPILE_IN_FILTERS, 
+  [test "$enable_compile_in_filters" == "yes"])
 
-AM_CONDITIONAL(PSPELL_COMPATIBILITY, test "$enable_pspell_compatibility" != "no")
+AM_CONDITIONAL(PSPELL_COMPATIBILITY,  
+  [test "$enable_pspell_compatibility" != "no"])
+AM_CONDITIONAL(INCREMENTED_SONAME,    
+  [test "$enable_incremented_soname" != "no"])
+dnl AM_CONDITIONAL(ASPELL5_COMPATIBILITY,
+dnl   [test "$enable_incremented_soname" != "no" -a \
+dnl         "$enable_aspell5_compatibility" == "yes"])
 
 dnl GETTEXT
 
@@ -441,6 +454,6 @@ AC_CONFIG_FILES([Makefile gen/Makefile common/Makefile lib/Makefile data/Makefil
 		 interfaces/Makefile interfaces/cc/Makefile
 		 scripts/Makefile examples/Makefile
 		 prog/Makefile manual/Makefile po/Makefile.in modules/filter/Makefile
-		 myspell/Makefile
+		 myspell/Makefile lib5/Makefile
                  ])
 AC_OUTPUT

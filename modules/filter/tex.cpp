@@ -15,9 +15,9 @@
 #include "errors.hpp"
 #include "convert.hpp"
 
-#define FILTER_PROGRESS_CONTROL "tex-filter-debug.log"
-#include "filter_debug.hpp"
-#include <stdio.h>
+//#define FILTER_PROGRESS_CONTROL "tex-filter-debug.log"
+//#include "filter_debug.hpp"
+//#include <stdio.h>
 #include <cstdio>
 #include "filter_char_vector.hpp"
 #include "string_list.hpp"
@@ -268,7 +268,7 @@ namespace {
     String temp; temp.assign(value,p1);
     return StringMap::remove(temp);
   }
-  
+#if 0  
   //
   //
   class Recode {
@@ -748,11 +748,15 @@ namespace {
   TexDecoder::~TexDecoder(){
     FDEBUGCLOSE;
   }
+#endif
 }
 
 C_EXPORT 
 IndividualFilter * new_aspell_tex_filter() {return new TexFilter;}
+
+#if 0
 C_EXPORT 
 IndividualFilter * new_aspell_tex_decoder() {return new TexDecoder;}
 C_EXPORT 
 IndividualFilter * new_aspell_tex_encoder() {return new TexEncoder;}
+#endif
