@@ -59,8 +59,8 @@
 #include "suggest.hpp"
 #include "vararray.hpp"
 
-//#include "iostream.hpp"
-//#define DEBUG_SUGGEST
+#include "iostream.hpp"
+#define DEBUG_SUGGEST
 
 using namespace aspeller;
 using namespace acommon;
@@ -773,14 +773,14 @@ namespace {
     const char * sl = 0;
     EditDist score;
     int stopped_at = LARGE_NUM;
-    CheckList * cl = new_check_list();
-    lang->munch(original.word, cl);
+    GuessInfo gi;
+    lang->munch(original.word, &gi);
     Vector<const char *> sls;
     sls.push_back(original.soundslike.str());
 #ifdef DEBUG_SUGGEST
     COUT.printf("will try soundslike: %s\n", sls.back());
 #endif
-    for (const aspeller::CheckInfo * ci = check_list_data(cl); 
+    for (const aspeller::CheckInfo * ci = gi.head;
          ci; 
          ci = ci->next) 
     {
@@ -794,8 +794,6 @@ namespace {
 #endif
       }
     }
-    delete_check_list(cl);
-    cl = 0;
     const char * * begin = sls.pbegin();
     const char * * end   = sls.pend();
     for (SpellerImpl::WS::const_iterator i = sp->suggest_ws.begin();
@@ -947,7 +945,6 @@ namespace {
             Candidates::iterator i = candidates.begin();
             Candidates::iterator j = candidates.begin();
             for (; i != candidates.end(); ++i) {
-              assert(i->info.free_ == 0);
               if (i->score == orig_min) continue;
               if (min_score > i->score) min_score = i->score;
               *j = *i;

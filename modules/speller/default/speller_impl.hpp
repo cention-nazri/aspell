@@ -98,7 +98,7 @@ namespace aspeller {
 			 CheckInfo *, GuessInfo *);
 
     PosibErr<bool> check(MutableString word) {
-      guess_info.reset(guesses);
+      guess_info.reset();
       return check(word.begin(), word.end(), false,
 		   unconditional_run_together_ ? run_together_limit_ : 0,
 		   check_inf, &guess_info);
@@ -123,8 +123,8 @@ namespace aspeller {
     const CheckInfo * check_info() {
       if (check_inf[0].word)
         return check_inf;
-      else if (guess_info.num > 0)
-        return guesses + 1;
+      else if (guess_info.head)
+        return guess_info.head;
       else
         return 0;
     }
@@ -194,7 +194,6 @@ namespace aspeller {
 		     const char *, const char *) const;
 
     CheckInfo check_inf[8];
-    CheckInfo guesses[8];
     GuessInfo guess_info;
 
     typedef Vector<const Dict *> WS;
@@ -225,10 +224,16 @@ namespace aspeller {
     SpellerImpl::WS::const_iterator begin;
     SpellerImpl::WS::const_iterator end;
     inline LookupInfo(SpellerImpl * s, Mode m);
-    bool lookup (ParmString word, WordEntry & o) const;
+    // returns 0 if nothing found
+    // 1 if a match is found
+    // -1 if a word is found but affix doesn't match and "gi"
+    int lookup (ParmString word, char aff, 
+                WordEntry & o, GuessInfo * gi) const;
   };
 
-  inline LookupInfo::LookupInfo(SpellerImpl * s, Mode m) : sp(s), lang(&s->lang()), mode(m) {
+  inline LookupInfo::LookupInfo(SpellerImpl * s, Mode m) 
+    : sp(s), lang(s ? &s->lang() : 0), mode(m) 
+  {
     switch (m) { 
     case Word: 
       begin = sp->affix_ws.begin(); 

@@ -287,7 +287,7 @@ namespace aspeller {
 
     bool have_affix() const {return affix_;}
 
-    void munch(ParmString word, CheckList * cl) const {affix_->munch(word, cl);}
+    void munch(ParmString word, GuessInfo * cl) const {affix_->munch(word, cl);}
 
     WordAff * expand(ParmString word, ParmString aff, 
                      ObjStack & buf, int limit = INT_MAX) const {

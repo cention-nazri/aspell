@@ -157,45 +157,6 @@ struct AffixLess
 
 //////////////////////////////////////////////////////////////////////
 //
-// CheckList
-//
-
-CheckList * new_check_list()
-{
-  return new CheckList;
-}
-
-void delete_check_list(CheckList * cl)
-{
-  delete cl;
-}
-
-CheckInfo * check_list_data(CheckList * cl)
-{
-  if (cl->gi.num > 0)
-    return cl->data + 1;
-  else
-    return 0;
-}
-
-CheckList::CheckList()
- : gi(63)
-{
-  memset(data, 0, sizeof(data));
-  gi.reset(data);
-}
-
-void CheckList::reset()
-{
-  for (CheckInfo * p = data + 1; p != data + 1 + gi.num; ++p) {
-    free(const_cast<char *>(p->word.str()));
-    p->word = 0;
-  }
-  gi.reset(data);
-}
-
-//////////////////////////////////////////////////////////////////////
-//
 // Affix Manager
 //
 
@@ -787,16 +748,16 @@ bool AffixMgr::affix_check(const LookupInfo & linf, ParmString word,
   return suffix_check(linf, sword, ci, gi, 0, NULL);
 }
 
-void AffixMgr::munch(ParmString word, CheckList * cl) const
+void AffixMgr::munch(ParmString word, GuessInfo * gi) const
 {
   LookupInfo li(0, LookupInfo::AlwaysTrue);
   CheckInfo ci;
-  cl->reset();
+  gi->reset();
   CasePattern cp = lang->LangImpl::case_pattern(word);
   if (cp == AllUpper) return;
   if (cp != FirstUpper)
-    prefix_check(li, word, ci, &cl->gi);
-  suffix_check(li, word, ci, &cl->gi, 0, NULL);
+    prefix_check(li, word, ci, gi);
+  suffix_check(li, word, ci, gi, 0, NULL);
 }
 
 WordAff * AffixMgr::expand(ParmString word, ParmString aff, 
@@ -890,83 +851,40 @@ WordAff * AffixMgr::expand_suffix(ParmString word, const byte * aff,
 // LookupInfo
 //
 
-static void free_word(WordEntry * w)
-{
-  free((void *)w->word);
-}
-
-static void free_aff(WordEntry * w)
-{
-  free((void *)w->aff);
-}
-
-struct LookupBookkepping
-{
-  const char * aff; // the affix here is a list of valid affixes for
-                    // the word
-  bool alloc;
-  LookupBookkepping() : aff(0), alloc(false) {}
-};
-
-static void append_aff(LookupBookkepping & s, WordEntry & o)
-{
-  size_t s0 = strlen(s.aff);
-  size_t s1 = strlen(o.aff);
-  if (s0 == s1 && memcmp(s.aff, o.aff, s0) == 0) return;
-  char * tmp = (char *)malloc(s0 + s1 + 1);
-  // FIXME: avoid adding duplicate flags
-  memcpy(tmp, o.aff, s1);
-  memcpy(tmp + s1, s.aff, s0);
-  tmp[s0 + s1] = '\0';
-  if (s.alloc) free((void *)s.aff);
-  s.aff = tmp;
-  s.alloc = true;
-}
-
-bool LookupInfo::lookup (ParmString word, WordEntry & o) const
+int LookupInfo::lookup (ParmString word, char achar, 
+                        WordEntry & o, GuessInfo * gi) const
 {
   SpellerImpl::WS::const_iterator i = begin;
-  const char * w = 0;
-  LookupBookkepping s;
+  const char * g = 0;
   if (mode == Word) {
     do {
       if ((*i)->lookup(word, o, lang)) {
-        w = o.word;
-        if (s.aff == 0) s.aff = o.aff;
-        else append_aff(s, o); // this should not be a very common case
+        if (TESTAFF(o.aff, achar))
+          return 1;
+        else
+          g = o.word;
       }
       ++i;
     } while (i != end);
   } else if (mode == Clean) {
     do {
       if ((*i)->clean_lookup(word, o)) {
-        w = o.word;
-        if (s.aff == 0) s.aff = o.aff;
-        else append_aff(s, o); // this should not be a very common case
+        if (TESTAFF(o.aff, achar))
+          return 1;
+        else
+          g = o.word;
       }
       ++i;
     } while (i != end);
-//   } else if (mode == Soundslike) {
-//     do {
-//       if (i->dict->soundslike_lookup(word, o)) {
-//         w = o.word;
-//         if (s.aff == 0) s.aff = o.aff;
-//         else append_aff(s, o); // this should not be a very common case
-//         while (o.adv()) append_aff(s, o); // neither should this
-//       }
-//       ++i;
-//    } while (i != end);
-  } else {
-    o.word = strdup(word);
-    o.aff  = word + strlen(word);
-    //o.free_ = free_word; //FiXME this isn't right....
-    return true;
+  } else if (gi) {
+    g = gi->dup(word);
   }
-  if (!w) return false;
-  o.word = w;
-  o.aff = s.aff;
-  if (s.alloc) o.free_ = free_aff;
-  return true;
+  if (gi && g) {
+    CheckInfo * ci = gi->add();
+    ci->word = g;
+    return -1;
+  }
+  return 0;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -1037,23 +955,29 @@ bool PfxEntry::check(const LookupInfo & linf, ParmString word,
 
     if (cond >= numconds) {
       CheckInfo * lci = 0;
+      CheckInfo * guess = 0;
       tmpl += stripl;
-      bool res = linf.lookup(tmpword, wordinfo);
 
-      if (res && TESTAFF(wordinfo.aff, achar)) {
+      int res = linf.lookup(tmpword, achar, wordinfo, gi);
+
+      if (res == 1) {
 
         lci = &ci;
         lci->word = wordinfo.word;
         goto quit;
         
-      } 
+      } else if (res == -1) {
+
+        guess = gi->head;
+
+      }
       
       // prefix matched but no root word was found 
       // if XPRODUCT is allowed, try again but now 
       // cross checked combined with a suffix
       
       if (gi)
-        lci = gi->last;
+        lci = gi->head;
       
       if (xpflg & XPRODUCT) {
         if (pmyMgr->suffix_check(linf, ParmString(tmpword, tmpl), 
@@ -1061,9 +985,13 @@ bool PfxEntry::check(const LookupInfo & linf, ParmString word,
                                  XPRODUCT, (AffEntry *)this)) {
           lci = &ci;
           
-        } else if (gi && gi->last != lci) {
+        } else if (gi) {
           
-          while (lci = const_cast<CheckInfo *>(lci->next), lci) {
+          CheckInfo * stop = lci;
+          for (lci = gi->head; 
+               lci != stop; 
+               lci = const_cast<CheckInfo *>(lci->next)) 
+          {
             lci->pre_flag = achar;
             lci->pre_strip_len = stripl;
             lci->pre_add_len = appndl;
@@ -1077,11 +1005,9 @@ bool PfxEntry::check(const LookupInfo & linf, ParmString word,
         }
       }
     
-      if (res && gi) {
-        
-        lci = gi->add();
-        lci->word = wordinfo.word;
-      }
+      if (guess)
+        lci = guess;
+      
     quit:
       if (lci) {
         lci->pre_flag = achar;
@@ -1173,25 +1099,27 @@ bool SfxEntry::check(const LookupInfo & linf, ParmString word,
     if (cond < 0) {
       CheckInfo * lci = 0;
       tmpl += stripl;
-      if (linf.lookup(tmpword, wordinfo)) {
-        if (TESTAFF(wordinfo.aff, achar) && 
-            ((optflags & XPRODUCT) == 0 || 
-             TESTAFF(wordinfo.aff, ep->achar))) {
-          lci = &ci;
-        } else if (gi) {
-          lci = gi->add();
-        }
-
-        if (lci) {
-          lci->word = wordinfo.word;
-          lci->suf_flag = achar;
-          lci->suf_strip_len = stripl;
-          lci->suf_add_len = appndl;
-          lci->suf_add = appnd;
-        }
-        
-        if (lci == &ci) return true;
+      int res = linf.lookup(tmpword, achar, wordinfo, gi);
+      if (res == 1
+          && ((optflags & XPRODUCT) == 0 || TESTAFF(wordinfo.aff, ep->achar)))
+      {
+        lci = &ci;
+        lci->word = wordinfo.word;
+      } else if (res == 1) {
+        lci = gi->add();
+        lci->word = wordinfo.word;
+      } else if (res == -1) {
+        lci = gi->head;
       }
+
+      if (lci) {
+        lci->suf_flag = achar;
+        lci->suf_strip_len = stripl;
+        lci->suf_add_len = appndl;
+        lci->suf_add = appnd;
+      }
+      
+      if (lci == &ci) return true;
     }
   }
   return false;

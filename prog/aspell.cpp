@@ -1510,11 +1510,11 @@ void munch()
   Conv iconv(setup_conv(options, lang));
   Conv oconv(setup_conv(lang, options));
   String word;
-  CheckList * cl = new_check_list();
+  GuessInfo gi;
   while (CIN.getline(word)) {
-    lang->munch(iconv(word), cl);
+    lang->munch(iconv(word), &gi);
     COUT << word;
-    for (const aspeller::CheckInfo * ci = check_list_data(cl); ci; ci = ci->next)
+    for (const aspeller::CheckInfo * ci = gi.head; ci; ci = ci->next)
     {
       COUT << ' ' << oconv(ci->word) << '/';
       if (ci->pre_flag != 0) COUT << oconv(static_cast<char>(ci->pre_flag));
@@ -1522,7 +1522,6 @@ void munch()
     }
     COUT << '\n';
   }
-  delete_check_list(cl);
 }
 
 //////////////////////////

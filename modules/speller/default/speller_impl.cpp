@@ -426,8 +426,7 @@ namespace aspeller {
 
   SpellerImpl::SpellerImpl() 
     : Speller(0) /* FIXME */, ignore_repl(true), 
-      dicts_(0), personal_(0), session_(0), repl_(0), main_(0),
-      guess_info(7)
+      dicts_(0), personal_(0), session_(0), repl_(0), main_(0)
   {}
 
   inline void add_dicts(SpellerImpl * sp, DictList & d)

@@ -34,17 +34,13 @@ namespace aspeller {
   class Language;
   struct ConvertWord;
 
-  // WordEntry is an entry in the dictionary.  Both word and aff
-  // should point to a string that will stay in memory as long as the
-  // dictionary does unless under very special circumstances.  Thus
-  // free_ should generally be null.
+  // WordEntry is an entry in the dictionary.  
   struct WordEntry
   {
     const char * word;
     const char * aff;
     const char * catg;
     void (* adv_)(WordEntry *);
-    void (* free_)(WordEntry *);
     void * intr[2];
     unsigned word_size;
     enum What {Other, Word, Soundslike, Clean, Misspelled} what;
@@ -56,8 +52,8 @@ namespace aspeller {
     operator bool () const {return word != 0;}
     OStream & write(OStream & o, const Language & l, Convert * c = 0) const;
     WordEntry() {memset(this, 0, sizeof(WordEntry));}
-    void clear() {if (free_) free_(this); memset(this, 0, sizeof(WordEntry));}
-    ~WordEntry() {if (free_) free_(this);}
+    void clear() {memset(this, 0, sizeof(WordEntry));}
+    ~WordEntry() {}
   };
 }
 

@@ -7,6 +7,7 @@
 #ifndef __aspeller_check_list__
 #define __aspeller_check_list__
 
+#include "objstack.hpp"
 #include "speller.hpp"
 
 namespace aspeller {
@@ -21,28 +22,22 @@ namespace aspeller {
   struct GuessInfo
   {
     int num;
-    int max;
-    CheckInfo * last;
-    GuessInfo(int m) : max(m) {}
-    void reset(CheckInfo * ci) { num = 0; last = ci; }
+    CheckInfo * head;
+    GuessInfo() : num(0), head(0) {}
+    void reset() { buf.reset(); num = 0; head = 0; }
     CheckInfo * add() {
-      if (num >= max) return 0;
       num++;
-      last->next = last + 1;
-      last = const_cast<CheckInfo *>(last->next);
-      clear_check_info(*last);
-      last->guess = true;
-      return last;
+      CheckInfo * tmp = (CheckInfo *)buf.alloc_top(sizeof(CheckInfo));
+      clear_check_info(*tmp);
+      tmp->next = head;
+      head = tmp;
+      head->guess = true;
+      return head;
     }
-  };
-
-  struct CheckList
-  {
-    GuessInfo gi;
-    CheckInfo data[64];
-    void reset();
-    CheckList();
-    ~CheckList() {reset();}
+    void * alloc(unsigned s) {return buf.alloc_bottom(s);}
+    char * dup(ParmString str) {return buf.dup(str);}
+  private:
+    ObjStack buf;
   };
 
 
