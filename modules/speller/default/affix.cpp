@@ -103,7 +103,7 @@ struct PfxEntry : public AffEntry
   PfxEntry() {}
 
   bool check(const LookupInfo &, const AffixMgr * pmyMgr,
-             ParmString, CheckInfo &, GuessInfo *) const;
+             ParmString, CheckInfo &, GuessInfo *, bool cross = true) const;
 
   inline bool          allow_cross() const { return ((xpflg & XPRODUCT) != 0); }
   inline byte flag() const { return achar;  }
@@ -757,7 +757,7 @@ static void encodeit(CondsLookup & l, ObjStack & buf,
 
 // check word for prefixes
 bool AffixMgr::prefix_check (const LookupInfo & linf, ParmString word, 
-                             CheckInfo & ci, GuessInfo * gi) const
+                             CheckInfo & ci, GuessInfo * gi, bool cross) const
 {
  
   // first handle the special case of 0 length prefixes
@@ -773,7 +773,7 @@ bool AffixMgr::prefix_check (const LookupInfo & linf, ParmString word,
 
   while (pptr) {
     if (isSubset(pptr->key(),word)) {
-      if (pptr->check(linf,this,word,ci,gi)) return true;
+      if (pptr->check(linf,this,word,ci,gi,cross)) return true;
       pptr = pptr->next_eq;
     } else {
       pptr = pptr->next_ne;
@@ -843,7 +843,7 @@ bool AffixMgr::affix_check(const LookupInfo & linf, ParmString word,
   return suffix_check(linf, sword, ci, gi, 0, NULL);
 }
 
-void AffixMgr::munch(ParmString word, GuessInfo * gi) const
+void AffixMgr::munch(ParmString word, GuessInfo * gi, bool cross) const
 {
   LookupInfo li(0, LookupInfo::AlwaysTrue);
   CheckInfo ci;
@@ -851,7 +851,7 @@ void AffixMgr::munch(ParmString word, GuessInfo * gi) const
   CasePattern cp = lang->LangImpl::case_pattern(word);
   if (cp == AllUpper) return;
   if (cp != FirstUpper)
-    prefix_check(li, word, ci, gi);
+    prefix_check(li, word, ci, gi, cross);
   suffix_check(li, word, ci, gi, 0, NULL);
 }
 
@@ -1051,7 +1051,7 @@ SimpleString PfxEntry::add(SimpleString word, ObjStack & buf) const
 // check if this prefix entry matches 
 bool PfxEntry::check(const LookupInfo & linf, const AffixMgr * pmyMgr,
                      ParmString word,
-                     CheckInfo & ci, GuessInfo * gi) const
+                     CheckInfo & ci, GuessInfo * gi, bool cross) const
 {
   unsigned int		cond;	// condition number being examined
   unsigned              tmpl;   // length of tmpword
@@ -1113,7 +1113,7 @@ bool PfxEntry::check(const LookupInfo & linf, const AffixMgr * pmyMgr,
       if (gi)
         lci = gi->head;
       
-      if (xpflg & XPRODUCT) {
+      if (cross && xpflg & XPRODUCT) {
         if (pmyMgr->suffix_check(linf, ParmString(tmpword, tmpl), 
                                  ci, gi,
                                  XPRODUCT, (AffEntry *)this)) {

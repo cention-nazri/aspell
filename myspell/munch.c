@@ -201,6 +201,7 @@ int main(int argc, char** argv)
                ep1->keep = 1;
                if (pfxp != NULL) add_affix_char(ep1,pfxp->achar);
                if (sfxp != NULL) add_affix_char(ep1,sfxp->achar);
+
             } else {
 	      ep->keep = 1;
             }

@@ -1793,6 +1793,10 @@ A personal and replacement word list can be created in a similar fashion.
 @c FIXME: add notes about how affix compression works when creating
 @c dictionaries.
 
+@subsection ``Munching'' a word list
+
+FIXME: Writeme
+
 @subsection Format of the Replacement Word List
 
 The replacement word list has each replacement pair on its own line in
@@ -2960,7 +2964,7 @@ prefixes.  Thus this option should not be used for prefix heavy
 languages such as Hebrew.
 
 An existing word list, without affix info, can be affix compressed
-using using the @command{munch} program found in the myspell/ directory.
+using using @command{aspell munch-list}.
 
 @subsection Format of the Affix File
 
@@ -3826,12 +3830,6 @@ Create a generic filter to handle multi-character letters such as
 @samp{"a} or @samp{\"a} for @"a.  This filter should make use of the
 already exiting normalization code if possible.
 @item
-Add the functionally of the @command{munch} command (in the
-@file{myspell/} directory) to the @command{aspell} utility under the
-command @samp{aspell munchlist}.  This command should be able to work
-with UTF-8 word lists and should make use of the exiting affix code
-rather than reading the affix file directly.
-@item
 Make Aspell @strong{Thread safe}. Even though Aspell itself is not
 multi-threaded I would like it to be thread safe so that it can be
 used by multi-threaded programs. There are several areas of Aspell
@@ -4099,6 +4097,18 @@ a C++ program.
 
 @node ChangeLog
 @appendix ChangeLog
+
+@heading Changes from 0.60.1 to 0.60.2
+
+@itemize @bullet
+@item
+Added the @command{munch-list} command to the aspell utility.  The
+@command{munch} program in the @file{myspell/} directory will
+disappear in Aspell 0.61.  The @command{munchlist} script will also 
+likely disappear or be replaced with Aspell 0.61 since it doesn't work
+correctly anyway.
+
+@end itemize
 
 @heading Changes from 0.60.1 to 0.60.1.1 (November 20, 2004)
 

@@ -288,9 +288,9 @@ namespace aspeller {
 
     bool have_affix() const {return affix_;}
 
-    void munch(ParmStr word, GuessInfo * cl) const {
+    void munch(ParmStr word, GuessInfo * cl, bool cross = true) const {
       if (affix_)
-        affix_->munch(word, cl);
+        affix_->munch(word, cl, cross);
     }
       
     WordAff * expand(ParmStr word, ParmStr aff, 

@@ -190,7 +190,7 @@ namespace acommon {
     String & append(const void * str, unsigned int sz)
     {
       reserve(size() + sz);
-      memcpy(end_, str, sz);
+      if (sz > 0) memcpy(end_, str, sz);
       end_ += sz;
       return *this;
     }

@@ -88,11 +88,12 @@ namespace aspeller {
     PosibErr<void> setup(ParmString affpath, Conv &);
 
     bool affix_check(const LookupInfo &, ParmString, CheckInfo &, GuessInfo *) const;
-    bool prefix_check(const LookupInfo &, ParmString, CheckInfo &, GuessInfo *) const;
+    bool prefix_check(const LookupInfo &, ParmString, CheckInfo &, GuessInfo *, 
+                      bool cross = true) const;
     bool suffix_check(const LookupInfo &, ParmString, CheckInfo &, GuessInfo *,
                       int sfxopts, AffEntry* ppfx) const;
 
-    void munch(ParmString word, GuessInfo *) const;
+    void munch(ParmString word, GuessInfo *, bool cross = true) const;
 
     // None of the expand methods reset the objstack
 
