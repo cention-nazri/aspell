@@ -24,7 +24,6 @@
 #endif
 
 #include "aspell.h"
-#include <limits.h>
 //FIXME if Win(dos) is different
 #include <regex.h>
 
@@ -48,9 +47,6 @@
 #include "speller_impl.hpp"
 #include "data.hpp"
 #include "directory.hpp"
-
-#include <stdio.h>
-#include <cstdio>
 
 using namespace acommon;
 
@@ -257,13 +253,11 @@ int main (int argc, const char *argv[])
 	while (j != mode_abrvs_end && j->abrv != argv[i][1]) ++j;
 	if (j == mode_abrvs_end) {
 	  o = find_option(argv[i][1]);
-	  if (argv[i][1] == 'v' && argv[i][2] == 'v'){ 
+	  if (argv[i][1] == 'v' && argv[i][2] == 'v')
 	    // Hack for -vv
 	    parm = argv[i] + 3;
-          }
-	  else {
+	  else
 	    parm = argv[i] + 2;
-          }
 	} else {
 	  other_opt.name = "mode";
 	  other_opt.num_arg = 1;
@@ -323,9 +317,8 @@ int main (int argc, const char *argv[])
     print_help();
   else if (action_str == "version")
     print_ver();
-  else if (action_str == "config"){
+  else if (action_str == "config")
     config();
-  }
   else if (action_str == "dicts")
     dicts();
   else if (action_str == "check")
@@ -532,21 +525,7 @@ void pipe()
   char * word2;
   int    ignore;
   PosibErrBase err;
-  
-  int pipemode=0;
 
-  if (args.size()) {
-    if (args.front() == "word") {
-      args.pop_front();
-      pipemode|=1;
-    }
-  }
-  if (args.size()) {
-    if (args.front() == "noauto") {
-      args.pop_front();
-      pipemode|=2;
-    }
-  }
   print_ver();
 
   for (;;) {
@@ -586,9 +565,8 @@ void pipe()
     case '+':
       word = trim_wspace(line + 1);
       err = config->replace("mode", word);
-      if (err.get_err()){
+      if (err.get_err())
 	config->replace("mode", "tex");
-      }
       reload_filters(reinterpret_cast<Speller *>(speller));
       checker.del();
       checker = new_checker(speller, print_star);
@@ -623,9 +601,8 @@ void pipe()
 	case 'c':
 	  switch (line[3]) {
 	  case 's':
-	    if (get_word_pair(line + 4, word, word2)){
+	    if (get_word_pair(line + 4, word, word2))
 	      BREAK_ON_ERR(err = config->replace(word, word2));
-            }
 	    break;
 	  case 'r':
 	    word = trim_wspace(line + 4);
@@ -653,41 +630,18 @@ void pipe()
 	// continue on (no break)
       }
     case '^':
-    case '?':
-    case '§':
       ignore = 1;
     default:
-      int oldpipemode=pipemode;
-      switch (line[0]) {
-        case '?': {
-          pipemode &= INT_MAX-2;
-          break;
-        }
-        case '§': {
-          pipemode &= INT_MAX-1;
-          break;
-        }
-      }
       line += ignore;
       checker->process(line, strlen(line));
-
-bool steped=false;
-Token token ;
-
-      while ((token = checker->next_misspelling()) && !steped) {
-        if ( pipemode & 1 ) {
-          steped=true;
-        }
+      while (Token token = checker->next_misspelling()) {
 	word = line + token.offset;
 	word[token.len] = '\0';
 	start = clock();
-        const AspellWordList * suggestions = 0;
-        if ( !(pipemode & 2)) {
-          ((AspellWordList *) suggestions)
-             = aspell_speller_suggest(speller, word, -1);
-	  finish = clock();
-        }
-	if (suggestions && !aspell_word_list_empty(suggestions)) {
+        const AspellWordList * suggestions 
+	  = aspell_speller_suggest(speller, word, -1);
+	finish = clock();
+	if (!aspell_word_list_empty(suggestions)) {
 	  COUT << "& " << word 
 	       << " " << aspell_word_list_size(suggestions) 
 	       << " " << token.offset + ignore
@@ -724,7 +678,6 @@ Token token ;
 	  COUT << "Suggestion Time: " 
 	       << (finish-start)/(double)CLOCKS_PER_SEC << "\n";
       }
-      pipemode=oldpipemode;
       COUT << "\n";
     }
     if (c == EOF) break;
@@ -1416,9 +1369,9 @@ void print_help () {
     "\n"
     "<command> is one of:\n"
     "  -?|help [<expr>] display this help message\n"
-    "                    and help for filters matching <expr>if nstalled\n"
+    "                    and help for filters matching <expr> if installed\n"
     "  -c|check <file>  to check a file\n"
-    "  -a|pipe [word|noauto] \"ispell -a\" compatibility mode\n"
+    "  -a|pipe          \"ispell -a\" compatibility mode\n"
     "  -l|list          produce a list of misspelled words from standard input\n"
     "  [dump] config [-e <expr>]  dumps the current configuration to stdout\n"
     "  config [+e <expr>] <key>   prints the current value of an option\n"
