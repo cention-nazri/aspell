@@ -1,0 +1,104 @@
+
+pkgdoc_DATA = manual.dvi manual.tex manual2.lyx manual.aux\
+              devel.dvi  devel.tex devel2.lyx devel.aux
+noinst_DATA = manual-html manual-text devel-html devel-text
+
+## CLEANFILES += manual2.tex manual2.aux manual2.log
+
+MAINTAINERCLEANFILES = manual.*  manual-html manual-text\
+                       devel.*  devel-html devel-text
+
+fake-manual:
+	touch \
+	manual.dvi manual.tex manual.aux manual2.tex manual-html manual-text\
+	devel.dvi devel.tex devel.aux devel2.tex devel-html devel-text
+
+#
+# Main Manual
+#
+
+manual: @MAINTAINER_MODE_TRUE@ manual-text
+
+manual2.tex: @MAINTAINER_MODE_TRUE@ manual2.lyx
+	-lyx --export latex manual2.lyx
+
+manual.tex: @MAINTAINER_MODE_TRUE@ man-proc.pl manual2.tex
+	perl man-proc.pl manual
+
+manual.dvi: @MAINTAINER_MODE_TRUE@ manual.tex
+	latex manual.tex
+	latex manual.tex
+	latex manual.tex
+
+manual-html: @MAINTAINER_MODE_TRUE@ manual.dvi
+	cd man-html; rm -f *.html *.css *.png; cd ..
+	latex2html \
+	  -split 3 \
+          -toc_depth 3 \
+	  -dir man-html \
+	  -long_titles 2 \
+	  -local_icons \
+	  -show_section_numbers \
+	  manual.tex
+	touch manual-html
+
+manual-text: @MAINTAINER_MODE_TRUE@ manual-html html2txt.pl
+	-mkdir man-text
+	cd man-text;  rm -f *.txt; cd ..
+	perl html2txt.pl man
+	touch manual-text
+
+manual.ps: @MAINTAINER_MODE_TRUE@ manual.dvi
+	dvips -o manual.ps -t letter manual.dvi
+
+dist-hook:
+	cp $(distdir)/man-text/2_Getting.txt $(top_distdir)/README
+
+#
+# Devel Docs
+#
+
+devel: @MAINTAINER_MODE_TRUE@ devel-text
+
+devel2.tex: @MAINTAINER_MODE_TRUE@ devel2.lyx
+	-lyx --export latex devel2.lyx
+
+devel.tex: @MAINTAINER_MODE_TRUE@ man-proc.pl devel2.tex
+	perl man-proc.pl devel
+
+devel.dvi: @MAINTAINER_MODE_TRUE@ devel.tex
+	latex devel.tex
+	latex devel.tex
+	latex devel.tex
+
+devel-html: @MAINTAINER_MODE_TRUE@ devel.dvi
+	cd dev-html; rm -f *.html *.css *.png; cd ..
+	latex2html \
+	  -split 3 \
+          -toc_depth 3 \
+	  -dir dev-html \
+	  -long_titles 2 \
+	  -local_icons \
+	  -show_section_numbers \
+	  devel.tex
+	touch devel-html
+
+devel-text: @MAINTAINER_MODE_TRUE@ devel-html html2txt.pl
+	-mkdir dev-text
+	cd dev-text;  rm -f *.txt; cd ..
+	perl html2txt.pl dev
+	touch devel-text
+
+devel.ps: @MAINTAINER_MODE_TRUE@ devel.dvi
+	dvips -o devel.ps -t letter devel.dvi
+#
+#
+#
+
+SUBDIRS = man-html man-text dev-html dev-text
+
+EXTRA_DIST = ${pkgdoc_DATA} \
+             html.sty html2txt.pl edit-man manual2.per man-proc.pl\
+	     manual-text manual-html
+
+

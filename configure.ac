@@ -259,5 +259,8 @@ AC_CONFIG_FILES([Makefile common/Makefile lib/Makefile data/Makefile
                  modules/filter/Makefile modules/tokenizer/Makefile
                  modules/speller/Makefile modules/speller/default/Makefile
 		 interfaces/Makefile interfaces/cc/Makefile scripts/Makefile
-                 examples/Makefile prog/Makefile])
+                 examples/Makefile prog/Makefile manual/Makefile
+		 manual/man-html/Makefile manual/man-text/Makefile
+		 manual/dev-html/Makefile manual/dev-text/Makefile
+		 ])
 AC_OUTPUT

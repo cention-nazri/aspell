@@ -7,9 +7,24 @@ from CVS.
   libtool (CVS version)
   autoconf 2.50 or better
   automake 1.5 (earlier versions *might* work)
+And to build the manual
+  LyX*
+  LaTeX Installing
+  Latex2html
+  w3m
 
-libtool *must* be using the CVS for the C++ support.  The released
+libtool *must* be the CVS version for the C++ support.  The released
 version will not work.
+
+If you do not wish to build the manual use "make fake-manual" in the
+manual directory before building the rest of the source.
+
+* Since LyX depended on non free software which in a conflict of interest
+  for the FSF the generated TeX files are also included so that LyX is
+  not needed unless you plan on editing the manual.  If you wish to 
+  work on the manual but do not which to use LyX please contact me.
+  The eventual goal is to convert the manual into Texinfo.  Once done
+  this problem will go away.
 
 Before the build:
 
@@ -48,3 +63,7 @@ For example to debug speller-util with ddd use
 Using libtool is necessary to make sure the shared libraries get loaded
 right. If you debug them after they are installed this will not be
 necessary.
+
+--
+Kevin Atkinson
+kevin at atkinson dhs org

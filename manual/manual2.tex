@@ -1,0 +1,3714 @@
+%% LyX 1.1 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[11pt,oneside,english]{book}
+\usepackage[T1]{fontenc}
+\usepackage[latin1]{inputenc}
+\usepackage{geometry}
+\geometry{verbose,letterpaper,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+\usepackage{babel}
+\setcounter{secnumdepth}{3}
+\setlength\parskip{\medskipamount}
+\setlength\parindent{0pt}
+\IfFileExists{url.sty}{\usepackage{url}}
+                      {\newcommand{\url}{\texttt}}
+
+\makeatletter
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
+\providecommand{\LyX}{L\kern-.1667em\lower.25em\hbox{Y}\kern-.125emX\@}
+\newenvironment{LyXParagraphIndent}[1]%
+{
+  \begin{list}{}{%
+    \setlength\topsep{0pt}%
+    \addtolength{\leftmargin}{#1}
+    \setlength\parsep{0pt plus 1pt}%
+  }
+  \item[]
+}
+{\end{list}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Textclass specific LaTeX commands.
+ \newenvironment{lyxcode}
+   {\begin{list}{}{
+     \setlength{\rightmargin}{\leftmargin}
+     \raggedright
+     \setlength{\itemsep}{0pt}
+     \setlength{\parsep}{0pt}
+     \normalfont\ttfamily}%
+    \item[]}
+   {\end{list}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+
+\usepackage[T1]{fontenc}
+\usepackage{xspace}
+\newcommand{\nach}{$\to$\xspace}
+\newcommand{\hoch}{\texttt{$^\wedge$}}
+
+\usepackage{html}
+
+\newcommand{\doubledash}{-\hspace{0.1em}-}
+\newcommand{\doubledashb}{-\/-}
+\newcommand{\dlt}{{\footnotesize$\ll$}}
+\newcommand{\dgt}{{\footnotesize$\gg$}}
+
+\begin{htmlonly}
+
+\renewenvironment{lyxcode}
+  {\begin{list}{}{
+    \setlength{\rightmargin}{\leftmargin}
+    \raggedright
+    \setlength{\itemsep}{0pt}
+    \setlength{\parsep}{0pt}
+    \ttfamily}%
+   \item[] 
+   \begin{ttfamily}}
+   {\end{ttfamily}
+    \end{list} }
+
+\newenvironment{LyXParagraphIndent}[1]%
+{\begin{quote}}
+{\end{quote}}
+
+\renewcommand{\LyX}{LyX}
+
+\renewcommand{\doubledash}{\rawhtml &#45;&#45;\endrawhtml}
+\renewcommand{\doubledashb}{\rawhtml &#45;&#45;\endrawhtml}
+\renewcommand{\dlt}{«}
+\renewcommand{\dgt}{»}
+
+\renewcommand{\nach}{\rawhtml <i>to</i> \endrawhtml}
+\renewcommand{\hoch}{\rawhtml &#94;\endrawhtml}
+
+\end{htmlonly}
+
+\makeatother
+\begin{document}
+
+\title{The New Aspell 0.50{\Large }\\
+\textbf{\large A More Intelligent Ispell}}
+
+
+\author{Kevin Atkinson\\
+kevin at atkinson dhs org}
+
+\maketitle
+\tableofcontents{}
+
+
+\chapter*{Notes}
+
+A lot has changed since the last version of Aspell (.33.7). This manual
+is in the process of being updated, until the update is complete a
+lot of this manual may be incorrect. Please keep this in mind.
+
+The eventual goal is to convert this manual into Texinfo. However,
+since I do not have the time to learn Texinfo right now, I will continue
+to maintain it in the present format. Once someone goes through the
+trouble of converting it into Texinfo I will maintain the Texinfo
+version.
+
+
+\chapter{Introduction}
+
+Aspell is an Open Source spell checker designed to eventually replace
+Ispell. Its main feature is that it does a much better job of coming
+up with possible suggestions than Ispell does. In fact recent tests
+shows that it even does better than Microsoft Word 97's spell checker
+in some cases. In addition it has both compile time and run time support
+for other non-English languages. Aspell also functions as a library
+which can be used by other programs.
+
+
+\section{Comparison to other spell checker engines}
+
+\vspace{0.3cm}
+{\centering \begin{tabular}{|r|l|c|c|c|}
+\hline 
+&
+Aspell&
+Ispell&
+Netscape 4.0&
+Microsoft Word 97\\
+\hline 
+Open Source&
+x&
+x&
+&
+\\
+\hline 
+Suggestion Intelligence&
+88-98&
+54&
+55-70?&
+71\\
+\hline 
+Personal part of Suggestions&
+x&
+x&
+x&
+\\
+\hline 
+Alternate Dictionaries&
+x&
+x&
+?&
+?\\
+\hline 
+International Support&
+x&
+x&
+?&
+?\\
+\hline
+\end{tabular}\par}
+\vspace{0.3cm}
+
+The suggestion Intelligence is based on a small test kernel of misspelled/correct
+word pairs. Go to \url{http://aspell.net/test} for more info and
+how you can help contribute to the test kernel. The current scores
+for aspell are 88 in \textbf{fast} mode, 93 in \textbf{normal} mode,
+and 98 in \textbf{bad spellers} mode see section \ref{suggestion}
+for more information about the various suggestion modes.
+
+If you have any other information you would like to add to this chart
+please contact me at kevina at users sourceforge net.
+
+
+\subsection{Comparison to Ispell}
+
+
+\subsubsection{Features that only Aspell has}
+
+\begin{itemize}
+\item Does a much better job with coming up with suggestions than Ispell
+does or for that matter any other spell checker I have seen. If you
+know a spell checker that does a better job please let me know.
+\item Can learn from users misspellings.
+\item Is an actual library that others programs can link to instead of having
+to use it through a pipe.
+\item Is multiprocess intelligent. When a personal dictionary (or replacement
+list) is saved it will now first update the list against the dictionary
+on disk in case another process modified it.
+\item Can share the memory used in the main word list between processes.
+\item Support for detachable dictionaries \textbf{}so that more than one
+aspell class can use the same dictionary.
+\item Support for multiple personal dictionaries as well as support for
+special auxiliary dictionaries.
+\item Better support for run-together words.
+\item Ability to use multiple dictionaries by simply specifying it on the
+command line or in the configuration files.
+\end{itemize}
+
+\subsubsection{Things that, currently, only Ispell have}
+
+\begin{itemize}
+\item Support for affix compression (However this should change soon once
+Kevin Hendricks is integrated)
+\item Lower memory footprint
+\item Perhaps better support for spell checking (La)\TeX{} files.
+\item Support for spell checking Nroff files.
+\end{itemize}
+
+\chapter{Getting Started}
+
+
+\section{Requirements\label{reqs}}
+
+Aspell requires gcc 2.95 (or better) as the C++ compiler. Other C++
+compilers should work with some effort. Other C++ compilers for mostly
+POSIX compliant (Unix, Linux, BeOS, CygWin) systems should work with
+out any major problems provided that the compile can handle all of
+the advanced C++ features Aspell uses. C++ compilers for non-Unix
+systems might work but it will take some work. Aspell at very least
+requires a Unix-like environment (sh, grep, sed, tr, etc...) in order
+to build. Aspell also uses a few POSIX functions when necessary. Nevertheless,
+Aspell will compile and run using the MinGW version of gcc provided
+that the CygWin environment is used to to build it.
+
+
+\section{Obtaining}
+
+The latest version can always be found at Aspell's home page at \url{http://aspell.net}.
+
+
+\section{Support}
+
+Support for Aspell can be found on the Aspell mailing lists. Instructions
+for joining the various mailing lists (and an archive of them) can
+be found off the Aspell home page at \url{http://aspell.net}.
+
+
+\section{Helping Out}
+
+
+\section{Compiling \& Installing}
+
+
+\subsection{Generic Install Instructions}
+
+\begin{quote}
+./configure --disable-static \&\& make
+\end{quote}
+For additional configure options type ./configure --help. You can
+control what C++ compiler is used by setting the environmental variable
+CXX before running configure and you can control what flags are passed
+to the C++ compile via the environmental variable CXXFLAGS.
+
+Aspell should then compile with out any additional user intervention.
+If you run into problems please first check the sections below as
+that might solve your problem.
+
+To install the program simply type
+
+\begin{quote}
+make install
+\end{quote}
+After Aspell is installed at least one dictionary needs to be installed.
+You can find them at http://aspell.net. The \char`\"{}speller-util\char`\"{}
+program must be in your path in order for the dictionaries to install
+correctly.
+
+If you do not have Ispell or the traditional Unix {}``spell'' utility
+installed on your system than you should also copy the compatibly
+scripts {}``ispell'' and {}``spell'' located in the scripts/ directory
+into your binary directory which is usually /usr/local/bin so that
+programs that expect ispell or spell command will work correctly.
+
+
+\subsection{General Problems}
+
+Aspell does not use a released version of GNU Libtool. If you have
+a need to modify configure.ac or any of the Makefile.am's you should
+install the CVS version of libtool.
+
+
+\subsection{Curses Notes}
+
+If you are having problems compiling termios.cc than the most likely
+reason is due to incompatibilities with the curses implementation
+on your system. If this is the case than you can explicitly disable
+the curses library with --disable-curses. By doing this you will lose
+the nice full screen interface but hopefully you will be able to at
+least get Aspell to compile correctly.
+
+If the curses library is installed in a non-standard location than
+you can specify the library and include directory with --enable-curses=<\,{}<lib>\,{}>
+and --enable-curses-include=<\,{}<dir>\,{}>.
+\textbf{Lib} can either be the complete path of the library (for example
+{}``/usr/local/curses/libcurses.a''), the name of the library (for
+example {}``ncurses'') or a combined location and library in the
+form {}``-L<\,{}<lib dir>\,{}> -l<\,{}<lib>\,{}>''
+(for example {}``-L/usr/local/ncurses/lib -lncurses''). \textbf{Dir}
+is the location of the curses header files (for example {}``/usr/local/ncurses/include''). 
+
+
+\subsection{Win32 Notes}
+
+Aspell should be able to compile on Win32 platforms using the Win32
+version of gcc which can either be the Cgiwin or the Mingw version
+of Gcc 2.95 using the Cgiwin development environment. The Mingw version
+of Aspell will have slightly less functionality, but none of which
+is noticeable to the end user. In order to get the nice full screen
+interface with Mingw when spell checking files a curses implementation
+that does not require Cygwin is required. The PDCurses (\url{http://www.lightlink.com/hessling/PDCurses/})
+implementation is known to work, other implementations may work however
+they have not been tested. See the previous section for information
+on specifying the location of the curses library and include file.
+
+If Aspell is compiled with --enable-win32-relocatable and the \textbf{bindir}
+is set to the same value as \textbf{prefix} (ie not <\,{}<prefix>\,{}>/bin)
+then the Aspell directory (what prefix is set to) can be relocated
+anywhere provided that none of the data files are moved around within
+the Aspell directory.
+
+The default paths for Aspell are designed for a Unix system and not
+a Win32 system so you might want to specify different ones when compiling
+Aspell. Also if the HOME environmental variable is not set Aspell
+will assume it is the current working directly. This may lead to your
+personal word lists being saved in unpredictable locations. To solve
+this either compile with --enable-win32-relocatable (see above) or
+specify the complete path of the personal and replacement word lists
+in aspell.conf. If Aspell is compiled with --enable-win32-relocatable
+than the personal word lists are saved in the \textbf{prefix} directory
+and the name is changed from {}``\texttt{.aspell.<lang>.{*}}'' to''
+\texttt{<lang>.{*}}''.
+
+
+\section{Upgrading from Aspell .33/Pspell .12}
+
+Aspell has undergone an extremely large number of changes since the
+previous Aspell/Pspell release. For one thing Pspell has been merged
+with Aspell so there in no longer two separate libraries you have
+to worry about.
+
+The functionally of the old Aspell utility is now broken up into to
+utilities. {}``aspell'' and {}``speller-util''. The \char`\"{}aspell\char`\"{}
+program handles the checking of documents while {}``speller-util''
+handles the management of dictionaries.
+
+The way dictionaries are handled has also changed. For one thing the
+language names have changed to the two letter iso code. This means
+that your old personal word lists won't work without some minor changes.
+{[}FIXME A Script should be written to automate the change and it
+should be documented here.{]}
+
+The Pspell ABI is now part of Asepll except that the name of everything
+has changed due to the renaming of Pspell to Aspell. In particuler
+please note the following name changes:
+
+\begin{quote}
+pspell -> aspell\\
+manager -> speller\\
+emulation -> enumeration\\
+master\_word\_list -> main\_word\_list
+\end{quote}
+Please also note that the name of the \textbf{language-tag} option
+has changed to \textbf{lang}. However, for backwards compatibily the
+language-tag option will still work.
+
+However, you should also be able to build applications that require
+Pspell with the new Aspell as a backwards compatibility header file
+is provided.
+
+The format of the complied dictionaries has almost certenly changed.
+So you will need to recompile them for the new Aspell.
+
+
+\chapter{Basic Usage}
+
+Two seperate utilties are now used to control Aspell, \char`\"{}aspell\char`\"{}
+and \char`\"{}speller-util\char`\"{}. The \char`\"{}aspell\char`\"{}
+program handles the checking of documents while \char`\"{}speller-util\char`\"{}
+handles the management of dictionaries. For a quick reference on either
+utility use {}``--help''.
+
+
+\section{Spellchecking Individual Files\label{check}}
+
+To use Aspell to spellcheck a file type in 
+
+\begin{quote}
+aspell check {[}<\,{}<options>\,{}>{]}
+<\,{}<filename>\,{}>
+\end{quote}
+at the command line where <\,{}<filename>\,{}>
+is the file you want to check and <\,{}<options>\,{}>
+is any number of optional options. Some of the more useful ones include:
+
+\begin{description}
+\item [--mode=<\,{}<mode>\,{}>]the mode to
+use when checking files. The available modes are none, url, email,
+sgml, or tex. See section \ref{filter} for more informations on the
+various modes.
+\item [--dont-backup]don't create a backup file.
+\item [--sug-mode=<\,{}<mode>\,{}>]the suggestion
+mode to use where mode is one of ultra, fast, normal, or bad-spellers.
+See section \ref{suggestion} for more information on these modes.
+\item [--master=<\,{}<name>\,{}>]the main
+dictionary to use.
+\item [--keymapping=<\,{}<name>\,{}>]the keymapping
+to use. Either \textbf{aspell} for the default mapping or \textbf{ispell}
+to use the same mapping that the ispell utility uses.
+\end{description}
+Please see Chapter \ref{customizing} for more information on the
+available options.
+
+For example to check the file foo.txt:
+
+\begin{quote}
+aspell check foo.txt
+\end{quote}
+and to check the file foo.txt using the bad-spellers suggestion mode
+and the large American English dictionary:
+
+\begin{quote}
+aspell check --sug-mode=bad-spellers --master=american-lrg foo.txt
+\end{quote}
+If the \textbf{mode} option is not given then aspell will use the
+extension of the file to determine the current mode. If the extension
+is .tex, then \TeX{} mode will be uses, if the extension is .html,
+.htm, .php, or .sgml it will check the file in sgml mode, otherwise
+it will use url mode. Please note that the \textbf{sgml-options} can
+be used to change what extension are used for the sgml mode. See chapter
+\ref{filter} for more information on the various modes that can be
+used.
+
+If Aspell was compiled with curses support and the TERM environmental
+variable is set to a capable terminal type than Aspell will use a
+nice full screen interface. Otherwise it will use a simpler {}``dumb''
+terminal interface where the misspelled word is surrounded by two
+'{*}'. In either case the interface should be self explanatory.
+
+
+\section{Using Aspell with other Applications}
+
+
+\subsection{With Applications that Expect Ispell}
+
+Aspell can be used as a drop in replacement for Ispell for programs
+that use Ispell through a pipe such as Emacs and \LyX{}. It can also
+be used with programs that use simple call the ispell command and
+expect the original file to be overwritten with the corrected version.
+It support the basic features of Ispell, however it does not currently
+have a Nroff mode so there may be situations in which you still wish
+to use Ispell. Nevertheless, I have been using Aspell for Xemacs and
+\LyX{} since the middle of September of 1998 with out any problems.
+
+If you do not have Ispell installed on your system and have installed
+the Ispell compatibly script than you should not need to do anything
+as most applications will that expect Ispell will work as expected
+with Aspell via the Ispell compatibility script.
+
+Otherwise, the recommended way to use Aspell as a replacement for
+ispell is to change the Ispell command from within the program being
+used. If the program uses ispell in pipe mode simple change ispell
+to aspell. If the program calls the \textbf{}ispell command to check
+the file change {}``ispell'' \textbf{}with {}``aspell check''.
+
+If that is impossible and the program uses ispell through a pipe than
+the run-with-aspell script can be used for programs using ispell in
+pipe mode. The format of the script is:
+
+\begin{quote}
+run-with-aspell <\,{}<command>\,{}>
+\end{quote}
+where <\,{}<command>\,{}> is the name
+of the program with any optional arguments.
+
+The old method of mapping Ispell to Aspell is discouraged because
+it can create compatibility problems with programs that actually require
+Ispell such as Ispell's own scripts.
+
+
+\subsection{With Emacs and Xemacs}
+
+The easiest way to use Aspell with Emacs or Xemacs is to add this
+line:
+
+\begin{lyxcode}
+(setq-default~ispell-program-name~\char`\"{}aspell\char`\"{})
+\end{lyxcode}
+to the end of your .emacs file.
+
+For some reason version 3.0 of ispell.el (the lisp program that (x)emacs
+uses) want to reverse the suggestion list. To fix this add this line:
+
+\begin{lyxcode}
+(setq-default~ispell-extra-args~'(\char`\"{}-{}-reverse\char`\"{}))
+\end{lyxcode}
+after the previous line in your .emacs file and it should solve the
+problem. 
+
+Ispell.el, version 3.1 (December 1, 1998) and better, has the list
+reversing problem fixed. You can find it at \url{http://www.kdstevens.com/~stevens/ispell-page.html}.
+
+
+\subsection{With \LyX{}}
+
+Version 1.0 of \LyX{} provides support for Aspell learning for users
+mistake feature.
+
+To use aspell with \LyX{} 1.0 either change the \textbf{spell\_command}
+option in the lyxrc file or use the run-with-aspell utility.
+
+
+\subsection{With VIM}
+
+\textit{(The following section was written by \char`\"{}R. Marc\char`\"{},
+rmarc at copacetic net.) }
+
+To use aspell in vim you simply need to add the following line to
+your .vimrc file:
+
+\begin{lyxcode}
+map~\textasciicircum{}T~:w!<CR>:!aspell~check~\%<CR>:e!~\%<CR>
+\end{lyxcode}
+I use <Ctrl-T> since that's the way you spell check in pico. In order
+to add a control character to your .vimrc you must type <Ctrl-v> first.
+In this case <Ctrl-v><Ctrl-t>.
+
+A more useful way to use Aspell, IMHO, is in combination with newsbody
+(\url{http://www.image.dk/~byrial/newsbody/}) which is how I use
+it since vim is my editor for my mailer and my news reader.
+
+\begin{lyxcode}
+map~\textasciicircum{}T~\textbackslash{}1\textbackslash{}2<CR>:e!~\%<CR>
+
+map~\textbackslash{}1~:w!<CR>
+
+map~\textbackslash{}2~:!newsbody~-qs~-n~\%~-p~aspell~check~\textbackslash{}\%f<CR>
+\end{lyxcode}
+
+\subsection{With Pine}
+
+To use aspell in pine simply change the option \textbf{speller} to 
+
+\begin{quote}
+aspell --mode=email check
+\end{quote}
+To change the speller option go to the main menu. Type \textbf{S}
+for \emph{setup}, \textbf{C} for \emph{config}, then W for \emph{where
+is}. Type in \textbf{speller} as the word to find. The speller option
+should be highlighted now. Hit enter, type in the above line, and
+hit enter again. Then type \textbf{E} for \emph{exit setup} and \textbf{Y}
+to save the change.
+
+If you have a strong desire to check other peoples comments change
+\textbf{speller} to
+
+\begin{quote}
+aspell check
+\end{quote}
+instead which will avoid switching aspell into email mode.
+
+
+\chapter{Customizing Aspell\label{customizing}}
+
+The behavior of Aspell can be changed by any number of options which
+can be specified at either the command line, the environmental variable
+ASPELL\_CONF, a personal configuration file, or a global configuration
+file. Options specified on the command line override options specified
+by the environmental variable. Options specified by the environmental
+variable override options specified by either of the configurations
+files. Finally options specified by the personal configuration file
+override options specified in the global configuration file. Options
+specified in the environmental variable ASPELL\_CONF, a personal configuration
+file, or a global configuration file will take effect no matter how
+Aspell is used which includes being used by other applications.
+
+Aspell has three basic type of options: \textbf{boolean}, \textbf{value},
+and \textbf{list}. \textbf{Boolean} options are either enabled or
+disabled, \textbf{value} options take a specific value, and \textbf{list}
+options can either have entries added or removed from the list.
+
+
+\section{Specifying Options}
+
+
+\subsection{At the Command Line}
+
+All options specified at the command line have the following basic
+format:
+
+\begin{quote}
+--<\,{}<option>\,{}>{[}=<\,{}<value>\,{}>{]}
+\end{quote}
+where the '=' can be replaced by whitespace.
+
+However some options also have single letter abbreviations of the
+form:
+
+\begin{quote}
+-<\,{}<letter>\,{}>{[}<\,{}<optional
+whitespace>\,{}><\,{}<value>\,{}>{]}
+\end{quote}
+
+\subsubsection{Boolean}
+
+To enable a boolean option simply special the option with out any
+corresponding value. For example to ignore accents when checking words
+use {}``--ignore-accents''. To disable a boolean option prefix the
+option name with a {}``dont-''. For example to not ignore accents
+when checking words use {}``--dont-ignore-accents''.
+
+If a boolean option has a single letter abbreviation simply give the
+letter corresponding to either enabling or disabling the option with
+out any corresponding value. For example to consider run-together
+words legal use {}``-C'' or to consider them illegal use {}``-B''
+
+
+\subsubsection{Value}
+
+To specify a value option simply specify the option with its corresponding
+value. For example to set the filter mode to Tex use {}``--mode=tex''.
+
+If a value option has a single letter shortcut simply specify the
+single letter short cut with its corresponding value. For example
+to use a large american dictionary use {}``-d american-lrg''.
+
+
+\subsubsection{List}
+
+To add a value to the list prefix the option name with a {}``add-''
+and then specify the value to add. For example to add the URL filter
+use {}``--add-filter url''. To remove a value from a list option
+prefix the option name with a {}``rem-'' and then specify the value
+to remove. For example to remove the URL filter use {}``--rem-filter
+url''. To remove all items from a list prefix the option name with
+a {}``rem-all'' without specify any value. For example to remove
+all filters use {}``--rem-all-filter''.
+
+
+\subsection{Via a Configuration File}
+
+Aspell can also accept options via a personal or global configuration
+file. The exact files to used are specified by the options \textbf{per-conf}
+and \textbf{conf} respectfully but the personal configuration file
+is normally {}``.aspell.conf'' located in the HOME directory and
+the global one is normally {}``aspell.conf'' which is located in
+the etc directory which is normally {}``/usr/etc'' or {}``/usr/local/etc''.
+To find out the particular values for your particular system use {}``aspell
+dump config''.
+
+Each line of the configuration file has the format:
+
+\begin{lyxcode}
+<\,{}<option>\,{}>~{[}<\,{}<value>\,{}>{]}
+\end{lyxcode}
+There may any number of spaces between the option and the value however
+it can only be spaces, ie there is no '=' between the option name
+and the value.
+
+Comments may also be included by preceding them with a '\#' as anything
+from a {}``\#'' to a newline is ignored. Blank lines are also allowed.
+
+Values set in the personal configuration file override those in the
+global file. Options specified at either the command line or via an
+environmental variable override those specified by either configuration
+file.
+
+
+\subsubsection{Boolean}
+
+To specify a boolean option simply include the option followed by
+a {}``true'' to enable it or a {}``false'' to disable it. For
+example to allow run-together words use {}``run-together true''.
+
+
+\subsubsection{Value}
+
+To specify a value option simply include the option followed by the
+corresponding option. For example to set the default language to german
+use {}``lang german''.
+
+
+\subsubsection{List}
+
+To add a value to the list prefix the option name with a {}``add-''
+and then specify the value to add. For example to add the URL filter
+use {}``add-filter url''. To remove a value from a list option prefix
+the option name with a {}``rem-'' and then specify the value to
+remove. For example to remove the URL filter use {}``rem-filter url''.
+To remove all items from a list prefix the option name with a {}``rem-all''
+without specify any value. For example to remove all filters use {}``rem-all-filter''.
+
+
+\subsection{Via an Environmental Variable}
+
+The environmental variable ASPELL\_CONF may also be used and it overrides
+any options set in the configuration file. The format of the string
+is exactly the same as the configuration file except that semicolons
+( ; ) are used instead of newlines.
+
+
+\section{The Options\label{options}}
+
+The following is a list of available options broken down by category.
+Each entry has the following format:
+
+\begin{quote}\begin{description}
+\item [<<option>>[,<<single letter abbreviations>>]] \textit{(<<type>>)} <<description>>
+\end{description}\end{quote}
+
+Where single letter options are specified as they would appear at
+the command line, ie with the preceding dash. Boolean single letter
+options are specified in the following format:
+
+\begin{quote}
+-<\,{}<abbreviation to enable>\,{}>|-<\,{}<abbreviation
+to disable>\,{}>
+\end{quote}
+<\,{}<Option>\,{}> is one of the following:
+\textbf{boolean}, \textbf{string}, \textbf{file}, \textbf{dir}, \textbf{integer},
+or \textbf{list}. \textbf{String}, \textbf{file}, \textbf{dir}, and
+\textbf{integer} types are all value options which can only take a
+specific type of value.
+
+
+\subsection{Dictionary Options}
+
+The following options may be used to control which dictionaries to
+use and how they behave (see section \ref{dict-opts} for more information):
+
+\begin{description}
+\item [master,-d]\textit{(string)} base name of the dictionary to use. If
+this option is specifed than Aspell with either use this dictionary
+or die.
+\item [dict-dir]\textit{(dir)} location of the main word list
+\item [lang]\textit{(string)} language to use, it follows the same format
+of the LANG environmental variable on most systems. In fact it defaults
+to the value of the LANG environmental variable if it is set. It consists
+of the two letter ISO 639 language code and an optional two letter
+ISO 3166 country code after a dash or underscore.
+\item [size]\textit{(string)} the perfered size of the word list
+\item [jargon]\textit{(string)} an extra information to distinguish two
+different words lists that have the same lang and size.
+\item [word-list-path]\textit{(list)} search path for word list information
+files
+\item [module-search-order]\textit{(list)} list of available modules, modules
+that come first on this list have a higher priority. Currently there
+is only one speller module.
+\item [personal,-p]\textit{(file)} personal word list file name
+\item [repl]\textit{(file)} replacements list file name
+\item [extra-dicts]\textit{(list)} extra dictionaries to use.
+\item [strip-accents]\textit{(boolean)} strip accents from all words in
+the dictionary
+\end{description}
+
+\subsection{Checker Options}
+
+These options control the beahvior of Aspell when checking documents.
+
+\begin{description}
+\item [ignore,-W](\textit{integer}) ignore words <= n chars
+\item [ignore-case]\textit{(boolean)} ignore case when checking words
+\item [ignore-accents]\textit{(boolean)} ignore accents when checking words
+\item [ignore-repl]\textit{(boolean)} ignore commands to store replacement
+pairs
+\item [save-repl]\textit{(boolean)} save the replacement word list on save
+allkeyboard \textit{(file)} the base name of the keyboard definition
+file to use (see section \ref{typo})
+\item [sug-mode]\textit{(mode)} suggestion mode = ultra | fast | normal
+| bad-spellers (see section \ref{suggestion})
+\end{description}
+
+\subsection{Filter Options}
+
+These options modify the behavior of the various filters (see section
+\ref{filter} for more information):
+
+\begin{description}
+\item [filter]\textit{(list)} add or removes a filter
+\item [mode]\textit{(string)} sets the filter mode. Mode is one if none,
+url, email, sgml, or tex. (The short cut options '-e' may be used
+for email, '-H' for Html/Sgml, or '-t' for Tex)
+\item [encoding]\textit{(string)} The encoding the input text is in. Valid
+values are {}``utf-8'', {}``iso8859-{*}'', {}``koi8-r'', {}``viscii'',
+{}``cp1252'', {}``machine unsigned 16'', {}``machine unsigned
+32''. However, the aspell utility will cuuretly only function correctly
+with 8-bit encodings. I hope to provide utf-8 support in the future.
+The two {}``machine unsigned'' encodings are entended to be used
+by other programs using the Aspell librarary and it is unlikly the
+Aspell utility will ever support these encodings.
+\item [add|rem-email-quote]\textit{(list)} email quote characters
+\item [email-margin]\textit{(integer)} num chars that can appear before
+the quote char
+\item [sgml-check]\textit{(list)} sgml attributes to always check.
+\item [sgml-extension]\textit{(list)} sgml file extensions.
+\item [tex-command]\textit{(list)} \TeX{} commands
+\item [tex-check-comments]\textit{(boolean)} check \TeX{} comments
+\end{description}
+
+\subsection{Run-together Word Options}
+
+These may be used to control the behavior of run-together words (see
+section \ref{run-together} for more information):
+
+\begin{description}
+\item [run-together,-C|-B]\textit{(boolean)} consider run-together words
+legal
+\item [run-together-limit]\textit{(integer)} maximum numbers that can be
+strung together 
+\item [run-together-min]\textit{(integer)} minimal length of interior words
+\end{description}
+
+\subsection{Misc Options}
+
+Misc. other options that don't fall under any other catagory
+
+\begin{description}
+\item [conf]\textit{(file)} main configuration file
+\item [conf-dir]\textit{(dir)} location of main configuration file
+\item [data-dir]\textit{(dir}) location of language data files
+\item [local-data-dir]\textit{(dir)} alternative location of language data
+files. This directory is searched before \textbf{data-dir}. It defaults
+to the same directory the actual main word list is in (which is not
+necessarily dict-dir).
+\item [home-dir](\textit{dir}) location for personal files
+\item [per-conf]\textit{(file)} personal configuration file
+\item [prefix]\textit{(dir)} prefix directory
+\item [set-prefix]\textit{(boolean)} set the prefix based on executable
+location (only works on Win32 and when compiled with --enable-win32-relocatable)
+\end{description}
+
+\subsection{Aspell Utility Options}
+
+\begin{description}
+\item [backup,-b|-x]\textit{(boolean)} create a backup file by appending
+{}``.bak'' to the file name. (Only applies when the command is \textbf{check})
+\item [time]\textit{(boolean)} time load time and suggest time in pipe mode.
+\item [reverse]\textit{(boolean)} reverse the order of the suggestions list.
+\item [keymapping]\textit{(string)} the keymapping to use. Either \textbf{aspell}
+for the default mapping or \textbf{ispell} to use the same mapping
+that the ispell utility uses.
+\end{description}
+
+\section{Dumping Configuration Values}
+
+To find out the current value of all the options use the command {}``aspell
+dump config''. This will dump the current configuration to standard
+output. The format of the contents dumped is such that it can be used
+as either the global or personal configuration file.
+
+To find out the current value of a particular option use {}``aspell
+config <\,{}<option>\,{}>''. This will
+print out the value of <\,{}<option>\,{}>
+to stdout and nothing else.
+
+
+\section{Notes on various Options}
+
+
+\subsection{Notes on Various Filters and Filter Modes\label{filter}}
+
+Aspell now has rudimentary filter support. You can either select from
+individual filters or chose a filter mode. To select a filter mode
+use the \textbf{mode} option. You may chose from \textbf{none}, \textbf{url},
+\textbf{email}, \textbf{sgml}, and \textbf{tex}. The default mode
+is \textbf{url}. Individual filters can be added with the option \textbf{add-filter}
+and remove with the \textbf{rem-filter} option. The currently available
+filters are \textbf{url}, \textbf{email}, \textbf{sgml}, \textbf{tex}
+as well as a bunch of filters which translate the text from one format
+to another. 
+
+
+\subsubsection{None Mode}
+
+This mode is exactly what it says. It turns off all filters.
+
+
+\subsubsection{Url Filter/Mode}
+
+The \textbf{url} filter/mode skips over URL's, host names, and email
+addresses. Because this filter is almost always useful and rarely
+does any harm it is enabled in all modes except \textbf{none}. To
+turn it off either select the \textbf{none} mode or use \textbf{rem-filter}
+option \emph{after} the desired mode is selected.
+
+
+\subsubsection{Email Filter/Mode}
+
+The \textbf{email} filter/mode skips over quoted text. It currently
+does not support skipping over headers however a future version should.
+In the mean time I suggest you use Aspell with Newsbody which can
+be found at \url{http://home.worldonline.dk/~byrial/newsbody/}. The
+option \textbf{email-skip} controls the number of characters that
+can appear before the email quote char, the default is 10. The option
+\textbf{add|rem-email-quote} controls the characters that are considered
+quote characters, the default is {}``>' and '|'.
+
+
+\subsubsection{SGML Filter/Mode\label{sgml}}
+
+The \textbf{sgml} filter/mode will skip over sgml commands. It currently
+does not handle nested < > unless they are in quotes. It also does
+it handle the null end tag (net) minimization feature of sgml such
+as 
+
+\begin{quote}
+<emphasis/important/
+\end{quote}
+The option \textbf{add|rem-sgml-check} controls which sgml tags should
+always be checked. The default is {}``alt''.
+
+The option \textbf{add|rem-sgml-extension} controls which file extensions
+are recognized as sgml/html files. The default is html, htm, php,
+and sgml. The extension are not case sensitive so extensions like
+.HTM will also be recognized.
+
+
+\subsubsection{\TeX{} Filter/Mode}
+
+The \textbf{tex} (all lowercase) filter/mode skips over \TeX{} commands
+and parameters and/or options to certain command. It also skips over
+\TeX{} comments by default. The option \textbf{{[}dont-{]}tex-check-comments}
+controls whether or not aspel will skip over \TeX{} comments. The
+option \textbf{add|rem-tex-command} controls which \TeX{} commands
+should have certain parameters and/or options also skipped over. Commands
+that are not specified will have all there parameters and/or options
+checked. The format for each item is
+
+\begin{quote}
+<\,{}<command>\,{}>~~<\,{}<a
+list of p,P,o and Os>\,{}>
+\end{quote}
+The first item is simple the command name. The second item controls
+which parameters to skip over. A 'p' skips over a parameter while
+a 'P' won't. Similar an 'o' will skip over an optional parameter while
+a 'O' won't. The first letter on the list will apply to the first
+parameter, the second letter will apply to the second parameter etc.
+If there are more parameters than letters Aspell will simply check
+them as normal. For example the option
+
+\begin{quote}
+add-tex-command rule pp
+\end{quote}
+will skip over the first two parameters of the {}``rule'' command
+while the option
+
+\begin{quote}
+add-tex-command foo Pop
+\end{quote}
+will \emph{check} the first parameter of the {}``foo'' command,
+skip over the next optional parameter, if it is present, and will
+skip over the second parameter --- even if the optional parameter
+is not present --- and will check any additional parameters.
+
+A'{*}' at the end of the command is simply ignored. For example the
+option
+
+\begin{quote}
+enlargethispage p
+\end{quote}
+will ignore the first parameter in both enlargethispage and enlargethispage{*}.
+
+To remove a command simple use the \textbf{rem-tex-command} option.
+For example
+
+\begin{quote}
+rem-tex-command foo
+\end{quote}
+will remove the command foo, if present, from the list of \TeX{} commands.
+
+
+\subsection{Notes on the Prefix Option}
+
+The \textbf{prefix} option is there to allow Aspell to easily be relocated.
+Changing \textbf{prefix} will change all directory names relative
+to the new prefix that are not explicitly set. For example if \textbf{prefix}
+was {}``/usr/local/aspell'' and \textbf{dict-dir} has a default
+value of {}``/usr/local/aspell/dict'' than changing \textbf{prefix}
+to {}``/opt/aspell'' will also change the default value of \textbf{dict-dir}
+to {}``/opt/aspell/dict''. Note that modifying prefix will only
+effect the default compiled in values of directories. If a directory
+option is explicitly given a value than changing the value of \textbf{prefix}
+has no effect on that directory option.
+
+
+\subsection{Notes on Typo-Analysis and the Keyboard Definition File\label{typo}}
+
+Aspell .33 and better will, in general, give a higher priority to
+certain misspelling which are likely to be due to typos such as {}``teh''
+instead of {}``the'' or {}``hapoy'' instead of {}``happy''.
+However in order to do this well Aspell needs to know the layout of
+the keyboard. The keyboard definition file simply identifies keys
+that are right next to each other. The file has an extension of .kbd
+and each line consists of two letters corresponding to two keys that
+are right next to each other. For example the line {}``as'' will
+indicate that '\texttt{\textbf{a}}' and '\texttt{\textbf{s}}' are
+right next to each other. If {}``as'' is listed as a entry it is
+not necessary to list {}``sa'' as an entry as that will be done
+automatically. Also by {}``right next to each other'' I mean to
+keys that are close enough together that it is easy to type one instead
+of the other. On most keyboards this means keys that are to the left
+or to the right of each other and not \emph{keys} that are below or
+above it.
+
+The default for this option is normally {}``standard''. However
+the default can be changed via the language data file. The normal
+default, {}``standard'', should work well for most QWERTY like keyboard
+layouts. It may need minor adjusting for foreign keyboards. The {}``dvorak''
+option can for a Dvorak layout. When creating a keyboard definition
+file for a foreign language please keep in mind that Aspell completely
+ignores accents when scoring words so that the key '\texttt{\textbf{o}}'
+and '\texttt{\textbf{ö}}' will appear to be the same key to aspell
+even if they are in fact separate keys on your keyboard.
+
+
+\subsection{Notes on the Different Suggestion Modes\label{suggestion}}
+
+In order to understand what these suggestion modes do, a basic understanding
+of how aspell works is required. See section \ref{works} for that.
+The suggestion modes are as follows.
+
+\begin{description}
+\item [ultra]This method will use the fastest method available to come up
+with decent suggestions. This currently means that it will look for
+soundslikes within one edit distance apart without doing any typo
+analysis. It is slower than Ispell by a factor of 1.5 to 2 when a
+single word list is used. It speed is only minor affected by the size
+of the word list, if at all, but it is strongly effected by the number
+of word lists use. In this mode Aspell gets about 87\% of the words
+from my small test kernel of misspelled words. (Go to \url{http://aspell.sourceforge.net/test}
+for more info on the test kernel as well as comparisons of this version
+of Aspell with previous versions and other spell checkers.)
+\item [fast]This method is like ultra except that it also performs typo
+analysis unless it is turned off by setting the keyboard to none.
+The typo analysis brings words which are likely to be due to typos
+to the beginning of the list but slows things down by a factor of
+about two. This mode should get around the same number of words that
+the ultra method does.
+\item [normal]This method looks for soundslikes within two edit distance
+apart and perform typo-analysis unless it is turned off. Is is around
+10 times slower than fast mode with the english word list but returns
+better suggestions. Its speed is directly proportional to the size
+of the word list. This mode gets 93\% of the words.
+\item [bad-spellers]This method also looks for soundslikes within two edit
+distances apart but is more tailored for the bad speller where as
+fast or normal are more tailed to strike a good balance between typos
+and true misspellings. This mode never performs typo-analysis and
+returns a \emph{huge} number of words for the really bad spellers
+who can't seam to get the spelling anything close to what it should
+be. If the misspelled word looks anything like the correct spelling
+it is bound to be found \emph{somewhere} on the list of 100 or more
+suggestions. This mode gets 98\% of the words.
+\end{description}
+
+\chapter{Working With Dictionaries\label{manage}\label{dict-opts}}
+
+
+\section{How Aspell Selects an Appropriate Dictionary}
+
+Aspell will go through the following steps to find an appropriate
+dictionary:
+
+\begin{enumerate}
+\item If the \textbf{master} options is set in any fashion (via the command
+line, the ASPELL\_CONF environmental variable, or a configuration
+file) look for a dictionary of that name. If one could not be found
+complain.
+\item If the \textbf{lang} option or LANG environmental variable is set
+and master option is not then use it (giving preference to \textbf{lang}
+over LANG) to search for an appropriate dictionary. If more than one
+dictionary is found for the given language string than it will look
+for a dictionary with a matching jargon if the \textbf{jargon} option
+is set. If it is not set it will look for a dictionary with no jargon.
+If after matching the lang and jargon there is still more than one
+dictionary available it will find one with the size closest to the
+value of the \textbf{size} option. The default size is 60.
+\item Finally, if all else fails, complain.
+\end{enumerate}
+
+\section{Listing Availabe Dictionaries}
+
+For a list of available dictionaries use the command {}``aspell dump
+dicts''. This will form a list of dictionaries that aspell will search
+when a dictionary is not specifically given.
+
+
+\section{Dumping the contents of the word list}
+
+The dump command in \textbf{speller-util} will simply dump the contents
+of a word list to stdout in a format than can be read back in with
+\textbf{speller-util create}.
+
+If no word list is specified the command will act on the default one.
+For example the command 
+
+\begin{quote}
+speller-util dump personal
+\end{quote}
+will simply dump the contents of the current personal word list to
+stdout.
+
+
+\section{Creating an Individual Word List}
+
+To create an individual main word list from a list of words use the
+command
+
+\begin{quote}
+speller-util --lang=<\,{}<lang>\,{}>
+create master ./<\,{}<base>\,{}> < <\,{}<wordlist>\,{}>
+\end{quote}
+where <\,{}<base>\,{}> is the name of
+the word list and <\,{}<word list>\,{}>
+is the list of words separated by white space. The name of the word
+list will automatically be converted to all lowercase. The {}``./''
+is important because without it aspell will create the word list in
+the normal word list directory. If you are trying to create a word
+list in a language other than english check the aspell data-dir (usually
+/usr/share/aspell, use {}``aspell dump config'' to find out what
+it is on your system) to see if a language data file exists for your
+language. If not you will need to create one. See chapter \ref{inter}
+for more information on using Aspell with other languages.
+
+This will create the file <\,{}<base>\,{}>
+in the current directory. To use the new word list copy the file to
+the normal word list directory (use {}``aspell config'' to find
+out what it is) and use the option --master=<\,{}<base>\,{}>. 
+
+The compiled dictionary file is machine dependent. It is dependent
+on endian order, and the page size for the machine because they are
+mmaped in. Please do not distribute the compiled dictionaries unless
+you are only distributing them for a particular platform such as you
+would a binary. That is why is normally installed in {}``lib/aspell''
+instead of {}``share/aspell''.
+
+Aspell is now also able to use special {}``multi'' dictionaries.
+See section \ref{dict-opts} form more information.
+
+A personal and replacement word list can be created in a similar fashion.
+
+Because Aspell does not support any sort of affix compression like
+Ispell does Ispell word lists will not work as is. In order to use
+Ispell's word lists simply pipe the word list through ``ispell -e''
+to expand the munched word lists.
+
+
+\subsection{Format of the Replacement Word List}
+
+The replacement word has each replacement pair on its own line in
+the following format
+
+\begin{lyxcode}
+<\,{}<misspelled~word>\,{}>:~<\,{}<correction>\,{}>
+\end{lyxcode}
+
+\section{Using Multi Dictionaries}
+
+As with precious versions of aspell you can specify the main dictionary
+to use via the -d or --master option. However as of Aspell .32 you
+can now also:
+
+\begin{enumerate}
+\item Specify more than word list to use with the \textbf{extra-dicts} option.
+\item Optionally have all accents striped form the word lists using \textbf{strip-accents}
+option. This is \emph{not} the same thing as the \textbf{ignore-accents}
+option. As enabling the \textbf{ignore-accents} would accept both
+cafe and café (notice the accent on the e), but only enabling strip-accents
+would only accent cafe, even if café is in the original dictionary.
+Specify \textbf{strip-accents} is just like using a word list with
+out the accents.
+\item Specify special {}``multi'' dictionaries.
+\end{enumerate}
+A {}``multi'' dictionary is a special file which basically a list
+of dictionary files to use. A multi dictionary must end is \textbf{.multi}
+and has roughly the same format of a configuration file where the
+two valid keys are \textbf{add} and \textbf{strip-accents}. The \textbf{add}
+key is used for adding individual word lists, or other {}``multi''
+files. The \textbf{strip-accents} key is used to control if accents
+are striped from the dictionaries. Unlike the global strip-accent
+option this option only effects word lists that came after the option.
+For example:
+
+\begin{quote}
+strip-accents yes\\
+add english\\
+strip-accents no\\
+add must-accent
+\end{quote}
+will strip accents from the english word list but not the must-accent
+word list. If the global strip-accents option is specified the local
+strip-accents options are ignored
+
+\begin{lyxcode}
+
+\end{lyxcode}
+
+\section{Dictionary Naming\label{dictname}}
+
+In order for Aspell to be able to correctly recognize a dictionary
+based on the setting of the LANG environmental variable the dictionaries
+need to be located located .... and they need to be a {}``multi''
+dictionary.
+
+Each dictionary that yoou expact aspell to be able to find needs to
+have the following name:
+
+\begin{quote}
+<\,{}<language>\,{}>{[}\_<\,{}<region>{]}{[}-<\,{}<jargon>\,{}>{]}{[}-<\,{}<size>\,{}>{]}.multi
+\end{quote}
+Where <\,{}<language>\,{}> is the two
+letter language code, <\,{}<region>\,{}>
+is the two letter region code, <\,{}<jargon>\,{}>
+is any extra informations to distinguish the word list from other
+ones with the same language and spelling, and <\,{}<size>\,{}>
+is the size of the dictionary. If no size is specified that the default
+size of 60 will be assumed.
+
+For example:
+
+\begin{quote}
+en.multi\\
+en\_US.multi\\
+en-medical.multi\\
+en-medical-85.multi\\
+en-85.multi\\
+de.pwli
+\end{quote}
+
+\section{AWLI files}
+
+In order for Aspell to find dictionaries that are located in odd places
+or not named according to section \ref{dictname} a AWLI file needs
+to be created for the dictionary and located in some place where Aspell
+can find it.
+
+Each AWLI has the the following name:
+
+\begin{quote}
+<\,{}<language>\,{}>{[}\_<\,{}<region>{]}{[}-<\,{}<jargon>\,{}>{]}{[}-<\,{}<size>\,{}>{]}-<\,{}<module>\,{}>.pwli
+\end{quote}
+Where the names have the same meaning as in section \ref{dictname}
+and <\,{}<module>\,{}> is the speller
+module to use, which should be set to {}``default'' for now since
+there is only one speller module.
+
+Each AWLI file for an Aspell word list should then contain exactly
+one line which contains the full path of the main word list.
+
+
+\chapter{Writing programs to use Aspell}
+
+There are two main ways to use aspell from within your application.
+Through the external C API or though a pipe. The internal Aspell API
+can be used directly but that is not recommended as the actual Aspell
+API is constantly changing.
+
+
+\section{Though the C API}
+
+The Aspell library contains two main classes and several helper classes.
+The two main classes are AspellConfig and AspellMaster. The AspellConfig
+class is used to set initial defaults and to change spell checker
+specific options. The AspellManager class does most of the real work.
+It is responsible for managing the dictionaries, checking if a word
+is in the dictionary, and coming up with suggestions among other things.
+There are many helper classes the important ones are AspellWordList,
+AspellMutableWordList, Aspell{*}Enumeration. The AspellWordList classes
+is used for accessing the suggestion list, as well as the personal
+and suggestion word list currently in use. The AspellMutableWordList
+is used to manage the personal, and perhaps other, word lists. The
+Aspell{*}Enumeration classes are used for iterating through a list.
+
+
+\subsection{Usage}
+
+To use Aspell your application should include {}``aspell/aspell.h''.
+In order to insure that all the necessary libraries are linked in
+libtool should be used to perform the linking. When using libtool
+simply linking with {}``-laspell'' should be all that is necessary.
+When using shared libraries you might be able to simply link {}``-laspell'',
+but this is not recommended. This version of Aspell uses the CVS version
+of libtool however released versions of libtool should also work.
+
+When your application first starts you should get a new configuration
+class with the command:
+
+\begin{lyxcode}
+AspellConfig~{*}~spell\_config~=~new\_aspell\_config();
+\end{lyxcode}
+which will create a new AspellConfig class. It is allocated with new
+and it is your responsibility to delete it with delete\_aspell\_config.
+Once you have the config class you should set some variables. The
+most important one is the language variable. To do so use the command:
+
+\begin{lyxcode}
+aspell\_config\_replace(spell\_config,~\char`\"{}lang\char`\"{},~\char`\"{}en\_US\char`\"{});
+\end{lyxcode}
+which will set the default language to use to American English. The
+language is expected to be the standard two letter ISO 639 language
+code, with an optional two letter ISO 3166 country code after an underscore.
+You can set the preferred size via the \textbf{size} option, any extra
+info via the \textbf{jargon} option, and the encoding via the \textbf{encoding}
+option. Other things you might want to set is the preferred spell
+checker to use, the search path for dictionary's, and the like see
+section \ref{options} for a list of all available options.
+
+When ever a new document is created a new AspellManager class should
+also be created. There should be one speller class per document. To
+create a new speller class use the new\_aspell\_speller and then cast
+it up using to\_aspell\_speller like so.
+
+\begin{lyxcode}
+AspellCanHaveError~{*}~possible\_err~=~new\_aspell\_speller(spell\_config);
+
+AspellManager~{*}~spell\_checker~=~0;
+
+if~(aspell\_error\_number(possible\_err)~!=~0)
+
+~~puts(aspell\_error\_message(possible\_err));
+
+else
+
+~~spell\_checker~=~to\_aspell\_speller(possible\_err);
+\end{lyxcode}
+which will create a new AspellManager class using the defaults found
+in spell\_config. To find out which dictionary is selected the \textbf{lang},
+\textbf{size}, and \textbf{jargon} options may be examinded. To find
+out the exact name of the dictionary the \textbf{master} option way
+be examned as well as the \textbf{master-flags} opntions to see if
+any special flags that were passed on to the module. The \textbf{module}
+option way also be examed to figure out which speller module was selected,
+but since there is only one this option will always be the same.
+
+If for some reason you want to use different defaults simply clone
+spell\_config and change the setting like so:
+
+\begin{lyxcode}
+AspellConfig~{*}~spell\_config2~=~aspell\_config\_clone(spell\_config);
+
+aspell\_config\_replace(spell\_config2,~\char`\"{}lang\char`\"{},\char`\"{}nl\char`\"{});
+
+possible\_err~=~new\_aspell\_speller(spell\_config2);
+
+delete\_aspell\_config(spell\_config2);
+\end{lyxcode}
+Once the speller class is created you can use the check method to
+see if a word in the document is correct like so:
+
+\begin{lyxcode}
+int~correct~=~aspell\_speller\_check(spell\_checker,~<word>,~<size>);
+\end{lyxcode}
+<word> can is expected to a const char {*} character string. If the
+encoding is set to be {}``machine unsigned 16'' or {}``machine
+unsigned 32''. <word> is expected to be a cast from either const
+u16int {*} or const u32int{*} respectfully. U16int and u32int are
+generally unsigned short and unsigned int respectfully. <size> is
+the length of the string or -1 if the sting is null terminated. If
+the string is a cast from const u16int {*} or const u32int {*} then
+size is the amount of space in bytes the string takes up after being
+casted to const char {*} and not the true size of the string. Aspell\_speller\_check
+will return 0 is it is not found and non-zero otherwise.
+
+If the word is not correct than the suggest method can be used to
+come up with likely replacements.
+
+\begin{lyxcode}
+AspellWordList~{*}~suggestions~=~aspell\_speller\_suggest(spell\_checker,~<word>,~<size>);
+
+AspellStringEnumeration~{*}~elements~=~aspell\_word\_list\_elements(suggestions);
+
+const~char~{*}~word;
+
+while~(~(word~=~aspell\_string\_enumeration\_next(aspell\_elements)~!=~NULL~)~\{
+
+~~//~add~to~suggestion~list
+
+\}
+
+delete\_aspell\_string\_manag(elements);
+\end{lyxcode}
+Notice how \texttt{elements} is deleted but \texttt{suggestions} is
+not. The value returned by suggestions is only valid to the next call
+to suggest. Once a replacement is made the store\_repl method should
+be used to communicate the replacement pair back to the spell checker
+(see section \ref{replpair} for why). It usage is as follows:
+
+\begin{lyxcode}
+aspell\_speller\_store\_repl(spell\_checker,~
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~<misspelled~word>,~<size>,
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~<correctly~spelled~word>,~<size>);
+\end{lyxcode}
+If the user decided to add the word to the session or personal dictionary
+the the word can be be added using the add\_to\_session or add\_to\_personal
+methods respectfully like so:
+
+\begin{lyxcode}
+aspell\_speller\_add\_to\_session|personal(spell\_checker,~<word>,~<size>);
+\end{lyxcode}
+It is better to let the spell checker manage these words rather than
+doing it your self so that the words have a change of appearing in
+the suggestion list.
+
+Finally, when the document is closed the AspellManager class should
+be deleted like so.
+
+\begin{lyxcode}
+delete\_aspell\_speller(spell\_checker);
+\end{lyxcode}
+
+\subsection{API Reference}
+
+Methods that return a boolean result generally return false on error
+and true other wise. To find out what went wrong use the error\_number
+and error\_message methods. Unless otherwise stated methods that return
+a {}``const char {*}'' will return null on error. In general, the
+charter string returned is only valid until the next method which
+returns a {}``const char {*}'' is called.
+
+For the details of the various classes please see the header files.
+In the future I will generate class references using some automated
+tool.
+
+
+\subsection{Examples}
+
+Two simple examples are included in the examples directory. The {}``example-c''
+program demenstracts most of the Aspell library functionary and the
+{}``list-dicts'' lists the available dictionaries.
+
+
+\subsection{Notes About Thread Safety}
+
+Read-only Aspell methods and functions should be thread safe as long
+as exceptions, new, delete, delete{[}{]}, and STL allocators are thread
+safe. To the best of my knowledge gcc and egcs meet these requirements.
+It is up to the programmer to make sure multiple threads do not do
+thing such as change the dictionaries and add or delete items from
+the personal or session dictionaries.
+
+
+\section{Through A Pipe\label{pipe}}
+
+When given the \textbf{pipe} or \textbf{-a} command aspell goes into
+a pipe mode that is compatible with {}``ispell -a''. Aspell also
+defines its own set of extensions to ispell pipe mode.
+
+
+\subsection{Format of the Data Stream\label{data_stream}}
+
+In this mode, Aspell prints a one-line version identification message,
+and then begins reading lines of input. For each input line, a single
+line is written to the standard output for each word checked for spelling
+on the line. If the word was found in the main dictionary, or your
+personal dictionary, then the line contains only a '{*}'. 
+
+If the word is not in the dictionary, but there are suggestions, then
+the line contains an '\&', a space, the misspelled word, a space,
+the number of near misses, the number of characters between the beginning
+of the line and the beginning of the misspelled word, a colon, another
+space, and a list of the suggestions separated by commas and spaces.
+
+Finally, if the word does not appear in the dictionary, and there
+are no suggestions, then the line contains a '\#', a space, the misspelled
+word, a space, and the character offset from the beginning of the
+line. Each sentence of text input is terminated with an additional
+blank line, indicating that ispell has completed processing the input
+line. 
+
+These output lines can be summarized as follows: 
+
+\begin{description}
+\item [OK:]{*} 
+\item [Suggestions:]\& <\,{}<original>\,{}>
+<\,{}<count>\,{}> <\,{}<offset>\,{}>:
+<\,{}<miss>\,{}>, <\,{}<miss>\,{}>,
+... 
+\item [None:]\# <\,{}<original>\,{}> <\,{}<offset>\,{}> 
+\end{description}
+When in the -a mode, Aspell will also accept lines of single words
+prefixed with any of '{*}', '\&', '@', '+', '-', '\textasciitilde{}',
+'\#', '!', '\%', or '\textasciicircum{}'. A line starting with '{*}'
+tells ispell to insert the word into the user's dictionary. A line
+starting with '\&' tells ispell to insert an all-lowercase version
+of the word into the user's dictionary. A line starting with '@' causes
+ispell to accept this word in the future. A line starting with '+',
+followed immediately by a valid mode will cause aspell to parse future
+input according the syntax of that formatter. A line consisting solely
+of a '+' will place ispell in \TeX{}/\LaTeX{} mode (similar to the
+-t option) and '-' returns aspell to its default mode (but these commands
+are obsolete). A line '\textasciitilde{}', is ignored for ispell compatibility.
+A line prefixed with '\#' will cause the personal dictionaries to
+be saved. A line prefixed with '!' will turn on terse mode (see below),
+and a line prefixed with '\%' will return ispell to normal (non-terse)
+mode. Any input following the prefix characters '+', '-', '\#', '!',
+'\textasciitilde{}', or '\%' is ignored, as is any input following.
+To allow spell-checking of lines beginning with these characters,
+a line starting with '\textasciicircum{}' has that character removed
+before it is passed to the spell-checking code. It is recommended
+that programmatic interfaces prefix every data line with an uparrow
+to protect themselves against future changes in Aspell. 
+
+To summarize these: 
+
+\begin{description}
+\item [{*}<\,{}<word>\,{}>]Add a word to the
+personal dictionary 
+\item [\&<\,{}<word>\,{}>]Insert the all-lowercase
+version of the word in the personal dictionary
+\item [@<\,{}<word>\,{}>]Accept the word,
+but leave it out of the dictionary
+\item [\#]Save the current personal dictionary
+\item [\textasciitilde{}]Ignored for ispell compatibility.
+\item [+]Enter \TeX{} mode.
+\item [+<\,{}<mode>\,{}>]Enter the mode specified
+by <\,{}<mode>\,{}>.
+\item [-]Enter the default mode.
+\item [!]Enter terse mode 
+\item [\%]Exit terse mode
+\item [\textasciicircum{}]Spell-check the rest of the line 
+\end{description}
+In terse mode, Aspell will not print lines beginning with '{*}', which
+indicate correct words. This significantly improves running speed
+when the driving program is going to ignore correct words anyway.
+
+In addition to the above commands which are designed for Ispell compatibility
+Aspell also supports its own extension. All Aspell extensions follow
+the following format.
+
+\begin{quote}
+\$\$<\,{}<command>\,{}> {[}data{]}
+\end{quote}
+Where data may or may not be required depending on the particular
+command. Aspell currently supports the following command.
+
+\begin{description}
+\item [cs~<\,{}<option>\,{}>,<\,{}<value>\,{}>]Change
+a configuration option.
+\item [cr~<\,{}<option>\,{}>]Prints the value
+of a configuration option.
+\item [pp]Returns a list of all words in the current personal wordlist.
+\item [ps]Returns a list of all words in the current session dictionary.
+\item [l]Returns the current language name.
+\item [ra~<\,{}<mis>\,{}>,<\,{}<cor>\,{}>]Add
+the word pair to the replacement dictionary for latter use. Returns
+nothing.
+\end{description}
+Anything returned is returned on its own line line. All lists returned
+have the following format
+
+\begin{quote}
+<\,{}<num of items>\,{}>: <\,{}<item1>\,{}>,
+<\,{}<item2>\,{}>, <\,{}<etc>\,{}>
+\end{quote}
+\emph{(Part of the preceding section was directly copied out of the
+Ispell manual)}
+
+
+\section{Notes of Storing Replacement Pairs\label{replpair}}
+
+The store\_repl method and the \$\$?? should be used because Aspell
+is able to learn from users misspellings. For example on the first
+pass a user misspells beginning as beging so aspell suggests:
+
+\begin{quote}
+begging, begin, being, Beijing, bagging, ....
+\end{quote}
+However the user then tries \char`\"{}begning\char`\"{} and aspell
+suggests
+
+\begin{quote}
+beginning, beaning, begging, ... 
+\end{quote}
+so the user selects beginning. However than, latter on in the document
+the user misspelles it as begng (NOT beging). Normally aspell will
+suggest.
+
+\begin{quote}
+began, begging, begin, begun, ....
+\end{quote}
+However becuase it knows the user mispelled beginning as beging it
+will instead suggest:
+
+\begin{quote}
+beginning, began, begging, begin, begun ...
+\end{quote}
+I myself often misspelled beginning (and still do) as something close
+to begging and two many times wind up writing sentences such as \char`\"{}begging
+with ....\char`\"{}.
+
+Please also note that replacements commands has a memory. Which means
+if you first store the replacement pair:
+
+\begin{quote}
+sicolagest -> psycolagest
+\end{quote}
+then store the replacement pair
+
+\begin{quote}
+psycolagest -> psychologist
+\end{quote}
+The replacement pair
+
+\begin{quote}
+sicolagest -> psychologist
+\end{quote}
+will also get stored so that you don't have to worry about it.
+
+
+\chapter{Adding Support For Other Languages\label{inter}}
+
+{[}FIXME: This section needs updateing{]}
+
+Before you consider adding support for Aspell for your language first
+check if it is already done via the Aspell-Dicts project. As of the
+release of support for the following languages is now available:
+
+\begin{quotation}
+\begin{tabular}{lll}
+Breton&
+{[}br{]}&
+\\
+Catalan&
+{[}ca{]}&
+\\
+Czech&
+{[}cs{]}&
+\\
+Danish&
+{[}da{]}&
+\\
+Dutch&
+{[}nl{]}&
+\\
+Esperanto&
+{[}eo{]}&
+\\
+Faroese&
+{[}fo{]}&
+\\
+French&
+{[}fr{]}&
+(Standard {[}fr\_FR{]} and Swiss French {[}fr\_CH{]} and in three
+sizes: small, medium and large)\\
+German&
+{[}de{]}&
+(Standard {[}de\_DE{]} and Swiss German {[}de\_CH{]})\\
+Italian&
+{[}it{]}&
+\\
+Norwegian&
+{[}no{]}&
+\\
+Polish&
+{[}pl{]}&
+\\
+Portuguese&
+{[}pt{]}&
+(Standard {[}pt\_PT{]} and Brazilian {[}pt\_BR{]})\\
+Russian&
+{[}ru{]}&
+\\
+Spanish&
+{[}es{]}&
+\\
+Swedish&
+{[}sv{]}&
+\\
+\end{tabular}
+\end{quotation}
+You can find all of these packages at the aspell home page (\url{http://aspell.sourceforge.net/}).
+
+If your language is not listed above please send me a note and I will
+work with you on adding support. \emph{The instructions below still
+apply however for this version of Aspell however they may not once
+the Aspell is merged into Pspell (see section \ref{future}).}
+
+Adding a language to aspell is fairly straightforward. You need to
+at very least create the language data file, and compile a new word
+list. You should also create a PWLI file for each of your word lists
+so that your new word lists will work correctly with the LANG environmental
+variable and with Pspell.
+
+Please note, however, that Aspell international support is not 100\%
+done yet. More information on my future planes for international support
+in aspell can be found at \url{http://aspell.sourceforge.net/international/}.
+
+
+\section{The Language Data File}
+
+The basic format of the language data data is the same as it for aspell
+configuration file. It is named <\,{}<lang>\,{}>.dat
+and is located in the architecture independent data dir for aspell
+(option \textbf{data-dir}) which is usually <\,{}<prefix>\,{}>/share/aspell.
+Use {}``aspell config'' to find out where it is in your installation.
+
+The language data file has several mandatory fields, and several optional
+ones. All fields are case sensitive and should be in all lower case.
+
+The two mandatory fields are \textbf{name} and \textbf{charset}. \textbf{Name}
+is the name of the language and should be the same as the file name
+(without the .dat). \textbf{Charset} is the charset aspell will expect
+the word lists to be formatted in. You may chose from any of the iso-8859-{*}
+character sets as well as, koi8-f, koi8-r, and viscii. If your language
+can fit in the plain old ASCII character set use iso8859-1. If you
+use some other character set for your language other than the ones
+listed here drop me a note and I will look into adding support for
+it.
+
+The optional fields are \textbf{special, soundslike}, \textbf{keyboard}
+and a bunch of options to specify how run-together words are handles.
+\textbf{Special} is for non letter characters that can appear in your
+language such as the \textbf{'} and \textbf{-}. The format for the
+value is a list separated by spaces. Each item of the list has the
+following format
+
+\begin{quote}
+<\,{}<char>\,{}>~~<\,{}<begin>\,{}><\,{}<middle>\,{}><\,{}<end>\,{}>
+\end{quote}
+<\,{}<char>\,{}> is the non letter character
+in question. <\,{}<begin>\,{}>,<\,{}<middle>\,{}>,<\,{}<end>\,{}>
+are either a '-' or a '{*}'. A star for <\,{}<begin>\,{}>
+means that the character at the beginning of the word, a '-' means
+it can't. The same is true for <\,{}<middle>\,{}>
+and <\,{}<end>\,{}>. For example the
+entry for the \textbf{'} in english is:
+
+\begin{lyxcode}
+'~-{*}-
+\end{lyxcode}
+To include more than one middle character just list them one after
+another on the same line. for example to make both the ' and the -
+a middle character use the following line in the language data file:
+
+\begin{lyxcode}
+special~'~-{*}-~-~-{*}-
+\end{lyxcode}
+The \textbf{soundslike} option, \textbf{}if present, should be the
+name of the soundslike data for the language. The data is expected
+to be in the file <\,{}<name>\,{}>\_phonetic.dat. 
+
+If the name is \textbf{generic} a really generic soundslike algorithm
+will be used which consists of striping all the vowels and removing
+all accents. I recommend first using the generic algorithm and then,
+after aspell is working with the new language, work on the transformation
+array.
+
+If the soundslike name is \textbf{none} then no soundslike lookup
+table will be used. This will reduce the size of the compiled word
+list by around 50\% but at the sacrifice of suggestion quality. If
+the soundslike is none than the soundslike for the word will simply
+be the word itself in lowercase, will all accents stripped. For languages
+with phonetic spelling the difference will not be very noticeable.
+However, for languages with non-phonetic spelling there will be a
+noticeable difference. The difference you notice will depend on the
+quality of the soundslike data file. If you do not notice much of
+a difference for a language with non-phonetic spelling that is a good
+indication that the soundslike data is not rough enough---or the words
+you are trying are not that badly misspelled.
+
+The keyboard option specifies the base name of the keyboard definition
+file to use. See section \ref{typo} for more information.
+
+The options to control how run-together words are handled are the
+same as the are in the normal configurations files. Please see section
+\ref{run-together} for more information.
+
+
+\section{Compiling the Word List}
+
+Once you have a working language data file installed in the right
+place you are ready to compile the main word list. See section \ref{manage}
+to find out what to do. This section also includes instructions for
+creating the PWLI file.
+
+
+\section{Phonetic Code}
+
+\textit{(The following section was written by Björn Jacke, bjoern.jacke
+at gmx de)}
+
+Aspell is in fact the spell checker that comes up with the best suggestions
+if it finds an unknown word. One reason is that it does not just compare
+the word with other words in the dictionary (like Ispell does) but
+also uses phonetic comparisons with other words.
+
+The new table driven phonetic code is very flexible and setting up
+phonetic transformation rules for other languages is not difficult
+but there can be a number of stumbling stones --- that's why I wrote
+this section.
+
+The main phonetic code is free of any language specific code and should
+be powerful enough to allow setting up rules for any language. Anything
+which is language specific is kept in a plain text file and can easily
+be edited. So it's even possible to write phonetic transformation
+rules if you don't have any programming skills. All you need to know
+is how words of the language are written and how they are pronounced.
+
+
+\subsection{Syntax of the transformation array}
+
+In the translation array there are two strings on each line; the first
+one is the search string (or switch name) and the second one is the
+replacement string (or switch parameter). The line
+
+\begin{lyxcode}
+version~~~<\,{}<version>\,{}>
+\end{lyxcode}
+is also required to appear somewhere in the translation array. The
+version string can be anything but it should be changed when ever
+the a new version of the translation array is released. This is important
+because it will keep Aspell from using a compiled dictionary with
+the wrong set of rules. For example if when coming up with suggestion
+for {}``hallo'' aspell will use the new rules to come up with the
+soundslike say {}``H{*}L{*}'' but if hello is stored in the dictionary
+using the old rules as {}``HL'' instead of {}``H{*}L{*}'' aspell
+will never be able to come up with hello. So to solve this problem
+Aspell checks if the version strings match and abort with an error
+if they don't. Thus it is important to update it when ever a new version
+of the translation array is releases. This is only a problem with
+the main word list as the personal word lists are now stored as simple
+word lists with a single header line (ie, no soundslike data).
+
+Each non switch line represents one replacement (transformation) rule.
+Words beginning with the same letter must be grouped together; the
+order inside this group does not depend on alphabetical issues but
+it gives priorities; the higher the rule the higher the priority.
+That's why the first rule that matches is applied. In the following
+example:
+
+\begin{lyxcode}
+
+
+GH~~~~~\_~~\\
+G~~~~~~K~~\\
+~
+\end{lyxcode}
+{}``GH \nach \_'' has higher priority than {}``G \nach K''. {}``\_''
+represents the empty string {}``''. If {}``GH \nach \_'' would
+stand after {}``G \nach K'', the second rule would never match because
+the algorithm would stop searching for more rules after the first
+match. The above rules transform any {}``GH'' to an empty string
+(delete them) and transform any other {}``G'' to {}``K''.
+
+At the end of the first string of a line (the search string) there
+may optionally stand a number of characters in brackets. One (only
+one!) of these characters must fit. It's comparable with the {[} {]}
+brackets in regular expressions. The rule {}``DG(EIY) \nach J''
+for example would match any {}``DGE'', {}``DGI'' and {}``DGY''
+and replace them with {}``J''. This way you can reduce several rules
+to one.
+
+Behind the search string there can stand one or more dashes (-). Those
+search strings will be matched totally but only the beginning of the
+string will be replaced. Furthermore for these rules no follow-up
+rule will be searched (what this is will be explained later). The
+rule {}``TCH-- \nach \_'' will match any word containing {}``TCH''
+(like {}``match'') but will only replace the first character {}``T''
+with an empty string. The number of dashes determines how many characters
+from the end will not be replaced. After the replacement the search
+for transformation rules continues with the not replaced {}``CH''! 
+
+If a {}``<'' is appended to the search string, the search for replacement
+rules will continue with the replacement string and not with the next
+character of the word. The rule {}``PH< \nach F'' for example would
+replace {}``PH'' with {}``F'' and then again start to search for
+a replacement rule for {}``F\ldots{}''. If there would also be
+rules like {}``FO \nach O'' and {}``F \nach \_'' then words like
+{}``PHOXYZ'' would be transformed to {}``OXYZ'' and any occurrences
+of {}``PH'' that are not followed by an {}``O'' will be deleted
+like {}``PHIXYZ \nach IXYZ''. The second replacement however is
+not applied if the priority of this rule is lower than the priority
+of the first rule.
+
+Priorities are added to a rule by putting a number between 0 and 9
+at the end of the search string, for example {}``ING6 \nach N''.
+The higher the number the higher is the priority.
+
+Priorities are especially important for the previously mentioned follow-up
+rules. Follow-up rules are searched beginning from the last string
+of the first search string. This is a bit complicated but I hope this
+example will make it more clear:
+
+\begin{lyxcode}
+
+
+CHS~~~~~~X~\\
+CH~~~~~~~G~\\
+~\\
+HAU-{}-1~~~H~\\
+~\\
+SCH~~~~~~SH~\\
+~
+\end{lyxcode}
+In this example {}``CHS' in the word {}``FUCHS'' would be transformed
+to {}``X''. If we take the word {}``DURCHSCHNITT'' the things
+look a bit different. Here {}``CH'' belongs together and {}``SCH''
+belongs together and both are spoken separately. The algorithm however
+first finds the string {}``CHS'' which may not be transformed like
+in the previous word {}``FUCHS''. At this point the algorithm can
+find a follow up rule. It takes the last character of the first matching
+rule ({}``CHS'') which is {}``S'' and looks for the next match,
+beginning from this character. What it finds is clear: It finds {}``SCH
+\nach SH'', which has the same priority (no priority means standard
+priority, which is 5). If the priority is the same or higher the follow-up
+rule will be applied. Let's take a look at the word {}``SCHAUKEL''.
+In this word {}``SCH'' belongs together and may not be torn apart.
+After the algorithm has found \char`\"{}SCH \nach SH\char`\"{} it
+searches for a follow-up rule for \char`\"{}H\char`\"{}+\char`\"{}AUKEL\char`\"{}.
+It finds \char`\"{}HAU--1 \nach H\char`\"{}, but does not apply it
+because its priority is lower than the one of the first rule. You
+see that this is a very powerful feature but it also can easily lead
+to mistakes. If you really don't need this feature you can turn it
+off by putting the line
+
+\begin{lyxcode}
+followup~~~~~~0~
+\end{lyxcode}
+at the beginning of the phonetic table file. As mentioned, for rules
+containing a `-' no follow-up rules are searched but giving such rules
+a priority is not totally senseless because they self can be follow-up
+rules and in that case the priority makes sense again. Follow-up rules
+of follow-up rules are not searched because this is in fact not needed
+very often.
+
+The control character \char`\"{}\hoch\char`\"{} says that the search
+string only matches at the beginning of words so that the rule \char`\"{}RH\hoch \nach R\char`\"{}
+will only apply to words like \char`\"{}RHESUS\char`\"{} but not \char`\"{}PERHAPS\char`\"{}.
+You can append another \char`\"{}\hoch\char`\"{} to the search string.
+In that case the algorithm treats the rest of the word totally separately
+from first matched string in at beginning. This is useful for prefixes
+whose pronunciation does not depend on the rest of the word and vice
+versa like \char`\"{}OVER\hoch\hoch\char`\"{} in English for example.
+
+The same way as \char`\"{}\hoch\char`\"{} works does \char`\"{}\$\char`\"{}
+only apply on words that end with the search string. \char`\"{}GN\$ \nach N\char`\"{}
+only matches on words like \char`\"{}SIGN\char`\"{} but not \char`\"{}SIGNUM\char`\"{}.
+If you use \char`\"{}\hoch\char`\"{} and \char`\"{}\$\char`\"{} together,
+both of them must fit \char`\"{}ENOUGH\hoch\$ \nach NF\char`\"{} will
+only match the word \char`\"{}ENOUGH\char`\"{} and nothing else.
+
+Of course you can combine all of the mentioned control characters
+but they must occur in this order: \texttt{< - priority \^{} \$}.
+All characters must be written in CAPITAL letters.
+
+If absolutely no rule can be found --- might happen if you use strange
+characters for which you don't have any replacement rule --- the next
+character will simply be skipped and the search for replacement rules
+will continue with the rest of the word.
+
+If you want double letters to be reduced to one you must set up a
+rule like \char`\"{}LL- \nach L\char`\"{}. If double letters in the
+resulting phonetic word should be allowed, you must place the line
+
+\begin{lyxcode}
+collapse\_result~~~~~0~
+\end{lyxcode}
+at the beginning of your transformation table file; otherwise set
+the value to `1'. The English rules for example strip all vowels from
+words and so the word \char`\"{}GOGO\char`\"{} would be transformed
+to \char`\"{}K\char`\"{} and not to \char`\"{}KK\char`\"{} (as desired)
+if \texttt{collapse\_result} is set to 1. That's why the English rules
+have \texttt{collapse\_result} set to \texttt{0}.
+
+
+\subsection{How do I start finally?}
+
+Before you start to write an array of transformation rules, you should
+be aware that you have to do some work to make sure that things you
+do will result in correct transformation rules.
+
+
+\subsubsection{Things that come in handy}
+
+First of all you need to have a large word list of the language you
+want to make phonetics for. It should contain about as many words
+as the dictionary of the spell checker. If you don't have such a list,
+you will probably find an Ispell dictionary at \url{http://fmg-www.cs.ucla.edu/geoff/ispell-dictionaries.html}
+which will help you. You can then make affix expansion via \texttt{ispell
+-e} and then pipe it trough \texttt{\textbackslash{}tr \char`\"{}
+\char`\"{} \char`\"{}\textbackslash{}n\char`\"{}} to put one word
+on each line. After that you eventually have to convert special characters
+like `é' from Ispell's internal representation to latin1 encoding.
+\texttt{sed s/e'/é/g} for example would replace all e' with é.
+
+The second is that you know how to use regular expressions and know
+how to use \texttt{grep}. You should for example know that 
+
+\begin{lyxcode}
+grep~\^{}{[}\^{}aeiou{]}qu{[}io{]}~wordlist~|~less
+\end{lyxcode}
+will show you all words that begin with any character but a, e, i,
+o or u and then continue with `qui' or `quo'. This stuff is important
+for example to find out if a phonetic replacement rule you want to
+set up is valid for all words which match the expression you want
+to replace. Taking a look at the regex(7) man page is a good idea.
+
+
+\subsubsection{What the phonetic code should do}
+
+Normal text comparison works well as long as the typer misspells a
+word because he pressed one key he didn't really want to press. In
+this cases mostly one character differs from the original word.
+
+In cases where the writer didn't know about the correct spelling of
+the word however the word may have several characters that differ
+from the original word but usually the word would still sound like
+the original word. Someone might think for example that `tough' is
+spelled `taff'. No spell checker without phonetic code will come to
+the idea that this might be `tough' but a spell checker who knows
+that `taff' would be pronounced like `tough' will make good suggestions
+to the user. Another example could be `funetik' and `phonetic'.
+
+From this examples you can see that the phonetic transformation should
+not be too fussy and too precise. If you implement a whole phonetic
+dictionary as you can find it in books this will not be very useful
+because then there could still be many characters differing from the
+misspelled and the desired word. What you should do if you implement
+the phonetic transformation table is to reduce the number of used
+letters to the only really necessary ones.
+
+Characters that sound similar should be reduced to one. In English
+language for example `Z' sounds like `S' and that's why the transformation
+rule {}``Z \nach S'' is present in the replacement table. `PH' is
+spoken like `F' and so we have a {}``PH \nach F'' rule.
+
+If you take a closer look you will even see that vowels sound very
+similar in English language: `contradiction', `cuntradiction', `cantradiction'
+or `centradiction' in fact sound nearly the same, don't they? Therefore
+the English phonetic replacement rules not only reduce all vowels
+to one but even remove them all (removing is done by just setting
+up no rule for those letters). The phonetic code of `contradiction'
+is `KNTRTKXN' and if you try to read this letter-monster loud you
+will hear that it still sound a bit like `contradiction'. You also
+see that `D' is transformed to `T' because they nearly sound the same.
+
+If you think you have found a regularity you should \emph{always}
+take your word list and grep for the corresponding regular expression
+you want to make a transformation rule for. An example: If you come
+to the idea that all English words ending on `ough' sound like `AF'
+at the end because you think of `enough' and `tough'. If you then
+grep for the corresponding regular expression by {}``grep -i ough\$
+wordlist'' you will see that the rule you wanted to set up is not
+correct because the rule doesn't fit to words like `although' or `bough'.
+So you have to define your rule more precisely or you have to set
+up exceptions if the number of words that differ from the desired
+rule is not so big.
+
+Don't forget about follow-up rules which can help in many cases but
+which also can lead to many confusions and side effects. It's also
+important to write exceptions in front of the more general rules (\char`\"{}GH\char`\"{}
+before \char`\"{}G\char`\"{} etc.).
+
+If you think you have set up a number of rules that may produce some
+good results try them out! If you run Aspell as \texttt{}{}``aspell
+--lang=<\,{}<your language>\,{}> pipe''
+you get a prompt at which you can type in words. If you just type
+words Aspell checks them and eventually makes suggestions if they
+are misspelled. If you type in {}``\$\$Sw <\,{}<word>\,{}>''
+you will see the phonetic transformation and you can test out if your
+work does what you want. 
+
+Another good way to control if changes you apply to your rules don't
+have any evil side effects is to create another list from your word
+list which contains not only the word of the word list but also the
+corresponding phonetic version of this word on the same line. If you
+do this one time before the change and one time after the change you
+can make a diff (see \texttt{man diff}) to see what \emph{really}
+changed. To do this use the command {}``aspell --lang=<\,{}<your
+language>\,{}> soundslike''. In this mode aspell will
+output the the original word and then its soundslike separated by
+a tab character for each word you give it. If you are interested in
+seeing how the algorithm works you can download a set of useful programs
+from \url{http://members.xoom.com/maccy/spell/phonet-utils.tar.gz}.
+This includes a program that produces a list as mentioned above and
+another program which illustrates how the algorithm works. It uses
+the same transformation table as Aspell and so it helps a lot during
+the process of creating a phonetic transformation table for Aspell.
+
+During your work you should write down your basic ideas so that other
+people are able to understand what you did (and you still know about
+it after a few weeks). The English table has a huge documentation
+appended for example.
+
+Now you can start experimenting with all the things you just read
+and perhaps set up a nice phonetic transformation table for your language
+to help Aspell to come up with the best correction suggestions ever
+seen also for your language. Take a look at the Aspell homepage to
+see if there is already a transformation table for your language.
+If there is one you might also take a look at it to see if it could
+be improved.
+
+If you think that this section helped you or if you think that this
+is just a waste of time you can send any feedback to \emph{}\textit{\emph{bjoern.jacke@gmx.de}}\emph{.}
+
+
+\section{Controlling the Behavior of Run-together Words\label{run-together}}
+
+Aspell has support for either unconditionally accepting run-together
+words or only accepting certain words in compound formation.
+
+Support for unconditionally accepting run-together words can either
+be turned on in the language data file or as a normal option via the
+\textbf{run-together} option. The \textbf{run-together-limit} options
+controls the maximum number of words that can be strung together,
+the default is normally 255. The \textbf{run-together-min} options
+controls the minimal length the individual components of the run together
+word can be, the default is normally 3. Both the run-together-limit
+and run-together-min option may be specified in both the language
+data file or as a normal. The \textbf{run-together-mid} option, which
+may only be specified in the language data file, may be used to specify
+up to three optional characters that may appear between individual
+words.
+
+In order for aspell to conditionally only accept certain words in
+compounds those words must be flagged when the compiled word list
+is being created. The format for each entry is
+
+\begin{quote}
+<\,{}<word>\,{}>:C{[}1{]}{[}2{]}{[}3{]}<\,{}<middle
+char>\,{}>
+\end{quote}
+The 1, 2, and 3 control if the word is allowed to appear in the begging,
+middle, or end of the compound, respectfully. More than one position
+flag may be specified. If none of them are specified it as assumed
+that the word may appear anywhere. The C is optional if 1, 2, or 3
+is specified. The <\,{}<middle char>\,{}>
+represents an optional character that may appear after the word in
+the formation of the compound if the word is not at the end of the
+compound. If the letter is lowercase than the character may appear
+after the word, if it is in uppercase then that letter must appear
+after the compound. Only one letter may be specified and it must also
+be in the list of middle letters specified via the \textbf{run-together-mid}
+option. \textbf{}The \textbf{run-together-limit} option may also be
+used to specify the maximum number of words to string together. 
+
+For example the word list:
+
+\begin{quote}
+beg:1\\
+mid:2 \\
+end:3 \\
+any:C \\
+never \\
+must:CM \\
+maybe:Cm
+\end{quote}
+Means that the word {}``beg'' may only appear at the begging of
+a word, the word {}``mid'' at the middle, the word {}``end'' at
+the end, and the word {}``any'' any place. The word {}``never''
+is never accepted in a compound unless the \textbf{run-together} option
+is set. The word {}``must'' may appear anywhere however it must
+be followed by an {}``m'', while the word maybe may be followed
+by an {}``m''. Given the above word list the following compounds
+or legal:
+
+\begin{quote}
+begmidend\\
+begany\\
+mustmend \\
+maybeend \\
+maybemend
+\end{quote}
+are all legal, but the following are not:
+
+\begin{quote}
+begmid\\
+mustend\\
+neverany
+\end{quote}
+Individual words such as {}``beg'' are always accepted.
+
+When the \textbf{run-together} option is not set Aspell will only
+accept words that have been flagged in a run-together word. When the
+\textbf{run-together} option is set aspell will accept words which
+are as least as long as the value specified in the \textbf{run-together-min}
+option. If the words length is less than \textbf{run-together-min}
+then it will only accept the word if it has been flagged. When the
+\textbf{run-together} option is not set the \textbf{run-together-min}
+option is ignored all together.
+
+Currently Aspell only supports run-together words when checking if
+a word is in the dictionary. When coming up with suggestions Aspell
+treats the word as a normal word and does not do anything special.
+This means that the suggestions will be virtually meaningless when
+the actual word is a run-together. I plan on more intelligently supporting
+run-together words when coming up with suggestions in a future version
+of Aspell.
+
+
+\chapter{How Aspell Works\label{works}}
+
+The magic behind my spell checker comes from merging Lawrence Philips
+excellent metaphone algorithm and Ispell's near miss strategy which
+is inserting a space or hyphen, interchanging two adjacent letters,
+changing one letter, deleting a letter, or adding a letter.
+
+The process goes something like this.
+
+\begin{enumerate}
+\item Convert the misspelled word to its soundslike equivalent (its metaphone
+for English words).
+\item Find all words that have a soundslike within one or two edit distances
+from the original words soundslike. The edit distance is the total
+number of deletions, insertions, exchanges, or adjacent swaps needed
+to make one string equivalent to the other. When set to only look
+for soundslikes within one edit distance it tries all possible soundslike
+combinations and check if each one is in the dictionary. When set
+to find all soundslike within two edit distance it scans through the
+entire dictionary and quickly scores each soundslike. The scoring
+is quick because it will give up if the two soundslikes are more than
+two edit distances apart.
+\item Find misspelled words that have a correctly spelled replacement by
+the same criteria of step number 2 and 3. That is the misspelled word
+in the word pair (such as teh -> the) would appear in the suggestions
+list as if it was a correct spelling.
+\item Score the result list and return the words with the lowest score.
+The score is roughly the weighed average of the weighed edit distance
+of the word to the misspelled word and the soundslike equivalent of
+the two words. The weighted edit distance is like the edit distance
+except that the various edits have weights attached to them.
+\item Replace the misspelled words that have correctly spelled replacements
+with their replacements and remove any duplicates that might arise
+because of this.
+\end{enumerate}
+Please note that the soundslike equivalent is a rough approximation
+of how the words sounds. It is not the phoneme of the word by any
+means. For more details about exactly how each step is performed please
+see the file \textbf{suggest.cc}. For more information on the metaphone
+algorithm please see the data file \textbf{english\_phonet.dat}.
+
+\appendix
+
+
+\chapter{Changelog}
+
+
+\section*{Changes from 0.33.7.1 to 0.50}
+
+Tons :)
+
+
+\section*{Changes from .33.7 to .33.7.1 (Aug 20, 2001)}
+
+\begin{itemize}
+\item Minor manual fixes.
+\item Compile fix for Gcc 3.0 and Solaris.
+\end{itemize}
+
+\section*{Changes from .33.6.3 to .33.7 (Aug 2, 2001)}
+
+\begin{itemize}
+\item Updates to Autoconf 2.50 and switched to the HEAD branch of libtools.
+\item Fixed a bug which caused Aspell to crash when typo-analysis is not
+used such as when sug-mode is \textbf{fast} or \textbf{bad spellers}.
+\item Added support for typo-analysis even when a soundslike is not used.
+\item Fixed a bug which causes extended charters to display incorrectly
+on some platforms
+\item Compile fixes so that it will compile with Gcc 3.0.
+\item Compile fixed which should allow Aspell to compile with Egcs 1.1.
+I have not been able to actually test it though. Please let me know
+at kevina@users.sourceforge.net if you have have tried with Egcs 1.1.
+\item Compile and configuration script fixes so that USE\_FILE\_INO will
+properly be defined and Aspell will compile correctly when it is defined.
+\item More ANSI C++ compliance fixes.
+\end{itemize}
+
+\section*{Changes from .33.6.2 to .33.6.3 (June 3, 2001)}
+
+\begin{itemize}
+\item Fixed a build problem in the manual/ directory by including manual-text
+and manual-html in the distribution.
+\end{itemize}
+
+\section*{Changes from .33.6.1 to .33.6.2 (June 3, 2001)}
+
+\begin{itemize}
+\item Compile fix so that Aspell will work correctly when not installed
+in /usr/local.
+\item Avoided regenerating the manual unless configured with enable-maintainer-mode.
+\item Added the missing documentation files in the scowl directory.
+\end{itemize}
+
+\section*{Changes from .33.6 to .33.6.1 (May 29, 2001)}
+
+\begin{itemize}
+\item Fixed a formating problem with the manual involving <\,{}<.
+\item Added a note about creating PWLI files.
+\item Removed the space after between the -L and the directory name in the
+pspell-module/ Makefile which caused problems on some platforms.
+\item Added the configure option AM\_MAINTAINER\_MODE to avoid enabling
+rules which often causes generated build files to be rebuild with
+the wrong version of Libtool by default. I don't know why I didn't
+think to do this a long time ago.
+\end{itemize}
+
+\section*{Changes from .33.5 to .33.6 (May 18, 2001)}
+
+\begin{itemize}
+\item Fixed a minor bug where some words would have random compound tags
+attached to them.
+\item Fixed a compile problem on many platforms where fileno is defined
+as a macro.
+\item Updated the description for a few of Aspell's options.
+\item Removed the note of Aspell not being able to run when compiled with
+the upcoming Gcc 3.0 compiler as things seam to work now.
+\item Added a note about Aspell not being able to compile with Egcs 1.1.
+\item Added hack to deal with Libtool's interdependencies problem. See bug
+\#416981 for Pspell for more info.
+\end{itemize}
+
+\section*{Changes from .33 to .33.5 (April 5, 2001)}
+
+\begin{itemize}
+\item {}``dump master'' correctly detects which dictionary and language
+to use based on the LANG environmental variable.
+\item Fixed a problem on Win32 which involves path names that begin with
+<\,{}<Drive Letter>\,{}>:.
+\item Bug fixes and enhancements so that Aspell can once again run under
+MinGW. You can even use the new full screen interface if Aspell is
+compiled with PDCurses.
+\item Some major modifications to make Aspell more C++ compliant in order
+to get Aspell to compile under the upcoming Gcc 3.0 compiler. This
+included only using STL features found in the standard version of
+C++. (Which means Aspell will no longer require using the SGI version
+of the STL) This should also make compiling C++ under non-gcc compilers
+a lot simpler. Please not that Aspell still has some problems with
+the upcoming Gcc 3.0 compiler (see section \ref{gcc3.0} for more
+info).
+\item Minor changes to remove some -Wall warnings. 
+\item Added a hack to that Aspell will properly compile as a shared library
+under Solaris.
+\item Added a few import missing words to the English word list.
+\end{itemize}
+
+\section*{Changes from .32.6 to .33 (January 28, 2001)}
+
+\begin{itemize}
+\item Added a new new curses based interface to replace the dumb terminal
+interface everyone has been bitching about.
+\item Added the ability to give higher priority to words such as \char`\"{}the\char`\"{}
+instead of \char`\"{}teh\char`\"{} which are likely to be due to typos.
+\item Reorganized the manual so that it is hopefully easier to follow.
+\item Ability to automatically select the best dictionary to used based
+on the setting of the LANG environmental variable.
+\item Expanded the medium dictionary size to include more words which included
+the original words found in ispell and eliminated the large size for
+now.
+\item Added three special variant add-on dictionaries.
+\item Switched to the multi-language branch of the CVS version of libtool.
+\end{itemize}
+
+\section*{Changes from .32.5 to .32.6 (Nov 8, 2000)}
+
+\begin{itemize}
+\item Fixed a bug that where Aspell will crash when reading in accented
+characters on some platforms. This fixes bug \# 112435.
+\item Fixed some other bugs so that it will run under Win32 under CygWin.
+Unfortunately it still won't run properly under Mingw.
+\item Fixed the mmap test in configure so that it won't fail on some platforms
+that use munmap(char {*}, int) instead of munmap(void {*}, int).
+\item Upgraded to the latest CVS version of libtool which fixed the problem
+with using GNU Make under Solaris.
+\item Added an option to copy files instead of using symbolic links for
+the special {}``multi'' dictionary files.
+\end{itemize}
+
+\section*{Changes from .32.1 to .32.5 (August 18, 2000)}
+
+\begin{itemize}
+\item Changed my email from kevinatk at home com to kevina at users sourceforge
+net please make a note of the new email address.
+\item Added an option to control if the personal replacement dictionary
+is saved when the save\_all\_wls method is called.
+\item Brought back the ability to dump the master word list even in the
+case of the special {}``multi'' lists.
+\item Added a large number of hacker related words and some other slang
+terms to the medium size word list.
+\item Added an {}``ispell'' and {}``spell'' compatibility script for
+systems which don't have ispell installed. They are located in the
+scripts/ directory and are not installed by default.
+\item Manual fixes.
+\item Added a note on not using GNU Make on Solaris.
+\end{itemize}
+
+\section*{Changes from .32 to .32.1 (August 5, 2000)}
+
+\begin{itemize}
+\item Minor compile fixes for recent gcc snapshot.
+\item Fixed naming of pwli files.
+\item Fixed a bug when aspell will crash when used with certain single letter
+flags. This bug was most noticeable when used with Emacs.
+\item Word list changes, see SCOWL Readme.
+\item Other miscellaneous changes.
+\end{itemize}
+
+\section*{Changes from .31.1 to .32 (July 23, 2000)}
+
+\begin{itemize}
+\item Added support for optionally doing without the soundslike data.
+\item Greatly reduced the amount of memory used when creating word lists.
+\item Added support for ignoring accents when coming up with suggestions.
+\item Added support for local-data-dir which is searched before data-dir.
+\item Added support for specifying which words may be used in compounds
+and where they may be used.
+\item Added support for having more than one main word list as well as a
+special {}``multi'' word list files which will allow multiple word
+lists to be treated as one.
+\item Aspell now uses a completely new word list.
+\item The apostrophe (') is no longer considered part of the word when it
+as at the end of the word such as in {}`` dogs' ''.
+\end{itemize}
+
+\section*{Changes from .31 to .31.1 (June 18, 2000)}
+
+\begin{itemize}
+\item Fixed a bug where Aspell would not create a complete dictionary file
+on some platforms when the data is 8-bit.
+\item Added a workaround so Aspell will work with ispell.el 3.3.
+\item Minor compile fixes so it would compile better with the very latest
+gcc (CVS Version).
+\item Removed note about compiling in Win32 as I was now able to get it
+to work.
+\end{itemize}
+
+\section*{Changes from .30.1 to .31 (June 11, 2000)}
+
+\begin{itemize}
+\item Added support for spell checking run together words.
+\item Added an option to produce a list of misspelled words from standard
+input.
+\item More robust error reporting when reading in language data files.
+\item Fixed a bug when that will cause Aspell to crash if the {}``special''
+line was not defined in the language data file.
+\item Update Pspell Module.
+\item Minor bug fixes.
+\item Added cross references in {}``The Aspell utility Chapter'' for easier
+use.
+\end{itemize}
+
+\section*{Changes from .30 to .30.1 (April 29, 2000)}
+
+\begin{itemize}
+\item Ported Aspell to Win32 platforms.
+\item Portability fixes which may help aspell compile on other platforms.
+\item Aspell will no longer fail if for some reason the mmap fails, instead
+it will just read the file in as normal and free the memory when done.
+\item Minor changes in the format of the main word list as a result of the
+changes, the old format should still work in most cases.
+\item Fixed a bug when aspell was ignoring the extension of file names such
+as .html or .tex when checking files.
+\item Fixed a bug when aspell will go into an infinite loop when creating
+the main word list from a word list which has duplicates in it.
+\item Minor changes to the manual for better clarity.
+\end{itemize}
+
+\section*{Changes from .29.1 to .30 (April 2, 2000)}
+
+\begin{itemize}
+\item Fixed many of the capitalization bugs found in previous versions of
+Aspell.
+\item Changed the format of the main word list yet again.
+\item Fixed a bug so that {}``aspell check'' will work on the PowerPC.
+\item Added ability to change configuration options in the middle of a session.
+\item Added words from /usr/dict/words found on most Linux systems as well
+as a bunch of commonly used abbreviation to the word list.
+\item Fixed a bug when aspell will dump core after reporting certain errors
+when compiled with gcc 2.95 or higher. This involved reworked the
+Exception heritage to get around a bug in gcc 2.95.
+\item Added a few more commands to the list of default commands the \TeX{}
+filter knows about.
+\item Aspell will now check if a word only contains valid characters before
+adding it to any dictionaries. This might mean that you have to manually
+delete a few words from your personal word list.
+\item Added option to ignore case when checking a document.
+\item Adjusted the parameters of the {}``normal'' suggest mode to so that
+significantly less far fetched results are returned in cases such
+as tomatoe, which went from 100 suggestions down to 32, at the expense
+of getting slightly lower results (less than 1\%),
+\item Improved the edit distance algorithm for slightly faster results.
+\item Removed the \$\$m command in pipe mode, you should now use {}``\$\$cs
+mode,<\,{}<mode>\,{}>'' to set the
+mode and {}``\$\$cr mode'' to find out the current mode.
+\item Reworked parts of Aspell to use Pspell services to avoid duplicating
+code.
+\item Added a module for the newly released Pspell. It will get installed
+with the rest of aspell.
+\item Miscellaneous other bug fixes.
+\end{itemize}
+
+\section*{Changes from .29 to .29.1 (Feb 18, 2000)}
+
+\begin{itemize}
+\item Improved the \TeX{} filter so that it will accept '@' at the begging
+of a command name and ignore trailing '{*}'s. It also now has better
+defaults for which parameters to skip.
+\item Reworked the main dictionary so that it can be memory mapped in. This
+decreases startup time and allows multiple aspell processes to use
+the same memory for the main word list. This also also made Aspell
+64 bit clean so that it should work on an alpha now.
+\item Fix so that aspell can compile on platforms that gnu as is not available
+for.
+\item Fixed issue with flock so it would compile on FreeBSD.
+\item Minor changes in the code to make it more C++ compliant although I
+am sure there will still be problems when using some other compiler
+other than gcc or egcs.
+\item Added some comments to the header files to better document a few of
+the classes.
+\end{itemize}
+
+\section*{Changes from .28.3 to .29 (Feb 6, 2000)}
+
+\begin{itemize}
+\item Fixed a bug in the pipe mode with lines that start with {}``\textasciicircum{}\$\$''.
+\item Added support for ignoring all words less than or equal to a specified
+length
+\item New soundslike code based thanks to the contribution of Björn Jacke.
+It now gets all of its data from a table making it easier for other
+people to add soundslike code for their native language. He also converted
+the metaphone algorithm to table form, eliminating the need for the
+old metaphone code.
+\item Major redesign of the suggestion code for better results.
+\item Changed the format of the personal word lists. In most cases it should
+be converted automatically.
+\item Changed the format of the main word list.
+\item Name space cleanup for more consistent naming. I now use name spaces
+which means that gcc 2.8.{*} and egcs 1.0.{*} will no longer cut it.
+\item Used file locks when reading and saving the personal dictionaries
+so that it truly multiprocess safe.
+\item Added rudimentary filter support.
+\item Reworked the configuration system once again. However, the changes
+to the end user who does not directly use my library should be minimal.
+\item Rewrote my code that handles parsing command line parameters so that
+it no longer uses popt as it was causing to many problems and didn't
+integrate well with my new configuration system.
+\item Fixed pipe mode so that it will properly ignore lines starting with
+'\textasciitilde{}' for better ispell compatibility.
+\item Aspell now has a new home page at \url{http://aspell.sourceforge.net/}.
+Please make note of the new URL.
+\item Miscellaneous manual fixes and clarifications.
+\end{itemize}
+
+\section*{Changes from .28.2.1 to .28.3 (Nov 20, 1999)}
+
+\begin{itemize}
+\item Fixed a bug that caused aspell to crash when spell checking words
+over 60 characters long.
+\item Reworked {}``aspell check'' so that
+
+\begin{enumerate}
+\item You no longer have to hit enter when making a choice.
+\item It will now overwrite the original file instead of creating a new
+file. An optional backup can be made by using the -b option.
+\end{enumerate}
+\item Fixed a few bugs in data.cc.
+\end{itemize}
+
+\section*{Changes from .28.2 to .28.2.1 (Aug 25, 1999)}
+
+\begin{itemize}
+\item Fixed the version number for the shared library.
+\item Fixed a problem with undefined references when linking to the shared
+library.
+\end{itemize}
+
+\section*{Changes from .28.1 to .28.2 (Aug 25, 1999)}
+
+\begin{itemize}
+\item Fixed a bunch of bugs in the language and configuration classes.
+\item Minor changed in the code so that it could compile with the new gcc
+2.95(.1).
+\item Changed the output of {}``dump config'' so that default values are
+given the value \char`\"{}<default>\char`\"{}. This means that the
+output can be used to created a configuration file.
+\item Added notes on using aspell with VIM.
+\end{itemize}
+
+\section*{Changes from .28 to .28.1 (July 27, 1999)}
+
+\begin{itemize}
+\item Removed some debug output
+\item Changed notes on compiling with gcc 2.8.{*} as I managed to get it
+to compile on my school account
+\item Avoided included \textbf{stdexcept} in \textbf{const\_string.hh} so
+that I could get to compile on my schools account with gcc 2.8.1.
+\end{itemize}
+
+\section*{Changes from .27.2 to .28 (July 25, 1999)}
+
+\begin{itemize}
+\item Provided an iterator for the replacement classes.
+\item Added support for dumping and creating and merging the personal and
+replacement word lists.
+\item Changed the aspell utility command line a bit, it now used popt.
+\item Totally reworked aspell configuration system. Now aspell can get configuration
+from any of 5 sources: the command line, the environmental variable
+ASPELL\_CONF, the personal configuration file, the global configuration
+file, and finally the compiled in defaults. 
+\item Totally reworked the language class in preparation for my new language
+code. See \url{http://aspell.sourceforge.net/international/} for
+more information of what I have in store.
+\item Added some options to the configure script: --enable-dict-dir=DIR,
+--enable-doc-dir=DIR, --enable-debug, and --enable-opt
+\item Removed some old header files.
+\item Reorganized the directory structure a bit
+\item Made the text version of the manual pages slightly easier to read
+\item Used the \textbackslash{}url command for urls for better formating
+of the printed version.
+\end{itemize}
+
+\section*{Changes from .27.1 to .27.2 (Mar 1, 1999)}
+
+\begin{itemize}
+\item Fixed a major bug that caused aspell to dump core when used without
+any arguments 
+\item Fixed another major bug that caused aspell to do nothing when used
+in interactive mode.
+\item Added an option to exit in Aspell's interactive mode.
+\item Removed some old documentation files from the distribution.
+\item Minor changes on to the section on using Aspell with egcs.
+\item Minor changes to remove -Wall warnings.
+\end{itemize}
+
+\section*{Changes from .27 to .27.1 (Feb 24, 1999)}
+
+\begin{itemize}
+\item Fixed a minor compile problem.
+\item Updated the section on using Aspell with egcs to it it more clear
+why the patch is necessary.
+\end{itemize}
+
+\section*{Changes from .26.2 to .27 (Feb 22, 1999)}
+
+\begin{itemize}
+\item \textbf{Totally reworked the C++ library which means you may need
+to change some things in your code.}
+\item Added support for detachable and multiple personal dictionaries in
+the C++ class library.
+\item The C++ class library now throws exceptions.
+\item Reworked aspell ability to learn from users misspellings a bit so
+that it now has a memory. See section \ref{replpair} for more information.
+\item Upgraded autoconf to version 2.13 and automake to version 1.4 for
+better portability.
+\item Fixed the configuration so the {}``make dist'' will work. For now
+on aspell will be distributed with {}``make dist''.
+\item Added support to skip over URL's, email addresses and host names.
+\item Added support for dumping the master and personal word list. You can
+now also merge a personal word list. Type aspell -help for help on
+using this feature. 
+\item Reorganized the source code.
+\item Started using proper version numbers for the shared library.
+\item Fixed a bug that caused a spell to crash when adding certain replacement
+pairs.
+\item Fixed the problem with duplicate lines when exiting pipe mode for
+good.
+\end{itemize}
+
+\section*{Changed from .26.1 to .26.2 (Jan 3, 1998)}
+
+\begin{itemize}
+\item Fixed another compile problem. Hopefully this time it will really
+compile OK on other peoples machines.
+\end{itemize}
+
+\section*{Changed from .26 to .26.1 (Jan 3, 1998)}
+
+\begin{itemize}
+\item Fixed a small compile problem in \textbf{as\_data.cc}.
+\end{itemize}
+
+\section*{Changed from .25.1 to .26 (Jan 3, 1999)}
+
+\begin{itemize}
+\item Fixed a bug that causes duplicates items to be displayed in the suggestion
+list for good. (If it still does it please send be email.)
+\item Added the ability for aspell to learn form the users misspellings.
+\item Library Interface changes. Still more to come....
+\item Is now multiprocess safe. When a personal dictionary (or replacement
+list) is saved it will now first update he list against the dictionary
+on disk in case another process modified it.
+\item Fixed the bug that caused duplicate output when used non interactively
+in pipe mode.
+\item Dropped support for gcc 2.7.2 as the C++ compiler.
+\item Updated the How Aspell Works (\ref{works}) Chapter.
+\item Added support for the ASPELL\_DATA\_DIR environmental variable.
+\end{itemize}
+
+\section*{Changes from .25 to .25.1 (Dec 10, 1998)}
+
+\begin{itemize}
+\item Fixed the version number so that Aspell reports the correct version
+number.
+\item Changed the note on gcc 2.7.2 compilers to make it clear that only
+the C++ compiler can not be gcc 2.7.2, it is ok if the C compiler
+is gcc 2.7.2.
+\item Updated the TODO list and reorganized it a bit.
+\item Fixed the directory so that all the documentation will get installed
+in \$\{prefix\}/doc/aspell instead of half of it in \$\{prefix\}/doc/aspell
+and half of it in \$\{prefix\}/doc/kspell.
+\end{itemize}
+
+\section*{Changes from .24 to .25 (Nov 23, 1998)}
+
+\begin{itemize}
+\item Total rework of how the main word list is stored. Start up time decreased
+to about 1/3 of what it was in .24 and memory usage decreased to about
+2/3. (When used with the provided word list on a Linux system). \textbf{}Also
+the \textbf{format and default locations of the main word list data
+files changed} in the process and the data \textbf{is now machine
+dependent}. The personal word list format, however, stayed the same.
+\item Changed the scoring method to produce slightly better results with
+words like the vs. teh. And other simpler misspellings where two letters
+are swapped.
+\item Fixed the very unpredictable behavior of the '{*}', '\&', '@' commands
+in the pipe mode.
+\item Added documentations for Aspell pipe mode (also known as ispell -a
+compatibility mode)
+\item Added a bunch of Aspell specific extensions to the pipe mode and documented
+them.
+\item Documented the \textbf{to\_soundslike} and \textbf{soundslike} methods
+for the \textbf{aspell} class.
+\item Changed the scoring method to produce better results for words like
+{}``fone'' vs {}``phone'' and other words that have a spelling
+that doesn't directly relate to how the word sounds by using the phoneme
+equivalent of the word in the scoring of it.
+\item Added the \textbf{to\_phoneme} and \textbf{have\_phoneme} methods
+to the \textbf{SC\_Language} class.
+\item Added the \textbf{to\_phoneme} method to the \textbf{aspell} class.
+\item Added the framework for being able to learn from the users misspelling.
+Right now it just keep a log of replacements.
+\item Re did \textbf{stl\_rope-30.diff}. \textbf{}For some reason the version
+of patch on my system refused it.
+\item Rewrite of the {}``Using as a replacement for Ispell'' section and
+added the \textbf{run-with-aspell} utility as a replacement of the
+old method of mapping Ispell to Aspell.
+\item Fixed a bug that caused duplicate words to appear in the suggestion
+list.
+\end{itemize}
+
+\section*{Changes from .23 to .24 (Nov 8, 1998)}
+
+\begin{itemize}
+\item Fixed my code so that it can once again compile with g++ 2.7.2.
+\item Rewrote the How It Works chapter.
+\item Rewrote the Requirement section and added noted on compiling with
+g++ 2.7.2.
+\item Added a To Do chapter.
+\item Added a Glossary and References chapter.
+\item Other minor documentation improvements.
+\item Internal code documentation improvements.
+\end{itemize}
+
+\section*{Changes from .22.1 to .23 (Oct 31, 1998)}
+
+\begin{itemize}
+\item Minor documentation fixes.
+\item Changed the scoring strategy for words with 3 or less letters. This
+cut the number of words returned for these roughly in half.
+\item Expanded the word list to also include \textbf{american.0} and \textbf{american.1}
+from the Ispell distribution. It now includes \textbf{english.0},
+\textbf{english.1}, \textbf{american.0} and \textbf{american.1} from
+the directory \textbf{languages/english} provided with Ispell 3.1.20.
+\item Added a link to the location of the latest Ispell.el in the documentation.
+\item Started a C interface and added some rough documentation for it.
+\end{itemize}
+
+\section*{Changes from .22 to .22.1 (Oct 27, 1998)}
+
+\begin{itemize}
+\item Minor bug fixes. I was deleting arrays with delete rather than delete{[}{]}.
+I was suppressed that this had not created a problem.
+\item Added a simple test program to test for a memory leak present on some
+systems. (Only debian slink at the moment.) See the file memleak-test.cc
+for more info.
+\end{itemize}
+
+\section*{Changes from .21 to .22 (Oct 26, 1998)}
+
+\begin{itemize}
+\item Major redesign or the scoring method. It now uses absolute distances
+rather than relative scores for more consistent results. See suggest.cc
+for more info.
+\item Suggest code rewritten is several places however the core process
+stayed the same.
+\item The suggest\_ultra method temporally does nothing. It should be working
+again by the next release.
+\end{itemize}
+
+\section*{Changes from .20 to .21 (Oct 13, 1998)}
+
+\begin{itemize}
+\item Added documentation for aspell::Error
+\item \textbf{Changed the library name from libspell to libaspell.} It should
+never have been libspell in the first place. Sorry for the incompatibility.
+\item Added \textbf{as\_error.hh} to the list of files copied to the include
+directory so that you can actually use the library outside of the
+source dir.
+\item Fixed bug that caused a segmentation fault with words where the only
+suggestions was inserting a space or hyphen such as in {}``ledgerline''.
+\item Added the \textbf{score} method to \textbf{aspell}.
+\item Changed the scoring method to deal with word when the user uses \char`\"{}f\char`\"{}
+in place of \char`\"{}ph\char`\"{} a lot better.
+\end{itemize}
+
+\section*{Changes from .11 to .20 (Oct 10, 1998)}
+
+\begin{itemize}
+\item \textbf{Name change.} \textbf{\emph{}}\textbf{Everything that was
+Kspell is now Aspell.} Sorry, the name Kspell was already used by
+KDE and I didn't want to cause any confusion.
+\item Fixed a bug that causes a segmentation fault when the HOME environmental
+variable doesn't exist.
+\end{itemize}
+
+\section*{Changes from .10 to .11 (Sep 12, 1998)}
+
+\begin{itemize}
+\item Overhaul of the SC\_Language class
+\item Added documentation for international support
+\item Added documentation for the C++ library
+\item Other minor bug fixes.
+\end{itemize}
+
+\chapter{To Do}
+
+Words in bold indicate how you should refer to the item when discussing
+it with me or others.
+
+
+\section{Things that will be done real soon}
+
+These items should get done within a release or two.
+
+\begin{itemize}
+\item Totally rewrite the aspell international support. See \url{http://aspell.sourceforge.net/international/}
+for more information.
+\item Rework the aspell \textbf{check} function to provide support for using
+any number of filters which will be needed for international support.
+\item Add support for more intelligently coming up with suggestions for
+words that are run-togethers.
+\end{itemize}
+
+\section{Things that need to be done}
+
+Things items will eventually be implemented as I know they are important
+however I am not sure when they will get done.
+
+\begin{itemize}
+\item Figure out a way for Aspell to work better with \textbf{extremely
+large dictionaries}.
+\end{itemize}
+
+\section{Things that I would like to get done}
+
+These items will eventually be implemented. I hope to have them all
+done before I move aspell to beta testing. They are in the approximate
+order of when they will get done.
+
+
+\section{Things that will be done eventually}
+
+I plan on doing these things eventually. It is just a matter of getting
+around to it.
+
+
+\section{Good ideas that are worth implementing}
+
+These items all sound like good ideas however I am not sure when I
+will get to implementing then if ever. If you are looking for a way
+to contribute picking up on one of these ideas would be a great way
+to start. They are presented in no particular order.
+
+\begin{itemize}
+\item Use Lawrence Philips' new Double Metaphone algorithm. See \url{http://aspell.sourceforge.net/metaphone/}.
+\item Add support for \textbf{affix compression.}
+\item Come up with a plug-in for \textbf{gEdit} the gnome text editor.
+\item Change languages (and thus dictionaries) based on the information
+in the actual document.
+\item Come up with a \textbf{nroff mode} for spell checking.
+\item Come up with a mode that will skip words based on the symbols that
+(almost) always surround the word. (\textbf{Word skipping by context})
+\item Create two \textbf{server modes} for Aspell. One that uses the \textbf{DICT}
+protocol and one that uses \textbf{ispell -a} method of communication
+of some arbitrary port.
+\item Come up with \textbf{thread safe personal dictionaries}.
+\item Use the \textbf{Hidden Markov Model} to base the suggestions on not
+only the word itself but on the context around the word.
+\item Having a way to \textbf{email} \textbf{the personal dictionary} and/or
+replacement list to a particular address either periodical or when
+it grows to a certain size.
+\item Be able to \textbf{}accept \textbf{words with spaces in them} as many
+languages have words such as as a word in a foreign phrases which
+only make sense when followed by other words.
+\end{itemize}
+The following good ideas where found in the ispell WISHES file so
+I thought I would pass them on.
+
+\begin{itemize}
+\item Ispell should be smart enough to ignore hyphenation signs, such as
+the \TeX{} \textbackslash{}- hyphenation indicator.
+\item (Jeff Edmonds) The personal dictionary should be able to remove certain
+words from the master dictionary, so that obscure words like \char`\"{}wether\char`\"{}
+wouldn't mask favorite typos.
+\item (Jeff Edmonds) It would be wonderful if ispell could correct inserted
+spaces such as \char`\"{}th e\char`\"{} for \char`\"{}the\char`\"{}
+or even \char`\"{}can not\char`\"{} for \char`\"{}cannot\char`\"{}.
+\item Since ispell has dictionaries available to it, it is conceivable that
+it could automatically determine the language of a particular file
+by choosing the dictionary that produced the fewest spelling errors
+on the first few lines.
+\end{itemize}
+
+\section{Things that are not likely to get implemented}
+
+Theses ideas are not likely to get implemented any time soon.
+
+\begin{itemize}
+\item (None Yet)
+\end{itemize}
+
+\section{Notes and Status of various items}
+
+
+\subsection{Affix Compression\label{affixcomp}}
+
+Due to the current way my spell checker works implementing affix compression
+would be next to impossible. Nevertheless, I do realize that for some
+languages affix compression is very important.
+
+So to solve this dilemma I plan on having two different modes of my
+spell checker: One with affix compression that does not use soundslike
+pairs (much like ispell) and one without affix compression that does
+use soundslike. 
+
+I plan to extract the affix manipulation code from Ispell with the
+help of an Ispell author. The tricky part would be getting this to
+getting this all to work properly at tun time bases on the dictionary
+used.
+
+
+\subsection{Extremely Large Dictionaries}
+
+This problem extends back to the fact of the way words are index is
+Aspell. This problem will get resolved when I implanted the affix
+compression mode as only one index would be used.
+
+
+\subsection{General region skipping}
+
+I want to implement this give other people an idea of how it should
+be done and because I am really sick of having to spell check through
+url and email address.
+
+
+\subsection{Word skipping by context}
+
+This was posted on the Aspell mailing list on January 1, 1999:
+
+I had an idea on a great general way to determine if a word should
+be skipped. Determine the words to skip based on the symbols that
+(almost) always surround the word.
+
+For example when asked to check the following C++ code:
+
+\begin{lyxcode}
+cout~<\/<~\char`\"{}My~age~is:~\char`\"{}~<\/<~num~<\/<~endl;~~\\
+cout~<\/<~\char`\"{}Next~year~I~will~be~\char`\"{}~<\/<~num~+~1~<\/<~endl;~
+\end{lyxcode}
+cout, num, and endl will all be skipped. \char`\"{}cout\char`\"{}
+will be skipped because it is always preceded by a <\/<. \char`\"{}num\char`\"{}
+will be skipped because it is always preceded by a <\/<. And \char`\"{}endl\char`\"{}
+will be skipped because it is always between a <\/< and a ;.
+
+Given the following html code.
+
+\begin{lyxcode}
+<table~width=50\%~cellspacing=0~cellpadding=1>~~\\
+<tr><td>One<td>Two<td>Three~~\\
+<tr><td>1<td>2<td>3~~\\
+</table>~\\
+~\\
+<table~cellspacing=0~cellpadding=1>~~\\
+</table>
+\end{lyxcode}
+table, width cellspacing, cellpadding, tr, td will all be skipped
+because they are always enclosed in \char`\"{}<>\char`\"{}. Now of
+course table and width would be marked as correct anyway however there
+is no harm in skipping them.
+
+So I was wondering if anyone on this list has any experience in writing
+this sort of context recognition code or could give me some pointers
+in the right direction.
+
+This sort of word skipping will be very powerful if done right. I
+imagine that it could replace specific spell checker modes for Tex,
+Nroff, SGML etc because it will automatically be able to figure out
+where it should skip words. It could also probably do a very good
+job on programming languages code.
+
+If you are interested in helping be out with this or just have general
+comments about the idea please let me know.
+
+
+\subsection{Hidden Markov Model}
+
+Knud Haugaard Sørensen suggested this one. From his email on the Aspell
+mailing list:
+
+\begin{quote}
+consider this examples.
+
+a fone number. -> a phone number. \\
+a fone dress. -> a fine dress.
+
+the example illustrates that the right correction might depend on
+the context of the word. So I suggest that you take a look on HMM
+to solve this problem.
+
+This might also provide a good base to include grammar correction
+in aspell.
+
+see this link \url{http://www.cse.ogi.edu/CSLU/HLTsurvey/ch1node7.html}
+\end{quote}
+I think it is a great idea. However unfortunately it will probably
+be very complicated to implement. Perhaps in the far future.
+
+
+\subsection{Email the Personal Dictionary}
+
+Some one suggest in a personal email:
+
+\begin{quote}
+Have you thought of adding a function to aspell, that - when the personal
+dictionary has grown significantly - sends the user's personal dictionary
+to the maintainer of the corresponding aspell dictionary? (if the
+user allows it)
+
+It would be a very useful service to the dictionary maintainers, and
+I think most users can see their benefit in it too.
+\end{quote}
+And I replied:
+
+\begin{quote}
+Yes I have considered something like that but not for the personal
+dictionaries but rather the replacement word list in order to get
+better test data for \url{http://aspell.sourceforge.net/test/}. The
+problem is I don't know of a good way to do this sense Aspell can
+also be used as a library. It also is not a real high priority, especially
+sense I would first need to learn how to send email within a C++ program.
+\end{quote}
+
+\subsection{Words With Spaces in Them}
+
+While this is something I would like to do it is not a simple task.
+The basic problem is that when tokenizing a string there is no good
+way to keep phrases together. So the solution is to some how add special
+conditions to certain words which will dictate which words can come
+before/after it. Then there is also a problem of how to come up with
+intelligent suggestions. What further complicates things is that many
+applications send words to Aspell a word at a time. So even if Aspell
+did support such a thing many applications that would use Aspell will
+not. So, in order for this to work applications will need to send
+text to Aspell a document or at least a sentence at a time. Unfortunately
+the framework for doing this is not there yet. It will be once I finish
+the filter interface. Another possible is to provide call back functions
+in which Aspell will be able to request the previous or next word
+on request. Yet again the framework for doing this is not there. Perhaps
+sometime in the near future.
+
+
+\chapter{Support for Gcc 2.7.2}
+
+(and other non-standard compliance compilers)
+
+My original plan was to program in such a way that it would Aspell
+would compile under Gcc 2.7.2 however after releasing a rather nasty
+bug in 2.7.2 with nested types I have desired to drop all support
+for Gcc 2.7.2. As of Aspell .27 all hope for being able to compile
+under Gcc 2.7.2 is lost as I am now using many modern C++ features
+which are simply not present in Gcc 2.7.2, most notably template specialization
+and template members. Egcs 1.1.1 is a very good standards compliant
+compiler and that is now the officially supported compiler. However
+as Egcs 1.1.1 is relatively new and, except for namespaces, provides
+little new functionality I will continue to support Egcs 1.0.3. Gcc
+2.8.1 should in theory work however it is so buggy I have yet to get
+it to compile with it nor has anyone else that I know of.
+
+Yes, my code could be rewritten so that is could compile under Gcc
+2.7.2 but Why? Using modern C++ has probably accelerated the development
+of this library my at least 50\%. And for that matter why stop at
+Gcc 2.7.2 why not go all out and totally rewrite my code pure C. I
+hope you see my point.
+
+However that does not mean I want to sacrifice portability unnecessarily.
+If you see any of part of my code that in not Standard C++ please
+let me know. My hope is that my code could compile on all Standard
+compliance C++ compilers with the addition of a few extra header files
+from SGI's STL.
+
+As a side note I think that Mozilla's C++ portability guide (\url{http://www.mozilla.org/docs/tplist/catBuild/portable-cpp.html})
+could be summed up in one sentence: Program in the dark ages of C++. 
+
+
+\chapter{Credits}
+
+\begin{itemize}
+\item To the many authors of Ispell (including R. E. Gorin, Pace Willisson,
+and Geoff Kuenning) for providing me with a good word list as well
+as giving me a few good ideas.
+\item Alan Beale for going well beyond the call of duty with helping me
+create a better word list.
+\item Lawrence Philips for coming up with the original metaphone algorithm
+and Michael Kuhn for writing C code for the algorithm.
+\item Björn Jacke for coming up with a generic soundslike algorithm which
+gets all of its data from a file, thus eliminating almost all need
+for language specific code from aspell.
+\item To the authors of SGI STL version 3.0 and up for proving a great set
+of generic container classes with cut the development time of this
+program in half at least.
+\item To the \LyX{} development team for giving me a great tool for the
+development of this manual.
+\end{itemize}
+
+\chapter{Glossary and References}
+
+\begin{description}
+\item [affix]in grammar, a word element that, when added to a word, modifies
+its meaning or function; prefix, infix, or suffix.
+\item [Debian]A 100\% Open Source Linux distribution \url{http://www.debian.org}
+\item [DICT~protocol]A TCP transaction based query/response protocol that
+allows a client to access dictionary definitions from a set of natural
+language dictionary databases. \url{http://www.dict.org/}
+\item [Gnome]A project to build a complete, user-friendly desktop based
+entirely on free software. \url{http://www.gnome.org/}
+\item [GTK+]A library for creating graphical user interfaces for the X Window
+System. It is designed to be small, efficient, and flexible. \url{http://www.gtk.org/}
+\item [GUI]Graphics User Interface
+\item [Ispell.el]Emacs interface for ispell. \url{http://www.kdstevens.com/~stevens/ispell-page.html}
+\item [Ispell]An international spell checker which is just about the only
+decent Open Source spell checker out there. (except Aspell of course).
+\url{http://fmg-www.cs.ucla.edu/geoff/ispell.html}
+\item [Ispell~-a]An Ispell mode that is designed to be used by other applications
+though a pipe.
+\item [KDE]A powerful graphical desktop environment for Unix workstations.
+\url{http://www.kde.org}
+\item [Linux]A Open Source version of Unix which runs on many platforms.
+\url{http://www.linux.org/}
+\item [\LyX{}]An What You See is What You Mean document editor for the X
+environment, \url{http://www.lyx.org}
+\item [Open~Source]Software where the source code is available for anyone
+to extend or modify. \url{http://www.opensource.org/}
+\item [Red~Hat]A commercial Linux distribution. \url{http://www.redhat.com}
+\item [RPM]Red Hat's packing format also used by other Linux distributions.
+\item [STL]Standard Temple Library. A C++ library of container classes,
+algorithms, and iterators.
+\item [SGI~STL]Silicon Graphics implantation of the STL. \url{http://www.sgi.com/Technology/STL/}
+\item [STLPort]A port of SGI STL designed to run on compilers that don't
+support all the latest features of C++. \url{http://corp.metabyte.com/~fbp/stl/}
+\end{description}
+
+\chapter{Copyright}
+
+The library and utility program is Copyrighted 2000 by Kevin Atkinson
+under the LGPL. Certain parts of the library, as indicated at the
+top of the source file, are under a weaker license. The provided word
+list is extracted from the word lists provided with Ispell thus it
+is distributed under the same terms of Ispell.
+
+The two licenses follow:
+
+
+\section{LGPL}
+
+{\centering GNU LIBRARY GENERAL PUBLIC LICENSE \\
+Version 2, June 1991\par}
+
+Copyright (C) 1991 Free Software Foundation, Inc. 
+
+\begin{quote}
+59 Temple Place, Suite 330, Boston, MA 02111-1307 USA 
+\end{quote}
+Everyone is permitted to copy and distribute verbatim copies of this
+license document, but changing it is not allowed.
+
+{[}This is the first released version of the library GPL. It is numbered
+2 because it goes with version 2 of the ordinary GPL.{]}
+
+{\centering Preamble\par}
+
+The licenses for most software are designed to take away your freedom
+to share and change it. By contrast, the GNU General Public Licenses
+are intended to guarantee your freedom to share and change free software
+--- to make sure the software is free for all its users.
+
+This license, the Library General Public License, applies to some
+specially designated Free Software Foundation software, and to any
+other libraries whose authors decide to use it. You can use it for
+your libraries, too.
+
+When we speak of free software, we are referring to freedom, not price.
+Our General Public Licenses are designed to make sure that you have
+the freedom to distribute copies of free software (and charge for
+this service if you wish), that you receive source code or can get
+it if you want it, that you can change the software or use pieces
+of it in new free programs; and that you know you can do these things.
+
+To protect your rights, we need to make restrictions that forbid anyone
+to deny you these rights or to ask you to surrender the rights. These
+restrictions translate to certain responsibilities for you if you
+distribute copies of the library, or if you modify it.
+
+For example, if you distribute copies of the library, whether gratis
+or for a fee, you must give the recipients all the rights that we
+gave you. You must make sure that they, too, receive or can get the
+source code. If you link a program with the library, you must provide
+complete object files to the recipients so that they can relink them
+with the library, after making changes to the library and recompiling
+it. And you must show them these terms so they know their rights.
+
+Our method of protecting your rights has two steps: (1) copyright
+the library, and (2) offer you this license which gives you legal
+permission to copy, distribute and/or modify the library.
+
+Also, for each distributor's protection, we want to make certain that
+everyone understands that there is no warranty for this free library.
+If the library is modified by someone else and passed on, we want
+its recipients to know that what they have is not the original version,
+so that any problems introduced by others will not reflect on the
+original authors' reputations.
+
+Finally, any free program is threatened constantly by software patents.
+We wish to avoid the danger that companies distributing free software
+will individually obtain patent licenses, thus in effect transforming
+the program into proprietary software. To prevent this, we have made
+it clear that any patent must be licensed for everyone's free use
+or not licensed at all.
+
+Most GNU software, including some libraries, is covered by the ordinary
+GNU General Public License, which was designed for utility programs.
+This license, the GNU Library General Public License, applies to certain
+designated libraries. This license is quite different from the ordinary
+one; be sure to read it in full, and don't assume that anything in
+it is the same as in the ordinary license.
+
+The reason we have a separate public license for some libraries is
+that they blur the distinction we usually make between modifying or
+adding to a program and simply using it. Linking a program with a
+library, without changing the library, is in some sense simply using
+the library, and is analogous to running a utility program or application
+program. However, in a textual and legal sense, the linked executable
+is a combined work, a derivative of the original library, and the
+ordinary General Public License treats it as such.
+
+Because of this blurred distinction, using the ordinary General Public
+License for libraries did not effectively promote software sharing,
+because most developers did not use the libraries. We concluded that
+weaker conditions might promote sharing better.
+
+However, unrestricted linking of non-free programs would deprive the
+users of those programs of all benefit from the free status of the
+libraries themselves. This Library General Public License is intended
+to permit developers of non-free programs to use free libraries, while
+preserving your freedom as a user of such programs to change the free
+libraries that are incorporated in them. (We have not seen how to
+achieve this as regards changes in header files, but we have achieved
+it as regards changes in the actual functions of the Library.) The
+hope is that this will lead to faster development of free libraries.
+
+The precise terms and conditions for copying, distribution and modification
+follow. Pay close attention to the difference between a \char`\"{}work
+based on the library\char`\"{} and a \char`\"{}work that uses the
+library\char`\"{}. The former contains code derived from the library,
+while the latter only works together with the library.
+
+Note that it is possible for a library to be covered by the ordinary
+General Public License rather than by this special one.
+
+{\centering GNU LIBRARY GENERAL PUBLIC LICENSE\\
+TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION\par}
+
+0. This License Agreement applies to any software library which contains
+a notice placed by the copyright holder or other authorized party
+saying it may be distributed under the terms of this Library General
+Public License (also called \char`\"{}this License\char`\"{}). Each
+licensee is addressed as \char`\"{}you\char`\"{}.
+
+A \char`\"{}library\char`\"{} means a collection of software functions
+and/or data prepared so as to be conveniently linked with application
+programs (which use some of those functions and data) to form executables.
+
+The \char`\"{}Library\char`\"{}, below, refers to any such software
+library or work which has been distributed under these terms. A \char`\"{}work
+based on the Library\char`\"{} means either the Library or any derivative
+work under copyright law: that is to say, a work containing the Library
+or a portion of it, either verbatim or with modifications and/or translated
+straightforwardly into another language. (Hereinafter, translation
+is included without limitation in the term \char`\"{}modification\char`\"{}.)
+
+\char`\"{}Source code\char`\"{} for a work means the preferred form
+of the work for making modifications to it. For a library, complete
+source code means all the source code for all modules it contains,
+plus any associated interface definition files, plus the scripts used
+to control compilation and installation of the library.
+
+Activities other than copying, distribution and modification are not
+covered by this License; they are outside its scope. The act of running
+a program using the Library is not restricted, and output from such
+a program is covered only if its contents constitute a work based
+on the Library (independent of the use of the Library in a tool for
+writing it). Whether that is true depends on what the Library does
+and what the program that uses the Library does. 1. You may copy and
+distribute verbatim copies of the Library's complete source code as
+you receive it, in any medium, provided that you conspicuously and
+appropriately publish on each copy an appropriate copyright notice
+and disclaimer of warranty; keep intact all the notices that refer
+to this License and to the absence of any warranty; and distribute
+a copy of this License along with the Library.
+
+You may charge a fee for the physical act of transferring a copy,
+and you may at your option offer warranty protection in exchange for
+a fee.
+
+2. You may modify your copy or copies of the Library or any portion
+of it, thus forming a work based on the Library, and copy and distribute
+such modifications or work under the terms of Section 1 above, provided
+that you also meet all of these conditions:
+
+\begin{LyXParagraphIndent}{0.5in}
+a) The modified work must itself be a software library.
+
+b) You must cause the files modified to carry prominent notices stating
+that you changed the files and the date of any change.
+
+c) You must cause the whole of the work to be licensed at no charge
+to all third parties under the terms of this License.
+
+d) If a facility in the modified Library refers to a function or a
+table of data to be supplied by an application program that uses the
+facility, other than as an argument passed when the facility is invoked,
+then you must make a good faith effort to ensure that, in the event
+an application does not supply such function or table, the facility
+still operates, and performs whatever part of its purpose remains
+meaningful.
+
+\end{LyXParagraphIndent}
+
+(For example, a function in a library to compute square roots has
+a purpose that is entirely well-defined independent of the application.
+Therefore, Subsection 2d requires that any application-supplied function
+or table used by this function must be optional: if the application
+does not supply it, the square root function must still compute square
+roots.)
+
+These requirements apply to the modified work as a whole. If identifiable
+sections of that work are not derived from the Library, and can be
+reasonably considered independent and separate works in themselves,
+then this License, and its terms, do not apply to those sections when
+you distribute them as separate works. But when you distribute the
+same sections as part of a whole which is a work based on the Library,
+the distribution of the whole must be on the terms of this License,
+whose permissions for other licensees extend to the entire whole,
+and thus to each and every part regardless of who wrote it.
+
+Thus, it is not the intent of this section to claim rights or contest
+your rights to work written entirely by you; rather, the intent is
+to exercise the right to control the distribution of derivative or
+collective works based on the Library.
+
+In addition, mere aggregation of another work not based on the Library
+with the Library (or with a work based on the Library) on a volume
+of a storage or distribution medium does not bring the other work
+under the scope of this License.
+
+3. You may opt to apply the terms of the ordinary GNU General Public
+License instead of this License to a given copy of the Library. To
+do this, you must alter all the notices that refer to this License,
+so that they refer to the ordinary GNU General Public License, version
+2, instead of to this License. (If a newer version than version 2
+of the ordinary GNU General Public License has appeared, then you
+can specify that version instead if you wish.) Do not make any other
+change in these notices.
+
+Once this change is made in a given copy, it is irreversible for that
+copy, so the ordinary GNU General Public License applies to all subsequent
+copies and derivative works made from that copy.
+
+This option is useful when you wish to copy part of the code of the
+Library into a program that is not a library.
+
+4. You may copy and distribute the Library (or a portion or derivative
+of it, under Section 2) in object code or executable form under the
+terms of Sections 1 and 2 above provided that you accompany it with
+the complete corresponding machine-readable source code, which must
+be distributed under the terms of Sections 1 and 2 above on a medium
+customarily used for software interchange.
+
+If distribution of object code is made by offering access to copy
+from a designated place, then offering equivalent access to copy the
+source code from the same place satisfies the requirement to distribute
+the source code, even though third parties are not compelled to copy
+the source along with the object code.
+
+5. A program that contains no derivative of any portion of the Library,
+but is designed to work with the Library by being compiled or linked
+with it, is called a \char`\"{}work that uses the Library\char`\"{}.
+Such a work, in isolation, is not a derivative work of the Library,
+and therefore falls outside the scope of this License.
+
+However, linking a \char`\"{}work that uses the Library\char`\"{}
+with the Library creates an executable that is a derivative of the
+Library (because it contains portions of the Library), rather than
+a \char`\"{}work that uses the library\char`\"{}. The executable is
+therefore covered by this License. Section 6 states terms for distribution
+of such executables.
+
+When a \char`\"{}work that uses the Library\char`\"{} uses material
+from a header file that is part of the Library, the object code for
+the work may be a derivative work of the Library even though the source
+code is not. Whether this is true is especially significant if the
+work can be linked without the Library, or if the work is itself a
+library. The threshold for this to be true is not precisely defined
+by law.
+
+If such an object file uses only numerical parameters, data structure
+layouts and accessors, and small macros and small inline functions
+(ten lines or less in length), then the use of the object file is
+unrestricted, regardless of whether it is legally a derivative work.
+(Executables containing this object code plus portions of the Library
+will still fall under Section 6.)
+
+Otherwise, if the work is a derivative of the Library, you may distribute
+the object code for the work under the terms of Section 6. Any executables
+containing that work also fall under Section 6, whether or not they
+are linked directly with the Library itself.
+
+6. As an exception to the Sections above, you may also compile or
+link a \char`\"{}work that uses the Library\char`\"{} with the Library
+to produce a work containing portions of the Library, and distribute
+that work under terms of your choice, provided that the terms permit
+modification of the work for the customer's own use and reverse engineering
+for debugging such modifications.
+
+You must give prominent notice with each copy of the work that the
+Library is used in it and that the Library and its use are covered
+by this License. You must supply a copy of this License. If the work
+during execution displays copyright notices, you must include the
+copyright notice for the Library among them, as well as a reference
+directing the user to the copy of this License. Also, you must do
+one of these things:
+
+\begin{LyXParagraphIndent}{0.5in}
+a) Accompany the work with the complete corresponding machine-readable
+source code for the Library including whatever changes were used in
+the work (which must be distributed under Sections 1 and 2 above);
+and, if the work is an executable linked with the Library, with the
+complete machine-readable \char`\"{}work that uses the Library\char`\"{},
+as object code and/or source code, so that the user can modify the
+Library and then relink to produce a modified executable containing
+the modified Library. (It is understood that the user who changes
+the contents of definitions files in the Library will not necessarily
+be able to recompile the application to use the modified definitions.)
+
+b) Accompany the work with a written offer, valid for at least three
+years, to give the same user the materials specified in Subsection
+6a, above, for a charge no more than the cost of performing this distribution.
+
+c) If distribution of the work is made by offering access to copy
+from a designated place, offer equivalent access to copy the above
+specified materials from the same place.
+
+d) Verify that the user has already received a copy of these materials
+or that you have already sent this user a copy.
+
+\end{LyXParagraphIndent}
+
+For an executable, the required form of the \char`\"{}work that uses
+the Library\char`\"{} must include any data and utility programs needed
+for reproducing the executable from it. However, as a special exception,
+the source code distributed need not include anything that is normally
+distributed (in either source or binary form) with the major components
+(compiler, kernel, and so on) of the operating system on which the
+executable runs, unless that component itself accompanies the executable.
+
+It may happen that this requirement contradicts the license restrictions
+of other proprietary libraries that do not normally accompany the
+operating system. Such a contradiction means you cannot use both them
+and the Library together in an executable that you distribute.
+
+7. You may place library facilities that are a work based on the Library
+side-by-side in a single library together with other library facilities
+not covered by this License, and distribute such a combined library,
+provided that the separate distribution of the work based on the Library
+and of the other library facilities is otherwise permitted, and provided
+that you do these two things:
+
+\begin{LyXParagraphIndent}{0.5in}
+a) Accompany the combined library with a copy of the same work based
+on the Library, uncombined with any other library facilities. This
+must be distributed under the terms of the Sections above.
+
+b) Give prominent notice with the combined library of the fact that
+part of it is a work based on the Library, and explaining where to
+find the accompanying uncombined form of the same work.
+
+\end{LyXParagraphIndent}
+
+8. You may not copy, modify, sublicense, link with, or distribute
+the Library except as expressly provided under this License. Any attempt
+otherwise to copy, modify, sublicense, link with, or distribute the
+Library is void, and will automatically terminate your rights under
+this License. However, parties who have received copies, or rights,
+from you under this License will not have their licenses terminated
+so long as such parties remain in full compliance.
+
+9. You are not required to accept this License, since you have not
+signed it. However, nothing else grants you permission to modify or
+distribute the Library or its derivative works. These actions are
+prohibited by law if you do not accept this License. Therefore, by
+modifying or distributing the Library (or any work based on the Library),
+you indicate your acceptance of this License to do so, and all its
+terms and conditions for copying, distributing or modifying the Library
+or works based on it.
+
+10. Each time you redistribute the Library (or any work based on the
+Library), the recipient automatically receives a license from the
+original licensor to copy, distribute, link with or modify the Library
+subject to these terms and conditions. You may not impose any further
+restrictions on the recipients' exercise of the rights granted herein.
+You are not responsible for enforcing compliance by third parties
+to this License.
+
+11. If, as a consequence of a court judgment or allegation of patent
+infringement or for any other reason (not limited to patent issues),
+conditions are imposed on you (whether by court order, agreement or
+otherwise) that contradict the conditions of this License, they do
+not excuse you from the conditions of this License. If you cannot
+distribute so as to satisfy simultaneously your obligations under
+this License and any other pertinent obligations, then as a consequence
+you may not distribute the Library at all. For example, if a patent
+license would not permit royalty-free redistribution of the Library
+by all those who receive copies directly or indirectly through you,
+then the only way you could satisfy both it and this License would
+be to refrain entirely from distribution of the Library.
+
+If any portion of this section is held invalid or unenforceable under
+any particular circumstance, the balance of the section is intended
+to apply, and the section as a whole is intended to apply in other
+circumstances.
+
+It is not the purpose of this section to induce you to infringe any
+patents or other property right claims or to contest validity of any
+such claims; this section has the sole purpose of protecting the integrity
+of the free software distribution system which is implemented by public
+license practices. Many people have made generous contributions to
+the wide range of software distributed through that system in reliance
+on consistent application of that system; it is up to the author/donor
+to decide if he or she is willing to distribute software through any
+other system and a licensee cannot impose that choice.
+
+This section is intended to make thoroughly clear what is believed
+to be a consequence of the rest of this License.
+
+12. If the distribution and/or use of the Library is restricted in
+certain countries either by patents or by copyrighted interfaces,
+the original copyright holder who places the Library under this License
+may add an explicit geographical distribution limitation excluding
+those countries, so that distribution is permitted only in or among
+countries not thus excluded. In such case, this License incorporates
+the limitation as if written in the body of this License.
+
+13. The Free Software Foundation may publish revised and/or new versions
+of the Library General Public License from time to time. Such new
+versions will be similar in spirit to the present version, but may
+differ in detail to address new problems or concerns.
+
+Each version is given a distinguishing version number. If the Library
+specifies a version number of this License which applies to it and
+\char`\"{}any later version\char`\"{}, you have the option of following
+the terms and conditions either of that version or of any later version
+published by the Free Software Foundation. If the Library does not
+specify a license version number, you may choose any version ever
+published by the Free Software Foundation.
+
+14. If you wish to incorporate parts of the Library into other free
+programs whose distribution conditions are incompatible with these,
+write to the author to ask for permission. For software which is copyrighted
+by the Free Software Foundation, write to the Free Software Foundation;
+we sometimes make exceptions for this. Our decision will be guided
+by the two goals of preserving the free status of all derivatives
+of our free software and of promoting the sharing and reuse of software
+generally.
+
+{\centering NO WARRANTY\par}
+
+15. BECAUSE THE LIBRARY IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY
+FOR THE LIBRARY, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT
+WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER
+PARTIES PROVIDE THE LIBRARY \char`\"{}AS IS\char`\"{} WITHOUT WARRANTY
+OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED
+TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE
+LIBRARY IS WITH YOU. SHOULD THE LIBRARY PROVE DEFECTIVE, YOU ASSUME
+THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.
+
+16. IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN
+WRITING WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY
+AND/OR REDISTRIBUTE THE LIBRARY AS PERMITTED ABOVE, BE LIABLE TO YOU
+FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL
+DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE THE LIBRARY (INCLUDING
+BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING RENDERED INACCURATE
+OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A FAILURE OF THE LIBRARY
+TO OPERATE WITH ANY OTHER SOFTWARE), EVEN IF SUCH HOLDER OR OTHER
+PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+
+{\centering END OF TERMS AND CONDITIONS\par}
+
+{\centering How to Apply These Terms to Your New Libraries\par}
+
+If you develop a new library, and you want it to be of the greatest
+possible use to the public, we recommend making it free software that
+everyone can redistribute and change. You can do so by permitting
+redistribution under these terms (or, alternatively, under the terms
+of the ordinary General Public License).
+
+To apply these terms, attach the following notices to the library.
+It is safest to attach them to the start of each source file to most
+effectively convey the exclusion of warranty; and each file should
+have at least the \char`\"{}copyright\char`\"{} line and a pointer
+to where the full notice is found.
+
+\begin{quote}
+<one line to give the library's name and a brief idea of what it does.>\\
+Copyright (C) <year> <name of author>
+
+This library is free software; you can redistribute it and/or modify
+it under the terms of the GNU Library General Public License as published
+by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Library General Public
+License for more details.
+
+You should have received a copy of the GNU Library General Public
+License along with this library; if not, write to the Free Foundation,
+Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+\end{quote}
+Also add information on how to contact you by electronic and paper
+mail.
+
+You should also get your employer (if you work as a programmer) or
+your school, if any, to sign a \char`\"{}copyright disclaimer\char`\"{}
+for the library, if necessary. Here is a sample; alter the names:
+
+\begin{quote}
+Yoyodyne, Inc., hereby disclaims all copyright interest in the library
+`Frob' (a library for tweaking knobs) written by James Random Hacker.
+
+<signature of Ty Coon>, 1 April 1990 Ty Coon, President of Vice
+\end{quote}
+That's all there is to it!
+
+
+\section{Ispell Copyright}
+
+Copyright (c), 1983, by Pace Willisson
+
+Copyright 1992, 1993, Geoff Kuenning, Granada Hills, CA All rights
+reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer. 
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution. 
+
+3. All modifications to the source code must be clearly marked as
+such. Binary redistributions based on modified source code must be
+clearly marked as modified versions in the documentation and/or other
+materials provided with the distribution. 
+
+4. All advertising materials mentioning features or use of this software
+must display the following acknowledgment: 
+
+\begin{quote}
+This product includes software developed by Geoff Kuenning and other
+unpaid contributors. 
+\end{quote}
+5. The name of Geoff Kuenning may not be used to endorse or promote
+products derived from this software without specific prior written
+permission.
+
+THIS SOFTWARE IS PROVIDED BY GEOFF KUENNING AND CONTRIBUTORS ``AS
+IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL GEOFF KUENNING OR CONTRIBUTORS
+BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
+OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+\end{document}
