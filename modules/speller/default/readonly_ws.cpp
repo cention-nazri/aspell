@@ -51,7 +51,6 @@ using std::pair;
 #include "vector_hash-t.hpp"
 #include "check_list.hpp"
 #include "lsort.hpp"
-#include "iostream.hpp"
 
 #include "gettext.h"
 

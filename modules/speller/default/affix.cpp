@@ -47,7 +47,6 @@
 
 //#include "iostream.hpp"
 
-#include "gettext.h"
 #include "affix.hpp"
 #include "errors.hpp"
 #include "getdata.hpp"
@@ -57,6 +56,8 @@
 #include "vararray.hpp"
 #include "lsort.hpp"
 #include "hash-t.hpp"
+
+#include "gettext.h"
 
 using namespace std;
 

@@ -8,8 +8,6 @@
 #include <string.h>
 #include <math.h>
 
-#include "gettext.h"
-
 #include "asc_ctype.hpp"
 #include "convert.hpp"
 #include "fstream.hpp"
@@ -23,6 +21,8 @@
 #include "vararray.hpp"
 
 #include "iostream.hpp"
+
+#include "gettext.h"
 
 namespace acommon {
 

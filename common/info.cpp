@@ -10,8 +10,6 @@
 #include <ctype.h>
 #include <dirent.h>
 
-#include "gettext.h"
-
 // POSIX includes
 #ifdef __bsdi__
  /* BSDi defines u_intXX_t types in machine/types.h */
@@ -38,6 +36,8 @@
 #include "strtonum.hpp"
 #include "lock.hpp"
 #include "string_map.hpp"
+
+#include "gettext.h"
 
 namespace acommon {
 

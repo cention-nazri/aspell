@@ -11,7 +11,6 @@
 #include <sys/types.h>
 #include <dirent.h>
 
-#include "gettext.h"
 #include "asc_ctype.hpp"
 #include "can_have_error.hpp"
 #include "config.hpp"
@@ -28,7 +27,7 @@
 #include "string_list.hpp"
 #include "string_map.hpp"
 
-#include "iostream.hpp"
+#include "gettext.h"
 
 #if 0
 #include "preload.h"

@@ -4,7 +4,6 @@
 // license along with this library if you did not you can find
 // it at http://www.gnu.org/.
 
-#include "gettext.h"
 #include "asc_ctype.hpp"
 #include "config.hpp"
 #include "string.hpp"
@@ -19,11 +18,12 @@
 //#define FILTER_PROGRESS_CONTROL "tex-filter-debug.log"
 //#include "filter_debug.hpp"
 //#include <stdio.h>
-#include <cstdio>
+//#include <cstdio>
 #include "filter_char_vector.hpp"
 #include "string_list.hpp"
 #include "string_enumeration.hpp"
 
+#include "gettext.h"
 
 namespace {
 
