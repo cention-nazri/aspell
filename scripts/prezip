@@ -146,7 +146,7 @@ h )
    -f --force       force
    -k --keep        keep input files
    -s --sort        sort and remove duplicates before compressing
-   -S --nocwl       do not transform .wl to .cwl (use .wl.pz instead)
+   -S --nocwl       do not rename .wl suffix to .cwl (use .wl.pz instead)
    -q --quiet       suppress all warnings
 
   If invoked as "prezip" the default action is to compress.

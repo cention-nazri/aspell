@@ -1,5 +1,5 @@
 \input texinfo   @c -*-texinfo-*-
-@comment $Id: aspell.texi,v 1.25 2004/04/24 19:33:34 kevina Exp $
+@comment $Id: aspell.texi,v 1.26 2004/04/26 03:51:59 kevina Exp $
 @comment %**start of header
 @setfilename aspell.info
 @settitle GNU Aspell 0.60
@@ -770,17 +770,25 @@ sets the filter mode.  Mode is one of @samp{none}, @samp{url},
 @option{-t} for @TeX{})
 
 @item encoding (@i{string})
-The encoding the input text is in.  Valid values are @samp{utf-8},
-@samp{iso-8859-*}, @samp{koi8-r}, @samp{viscii}, @samp{cp1252},
-@samp{ucs-2}, @samp{ucs-4}.  When using the aspell utility the
-default encoding is based on the current locale.  Thus if your locale
-currently uses the @samp{utf-8} encoding than everything will be in
-@acronym{UTF-8}.  The @samp{ucs-2} and @samp{ucs-4} encodings are
-intended to be used by other programs using the Aspell library and is
-not suppotted by the Aspell utility.
+The encoding the input text is in.  Valid values include, but are not
+limited not, @samp{iso-8859-*}, @samp{utf-8}, @samp{ucs-2},
+@samp{ucs-4}.  When using the aspell utility the default encoding is
+based on the current locale.  Thus if your locale currently uses the
+@samp{utf-8} encoding than everything will be in @acronym{UTF-8}.  The
+@samp{ucs-2} and @samp{ucs-4} encodings are intended to be used by other
+programs using the Aspell library and is not suppotted by the Aspell
+utility.
 
 @item normalize (@i{boolean})
-Perform unicode normalization.
+Perform Unicode normalization.  Enabled by default.
+
+@item norm-strict (@i{boolean})
+
+Avoid lossy conversions when normalizing.  Lossy conversions includes
+compatibility mappings such as splitting the letter @samp{OE} (U+152)
+into @samp{O} and @samp{E} (when the combined letter is not available),
+and mappings which will remove accents.  Disabled by default except when
+creating dictionaries.
 
 @item norm-form (@i{string})
 The normalization form the output should be in.  This option primarly
@@ -792,6 +800,13 @@ Valid values are @samp{none}, @samp{nfd} for fully decomposition
 that @emph{full} composition is used rather than @emph{canonical}
 composition.  The @option{normalize} option must be enabled for this
 option to be used.
+
+@item norm-requires (@i{boolean})
+
+Set to true when the current language requires Unicode normalization.
+This is generally the case when private use characters are used
+internally by Aspell or when Normalization Form C is not the same as
+full composition.
 
 @end table
 
@@ -2111,6 +2126,12 @@ Unimplemented
 @item flag-char
 
 Unimplemented
+
+@item norm-required
+
+Should be set to true if your language makes use of private use
+characters or when Normalization Form C is not the same as
+full composition.
 
 @item normalize
 

@@ -162,7 +162,7 @@
 @item te @tab Telugu @tab Telugu @tab Maybe @tab -
 @item tet @tab Tetum @tab Latin @tab Maybe @tab -
 @item tg @tab Tajik @tab Cyrillic @tab Maybe @tab -
-@item ti @tab Tigrinya @tab Ethiopic @tab - @tab -
+@item ti @tab Tigrinya @tab Ethiopic @tab Maybe @tab -
 @item tk @tab Turkmen @tab Latin @tab - @tab -
 @item tl @tab Tagalog @tab Latin @tab Maybe @tab -
 @item tn @tab Tswana @tab Latin @tab Yes @tab -
