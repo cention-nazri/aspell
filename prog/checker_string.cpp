@@ -21,7 +21,7 @@ static int get_line(FILE * in, CharVector & d)
   return d.size();
 }
 
-CheckerString::CheckerString(Speller * speller, 
+CheckerString::CheckerString(AspellSpeller * speller, 
 			     FILE * in, FILE * out, 
 			     int num_lines)
   : in_(in), out_(out), speller_(speller)
@@ -41,7 +41,8 @@ CheckerString::CheckerString(Speller * speller,
   diff_ = 0;
   has_repl_ = false;
 
-  checker_.reset(new_document_checker(speller, 0, 0));
+  checker_.reset(new_document_checker(reinterpret_cast<Speller *>(speller), 
+				      0, 0));
   checker_->process(cur_line_->data(), cur_line_->size());
 }
 
@@ -80,7 +81,7 @@ bool CheckerString::next_misspelling()
   if (has_repl_) {
     has_repl_ = false;
     CharVector word;
-    bool correct = speller_->check(get_word(word));
+    bool correct = aspell_speller_check(speller_, get_word(word), -1);
     if (!correct)
       return true;
     diff_ += word_size_ - tok_.len;

@@ -10,12 +10,22 @@
 //       check if the same bug is present in the other file and fix 
 //       them both at the same time.
 // 
+//       This program currently uses a very ugly mix of the internal
+//       API and the external C interface.  The eventual goal is to
+//       use only the external C++ interface, however, the external
+//       C++ interface is currently incomplete.  The C interface is
+//       used in some places because without the strings will not get
+//       converted properly when the encoding is not the same as the
+//       internal encoding used by aspell.
+// 
 
 #include <deque>
 
 #include <ctype.h>
 
 #include "settings.h"
+
+#include "aspell.h"
 
 #include "check_funs.hpp"
 #include "config.hpp"
@@ -391,12 +401,12 @@ bool get_word_pair(char * line, char * & w1, char * & w2)
   return true;
 }
 
-void print_elements(const WordList * wl) {
-  Enumeration<StringEnumeration> els = wl->elements();
+void print_elements(const AspellWordList * wl) {
+  AspellStringEnumeration * els = aspell_word_list_elements(wl);
   int count = 0;
   const char * w;
   String line;
-  while ( (w = els.next()) != 0 ) {
+  while ( (w = aspell_string_enumeration_next(els)) != 0 ) {
     ++count;
     line += w;
     line += ", ";
@@ -411,10 +421,11 @@ void status_fun(void * d, Token, int correct)
     COUT << "*\n";
 }
 
-DocumentChecker * new_checker(Speller * speller, 
+DocumentChecker * new_checker(AspellSpeller * speller, 
 			      bool & print_star) 
 {
-  EXIT_ON_ERR_SET(new_document_checker(speller,0,0), 
+  EXIT_ON_ERR_SET(new_document_checker(reinterpret_cast<Speller *>(speller),
+				       0,0), 
 		  StackPtr<DocumentChecker>, checker);
   checker->set_status_fun(status_fun, &print_star);
   return checker.release();
@@ -431,7 +442,14 @@ void pipe()
   clock_t start,finish;
   start = clock();
 
-  EXIT_ON_ERR_SET(new_speller(options), StackPtr<Speller>, speller);
+  AspellCanHaveError * ret 
+    = new_aspell_speller(reinterpret_cast<AspellConfig *>(options.get()));
+  if (aspell_error(ret)) {
+    CERR << "Error: " << aspell_error_message(ret) << "\n";
+    exit(1);
+  }
+  AspellSpeller * speller = to_aspell_speller(ret);
+  Config * config = reinterpret_cast<Config *>(config);
   if (do_time)
     COUT << "Time to load word list: " 
          << (clock() - start)/(double)CLOCKS_PER_SEC << "\n";
@@ -461,29 +479,33 @@ void pipe()
       continue;
     case '*':
       word = trim_wspace(line + 1);
-      BREAK_ON_ERR(speller->add_to_personal(word));
+      aspell_speller_add_to_personal(speller, word, -1);
       break;
     case '&':
       word = trim_wspace(line + 1);
-      BREAK_ON_ERR(speller->add_to_personal(speller->to_lower(word)));
+      aspell_speller_add_to_personal
+	(speller, 
+	 reinterpret_cast<Speller *>(speller)->to_lower(word), -1);
       break;
     case '@':
       word = trim_wspace(line + 1);
-      BREAK_ON_ERR(speller->add_to_session(word));
+      aspell_speller_add_to_session(speller, word, -1);
       break;
     case '#':
-      BREAK_ON_ERR(speller->save_all_word_lists());
+      aspell_speller_save_all_word_lists(speller);
+      if (aspell_speller_error(speller))
+	CERR << "Error: " << aspell_speller_error_message(speller) << "\n";
       break;
     case '+':
       word = trim_wspace(line + 1);
-      err = speller->config()->replace("mode", word);
+      err = config->replace("mode", word);
       if (err.get_err())
-	speller->config()->replace("mode", "tex");
+	config->replace("mode", "tex");
       checker.del();
       checker = new_checker(speller, print_star);
       break;
     case '-':
-      speller->config()->remove("filter");
+      config->remove("filter");
       checker.del();
       checker = new_checker(speller, print_star);
       break;
@@ -504,7 +526,7 @@ void pipe()
 	  switch(line[3]) {
 	  case 'a':
 	    if (get_word_pair(line + 3, word, word2))
-	      speller->store_replacement(word, word2);
+	      aspell_speller_store_replacement(speller, word, -1, word2, -1);
 	    break;
 	  }
 	  break;
@@ -512,11 +534,11 @@ void pipe()
 	  switch (line[3]) {
 	  case 's':
 	    if (get_word_pair(line + 3, word, word2))
-	      BREAK_ON_ERR(err = speller->config()->replace(word, word2));
+	      BREAK_ON_ERR(err = config->replace(word, word2));
 	    break;
 	  case 'r':
 	    word = trim_wspace(line + 3);
-	    BREAK_ON_ERR_SET(speller->config()->retrieve(word), 
+	    BREAK_ON_ERR_SET(config->retrieve(word), 
 			     PosibErr<String>, ret);
 	    break;
 	  }
@@ -524,15 +546,15 @@ void pipe()
 	case 'p':
 	  switch (line[3]) {
 	  case 'p':
-	    print_elements(speller->personal_word_list());
+	    print_elements(aspell_speller_personal_word_list(speller));
 	    break;
 	  case 's':
-	    print_elements(speller->session_word_list());
+	    print_elements(aspell_speller_session_word_list(speller));
 	    break;
 	  }
 	  break;
 	case 'l':
-	  COUT << speller->config()->retrieve("lang") << "\n";
+	  COUT << config->retrieve("lang") << "\n";
 	  break;
 	}
 	break;
@@ -547,18 +569,20 @@ void pipe()
 	word = line + token.offset;
 	word[token.len] = '\0';
 	start = clock();
-        const WordList * suggestions = speller->suggest(word);
+        const AspellWordList * suggestions 
+	  = aspell_speller_suggest(speller, word, -1);
 	finish = clock();
-	if (!suggestions->empty()) {
+	if (!aspell_word_list_empty(suggestions)) {
 	  COUT << "& " << word 
-	       << " " << suggestions->size() 
+	       << " " << aspell_word_list_size(suggestions) 
 	       << " " << token.offset
 	       << ":";
+	  AspellStringEnumeration * els 
+	    = aspell_word_list_elements(suggestions);
 	  if (options->retrieve_bool("reverse")) {
 	    Vector<String> sugs;
-	    sugs.reserve(suggestions->size());
-	    Enumeration<StringEnumeration> els = suggestions->elements();
-	    while ( ( w = els.next()) != 0)
+	    sugs.reserve(aspell_word_list_size(suggestions));
+	    while ( ( w = aspell_string_enumeration_next(els)) != 0)
 	      sugs.push_back(w);
 	    Vector<String>::reverse_iterator i = sugs.rbegin();
 	    while (true) {
@@ -568,13 +592,13 @@ void pipe()
 	      COUT << ",";
 	    }
 	  } else {
-	    Enumeration<StringEnumeration> els = suggestions->elements();
-	    while ( ( w = els.next()) != 0) {
+	    while ( ( w = aspell_string_enumeration_next(els)) != 0) {
 	      COUT << " " << w;
-	      if (!els.at_end())
+	      if (!aspell_string_enumeration_at_end(els))
 		COUT << ",";
 	    }
 	  }
+	  delete_aspell_string_enumeration(els);
 	  COUT << "\n";
 	} else {
 	  COUT << "# " << word << " " 
@@ -588,6 +612,8 @@ void pipe()
       COUT << "\n";
     }
   }
+
+  delete_aspell_speller(speller);
 }
 
 ///////////////////////////
@@ -662,7 +688,13 @@ void check(bool interactive)
     in = stdin;
   }
 
-  EXIT_ON_ERR_SET(new_speller(options), StackPtr<Speller>, speller);
+  AspellCanHaveError * ret 
+    = new_aspell_speller(reinterpret_cast<AspellConfig *>(options.get()));
+  if (aspell_error(ret)) {
+    CERR << "Error: " << aspell_error_message(ret) << "\n";
+    exit(1);
+  }
+  AspellSpeller * speller = to_aspell_speller(ret);
 
   state = new CheckerString(speller,in,out,64);
  
@@ -712,12 +744,14 @@ void check(bool interactive)
       // print the suggestions and menu choices
       //
 
-      const WordList * suggestions = speller->suggest(word);
-      Enumeration<StringEnumeration> els = suggestions->elements();
+      const AspellWordList * suggestions = aspell_speller_suggest(speller, 
+								  word, -1);
+      AspellStringEnumeration * els = aspell_word_list_elements(suggestions);
       sug_con.resize(0);
-      while (sug_con.size() != 10 && (w = els.next()) != 0) {
+      while (sug_con.size() != 10 
+	     && (w = aspell_string_enumeration_next(els)) != 0)
 	sug_con.push_back(w);
-      }
+      delete_aspell_string_enumeration(els);
 
       // disable suspend
       unsigned int suggestions_size = sug_con.size();
@@ -763,13 +797,15 @@ void check(bool interactive)
       case Ignore:
 	break;
       case IgnoreAll:
-	speller->add_to_session(word);
+	aspell_speller_add_to_session(speller, word, -1);
 	break;
       case Add:
-	speller->add_to_personal(word);
+	aspell_speller_add_to_personal(speller, word, -1);
 	break;
       case AddLower:
-	speller->add_to_personal(speller->to_lower(word));
+	aspell_speller_add_to_personal
+	  (speller, 
+	   reinterpret_cast<Speller *>(speller)->to_lower(word), -1);
 	break;
       case Replace:
       case ReplaceAll:
@@ -800,8 +836,9 @@ void check(bool interactive)
   }
 exit_loop:
   {
-    speller->save_all_word_lists();
+    aspell_speller_save_all_word_lists(speller);
     state.del(); // to close the file handles
+    delete_aspell_speller(speller);
     
     bool keep_backup = options->retrieve_bool("backup");
     if (!keep_backup)
@@ -814,6 +851,7 @@ exit_loop:
 abort_loop:
   {
     state.del(); // to close the file handles
+    delete_aspell_speller(speller);
 
     rename_file(backup_name, file_name);
 

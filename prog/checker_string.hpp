@@ -6,6 +6,8 @@
 
 #include <stdio.h>
 
+#include "aspell.h"
+
 #include "vector.hpp"
 #include "char_vector.hpp"
 #include "document_checker.hpp"
@@ -61,7 +63,7 @@ public:
     {return Iterator(this, cur_line_, word_begin_ + word_size_);}
   int word_size() {return word_size_;}
 
-  CheckerString(Speller * speller, FILE * in, FILE * out, int lines);
+  CheckerString(AspellSpeller * speller, FILE * in, FILE * out, int lines);
   ~CheckerString();
 
   bool next_misspelling();
@@ -110,7 +112,7 @@ private:
   FILE * out_;
 
   CopyPtr<DocumentChecker> checker_;
-  Speller * speller_;
+  AspellSpeller * speller_;
   Lines::iterator end_;
   
   Lines::iterator cur_line_;
