@@ -67,7 +67,7 @@ namespace acommon {
   // Assumes that the maxium number of items in the table is 256
   // Also assumes (unsigned char)i == i % 256
 
-  // Based on the iso8859-* character sets it is very fast, almsot all
+  // Based on the iso-8859-* character sets it is very fast, almsot all
   // lookups involving no more than 2 comparisons.
   // NO looks ups involded more than 3 comparssions.
   // Also, no division (or modules) is done whatsoever.
@@ -442,6 +442,10 @@ namespace acommon {
     
     if (buf == "ascii")
       return "iso-8859-1";
+    else if (buf == "machine unsigned 16")
+      return "utf-16";
+    else if (buf == "machine unsigned 32")
+      return "utf-32";
     else
       return buf.c_str();
   }
@@ -467,11 +471,11 @@ namespace acommon {
     in_code_ = in;
     out_code_ = out;
     
-    if (in_code_ == "iso8859-1")
+    if (in_code_ == "iso-8859-1")
       decode_ = new DecodeDirect<Uni8>;
-    else if (in_code_ == "machine unsigned 16")
+    else if (in_code_ == "utf-16")
       decode_ = new DecodeDirect<Uni16>;
-    else if (in_code_ == "machine unsigned 32")
+    else if (in_code_ == "utf-32")
       decode_ = new DecodeDirect<Uni32>;
     else if (in_code_ == "utf-8")
       decode_ = new DecodeUtf8;
@@ -479,11 +483,11 @@ namespace acommon {
       decode_ = new DecodeLookup;
     RET_ON_ERR(decode_->init(in_code_, c));
     
-    if (out_code_ == "iso8859-1")
+    if (out_code_ == "iso-8859-1")
       encode_ = new EncodeDirect<Uni8>;
-    else if (out_code_ == "machine unsigned 16")
+    else if (out_code_ == "utf-16")
       encode_ = new EncodeDirect<Uni16>;
-    else if (out_code_ == "machine unsigned 32")
+    else if (out_code_ == "utf-32")
       encode_ = new EncodeDirect<Uni32>;
     else if (out_code_ == "utf-8")
       encode_ = new EncodeUtf8;
@@ -492,9 +496,9 @@ namespace acommon {
     RET_ON_ERR(encode_->init(out_code_, c));
 
     if (in_code_ == out_code_) {
-      if (in_code_ == "machine unsigned 16")
+      if (in_code_ == "utf-16")
 	conv_ = new ConvDirect<Uni16>;
-      else if (in_code_ == "machine unsigned 32")
+      else if (in_code_ == "utf-32")
 	conv_ = new ConvDirect<Uni32>;
       else
 	conv_ = new ConvDirect<char>;

@@ -1,5 +1,5 @@
 \input texinfo   @c -*-texinfo-*-
-@comment $Id: aspell.texi,v 1.8 2004/02/15 00:57:58 kevina Exp $
+@comment $Id: aspell.texi,v 1.9 2004/02/15 09:42:05 kevina Exp $
 @comment %**start of header
 @setfilename aspell.info
 @settitle GNU Aspell 0.51
@@ -758,11 +758,11 @@ sets the filter mode.  Mode is one of @kbd{none}, @kbd{url},
 
 @item encoding (@i{string})
 The encoding the input text is in.  Valid values are @kbd{utf-8},
-@kbd{iso8859-*}, @kbd{koi8-r}, @kbd{viscii}, @kbd{cp1252},
-@kbd{machine unsigned 16}, @kbd{machine unsigned 32}.  However, the
+@kbd{iso-8859-*}, @kbd{koi8-r}, @kbd{viscii}, @kbd{cp1252},
+@kbd{utf-16}, @kbd{utf-32}.  However, the
 Aspell utility will currently only function correctly with 8-bit
-encodings.  I hope to provide utf-8 support in the future.  The two
-@kbd{machine unsigned} encodings are intended to be used by other
+encodings.  I hope to provide utf-8 support in the future.  The 
+@kbd{utf-16} and @kbd{utf-32} encodings are intended to be used by other
 programs using the Aspell library and it is unlikly the Aspell utility
 will ever support these encodings.
 @end table
@@ -1626,9 +1626,9 @@ to see if a word in the document is correct like so:
 int correct = aspell_speller_check(spell_checker, @i{word}, @i{size});
 @end example
 
-@code{@i{w ord}} is expected to be a @code{const char *} character
-string.  If the encoding is set to be @code{machine unsigned 16} or
-@code{machine unsigned 32}.  @code{@i{word}} is expected to be a cast
+@code{@i{word}} is expected to be a @code{const char *} character
+string.  If the encoding is set to be @code{utf-16} or
+@code{utf-32}.  @code{@i{word}} is expected to be a cast
 from either @code{const u16int *} or @code{const u32int *}
 respectively.  @code{U16int} and @code{u32int} are generally
 @code{unsigned short} and @code{unsigned int} respectively.
@@ -1955,7 +1955,7 @@ file name (without the @file{.dat}).
 formatted in.  You may chose from any of the @code{iso-8859-}*
 character sets as well as, @code{koi8-f}, @code{koi8-r}, and
 @code{viscii}.  If your language can fit in the plain old ASCII
-character set use @code{iso8859-1}.  If you use some other character
+character set use @code{iso-8859-1}.  If you use some other character
 set for your language other than the ones listed here drop me a note
 and I will look into adding support for it.
 
