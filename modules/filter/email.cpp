@@ -4,8 +4,6 @@
 // license along with this library if you did not you can find
 // it at http://www.gnu.org/.
 
-#include <stdint.h>
-
 #include "convert.hpp"
 #include "config.hpp"
 #include "indiv_filter.hpp"
@@ -24,23 +22,24 @@ namespace acommon {
 
     class QuoteChars : public MutableContainer {
     public:
-      Vector<uint32_t> data;
+      typedef FilterChar::Chr Value;
+      Vector<Value> data;
       Conv conv;
-      bool have(uint32_t c) {
-        uint32_t * i = data.pbegin();
-        uint32_t * end = data.pend();
+      bool have(Value c) {
+        Value * i = data.pbegin();
+        Value * end = data.pend();
         for (; i != end && *i != c; ++i);
         return i != end;
       }
       PosibErr<bool> add(ParmString s) {
-        uint32_t c = *(uint32_t *)conv(s);
+        Value c = *(Value *)conv(s);
         if (!have(c)) data.push_back(c);
         return true;
       }
       PosibErr<bool> remove(ParmString s) {
-        uint32_t c = *(uint32_t *)conv(s);
-        Vector<uint32_t>::iterator i = data.begin();
-        Vector<uint32_t>::iterator end = data.end();
+        Value c = *(Value *)conv(s);
+        Vector<Value>::iterator i = data.begin();
+        Vector<Value>::iterator end = data.end();
         for (; i != end && *i != c; ++i);
         if (i != end) data.erase(i);
         return true;
