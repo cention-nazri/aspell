@@ -1,5 +1,5 @@
 #!/bin/sh
 
-./configure --enable-maintainer-mode --disable-static \
+./configure --enable-maintainer-mode \
   --prefix=`pwd`/inst CFLAGS='-g -Wall' CXXFLAGS='-g -Wall' "$@"
 

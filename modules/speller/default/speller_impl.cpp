@@ -326,9 +326,11 @@ namespace aspeller {
       return false;
     } else {
       if (!lang_) 
-	{
-	  lang_.reset(new Language(*w->lang()));
-	}
+      {
+	lang_.reset(new Language(*w->lang()));
+	config_->replace("lang", lang_name());
+	config_->replace("language-tag", lang_name());
+      }
       w->attach(*lang_);
       DataSetCollection::Item wc(w);
       wc.set_sensible_defaults();

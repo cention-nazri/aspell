@@ -1,7 +1,7 @@
 
 AC_INIT
 AM_CONFIG_HEADER(common/settings.h)
-AM_INIT_AUTOMAKE(aspell, 0.50-20020811)
+AM_INIT_AUTOMAKE(aspell, 0.50-20020815)
 
 AM_MAINTAINER_MODE
 
@@ -23,7 +23,8 @@ AC_SUBST(pkglibdir)
 AC_PROG_CXX
 AC_LANG([C++])
 
-AM_PROG_LIBTOOL
+AC_DISABLE_STATIC
+AC_PROG_LIBTOOL
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                                                                 #

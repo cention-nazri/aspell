@@ -543,17 +543,19 @@ Compiling & Installing
 Generic Install Instructions
 \layout Quote
 
-./configure --disable-static && make
-\layout Standard
-
-[FIXME: Static libraries should be disabled by default, add an explanation
- on why static libraries should not be used]
+./configure && make
 \layout Standard
 
 For additional configure options type ./configure --help.
  You can control what C++ compiler is used by setting the environmental
  variable CXX before running configure and you can control what flags are
  passed to the C++ compile via the environmental variable CXXFLAGS.
+ Static libraries are disabled by default since static libraries will not
+ work right due to the mixing of C and C++.
+ When a C program links with the static libraries in Aspell it is likely
+ to crash because Aspell's C++ objects are not getting initialized correctly.
+ However, if for some reason you want them, you can enable them via --enable-sta
+tic.
 \layout Standard
 
 Aspell should then compile with out any additional user intervention.
