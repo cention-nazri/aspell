@@ -25,7 +25,11 @@ EXTRA_DIST =
 # libaspell and friends
 #
 
-lib_LTLIBRARIES = libaspell.la libpspell.la
+lib_LTLIBRARIES = libaspell.la 
+
+if PSPELL_COMPATIBILITY
+lib_LTLIBRARIES += libpspell.la
+endif
 
 libaspell_la_SOURCES =\
   common/cache.cpp\
@@ -91,11 +95,13 @@ libaspell_la_LIBADD =  $(LIBINTL)
 
 libaspell_la_LDFLAGS = -version-info 16:0:1
 
+if PSPELL_COMPATIBILITY
 libpspell_la_SOURCES = lib/dummy.cpp
 
 libpspell_la_LIBADD = libaspell.la
 
 libpspell_la_LDFLAGS = -version-info 16:0:1
+endif
 
 EXTRA_DIST += common/*.hpp common/*.h\
               modules/speller/default/*.hpp\
@@ -231,17 +237,24 @@ CLEANFILES += gen/dirs.h
 # Scripts
 #
 
-bin_SCRIPTS = scripts/pspell-config scripts/run-with-aspell scripts/aspell-import
+bin_SCRIPTS = scripts/run-with-aspell scripts/aspell-import
 pkgdata_SCRIPTS = scripts/spell scripts/ispell
 
 scripts/run-with-aspell: scripts/run-with-aspell.create
 	sh ${srcdir}/scripts/run-with-aspell.create ${pkgdatadir} > scripts/run-with-aspell
 	chmod 755 scripts/run-with-aspell
 
+
+if PSPELL_COMPATIBILITY
+
+bin_SCRIPTS += scripts/pspell-config 
 scripts/pspell-config: scripts/mkconfig
 	sh ${srcdir}/scripts/mkconfig ${VERSION} ${datadir} ${pkgdatadir}
+CLEANFILES += scripts/pspell-config
 
-CLEANFILES += scripts/pspell-config scripts/run-with-aspell
+endif
+
+CLEANFILES += scripts/run-with-aspell
 
 EXTRA_DIST += scripts/mkconfig scripts/spell scripts/ispell \
               scripts/run-with-aspell.create scripts/aspell-import
@@ -280,10 +293,13 @@ EXTRA_DIST += auto/auto auto/mk-src.txt ${mksrc}
 
 include_HEADERS = interfaces/cc/aspell.h
 
+if PSPELL_COMPATIBILITY
+
 pspell_includedir = ${includedir}/pspell
 
 pspell_include_HEADERS = interfaces/cc/pspell.h
 
+endif
 
 ########################################################################
 #

@@ -61,13 +61,16 @@ AC_ARG_ENABLE(curses-include,
 AC_ARG_ENABLE(compile-in-filters,
 [  --enable-compile-in-filters])
 
+AC_ARG_ENABLE(pspell-compatibility,
+[  --disable-pspell-compatibility])
+
 dnl
 
 AC_PROG_CXX
-if test "$GXX" == "yes"
-then
-  CXXFLAGS="$CXXFLAGS -fno-exceptions"
-fi
+#if test "$GXX" == "yes"
+#then
+#  CXXFLAGS="$CXXFLAGS -fno-exceptions"
+#fi
 
 AC_LANG([C++])
 
@@ -100,6 +103,8 @@ then
 fi
 
 AM_CONDITIONAL(COMPILE_IN_FILTERS, test "$enable_compile_in_filters" == "yes")
+
+AM_CONDITIONAL(PSPELL_COMPATIBILITY, test "$enable_pspell_compatibility" != "no")
 
 dnl GETTEXT
 
