@@ -8,14 +8,14 @@ perl mk-doc.pl
 touch auto
 cd ..
 
-cd manual
-test -e man-html || mkdir man-html
-test -e man-text || mkdir man-text
-test -e dev-html || mkdir dev-html
-test -e dev-text || mkdir dev-text
-touch man-html/manual.html man-text/manual.txt
-touch dev-html/devel.html dev-text/devel.txt
-cd ..
+#cd manual
+#test -e man-html || mkdir man-html
+#test -e man-text || mkdir man-text
+#test -e dev-html || mkdir dev-html
+#test -e dev-text || mkdir dev-text
+#touch man-html/manual.html man-text/manual.txt
+#touch dev-html/devel.html dev-text/devel.txt
+#cd ..
 
 autopoint -f || exit 1
 libtoolize --automake || exit 1

@@ -1,5 +1,5 @@
 
-2004/01/02
+2004/01/19
 
 The following packages need to be installed to build this package
 from CVS.
@@ -8,11 +8,7 @@ from CVS.
   gettext 0.13
   autoconf 2.50 or better
   automake 1.5 (earlier versions *might* work)
-And to build the manual
-  LyX*
-  LaTeX Installing
-  Latex2html
-  w3m
+  makeinfo
 
 If you do not wish to build the manual use "make fake-manual" in the
 manual directory before building the rest of the source.
@@ -24,17 +20,11 @@ Before the build:
   ./configure --disable-static <options> 
   or ./config-opt <options> or ./config-debug <options>
 
-  make manual or make fake-manual
-
 The ./config-* will set things up for easier development.  If you want
 to install Aspell to use it rather than develop with it than use the
 normal configure.  When config-* is used the default things will be
 installed in <build dir>/inst for easier testing and debugging. You
 can change that by using the --prefix option.
-
-The "make manual" is necessary to bootstrap the manual.  If you don't
-do it the build may fail.  Use "make fake-manual" if you do not wish
-to build the manual.
 
 Autogen should be run when ever anything but the source files or
 Makefile.am files are modified by either yourself or a cvs update.

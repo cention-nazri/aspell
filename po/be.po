@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.51\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-01-11 23:09-0500\n"
+"POT-Creation-Date: 2004-01-20 09:34-0500\n"
 "PO-Revision-Date: 2004-01-06 16:34+0200\n"
 "Last-Translator: Vital khilko <dojlid@mova.org>\n"
 "Language-Team: Belarusian <i18n@mova.org>\n"
@@ -171,16 +171,20 @@ msgid "create a backup file by appending \".bak\""
 msgstr "стварае рэзэрвовы файл праз даданьне пашырэньня \".bak\""
 
 #: common/config.cpp:1139
+msgid "keymapping for check mode, one of aspell ispell"
+msgstr "мапаваньне клявішаў для рэжыма праверкі, адно з aspell ispell"
+
+#: common/config.cpp:1141
 msgid "reverse the order of the suggest list"
 msgstr "адваротны накірунак у сьпісе прапановаў"
 
-#: common/config.cpp:1141
+#: common/config.cpp:1143
+msgid "suggest possible replacements"
+msgstr ""
+
+#: common/config.cpp:1145
 msgid "time load time and suggest time in pipe mode"
 msgstr "час загрузкі й час прапановы ў рэжыме канала"
-
-#: common/config.cpp:1143
-msgid "keymapping for check mode, one of aspell ispell"
-msgstr "мапаваньне клявішаў для рэжыма праверкі, адно з aspell ispell"
 
 #: common/errors.cpp:42
 #, c-format
@@ -396,100 +400,100 @@ msgstr "Невядомае дзеяньне: %s"
 msgid "Invalid Input"
 msgstr "Недапушчальны ўвод"
 
-#: prog/aspell.cpp:517
+#: prog/aspell.cpp:518
 msgid "Time to load word list: "
 msgstr "Час загрузкі сьпісу словаў: "
 
-#: prog/aspell.cpp:679
+#: prog/aspell.cpp:684
 msgid "Suggestion Time: "
 msgstr "Час прапанаваньня: "
 
-#: prog/aspell.cpp:720
+#: prog/aspell.cpp:725
 msgid "You must specify a file name."
 msgstr "Вы мусіце пазначыць назву файла."
 
-#: prog/aspell.cpp:730
+#: prog/aspell.cpp:735
 #, c-format
 msgid "Could not open the file \"%s\" for reading"
 msgstr "Немагчыма адкрыць файл \"%s\" для чытаньня"
 
-#: prog/aspell.cpp:736
+#: prog/aspell.cpp:741
 #, c-format
 msgid "Could not open the file \"%s\"  for writing. File not saved."
 msgstr "Немагчыма адкрыць файл \"%s\"  для запісу. Файл не захаваны."
 
-#: prog/aspell.cpp:749
+#: prog/aspell.cpp:754
 #, c-format
 msgid "Invalid keymapping: %s"
 msgstr "Недапушчальнае мапаваньне клявішаў:·%s"
 
-#: prog/aspell.cpp:770
+#: prog/aspell.cpp:775
 msgid "Ignore"
 msgstr "Ігнараваць"
 
-#: prog/aspell.cpp:771
+#: prog/aspell.cpp:776
 msgid "Ignore all"
 msgstr "Ігнараваць усё"
 
-#: prog/aspell.cpp:772
+#: prog/aspell.cpp:777
 msgid "Replace"
 msgstr "Замяніць"
 
-#: prog/aspell.cpp:773
+#: prog/aspell.cpp:778
 msgid "Replace all"
 msgstr "Замяніць усё"
 
-#: prog/aspell.cpp:774
+#: prog/aspell.cpp:779
 msgid "Add"
 msgstr "Дадаць"
 
-#: prog/aspell.cpp:775
+#: prog/aspell.cpp:780
 msgid "Add Lower"
 msgstr "Дадаць малымі літарамі"
 
-#: prog/aspell.cpp:776
+#: prog/aspell.cpp:781
 msgid "Abort"
 msgstr "Адкінуць"
 
-#: prog/aspell.cpp:777
+#: prog/aspell.cpp:782
 msgid "Exit"
 msgstr "ВЫйсьці"
 
-#: prog/aspell.cpp:858
+#: prog/aspell.cpp:863
 msgid "Are you sure you want to abort? "
 msgstr "Вы сапраўды жадаеце адкінуць?"
 
-#: prog/aspell.cpp:878
+#: prog/aspell.cpp:883
 msgid "With: "
 msgstr "З: "
 
-#: prog/aspell.cpp:892
+#: prog/aspell.cpp:897
 msgid "Sorry that is an invalid choice!"
 msgstr "Выбачайце, але гэта памылковы выбар!"
 
-#: prog/aspell.cpp:1012
+#: prog/aspell.cpp:1017
 msgid "Sorry \"filter\" is currently unimplemented.\n"
 msgstr "Выбачайце \"фільтар\" зараз не працаздольны.\n"
 
-#: prog/aspell.cpp:1103
+#: prog/aspell.cpp:1108
 msgid "Can't merge a master word list yet. Sorry."
 msgstr "Немагчыма зараз аб'яднаць асноўны сьпіс словаў. Выбачайце."
 
-#: prog/aspell.cpp:1132
+#: prog/aspell.cpp:1137
 msgid "Sorry \"create/merge personal\" is currently unimplemented.\n"
 msgstr ""
 "Выбачайце \"стварэньне/аб'яднаньне пэрсанальнага\" зараз непрацаздольнае.\n"
 
-#: prog/aspell.cpp:1141 prog/aspell.cpp:1197
+#: prog/aspell.cpp:1146 prog/aspell.cpp:1202
 #, c-format
 msgid "Sorry I won't overwrite \"%s\""
 msgstr "Выбачайце, трэба перазапісаць \"%s\""
 
-#: prog/aspell.cpp:1188
+#: prog/aspell.cpp:1193
 msgid "Sorry \"create/merge repl\" is currently unimplemented.\n"
 msgstr "Выбачайце пакуль гэтая апэрацыя непрацаздольная.\n"
 
-#: prog/aspell.cpp:1367
+#: prog/aspell.cpp:1372
 #, c-format
 msgid ""
 "\n"
@@ -544,7 +548,7 @@ msgstr ""
 "[выбары] адзін з наступных выбараў:\n"
 "\n"
 
-#: prog/aspell.cpp:1396
+#: prog/aspell.cpp:1401
 #, c-format
 msgid ""
 "\n"

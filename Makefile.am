@@ -306,8 +306,8 @@ pkgdata_DATA = ${top_srcdir}/data/*.dat ${top_srcdir}/data/*.kbd
 EXTRA_DIST += config.rpath  README ${pkgdata_DATA} m4/*.m4 \
               misc/po-filter.c
 
-README: manual/man-text/2_Getting.txt
-	cp manual/man-text/2_Getting.txt README
+README: manual/aspell.texi
+	cd manual; perl mk-readme.pl; mv README ..; cd ..
 
 maintainer-clean-local:
 	@find . \( -name '*.?pp' -o -name '*.h' -o -name '*.opt' \) -print |\

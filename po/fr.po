@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Aspell 0.51\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-01-11 23:09-0500\n"
+"POT-Creation-Date: 2004-01-20 09:34-0500\n"
 "PO-Revision-Date: 2004-01-06 23:25+0200\n"
 "Last-Translator: Thierry Thomas <thierry@pompo.net>\n"
 "Language-Team: French <aspell-devel@gnu.org>\n"
@@ -174,18 +174,22 @@ msgid "create a backup file by appending \".bak\""
 msgstr "créer un fichier de sauvegarde en ajoutant « .bak »"
 
 #: common/config.cpp:1139
-msgid "reverse the order of the suggest list"
-msgstr "inverser l'ordre de la liste de suggestion"
-
-# TODO: traduction à reprendre...
-#: common/config.cpp:1141
-msgid "time load time and suggest time in pipe mode"
-msgstr "durée, temps de chargement et temps de recherche en mode « pipe »"
-
-#: common/config.cpp:1143
 msgid "keymapping for check mode, one of aspell ispell"
 msgstr ""
 "affectation des touches lors de la vérification : comme Aspell ou Ispell"
+
+#: common/config.cpp:1141
+msgid "reverse the order of the suggest list"
+msgstr "inverser l'ordre de la liste de suggestion"
+
+#: common/config.cpp:1143
+msgid "suggest possible replacements"
+msgstr ""
+
+# TODO: traduction à reprendre...
+#: common/config.cpp:1145
+msgid "time load time and suggest time in pipe mode"
+msgstr "durée, temps de chargement et temps de recherche en mode « pipe »"
 
 #: common/errors.cpp:42
 #, c-format
@@ -410,106 +414,106 @@ msgstr "Action inconnue : %s"
 msgid "Invalid Input"
 msgstr "Entrée invalide"
 
-#: prog/aspell.cpp:517
+#: prog/aspell.cpp:518
 msgid "Time to load word list: "
 msgstr "Temps de chargement du dictionnaire :"
 
-#: prog/aspell.cpp:679
+#: prog/aspell.cpp:684
 msgid "Suggestion Time: "
 msgstr "Temps de suggestion :"
 
-#: prog/aspell.cpp:720
+#: prog/aspell.cpp:725
 msgid "You must specify a file name."
 msgstr "Vous devez indiquer un nom de fichier."
 
-#: prog/aspell.cpp:730
+#: prog/aspell.cpp:735
 #, c-format
 msgid "Could not open the file \"%s\" for reading"
 msgstr "Impossible d'ouvrir le fichier « %s » en lecture"
 
-#: prog/aspell.cpp:736
+#: prog/aspell.cpp:741
 #, c-format
 msgid "Could not open the file \"%s\"  for writing. File not saved."
 msgstr ""
 "Impossible d'ouvrir le fichier « %s » en écriture. Fichier non enregistré."
 
-#: prog/aspell.cpp:749
+#: prog/aspell.cpp:754
 #, c-format
 msgid "Invalid keymapping: %s"
 msgstr "Correspondance de touches invalide : %s"
 
-#: prog/aspell.cpp:770
+#: prog/aspell.cpp:775
 msgid "Ignore"
 msgstr "Ignorer"
 
-#: prog/aspell.cpp:771
+#: prog/aspell.cpp:776
 msgid "Ignore all"
 msgstr "Ignorer tout"
 
-#: prog/aspell.cpp:772
+#: prog/aspell.cpp:777
 msgid "Replace"
 msgstr "Remplacer"
 
-#: prog/aspell.cpp:773
+#: prog/aspell.cpp:778
 msgid "Replace all"
 msgstr "Remplacer tout"
 
-#: prog/aspell.cpp:774
+#: prog/aspell.cpp:779
 msgid "Add"
 msgstr "Ajouter"
 
-#: prog/aspell.cpp:775
+#: prog/aspell.cpp:780
 msgid "Add Lower"
 msgstr "Ajouter minus."
 
-#: prog/aspell.cpp:776
+#: prog/aspell.cpp:781
 msgid "Abort"
 msgstr "Avorter"
 
-#: prog/aspell.cpp:777
+#: prog/aspell.cpp:782
 msgid "Exit"
 msgstr "Sortir"
 
-#: prog/aspell.cpp:858
+#: prog/aspell.cpp:863
 msgid "Are you sure you want to abort? "
 msgstr "Voulez-vous vraiment avorter ?"
 
 # remplacer ... par : ...
-#: prog/aspell.cpp:878
+#: prog/aspell.cpp:883
 msgid "With: "
 msgstr "par : "
 
-#: prog/aspell.cpp:892
+#: prog/aspell.cpp:897
 msgid "Sorry that is an invalid choice!"
 msgstr "Désolé, choix invalide !"
 
-#: prog/aspell.cpp:1012
+#: prog/aspell.cpp:1017
 msgid "Sorry \"filter\" is currently unimplemented.\n"
 msgstr "« filter » n'est pas encore implémenté.\n"
 
-#: prog/aspell.cpp:1103
+#: prog/aspell.cpp:1108
 msgid "Can't merge a master word list yet. Sorry."
 msgstr ""
 "Impossible de fusionner un dictionnaire principal pour l'instant. Désolé."
 
-#: prog/aspell.cpp:1132
+#: prog/aspell.cpp:1137
 msgid "Sorry \"create/merge personal\" is currently unimplemented.\n"
 msgstr ""
 "La création et la fusion de dictionnaires personnels ne sont \n"
 "pas encore implémentées.\n"
 
-#: prog/aspell.cpp:1141 prog/aspell.cpp:1197
+#: prog/aspell.cpp:1146 prog/aspell.cpp:1202
 #, c-format
 msgid "Sorry I won't overwrite \"%s\""
 msgstr "Désolé, je ne peux pas écraser « %s »"
 
-#: prog/aspell.cpp:1188
+#: prog/aspell.cpp:1193
 msgid "Sorry \"create/merge repl\" is currently unimplemented.\n"
 msgstr ""
 "La création et la fusion de listes de remplacement ne sont \n"
 "pas encore implémentées.\n"
 
-#: prog/aspell.cpp:1367
+#: prog/aspell.cpp:1372
 #, c-format
 msgid ""
 "\n"
@@ -565,7 +569,7 @@ msgstr ""
 "[options] à choisir parmi :\n"
 "\n"
 
-#: prog/aspell.cpp:1396
+#: prog/aspell.cpp:1401
 #, c-format
 msgid ""
 "\n"
