@@ -295,3 +295,13 @@ maintainer-clean-local:
 	    xargs rm
 
 ACLOCAL_AMFLAGS = -I m4
+
+.PHONY: .manual fake-manual
+
+.manual:
+	$(MAKE) -C manual manual
+manual: .manual
+	$(MAKE) -C manual manual
+
+fake-manual: 
+	$(MAKE) -C manual fake-manual

@@ -1,11 +1,11 @@
 
-2002/07/22
+2004/01/02
 
 The following packages need to be installed to build this package
 from CVS.
   perl (I use v5.6.0 but other versions may work)
-  libtool (CVS version)
-  gettext 0.11.5
+  libtool 1.5 or better
+  gettext 0.13
   autoconf 2.50 or better
   automake 1.5 (earlier versions *might* work)
 And to build the manual
@@ -14,18 +14,8 @@ And to build the manual
   Latex2html
   w3m
 
-libtool *must* be the CVS version for the C++ support.  The released
-version will not work.
-
 If you do not wish to build the manual use "make fake-manual" in the
 manual directory before building the rest of the source.
-
-* Since LyX depended on non free software which in a conflict of interest
-  for the FSF the generated TeX files are also included so that LyX is
-  not needed unless you plan on editing the manual.  If you wish to 
-  work on the manual but do not which to use LyX please contact me.
-  The eventual goal is to convert the manual into Texinfo.  Once done
-  this problem will go away.
 
 Before the build:
 
@@ -34,11 +24,17 @@ Before the build:
   ./configure --disable-static <options> 
   or ./config-opt <options> or ./config-debug <options>
 
+  make manual or make fake-manual
+
 The ./config-* will set things up for easier development.  If you want
 to install Aspell to use it rather than develop with it than use the
 normal configure.  When config-* is used the default things will be
 installed in <build dir>/inst for easier testing and debugging. You
-can change that by using the --prefix option.  
+can change that by using the --prefix option.
+
+The "make manual" is necessary to bootstrap the manual.  If you don't
+do it the build may fail.  Use "make fake-manual" if you do not wish
+to build the manual.
 
 Autogen should be run when ever anything but the source files or
 Makefile.am files are modified by either yourself or a cvs update.

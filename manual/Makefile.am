@@ -2,7 +2,7 @@ pkgdoc_DATA = manual.dvi manual.tex manual2.lyx manual.aux\
               devel.dvi  devel.tex devel2.lyx devel.aux
 noinst_DATA = manual-html manual-text devel-html devel-text
 
-## CLEANFILES += manual2.tex manual2.aux manual2.log
+CLEANFILES = manual2.tex manual2.aux manual2.log
 
 MAINTAINERCLEANFILES = manual.*  manual-html manual-text\
                        devel.*  devel-html devel-text
@@ -11,16 +11,21 @@ MAINTAINERCLEANFILES = manual.*  manual-html manual-text\
 export TEXT_DUMP=@TEXT_DUMP@
 export DUMP_WIDTH=@DUMP_WIDTH@
 
+.PHONY: manual fake-manual
+
 fake-manual:
 	touch \
 	manual.dvi manual.tex manual.aux manual2.tex manual-html manual-text\
-	devel.dvi devel.tex devel.aux devel2.tex devel-html devel-text
+	devel.dvi devel.tex devel.aux devel2.tex devel-html devel-text\
+        man-html/manual.html man-text/manual.txt\
+        dev-html/devel.html dev-text/devel.txt
 
 #
 # Main Manual
 #
 
-manual: @MAINTAINER_MODE_TRUE@ manual-text devel-text
+manual: manual2.tex manual.tex manual.dvi manual-html manual-text\
+        devel2.tex devel.tex devel.dvi devel-html devel-text
 
 manual2.tex: @MAINTAINER_MODE_TRUE@ manual2.lyx
 	-lyx --export latex manual2.lyx
@@ -34,7 +39,7 @@ manual.dvi: @MAINTAINER_MODE_TRUE@ manual.tex
 	latex manual.tex
 
 manual-html: @MAINTAINER_MODE_TRUE@ manual.dvi
-	-rm dev-html/*
+	-rm man-html/*
 	latex2html \
 	  -split 3 \
           -toc_depth 3 \
@@ -47,7 +52,7 @@ manual-html: @MAINTAINER_MODE_TRUE@ manual.dvi
 	touch manual-html
 
 manual-text: @MAINTAINER_MODE_TRUE@ manual-html html2txt.pl
-	-rm dev-text/*
+	-rm man-text/*
 	perl html2txt.pl man
 	touch manual-text
 
@@ -57,8 +62,6 @@ manual.ps: @MAINTAINER_MODE_TRUE@ manual.dvi
 #
 # Devel Docs
 #
-
-devel: @MAINTAINER_MODE_TRUE@ devel-text
 
 devel2.tex: @MAINTAINER_MODE_TRUE@ devel2.lyx
 	-lyx --export latex devel2.lyx
@@ -94,7 +97,7 @@ devel.ps: @MAINTAINER_MODE_TRUE@ devel.dvi
 
 nobase_pkgdoc_DATA = man-html/* man-text/* dev-html/* dev-text/*
 
-MAINTAINERCLEANFILES += ${nobase_pkgdoc_DATA} *.pl WARNINGS
+MAINTAINERCLEANFILES += ${nobase_pkgdoc_DATA} WARNINGS
 
 EXTRA_DIST = ${pkgdoc_DATA} ${nobase_pkgdoc_DATA}\
              html.sty html2txt.pl edit-man manual2.per man-proc.pl\
