@@ -1103,6 +1103,11 @@ namespace acommon {
        N_("use personal, replacement & session dictionaries")}
     , {"warn", KeyInfoBool, "false", // FIXME: Implement
        N_("enable warnings")}
+    , {"normalize", KeyInfoBool, "false",
+       N_("enable Unicode normalization")}
+    , {"norm-required", KeyInfoBool, "false", 0} // FIXME
+    , {"norm-form", KeyInfoString, "nfc",
+       N_("Unicode normalization form: none, nfd, nfc, comp")}
     
     //
     // These options are only used when creating dictionaries

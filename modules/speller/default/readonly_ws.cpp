@@ -722,9 +722,9 @@ namespace {
 
     ConvEC iconv;
     if (config.have("encoding"))
-      RET_ON_ERR(iconv.setup(config, config.retrieve("encoding"), lang.charset()));
+      RET_ON_ERR(iconv.setup(config, config.retrieve("encoding"), lang.charset(),NormFrom));
     else
-      RET_ON_ERR(iconv.setup(config, lang.data_encoding(), lang.charset()));
+      RET_ON_ERR(iconv.setup(config, lang.data_encoding(), lang.charset(),NormFrom));
 
     //CERR << (affix_compress ? "  AFFIX COMPRESS" : "")
     //     << (use_soundslike ? "  USING SOUNDSLIKE" : "") 

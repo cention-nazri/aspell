@@ -162,4 +162,13 @@ namespace acommon {
     return p;
   }
 
+  void remove_comments(String & buf)
+  {
+    buf.ensure_null_end();
+    char * p = buf.data();
+    while (*p && *p != '#') ++p;
+    if (*p == '#') {--p; while (p >= buf.data() && asc_isspace(*p)) --p; ++p;}
+    buf.resize(p - buf.data());
+  }
+
 }

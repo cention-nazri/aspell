@@ -49,10 +49,9 @@ namespace acommon {
                         CharVector & out) const = 0;
     virtual PosibErr<void> encode_ec(const FilterChar * in, const FilterChar * stop, 
                                      CharVector & out, ParmString orig) const = 0;
-    // encodes the string by modifying the input, if it can't abe done
-    // return false
-    virtual bool encode_direct(FilterChar * in, FilterChar * stop) const
-      {return false;}
+    // may convert inplace
+    virtual bool encode(FilterChar * & in, FilterChar * & stop, 
+                        FilterCharVector & buf) const {return false;}
     static PosibErr<Encode *> get_new(const String &, const Config *);
     virtual ~Encode() {}
   };
@@ -68,14 +67,40 @@ namespace acommon {
                                       CharVector & out, ParmString orig) const = 0;
     virtual ~DirectConv() {}
   };
+  template <class T> struct NormTable;
+  struct FromUniNormEntry;
+  struct ToUniNormEntry;
+  struct NormTables : public Cacheable {
+    typedef const Config CacheConfig;
+    typedef const char * CacheKey;
+    String key;
+    bool cache_key_eq(const char * l) const  {return key == l;}
+    static PosibErr<NormTables *> get_new(const String &, const Config *);
+    NormTable<FromUniNormEntry> * internal;
+    struct ToUniTable {
+      String name;
+      NormTable<ToUniNormEntry> * data;
+      NormTable<ToUniNormEntry> * ptr;
+      ToUniTable() : data(), ptr() {}
+    };
+    typedef Vector<ToUniTable> ToUni;
+    Vector<ToUniTable> to_uni;
+    ~NormTables();
+  };
 
   typedef FilterCharVector ConvertBuffer;
 
   class Convert {
   private:
-    CachePtr<Decode> decode_;
-    CachePtr<Encode> encode_;
-    StackPtr<DirectConv> conv_;
+    CachePtr<Decode> decode_d;
+    Decode * decode_;
+    CachePtr<Encode> encode_d;
+    Encode * encode_;
+    CachePtr<NormTables> norm_tables_;
+    DirectConv * conv_;
+
+    static const size_t memory_size = 96;
+    char memory[memory_size];
 
     ConvertBuffer buf_;
 
@@ -93,7 +118,9 @@ namespace acommon {
     Filter filter;
 
     PosibErr<void> init(const Config &, ParmString in, ParmString out);
-
+    PosibErr<void> init_norm_to(const Config &, ParmString in, ParmString out);
+    PosibErr<void> init_norm_from(const Config &, ParmString in, ParmString out);
+    
     const char * in_code() const   {return decode_->key.c_str();}
     const char * out_code() const  {return encode_->key.c_str();}
 
@@ -116,8 +143,9 @@ namespace acommon {
 		CharVector & out) const
       {encode_->encode(in,stop,out);}
 
-    bool encode_direct(FilterChar * in, FilterChar * stop) const
-      {return encode_->encode_direct(in,stop);}
+    bool encode(FilterChar * & in, FilterChar * & stop, 
+                FilterCharVector & buf) const
+      {return encode_->encode(in,stop,buf);}
 
     // does NOT pass it through filters
     // DOES NOT use an internal state
@@ -173,31 +201,36 @@ namespace acommon {
 
   bool is_ascii_enc(ParmString enc);
 
+  enum Normalize {NormNone, NormFrom, NormTo};
+
   PosibErr<Convert *> internal_new_convert(const Config & c, 
                                            ParmString in, ParmString out,
-                                           bool if_needed);
+                                           bool if_needed,
+                                           Normalize n);
   
   static inline PosibErr<Convert *> new_convert(const Config & c,
-                                                ParmString in, ParmString out)
+                                                ParmString in, ParmString out,
+                                                Normalize n)
   {
-    return internal_new_convert(c,in,out,false);
+    return internal_new_convert(c,in,out,false,n);
   }
   
   static inline PosibErr<Convert *> new_convert_if_needed(const Config & c,
-                                                          ParmString in, ParmString out)
+                                                          ParmString in, ParmString out,
+                                                          Normalize n)
   {
-    return internal_new_convert(c,in,out,true);
+    return internal_new_convert(c,in,out,true,n);
   }
 
   struct ConvObj {
     Convert * ptr;
     ConvObj(Convert * c = 0) : ptr(c) {}
     ~ConvObj() {delete ptr;}
-    PosibErr<void> setup(const Config & c, ParmString from, ParmString to)
+    PosibErr<void> setup(const Config & c, ParmString from, ParmString to, Normalize norm)
     {
       delete ptr;
       ptr = 0;
-      PosibErr<Convert *> pe = new_convert_if_needed(c, from, to);
+      PosibErr<Convert *> pe = new_convert_if_needed(c, from, to, norm);
       if (pe.has_err()) return pe;
       ptr = pe.data;
       return no_err;
@@ -217,11 +250,12 @@ namespace acommon {
     ConvP(const ConvObj & c) : conv(c.ptr) {}
     ConvP(const ConvP & c) : conv(c.conv) {}
     void operator=(const ConvP & c) { conv = c.conv; }
-    PosibErr<void> setup(const Config & c, ParmString from, ParmString to)
+    PosibErr<void> setup(const Config & c, ParmString from, ParmString to, 
+                         Normalize norm)
     {
       delete conv;
       conv = 0;
-      PosibErr<Convert *> pe = new_convert_if_needed(c, from, to);
+      PosibErr<Convert *> pe = new_convert_if_needed(c, from, to, norm);
       if (pe.has_err()) return pe;
       conv = pe.data;
       return no_err;
@@ -278,9 +312,9 @@ namespace acommon {
   {
     ConvObj conv_obj;
     Conv(Convert * c = 0) : ConvP(c), conv_obj(c) {}
-    PosibErr<void> setup(const Config & c, ParmString from, ParmString to)
+    PosibErr<void> setup(const Config & c, ParmString from, ParmString to, Normalize norm)
     {
-      RET_ON_ERR(conv_obj.setup(c,from,to));
+      RET_ON_ERR(conv_obj.setup(c,from,to,norm));
       conv = conv_obj.ptr;
       return no_err;
     }
@@ -295,11 +329,11 @@ namespace acommon {
     ConvECP(const ConvObj & c) : conv(c.ptr) {}
     ConvECP(const ConvECP & c) : conv(c.conv) {}
     void operator=(const ConvECP & c) { conv = c.conv; }
-    PosibErr<void> setup(const Config & c, ParmString from, ParmString to)
+    PosibErr<void> setup(const Config & c, ParmString from, ParmString to, Normalize norm)
     {
       delete conv;
       conv = 0;
-      PosibErr<Convert *> pe = new_convert_if_needed(c, from, to);
+      PosibErr<Convert *> pe = new_convert_if_needed(c, from, to,norm);
       if (pe.has_err()) return pe;
       conv = pe.data;
       return no_err;
@@ -350,9 +384,9 @@ namespace acommon {
   {
     ConvObj conv_obj;
     ConvEC(Convert * c = 0) : ConvECP(c), conv_obj(c) {}
-    PosibErr<void> setup(const Config & c, ParmString from, ParmString to)
+    PosibErr<void> setup(const Config & c, ParmString from, ParmString to, Normalize norm)
     {
-      RET_ON_ERR(conv_obj.setup(c,from,to));
+      RET_ON_ERR(conv_obj.setup(c,from,to,norm));
       conv = conv_obj.ptr;
       return no_err;
     }

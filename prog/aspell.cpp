@@ -337,7 +337,7 @@ int main (int argc, const char *argv[])
   if (!utf8_opts.empty()) {
     Conv to_utf8;
 #ifdef USE_LOCALE
-    EXIT_ON_ERR(to_utf8.setup(*options, codeset, "utf-8"));
+    EXIT_ON_ERR(to_utf8.setup(*options, codeset, "utf-8", NormTo));
 #endif
     for (Vector<StringPair>::iterator i = utf8_opts.begin(); 
          i != utf8_opts.end();
@@ -439,7 +439,8 @@ static Convert * setup_conv(const aspeller::Language * lang,
   if (config->retrieve("encoding") != "none") {
     PosibErr<Convert *> pe = new_convert_if_needed(*config,
                                                    lang->charset(),
-                                                   config->retrieve("encoding"));
+                                                   config->retrieve("encoding"),
+                                                   NormTo);
     if (pe.has_err()) {print_error(pe.get_err()->mesg); exit(1);}
     return pe.data;
   } else {
@@ -453,7 +454,8 @@ static Convert * setup_conv(Config * config,
   if (config->retrieve("encoding") != "none") {
     PosibErr<Convert *> pe = new_convert_if_needed(*config,
                                                    config->retrieve("encoding"),
-                                                   lang->charset());
+                                                   lang->charset(),
+                                                   NormFrom);
     if (pe.has_err()) {print_error(pe.get_err()->mesg); exit(1);}
     return pe.data;
   } else {
@@ -1166,7 +1168,7 @@ void list()
 void convt()
 {
   Conv conv;
-  conv.setup(*options, args[0], args[1]);
+  conv.setup(*options, args[0], args[1], NormNone);
   String line;
   while (CIN.getline(line))
     COUT.printl(conv(line));

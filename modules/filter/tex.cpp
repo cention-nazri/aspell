@@ -487,7 +487,7 @@ namespace acommon {
     Conv conv; // this a quick and dirty fix witch will only work for
                // iso-8859-1.  Full unicode support needs to be
                // implemented
-    conv.setup(*config, "utf-8", "iso-8859-1");
+    conv.setup(*config, "utf-8", "iso-8859-1", NormNone);
 
     StringEnumeration * multibytelist=multibytechars.elements();
     const char * multibyte0=NULL;
@@ -589,7 +589,7 @@ namespace acommon {
     Conv conv; // this a quick and dirty fix witch will only work for
                // iso-8859-1.  Full unicode support needs to be
                // implemented
-    conv.setup(*config, "utf-8", "iso-8859-1");
+    conv.setup(*config, "utf-8", "iso-8859-1", NormNone);
 
     StringEnumeration * multibytelist=multibytechars.elements();
     const char * multibyte0=NULL;

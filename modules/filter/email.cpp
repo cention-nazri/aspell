@@ -61,7 +61,7 @@ namespace acommon {
   {
     name_ = "email-filter";
     order_num_ = 0.85;
-    is_quote_char.conv.setup(*opts, "utf-8", "utf-32");
+    is_quote_char.conv.setup(*opts, "utf-8", "utf-32", NormNone);
     opts->retrieve_list("filter-email-quote", &is_quote_char);
     margin = opts->retrieve_int("filter-email-margin");
     reset();

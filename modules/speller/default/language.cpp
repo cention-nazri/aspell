@@ -69,6 +69,9 @@ namespace aspeller {
     , {"sug-split-chars",     KeyInfoString, "- ", "", 0, FOR_CONFIG}
     , {"store-as",            KeyInfoString, "", ""}
     , {"try",                 KeyInfoString, "", ""}
+    , {"normalize",           KeyInfoBool, "false", "", 0, FOR_CONFIG}
+    , {"norm-required",       KeyInfoBool, "false", "", }
+    , {"norm-form",           KeyInfoString, "nfc", "", 0, FOR_CONFIG}
   };
 
   static GlobalCache<Language> language_cache("language");
@@ -118,18 +121,18 @@ namespace aspeller {
 #endif
       if (is_ascii_enc(tmp)) tmp = 0;
       if (tmp)
-        RET_ON_ERR(mesg_conv_.setup(*config, charset_, fix_encoding_str(tmp, buf)));
+        RET_ON_ERR(mesg_conv_.setup(*config, charset_, fix_encoding_str(tmp, buf), NormTo));
       else 
 #endif
-        RET_ON_ERR(mesg_conv_.setup(*config, charset_, data_encoding_));
+        RET_ON_ERR(mesg_conv_.setup(*config, charset_, data_encoding_, NormTo));
       // no need to check for errors here since we know charset_ is a
       // supported encoding
-      to_utf8_.setup(*config, charset_, "utf-8");
-      from_utf8_.setup(*config, "utf-8", charset_);
+      to_utf8_.setup(*config, charset_, "utf-8", NormTo);
+      from_utf8_.setup(*config, "utf-8", charset_, NormFrom);
     }
     
     Conv iconv;
-    RET_ON_ERR(iconv.setup(*config, data_encoding_, charset_));
+    RET_ON_ERR(iconv.setup(*config, data_encoding_, charset_, NormFrom));
 
     DataPair d;
 
@@ -298,7 +301,7 @@ namespace aspeller {
     StackPtr<KeyInfoEnumeration> els(lang_config_->possible_elements(false));
     const KeyInfo * k;
     Conv to_utf8;
-    to_utf8.setup(config, data_encoding_, "utf-8");
+    to_utf8.setup(config, data_encoding_, "utf-8", NormTo);
     while ((k = els->next()) != 0) {
       if (k->other_data == FOR_CONFIG 
 	  && lang_config_->have(k->name) && !config.have(k->name))
@@ -497,7 +500,7 @@ namespace aspeller {
 	if (!l.special(*i).middle) {
           char m[70];
           snprintf(m, 70, 
-                   _("The character '%s' may not appear at the middle of a word."),
+                   _("The character '%s' may not appear in the middle of a word."),
                    MsgConv(l)(*i));
           return make_err(invalid_word, MsgConv(l)(word), m);
         }
@@ -581,7 +584,6 @@ namespace aspeller {
     String lang = c.retrieve("lang");
     lang.ensure_null_end();
     char * l = lang.data();
-    CERR.printl(l);
 
     String dir1,dir2,path;
     fill_data_dir(&c, dir1, dir2);

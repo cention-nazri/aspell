@@ -9,6 +9,7 @@
 #include "convert.hpp"
 #include "speller.hpp"
 
+
 namespace acommon {
 
   class TokenizerBasic : public Tokenizer

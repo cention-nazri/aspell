@@ -9,6 +9,7 @@
 
 #include "char_vector.hpp"
 #include "filter_char.hpp"
+#include "filter_char_vector.hpp"
 
 namespace acommon {
 
@@ -58,6 +59,7 @@ namespace acommon {
     
     CharType char_type_[256];
     Convert * conv_;
+    FilterCharVector buf_;
   };
 
   // returns a new tokenizer and sets it up with the given speller

@@ -21,7 +21,7 @@ namespace acommon
 
   void Tokenizer::reset (FilterChar * begin, FilterChar * end) 
   {
-    bool can_encode = conv_->encode_direct(begin, end);
+    bool can_encode = conv_->encode(begin, end, buf_);
     assert(can_encode);
     end_pos = 0;
     word_end = begin;
