@@ -1,5 +1,5 @@
 /* This file is part of The New Aspell
- * Copyright (C) 2001 by Kevin Atkinson under the GNU LGPL
+ * Copyright (C) 2001, 2005 by Kevin Atkinson under the GNU LGPL
  * license version 2.0 or 2.1.  You should have received a copy of the
  * LGPL license along with this library if you did not you can find it
  * at http://www.gnu.org/.                                              */
@@ -67,7 +67,7 @@ namespace acommon {
     Segment * next;
     
     void * which;
-    unsigned id;     // uniq id of the orignal string
+    unsigned id;     // uniq id for the orignal string
     unsigned offset; // offset from the orignal string
     
     SegmentDataPtr data;
@@ -96,6 +96,7 @@ namespace acommon {
   };
   
   class Checker {
+    friend class SegmentIterator;
   protected:
     virtual void i_reset(Segment *) = 0;
     
@@ -109,22 +110,36 @@ namespace acommon {
     // this needs to be called by the derived class in the constructor
     void init(Speller * speller);
 
-    // this needs to be set when checker is created
-  public:
-
     void need_more(Segment * seg) // seg = last segment on list
       {if (callback_) callback_(callback_data_, seg->which);}
-    
+
+  public:
+
     Checker();
     virtual ~Checker();
     void reset();
+    // Should be called to reset the state when starting a new
+    // document.
 
     void process(const char * str, int size, void * which = 0);
-    // The "which" is a genertic pointer which can be used to keep
-    // track of which string the current word belongs to.
+    // Process the current string and add it to the queue of strings
+    // to check.  The string can be as long as you want it to be (even
+    // the whole document) not be smaller than a whitespace seperated
+    // token and should not split a non-whitspace delimited token in
+    // two.  For example:
+    //   OK:  "hello ", "world"
+    //   NOT: "hel", "lo world"
+    //   NOT: "hello w", "orld"
+    //   OK:  "http://www.google.com"
+    //   NOT: "http://", "www.google.com"
+    // The "which" is a genertic pointer which can be used to
+    // keep track of which string the current word belongs to.
 
     void add_separator();
-    // Add a paragraph separator after the last processed string.
+    // Add a separator after the last processed string, to seperate
+    // one word from another.  This means more than simply inserting
+    // a whitespace character in the case when the word can have a
+    // space in it
 
     void replace(const char * str, int size); 
     // after a word is corrected, as restarting is not
@@ -132,7 +147,7 @@ namespace acommon {
     // involved
     
     virtual const Token * next() = 0; 
-    // get next word, returns false if more data is needed
+    // get next word, returns null if more data is needed
 
     const Token * cur() const {return &token;}
     
@@ -144,12 +159,15 @@ namespace acommon {
 
     void set_callback(void (*c)(void *, void *), void * d) 
       {callback_ = c; callback_data_ = d;}
+    // sets the callback that is called when more data is needed the
+    // callback function is expected to add more data with the
+    // "process" method.  If the callback is not set or fails to add
+    // more data than the "next" method will return a null
 
-    // FIXME: need way to set span_strings
     bool span_strings() {return span_strings_;}
     void set_span_strings(bool v) {span_strings_ = v;}
-    // if a word can span multiple strigs.  If true the current word
-    // may not necessary be part of the last string processed
+    // if a word can span multiple strings in the case when word has a
+    // space in it or the like.  This defaults to false.
 
   private:
     Checker(const Checker &);

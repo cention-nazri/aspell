@@ -22,7 +22,7 @@ namespace acommon {
     // get first non blank line and count all read ones
     do {
       buf.clear();
-      buf.append('\0'); // to avoid some special cases
+      buf.append('\0'); // to avoid some special cases when scanning backward
       if (!in.append_line(buf)) return false;
       d.line_num++;
       p = buf.mstr() + 1;
