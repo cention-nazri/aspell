@@ -841,9 +841,11 @@ namespace acommon {
 
     if (strncmp(buf.c_str(), "iso8859", 7) == 0)
       buf.insert(buf.begin() + 3, '-'); // For backwards compatibility
-    
+
     if (buf == "ascii" || buf == "ansi_x3.4-1968")
       return "iso-8859-1";
+    else if (buf == "utf8")
+      return "utf-8";
     else if (buf == "machine unsigned 16" || buf == "utf-16")
       return "ucs-2";
     else if (buf == "machine unsigned 32" || buf == "utf-32")

@@ -13,7 +13,9 @@ my @table = qw(
 my %table;
 for (my $i = 0; $i != @table; $i += 2)
 {
-  push @{$table{ord($table[$i])}}, $table[$i+1];
+  push @{$table{ord($table[$i])}}, ("$table[$i+1]\{\}",
+                                    "{$table[$i+1]}",
+                                    "$table[$i+1]\\ ");
 }
 
 %comb = 
@@ -39,11 +41,14 @@ while (<F>) {
   my ($a, $b, $c) = (hex($1), hex($2), hex($3));
   next unless exists $comb{$c};
   next unless $b < 0x80;
-  push @{$table{$a}}, ($comb{$c}[0].'{'.'\\\\'.chr($b).'}') 
-      if ($b == ord('i') || $b == ord('j')) && $comb{$c}[2] eq 'a';
-  push @{$table{$a}}, ($comb{$c}[0].chr($b)) if $comb{$c}[1] eq '';
-    push @{$table{$a}}, ($comb{$c}[0].'{'.chr($b).'}');
-} 
+  my $B = chr($b);
+  my $C = $comb{$c}[0];
+  if (($B eq 'i' || $B eq 'j') && $comb{$c}[2] eq 'a') {
+    push @{$table{$a}}, "$C\{\\\\$B\}", "$C\\\\$B\\ ", "$C\\ \\\\$B\\ ";
+  }
+  push @{$table{$a}}, "$C$B" if $comb{$c}[1] eq '';
+  push @{$table{$a}}, "$C\{$B\}", "$C\\ $B";
+}
 
 open F, "/home/kevina/devel/aspell-lang/decomp.txt";
 while (<F>) {
@@ -51,8 +56,12 @@ while (<F>) {
   my ($a, $b, $c) = (hex($1), hex($2), hex($3));
   next unless exists $comb{$c};
   next unless $b >= 0x80 && exists $table{$b};
+  my $C = $comb{$c}[0];
   foreach (@{$table{$b}}) {
-    push @{$table{$a}}, ($comb{$c}[0].'{'.$_.'}');
+    next if /\{\}$/ || /^\{.+\}$/;
+    my $B = $_;
+    s/\\ $//;
+    push @{$table{$a}}, "$C\{$_\}";
   }
 }
 
