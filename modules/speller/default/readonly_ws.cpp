@@ -37,7 +37,6 @@ using std::pair;
 
 #include "settings.h"
 
-#include "gettext.h"
 #include "block_vector.hpp"
 #include "config.hpp"
 #include "data.hpp"
@@ -53,6 +52,8 @@ using std::pair;
 #include "check_list.hpp"
 #include "lsort.hpp"
 #include "iostream.hpp"
+
+#include "gettext.h"
 
 typedef unsigned int   u32int;
 static const u32int u32int_max = (u32int)-1;

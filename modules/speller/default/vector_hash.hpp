@@ -13,8 +13,8 @@
 #ifndef __aspeller_vector_hash_hh__
 #define __aspeller_vector_hash_hh__
 
-#include <iterator>
-#include <utility>
+//#include <iterator>
+//#include <utility>
 
 #include "settings.h"
 #undef REL_OPS_POLLUTION  // FIXME
@@ -55,7 +55,7 @@ namespace aspeller {
     TableIter   pos;
     HashTable * hash_table; 
   public:
-    typedef std::bidirectional_iterator_tag             iterator_category;
+    //typedef std::bidirectional_iterator_tag             iterator_category;
     typedef typename Parms::Value                       value_type;
     // these cause problems for SUNPRO_CC
     //typedef typename std::iterator_traits<TableIter>::difference_type difference_type;

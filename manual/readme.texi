@@ -143,7 +143,7 @@ currently unimplemented.
 
 The Aspell 0.60 library is binary compatible with the Aspell 0.50
 library.  For this reason I chose @emph{not} to increment the major
-version number of the shared (so-name) library by default which means
+version number (so-name) of the shared library by default which means
 programs that were compiled for Aspell 0.50 will also work for Aspell
 0.60.  However, this means that having both Aspell 0.50 and Aspell 0.60
 installed at the same time can be pragmatic.  If you wish to allow both

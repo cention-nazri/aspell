@@ -13,7 +13,8 @@
 #ifndef __autil_block_vector__
 #define __autil_block_vector__
 
-#include <iterator>
+#include <stddef.h>
+//#include <iterator>
 
 namespace aspeller {
 
@@ -31,7 +32,7 @@ namespace aspeller {
     typedef const T & const_reference;
     typedef T *       pointer;
     typedef T *       const_pointer;
-    typedef std::random_access_iterator_tag  iterator_category;
+    //typedef std::random_access_iterator_tag  iterator_category;
     typedef ptrdiff_t                        distance_type;
 
     BlockVector() : begin_(0), end_(0) {}
