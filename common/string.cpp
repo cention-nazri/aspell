@@ -18,9 +18,9 @@ namespace acommon {
     append(str);
   }
 
-  void String::write(const char * str, unsigned int size)
+  void String::write(const void * str, unsigned int size)
   {
-    append(str, size);
+    append(static_cast<const char *>(str), size);
   }
 
   bool StringIStream::getline(String & str, char delem)

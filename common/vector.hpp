@@ -15,6 +15,11 @@ namespace acommon
   class Vector : public std::vector<T>
   {
   public:
+
+    Vector() {}
+    Vector(unsigned int s) : std::vector<T>(s) {}
+    Vector(unsigned int s, const T & val) : std::vector<T>(s, val) {}
+
     void append(T t) {
       push_back(t);
     }

@@ -38,6 +38,7 @@ namespace acommon {
     typedef typename std::list<T>::const_iterator const_iterator;
     typedef typename std::list<T>::size_type      size_type;
     bool empty() {return data_.empty();}
+    void clear() {data_.clear();}
     size_type size() {return data_.size();}
     iterator begin() {return data_.begin();}
     iterator end()   {return data_.end();}

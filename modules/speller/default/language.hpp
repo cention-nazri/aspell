@@ -116,23 +116,35 @@ namespace aspeller {
 
   };
 
-  struct InsensitiveEqual {
-    // compares to strings without regards to casing or special begin
-    // or end characters
+  struct InsensitiveCompare {
+    // compares to strings without regards to casing or special characters
     const Language * lang;
-    InsensitiveEqual() {}
-    InsensitiveEqual(const Language * l) 
-      : lang(l) {}
+    InsensitiveCompare(const Language * l = 0) : lang(l) {}
+    operator bool () const {return lang;}
+    int operator() (const char * a, const char * b) const
+    { 
+      if (lang->special(*a).begin) ++a;
+      if (lang->special(*b).begin) ++b;
+      while (*a != '\0' && *b != '\0' 
+	     && lang->to_stripped(*a) == lang->to_stripped(*b)) 
+      {
+	++a, ++b;
+	if (lang->special(*a).middle) ++a;
+	if (lang->special(*b).middle) ++b;
+      }
+      if (lang->special(*a).end) ++a;
+      if (lang->special(*b).end) ++b;
+      return static_cast<unsigned char>(lang->to_stripped(*a)) 
+	- static_cast<unsigned char>(lang->to_stripped(*b));
+    }
+  };
+
+  struct InsensitiveEqual {
+    InsensitiveCompare cmp;
+    InsensitiveEqual(const Language * l = 0) : cmp(l) {}
     bool operator() (const char * a, const char * b) const
     {
-      if (lang->special(*a).begin) ++a; // if *a == '\0' it won't be begin
-      if (lang->special(*b).begin) ++b; // if *b == '\0' it won't be begin
-      while (*a != '\0' && *b != '\0' 
-	     &&lang->to_stripped(*a) == lang->to_stripped(*b)) 
-	++a, ++b;
-      if (lang->special(*a).end) ++a; // if *a == '\0' it won't be end 
-      if (lang->special(*b).end) ++b; // if *b == '\0' it won't be end
-      return (*a == '\0' && *a == *b);
+      return cmp(a,b) == 0;
     }
   };
   
@@ -146,7 +158,9 @@ namespace aspeller {
     size_t operator() (const char * s) const
     {
       size_t h = 0;
-      while (*s != '\0') {
+      for (;;) {
+	if (lang->special(*s).any()) ++s;
+	if (*s == 0) break;
 	if (lang->char_type(*s) == Language::letter)
 	  h=5*h + lang->to_stripped(*s);
 	++s;
@@ -214,14 +228,22 @@ namespace aspeller {
     return true;
   }
 
+  template <class Str>
+  inline void to_stripped(const Language & l, ParmString word, Str & new_word)
+  {
+    for (const char * i = word; *i; ++i) {
+      if (l.special(*i).any()) ++i;
+      new_word.push_back(l.to_stripped(*i));
+    }
+  }
+
   inline String to_stripped(const Language & l, ParmString word) 
   {
-    String new_word; 
-    for (const char * i = word; *i; ++i) 
-      new_word += l.to_stripped(*i); 
+    String new_word;
+    to_stripped(l, word, new_word);
     return new_word;
   }
-  
+
   inline bool is_stripped(const Language & l, ParmString word)
   {
     for (const char * i = word; *i; ++i) 

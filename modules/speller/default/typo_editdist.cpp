@@ -12,12 +12,16 @@ namespace aspeller {
 
   using namespace std;
 
-  short typo_edit_distance(const unsigned char * word, 
-			   const unsigned char * target,
+  short typo_edit_distance(const char * word0, 
+			   const char * target0,
 			   const TypoEditDistanceWeights & w) 
   {
-    int word_size   = strlen(reinterpret_cast<const char *>(word)  ) + 1;
-    int target_size = strlen(reinterpret_cast<const char *>(target)) + 1;
+    int word_size   = strlen(word0  ) + 1;
+    int target_size = strlen(target0) + 1;
+    const unsigned char * word 
+      = reinterpret_cast<const unsigned char *>(word0);
+    const unsigned char * target 
+      = reinterpret_cast<const unsigned char *>(target0);
     ShortMatrix e;
     e.init(word_size,target_size);
     e(0,0) = 0;

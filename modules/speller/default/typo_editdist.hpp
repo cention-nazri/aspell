@@ -38,8 +38,8 @@ namespace aspeller {
 
   // the running time is tightly asymptotically bounded by strlen(a)*strlen(b)
 
-  short typo_edit_distance(const unsigned char * word, 
-			   const unsigned char * target,
+  short typo_edit_distance(const char * word, 
+			   const char * target,
 			   const TypoEditDistanceWeights & w);
 }
 

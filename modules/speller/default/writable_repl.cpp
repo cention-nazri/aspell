@@ -101,7 +101,7 @@ namespace aspeller_default_writable_repl {
     VirEmul * repls_w_soundslike(const char * soundslike) const;
     VirEmul * repls_w_soundslike(SoundslikeWord soundslike) const;
       
-    struct SoundslikeElementsParms;
+    struct SoundslikeElements;
     VirSoundslikeEmul * soundslike_elements() const;
   };
     
@@ -255,23 +255,29 @@ namespace aspeller_default_writable_repl {
 
   }
 
-  struct WritableReplS::SoundslikeElementsParms {
-    typedef SoundslikeWord                   Value;
-    typedef LookupTable::const_iterator      Iterator;
-    Iterator end_;
-    SoundslikeElementsParms(Iterator e) : end_(e) {}
-    bool endf(Iterator i) const {return i==end_;}
-    static Value deref(Iterator i) {
-      return Value(i->first.c_str(),
-		   reinterpret_cast<const void *>(&i->second));
+  struct WritableReplS::SoundslikeElements : public SoundslikeEnumeration {
+
+    typedef LookupTable::const_iterator  Itr;
+
+    Itr i;
+    Itr end;
+
+    SoundslikeElements(Itr i0, Itr end0) : i(i0), end(end0) {}
+
+    SoundslikeWord next(int) {
+      if (i == end)
+	return SoundslikeWord(0,0);
+      SoundslikeWord tmp(i->first.c_str(),
+			 reinterpret_cast<const void *>(&i->second));
+      ++i;
+      return tmp;
     }
-    static Value end_state() {return Value(0,0);}
   };
 
   WritableReplS::VirSoundslikeEmul * 
   WritableReplS::soundslike_elements() const {
-    return new MakeVirEnumeration<SoundslikeElementsParms>
-      (lookup_table->begin(),SoundslikeElementsParms(lookup_table->end()));
+    return new SoundslikeElements(lookup_table->begin(),
+				  lookup_table->end());
   }
 
   PosibErr<void> WritableReplS::save (FStream & out, ParmString file_name) 

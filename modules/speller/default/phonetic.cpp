@@ -98,10 +98,7 @@ namespace aspeller {
     {
       String new_word;
       new_word.reserve(str.size());
-      
-      for (const char * i = str; *i != '\0'; ++i) 
-	new_word += lang->to_stripped(*i);
-      
+      to_stripped(*lang, str, new_word);
       return new_word;
     }
 
