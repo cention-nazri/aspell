@@ -13,7 +13,7 @@ namespace acommon {
   public:
     PosibErr<void> setup(Config *);
     void reset() {}
-    void process(FilterChar *, FilterChar *);
+    void process(FilterChar * &, FilterChar * &);
   };
 
   PosibErr<void> UrlFilter::setup(Config *) 
@@ -23,12 +23,13 @@ namespace acommon {
     return no_err;
   }
 
-  void UrlFilter::process(FilterChar * str, FilterChar * end)
+  void UrlFilter::process(FilterChar * & str0, FilterChar * & end)
   {
     enum {slash, who_cares} prev_char;
     enum {wbegin, wmiddle, wend} word_pos;
     bool blank_out;
     int point_chars;
+    FilterChar * str = str0;
     FilterChar * cur = str;
     while (cur < end) {
       prev_char = who_cares;

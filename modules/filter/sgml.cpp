@@ -55,7 +55,7 @@ namespace acommon {
 
     PosibErr<void> setup(Config *);
     void reset();
-    void process(FilterChar *, FilterChar *);
+    void process(FilterChar * &, FilterChar * &);
   };
 
   PosibErr<void> SgmlFilter::setup(Config * opts) 
@@ -139,8 +139,9 @@ namespace acommon {
     return in_what != InValueNoSkip;
   }
 
-  void SgmlFilter::process(FilterChar * cur, FilterChar * stop)
+  void SgmlFilter::process(FilterChar * & str, FilterChar * & stop)
   {
+    FilterChar * cur = str;
     while (cur != stop) {
       if (process_char(*cur))
 	*cur = ' ';

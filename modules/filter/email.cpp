@@ -43,7 +43,7 @@ namespace acommon {
   public:
     PosibErr<void> setup(Config *);
     void reset();
-    void process(FilterChar *, FilterChar *);
+    void process(FilterChar * &, FilterChar * &);
   };
 
   PosibErr<void> EmailFilter::setup(Config * opts) 
@@ -63,16 +63,17 @@ namespace acommon {
     n = 0;
   }
 
-  void EmailFilter::process(FilterChar * str, FilterChar * end)
+  void EmailFilter::process(FilterChar * & str, FilterChar * & end)
   {
     FilterChar * line_begin = str;
-    while (str < end) {
-      if (prev_newline && is_quote_char.have(*str))
+    FilterChar * cur = str;
+    while (cur < end) {
+      if (prev_newline && is_quote_char.have(*cur))
 	in_quote = true;
-      if (*str == '\n') {
+      if (*cur == '\n') {
 	if (in_quote)
-	  memset(line_begin, ' ', str - line_begin);
-	line_begin = str;
+	  memset(line_begin, ' ', cur - line_begin);
+	line_begin = cur;
 	in_quote = false;
 	prev_newline = true;
 	n = 0;
@@ -81,10 +82,11 @@ namespace acommon {
       } else {
 	prev_newline = false;
       }
-      ++str;
+      ++cur;
     }
     if (in_quote)
-      memset(line_begin, ' ', str - line_begin);
+      for (FilterChar * i = line_begin; i != cur; ++)
+	*i = ' ';
   }
   
   IndividualFilter * new_email_filter() 

@@ -43,14 +43,14 @@ namespace acommon {
       (*cur)->reset();
   }
 
-  void Filter::process(FilterChar * str, FilterChar * stop)
+  void Filter::process(FilterChar * & start, FilterChar * & stop)
   {
     Filters::iterator cur, end;
     cur = filters_.begin();
     end = filters_.end();
     //COUT << "BEFORE: " << str;
     for (; cur != end; ++cur)
-      (*cur)->process(str, stop);
+      (*cur)->process(start, stop);
     //COUT << "AFTER: " << str;
   }
 

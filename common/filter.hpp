@@ -23,7 +23,7 @@ namespace acommon {
   public:
     PosibErr<void> setup(Speller * speller, Config * config);
     void reset();
-    void process(FilterChar * start, FilterChar * stop);
+    void process(FilterChar * & start, FilterChar * & stop);
     void add_filter(IndividualFilter * filter);
     Config * config() {return config_;} 
     Filter();
