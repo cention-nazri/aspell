@@ -323,6 +323,8 @@ namespace aspeller {
 
     CasePattern case_pattern(ParmStr str) const;
 
+    CasePattern case_pattern(const char * str, unsigned size) const;
+
     void fix_case(CasePattern case_pattern, char * str)
     {
       if (!str[0]) return;

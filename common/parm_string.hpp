@@ -30,6 +30,9 @@
 // const char * s2 = "...";
 // foo(s2);
 //
+// The string is expected to be null terminated, even if size is give
+// during construction.
+//
 
 namespace acommon {
 
