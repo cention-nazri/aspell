@@ -84,24 +84,21 @@ GlobalCacheBase::~GlobalCacheBase()
   if (next) next->prev = prev;
 }
 
-void reset_cache()
-{
-  LOCK(&global_cache_lock);
-  for (GlobalCacheBase * i = first_cache; i; i = i->next)
-  {
-    i->detach_all();
-  }
-}
-
 bool reset_cache(const char * which)
 {
   LOCK(&global_cache_lock);
   bool any = false;
   for (GlobalCacheBase * i = first_cache; i; i = i->next)
   {
-    if (strcmp(i->name, which) == 0) {i->detach_all(); any = true;}
+    if (which && strcmp(i->name, which) == 0) {i->detach_all(); any = true;}
   }
   return any;
+}
+
+extern "C"
+int aspell_reset_cache(const char * which)
+{
+  return reset_cache(which);
 }
 
 #if 0

@@ -275,10 +275,10 @@ mksrc = \
  auto/MkSrc/Info.pm            auto/MkSrc/ProcCxx.pm\
  auto/MkSrc/ProcNative.pm      auto/MkSrc/Util.pm
 
-auto: @MAINTAINER_MODE_TRUE@ ${mksrc}
-	cd auto; perl mk-src.pl
-	cd auto; perl auto/mk-doc.pl
-	touch auto/auto
+#auto: @MAINTAINER_MODE_TRUE@ ${mksrc}
+#	cd auto; perl mk-src.pl
+#	cd auto; perl auto/mk-doc.pl
+#	touch auto/auto
 
 EXTRA_DIST += auto/auto auto/mk-src.txt ${mksrc}
 

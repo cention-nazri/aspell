@@ -78,6 +78,12 @@ $info{class}{proc}{cc} = sub {
   return $ret;
 };
 
+$info{func}{proc}{cc} = sub {
+  my ($d) = @_;
+  return (make_desc($d->{desc}).
+          make_func("aspell ".$d->{name}, @{$d->{data}}, {mode => 'cc'}).';');
+};
+
 $info{errors}{proc}{cc} = sub {
   my ($d) = @_;
   my $p;

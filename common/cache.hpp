@@ -66,8 +66,7 @@ public:
     return no_err;
   }
 
-  bool reset_cache();
-  void reset_cache(const char *);
+  void reset_cache(const char * = 0);
 };
 
 }
