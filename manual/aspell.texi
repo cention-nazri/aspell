@@ -4104,9 +4104,9 @@ a C++ program.
 @item
 Added the @command{munch-list} command to the aspell utility.  The
 @command{munch} program in the @file{myspell/} directory will
-disappear in Aspell 0.61.  The @command{munchlist} script will also 
-likely disappear or be replaced with Aspell 0.61 since it doesn't work
-correctly anyway.
+disappear in Aspell 0.61.  The @command{munchlist} script will also
+likely disappear or be replaced when Aspell 0.61 is released since it
+doesn't work correctly anyway.
 
 @end itemize
 
