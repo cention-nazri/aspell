@@ -4,14 +4,18 @@
 // license along with this library if you did not you can find
 // it at http://www.gnu.org/.
 
-//#include <stdio.h>
+#include <stdio.h>
 //#define DEBUG {fprintf(stderr,"File: %s(%i)\n",__FILE__,__LINE__);}
 #include <string.h>
 #include <stdlib.h>
 #include <assert.h>
-
-#include "dirs.h"
+#ifdef WIN32PORT
+#include <windows.h>// GetModuleFilename
+#include <shlobj.h> // SHGetSpecialFolderLocation
+extern void * get_module_handle();
+#endif
 #include "settings.h"
+#include "dirs.h"
 
 #ifdef USE_LOCALE
 # include <locale.h>
@@ -579,6 +583,8 @@ namespace acommon {
 
 #endif
 
+  // Return the default value for the given key.  Expand the
+  // configuration string.
   String Config::get_default(const KeyInfo * ki) const
   {
     bool   in_replace = false;
@@ -607,8 +613,50 @@ namespace acommon {
 
 	// do nothing
 
-      } else {
+      }
+#ifdef WIN32PORT
+      else if (strcmp(i, "prefix") == 0) {
+
+        char * buff = new char [MAX_PATH];
+        HMODULE hand = reinterpret_cast<HMODULE> (get_module_handle());
+        if (GetModuleFileName(hand, buff, MAX_PATH)) {
+          //convert all \ chars to /
+          for (char *ptr = buff; *ptr; ++ptr)
+            if ('\\' == *ptr)
+              *ptr = '/';
+          //snip off the filename leaving the path
+          char * end = strrchr(buff,'/');
+          if (end)
+            *end = 0;
+          final_str = buff;
+          delete [] buff;
+        } else {
+          printf("could not find install directory, !prefix");
+          final_str = ""; // this should not happen
+        }
+
+      } else if (strcmp(i, "home-dir") == 0) { 
+
+        //get the personal folder (e.g. "c:\My Documents")
+        char * dir = new char[MAX_PATH];
+        LPITEMIDLIST items = 0;
+        HRESULT hand = SHGetSpecialFolderLocation(0, CSIDL_PERSONAL, &items);
+        if ((NOERROR == hand) && items) {
+          if (SHGetPathFromIDList(items, dir)) {
+            for (char *ptr = dir; *ptr; ++ptr)
+              if ('\\' == *ptr)
+                *ptr = '/';
+            final_str = dir;
+          }
+          CoTaskMemFree(items);
+        }
+        delete [] dir;
+
+      }
+#endif
+      else {
       
+        fprintf(stderr, "!%s unimplemented", i);
 	abort(); // this should not happen
       
       }
@@ -672,6 +720,7 @@ namespace acommon {
     }
     return final_str;
   }
+
 
   PosibErr<String> Config::get_default(ParmStr key) const
   {
@@ -1337,8 +1386,11 @@ namespace acommon {
     return no_err;
   }
 
-
-#ifdef ENABLE_WIN32_RELOCATABLE
+#if defined(WIN32_USE_PERSONAL_DIR)
+#  define HOME_DIR "!home-dir"
+#  define PERSONAL "<lang>.pws"
+#  define REPL     "<lang>.prepl"
+#elif defined(ENABLE_WIN32_RELOCATABLE)
 #  define HOME_DIR "<prefix>"
 #  define PERSONAL "<lang>.pws"
 #  define REPL     "<lang>.prepl"
@@ -1462,7 +1514,12 @@ namespace acommon {
        N_("search path for word list information files"), KEYINFO_HIDDEN}
     , {"warn", KeyInfoBool, "true",
        N_("enable warnings")}
-    
+#ifdef WIN32PORT
+    , {"dict-subdir", KeyInfoString, "dicts",
+       N_("sub directory for dictionaries")}
+    , {"data-subdir", KeyInfoString, "data",
+       N_("sub directory for other data")}
+#endif
     
     //
     // These options are generally used when creating dictionaries
@@ -1507,6 +1564,7 @@ namespace acommon {
        N_("suggest possible replacements"), KEYINFO_MAY_CHANGE}
     , {"time"   , KeyInfoBool, "false",
        N_("time load time and suggest time in pipe mode"), KEYINFO_MAY_CHANGE}
+
     };
 
   const KeyInfo * config_impl_keys_begin = config_keys;
