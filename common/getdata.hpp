@@ -8,23 +8,25 @@
 #define ASPELL_GET_DATA__HPP
 
 #include <stddef.h>
+#include "mutable_string.hpp"
 
 namespace acommon {
 
   class IStream;
   class String;
 
-  bool getdata_pair(IStream & in, String & key, String & data);
+  // NOTE: getdata_pair WILL NOT unescape a string
 
-  // This getdata_pair WILL NOT unescape a string
   struct DataPair {
-    char * key;
-    char * key_end;
-    char * value;
-    char * value_end;
+    MutableString key;
+    MutableString value;
   };
+
   bool getdata_pair(IStream & in, DataPair & d, char * buf, size_t len);
 
-  void unescape(String &);
+  void unescape(char *);
+
+  void to_lower(char *);
+
 }
 #endif

@@ -888,9 +888,11 @@ namespace acommon {
 
   PosibErr<void> Config::read_in(IStream & in) 
   {
-    String key,value;
-    while (getdata_pair(in, key, value)) {
-      RET_ON_ERR(replace(key, value));
+    char buf[256];
+    DataPair dp;
+    while (getdata_pair(in, dp, buf, 256)) {
+      unescape(dp.value.str());
+      RET_ON_ERR(replace(dp.key, dp.value));
     }
     return no_err;
   }

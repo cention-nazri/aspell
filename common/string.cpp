@@ -71,12 +71,4 @@ namespace acommon {
     return size == 0;
   }
 
-  String & String::no_case() {
-    unsigned int countcase=0;
-    for (countcase = 0; countcase < length(); countcase++) {
-      (*this)[countcase] = asc_tolower((*this)[countcase]);
-    }
-    return *this;
-  }
-  
 }

@@ -216,28 +216,28 @@ namespace acommon {
     
     PosibErr<void> err;
 
-    String key, data;
-    while (getdata_pair(in, key, data)) {
-      if (key == "order-num") {
-	to_add->c_struct.order_num = strtod_c(data.c_str(), NULL);
+    char buf[256]; DataPair d;
+    while (getdata_pair(in, d, buf, 256)) {
+      if (d.key == "order-num") {
+	to_add->c_struct.order_num = strtod_c(d.value.str(), NULL);
 	if (!(0 < to_add->c_struct.order_num && 
 	      to_add->c_struct.order_num < 1)) 
 	  {
-	    err.prim_err(bad_value, key, data,
+	    err.prim_err(bad_value, d.key, d.value,
 			 "a number between 0 and 1");
 	    goto RETURN_ERROR;
 	  }
-      } else if (key == "lib-dir") {
-	to_add->lib_dir = data;
+      } else if (d.key == "lib-dir") {
+	to_add->lib_dir = d.value.str();
 	to_add->c_struct.lib_dir = to_add->lib_dir.c_str();
-      } else if (key == "dict-dir" || key == "dict-dirs") {
+      } else if (d.key == "dict-dir" || d.key == "dict-dirs") {
 	to_add->c_struct.dict_dirs = &(to_add->dict_dirs);
-	itemize(data, to_add->dict_dirs);
-      } else if (key == "dict-exts") {
+	itemize(d.value, to_add->dict_dirs);
+      } else if (d.key == "dict-exts") {
 	to_add->c_struct.dict_dirs = &(to_add->dict_exts);
-	itemize(data, to_add->dict_exts);
+	itemize(d.value, to_add->dict_exts);
       } else {
-	err.prim_err(unknown_key, key);
+	err.prim_err(unknown_key, d.key);
 	goto RETURN_ERROR;
       }
     }
@@ -448,7 +448,9 @@ namespace acommon {
     } else {
       FStream f;
       RET_ON_ERR(f.open(node->info_file, "r"));
-      bool res = getdata_pair(f, main_wl, flags);
+      char buf[256]; DataPair dp; // FIXME
+      bool res = getdata_pair(f, dp, buf, 256);
+      main_wl = dp.key; flags = dp.value;
       f.close();
       if (!res)
 	return make_err(bad_file_format,  node->info_file, "");

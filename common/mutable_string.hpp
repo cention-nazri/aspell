@@ -40,39 +40,39 @@ namespace acommon {
     char * end() const {
       return str_ + size_;
     }
-  private:
+  public: // but only use if really necessary
     char * str_;
     unsigned int size_;
   };
 
-  inline bool operator==(MutableString s1, MutableString s2)
+  static inline bool operator==(MutableString s1, MutableString s2)
   {
     if (s1.size() != s2.size())
       return false;
     else
       return strncmp(s1,s2, s1.size()) == 0;
   }
-  inline bool operator==(const char * s1, MutableString s2)
+  static inline bool operator==(const char * s1, MutableString s2)
   {
     return strcmp(s1,s2) == 0;
   }
-  inline bool operator==(MutableString s1, const char * s2)
+  static inline bool operator==(MutableString s1, const char * s2)
   {
     return strcmp(s1,s2) == 0;
   }
 
-  inline bool operator!=(MutableString s1, MutableString s2)
+  static inline bool operator!=(MutableString s1, MutableString s2)
   {
     if (s1.size() != s2.size())
       return true;
     else
       return strncmp(s1,s2, s1.size()) != 0;
   }
-  inline bool operator!=(const char * s1, MutableString s2)
+  static inline bool operator!=(const char * s1, MutableString s2)
   {
     return strcmp(s1,s2) != 0;
   }
-  inline bool operator!=(MutableString s1, const char * s2)
+  static inline bool operator!=(MutableString s1, const char * s2)
   {
     return strcmp(s1,s2) != 0;
   }

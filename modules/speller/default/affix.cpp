@@ -116,8 +116,7 @@ AffixMgr::~AffixMgr()
 PosibErr<void> AffixMgr::parse_file(const char * affpath)
 {
   // io buffers
-  char buf[256];
-  DataPair datapair;
+  char buf[256]; DataPair d;
  
   // affix type
   char ft;
@@ -136,33 +135,30 @@ PosibErr<void> AffixMgr::parse_file(const char * affpath)
   // read in each line ignoring any that do not
   // start with a known line type indicator
 
-  while (getdata_pair(afflst,datapair,buf,256)) {
-    ParmString key(datapair.key, datapair.key_end - datapair.key);
-    ParmString data(datapair.value, datapair.value_end - datapair.value);
-
+  while (getdata_pair(afflst,d,buf,256)) {
     ft = ' ';
 
     /* parse in the name of the character set used by the .dict and .aff */
 
-    if (key == "SET") 
-      encoding = data;
+    if (d.key == "SET") 
+      encoding = d.value;
 
     /* parse in the flag used by the controlled compound words */
-    else if (key == "COMPOUNDFLAG")
-      compound = data;
+    else if (d.key == "COMPOUNDFLAG")
+      compound = d.value;
 
     /* parse in the flag used by the controlled compound words */
-    else if (key == "COMPOUNDMIN")
-      cpdmin = atoi(data); // FiXME
+    else if (d.key == "COMPOUNDMIN")
+      cpdmin = atoi(d.value); // FiXME
 
-    else if (key == "TRY" || key == "REP");
+    else if (d.key == "TRY" || d.key == "REP");
 
-    else if (key == "PFX" || key == "SFX")
-      ft = key[0];
+    else if (d.key == "PFX" || d.key == "SFX")
+      ft = d.key[0];
 
     // parse this affix: P - prefix, S - suffix
     if (ft != ' ')
-      RET_ON_ERR(parse_affix(data, ft, afflst));
+      RET_ON_ERR(parse_affix(d.value, ft, afflst));
 
   }
   afflst.close();

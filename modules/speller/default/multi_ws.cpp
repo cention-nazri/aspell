@@ -36,7 +36,6 @@ namespace aspeller {
     FStream in;
     RET_ON_ERR(in.open(fn, "r"));
     set_file_name(fn);
-    String key, data;
     bool strip_accents;
     if (config->have("strip-accents"))
       strip_accents = config->retrieve_bool("strip-accents");
@@ -44,21 +43,23 @@ namespace aspeller {
       strip_accents = false;
     else
       strip_accents = li->convert.strip_accents;
-    while( getdata_pair(in, key, data) ) {
-      if (key == "strip-accents") {
+    char buf[256]; DataPair d;
+    while(getdata_pair(in, d, buf, 256)) 
+    {
+      if (d.key == "strip-accents") {
 	if (config->have("strip-accents")) {
 	  // do nothing
-	} if (data == "true") {
+	} if (d.value == "true") {
 	  strip_accents = true;
-	} else if (data == "false") {
+	} else if (d.value == "false") {
 	  strip_accents = false;
 	} else {
-	  return make_err(bad_value, "strip-accents", data, "true or false").with_file(fn);
+	  return make_err(bad_value, "strip-accents", d.value, "true or false").with_file(fn);
 	}
-      } else if (key == "add") {
+      } else if (d.key == "add") {
 	LocalWordSet ws;
 	ws.local_info.set(0, config, strip_accents);
-        RET_ON_ERR_SET(add_data_set(data, *config, speller, &ws.local_info, dir),LoadableDataSet  *,wstemp);
+        RET_ON_ERR_SET(add_data_set(d.value, *config, speller, &ws.local_info, dir),LoadableDataSet  *,wstemp);
         ws.word_set=wstemp;
         RET_ON_ERR(set_check_lang(ws.word_set->lang()->name(), config));
 	ws.local_info.set_language(ws.word_set->lang());
@@ -66,7 +67,7 @@ namespace aspeller {
 
       } else {
 	
-	return make_err(unknown_key, key).with_file(fn);
+	return make_err(unknown_key, d.key).with_file(fn);
 
       }
     }

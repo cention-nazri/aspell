@@ -12,6 +12,7 @@
 
 #include "hash_fun.hpp"
 #include "parm_string.hpp"
+#include "mutable_string.hpp"
 #include "istream.hpp"
 #include "ostream.hpp"
 
@@ -26,6 +27,7 @@ namespace acommon {
     String(const char * s) : std::string(s) {}
     String(const char * s, unsigned int size) : std::string(s, size) {}
     String(ParmString s) : std::string(s) {}
+    String(MutableString s) : std::string(s.str(), s.size()) {}
     String(const std::string & s) : std::string(s) {}
     String(const String & other) : std::string(other) {}
     inline String(const PosibErr<String> & other);
@@ -36,6 +38,10 @@ namespace acommon {
     inline String & operator= (const PosibErr<const char *> & s);
     String & operator= (ParmString s) {
       std::string::operator= (s);
+      return *this;
+    }
+    String & operator= (MutableString s) {
+      std::string::assign(s.str(), s.size());
       return *this;
     }
     String & operator= (const std::string & s) {
@@ -55,8 +61,6 @@ namespace acommon {
     void write (char c);
     void write (ParmString);
     void write (const void *, unsigned int);
-
-    String & no_case(); // FIXME: find a better way
   };
 
   inline String operator+ (ParmString rhs, ParmString lhs)

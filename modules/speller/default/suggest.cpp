@@ -57,7 +57,7 @@
 #include "stack_ptr.hpp"
 #include "suggest.hpp"
 
-#include "iostream.hpp"
+//#include "iostream.hpp"
 //#define DEBUG_SUGGEST
 
 using namespace aspeller;
@@ -857,7 +857,7 @@ namespace aspeller {
       char buf[64];
       DataPair d;
       while (getdata_pair(in, d, buf, 64)) {
-	if (d.key_end - d.key != 2)
+	if (d.key.size() != 2)
 	  return make_err(bad_file_format, file);
 	w.repl (l.to_normalized(d.key[0]),
 		l.to_normalized(d.key[1])) = w.repl_dis1;

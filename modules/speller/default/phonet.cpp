@@ -68,7 +68,7 @@ namespace aspeller {
   };
   
   PosibErr<PhonetParms *> load_phonet_rules(const String & file) {
-    char buf[256];
+    char buf[256]; DataPair dp;
 
     FStream in;
     RET_ON_ERR(in.open(file, "r"));
@@ -78,19 +78,16 @@ namespace aspeller {
     parms->followup        = true;
     parms->collapse_result = false;
 
-    DataPair datapair;
     int size = 0;
     int num = 0;
     while (true) {
-      if (!getdata_pair(in, datapair, buf, 256)) break;
-      ParmString key(datapair.key, datapair.key_end - datapair.key);
-      ParmString value(datapair.value, datapair.value_end - datapair.value);
-      if (key != "followup" && key != "collapse_result" &&
-	  key != "version") {
+      if (!getdata_pair(in, dp, buf, 256)) break;
+      if (dp.key != "followup" && dp.key != "collapse_result" &&
+	  dp.key != "version") {
 	++num;
-	size += key.size() + 1;
-	if (value != "_") {
-	  size += value.size() + 1;
+	size += dp.key.size() + 1;
+	if (dp.value != "_") {
+	  size += dp.value.size() + 1;
 	}
       }
     }
@@ -104,26 +101,24 @@ namespace aspeller {
     in.restart();
 
     while (true) {
-      if (!getdata_pair(in, datapair, buf, 256)) break;
-      ParmString key(datapair.key, datapair.key_end - datapair.key);
-      ParmString value(datapair.value, datapair.value_end - datapair.value);
-      if (key == "followup") {
-	parms->followup = to_bool(value);
-      } else if (key == "collapse_result") {
-	parms->collapse_result = to_bool(value);
-      } else if (key == "version") {
-	parms->version = value;
+      if (!getdata_pair(in, dp, buf, 256)) break;
+      if (dp.key == "followup") {
+	parms->followup = to_bool(dp.value);
+      } else if (dp.key == "collapse_result") {
+	parms->collapse_result = to_bool(dp.value);
+      } else if (dp.key == "version") {
+	parms->version = dp.value;
       } else {
-	strncpy(d, key.str(), key.size() + 1);
+	strncpy(d, dp.key.str(), dp.key.size() + 1);
 	*r = d;
 	++r;
-	d += key.size() + 1;
-	if (value == "_") {
+	d += dp.key.size() + 1;
+	if (dp.value == "_") {
 	  *r = "";
 	} else {
-	  strncpy(d, value.str(), value.size() + 1);
+	  strncpy(d, dp.value.str(), dp.value.size() + 1);
 	  *r = d;
-	  d += value.size() + 1;
+	  d += dp.value.size() + 1;
 	}
 	++r;
       }
