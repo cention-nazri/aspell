@@ -181,16 +181,16 @@ namespace acommon {
   public:
     StraightThrough(ParmString e)
       : Convert(e,e) {}
-    void convert           (const char   * in, 
-			    OStream & out) const;
+    void convert_until_null (const char   * in, 
+			     OStream & out) const;
     const char * convert_until (const char   * in, const char * stop, 
 				OStream & out) const;
     bool convert_next_char (const char * & in, 
 			    OStream & out) const;
   };
 
-  void StraightThrough::convert(const char * in, 
-				OStream & out) const
+  void StraightThrough::convert_until_null(const char * in, 
+					   OStream & out) const
   {
     out.write(in);
   }
@@ -311,15 +311,15 @@ namespace acommon {
       && strcmp(rhs.out_code(), lhs.out_code()) == 0;
   }
 
-  void Convert::convert (const char *  in, 
-			       OStream & out) const
+  void Convert::convert_until_null(const char *  in, 
+				   OStream & out) const
   {
     while (convert_next_char(in, out));
   }
 
   const char * Convert::convert_until (const char *  in, 
-					     const char * stop, 
-					     OStream & out) const
+				       const char * stop, 
+				       OStream & out) const
   {
     while (in < stop && convert_next_char(in, out));
     return in;
