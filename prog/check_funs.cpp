@@ -365,7 +365,7 @@ void get_line(String & line) {
   }
 }
     
-void get_choice(char & c) {
+void get_choice(int & c) {
 #if   HAVE_LIBCURSES
   if (use_curses) {
     doupdate();

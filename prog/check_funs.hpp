@@ -29,7 +29,7 @@ typedef Vector<Choice> Choices;
 extern StackPtr<Choices> word_choices;
 extern StackPtr<Choices> menu_choices;
 
-void get_choice(char & choice);
+void get_choice(int & choice);
 void get_line(String & line);
 void begin_check();
 void display_misspelled_word();

@@ -446,6 +446,15 @@ Better support for run-together words.
 
 Ability to use multiple dictionaries by simply specifying it on the command
  line or in the configuration files.
+\layout Itemize
+
+A better, more complete word list for the English language.
+ Word lists are provided for American, British, and Canadian spelling.
+ Special care has been taken to only include one spelling for each word
+ in any particular word list.
+ The word list included in Ispell by contrast only included support for
+ American and British and also tends to included multiple spellings for
+ a word which can mask some spelling errors.
 \layout Subsubsection
 
 Things that, currently, only Ispell have
@@ -610,11 +619,6 @@ spell
 General Problems
 \layout Standard
 
-Aspell does not use a released version of GNU Libtool.
- If you have a need to modify configure.ac or any of the Makefile.am's you
- should install the CVS version of libtool.
-\layout Standard
-
 There seams to be a bug in gcc when compiling with 
 \begin_inset Quotes eld
 \end_inset 
@@ -642,6 +646,11 @@ There seams to be a bug in gcc when compiling with
 
  and you should be okay.
  If you can find a work around for this problem please let me know.
+\layout Standard
+
+Also, Aspell does not use a released version of GNU Libtool.
+ If you have a need to modify configure.ac or any of the Makefile.am's you
+ should install the CVS version of libtool.
 \layout Subsection
 
 Curses Notes
@@ -3993,7 +4002,7 @@ Adding Support For Other Languages
 Before you consider adding support for Aspell first make sure that someone
  else has not already done it.
  A good number of dictionaries off the Aspell home page at 
-\begin_inset LatexCommand \url[aspell.net]{http://aspell.net}
+\begin_inset LatexCommand \url{http://aspell.net}
 
 \end_inset 
 
@@ -5550,7 +5559,7 @@ appendix
 Changelog
 \layout Section*
 
-Changes from .33.7.1 to 0.50 (Aug ??,2002)
+Changes from .33.7.1 to 0.50 (Aug 23, 2002)
 \layout Itemize
 
 A complete overhaul of the source code which included merging Pspell into

@@ -1,4 +1,4 @@
-INCLUDES = -I${top_builddir}/common
+INCLUDES = -I${top_srcdir}/common
 
 noinst_LTLIBRARIES = libaspell-filter-standard.la
 

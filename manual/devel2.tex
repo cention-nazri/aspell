@@ -392,12 +392,11 @@ application will likely highlight {}``e my '' as the misspelling
 because the spell checker will return 25 as the offset instead of
 30. However with keeping track of the width using FilterChar the spell
 checker will now that the real position it 30 since the quote is really
-6 characters wide. In particular the text fill be annotated something
+6 characters wide. In particular the text will be annotated something
 like the following:
 
 \begin{lyxcode}
-1111111111111611111111111111161
-
+1111111111111611111111111111161~\\
 Mr.~foo~said~\char`\"{}I~hate~my~namme\char`\"{}.
 \end{lyxcode}
 The standard \textbf{encoder} and \textbf{decoder} filters are defined

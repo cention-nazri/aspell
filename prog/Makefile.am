@@ -1,6 +1,7 @@
 
-INCLUDES = -I${top_builddir}/interfaces/cc/ \
-           -I${top_builddir}/modules/speller/default/ \
+INCLUDES = -I${top_srcdir}/common/\
+           -I${top_srcdir}/interfaces/cc/ \
+           -I${top_srcdir}/modules/speller/default/ \
            $(CURSES_INCLUDE)
 
 bin_PROGRAMS = word-list-compress aspell

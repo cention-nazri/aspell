@@ -1,5 +1,5 @@
 
-pkgdata_DATA = *.dat *.kbd
+pkgdata_DATA = ${srcdir}/*.dat ${srcdir}/*.kbd
 
 EXTRA_DIST = ${pkgdata_DATA}
 

@@ -802,7 +802,7 @@ void check(bool interactive)
       // Handle the users choice
       //
 
-      char choice;
+      int choice;
       get_choice(choice);
       
       if (choice == '0') choice = '9' + 1;

@@ -52,9 +52,6 @@ manual-text: @MAINTAINER_MODE_TRUE@ manual-html html2txt.pl
 manual.ps: @MAINTAINER_MODE_TRUE@ manual.dvi
 	dvips -o manual.ps -t letter manual.dvi
 
-dist-hook:
-	cp $(distdir)/man-text/2_Getting.txt $(top_distdir)/README
-
 #
 # Devel Docs
 #
@@ -102,6 +99,5 @@ SUBDIRS = man-html man-text dev-html dev-text
 EXTRA_DIST = ${pkgdoc_DATA} \
              html.sty html2txt.pl edit-man manual2.per man-proc.pl\
 	     manual-text manual-html devel-html devel-text
-	     
 
 

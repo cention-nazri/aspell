@@ -177,6 +177,12 @@ special auxiliary dictionaries.
 \item Better support for run-together words.
 \item Ability to use multiple dictionaries by simply specifying it on the
 command line or in the configuration files.
+\item A better, more complete word list for the English language. Word lists
+are provided for American, British, and Canadian spelling. Special
+care has been taken to only include one spelling for each word in
+any particular word list. The word list included in Ispell by contrast
+only included support for American and British and also tends to included
+multiple spellings for a word which can mask some spelling errors.
 \end{itemize}
 
 \subsubsection{Things that, currently, only Ispell have}
@@ -274,15 +280,15 @@ programs that expect ispell or spell command will work correctly.
 
 \subsection{General Problems}
 
-Aspell does not use a released version of GNU Libtool. If you have
-a need to modify configure.ac or any of the Makefile.am's you should
-install the CVS version of libtool.
-
 There seams to be a bug in gcc when compiling with {}``-O3'' which
 will cause undefined references involving the CopyPtr class. If you
 get undefined references when compiling with {}``-O3'' simply change
 that to {}``-O2'' and you should be okay. If you can find a work
 around for this problem please let me know.
+
+Also, Aspell does not use a released version of GNU Libtool. If you
+have a need to modify configure.ac or any of the Makefile.am's you
+should install the CVS version of libtool.
 
 
 \subsection{Curses Notes}
@@ -1661,9 +1667,9 @@ will also get stored so that you don't have to worry about it.
 
 Before you consider adding support for Aspell first make sure that
 someone else has not already done it. A good number of dictionaries
-off the Aspell home page at aspell.net \url{http://aspell.net}. If
-your language is not listed above please send me a note and I will
-work with you on adding support.
+off the Aspell home page at \url{http://aspell.net}. If your language
+is not listed above please send me a note and I will work with you
+on adding support.
 
 This chapter describes the old manual way of adding support for a
 new language in Aspell. The recommended way to add support is through
@@ -2226,7 +2232,7 @@ algorithm please see the data file \textbf{english\_phonet.dat}.
 \chapter{Changelog}
 
 
-\section*{Changes from .33.7.1 to 0.50 (Aug ??,2002)}
+\section*{Changes from .33.7.1 to 0.50 (Aug 23, 2002)}
 
 \begin{itemize}
 \item A complete overhaul of the source code which included merging Pspell

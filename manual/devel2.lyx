@@ -774,12 +774,11 @@ e my
  However with keeping track of the width using FilterChar the spell checker
  will now that the real position it 30 since the quote is really 6 characters
  wide.
- In particular the text fill be annotated something like the following:
+ In particular the text will be annotated something like the following:
 \layout LyX-Code
 
 1111111111111611111111111111161
-\layout LyX-Code
-
+\newline 
 Mr.
  foo said "I hate my namme".
 \layout Standard

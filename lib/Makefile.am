@@ -1,5 +1,5 @@
 
-INCLUDES = -I../interfaces/cc/ -I../common
+INCLUDES = -I${top_srcdir}/interfaces/cc/ -I${top_srcdir}/common
 
 lib_LTLIBRARIES = libaspell.la libpspell.la
 
@@ -11,10 +11,10 @@ libaspell_la_SOURCES =\
   string_enumeration-c.cpp   word_list-c.cpp \
   filter-c.cpp          document_checker-c.cpp
 
-libaspell_la_LIBADD = ../common/libaspell-common.la \
-                      ../modules/speller/default/libaspell-speller-default.la \
-                      ../modules/filter/libaspell-filter-standard.la \
-                      ../modules/tokenizer/libaspell-tokenizer-standard.la
+libaspell_la_LIBADD = ${top_builddir}/common/libaspell-common.la \
+                      ${top_builddir}/modules/speller/default/libaspell-speller-default.la \
+                      ${top_builddir}/modules/filter/libaspell-filter-standard.la \
+                      ${top_builddir}/modules/tokenizer/libaspell-tokenizer-standard.la
 
 libaspell_la_LDFLAGS = -version-info 15:0:0
 
