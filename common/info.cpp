@@ -352,15 +352,28 @@ namespace acommon {
     to_add->code.assign(name, p0-name);
     to_add->c_struct.code = to_add->code.c_str();
 
-    // check if the code is in a valid form.  If its not than 
-    // ignore this entry
+    // check if the code is in a valid form and normilize entry.  
+    // If its not in a valid form than ignore this entry
 
-    if (!(to_add->code.size() >= 2 
-	  && asc_isalpha(to_add->code[0]) && asc_isalpha(to_add->code[1]) 
-	  && (to_add->code.size() == 2 
-	      || (to_add->code.size() == 5 && to_add->code[2] == '_' 
-		  && asc_isalpha(to_add->code[3]) 
-		  && asc_isalpha(to_add->code[4]))))) return no_err;
+    if (to_add->code.size() >= 2 
+	&& asc_isalpha(to_add->code[0]) && asc_isalpha(to_add->code[1])) 
+    {
+      to_add->name[0] = asc_tolower(to_add->name[0]);
+      to_add->name[1] = asc_tolower(to_add->name[1]);
+      to_add->code[0] = asc_tolower(to_add->code[0]);
+      to_add->code[1] = asc_tolower(to_add->code[1]);
+      if (to_add->code.size() == 2); // do nothing
+      else if (to_add->code.size() == 5 && to_add->code[2] == '_' 
+	       && asc_isalpha(to_add->code[3]) 
+	       && asc_isalpha(to_add->code[4])) {
+	to_add->name[3] = asc_toupper(to_add->name[3]);
+	to_add->name[4] = asc_toupper(to_add->name[4]);
+	to_add->code[3] = asc_toupper(to_add->code[3]);
+	to_add->code[4] = asc_toupper(to_add->code[4]);
+      } else
+	return no_err;
+    } else
+      return no_err;
     
     // Need to do it here as module is about to get a value
     // if it is null

@@ -567,7 +567,6 @@ namespace aspeller {
   PosibErr<void> SpellerImpl::setup(Config * c) {
     assert (config_ == 0);
     config_.reset(c);
-    //config_->read_in(&override); // FIXME
 
     ignore_repl = config_->retrieve_bool("ignore-repl");
     ignore_count = config_->retrieve_int("ignore");

@@ -229,7 +229,7 @@ namespace acommon {
     //
     // Give first prefrence to an exect match for the language-country
     // code, then give prefrence to those in the alternate code list
-    // in the order they are presented, then if there is no match get fine
+    // in the order they are presented, then if there is no match
     // look for one for just language.  If that fails give up.
     // Once the best matching code is found, try to find a matching
     // jargon if one exists, other wise look for one with no jargon.
