@@ -489,9 +489,11 @@ namespace aspeller {
     }
 
     const char * sys_enc = lang_->charset();
-    if (!config_->have("encoding"))
-      config_->replace("encoding", sys_enc);
     String user_enc = config_->retrieve("encoding");
+    if (user_enc == "none") {
+      config_->replace("encoding", sys_enc);
+      user_enc = sys_enc;
+    }
 
     PosibErr<Convert *> conv;
     conv = new_convert(*c, user_enc, sys_enc);

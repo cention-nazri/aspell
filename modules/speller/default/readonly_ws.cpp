@@ -721,7 +721,10 @@ namespace {
     bool use_jump_tables = use_soundslike || config.retrieve_bool("use-jump-tables");
 
     Conv iconv;
-    iconv.setup(config, config.retrieve("encoding"), lang.charset());
+    if (config.have("encoding"))
+      iconv.setup(config, config.retrieve("encoding"), lang.charset());
+    else
+      iconv.setup(config, lang.data_encoding(), lang.charset());
 
     //CERR << (affix_compress ? "  AFFIX COMPRESS" : "")
     //     << (use_soundslike ? "  USING SOUNDSLIKE" : "") 

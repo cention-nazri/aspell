@@ -394,7 +394,7 @@ namespace acommon {
   static inline void get_encoding(String & final_str)
   {
     const char * codeset = nl_langinfo(CODESET);
-    if (is_ascii_enc(codeset)) codeset = "iso-8859-1";
+    if (is_ascii_enc(codeset)) codeset = "none";
     final_str = codeset;
   }
 
@@ -407,7 +407,7 @@ namespace acommon {
 
   static inline void get_encoding(String & final_str)
   {
-    final_str = "iso-8859-1";
+    final_str = "none";
   }
 
 #endif

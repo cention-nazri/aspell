@@ -348,10 +348,10 @@ int main (int argc, const char *argv[])
     }
     utf8_opts.clear();
   }
-#ifdef USE_LOCALE
-  if (!options->have("encoding") && codeset)
-    EXIT_ON_ERR(options->replace("encoding", codeset));
-#endif
+// #ifdef USE_LOCALE
+//   if (!options->have("encoding") && codeset)
+//     EXIT_ON_ERR(options->replace("encoding", codeset));
+// #endif
 
   //
   // perform the requested action
@@ -435,7 +435,7 @@ int main (int argc, const char *argv[])
 static Convert * setup_conv(const aspeller::Language * lang,
                                       Config * config)
 {
-  if (config->have("encoding")) {
+  if (config->retrieve("encoding") != "none") {
     PosibErr<Convert *> pe = new_convert_if_needed(*config,
                                                    lang->charset(),
                                                    config->retrieve("encoding"));
@@ -449,7 +449,7 @@ static Convert * setup_conv(const aspeller::Language * lang,
 static Convert * setup_conv(Config * config,
                             const aspeller::Language * lang)
 {
-  if (config->have("encoding")) {
+  if (config->retrieve("encoding") != "none") {
     PosibErr<Convert *> pe = new_convert_if_needed(*config,
                                                    config->retrieve("encoding"),
                                                    lang->charset());
