@@ -199,7 +199,7 @@ bool PfxEntry::check(const LookupInfo & linf, ParmString word,
                                    ci, gi,
                                    XPRODUCT, (AffEntry *)this))
             lci = &ci;
-          else if (gi->last != lci) {
+          else if (gi && gi->last != lci) {
             while (lci = const_cast<CheckInfo *>(lci->next), lci) {
               lci->pre_flag = achar;
               lci->pre_add = appnd;

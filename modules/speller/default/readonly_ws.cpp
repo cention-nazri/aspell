@@ -177,7 +177,7 @@ namespace aspeller_default_readonly_ws {
     struct StrippedElements;
 
   public:
-    VirEnum * detailed_elements() const;
+    WordEntryEnumeration * detailed_elements() const;
     Size      size()     const;
     bool      empty()    const;
 
@@ -232,9 +232,8 @@ namespace aspeller_default_readonly_ws {
     }
   };
 
-  ReadOnlyWS::VirEnum * ReadOnlyWS::detailed_elements() const {
-    return new MakeVirEnumeration<ElementsParms>
-      (word_lookup.begin(), ElementsParms(this));
+  WordEntryEnumeration * ReadOnlyWS::detailed_elements() const {
+    return new MakeEnumeration<ElementsParms>(word_lookup.begin(), ElementsParms(this));
   }
 
   ReadOnlyWS::Size ReadOnlyWS::size() const {

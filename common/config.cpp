@@ -1100,7 +1100,7 @@ namespace acommon {
        N_("personal configuration file"),{0, CANT_CHANGE}}
     , {"per-conf-path", KeyInfoString, "<home-dir/per-conf>", 0}
     , {"personal", KeyInfoString, PERSONAL,
-       N_("personal word list file name")}
+       N_("personal dictionary file name")}
     , {"personal-path", KeyInfoString, "<home-dir/personal>", 0}
     , {"prefix",   KeyInfoString, PREFIX,
        N_("prefix directory"), {0, CANT_CHANGE}}
@@ -1113,7 +1113,6 @@ namespace acommon {
        N_("maxium numbers that can be strung together")}
     , {"run-together-min",    KeyInfoInt,   "3",
        N_("minimal length of interior words")}
-    , {"run-together-specified", KeyInfoBool, "false", 0}
     , {"save-repl", KeyInfoBool  , "true",
        N_("save replacement pairs on save all")}
     , {"set-prefix", KeyInfoBool, "true",
@@ -1126,19 +1125,31 @@ namespace acommon {
        N_("strip accents from word lists")}
     , {"sug-mode",   KeyInfoString, "normal",
        N_("suggestion mode")}
+    , {"sug-edit-dist", KeyInfoInt, "1",
+       N_("Edit distance to use. If set override sug-mode default.")}
+    , {"sug-repl-table", KeyInfoBool, "true",
+       N_("Use replacement tables. If set override sug-mode default.")}
+    , {"sug-split-chars", KeyInfoString, " -",
+       N_("Chars to insert when a word is split. If set override sug-mode default.")}
     , {"word-list-path", KeyInfoList, DATA_DIR,
+
        N_("Search path for word list information files")}
+    , {"affix-char",          KeyInfoString, "/", 
+       N_("Character to use to indicate affix flags in word lists")}
+    , {"flag-char",           KeyInfoString, ":",
+       N_("Character to use to indicate additional flags in word lists")
+    }
 
     //
     // These options are only used when creating dictionaries
     // and may also be specified in the language data file
     //
     , {"use-soundslike", KeyInfoBool, "true",
-       ""}
+       N_("Encode soundslike infomation into newly created dictionaries.")}
     , {"use-jump-tables", KeyInfoBool, "true",
-       ""}
+       N_("Use jump tables in newly created dictionaries.")}
     , {"affix-compress", KeyInfoBool, "false",
-       ""}
+       N_("Use affix compression in newly created dictionaries.")}
     
     //
     // These options are specific to the "aspell" utility.  They are

@@ -57,8 +57,8 @@
 #include "stack_ptr.hpp"
 #include "suggest.hpp"
 
-//#include "iostream.hpp"
-//#define DEBUG_SUGGEST
+#include "iostream.hpp"
+#define DEBUG_SUGGEST
 
 using namespace aspeller;
 using namespace acommon;
@@ -472,7 +472,9 @@ namespace aspeller_default_suggest {
         if (score >= LARGE_NUM) continue;
         stopped_at = LARGE_NUM;
         i->ws->soundslike_lookup(*sw, w);
+	//CERR << sw->word << "\n";
         for (; !w.at_end(); w.adv()) {
+	  //CERR << "  " << w.word << "\n";
           word.clear();
           i->convert.convert(w.word, word);
           WordEntry * repl = 0;
@@ -717,7 +719,7 @@ namespace aspeller_default_suggest {
     bool empty() const { return suggestions.empty(); }
     Size size() const { return suggestions.size(); }
     VirEmul * elements() const {
-      return new MakeVirEnumeration<Parms, StringEnumeration>
+      return new MakeEnumeration<Parms, StringEnumeration>
 	(suggestions.begin(), Parms(suggestions.end()));
     }
   };

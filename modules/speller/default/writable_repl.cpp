@@ -89,9 +89,9 @@ namespace aspeller_default_writable_repl {
     ~WritableReplS() {delete lookup_table;}
 
     struct ElementsVirEmulImpl;
-    VirEnum * detailed_elements() const {return 0;}
-    Size      size()     const;
-    bool      empty()    const;
+    Enum * detailed_elements() const {return 0;}
+    Size   size()     const;
+    bool   empty()    const;
       
     PosibErr<void> clear();
       

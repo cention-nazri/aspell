@@ -43,47 +43,25 @@
 namespace acommon {
 
   template <typename Val>
-  class VirEnumeration {
-  public:
-    typedef Val Value;
-    typedef VirEnumeration Base;
-    virtual VirEnumeration * clone() const = 0;
-    virtual void assign(const VirEnumeration *) = 0;
-    virtual Value next() = 0;
-    virtual bool at_end() const = 0;
-    virtual ~VirEnumeration() {}
-  };
-
-  template <typename Base>
   class Enumeration {
   public:
-    typedef typename Base::Value Value;
-    typedef Base                 VirEmul;
-
-  private:
-    ClonePtr<VirEmul> p_;
-
-  public:
-    Enumeration() : p_(0) {}
-    Enumeration(VirEmul * p) : p_(p) {}
-    Enumeration(const VirEmul & p) : p_(p.clone()) {}
-    Enumeration & operator=(VirEmul * p) {
-      p_.reset(p);
-      return *this;
-    }
-    
-    Value next() {return p_->next();}
-    bool at_end() const {return p_->at_end();}
+    typedef Val Value;
+    typedef Enumeration Base;
+    virtual Enumeration * clone() const = 0;
+    virtual void assign(const Enumeration *) = 0;
+    virtual Value next() = 0;
+    virtual bool at_end() const = 0;
+    virtual ~Enumeration() {}
   };
 
-  template <class Parms, class VirEmul = VirEnumeration<typename Parms::Value> > 
+  template <class Parms, class Enum = Enumeration<typename Parms::Value> > 
   // Parms is expected to have the following members:
   //   typename Value
   //   typename Iterator;
   //   bool endf(Iterator)  
   //   Value end_state()
   //   Value deref(Iterator)
-  class MakeVirEnumeration : public VirEmul {
+  class MakeEnumeration : public Enum {
   public:
     typedef typename Parms::Iterator Iterator;
     typedef typename Parms::Value    Value;
@@ -92,15 +70,15 @@ namespace acommon {
     Parms     parms_;
   public:
 
-    MakeVirEnumeration(const Iterator i, const Parms & p = Parms()) 
+    MakeEnumeration(const Iterator i, const Parms & p = Parms()) 
       : i_(i), parms_(p) {}
 
-    VirEmul * clone() const {
-      return new MakeVirEnumeration(*this);
+    Enum * clone() const {
+      return new MakeEnumeration(*this);
     }
 
-    void assign (const VirEmul * other) {
-      *this = *static_cast<const MakeVirEnumeration *>(other);
+    void assign (const Enum * other) {
+      *this = *static_cast<const MakeEnumeration *>(other);
     }
 
     Value next() {
@@ -127,13 +105,13 @@ namespace acommon {
   };
   
   template <class Value> 
-  class MakeAlwaysEndEnumeration : public VirEnumeration<Value> {
+  class MakeAlwaysEndEnumeration : public Enumeration<Value> {
     MakeAlwaysEndEnumerationParms<Value> parms_;
   public:
     MakeAlwaysEndEnumeration * clone() const {
       return new MakeAlwaysEndEnumeration(*this);
     }
-    void assign(const VirEnumeration<Value> * that) {
+    void assign(const Enumeration<Value> * that) {
       *this = *static_cast<const MakeAlwaysEndEnumeration *>(that);
     }
     Value next() {return parms_.end_state();}

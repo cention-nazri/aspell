@@ -27,7 +27,6 @@ namespace aspeller {
     , {"name",                KeyInfoString, "", "", ""}
     , {"run-together",        KeyInfoBool,   "", "", "c"}
     , {"run-together-limit",  KeyInfoInt,    "", "", "c"}
-    , {"run-together-middle", KeyInfoString, "", "", ""}
     , {"run-together-min",    KeyInfoInt,    "", "", "c"}
     , {"soundslike",          KeyInfoString, "none", "", ""}
     , {"special",             KeyInfoString, "", "", ""}
@@ -37,6 +36,8 @@ namespace aspeller {
     , {"keyboard",            KeyInfoString, "standard", "", "c"} 
     , {"affix",               KeyInfoString, "none", "", ""}
     , {"affix-compress",      KeyInfoBool, "false", "", "c"}
+    , {"affix-char",          KeyInfoString, "/", "", "c"}
+    , {"flag-char",           KeyInfoString, ":", "", "c"}
   };
 
   static GlobalCache<Language> language_cache;
@@ -157,9 +158,9 @@ namespace aspeller {
 
   void Language::set_lang_defaults(Config & config)
   {
-    Enumeration<KeyInfoEnumeration> els = lang_config_->possible_elements(false);
+    StackPtr<KeyInfoEnumeration> els(lang_config_->possible_elements(false));
     const KeyInfo * k;
-    while ((k = els.next()) != 0) {
+    while ((k = els->next()) != 0) {
       if (k->otherdata[0] == 'c' 
 	  && lang_config_->have(k->name) && !config.have(k->name))
       {

@@ -49,7 +49,7 @@ namespace aspeller {
     enum SpecialId {main_id, personal_id, session_id, 
 		    personal_repl_id, none_id};
 
-    typedef Enumeration<VirEnumeration<DataSet *> > WordLists;
+    typedef Enumeration<DataSet *> * WordLists;
 
     WordLists wordlists() const;
     int num_wordlists() const;
@@ -167,7 +167,6 @@ namespace aspeller {
     unsigned int            ignore_count;
     bool                    ignore_repl;
     bool                    unconditional_run_together_;
-    bool                    run_together_specified_;
     unsigned int            run_together_limit_;
     const char *            run_together_middle_;
     unsigned int            run_together_min_;

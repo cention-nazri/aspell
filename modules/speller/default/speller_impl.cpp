@@ -246,8 +246,8 @@ namespace aspeller {
   }
 
   SpellerImpl::WordLists SpellerImpl::wordlists() const {
-    return WordLists(MakeVirEnumeration<DataSetCollection::Parms>
-		     (wls_->begin(), DataSetCollection::Parms(wls_->end())));
+    return 0; //FIXME
+    //return MakeEnumeration<DataSetCollection::Parms>(wls_->begin(), DataSetCollection::Parms(wls_->end()));
   }
 
   bool SpellerImpl::have(const DataSet::Id &to_find) const {
@@ -603,7 +603,6 @@ namespace aspeller {
     from_internal_.reset(conv);
 
     unconditional_run_together_ = config_->retrieve_bool("run-together");
-    run_together_specified_     = config_->retrieve_bool("run-together-specified");
 
     run_together_limit_  = config_->retrieve_int("run-together-limit");
     if (run_together_limit_ > 8) {
@@ -612,7 +611,6 @@ namespace aspeller {
     }
     run_together_min_    = config_->retrieve_int("run-together-min");
 
-    run_together_start_len_ = config_->retrieve_int("run-together-specified");
     if (unconditional_run_together_ 
 	&& run_together_min_ < run_together_start_len_)
       run_together_start_len_ = run_together_min_;
@@ -635,6 +633,8 @@ namespace aspeller {
         all_ws.push_back(&*i);
       }
     }
+
+    use_soundslike = true;
 
     const std::type_info * ti = 0;
     while (!all_ws.empty())

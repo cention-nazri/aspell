@@ -33,7 +33,7 @@ namespace acommon {
     StringEnumeration() : ref_count_(0), copyable_(2), from_internal_(0) {}
     virtual ~StringEnumeration() {}
   };
-  
+
 }
 
 #endif /* ASPELL_STRING_ENUMERATION__HPP */

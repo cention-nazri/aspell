@@ -1102,18 +1102,18 @@ void dump (aspeller::LocalWordSet lws)
   case DataSet::basic_word_set:
     {
       BasicWordSet * ws = static_cast<BasicWordSet *>(lws.word_set);
-      BasicWordSet::Enum els = ws->detailed_elements();
+      StackPtr<WordEntryEnumeration> els(ws->detailed_elements());
       WordEntry * wi;
-      while (wi = els.next(), wi)
+      while (wi = els->next(), wi)
 	wi->write(COUT,*(ws->lang()), lws.local_info.convert) << "\n";
     }
     break;
   case DataSet::basic_multi_set:
     {
-      BasicMultiSet::Emul els 
-	= static_cast<BasicMultiSet *>(lws.word_set)->detailed_elements();
+      StackPtr<BasicMultiSet::Enum> els 
+	(static_cast<BasicMultiSet *>(lws.word_set)->detailed_elements());
       LocalWordSet ws;
-      while (ws = els.next(), ws) 
+      while (ws = els->next(), ws) 
 	dump (ws);
     }
     break;
@@ -1199,11 +1199,11 @@ void personal () {
 
     WritableWordSet * per = new_default_writable_word_set();
     per->load(config->retrieve("personal-path"), config);
-    WritableWordSet::Enum els = per->detailed_elements();
+    StackPtr<WordEntryEnumeration> els(per->detailed_elements());
     LocalWordSetInfo wsi;
     wsi.set(per->lang(), config);
     WordEntry * wi;
-    while (wi = els.next(), wi) {
+    while (wi = els->next(), wi) {
       wi->write(COUT,*(per->lang()), wsi.convert);
       COUT << "\n";
     }
@@ -1262,11 +1262,11 @@ void repl() {
 
      WritableReplacementSet * repl = new_default_writable_replacement_set();
      repl->load(config->retrieve("repl-path"), config);
-     WritableReplacementSet::Enum els = repl->detailed_elements();
+     StackPtr<WordEntryEnumeration> els(repl->detailed_elements());
  
      WordEntry * rl = 0;
      WordEntry words;
-     while ((rl = els.next())) {
+     while ((rl = els->next())) {
        repl->repl_lookup(*rl, words);
        do {
          COUT << rl->word << ": " << words.word << "\n";
@@ -1504,9 +1504,9 @@ void print_help () {
     "\n"
     "[options] is any of the following:\n"
     "\n"), VERSION);
-  Enumeration<KeyInfoEnumeration> els = options->possible_elements();
+  StackPtr<KeyInfoEnumeration> els(options->possible_elements());
   const KeyInfo * k;
-  while (k = els.next(), k) {
+  while (k = els->next(), k) {
     if (k->desc == 0) continue;
     if ((k->type == KeyInfoDescript) &&
         !strncmp(k->name,"filter-",7)){

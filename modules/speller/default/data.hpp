@@ -29,6 +29,8 @@ namespace aspeller {
   static const bool DONT_LOCK = false;
   static const bool USE_SOUNDSLIKE = true;
   static const bool NO_SOUNDSLIKE = false;
+  
+  typedef Enumeration<WordEntry *> WordEntryEnumeration;
 
   class DataSet {
     friend class SpellerImpl;
@@ -138,14 +140,13 @@ namespace aspeller {
       basic_type =  basic_word_set;
     }
     
-    typedef VirEnumeration<WordEntry *> VirEnum;
-    typedef Enumeration<VirEnum>        Enum;
+    typedef WordEntryEnumeration        Enum;
     typedef const char *                Value;
     typedef unsigned int                Size;
 
     StringEnumeration * elements() const;
 
-    virtual VirEnum * detailed_elements() const = 0;
+    virtual Enum * detailed_elements() const = 0;
     virtual Size   size()     const = 0;
     virtual bool   empty()    const {return !size();}
   
@@ -211,17 +212,15 @@ namespace aspeller {
     }
     
     typedef LocalWordSet         Value;
-    typedef VirEnumeration<Value>  VirEmul;
-    typedef Enumeration<VirEmul>   Emul;
+    typedef Enumeration<Value>   Enum;
     typedef unsigned int         Size;
 
     virtual bool   empty()    const {return !size();}
     virtual Size   size()     const = 0;
     virtual StringEnumeration * elements() const {abort();} //FIXME
 
-    virtual VirEmul * detailed_elements() const = 0;
+    virtual Enum * detailed_elements() const = 0;
   };
-
 
   typedef unsigned int DataType;
   static const DataType DT_ReadOnly     = 1<<0;

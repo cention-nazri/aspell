@@ -80,7 +80,7 @@ namespace aspeller_default_writable_wl {
     bool soundslike_lookup(const char * soundslike, WordEntry &) const;
     bool soundslike_lookup(const WordEntry & soundslike, WordEntry &) const;
 
-    VirEnum * detailed_elements() const;
+    Enum * detailed_elements() const;
 
     struct SoundslikeElements;
     SoundslikeEnumeration * soundslike_elements() const;
@@ -97,8 +97,8 @@ namespace aspeller_default_writable_wl {
     static Value end_state() {return 0;}
   };
 
-  WritableWS::VirEnum * WritableWS::detailed_elements() const {
-    return new MakeVirEnumeration<ElementsParms>
+  WritableWS::Enum * WritableWS::detailed_elements() const {
+    return new MakeEnumeration<ElementsParms>
       (word_lookup->begin(),ElementsParms(word_lookup->end()));
   }
 

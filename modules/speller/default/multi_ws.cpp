@@ -18,7 +18,7 @@ namespace aspeller {
   public:
     PosibErr<void> load(ParmString, Config *, SpellerImpl *, const LocalWordSetInfo * li);
 
-    VirEmul * detailed_elements() const;
+    Enum * detailed_elements() const;
     unsigned int      size()     const;
     
   public: //but don't use
@@ -85,9 +85,9 @@ namespace aspeller {
     Value deref(Iterator i) const {return *i;}
   };
 
-  MultiWS::VirEmul * MultiWS::detailed_elements() const
+  MultiWS::Enum * MultiWS::detailed_elements() const
   {
-    return new MakeVirEnumeration<ElementsParms>(wss.begin(), wss.end());
+    return new MakeEnumeration<ElementsParms>(wss.begin(), wss.end());
   }
   
   unsigned int MultiWS::size() const 

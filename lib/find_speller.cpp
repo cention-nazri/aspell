@@ -301,10 +301,9 @@ namespace acommon {
     else if (config->have("module-search-order"))
       config->retrieve_list("module-search-order", &b_module.list);
     {
-      Enumeration<ModuleInfoEnumeration> els 
-	= get_module_info_list(config)->elements();
+      StackPtr<ModuleInfoEnumeration> els(get_module_info_list(config)->elements());
       const ModuleInfo * entry;
-      while ( (entry = els.next()) != 0)
+      while ( (entry = els->next()) != 0)
 	b_module.list.add(entry->name);
     }
     b_module.init();
