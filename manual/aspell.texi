@@ -1,5 +1,5 @@
 \input texinfo   @c -*-texinfo-*-
-@comment $Id: aspell.texi,v 1.26 2004/04/26 03:51:59 kevina Exp $
+@comment $Id: aspell.texi,v 1.27 2004/04/28 20:06:41 kevina Exp $
 @comment %**start of header
 @setfilename aspell.info
 @settitle GNU Aspell 0.60
@@ -3037,12 +3037,15 @@ H@`anzi Characters are used to write Chinese, Japanese, Korean, and were
 once used to write Vietnamese.  Each h@`anzi character represents a
 syllable of a spoken word and also has a meaning.  Since there are
 around 3,000 of them in common usage it is unlikely that Aspell will
-ever be able to support spell checking languages written using h@`anzi.
-However, I am not even sure if these languages need spell checking since
-h@`anzi characters are generally not entered in directly.  Furthermore
-even if Aspell could spell check h@`anzi the exiting suggestion strategy
-will not work well at all, and thus a completely new strategy will need
-to be developed.
+ever be able to support spell checking languages written using h@`anzi
+until full Unicode support is implemented.  However, I am not even sure
+if these languages need spell checking since h@`anzi characters are
+generally not entered in directly.  Furthermore even if Aspell could
+spell check h@`anzi the exiting suggestion strategy will not work well
+at all, and thus a completely new strategy will need to be developed.
+However, it is is the case that h@`anzi needs to be spell checked and
+you know something about the issues involved please fell free to contact
+me.
 
 @appendixsubsec Japanese
 
@@ -3198,10 +3201,96 @@ In some languages, such as German, it is acceptable to string two words
 together, thus forming a compound word.  However, there are rules to
 when this can be done.  Furthermore, it is not always sufficient to
 simply concatenate the two words.  For example, sometimes a letter is
-inserted between the two words.  I tried implementing support for
-compound words in Aspell but it was too limiting and no one used it.
-Before I try implementing it again I want to know all the issues
-involved.
+inserted between the two words.  Aspell currently has support for
+unconditionally stringing words together.  I tried implementing more
+sophisticated support for compound words in Aspell but it was too
+limiting and no one used it.
+
+After receiving feedback from several people it seams that acceptable
+support for compound words involved two basically independent parts.
+If this is not suffecent for your language please let me know.
+
+@heading Part One
+
+Describes how the word needs to be changed when forming a compound
+
+@example
+CMP <flag> <strip> <add> <cond> <cond2>
+
+<flag>  is the compound flag
+<strip> is the string to strip or 0 for the null string
+<add>   is the string to add or 0 for the null string
+<cond>  is the condition to match at the end of the current word
+<cond2> is the condition to match at the beginning of the next word
+@end example
+
+@noindent
+All but the last field are the same as a suffix entry in the exiting
+affix code.
+
+<cond> is a simplified regular expression.  Some examples:
+@example
+. (for anything)
+e
+[^aeiou]y
+[^ey]
+[aeiou]y
+@end example
+
+It does not seam necessary to change the beginning of a word when
+forming compounds
+
+@heading Part Two
+
+Describes the position a word can appear in (beginning, middle, or
+end) and with which words.
+
+To do this each word can be assigned a category.  Then each category
+can be given a set of rules to describe how it can be used in a
+compound word for example
+
+@example
+A + B: indicates that category A may appear at beginning of a
+  word when followed by a category B word.  When combined it is then
+  considered a category B word.
+A + C + B: here a C word may only appear between an A or B word
+A + A + B
+A + A
+A + A + A
+etc..
+@end example
+
+I have not decided if a word should be allowed to belong to more than
+one category as a new category can be created in necessary to mean
+words in both category A and B for example.
+
+@appendixsubsec To Implement
+
+To implement support for compound words based on the above description
+the following will need to be done:
+
+@enumerate
+
+@item
+expand the affix code to support special compound flags as
+described in part one
+
+@item
+write code to store the conditions as described in part two
+
+@item
+expand the compound checking code to check against the conditions
+
+@item
+expand the dictionary format to store the necessary compound info
+with the word
+
+@end enumerate
+
+I don't think I will be able to implement this in time for Aspell 0.60.
+However, if you would like to try to implementing this let me know.  If
+you can get it done by the end of June or so it will probably make it
+into Aspell 0.60.
 
 @node Context Sensitive Spelling
 @appendixsec Context Sensitive Spelling
@@ -3243,7 +3332,7 @@ both the base and combing character is present than (2), otherwise (3).
 Unicode Normalization is now implemented in Aspell 0.60.
 
 @node Words With Symbols in Them
-@appendixsec Words With Spaces or other Symbols in Them
+@appendixsec Words With Spaces or Other Symbols in Them
 
 Many languages, including English, have words with non-letter symbols in
 them.  For example the apostrophe.  These symbols generally appear in
@@ -3375,15 +3464,10 @@ implemented. However, I could still use help with them.
 
 @itemize @bullet
 @item
-Better @strong{support for compound words}. If you speak a language
-which has a lot of compound of run-together words I would appreciate
-hearing back from you. The current support for @emph{conditional}
-compound words will disappear in Aspell 0.60 since no one seams to be
-using it. Support for @emph{unconditional} compound words will still
-be available. However, several people have informed me that they need
-more. I attempted to provide that, but it wasn't powerful enough, and
-hence unused. Thus, I am going to start from scratch, but I need to
-know exactly what is involved in correct compound formation.
+Better support for @strong{compound words}. The current support for
+@emph{conditional} compound words will disappear in Aspell 0.60 since no
+one seams to be using it. Support for @emph{unconditional} compound
+words will still be available. @xref{Compound Words}.
 @item
 Be able to accept @strong{words with spaces in them} as many languages
 have words, such as a word in a foreign phrase, which only make sense
