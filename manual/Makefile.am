@@ -17,7 +17,7 @@ fake-manual:
 # Main Manual
 #
 
-manual: @MAINTAINER_MODE_TRUE@ manual-text
+manual: @MAINTAINER_MODE_TRUE@ manual-text devel-text
 
 manual2.tex: @MAINTAINER_MODE_TRUE@ manual2.lyx
 	-lyx --export latex manual2.lyx
