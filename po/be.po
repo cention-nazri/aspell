@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.51\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-02-03 19:20-0500\n"
+"POT-Creation-Date: 2004-02-04 20:02-0500\n"
 "PO-Revision-Date: 2004-01-06 16:34+0200\n"
 "Last-Translator: Vital khilko <dojlid@mova.org>\n"
 "Language-Team: Belarusian <i18n@mova.org>\n"
@@ -176,62 +176,67 @@ msgstr ""
 
 #: common/config.cpp:1072
 #, fuzzy
-msgid "use replacement tables, override sug-mode default"
+msgid "use typo analysis, override sug-mode default"
 msgstr "захаваньне параў замены ў часе захаваньня"
 
 #: common/config.cpp:1074
+#, fuzzy
+msgid "use replacement tables, override sug-mode default"
+msgstr "захаваньне параў замены ў часе захаваньня"
+
+#: common/config.cpp:1076
 msgid "characters to insert when a word is split"
 msgstr ""
 
-#: common/config.cpp:1077
+#: common/config.cpp:1078
 #, fuzzy
 msgid "search path for word list information files"
 msgstr "Шлях пошуку для сьпісаў словаў"
 
-#: common/config.cpp:1079
+#: common/config.cpp:1080
 #, fuzzy
 msgid "indicator for affix flags in word lists"
 msgstr "разьмяшчэньне сьпісу словаў"
 
-#: common/config.cpp:1081
+#: common/config.cpp:1082
 #, fuzzy
 msgid "indicator for additional flags in word lists"
 msgstr "дадатковыя зьвесткі для сьпісу словаў"
 
-#: common/config.cpp:1088
+#: common/config.cpp:1089
 msgid "encode soundslike infomation when creating dicts"
 msgstr ""
 
-#: common/config.cpp:1090
+#: common/config.cpp:1091
 msgid "use jump tables when creating dictionaries"
 msgstr ""
 
-#: common/config.cpp:1092
+#: common/config.cpp:1093
 msgid "use affix compression when creating dictionaries"
 msgstr ""
 
-#: common/config.cpp:1099
+#: common/config.cpp:1100
 msgid "create a backup file by appending \".bak\""
 msgstr "стварае рэзэрвовы файл праз даданьне пашырэньня \".bak\""
 
-#: common/config.cpp:1102
+#: common/config.cpp:1103
 msgid "make possible root/affix combinations not in the dictionary"
 msgstr ""
 
-#: common/config.cpp:1104
+#: common/config.cpp:1105
 #, fuzzy
 msgid "keymapping for check mode, aspell or ispell"
 msgstr "мапаваньне клявішаў для рэжыма праверкі, адно з aspell ispell"
 
-#: common/config.cpp:1106
+#: common/config.cpp:1107
 msgid "reverse the order of the suggest list"
 msgstr "адваротны накірунак у сьпісе прапановаў"
 
-#: common/config.cpp:1108
+#: common/config.cpp:1109
 msgid "suggest possible replacements"
 msgstr ""
 
-#: common/config.cpp:1110
+#: common/config.cpp:1111
 msgid "time load time and suggest time in pipe mode"
 msgstr "час загрузкі й час прапановы ў рэжыме канала"
 
@@ -610,19 +615,19 @@ msgstr ""
 "  %s Фільтар: %s\n"
 "\tЗаўвага: у двухсэнсавых выпадках прэфікс сьледуе за выбарам `filter-'\n"
 
-#: modules/speller/default/language.cpp:67
+#: modules/speller/default/language.cpp:70
 msgid "This is probably because: "
 msgstr ""
 
-#: modules/speller/default/language.cpp:74
+#: modules/speller/default/language.cpp:77
 msgid "The required field \"name\" is missing."
 msgstr ""
 
-#: modules/speller/default/language.cpp:286
+#: modules/speller/default/language.cpp:323
 msgid "Empty string."
 msgstr ""
 
-#: modules/speller/default/language.cpp:292
+#: modules/speller/default/language.cpp:329
 #, fuzzy
 msgid "Does not contain any letters."
 msgstr " не патрабуе ніякіх парамэтраў."
@@ -652,7 +657,8 @@ msgid "add/rem delimiter(s) separated by spaces"
 msgstr "даданьне/выдаленьне межаў пазначаных прагаламі"
 
 #: modules/filter/context-filter.opt:21
-msgid "swaps visible and invisible text;(starts invisible)"
+#, fuzzy
+msgid "swaps visible and invisible text"
 msgstr "абмен бачнага і нябачнага тэксту;( пачатак з бачнага)"
 
 #: modules/filter/email-filter.opt:7
