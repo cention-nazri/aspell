@@ -466,48 +466,48 @@ namespace {
   }
 
   //
+  // Sgml Encoder - BROKEN do not use
   //
-  //
 
-  class SgmlEncoder : public IndividualFilter 
-  {
-    FilterCharVector buf;
-    String which;
-  public:
-    SgmlEncoder(const char * n) : which(n) {}
-    PosibErr<bool> setup(Config *);
-    void reset() {}
-    void process(FilterChar * &, FilterChar * &);
-  };
+//   class SgmlEncoder : public IndividualFilter 
+//   {
+//     FilterCharVector buf;
+//     String which;
+//   public:
+//     SgmlEncoder(const char * n) : which(n) {}
+//     PosibErr<bool> setup(Config *);
+//     void reset() {}
+//     void process(FilterChar * &, FilterChar * &);
+//   };
 
-  PosibErr<bool> SgmlEncoder::setup(Config *) 
-  {
-    name_ = which + "-encoder";
-    order_num_ = 0.99;
-    return true;
-  }
+//   PosibErr<bool> SgmlEncoder::setup(Config *) 
+//   {
+//     name_ = which + "-encoder";
+//     order_num_ = 0.99;
+//     return true;
+//   }
 
-  void SgmlEncoder::process(FilterChar * & start, FilterChar * & stop)
-  {
-    buf.clear();
-    FilterChar * i = start;
-    while (i != stop)
-    {
-      if (*i > 127) {
-	buf.append("&#", i->width);
-	char b[10];
-	sprintf(b, "%d", i->chr);
-	buf.append(b, 0);
-	buf.append(';', 0);
-      } else {
-	buf.append(*i);
-      }
-      ++i;
-    }
-    buf.append('\0');
-    start = buf.pbegin();
-    stop  = buf.pend() - 1;
-  }
+//   void SgmlEncoder::process(FilterChar * & start, FilterChar * & stop)
+//   {
+//     buf.clear();
+//     FilterChar * i = start;
+//     while (i != stop)
+//     {
+//       if (*i > 127) {
+// 	buf.append("&#", i->width);
+// 	char b[10];
+// 	sprintf(b, "%d", i->chr);
+// 	buf.append(b, 0);
+// 	buf.append(';', 0);
+//       } else {
+// 	buf.append(*i);
+//       }
+//       ++i;
+//     }
+//     buf.append('\0');
+//     start = buf.pbegin();
+//     stop  = buf.pend() - 1;
+//   }
 }
 
 C_EXPORT IndividualFilter * new_aspell_sgml_filter() 
@@ -518,10 +518,10 @@ C_EXPORT IndividualFilter * new_aspell_sgml_decoder()
 {
   return new SgmlDecoder("sgml");
 }
-C_EXPORT IndividualFilter * new_aspell_sgml_encoder() 
-{
-  return new SgmlEncoder("sgml");
-}
+// C_EXPORT IndividualFilter * new_aspell_sgml_encoder() 
+// {
+//   return new SgmlEncoder("sgml");
+// }
 
 C_EXPORT IndividualFilter * new_aspell_html_filter() 
 {
@@ -531,10 +531,10 @@ C_EXPORT IndividualFilter * new_aspell_html_decoder()
 {
   return new SgmlDecoder("html");
 }
-C_EXPORT IndividualFilter * new_aspell_html_encoder() 
-{
-  return new SgmlEncoder("html");
-}
+// C_EXPORT IndividualFilter * new_aspell_html_encoder() 
+// {
+//   return new SgmlEncoder("html");
+// }
 
 
 /* Example HTML:
