@@ -32,6 +32,7 @@
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <unistd.h>
+# include <fcntl.h>
 #endif
 
 #include "asc_ctype.hpp"
@@ -845,19 +846,20 @@ void check()
     exit(-1);
   }
     
-  out = fopen(new_name.c_str(), "w");
-  if (!out) {
-    print_error(_("Could not open the file \"%s\"  for writing. File not saved."), file_name);
-    exit(-1);
-  }
-
 #ifdef USE_FILE_INO
   {
     struct stat st;
     fstat(fileno(in), &st);
-    fchmod(fileno(out), st.st_mode);
+    int fd = open(new_name.c_str(), O_WRONLY | O_CREAT | O_TRUNC, st.st_mode);
+    if (fd >= 0) out = fdopen(fd, "w");
   }
+#else
+  out = fopen(new_name.c_str(), "w");
 #endif
+  if (!out) {
+    print_error(_("Could not open the file \"%s\"  for writing. File not saved."), file_name);
+    exit(-1);
+  }
 
   if (!options->have("mode"))
     set_mode_from_extension(options, file_name);
