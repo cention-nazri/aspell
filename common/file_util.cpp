@@ -41,12 +41,15 @@
 
 namespace acommon {
 
+  // Return false if file is already an absolute path and does not need
+  // a directory prepended.
   bool need_dir(ParmString file) {
-    if (file[0] == '/' 
-	|| (file[0] == '.' && file[1] == '/')
-	// For Win32:
-	|| (file[0] != '\0' && file[1] == ':')
-	|| (file[0] == '\\'))
+    if (file[0] == '/' || (file[0] == '.' && file[1] == '/')
+#ifdef WIN32
+        || (asc_isalpha(file[0]) && file[1] == ':')
+        || file[0] == '\\' || (file[0] == '.' && file[1] == '\\')
+#endif
+      )
       return false;
     else
       return true;
@@ -67,9 +70,9 @@ namespace acommon {
   String figure_out_dir(ParmString dir, ParmString file)
   {
     String temp;
-    int s = strlen(file) - 1;
+    int s = file.size() - 1;
     while (s != -1 && file[s] != '/') --s;
-    if (file[0] != '.' && file[0] != '/') {
+    if (need_dir(file)) {
       temp += dir;
       temp += '/';
     }
