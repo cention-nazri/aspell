@@ -157,12 +157,14 @@ const PossibleOption possible_options[] = {
   OPTION("guess",            'm', 0),
   OPTION("dont-guess",       'P', 0),
   
-  COMMAND("version",   'v', 0),
+  COMMAND("usage",     '?',  0),
   COMMAND("help",      '\0', 0),
-  COMMAND("usage",     '?', 0),
+  COMMAND("version",   'v',  0),
   COMMAND("config",    '\0', 0),
-  COMMAND("check",     'c', 0),
-  COMMAND("pipe",      'a', 0),
+  COMMAND("dicts",     '\0', 0),
+  COMMAND("check",     'c',  0),
+  COMMAND("pipe",      'a',  0),
+  COMMAND("list",      '\0', 0),
   COMMAND("conv",      '\0', 2),
   COMMAND("norm",      '\0', 1),
   COMMAND("filter",    '\0', 0),
@@ -170,11 +172,9 @@ const PossibleOption possible_options[] = {
   COMMAND("munch",     '\0', 0),
   COMMAND("expand",    '\0', 0),
   COMMAND("combine",   '\0', 0),
-  COMMAND("list",      '\0', 0),
-  COMMAND("dicts",     '\0', 0),
+  COMMAND("clean",     '\0', 0),
   COMMAND("filters",   '\0', 0),
   COMMAND("modes",     '\0', 0),
-  COMMAND("clean",     '\0', 0),
 
   COMMAND("dump",   '\0', 1),
   COMMAND("create", '\0', 1),
@@ -314,7 +314,7 @@ int main (int argc, const char *argv[])
           num_parms = 0;
           i += 1;
         } else {
-          print_error(_("You must specify a parameter for %s"), argv[i]);
+          print_error(_("You must specify a parameter for \"%s\"."), argv[i]);
           return 1;
         }
       } else {
@@ -367,11 +367,24 @@ int main (int argc, const char *argv[])
     return 1;
   }
 
+  String action_str = args.front();
+  args.pop_front();
+  const PossibleOption * action_opt = find_option(action_str.str());
+  if (!action_opt->is_command) {
+    print_error(_("Unknown Action: %s"),  action_str);
+    return 1;
+  } else if (action_opt->num_arg == 1 && args.empty()) {
+    print_error(_("You must specify a parameter for \"%s\"."), action_str);
+    return 1;
+  } else if (action_opt->num_arg > (int)args.size()) {
+    CERR.printf(_("Error: You must specify at least %d parameters for \"%s\".\n"), 
+                action_opt->num_arg, action_str.str());
+    return 1;
+  }
+
   //
   // perform the requested action
   //
-  String action_str = args.front();
-  args.pop_front();
   if (action_str == "usage")
     print_help();
   else if (action_str == "help")
@@ -402,18 +415,20 @@ int main (int argc, const char *argv[])
     expand();
   else if (action_str == "combine")
     combine();
+  else if (action_str == "clean")
+    clean();
+  else if (action_str == "filters")
+    filters();
+  else if (action_str == "modes")
+    modes();
   else if (action_str == "dump")
     action = do_dump;
   else if (action_str == "create")
     action = do_create;
   else if (action_str == "merge")
     action = do_merge;
-  else if (action_str == "clean")
-    clean();
-  else {
-    print_error(_("Unknown Action: %s"),  action_str);
-    return 1;
-  }
+  else
+    abort(); // this should not happen
 
   if (action != do_other) {
     if (args.empty()) {
