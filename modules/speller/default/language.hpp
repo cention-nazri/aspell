@@ -58,6 +58,7 @@ namespace aspeller {
     int max_normalized_;
 
     String      soundslike_chars_;
+    String      stripped_chars_;
 
     StackPtr<Soundslike> soundslike_;
     StackPtr<AffixMgr>   affix_;
@@ -125,6 +126,7 @@ namespace aspeller {
     }
 
     const char * soundslike_chars() const {return soundslike_chars_.c_str();}
+    const char * stripped_chars() const {return stripped_chars_.c_str();}
 
     const AffixMgr * affix() const {return affix_;}
 

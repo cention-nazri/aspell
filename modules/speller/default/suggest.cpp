@@ -303,91 +303,157 @@ namespace aspeller_default_suggest {
 	
 	if (speller->check(new_word) && speller->check(new_word + i + 1)) {
 	  new_word[i] = ' ';
-	  add_nearmiss(new_word, parms.edit_distance_weights.del2,
+	  add_nearmiss(new_word, parms.edit_distance_weights.del2*3/2,
 		       dont_count, do_need_alloc);
 
 	  new_word[i] = '-';
-	  add_nearmiss(new_word, parms.edit_distance_weights.del2,
+	  add_nearmiss(new_word, parms.edit_distance_weights.del2*3/2,
 		       dont_count, do_need_alloc);
 	}
       }
       
       delete[] new_word;
     }
-    const char * original_soundslike = original_word.soundslike.c_str();
-    //unsigned int original_soundslike_len = strlen(original_soundslike);
+
+    if (false && parms.soundslike_level == 1) {
+
+      const char * replace_list = lang->stripped_chars();
+      char a,b;
+      const char * c;
+
+      // Change one letter
       
-    EditDist (* edit_dist_fun)(const char *, const char *, 
-			       const EditDistanceWeights &);
+      new_soundslike = soundslike;
 
-    if (parms.soundslike_level == 1)
-      edit_dist_fun = limit1_edit_distance;
-    else
-      edit_dist_fun = limit2_edit_distance;
+      for (i = 0; i != soundslike.size(); ++i) {
+	for (c = replace_list; *c; ++c) {
+	  if (*c == soundslike[i]) continue;
+	  new_soundslike[i] = *c;
+	  try_sound(new_soundslike.c_str(),parms.edit_distance_weights.sub);
+	}
+	new_soundslike[i] = soundslike[i];
+      }
 
-    for (SpellerImpl::DataSetCollection::const_iterator i 
-	   = speller->data_set_collection().begin();
-	 i != speller->data_set_collection().end();
-	 ++i) {
+      // Interchange two adjacent letters.
 
-      if (!i->use_to_suggest) continue;
+      for (i = 0; i+1 != soundslike.size(); ++i) {
+	a = new_soundslike[i];
+	b = new_soundslike[i+1];
+	new_soundslike[i] = b;
+	new_soundslike[i+1] = a;
+	try_sound(new_soundslike.c_str(),parms.edit_distance_weights.swap);
+	new_soundslike[i] = a;
+	new_soundslike[i+1] = b;
+      }
+
+      // Add one letter
+
+      new_soundslike += ' ';
+      i = new_soundslike.size()-1;
+      while(true) {
+	for (c=replace_list; *c; ++c) {
+	  new_soundslike[i] = *c;
+	  try_sound(new_soundslike.c_str(),parms.edit_distance_weights.del1);
+	}
+	if (i == 0) break;
+	new_soundslike[i] = new_soundslike[i-1];
+	--i;
+      }
+    
+      // Delete one letter
+
+      if (soundslike.size() > 1) {
+	new_soundslike = soundslike;
+	a = new_soundslike[new_soundslike.size() - 1];
+	new_soundslike.resize(new_soundslike.size() - 1);
+	i = new_soundslike.size();
+	while (true) {
+	  try_sound(new_soundslike.c_str(),parms.edit_distance_weights.del2);
+	  if (i == 0) break;
+	  b = a;
+	  a = new_soundslike[i-1];
+	  new_soundslike[i-1] = b;
+	  --i;
+	}
+      }
+
+    } else {
+
+      const char * original_soundslike = original_word.soundslike.c_str();
+      //unsigned int original_soundslike_len = strlen(original_soundslike);
       
-      if (i->data_set->basic_type == DataSet::basic_word_set) {
-
-	const BasicWordSet * data_set 
-	  = static_cast<const BasicWordSet *>(i->data_set);
-
-	StackPtr<SoundslikeEnumeration> els(data_set->soundslike_elements());
-    
-	SoundslikeWord sw;	
-	EditDist score;
-        unsigned int stopped_at = LARGE_NUM;
-        //CERR << "\\" << original_soundslike << '\n';
-	while ( (sw = els->next(stopped_at)) == true) 
-	{
-	  score = edit_dist_fun(sw.soundslike,
-				original_soundslike, 
-				parms.edit_distance_weights);
-	  stopped_at = score.stopped_at - sw.soundslike;
-	  if (score < LARGE_NUM) {
-            //CERR << "//" << sw.soundslike << ' ' << score << '\n';
-	    stopped_at = LARGE_NUM;
-	    BasicWordSet::Emul e = data_set->words_w_soundslike(sw);
-	    BasicWordInfo bw;
-	    String word;
-	    while ((bw = e.next())) {
-	      bw.get_word(word, i->local_info.convert);
-	      add_nearmiss(word.c_str(), score, do_count, do_need_alloc);
-	    }
-	  }
-	}
-
-      } else {
-	
-	const BasicReplacementSet * repl_set
-	  = static_cast<const BasicReplacementSet *>(i->data_set);
-
-	StackPtr<SoundslikeEnumeration> els(repl_set->soundslike_elements());
-    
-	SoundslikeWord w;
-	EditDist score;
-        unsigned int stopped_at = LARGE_NUM;
-	while ( (w = els->next(stopped_at)) == true) 
-	{
-	  score = edit_dist_fun(w.soundslike,
-				original_soundslike, 
-				parms.edit_distance_weights);
-	  
-	  stopped_at = score.stopped_at - w.soundslike;
-	  if (score < LARGE_NUM) {
-	    stopped_at = LARGE_NUM;
-	    BasicReplacementSet::Emul e = repl_set->repls_w_soundslike(w);
-	    ReplacementList repl;
-	    while (! (repl = e.next()).empty() )
-	      add_nearmiss(repl.misspelled_word, score, 
-			   dont_count, dont_need_alloc, repl.elements);
-	  }
-	}
+      EditDist (* edit_dist_fun)(const char *, const char *, 
+                                 const EditDistanceWeights &);
+      
+      if (parms.soundslike_level == 1)
+        edit_dist_fun = limit1_edit_distance;
+      else
+        edit_dist_fun = limit2_edit_distance;
+      
+      for (SpellerImpl::DataSetCollection::const_iterator i 
+             = speller->data_set_collection().begin();
+           i != speller->data_set_collection().end();
+           ++i) {
+        
+        if (!i->use_to_suggest) continue;
+        
+        if (i->data_set->basic_type == DataSet::basic_word_set) {
+          
+          const BasicWordSet * data_set 
+            = static_cast<const BasicWordSet *>(i->data_set);
+          
+          StackPtr<SoundslikeEnumeration> els(data_set->soundslike_elements());
+          
+          SoundslikeWord sw;	
+          EditDist score;
+          unsigned int stopped_at = LARGE_NUM;
+          //CERR << "\\" << original_soundslike << '\n';
+          while ( (sw = els->next(stopped_at)) == true) 
+          {
+            score = edit_dist_fun(sw.soundslike,
+                                  original_soundslike, 
+                                  parms.edit_distance_weights);
+            stopped_at = score.stopped_at - sw.soundslike;
+            if (score < LARGE_NUM) {
+              //CERR << "//" << sw.soundslike << ' ' << score << '\n';
+              stopped_at = LARGE_NUM;
+              BasicWordSet::Emul e = data_set->words_w_soundslike(sw);
+              BasicWordInfo bw;
+              String word;
+              while ((bw = e.next())) {
+                bw.get_word(word, i->local_info.convert);
+                add_nearmiss(word.c_str(), score, do_count, do_need_alloc);
+              }
+            }
+          }
+          
+        } else {
+          
+          const BasicReplacementSet * repl_set
+            = static_cast<const BasicReplacementSet *>(i->data_set);
+          
+          StackPtr<SoundslikeEnumeration> els(repl_set->soundslike_elements());
+          
+          SoundslikeWord w;
+          EditDist score;
+          unsigned int stopped_at = LARGE_NUM;
+          while ( (w = els->next(stopped_at)) == true) 
+          {
+            score = edit_dist_fun(w.soundslike,
+                                  original_soundslike, 
+                                  parms.edit_distance_weights);
+            
+            stopped_at = score.stopped_at - w.soundslike;
+            if (score < LARGE_NUM) {
+              stopped_at = LARGE_NUM;
+              BasicReplacementSet::Emul e = repl_set->repls_w_soundslike(w);
+              ReplacementList repl;
+              while (! (repl = e.next()).empty() )
+                add_nearmiss(repl.misspelled_word, score, 
+                             dont_count, dont_need_alloc, repl.elements);
+            }
+          }
+        }
       }
     }
   }

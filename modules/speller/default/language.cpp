@@ -163,6 +163,7 @@ namespace aspeller {
     if (pe.has_err()) return pe;
     soundslike_.reset(pe);
     soundslike_chars_ = soundslike_->soundslike_chars();
+    //stripped_chars_   = NoSoundslike(this).soundslike_chars();
 
     affix_.reset(new_affix_mgr(data.retrieve("affix"), this));
     affix_compress_ = data.retrieve_bool("affix-compress");

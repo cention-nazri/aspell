@@ -1,5 +1,5 @@
 AUTOMAKE_OPTIONS = foreign subdir-objects
-SUBDIRS = . po manual examples
+SUBDIRS = . po manual
 
 # These are needed due to a bug in Automake
 pkgdatadir = @pkgdatadir@

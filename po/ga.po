@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.51-b20040106\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-01-24 18:07-0500\n"
+"POT-Creation-Date: 2004-01-26 04:48-0500\n"
 "PO-Revision-Date: 2004-01-11 20:42-0500\n"
 "Last-Translator: Kevin Patrick Scannell <scannell@SLU.EDU>\n"
 "Language-Team: Irish <ga@li.org>\n"
@@ -573,11 +573,11 @@ msgstr ""
 msgid "The required field \"name\" is missing."
 msgstr ""
 
-#: modules/speller/default/language.cpp:287
+#: modules/speller/default/language.cpp:288
 msgid "Empty string."
 msgstr ""
 
-#: modules/speller/default/language.cpp:293
+#: modules/speller/default/language.cpp:294
 #, fuzzy
 msgid "Does not contain any letters."
 msgstr " -- ní ghlactar aon pharaiméadar."
