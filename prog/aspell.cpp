@@ -1266,6 +1266,7 @@ void master () {
 
   if (action == do_create) {
     
+    find_language(*config);
     EXIT_ON_ERR(create_default_readonly_dict
                 (new IstreamVirEnumeration(CIN),
                  *config));
@@ -1414,6 +1415,7 @@ void repl() {
 void soundslike() {
   using namespace aspeller;
   CachePtr<Language> lang;
+  find_language(*options);
   PosibErr<Language *> res = new_language(*options);
   if (!res) {print_error(res.get_err()->mesg); exit(1);}
   lang.reset(res.data);
@@ -1437,6 +1439,7 @@ void munch()
 {
   using namespace aspeller;
   CachePtr<Language> lang;
+  find_language(*options);
   PosibErr<Language *> res = new_language(*options);
   if (!res) {print_error(res.get_err()->mesg); exit(1);}
   lang.reset(res.data);
@@ -1474,6 +1477,7 @@ void expand()
   
   using namespace aspeller;
   CachePtr<Language> lang;
+  find_language(*options);
   PosibErr<Language *> res = new_language(*options);
   if (!res) {print_error(res.get_err()->mesg); exit(1);}
   lang.reset(res.data);
@@ -1559,6 +1563,7 @@ void combine()
 {
   using namespace aspeller;
   CachePtr<Language> lang;
+  find_language(*options);
   PosibErr<Language *> res = new_language(*options);
   if (!res) {print_error(res.get_err()->mesg); exit(1);}
   lang.reset(res.data);

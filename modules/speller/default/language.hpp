@@ -406,6 +406,8 @@ namespace aspeller {
   
   PosibErr<void> check_if_valid(const Language & l, ParmString word);
 
+  bool find_language(Config & c);
+
   PosibErr<Language *> new_language(const Config &, ParmString lang = 0);
 
   PosibErr<void> open_affix_file(const Config &, FStream & o);

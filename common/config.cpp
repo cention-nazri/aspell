@@ -431,20 +431,14 @@ namespace acommon {
     
       if (strcmp(i, "lang") == 0) {
 
-	if (have("master")) {
+        if (have("actual-lang")) {
+          final_str = data_.lookup("actual-lang");
+        } else if (have("master")) {
 	  final_str = "<unknown>";
 	} else {
 	  get_lang(final_str);
 	}
 	
-      } else if (strcmp(i, "actual-lang") == 0) {
-	
-	unsigned int len = 0;
-	final_str = retrieve("lang");
-	while (len < final_str.size() && final_str[len] != '_')
-	  ++len;
-	final_str.resize(len);
-
       } else if (strcmp(i, "encoding") == 0) {
 
         get_encoding(final_str);
@@ -558,6 +552,10 @@ namespace acommon {
   PosibErr<void> NotifyListBlockChange::clear() {
     notify_all(key_info, 0, all_removed);
     return no_err;
+  }
+
+  void Config::replace_internal(ParmString k, ParmString v) {
+    data_.replace(k, v);
   }
 
   PosibErr<void> Config::replace(ParmString k, ParmString value) {
@@ -990,12 +988,12 @@ namespace acommon {
 
 #ifdef ENABLE_WIN32_RELOCATABLE
 #  define HOME_DIR "<prefix>"
-#  define PERSONAL "<actual-lang>.pws"
-#  define REPL     "<actual-lang>.prepl"
+#  define PERSONAL "<lang>.pws"
+#  define REPL     "<lang>.prepl"
 #else
 #  define HOME_DIR "<$HOME|./>"
-#  define PERSONAL ".aspell.<actual-lang>.pws"
-#  define REPL     ".aspell.<actual-lang>.prepl"
+#  define PERSONAL ".aspell.<lang>.pws"
+#  define REPL     ".aspell.<lang>.prepl"
 #endif
 
   char mode_string[128] = "filter mode";
@@ -1005,7 +1003,7 @@ namespace acommon {
   static const KeyInfo config_keys[] = {
     // the description should be under 50 chars
     {"actual-dict-dir", KeyInfoString, "<dict-dir^master>", 0}
-    , {"actual-lang",     KeyInfoString, "!actual-lang", 0}
+    , {"actual-lang",     KeyInfoString, "", 0} 
     , {"conf",     KeyInfoString, "aspell.conf",
        /* TRANSLATORS: The remaing strings in config.cpp should be kept
           under 50 characters, begin with a lower case character and not
@@ -1013,7 +1011,7 @@ namespace acommon {
        N_("main configuration file")}
     , {"conf-dir", KeyInfoString, CONF_DIR,
        N_("location of main configuration file")}
-    , {"conf-path",     KeyInfoString, "<conf-dir/conf>",     0}
+    , {"conf-path",     KeyInfoString, "<conf-dir/conf>", 0}
     , {"data-dir", KeyInfoString, DATA_DIR,
        N_("location of language data files")}
     , {"dict-dir", KeyInfoString, DICT_DIR,

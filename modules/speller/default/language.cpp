@@ -18,6 +18,7 @@
 #include "string.hpp"
 #include "cache-t.hpp"
 #include "getdata.hpp"
+#include "file_util.hpp"
 
 #ifdef ENABLE_NLS
 #  include <langinfo.h>
@@ -285,6 +286,7 @@ namespace aspeller {
 
   void Language::set_lang_defaults(Config & config)
   {
+    config.replace_internal("actual-lang", name());
     StackPtr<KeyInfoEnumeration> els(lang_config_->possible_elements(false));
     const KeyInfo * k;
     Conv to_utf8;
@@ -542,15 +544,14 @@ namespace aspeller {
   PosibErr<Language *> new_language(const Config & config, ParmString lang)
   {
     if (!lang)
-      return get_cache_data(&language_cache, &config, config.retrieve("actual-lang"));
+      return get_cache_data(&language_cache, &config, config.retrieve("lang"));
     else
       return get_cache_data(&language_cache, &config, lang);
   }
 
   PosibErr<void> open_affix_file(const Config & c, FStream & f)
   {
-
-    String lang = c.retrieve("actual-lang");
+    String lang = c.retrieve("lang");
 
     String dir1,dir2,path;
     fill_data_dir(&c, dir1, dir2);
@@ -565,6 +566,28 @@ namespace aspeller {
     RET_ON_ERR(f.open(file,"r"));
 
     return no_err;
+  }
+
+  bool find_language(Config & c)
+  {
+    String lang = c.retrieve("lang");
+    char * l = lang.data();
+
+    String dir1,dir2,path;
+    fill_data_dir(&c, dir1, dir2);
+
+    char * s = l + strlen(l);
+
+    while (s > l) {
+      find_file(path,dir1,dir2,l,".dat");
+      if (file_exists(path)) {
+        c.replace_internal("actual-lang", lang);
+        return true;
+      }
+      while (s > l && !(*s == '-' || *s == '_')) --s;
+      *s = '\0';
+    }
+    return false;
   }
 
 }

@@ -142,6 +142,8 @@ namespace acommon {
     
     PosibErr<void> replace (ParmString, ParmString);
     PosibErr<bool> remove  (ParmString);
+
+    void replace_internal (ParmString, ParmString);
     
     void write_to_stream(OStream & out, bool include_extra = false);
 
