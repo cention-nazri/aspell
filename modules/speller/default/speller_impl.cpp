@@ -7,7 +7,6 @@
 #include <stdlib.h>
 #include <typeinfo>
 
-#include "aspeller.hpp"
 #include "clone_ptr-t.hpp"
 #include "config.hpp"
 #include "copy_ptr-t.hpp"

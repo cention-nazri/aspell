@@ -47,7 +47,7 @@
 
 #include "fstream.hpp"
 
-#include "aspeller.hpp"
+#include "speller_impl.hpp"
 #include "asuggest.hpp"
 #include "basic_list.hpp"
 #include "clone_ptr-t.hpp"
