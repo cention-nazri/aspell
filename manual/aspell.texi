@@ -1,7 +1,7 @@
 \input texinfo   @c -*-texinfo-*-
 
 @setfilename aspell.info
-@settitle GNU Aspell 0.60
+@settitle GNU Aspell 0.60.1
 @syncodeindex pg cp
 @documentencoding ISO-8859-1
 
@@ -26,7 +26,7 @@ Documentation License".
 @end direntry
 
 @titlepage
-@title GNU Aspell 0.60
+@title GNU Aspell 0.60.1
 @author Kevin Atkinson (@email{kevina@@gnu.org})
 @page
 @vskip 0pt plus 1filll
@@ -63,8 +63,9 @@ It can either be used as a library or as an independent spell checker.
 
 Basic Usage
 
-* Spellchecking Individual Files::
-* Using Aspell with other Applications::
+* Spellchecking Individual Files::  
+* Using Aspell as a Replacement for Ispell::  
+* Using Aspell with other Applications::  
 
 Customizing Aspell
 
@@ -245,10 +246,12 @@ errors.
 Lower memory footprint
 
 @item
-Perhaps better support for spell checking (La)TeX files.
+Ability to deal with arbitrary multi-character letters such as old
+ASCII encodings of accented letters.
 
 @item
-Support for spell checking Nroff files.
+Perhaps better support for spell checking (La)TeX and Nroff files.
+
 @end itemize
 
 @node Support
@@ -265,8 +268,9 @@ For a quick reference on the Aspell utility use the command
 @command{aspell --help}.
 
 @menu
-* Spellchecking Individual Files::
-* Using Aspell with other Applications::
+* Spellchecking Individual Files::  
+* Using Aspell as a Replacement for Ispell::  
+* Using Aspell with other Applications::  
 @end menu
 
 @node Spellchecking Individual Files
@@ -338,9 +342,7 @@ extension of the file to determine the current mode.  If the extension
 is @file{.tex}, then @option{tex} mode will be used, if the extension
 is @file{.html}, @file{.htm}, @file{.php}, or @file{.sgml} it will
 check the file in @option{sgml} mode, otherwise it will use
-@option{url} mode.  These extensions can be changed via the
-@option{tex-extension} and @option{sgml-extension} options
-respectively.
+@option{url} mode. 
 
 For more information on the various modes that can be used, see
 @ref{Notes on Various Filters and Filter Modes}.
@@ -363,20 +365,20 @@ Furthermore it is also possible to check an UTF-8 document on an 8-bit
 terminal provided that the document can be successfully converted into
 that encoding.
 
-@node Using Aspell with other Applications
-@section Using Aspell with other Applications
+@node Using Aspell as a Replacement for Ispell
+@section Using Aspell as a Replacement for Ispell
 
-@subsection With Applications that Expect Ispell
+As of GNU Aspell 0.60.1 Aspell should be able to completly replase
+Ispell for most applications.  The Ispell compatilty script should
+work for most applications which expect Ispell.  However their are
+some differences which you should be aware of.
+
+@subsection As a Drop In Replacement
 
 Aspell can be used as a drop in replacement for Ispell for programs
 that use Ispell through a pipe such as Emacs and LyX.  It can also be
 used with programs that simply call the @command{ispell} command and
 expect the original file to be overwritten with the corrected version.
-It supports the basic features of Ispell, however it does not
-currently have a Nroff mode so there may be situations in which you
-still wish to use Ispell.  Nevertheless, I have been using Aspell for
-Xemacs and LyX since the middle of September of 1998 without any
-problems.
 
 If you do not have Ispell installed on your system and have installed
 the Ispell compatibly script than you should not need to do anything
@@ -390,9 +392,10 @@ simple change @command{ispell} to @command{aspell}.  If the program
 calls the @command{ispell} command to check the file change
 @command{ispell} with @command{aspell check}.
 
-If that is impossible and the program uses Ispell through a pipe than
-the @command{run-with-aspell} script can be used for programs using
-Ispell in pipe mode.  The format of the script is:
+If that is impossible than the @command{run-with-aspell} script can be
+used.  This script modifies the patch so that programs see the Ispell
+compatibity script instead of the actual true @command{ispell}
+command.  The format of the script is:
 
 @example
 run-with-aspell @var{command}
@@ -405,6 +408,111 @@ arguments.
 The old method of mapping Ispell to Aspell is discouraged because it
 can create compatibility problems with programs that actually require
 Ispell such as Ispell's own scripts.
+
+@subsection Differences From Ispell
+
+Nevertheless, Aspell is not Ispell, nor is it meant to completly
+emulate the behavior of Ispell.  The @command{aspell} command is not
+identical to the @command{ispell} command when not used in ``pipe''
+mode.  If an application expects to the @command{ispell} command than
+the Ispell comataibility script should be used.  
+
+@subsubsection Funcationaly of the Ispell Compatibility Script
+
+The Ispell compatibility script provides the following Ispell
+functionaly.
+
+@itemize @bullet
+@item
+The ability to check a file when called with out any mode paramaters.
+
+@item
+The pipe or -a mode.
+
+@item 
+The list of -l mode.
+
+@item
+The version or -v mode.  A single line is returned which, while not
+being identical to the line Ispell returns, is suffesent to fool most
+programs.
+
+@item
+The munch or -c mode.  When an affix file is availably for the
+underlying language.
+
+@item
+The expand or -e mode.  Again, when an affix file is availably for the
+underlying language.
+@end itemize
+
+However the Ispell script currently unable to emmulate the following Ispell
+functionaly:
+
+@itemize @bullet
+@item
+The '-A' pipe mode.  This is different from the normal pipe mode in
+that the special @code{&Include_File&} is recognized.
+
+@item
+The ability to dump the affix file when called with '-D'
+@end itemize
+
+@subsubsection Recognized Options
+
+Aspell, and thus the ispell compatibility script, recognizes most of
+the options that Ispell uses except for the '-S', '-w' and '-T'
+options.  The Aspell command will simply ignore these options if it
+sees them.
+
+@subsubsection Check Mode Compatibility
+
+The interface used by Aspell when checking individual files is
+slightly different than Ispell's.  In particular the default
+keymappings are not the same as the ones Ispell uses.  However Aspell
+supports using the Ispell keymappings via the @option{keymapping}
+option.  To use the Ispell keymappings set the @option{kepmapping}
+option to @code{ispell}.  This can be done on the command line by
+adding using the command:
+
+@example
+  aspell check --keymapping=ispell @dots{}
+@exdent or with the Ispell compatibility script
+  ispell --keymapping=ispell @dots{}
+@end example
+
+The Ispell keymapping can always be used when the Ispell compatibly
+script is called by uncommenting the indicated line in the
+@command{ispell} script.
+
+@subsubsection Pipe Mode Compatibility
+
+The Aspell pipe mode shold be identical to the Ispell pipe mode except
+if the line starts with a '$$' as that will trigger special Aspell
+only commands or if the line starts with a '~' which is ignored by Aspell.
+
+@subsubsection Other Differences
+
+The compiled dictionary format is completly different than Ispell's.
+Furthermore the format of the language data files's are different than
+Ispell's affix file.  However, all known Ispell dictionaries been
+converted to Aspell format, except for Albanian (sq) as I was unable
+to find the source word list.
+
+The naming and format of the personal dictionary is also different.
+However, ... FIXME (WRITEME)
+ n  
+@subsubsection Missing Functionally
+
+The only major area where Ispell is superior to Aspell is in the
+handling of multi character letters such as old ASCII encoding of
+accented characters.
+
+However, Aspell can handle UTF-8 documents far better than Ispell
+can.
+
+@node Using Aspell with other Applications
+@section Using Aspell with other Applications
 
 @subsection With Emacs and Xemacs
 
@@ -1910,12 +2018,14 @@ dictionaries.
 
 @subsection Notes About Thread Safety
 
-Read-only Aspell methods and functions should be thread safe as long
-as @code{new}, @code{delete}, @code{delete[]}, and STL allocators are
-thread safe.  To the best of my knowledge gcc meets these
-requirements.  It is up to the programmer to make sure multiple
-threads do not do things such as change the dictionaries and add or
-delete items from the personal or session dictionaries.
+Aspell should be thread safe, when used properly, as long as the
+underlying compiler, C and C++ library is thread safe.  Aspell
+objects, including the AspellSpeller class, should not be used by
+multiple threads unless they are protected by locks or it is only
+accessed by read-only methods.  A method is read-only only if a
+@code{const} object is passed in.  Many methods that seam to be
+read-only are not becuase they may store state information in the
+object.
 
 @node Through A Pipe
 @section Through A Pipe
@@ -3606,16 +3716,11 @@ that that are potently thread unsafe (such as accessing a global pool)
 and several classes which have the potential of being used by more
 than one thread (such as the personal dictionary). @emph{[In Progress]}.
 @item
-Enhance @strong{ispell.el} so that it will work better with the new Aspell.
-@emph{[In Progress]}.
+Enhance @strong{ispell.el} so that it will work better with GNU
+Aspell.  @emph{[In Progress]}.
 @item
 Clean up copyright notices and bring the Aspell package up to
 @strong{GNU Standards}. @emph{[In Progress]}.
-@item
-Come up with a @strong{nroff mode} for spell checking. I know nothing about
-nroff. I would gladly write the filter if someone would be willing to
-work with me in developing one. All I really need to know is what to
-skip.
 @end itemize
 
 @appendixsubsec Things I would like to get done
@@ -3862,6 +3967,19 @@ a C++ program.
 
 @node ChangeLog
 @appendix ChangeLog
+
+@heading Changes from 0.60 to 0.60.1
+
+@itemize @bullet
+@item
+Lots of compile fixes for various platforms.
+@item
+Nroff filter thanks to Sergey Poznyakoff.
+@item
+Added a section detailes the differnesed between Ispell and Aspell.
+@item
+Updated the section on thread safety.
+@end itemize
 
 @heading Changes from 0.50.5 to 0.60 (August 27, 2004)
 
@@ -5091,6 +5209,9 @@ The folowing people or companies have contributed a non-trival amount of
 code to Aspell and thus own the Copyright to part of Aspell.
 
 @table @asis
+
+@item Sergey Poznyakoff
+Wrote the Nroff filter.
 
 @item Tom Snyder
 Enhanced the SGML filter to also support skipping sgml tags such as

@@ -2,6 +2,10 @@
 
 # Ispell compatibility script for Aspell
 
+# Uncomment this (remove the leading '#') to use the Ispell key
+#   mapping when checking files with the "ispell command".
+#CHECK_FLAGS="--keymapping=ispell"
+
 command=""
 
 for p 
@@ -20,7 +24,7 @@ case $command in
 -c          ) shift; exec aspell munch "$@" ;;
 -e          ) shift; exec aspell expand "$@" ;;
 -e?         ) shift; exec aspell expand `expr substr $command 3 1` "$@" ;;
-"-"         ) exec aspell check "$@" ;;
+"-"         ) exec aspell check $CHECK_FLAGS "$@" ;;
 *           ) echo "Ispell compatibility script for Aspell."
               echo "Usage: $0 [options] -a|-l|-v[v]|-c|-e[1-4]|<file>"
               exit 1 ;;
