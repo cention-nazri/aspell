@@ -1,0 +1,6 @@
+#!/bin/sh
+
+f1=`find -name "*.?pp" -or -name "*.h"`
+f2=`grep -l -r -F "Automatically generated file." $f1`
+\rm $f2
+
