@@ -60,7 +60,7 @@ namespace acommon {
     return true;
   }
 
-  void unescape(char * dest, const char * src)
+  char * unescape(char * dest, const char * src)
   {
     while (*src) {
       if (*src == '\\') {
@@ -80,6 +80,7 @@ namespace acommon {
       ++dest;
     }
     *dest = '\0';
+    return dest;
   }
 
   bool escape(char * dest, const char * src, size_t limit, const char * others)

@@ -13,6 +13,7 @@
 #include "clone_ptr-t.hpp"
 #include "vector.hpp"
 #include "errors.hpp"
+#include "convert.hpp"
 
 #define FILTER_PROGRESS_CONTROL "tex-filter-debug.log"
 #include "loadable-filter-API.hpp"
@@ -480,14 +481,22 @@ namespace acommon {
     order_num_ = 0.4;
 
     StringList multibytechars;
-    
+
     config->retrieve_list("filter-tex-multi-byte", &multibytechars);
 
+    Conv conv; // this a quick and dirty fix witch will only work for
+               // iso-8859-1.  Full unicode support needs to be
+               // implemented
+    conv.setup(*config, "utf-8", "iso-8859-1");
+
     StringEnumeration * multibytelist=multibytechars.elements();
+    const char * multibyte0=NULL;
     const char * multibyte=NULL;
 
-    while ((multibyte=multibytelist->next())) {
-      
+    while ((multibyte0=multibytelist->next())) {
+
+      multibyte = conv(multibyte0);
+
       if (strlen(multibyte) < 3) {
         fprintf(stderr,"Filter: %s ignoring multi byte encoding `%s'\n",
                 name_,multibyte);
@@ -577,12 +586,20 @@ namespace acommon {
     
     config->retrieve_list("filter-tex-multi-byte", &multibytechars);
 
+    Conv conv; // this a quick and dirty fix witch will only work for
+               // iso-8859-1.  Full unicode support needs to be
+               // implemented
+    conv.setup(*config, "utf-8", "iso-8859-1");
+
     StringEnumeration * multibytelist=multibytechars.elements();
+    const char * multibyte0=NULL;
     const char * multibyte=NULL;
 
     multibytes.resize(0);
     
-    while ((multibyte=multibytelist->next())) {
+    while ((multibyte0=multibytelist->next())) {
+
+      multibyte = conv(multibyte0);
       
       if (strlen(multibyte) < 3) {
         fprintf(stderr,"Filter: %s ignoring multi byte encoding `%s'\n",

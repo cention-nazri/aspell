@@ -27,8 +27,12 @@ namespace acommon {
 
   bool getdata_pair(IStream & in, DataPair & d, String & buf);
 
-  void unescape(char * dest, const char * src);
-  static inline void unescape(char * dest) {unescape(dest, dest);}
+  char * unescape(char * dest, const char * src);
+  static inline char * unescape(char * dest) {return unescape(dest, dest);}
+  static inline void unescape(MutableString & d) {
+    char * e = unescape(d.str, d.str);
+    d.size = e - d.str;
+  }
 
   // if limit is not given than dest should have enough space for 
   // twice the number of characters of src
