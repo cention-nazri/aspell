@@ -189,7 +189,7 @@ libaspell_la_SOURCES +=\
 else # not COMPILE_IN_FILTERS
 
 dynamic_optfiles += ${optfiles}
-filter_ldflags = -module -avoid-version -no-undefined
+filter_ldflags = -module -avoid-version
 
 ### Add name of filter library containing your filter. Name always
 ### must look like lib<filtername>-filter.la see development manual
