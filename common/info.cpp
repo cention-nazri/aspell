@@ -340,8 +340,7 @@ namespace acommon {
       assert(p2 != 0); //FIXME: return error
       ModuleInfoNode * mod 
 	= list_all.module_info_list.find(p2+1, name_size - (p2+1-name));
-      //FIXME: Check for null and return and possibly return an error
-      //       on an unknown module
+      //FIXME: Check for null and eturn an error on an unknown module
       module = &(mod->c_struct);
     }
     to_add->c_struct.module = module;

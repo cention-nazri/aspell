@@ -74,6 +74,7 @@ namespace aspeller {
 
     PosibErr<const WordList *> personal_word_list  () const;
     PosibErr<const WordList *> session_word_list   () const;
+    PosibErr<const WordList *> main_word_list    () const;
     
     //
     // Language methods

@@ -509,6 +509,12 @@ class: speller
 		/
 		const word list
 
+	method: main word list
+
+		posib err
+		/
+		const word list
+
 	method: save all word lists
 	
 		posib err

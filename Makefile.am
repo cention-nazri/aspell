@@ -1,6 +1,6 @@
 
 AUTOMAKE_OPTIONS = foreign
 
-SUBDIRS = common modules lib examples prog
+SUBDIRS = common modules lib examples prog data interfaces
 
 

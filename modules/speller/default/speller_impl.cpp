@@ -298,6 +298,13 @@ namespace aspeller {
        (wls_->locate(session_id)->data_set));
   }
 
+  PosibErr<const WordList *> SpellerImpl::main_word_list() const {
+    return 
+      static_cast<const WordList *>
+      (static_cast<const BasicWordSet *>
+       (wls_->locate(main_id)->data_set));
+  }
+
   bool SpellerImpl::attach(DataSet * w, const LocalWordSetInfo * li) {
     DataSetCollection::Iterator i = wls_->locate(w);
     if (i != wls_->end()) {

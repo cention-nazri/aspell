@@ -108,7 +108,7 @@ int main(int argc, const char *argv[]) {
 	"  i <word>    ignore a word for the rest of the session\n"
 	"  p           dumps the personal word list\n"
 	"  P           dumps the session word list\n"
-	"  m           dumps the master  word list\n"
+	"  m           dumps the main  word list\n"
 	"  S           saves all word lists\n"
 	"  C           clear the cuurent sesstion word list\n"
 	"  x           quite\n"	);
@@ -119,11 +119,9 @@ int main(int argc, const char *argv[]) {
     case 'P':
       print_word_list(speller, aspell_speller_session_word_list(speller));
       break;
-#if 0
     case 'm':
-      print_word_list(speller, aspell_speller_master_word_list(speller));
+      print_word_list(speller, aspell_speller_main_word_list(speller));
       break;
-#endif
     case 'S':
       aspell_speller_save_all_word_lists(speller);
       check_for_error(speller);

@@ -70,6 +70,7 @@ namespace acommon {
 
     virtual PosibErr<const WordList *> personal_word_list() const = 0;
     virtual PosibErr<const WordList *> session_word_list () const = 0;
+    virtual PosibErr<const WordList *> main_word_list () const = 0;
   
     virtual PosibErr<void> save_all_word_lists() = 0;
   
