@@ -1069,7 +1069,7 @@ namespace acommon {
     , {"repl-path",     KeyInfoString, "<home-dir/repl>",     0}
     , {"run-together",        KeyInfoBool,  "false",
        N_("consider run-together words legal"), KEYINFO_MAY_CHANGE}
-    , {"run-together-limit",  KeyInfoInt,   "3",
+    , {"run-together-limit",  KeyInfoInt,   "2",
        N_("maximum number that can be strung together"), KEYINFO_MAY_CHANGE}
     , {"run-together-min",    KeyInfoInt,   "3",
        N_("minimal length of interior words"), KEYINFO_MAY_CHANGE}

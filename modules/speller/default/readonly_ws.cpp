@@ -891,12 +891,26 @@ namespace {
     first = sort(first, SoundslikeLess());
 
     //
+    // duplicate checks
+    // 
+    WordData * prev = first;
+    WordData * cur = first->next;
+    while (cur) {
+      if (strcmp(prev->word, cur->word) == 0) {
+        CERR.printf("WARNING: Ignoring duplicate: %s\n", cur->word);
+        prev->next = cur->next;
+      } else {
+        prev = cur;
+      }
+      cur = cur->next;
+    }
+
+    //
     //
     //
 
     unsigned data_size = 16;
     WordData * p = first;
-    // FIXME: Detect duplicates
     if (invisible_soundslike) {
       
       for (; p; p = p->next)

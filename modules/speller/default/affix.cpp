@@ -747,8 +747,7 @@ bool AffixMgr::suffix_check (const LookupInfo & linf, ParmString word,
 
   while (sptr) {
     if (isRevSubset(sptr->key(), word + word.size() - 1, word.size())) {
-      if (sptr->check(linf, word, ci, gi, sfxopts, ppfx))
-        return true;
+      if (sptr->check(linf, word, ci, gi, sfxopts, ppfx)) return true;
       sptr = sptr->next_eq;
     } else {
       sptr = sptr->next_ne;
@@ -1039,48 +1038,58 @@ bool PfxEntry::check(const LookupInfo & linf, ParmString word,
     if (cond >= numconds) {
       CheckInfo * lci = 0;
       tmpl += stripl;
-      if (linf.lookup(tmpword, wordinfo)) {
+      bool res = linf.lookup(tmpword, wordinfo);
 
-        if (TESTAFF(wordinfo.aff, achar))
+      if (res && TESTAFF(wordinfo.aff, achar)) {
+
+        lci = &ci;
+        lci->word = wordinfo.word;
+        goto quit;
+        
+      } 
+      
+      // prefix matched but no root word was found 
+      // if XPRODUCT is allowed, try again but now 
+      // cross checked combined with a suffix
+      
+      if (gi)
+        lci = gi->last;
+      
+      if (xpflg & XPRODUCT) {
+        if (pmyMgr->suffix_check(linf, ParmString(tmpword, tmpl), 
+                                 ci, gi,
+                                 XPRODUCT, (AffEntry *)this)) {
           lci = &ci;
-        else if (gi)
-          lci = gi->add();
-
-        if (lci)
-          lci->word = wordinfo.word;
-
-      } else {
-              
-        // prefix matched but no root word was found 
-        // if XPRODUCT is allowed, try again but now 
-        // cross checked combined with a suffix
-                
-        if (gi)
-          lci = gi->last;
-                
-        if (xpflg & XPRODUCT) {
-          if (pmyMgr->suffix_check(linf, ParmString(tmpword, tmpl), 
-                                   ci, gi,
-                                   XPRODUCT, (AffEntry *)this))
-            lci = &ci;
-          else if (gi && gi->last != lci) {
-            while (lci = const_cast<CheckInfo *>(lci->next), lci) {
-              lci->pre_flag = achar;
-              lci->pre_strip_len = stripl;
-              lci->pre_add_len = appndl;
-              lci->pre_add = appnd;
-            }
+          
+        } else if (gi && gi->last != lci) {
+          
+          while (lci = const_cast<CheckInfo *>(lci->next), lci) {
+            lci->pre_flag = achar;
+            lci->pre_strip_len = stripl;
+            lci->pre_add_len = appndl;
+            lci->pre_add = appnd;
           }
+          
+        } else {
+          
+          lci = 0;
+          
         }
       }
-              
+    
+      if (res && gi) {
+        
+        lci = gi->add();
+        lci->word = wordinfo.word;
+      }
+    quit:
       if (lci) {
         lci->pre_flag = achar;
         lci->pre_strip_len = stripl;
         lci->pre_add_len = appndl;
         lci->pre_add = appnd;
       }
-      if (lci ==&ci) return true;
+      if (lci == &ci) return true;
     }
   }
   return false;
@@ -1167,10 +1176,12 @@ bool SfxEntry::check(const LookupInfo & linf, ParmString word,
       if (linf.lookup(tmpword, wordinfo)) {
         if (TESTAFF(wordinfo.aff, achar) && 
             ((optflags & XPRODUCT) == 0 || 
-             TESTAFF(wordinfo.aff, ep->achar)))
+             TESTAFF(wordinfo.aff, ep->achar))) {
           lci = &ci;
-        else if (gi)
+        } else if (gi) {
           lci = gi->add();
+          CERR.printf(">>%s %s\n", word.str(), wordinfo.word);
+        }
 
         if (lci) {
           lci->word = wordinfo.word;

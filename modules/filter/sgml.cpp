@@ -4,7 +4,6 @@
 // version 2.0 or 2.1.  You should have received a copy of the LGPL
 // license along with this library if you did not you can find
 // it at http://www.gnu.org/.
-
 //
 // The orignal filter was written by Kevin Atkinson.
 // Tom Snyder rewrote the filter to support skipping SGML tags
@@ -78,9 +77,6 @@ namespace acommon {
       S_quoted,  // 8. In quoted attrib value.
       S_end,     // 9. Same as S_tag, but this is a </zee> type end tag.
       S_ignore_junk, // special case invalid area to ignore.
-      S_after_open, // 
-      S_nl, // 
-      S_nl_tago, // 
       S_ero,     // 10. in the &code; special encoding within HTML.
       S_entity,  // 11. in the alpha named &nom; special encoding.. 
       S_cro,     // 12. after the # of a &#nnn; numerical char reference encoding.
@@ -97,16 +93,18 @@ namespace acommon {
     S_com,    // 24. Fully in a comment
     S_com_e,  // 25. Perhaps ending a comment.
     
-    S_literal, // within a tag pair that means all content should be interpreted literally: <PRE>
+    //S_literal, // within a tag pair that means all content should be interpreted literally: <PRE>
                // NOT CURRENTLY SUPPORTED FULLY.
                
-    S_esc,S_dollar,S_paren,S_nonasciitext // WOULD BE USED FOR ISO_2022_JP support.
+    //S_esc,S_dollar,S_paren,S_nonasciitext // WOULD BE USED FOR ISO_2022_JP support.
                                           // NOT CURRENTLY SUPPORTED.               
     };
     
     ScanState in_what;
-    char quote_val;    // which quote char is quoting this attrib value.
-    char lookbehind;   // one char prior to this one. For escape handling and such.
+	     // which quote char is quoting this attrib value.	
+    FilterChar::Chr  quote_val;   
+	    // one char prior to this one. For escape handling and such.
+    FilterChar::Chr  lookbehind;   
 
     String tag_name;    // we accumulate the current tag name here.
     String attrib_name; // we accumulate the current attribute name here.
@@ -572,5 +570,3 @@ reportthisphaseFIVE
 <td width=1%><img src=http://wellll/thereeee/nowwww alt=real cool stuff>
 
 */
-
-
