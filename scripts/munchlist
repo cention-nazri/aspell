@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: munchlist,v 1.1.2.1 2004/05/17 01:57:00 kevina Exp $
+# $Id: munchlist,v 1.2 2004/06/02 15:07:36 kevina Exp $
 #
 # Copyright 1987, 1988, 1989, 1992, 1993, 1999, 2001, Geoff Kuenning,
 # Claremont, CA.
@@ -76,24 +76,6 @@
 #
 # 2004/02/11 kevina
 # Modifed to work with Aspell instead of Ispell
-#
-# $Log: munchlist,v $
-# Revision 1.1.2.1  2004/05/17 01:57:00  kevina
-# Sync With HEAD
-#
-# Revision 1.1  2004/02/12 01:26:19  kevina
-#
-#
-# common/fstream.hpp: Bug fix, use vfprintf not vprintf duh!
-#
-# scripts/munchlist/: ported ispell munchlist script to work with Aspell
-#
-# Enhanced aspell utility to provide needed output for munchlist script
-#
-# modules/speller/default/writable.cpp: Return no file found error if
-#   the file is empty.
-#
-# myspell/: Added some files from myspell
 #
 # Revision 1.3  2003/11/09 17:27:51  ed
 # Fix (based on Debian's) for insecure temporary file created in findaffix
