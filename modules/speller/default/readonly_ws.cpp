@@ -639,9 +639,9 @@ namespace {
   // then sort soundslike linked-list  
 
   struct WordData {
-    static const int size = 2;
-    char total_size; // including null chars
-    char word_size; // not including null char
+    static const unsigned int size = 2;
+    unsigned char total_size; // including null chars
+    unsigned char word_size; // not including null char
     char data[];
     const char * affix_data() const {
       return total_size == word_size + 1 ? 0 : data + word_size + 1;
@@ -799,6 +799,10 @@ namespace {
 	tstr.append(w0, s+1);
 	RET_ON_ERR_SET(iconv(tstr.data(), tstr.size()), char *, w);
         s = strlen(w);
+
+        if (s > 240)
+          return make_err(invalid_word, MsgConv(lang)(w),
+                          _("The total word length is larger than 240 characters."));
 
         char * p0 = strchr(w, '/');
 
