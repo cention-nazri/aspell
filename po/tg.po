@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-08-22 21:23-0400\n"
+"POT-Creation-Date: 2004-09-25 07:34-0600\n"
 "PO-Revision-Date: 2004-05-22 19:33+0000\n"
 "Last-Translator: Marina Kolucheva <youth_opportunities@tajik.net>\n"
 "Language-Team: Tajik\n"
@@ -26,11 +26,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.0.1\n"
 
-#: common/info.cpp:231
+#: common/info.cpp:230
 msgid "a number between 0 and 1"
 msgstr ""
 
-#: common/info.cpp:568
+#: common/info.cpp:567
 msgid "in the form \"<name> <value>\""
 msgstr ""
 
@@ -1312,7 +1312,7 @@ msgstr ""
 
 #: modules/filter/modes/perl.amf:60
 #, fuzzy
-msgid "mode for checking Perl comments and string literals"
+msgid "mode for checking perl comments and string literals"
 msgstr "филтр барои дарёфти фармоноти TeX/LaTeX"
 
 #: modules/filter/modes/sgml.amf:60

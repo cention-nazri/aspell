@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell-0.60-pre1\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-08-22 21:23-0400\n"
+"POT-Creation-Date: 2004-09-25 07:34-0600\n"
 "PO-Revision-Date: 2004-08-22 18:15-0400\n"
 "Last-Translator: Pavel Maryanov <acid_jack@ukr.net>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -18,11 +18,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.3\n"
 
-#: common/info.cpp:231
+#: common/info.cpp:230
 msgid "a number between 0 and 1"
 msgstr "число между 0 и 1"
 
-#: common/info.cpp:568
+#: common/info.cpp:567
 msgid "in the form \"<name> <value>\""
 msgstr "в виде \"<имя> <значение>\""
 
@@ -1293,7 +1293,8 @@ msgid "mode to disable all filters"
 msgstr "режим для отключения всех фильтров"
 
 #: modules/filter/modes/perl.amf:60
-msgid "mode for checking Perl comments and string literals"
+#, fuzzy
+msgid "mode for checking perl comments and string literals"
 msgstr "режим для проверки комментариев Perl и строковых литералов"
 
 #: modules/filter/modes/sgml.amf:60

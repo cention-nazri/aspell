@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60-pre3\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-08-22 21:23-0400\n"
+"POT-Creation-Date: 2004-09-25 07:34-0600\n"
 "PO-Revision-Date: 2004-08-22 18:06-0400\n"
 "Last-Translator: Kevin Patrick Scannell <scannell@SLU.EDU>\n"
 "Language-Team: Irish <ga@li.org>\n"
@@ -18,11 +18,11 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=n==1 ? 0 : (n>1 && n<7) ? 1 : (n>6 && n "
 "<11) ? 2 : 3;\n"
 
-#: common/info.cpp:231
+#: common/info.cpp:230
 msgid "a number between 0 and 1"
 msgstr "uimhir idir 0 agus 1"
 
-#: common/info.cpp:568
+#: common/info.cpp:567
 msgid "in the form \"<name> <value>\""
 msgstr "sa chruth \"<ainm> <luach>\""
 
@@ -1301,7 +1301,8 @@ msgid "mode to disable all filters"
 msgstr "dí-chumasaigh gach scagaire"
 
 #: modules/filter/modes/perl.amf:60
-msgid "mode for checking Perl comments and string literals"
+#, fuzzy
+msgid "mode for checking perl comments and string literals"
 msgstr "modh le haghaidh nótaí tráchta agus teaghráin i bPerl"
 
 #: modules/filter/modes/sgml.amf:60

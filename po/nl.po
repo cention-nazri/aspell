@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60-pre3\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-08-22 21:23-0400\n"
+"POT-Creation-Date: 2004-09-25 07:34-0600\n"
 "PO-Revision-Date: 2004-08-22 19:50-0400\n"
 "Last-Translator: Elros Cyriatan <cyriatan@fastmail.fm>\n"
 "Language-Team: Dutch <vertaling@nl.linux.org>\n"
@@ -16,11 +16,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: common/info.cpp:231
+#: common/info.cpp:230
 msgid "a number between 0 and 1"
 msgstr "een getal tussen 0 en 1"
 
-#: common/info.cpp:568
+#: common/info.cpp:567
 msgid "in the form \"<name> <value>\""
 msgstr "in de vorm \"<naam> <waarde>\""
 
@@ -1323,7 +1323,8 @@ msgid "mode to disable all filters"
 msgstr "modus om alle filters uit te schakelen"
 
 #: modules/filter/modes/perl.amf:60
-msgid "mode for checking Perl comments and string literals"
+#, fuzzy
+msgid "mode for checking perl comments and string literals"
 msgstr "modus voor controleren Perl-opm. en tekenreeksen"
 
 #: modules/filter/modes/sgml.amf:60

@@ -94,9 +94,9 @@ libaspell_la_SOURCES =\
 libaspell_la_LIBADD =  $(LIBINTL) $(PTHREAD_LIB)
 
 if INCREMENTED_SONAME
-libaspell_la_LDFLAGS = -version-info 16:0:0
+libaspell_la_LDFLAGS = -version-info 16:0:0 -no-undefined
 else
-libaspell_la_LDFLAGS = -version-info 16:0:1
+libaspell_la_LDFLAGS = -version-info 16:0:1 -no-undefined
 endif
 
 if PSPELL_COMPATIBILITY
@@ -105,9 +105,9 @@ libpspell_la_SOURCES = lib/dummy.cpp
 libpspell_la_LIBADD = libaspell.la
 
 if INCREMENTED_SONAME
-libpspell_la_LDFLAGS = -version-info 16:0:0
+libpspell_la_LDFLAGS = -version-info 16:0:0 -no-undefined
 else
-libpspell_la_LDFLAGS = -version-info 16:0:1
+libpspell_la_LDFLAGS = -version-info 16:0:1 -no-undefined
 endif
 
 endif
@@ -189,6 +189,7 @@ libaspell_la_SOURCES +=\
 else # not COMPILE_IN_FILTERS
 
 dynamic_optfiles += ${optfiles}
+filter_ldflags = -module -avoid-version -no-undefined
 
 ### Add name of filter library containing your filter. Name always
 ### must look like lib<filtername>-filter.la see development manual
@@ -197,19 +198,19 @@ filter_LTLIBRARIES = email-filter.la tex-filter.la\
 
 email_filter_la_SOURCES = modules/filter/email.cpp
 email_filter_la_LIBADD = libaspell.la 
-email_filter_la_LDFLAGS  = -module -avoid-version
+email_filter_la_LDFLAGS  = ${filter_ldflags}
 
 tex_filter_la_SOURCES = modules/filter/tex.cpp
 tex_filter_la_LIBADD = libaspell.la
-tex_filter_la_LDFLAGS  = -module -avoid-version
+tex_filter_la_LDFLAGS  = ${filter_ldflags}
 
 sgml_filter_la_SOURCES  = modules/filter/sgml.cpp
 sgml_filter_la_LIBADD = libaspell.la
-sgml_filter_la_LDFLAGS  = -module -avoid-version
+sgml_filter_la_LDFLAGS  = ${filter_ldflags}
 
 context_filter_la_SOURCES  = modules/filter/context.cpp
 context_filter_la_LIBADD = libaspell.la
-context_filter_la_LDFLAGS  = -module -avoid-version
+context_filter_la_LDFLAGS  = ${filter_ldflags}
 
 ### Before this line add the corresponding <yourfilterlibrary>_SOURCES and
 ### <yourfilterlibrary>_LIBADD lines.  The later at least has to look
