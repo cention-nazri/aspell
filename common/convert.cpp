@@ -10,6 +10,7 @@
 #include <string.h>
 #include <math.h>
 
+#include "settings.h"
 #include "asc_ctype.hpp"
 #include "convert_impl.hpp"
 #include "fstream.hpp"

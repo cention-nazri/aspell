@@ -16,6 +16,17 @@ namespace acommon
   {
   public:
 
+#ifdef _MSC_VER
+    // Bring type definitions from the std::vector class to acommon::Vector
+    typedef T value_type;
+    typedef std::vector<T>::size_type size_type;
+    typedef std::vector<T>::difference_type difference_type;
+    typedef std::vector<T>::reference reference;
+    typedef std::vector<T>::const_reference const_reference;
+    typedef std::vector<T>::iterator iterator;
+    typedef std::vector<T>::const_iterator const_iterator;
+#endif //_MSC_VER
+
     Vector() {}
     Vector(unsigned int s) : std::vector<T>(s) {}
     Vector(unsigned int s, const T & val) : std::vector<T>(s, val) {}

@@ -123,7 +123,7 @@ namespace acommon {
       c->filter_mode_notifier = this;
     }
     
-    ModeNotifierImpl * clone(Config * c) const {return new ModeNotifierImpl(*this, c);}
+    Notifier * clone(Config * c) const {return new ModeNotifierImpl(*this, c);}
 
     PosibErr<void> item_updated(const KeyInfo * ki, ParmStr);
     PosibErr<void> list_updated(const KeyInfo * ki);

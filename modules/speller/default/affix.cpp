@@ -59,8 +59,6 @@
 
 #include "gettext.h"
 
-using namespace std;
-
 namespace aspeller {
 
 using namespace acommon;
@@ -872,8 +870,10 @@ WordAff * AffixMgr::expand(ParmString word, ParmString aff,
   WordAff * cur = head;
   cur->word = buf.dup(word);
   cur->aff  = suf;
-
-  for (const byte * c = (const byte *)aff.str(), * end = c + aff.size();
+  {
+    const byte * c = (const byte *)aff.str();
+    const byte * end = c + aff.size();
+    for (;
        c != end; 
        ++c) 
   {
@@ -889,7 +889,7 @@ WordAff * AffixMgr::expand(ParmString word, ParmString aff,
       cur->aff = p->allow_cross() ? csuf : empty;
     }
   }
-
+  }
   *suf_e = 0;
   *csuf_e = 0;
   cur->next = 0;
@@ -899,14 +899,14 @@ WordAff * AffixMgr::expand(ParmString word, ParmString aff,
   WordAff * * end = &cur->next;
   WordAff * * very_end = end;
   size_t nsuf_s = suf_e - suf + 1;
-
+  {
   for (WordAff * * cur = &head; cur != end; cur = &(*cur)->next) {
     if ((int)(*cur)->word.size - max_strip_ >= limit) continue;
     byte * nsuf = (byte *)buf.alloc(nsuf_s);
     expand_suffix((*cur)->word, (*cur)->aff, buf, limit, nsuf, &very_end, word);
     (*cur)->aff = nsuf;
   }
-
+  }
   return head;
 }
 
@@ -947,17 +947,18 @@ WordAff * AffixMgr::expand_suffix(ParmString word, const byte * aff,
 CheckAffixRes AffixMgr::check_affix(ParmString word, char aff) const
 {
   CheckAffixRes res = InvalidAffix;
-  
+  {  
   for (PfxEntry * p = pFlag[(unsigned char)aff]; p; p = p->flag_next) {
     res = InapplicableAffix;
     if (p->applicable(word)) return ValidAffix;
   }
-
+  }
+  {
   for (SfxEntry * p = sFlag[(unsigned char)aff]; p; p = p->flag_next) {
     if (res == InvalidAffix) res = InapplicableAffix;
     if (p->applicable(word)) return ValidAffix;
   }
-
+  }
   return res;
 }
 

@@ -43,6 +43,7 @@
 #include <cstdlib>
 #include <new>
 
+#include "settings.h"
 #include "hash.hpp"
 #include "block_slist-t.hpp"
 
@@ -84,7 +85,7 @@ namespace acommon {
   }
 
   template <class P>
-  std::pair<typename HashTable<P>::iterator,bool> HashTable<P>::insert(const Value & to_insert)
+  std::pair<TYPENAME HashTable<P>::iterator,bool> HashTable<P>::insert(const Value & to_insert)
   {
     bool have;
     iterator put_me_here = find_i(parms_.key(to_insert), have);
@@ -152,7 +153,7 @@ namespace acommon {
   }
 
   template <class P>
-  std::pair<typename HashTable<P>::iterator, typename HashTable<P>::iterator>
+  std::pair<TYPENAME HashTable<P>::iterator, TYPENAME HashTable<P>::iterator>
   HashTable<P>::equal_range_i(const Key & to_find, int & c)
   {
     c = 0;
