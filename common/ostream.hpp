@@ -15,7 +15,10 @@ namespace acommon {
   public:
     virtual void write (char c) = 0;
     virtual void write (ParmString) = 0;
-    virtual void write (const char *, unsigned int) = 0;
+    virtual void write (const void *, unsigned int) = 0;
+
+    void write16(unsigned short v) {write(&v, 2);}
+    void write32(unsigned int v) {write(&v, 4);}
 
     OStream & operator << (char c) {
       write(c);

@@ -53,7 +53,7 @@ namespace acommon {
 
     void write (char c);
     void write (ParmString);
-    void write (const char *, unsigned int);
+    void write (const void *, unsigned int);
   };
 
   inline String operator+ (ParmString rhs, ParmString lhs)

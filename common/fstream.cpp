@@ -106,7 +106,7 @@ namespace acommon {
     fputs(str, file_);
   }
 
-  void FStream::write(const char * str, unsigned int n)
+  void FStream::write(const void * str, unsigned int n)
   {
     fwrite(str,1,n,file_);
   }

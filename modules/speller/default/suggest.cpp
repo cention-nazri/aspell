@@ -52,14 +52,17 @@
 #include "data.hpp"
 #include "editdist.hpp"
 #include "editdist2.hpp"
-#include "file_data_util.hpp"
 #include "errors.hpp"
+#include "file_data_util.hpp"
 #include "hash-t.hpp"
 #include "language.hpp"
 #include "leditdist.hpp"
 #include "speller_impl.hpp"
+#include "stack_ptr.hpp"
 #include "suggest.hpp"
 
+
+#include "iostream.hpp"
 //#define DEBUG_SUGGEST
 
 using namespace aspeller;
@@ -324,7 +327,7 @@ namespace aspeller_default_suggest {
       
       delete[] new_word;
     }
-
+#if 0
     if (parms.soundslike_level == 1) {
       
       try_sound(soundslike.c_str(), 0);
@@ -385,9 +388,20 @@ namespace aspeller_default_suggest {
 	}
       }
 
-    } else {
+    } else 
+#endif
+    {
 
       const char * original_soundslike = original_word.soundslike.c_str();
+      unsigned int original_soundslike_len = strlen(original_soundslike);
+      
+      EditDist (* edit_dist_fun)(const char *, const char *, 
+				 const EditDistanceWeights &);
+
+      if (parms.soundslike_level == 1)
+	edit_dist_fun = limit1_edit_distance;
+      else
+	edit_dist_fun = limit2_edit_distance;
 
       for (SpellerImpl::DataSetCollection::const_iterator i 
 	     = speller->data_set_collection().begin();
@@ -401,14 +415,18 @@ namespace aspeller_default_suggest {
 	  const BasicWordSet * data_set 
 	    = static_cast<const BasicWordSet *>(i->data_set);
 
-	  BasicWordSet::SoundslikeEmul els = data_set->soundslike_elements();
+	  StackPtr<SoundslikeEnumeration> els(data_set->soundslike_elements());
     
 	  SoundslikeWord sw;
-	  while ( (sw = els.next()) == true) {
+	  EditDist score;
+	  while ( (sw = els->next(score.stopped_at - sw.soundslike)) == true) 
+	  {
+	    score = edit_dist_fun(sw.soundslike,
+				  original_soundslike, 
+				  parms.edit_distance_weights);
+	    //COUT << sw.soundslike << " " 
+	    //	 << (score.stopped_at - sw.soundslike) << "\n";
 
-	    int score = limit2_edit_distance(original_soundslike, 
-					     sw.soundslike,
-					     parms.edit_distance_weights);
 	    if (score < LARGE_NUM) {
 	      BasicWordSet::Emul e = data_set->words_w_soundslike(sw);
 	      BasicWordInfo bw;
@@ -425,13 +443,13 @@ namespace aspeller_default_suggest {
 	  const BasicReplacementSet * repl_set
 	    = static_cast<const BasicReplacementSet *>(i->data_set);
 
-	  BasicWordSet::SoundslikeEmul els = repl_set->soundslike_elements();
-	
+	  StackPtr<SoundslikeEnumeration> els(repl_set->soundslike_elements());
+    
 	  SoundslikeWord w;
-	  while ( (w = els.next()) == true) {
-	    int score = limit2_edit_distance(original_soundslike, 
-					     w.soundslike,
-					     parms.edit_distance_weights);
+	  while ( (w = els->next(999)) == true) {
+	    int score = edit_dist_fun(w.soundslike,
+				      original_soundslike, 
+				      parms.edit_distance_weights);
 	  
 	    if (score < LARGE_NUM) {
 	      BasicReplacementSet::Emul e = repl_set->repls_w_soundslike(w);
@@ -562,10 +580,10 @@ namespace aspeller_default_suggest {
 	threshold = parms.edit_distance_weights.max;
 
 #  ifdef DEBUG_SUGGEST
-      cout << "Threshold is: " << threshold << endl;
-      cout << "try_for: " << try_for << endl;
-      cout << "Size of scored: " << scored_near_misses.size() << endl;
-      cout << "Size of ! scored: " << near_misses.size() << endl;
+      COUT << "Threshold is: " << threshold << "\n";
+      COUT << "try_for: " << try_for << "\n";
+      COUT << "Size of scored: " << scored_near_misses.size() << "\n";
+      COUT << "Size of ! scored: " << near_misses.size() << "\n";
 #  endif
       
       //if (threshold - try_for <=  parms.edit_distance_weights.max/2) return;
@@ -612,10 +630,10 @@ namespace aspeller_default_suggest {
   void Working::transfer() {
 
 #  ifdef DEBUG_SUGGEST
-    cout << endl << endl 
+    COUT << "\n" << "\n" 
 	 << original_word.word << '\t' 
 	 << original_word.soundslike << '\t'
-	 << endl;
+	 << "\n";
 #  endif
     int c = 1;
     hash_set<String,HashString<String> > duplicates_check;
@@ -626,8 +644,8 @@ namespace aspeller_default_suggest {
 	   && ( i->score <= threshold || c <= 3 );
 	 ++i, ++c) {
 #    ifdef DEBUG_SUGGEST
-      cout << i->word << '\t' << i->score 
-           << '\t' << lang->to_soundslike(i->word) << endl;
+      COUT << i->word << '\t' << i->score 
+           << '\t' << lang->to_soundslike(i->word) << "\n";
 #    endif
       if (i->repl_list != 0) {
 	const char * word;
@@ -711,14 +729,14 @@ namespace aspeller_default_suggest {
 
   SuggestionList & SuggestImpl::suggest(const char * word) { 
 #   ifdef DEBUG_SUGGEST
-    cout << "=========== begin suggest " << word << " ===========\n";
+    COUT << "=========== begin suggest " << word << " ===========\n";
 #   endif
     parms_.set_original_word_size(strlen(word));
     suggestion_list.suggestions.resize(0);
     Working sug(speller_, &speller_->lang(),word,parms_);
     sug.get_suggestions(suggestion_list.suggestions);
 #   ifdef DEBUG_SUGGEST
-    cout << "^^^^^^^^^^^  end suggest " << word << "  ^^^^^^^^^^^\n";
+    COUT << "^^^^^^^^^^^  end suggest " << word << "  ^^^^^^^^^^^\n";
 #   endif
     return suggestion_list;
   }
