@@ -376,9 +376,30 @@ void get_line(String & line) {
       }
       wrefresh(choice_w);
     }
+#ifdef HAVE_WIDE_CURSES
+    Vector<wchar_t> wstr;
+    for (int i = begin_x; i < end_x; ++i) {
+      cchar_t cc;
+      attr_t att;
+      short cp;
+      mvwin_wch(choice_w, 0, i, &cc);
+      size_t s = getcchar(&cc, 0, &att, &cp, 0);
+      wstr.resize(s);
+      getcchar(&cc, wstr.data(), &att, &cp, 0);
+      s = wcstombs(0, wstr.data(), 0);
+      if (s != (size_t)-1) {
+        int pos = line.alloc(s); // this always leaves space for the
+                                 // null character
+        wcstombs(line.data(pos), wstr.data(), s);
+      } else {
+        line += '?';
+      }
+    }
+#else
     for (int i = begin_x; i < end_x; ++i) {
       line += mvwinch(choice_w, 0, i) & A_CHARTEXT;
     }
+#endif
     menu_text = StdMenu;
     display_menu();
     doupdate();

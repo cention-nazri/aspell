@@ -127,7 +127,7 @@ void CheckerString::replace(ParmString repl)
 {
   assert(real_word_size_ > 0);
   int offset = real_word_begin_ - cur_line_->real.begin();
-  aspell_speller_store_replacement(speller_, &*real_word_begin_, real_word_size_, 
+  aspell_speller_store_replacement(speller_, &*real_word_begin_, real_word_size_,
 				   repl.str(), repl.size());
   cur_line_->real.replace(real_word_begin_, real_word_begin_ + real_word_size_,
                           repl.str(), repl.str() + repl.size());

@@ -1091,6 +1091,7 @@ void check()
       break;
     case Replace:
     case ReplaceAll:
+      // the string new_word is in the encoding of the document
       prompt(_("With: "));
       get_line(new_word);
       if (new_word.size() == 0)
@@ -1103,6 +1104,7 @@ void check()
         replace_list->replace(word, new_word);
       break;
     default:
+      // the replasments are in the encoding of the document
       if (choice >= '1' && choice < (char)suggestions_size + '1') { 
         state->replace(sug_con[choice-'1']);
         changed = true;

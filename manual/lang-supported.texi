@@ -34,7 +34,7 @@
 @item cy @tab Welsh @tab Latin @tab 0.50 @tab -
 @item
 @item da @tab Danish @tab Latin @tab 0.50 @tab Incomplete
-@item de @tab German @tab Latin @tab 0.50 @tab Incomplete
+@item de @tab German @tab Latin @tab 0.50 @tab Yes
 @item
 @item ee @tab Ewe @tab Latin @tab - @tab -
 @item el @tab Greek @tab Greek @tab 0.50 @tab -
@@ -127,12 +127,12 @@
 @item nds @tab Low Saxon @tab Latin @tab Maybe @tab -
 @item ne @tab Nepali @tab Devanagari @tab Maybe @tab -
 @item ng @tab Ndonga @tab Latin @tab Maybe @tab -
-@item nl @tab Dutch @tab Latin @tab 0.50 @tab Incomplete
+@item nl @tab Dutch @tab Latin @tab 0.50 @tab Yes
 @item nn @tab Norwegian Nynorsk @tab Latin @tab 0.50 @tab -
 @item nr @tab South Ndebele @tab Latin @tab - @tab -
 @item nso @tab Northern Sotho @tab Latin @tab Maybe @tab -
 @item nv @tab Navajo @tab Latin @tab - @tab -
-@item ny @tab Nyanja @tab Latin @tab Maybe @tab -
+@item ny @tab Nyanja @tab Latin @tab Planned @tab -
 @item
 @item oc @tab Occitan / Provencal @tab Latin @tab Maybe @tab -
 @item om @tab Oromo @tab Latin @tab - @tab -
@@ -188,7 +188,7 @@
 @item ty @tab Tahitian @tab Latin @tab Maybe @tab -
 @item
 @item ug @tab Uighur @tab Arabic @tab - @tab -
-@item uk @tab Ukrainian @tab Cyrillic @tab 0.50 @tab Incomplete
+@item uk @tab Ukrainian @tab Cyrillic @tab 0.50 @tab Yes
 @item ur @tab Urdu @tab Arabic @tab Maybe @tab -
 @item uz @tab Uzbek @tab Cyrillic @tab 0.60 @tab -
 @item

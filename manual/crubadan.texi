@@ -30,7 +30,6 @@
 @item Low Saxon (nds)
 @item Ndonga (ng)
 @item Northern Sotho (nso)
-@item Nyanja (ny)
 @item Occitan (oc)
 @item Pampangan (pam)
 @item Papiamentu (pap)
