@@ -88,28 +88,6 @@ kevin@atkinson.dhs.org
 \end_inset 
 
 
-\layout Chapter*
-
-Notes
-\layout Standard
-
-A lot has changed since the last version of Aspell (.33.7).
- This manual is in the process of being updated, until the update is complete
- a lot of this manual may be incorrect.
- Please keep this in mind.
- The latest version of this manual can be found at 
-\begin_inset LatexCommand \url{http://savanah.gnu.org/download/aspell/manual/user/manual.html}
-
-\end_inset 
-
-
-\layout Standard
-
-The eventual goal is to convert this manual into Texinfo.
- However, since I do not have the time to learn Texinfo right now, I will
- continue to maintain it in the present format.
- Once someone goes through the trouble of converting it into Texinfo I will
- maintain the Texinfo version.
 \layout Chapter
 
 Introduction
@@ -119,8 +97,11 @@ GNU Aspell is a Free and Open Source spell checker designed to eventually
  replace Ispell.
  It can either be used as a library or as an independent spell checker.
  Its main feature is that it does a much better job of coming up with possible
- suggestions than just about any other spell checker, including Ispell and
- Microsoft Word.
+ suggestions than just about any other spell checker out there for the English
+ language, including Ispell and Microsoft Word.
+ It also has many other technical enhancements over Ispell such as using
+ shared memory for dictionaries and intelligently handling personal dictionaries
+ when more than one Aspell process is open at once.
 \layout Section
 
 Comparison to other spell checker engines
@@ -510,7 +491,7 @@ Aspell requires gcc 2.95 (or better) as the C++ compiler.
 Obtaining
 \layout Standard
 
-The latest version can always be found at GNI Aspell's home page at 
+The latest version can always be found at GNU Aspell's home page at 
 \begin_inset LatexCommand \url{http://aspell.net}
 
 \end_inset 
@@ -587,7 +568,7 @@ make install
 
 After Aspell is installed at least one dictionary needs to be installed.
  You can find them at 
-\begin_inset LatexCommand \url{http://www.gnu.org/software/aspell/}
+\begin_inset LatexCommand \url{http://aspell.net/}
 
 \end_inset 
 
@@ -786,8 +767,10 @@ Aspell has undergone an extremely large number of changes since the previous
 \layout Standard
 
 The way dictionaries are handled has also changed.
- For one thing the language names have changed to the two letter iso code.
- These means that the your old personal dictionaries will not be recognized.
+ This includes a change in the naming conventions of both language names
+ and dictionaries.
+ Due to the language name change, your old personal dictionaries will not
+ be recognized.
  However, you can import the old dictionaries by running the 
 \begin_inset Quotes eld
 \end_inset 
@@ -797,11 +780,20 @@ aspell-import
 \end_inset 
 
  script.
+ This also means that dictionaries designed to work with older versions
+ of Aspell are not likely to function correctly.
+ Fortunately new dictionary packages are available for most languages.
+ You can find them off of the Aspell home page at 
+\begin_inset LatexCommand \url{http://aspell.net}
+
+\end_inset 
+
+.
 \layout Standard
 
-The Pspell ABI is now part of Asepll except that the name of everything
+The Pspell ABI is now part of Aspell except that the name of everything
  has changed due to the renaming of Pspell to Aspell.
- In particuler please note the following name changes:
+ In particular please note the following name changes:
 \layout Quote
 
 pspell -> aspell
@@ -822,18 +814,32 @@ language-tag
 lang
 \series default 
 .
- However, for backwards compatibily the language-tag option will still work.
+ However, for backward compatible the language-tag option will still work.
 \layout Standard
 
 However, you should also be able to build applications that require Pspell
- with the new Aspell as a backwards compatibility header file is provided.
+ with the new Aspell as a backward compatibility header file is provided.
 \layout Standard
 
-The format of the complied dictionaries has almost certainly changed.
- So you will need to recompile them for the new Aspell.
-\layout Standard
+Due to a change in the way dictionaries are handled, scanning for .pwli files
+ in order to get find out which dictionaries are available will no longer
+ work.
+ This means that programs that relied on this technique may have problems
+ finding dictionaries.
+ Fortunately, GNU Aspell now provided a uniform way to list all installed
+ dictionaries via the C API.
+ See the file 
+\begin_inset Quotes eld
+\end_inset 
 
-[FIXME Add now about missing .pwli files]
+list-dicts.c
+\begin_inset Quotes erd
+\end_inset 
+
+ in the examples/ directory for an example of how to due this.
+ Unfortunately there is isn't any simply way to find out which dictionaries
+ are installed which will work with both the old Aspell/Pspell and the new
+ GNU Aspell.
 \layout Section
 
 Using aspell-import
@@ -2900,7 +2906,7 @@ size
 \series default 
  option.
  The default size is 60.
- If Aspell can not find a dictionary based on 
+ If Aspell can not find a dictionary based on the 
 \series bold 
 lang
 \series default 
@@ -3084,7 +3090,7 @@ The replacement word has each replacement pair on its own line in the following
  format
 \layout LyX-Code
 
-<<misspelled word>>: <<correction>>
+<<misspelled word>> <<correction>>
 \layout Section
 
 Using Multi Dictionaries
@@ -3849,7 +3855,7 @@ Notes of Storing Replacement Pairs
 
 \layout Standard
 
-The store_repl method and the $$?? should be used because Aspell is able
+The store_repl method and the $$ra should be used because Aspell is able
  to learn from users misspellings.
  For example on the first pass a user misspells beginning as beging so aspell
  suggests:
@@ -3916,470 +3922,29 @@ Adding Support For Other Languages
 
 \layout Standard
 
-[FIXME: This section needs updateing]
-\layout Standard
-
-Before you consider adding support for Aspell for your language first check
- if it is already done via the Aspell-Dicts project.
- As of the release of support for the following languages is now available:
-\layout Quotation
-
-
-\begin_inset  Tabular
-<lyxtabular version="2" rows="16" columns="3">
-<features rotate="false" islongtable="false" endhead="0" endfirsthead="0" endfoot="0" endlastfoot="0">
-<column alignment="left" valignment="top" leftline="false" rightline="false" width="" special="">
-<column alignment="left" valignment="top" leftline="false" rightline="false" width="" special="">
-<column alignment="left" valignment="top" leftline="false" rightline="false" width="" special="">
-<row topline="false" bottomline="false" newpage="false">
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-Breton
-\end_inset 
-</cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-[br]
-\end_inset 
-</cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="true" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-\end_inset 
-</cell>
-</row>
-<row topline="false" bottomline="false" newpage="false">
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-Catalan
-\end_inset 
-</cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-[ca]
-\end_inset 
-</cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="true" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-\end_inset 
-</cell>
-</row>
-<row topline="false" bottomline="false" newpage="false">
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-Czech
-\end_inset 
-</cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-[cs]
-\end_inset 
-</cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="true" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-\end_inset 
-</cell>
-</row>
-<row topline="false" bottomline="false" newpage="false">
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-Danish
-\end_inset 
-</cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-[da]
-\end_inset 
-</cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="true" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-\end_inset 
-</cell>
-</row>
-<row topline="false" bottomline="false" newpage="false">
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-Dutch
-\end_inset 
-</cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-[nl]
-\end_inset 
-</cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="true" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-\end_inset 
-</cell>
-</row>
-<row topline="false" bottomline="false" newpage="false">
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-Esperanto
-\end_inset 
-</cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-[eo]
-\end_inset 
-</cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="true" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-\end_inset 
-</cell>
-</row>
-<row topline="false" bottomline="false" newpage="false">
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-Faroese
-\end_inset 
-</cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-[fo]
-\end_inset 
-</cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="true" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-\end_inset 
-</cell>
-</row>
-<row topline="false" bottomline="false" newpage="false">
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-French
-\end_inset 
-</cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-[fr]
-\end_inset 
-</cell>
-<cell multicolumn="0" alignment="left" valignment="top" topline="false" bottomline="false" leftline="true" rightline="true" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-(Standard [fr_FR] and Swiss French [fr_CH] and in three sizes: small, medium
- and large)
-\end_inset 
-</cell>
-</row>
-<row topline="false" bottomline="false" newpage="false">
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-German
-\end_inset 
-</cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-[de]
-\end_inset 
-</cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="true" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-(Standard [de_DE] and Swiss German [de_CH])
-\end_inset 
-</cell>
-</row>
-<row topline="false" bottomline="false" newpage="false">
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-Italian
-\end_inset 
-</cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-[it]
-\end_inset 
-</cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="true" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-\end_inset 
-</cell>
-</row>
-<row topline="false" bottomline="false" newpage="false">
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-Norwegian
-\end_inset 
-</cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-[no]
-\end_inset 
-</cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="true" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-\end_inset 
-</cell>
-</row>
-<row topline="false" bottomline="false" newpage="false">
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-Polish
-\end_inset 
-</cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-[pl]
-\end_inset 
-</cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="true" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-\end_inset 
-</cell>
-</row>
-<row topline="false" bottomline="false" newpage="false">
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-Portuguese
-\end_inset 
-</cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-[pt]
-\end_inset 
-</cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="true" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-(Standard [pt_PT] and Brazilian [pt_BR])
-\end_inset 
-</cell>
-</row>
-<row topline="false" bottomline="false" newpage="false">
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-Russian
-\end_inset 
-</cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-[ru]
-\end_inset 
-</cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="true" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-\end_inset 
-</cell>
-</row>
-<row topline="false" bottomline="false" newpage="false">
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-Spanish
-\end_inset 
-</cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-[es]
-\end_inset 
-</cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="true" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-\end_inset 
-</cell>
-</row>
-<row topline="false" bottomline="false" newpage="false">
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-Swedish
-\end_inset 
-</cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-[sv]
-\end_inset 
-</cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="true" rotate="false" usebox="none" width="" special="">
-\begin_inset Text
-
-\layout Standard
-
-\end_inset 
-</cell>
-</row>
-</lyxtabular>
-
-\end_inset 
-
-
-\layout Standard
-
-You can find all of these packages at the aspell home page (
-\begin_inset LatexCommand \url{http://aspell.sourceforge.net/}
-
-\end_inset 
-
-).
-\layout Standard
-
-If your language is not listed above please send me a note and I will work
- with you on adding support.
- 
-\emph on 
-The instructions below still apply however for this version of Aspell however
- they may not once the Aspell is merged into Pspell (see section 
-\begin_inset LatexCommand \ref{future}
-
-\end_inset 
-
-).
-\layout Standard
-
-Adding a language to aspell is fairly straightforward.
- You need to at very least create the language data file, and compile a
- new word list.
- You should also create a PWLI file for each of your word lists so that
- your new word lists will work correctly with the LANG environmental variable
- and with Pspell.
-\layout Standard
-
-Please note, however, that Aspell international support is not 100% done
- yet.
- More information on my future planes for international support in aspell
- can be found at 
-\begin_inset LatexCommand \url{http://aspell.sourceforge.net/international/}
+Before you consider adding support for Aspell first make sure that someone
+ else has not already done it.
+ A good number of dictionaries off the Aspell home page at 
+\begin_inset LatexCommand \url[aspell.net]{http://aspell.net}
 
 \end_inset 
 
 .
+ If your language is not listed above please send me a note and I will work
+ with you on adding support.
+\layout Standard
+
+This chapter describes the old manual way of adding support for a new language
+ in Aspell.
+ The recommended way to add support is through the aspell-dicts package.
+ The scripts used, as well as some documentation on what to do, is available
+ in the aspell-gen package which is available in the same location the dictionar
+y packages are at.
+\layout Standard
+
+Adding a language to aspell is fairly straightforward.
+ You need to create the language data file, and compile a new word list.
+ 
 \layout Section
 
 The Language Data File
@@ -4402,7 +3967,8 @@ aspell config
 \end_inset 
 
  to find out where it is in your installation.
- [FIXME: Add note about nameing convenstions somewhere][
+ By convention the language name should be the two letter ISO 639 language
+ code.
 \layout Standard
 
 The language data file has several mandatory fields, and several optional
@@ -5916,26 +5482,30 @@ appendix
 Changelog
 \layout Section*
 
-Changes from 0.33.7.1 to 0.50
-\layout Standard
-
-{FIXME]
+Changes from .33.7.1 to 0.50 (Aug ??,2002)
 \layout Itemize
 
-Changed the way language are handles.
- Languages are now two-letter abbreviation
+A complete overhaul of the source code which included merging Pspell into
+ Aspell.
 \layout Itemize
 
-Added dvorak keymap.
+Changed the way dictionaries and languages are handled.
 \layout Itemize
 
-Added ability to list the available dictionaries
+Added Dvorak keymap.
 \layout Itemize
 
-Improved the check interface a bit.
+Added the ability to list the available dictionaries
+\layout Itemize
+
+Improved the spell checking interface a bit.
 \layout Itemize
 
 Added support for using the Ispell keymapping when checking files.
+\layout Itemize
+
+Lots of other changes due to the massive overhaul of the source code.
+ 
 \layout Section*
 
 Changes from .33.7 to .33.7.1 (Aug 20, 2001)

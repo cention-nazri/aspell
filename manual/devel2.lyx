@@ -606,7 +606,7 @@ Decoders
 Decoding filters
 \series default 
  which manipulates a string of FilterChars by decoding the text is some
- way such as converting SGML character into its unicode value.
+ way such as converting SGML character into its Unicode value.
  
 \layout Enumerate
 
@@ -614,8 +614,8 @@ Decoding filters
 \series bold 
 True filters
 \series default 
- which manipulates a string of FilterChars to make it more sutable for spell
- checking.
+ which manipulates a string of FilterChars to make it more suitable for
+ spell checking.
  These filers generally blank out text which should not be spell checked
 \layout Enumerate
 
@@ -624,15 +624,137 @@ True filters
 Encoding filters
 \series default 
  which manipulates a string of FilterChars by encoding the text is some
- way such as converting certain unicode characters to SGML characters.
+ way such as converting certain Unicode characters to SGML characters.
 \layout Enumerate
 
 
 \series bold 
 Encoders
 \series default 
- which take a string of FilerChars and convert inro a standard format such
+ which take a string of FilterChars and convert into a standard format such
  as iso8859-1 or UTF-8
+\layout Standard
+
+Which types of filters are used depends on the situation
+\layout Enumerate
+
+When 
+\series bold 
+decoding words
+\series default 
+ for spell checking:
+\begin_deeper 
+\layout Itemize
+
+The 
+\series bold 
+decoder
+\series default 
+ to convert from a standard format
+\layout Itemize
+
+The 
+\series bold 
+decoding filter
+\series default 
+ to perform high level decoding if necessary
+\layout Itemize
+
+The 
+\series bold 
+encoder
+\series default 
+ to convert into an internal format used by the speller module
+\end_deeper 
+\layout Itemize
+
+When checking a document
+\begin_deeper 
+\layout Itemize
+
+The 
+\series bold 
+decoder
+\series default 
+ to convert from a standard format
+\layout Itemize
+
+The 
+\series bold 
+decoding filter
+\series default 
+ to perform high level decoding if necessary
+\layout Itemize
+
+A 
+\series bold 
+true filter
+\series default 
+ to filter out parts of the document which should not be spell checked
+\layout Itemize
+
+The 
+\series bold 
+encoder
+\series default 
+ to convert into an internal format used by the speller module
+\end_deeper 
+\layout Enumerate
+
+When 
+\series bold 
+encoding words
+\series default 
+ such as those returned for suggestions:
+\begin_deeper 
+\layout Itemize
+
+The 
+\series bold 
+decoder
+\series default 
+ to convert from the internal format used by the speller module
+\layout Itemize
+
+The 
+\series bold 
+encoding filter
+\series default 
+ to perform high level encodings if necessary
+\layout Itemize
+
+The 
+\series bold 
+encoder
+\series default 
+ to convert into a standard format
+\end_deeper 
+\layout Standard
+
+A FilterChar is a struct which contains the characters value in Unicode
+ and the 
+\begin_inset Quotes eld
+\end_inset 
+
+width
+\begin_inset Quotes erd
+\end_inset 
+
+ of the character.
+ ...
+\layout Standard
+
+The standard 
+\series bold 
+encoder
+\series default 
+ and 
+\series bold 
+decoder
+\series default 
+ filters are defined in common/convert.cpp.
+ There should generally not be any need to deal with them so they will not
+ be discussed here.
 \layout Standard
 
 [FIXME: Write more]

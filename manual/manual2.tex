@@ -86,27 +86,17 @@ kevin@atkinson.dhs.org}
 \tableofcontents{}
 
 
-\chapter*{Notes}
-
-A lot has changed since the last version of Aspell (.33.7). This manual
-is in the process of being updated, until the update is complete a
-lot of this manual may be incorrect. Please keep this in mind. The
-latest version of this manual can be found at \url{http://savanah.gnu.org/download/aspell/manual/user/manual.html}
-
-The eventual goal is to convert this manual into Texinfo. However,
-since I do not have the time to learn Texinfo right now, I will continue
-to maintain it in the present format. Once someone goes through the
-trouble of converting it into Texinfo I will maintain the Texinfo
-version.
-
-
 \chapter{Introduction}
 
 GNU Aspell is a Free and Open Source spell checker designed to eventually
 replace Ispell. It can either be used as a library or as an independent
 spell checker. Its main feature is that it does a much better job
 of coming up with possible suggestions than just about any other spell
-checker, including Ispell and Microsoft Word.
+checker out there for the English language, including Ispell and Microsoft
+Word. It also has many other technical enhancements over Ispell such
+as using shared memory for dictionaries and intelligently handling
+personal dictionaries when more than one Aspell process is open at
+once.
 
 
 \section{Comparison to other spell checker engines}
@@ -218,7 +208,7 @@ that the CygWin environment is used to to build it.
 
 \section{Obtaining}
 
-The latest version can always be found at GNI Aspell's home page at
+The latest version can always be found at GNU Aspell's home page at
 \url{http://aspell.net}.
 
 
@@ -271,9 +261,9 @@ To install the program simply type
 make install
 \end{quote}
 After Aspell is installed at least one dictionary needs to be installed.
-You can find them at \url{http://www.gnu.org/software/aspell/}. The
-\char`\"{}aspell\char`\"{} program must be in your path in order for
-the dictionaries to install correctly.
+You can find them at \url{http://aspell.net/}. The \char`\"{}aspell\char`\"{}
+program must be in your path in order for the dictionaries to install
+correctly.
 
 If you do not have Ispell or the traditional Unix {}``spell'' utility
 installed on your system than you should also copy the compatibly
@@ -348,14 +338,17 @@ previous Aspell/Pspell release. For one thing Pspell has been merged
 with Aspell so there in no longer two separate libraries you have
 to worry about.
 
-The way dictionaries are handled has also changed. For one thing the
-language names have changed to the two letter iso code. These means
-that the your old personal dictionaries will not be recognized. However,
-you can import the old dictionaries by running the {}``aspell-import''
-script.
+The way dictionaries are handled has also changed. This includes a
+change in the naming conventions of both language names and dictionaries.
+Due to the language name change, your old personal dictionaries will
+not be recognized. However, you can import the old dictionaries by
+running the {}``aspell-import'' script. This also means that dictionaries
+designed to work with older versions of Aspell are not likely to function
+correctly. Fortunately new dictionary packages are available for most
+languages. You can find them off of the Aspell home page at \url{http://aspell.net}.
 
-The Pspell ABI is now part of Asepll except that the name of everything
-has changed due to the renaming of Pspell to Aspell. In particuler
+The Pspell ABI is now part of Aspell except that the name of everything
+has changed due to the renaming of Pspell to Aspell. In particular
 please note the following name changes:
 
 \begin{quote}
@@ -365,17 +358,22 @@ emulation -> enumeration\\
 master\_word\_list -> main\_word\_list
 \end{quote}
 Please also note that the name of the \textbf{language-tag} option
-has changed to \textbf{lang}. However, for backwards compatibily the
+has changed to \textbf{lang}. However, for backward compatible the
 language-tag option will still work.
 
 However, you should also be able to build applications that require
-Pspell with the new Aspell as a backwards compatibility header file
+Pspell with the new Aspell as a backward compatibility header file
 is provided.
 
-The format of the complied dictionaries has almost certainly changed.
-So you will need to recompile them for the new Aspell.
-
-{[}FIXME Add now about missing .pwli files{]}
+Due to a change in the way dictionaries are handled, scanning for
+.pwli files in order to get find out which dictionaries are available
+will no longer work. This means that programs that relied on this
+technique may have problems finding dictionaries. Fortunately, GNU
+Aspell now provided a uniform way to list all installed dictionaries
+via the C API. See the file {}``list-dicts.c'' in the examples/
+directory for an example of how to due this. Unfortunately there is
+isn't any simply way to find out which dictionaries are installed
+which will work with both the old Aspell/Pspell and the new GNU Aspell.
 
 
 \section{Using aspell-import}
@@ -1096,7 +1094,7 @@ set it will look for a dictionary with no jargon. If after matching
 the lang and jargon there is still more than one dictionary available
 it will find one with the size closest to the value of the \textbf{size}
 option. The default size is 60. If Aspell can not find a dictionary
-based on \textbf{lang} option than it will give up and complain.
+based on the \textbf{lang} option than it will give up and complain.
 
 If the \textbf{lang} option is not explicitly set its value will be
 based on the LC\_MESSAGES locale. This locale is generally taken from
@@ -1181,7 +1179,7 @@ The replacement word has each replacement pair on its own line in
 the following format
 
 \begin{lyxcode}
-<\,{}<misspelled~word>\,{}>:~<\,{}<correction>\,{}>
+<\,{}<misspelled~word>\,{}>~<\,{}<correction>\,{}>
 \end{lyxcode}
 
 \section{Using Multi Dictionaries}
@@ -1590,7 +1588,7 @@ Ispell manual)}
 
 \section{Notes of Storing Replacement Pairs\label{replpair}}
 
-The store\_repl method and the \$\$?? should be used because Aspell
+The store\_repl method and the \$\$ra should be used because Aspell
 is able to learn from users misspellings. For example on the first
 pass a user misspells beginning as beging so aspell suggests:
 
@@ -1641,81 +1639,20 @@ will also get stored so that you don't have to worry about it.
 
 \chapter{Adding Support For Other Languages\label{inter}}
 
-{[}FIXME: This section needs updateing{]}
+Before you consider adding support for Aspell first make sure that
+someone else has not already done it. A good number of dictionaries
+off the Aspell home page at aspell.net \url{http://aspell.net}. If
+your language is not listed above please send me a note and I will
+work with you on adding support.
 
-Before you consider adding support for Aspell for your language first
-check if it is already done via the Aspell-Dicts project. As of the
-release of support for the following languages is now available:
-
-\begin{quotation}
-\begin{tabular}{lll}
-Breton&
-{[}br{]}&
-\\
-Catalan&
-{[}ca{]}&
-\\
-Czech&
-{[}cs{]}&
-\\
-Danish&
-{[}da{]}&
-\\
-Dutch&
-{[}nl{]}&
-\\
-Esperanto&
-{[}eo{]}&
-\\
-Faroese&
-{[}fo{]}&
-\\
-French&
-{[}fr{]}&
-(Standard {[}fr\_FR{]} and Swiss French {[}fr\_CH{]} and in three
-sizes: small, medium and large)\\
-German&
-{[}de{]}&
-(Standard {[}de\_DE{]} and Swiss German {[}de\_CH{]})\\
-Italian&
-{[}it{]}&
-\\
-Norwegian&
-{[}no{]}&
-\\
-Polish&
-{[}pl{]}&
-\\
-Portuguese&
-{[}pt{]}&
-(Standard {[}pt\_PT{]} and Brazilian {[}pt\_BR{]})\\
-Russian&
-{[}ru{]}&
-\\
-Spanish&
-{[}es{]}&
-\\
-Swedish&
-{[}sv{]}&
-\\
-\end{tabular}
-\end{quotation}
-You can find all of these packages at the aspell home page (\url{http://aspell.sourceforge.net/}).
-
-If your language is not listed above please send me a note and I will
-work with you on adding support. \emph{The instructions below still
-apply however for this version of Aspell however they may not once
-the Aspell is merged into Pspell (see section \ref{future}).}
+This chapter describes the old manual way of adding support for a
+new language in Aspell. The recommended way to add support is through
+the aspell-dicts package. The scripts used, as well as some documentation
+on what to do, is available in the aspell-gen package which is available
+in the same location the dictionary packages are at.
 
 Adding a language to aspell is fairly straightforward. You need to
-at very least create the language data file, and compile a new word
-list. You should also create a PWLI file for each of your word lists
-so that your new word lists will work correctly with the LANG environmental
-variable and with Pspell.
-
-Please note, however, that Aspell international support is not 100\%
-done yet. More information on my future planes for international support
-in aspell can be found at \url{http://aspell.sourceforge.net/international/}.
+create the language data file, and compile a new word list. 
 
 
 \section{The Language Data File}
@@ -1725,7 +1662,8 @@ configuration file. It is named <\,{}<lang>\,{}>.dat
 and is located in the architecture independent data dir for aspell
 (option \textbf{data-dir}) which is usually <\,{}<prefix>\,{}>/share/aspell.
 Use {}``aspell config'' to find out where it is in your installation.
-{[}FIXME: Add note about nameing convenstions somewhere{]}{[}
+By convention the language name should be the two letter ISO 639 language
+code.
 
 The language data file has several mandatory fields, and several optional
 ones. All fields are case sensitive and should be in all lower case.
@@ -2268,17 +2206,17 @@ algorithm please see the data file \textbf{english\_phonet.dat}.
 \chapter{Changelog}
 
 
-\section*{Changes from 0.33.7.1 to 0.50}
-
-\{FIXME{]}
+\section*{Changes from .33.7.1 to 0.50 (Aug ??,2002)}
 
 \begin{itemize}
-\item Changed the way language are handles. Languages are now two-letter
-abbreviation
-\item Added dvorak keymap.
-\item Added ability to list the available dictionaries
-\item Improved the check interface a bit.
+\item A complete overhaul of the source code which included merging Pspell
+into Aspell.
+\item Changed the way dictionaries and languages are handled.
+\item Added Dvorak keymap.
+\item Added the ability to list the available dictionaries
+\item Improved the spell checking interface a bit.
 \item Added support for using the Ispell keymapping when checking files.
+\item Lots of other changes due to the massive overhaul of the source code. 
 \end{itemize}
 
 \section*{Changes from .33.7 to .33.7.1 (Aug 20, 2001)}

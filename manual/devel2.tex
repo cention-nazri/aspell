@@ -328,16 +328,57 @@ In Aspell there are 5 types of filters:
 iso8859-1 or UTF-8 and convert it into a string of FilterChars.
 \item \textbf{Decoding filters} which manipulates a string of FilterChars
 by decoding the text is some way such as converting SGML character
-into its unicode value. 
+into its Unicode value. 
 \item \textbf{True filters} which manipulates a string of FilterChars to
-make it more sutable for spell checking. These filers generally blank
+make it more suitable for spell checking. These filers generally blank
 out text which should not be spell checked
 \item \textbf{Encoding filters} which manipulates a string of FilterChars
-by encoding the text is some way such as converting certain unicode
+by encoding the text is some way such as converting certain Unicode
 characters to SGML characters.
-\item \textbf{Encoders} which take a string of FilerChars and convert inro
+\item \textbf{Encoders} which take a string of FilterChars and convert into
 a standard format such as iso8859-1 or UTF-8
 \end{enumerate}
+Which types of filters are used depends on the situation
+
+\begin{enumerate}
+\item When \textbf{decoding words} for spell checking:
+
+\begin{itemize}
+\item The \textbf{decoder} to convert from a standard format
+\item The \textbf{decoding filter} to perform high level decoding if necessary
+\item The \textbf{encoder} to convert into an internal format used by the
+speller module
+\end{itemize}
+\end{enumerate}
+\begin{itemize}
+\item When checking a document
+
+\begin{itemize}
+\item The \textbf{decoder} to convert from a standard format
+\item The \textbf{decoding filter} to perform high level decoding if necessary
+\item A \textbf{true filter} to filter out parts of the document which should
+not be spell checked
+\item The \textbf{encoder} to convert into an internal format used by the
+speller module
+\end{itemize}
+\end{itemize}
+\begin{enumerate}
+\item When \textbf{encoding words} such as those returned for suggestions:
+
+\begin{itemize}
+\item The \textbf{decoder} to convert from the internal format used by the
+speller module
+\item The \textbf{encoding filter} to perform high level encodings if necessary
+\item The \textbf{encoder} to convert into a standard format
+\end{itemize}
+\end{enumerate}
+A FilterChar is a struct which contains the characters value in Unicode
+and the {}``width'' of the character. ...
+
+The standard \textbf{encoder} and \textbf{decoder} filters are defined
+in common/convert.cpp. There should generally not be any need to deal
+with them so they will not be discussed here.
+
 {[}FIXME: Write more{]}
 
 
