@@ -5,6 +5,7 @@
 #include <vector>
 #include <assert.h>
 
+#include "asc_ctype.hpp"
 #include "clone_ptr-t.hpp"
 #include "config.hpp"
 #include "enumeration.hpp"
@@ -53,7 +54,16 @@ namespace aspeller {
 		lang_config_keys + sizeof(lang_config_keys)/sizeof(KeyInfo));
     String path;
     dir_ = find_file(path,dir1,dir2,lang,".dat");
-    RET_ON_ERR(data.read_in_file(path));
+    {
+      PosibErrBase pe = data.read_in_file(path);
+      if (pe.has_err(cant_read_file)) {
+	String mesg = pe.get_err()->mesg;
+	mesg[0] = asc_tolower(mesg[0]);
+	mesg = "This is probably becuase " + mesg;
+	return make_err(unknown_language, l, mesg);
+      } else if (pe.has_err())
+	return pe;
+    }
 
     if (!data.have("name"))
       return make_err(bad_file_format, path, "The required field \"name\" is missing.");

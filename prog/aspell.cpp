@@ -718,7 +718,7 @@ void check(bool interactive)
 
  exit_loop:
 
-  speller->save_all_word_lists(); //noop
+  speller->save_all_word_lists();
   
   //end_check();
   

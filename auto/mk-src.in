@@ -417,7 +417,7 @@ errors:
 		no wordlist for lang
 			mesg => No word lists can be found for the language "%lang".
 		mismatched language
-			mesg => ...
+			mesg => Expected language "%lang" but got "%prev".
 			parms => prev
 	encoding
 		parms => encod

@@ -90,7 +90,7 @@ namespace aspeller {
       set_lang_hook(config);
     } else {
       if (l != lang_->name())
-	return make_err(mismatched_language, lang_->name(), l);
+	return make_err(mismatched_language, l, lang_->name());
     }
     return no_err;
   }

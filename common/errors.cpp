@@ -190,7 +190,7 @@ const ErrorInfo * const perror_no_wordlist_for_lang = &perror_no_wordlist_for_la
 
 static const ErrorInfo perror_mismatched_language_obj = {
   perror_language_related, // isa
-  "...", // mesg
+  "Expected language \"%lang:1\" but got \"%prev:2\".", // mesg
   2, // num_parms
   {"lang", "prev"} // parms
 };
