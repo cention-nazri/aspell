@@ -30,7 +30,7 @@ namespace acommon {
 
   void FStream::close()
   {
-    if (file_ != 0)
+    if (file_ != 0 && own_)
       fclose(file_);
     file_ = 0;
   }

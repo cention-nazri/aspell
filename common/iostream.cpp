@@ -7,7 +7,7 @@
 #include "iostream.hpp"
 
 namespace acommon {
-  FStream CIN(stdin);
-  FStream COUT(stdout);
-  FStream CERR(stderr);
+  FStream CIN(stdin, false);
+  FStream COUT(stdout, false);
+  FStream CERR(stderr, false);
 }

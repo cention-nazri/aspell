@@ -23,10 +23,13 @@ namespace acommon {
   {
   private:
     FILE * file_;
+    bool   own_;
 
   public:
-    FStream(char d = '\n') : IStream(d), file_(0) {}
-    FStream(FILE * f) : IStream('\n'), file_(f) {}
+    FStream(char d = '\n') 
+      : IStream(d), file_(0), own_(true) {}
+    FStream(FILE * f, bool own = true) 
+      : IStream('\n'), file_(f), own_(own) {}
     ~FStream() {close();}
 
     PosibErr<void> open(ParmString, const char *);
