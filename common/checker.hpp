@@ -129,7 +129,7 @@ namespace acommon {
                  void * which = 0);
     // Process the current string and add it to the queue of strings
     // to check.  The string can be as long as you want it to be (even
-    // the whole document) not be smaller than a whitespace seperated
+    // the whole document) not be smaller than a whitespace separated
     // token and should not split a non-whitspace delimited token in
     // two.  For example:
     //   OK:  "hello ", "world"
@@ -146,7 +146,7 @@ namespace acommon {
     // the string around ...
 
     void add_separator();
-    // Add a separator after the last processed string, to seperate
+    // Add a separator after the last processed string, to separate
     // one word from another.  This means more than simply inserting
     // a whitespace character in the case when the word can have a
     // space in it
@@ -171,15 +171,18 @@ namespace acommon {
       {more_data_callback_ = c; more_data_callback_data_ = d;}
     // sets the callback that is called when more data is needed the
     // callback function is expected to add more data with the
-    // "process" method.  If the callback is not set or fails to add
-    // more data than the "next" method will return a null
+    // "process" method.  The first paramter will of the callback
+    // function is the callback specific data "d", the second
+    // paramter is the "which" pointer of the last string used.
+    // If the callback is not set or fails to add more data
+    // than the "next" method will return null.
 
     void set_string_freed_callback(void (*c)(void *, void *), void * d) 
       {string_freed_callback_ = c; string_freed_callback_data_ = d;}
-    // sets the callback that is called when more data is needed the
-    // callback function is expected to add more data with the
-    // "process" method.  If the callback is not set or fails to add
-    // more data than the "next" method will return a null
+    // sets the callback that is called when a string is freed. The
+    // first paramter will of the callback function is the callback
+    // specific data "d", the second paramter is the "which" pointer 
+    // assocated with the freed sting.
 
     bool span_strings() {return span_strings_;}
     void set_span_strings(bool v) {span_strings_ = v;}
@@ -204,7 +207,6 @@ namespace acommon {
     CopyPtr<Filter> filter_;
     FilterCharVector proc_str_;
     unsigned last_id;
-    FilterCharVector separator_;
     bool span_strings_;
     Segment * first;
     Segment * last;

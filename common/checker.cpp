@@ -15,8 +15,6 @@ namespace acommon {
     : more_data_callback_(0), string_freed_callback_(0), 
       last_id(0), span_strings_(false), first(0), last(0)
   {
-    separator_.append(FilterChar(0x10, 0));
-    separator_.append(FilterChar(0x10, 0));
   }
 
   Checker::~Checker()
@@ -28,14 +26,12 @@ namespace acommon {
   {
     assert(!f || l);
 
-    if (!first) return;
-
     Segment * cur = f ? f->next : first;
     while (cur && cur != l) {
       Segment * next = cur->next;
       if (string_freed_callback_ && cur->which && 
-          (!next || cur->which != next->which) &&
-          (!f    || f->which != cur->which))
+          (!next || cur->id != next->id) &&
+          (!f    || f->id != cur->id))
         string_freed_callback_(string_freed_callback_data_, cur->which);
       delete cur;
       cur = next;
@@ -56,7 +52,9 @@ namespace acommon {
   }
 
   const FilterChar SegmentIterator::empty_str[1] = {FilterChar(0,0)};
-
+  static const FilterChar seg_separator[2] = {FilterChar(0x10,0), FilterChar(0x10,0)};
+  static const FilterChar * const seg_separator_end = seg_separator + 2;
+ 
   void Checker::reset()
   {
     free_segments();
@@ -121,11 +119,11 @@ namespace acommon {
   void Checker::add_separator()
   {
     Segment * seg = new Segment;
-    seg->begin = separator_.pbegin();
-    seg->end = separator_.pend();
+    seg->begin = seg_separator;
+    seg->end = seg_separator_end;
     seg->which = last->which;
     seg->offset = 0;
-    seg->id = last_id++;
+    seg->id = last->id;
     seg->prev = last;
     last->next = seg;
     last = seg;
