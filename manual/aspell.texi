@@ -1,5 +1,5 @@
 \input texinfo   @c -*-texinfo-*-
-@comment $Id: aspell.texi,v 1.22 2004/04/13 20:19:37 kevina Exp $
+@comment $Id: aspell.texi,v 1.23 2004/04/17 00:36:23 kevina Exp $
 @comment %**start of header
 @setfilename aspell.info
 @settitle GNU Aspell 0.60
@@ -2678,7 +2678,7 @@ internally.  If the option @option{data-encoding} is set to
 @samp{utf-8}, and your current locale character type is always set to
 @samp{utf-8}, than you can use UTF-8 for everything and not
 worry your self that an 8-bit character set is being used internally.
-If your language has no more than 220 distinct symbols, including
+If your language has no more than 210 distinct symbols, including
 different capitalizations and accents, than Aspell can support it.
 
 In order to create a new character set you will need to download
@@ -2856,7 +2856,7 @@ based on h@`anzi which includes Chinese, Japanese, and sometimes Korean.
 @appendixsec Supported
 
 Aspell 0.60 should be able to support the following languages as, to the
-best of my knowledge, they all contain 220 or fewer symbols and can
+best of my knowledge, they all contain 210 or fewer symbols and can
 thus, fit within an 8-bit character set. If an existing character set
 does not exists than a new one can be invented. This is true even if the
 script is not yet supported by Unicode as the private use area can be
@@ -2940,7 +2940,7 @@ character set.
 Any letter in the Unicode range U+0000 - U+0249, U+1E00 - U+1EFF (Basic
 Latin, Latin-1 Supplement, Latin Extended-A, Latin Extended-B, and Latin
 Extended Additional) can be represented using around 175 basic letters,
-and 25 modifiers which is less than 220 and can thus fit in an Aspell
+and 25 modifiers which is less than 210 and can thus fit in an Aspell
 8-bit character set.  Since this unicode range covers any possible Latin
 language this special character set can be used to reperesnt any word
 written using the Latin script if so desired.
@@ -2948,12 +2948,12 @@ written using the Latin script if so desired.
 @appendixsubsec Syllabic 
 
 Syllabic languages use a separate symbol for each syllable of the
-language.  Even thought most of them have more than 220 distinct
+language.  Even thought most of them have more than 210 distinct
 symbols Aspell can still support them by breaking them up.
 
 @appendixsubsubsec The Ethiopic Syllabary
 
-Even though the Ethiopic script has more than 220 distinct characters
+Even though the Ethiopic script has more than 210 distinct characters
 with a little work Aspell can still handle it.  The idea is to split
 each character into two parts based on the matrix representation.  The
 first 3 bits will be the first part and could be mapped to
@@ -2972,7 +2972,7 @@ encoding.
 
 In fact, the split consonant-vowel representation may prove to be so
 useful that it may be beneficial to encode other syllabary in this
-fashion, even if they are less than 220 of them.
+fashion, even if they are less than 210 of them.
 
 The code to break up a syllabary into the consonant-vowel parts does
 not exists as of Aspell 0.60.  However, it will be fairly easy to add
@@ -3005,7 +3005,7 @@ unsupported by Aspell for one reason or another.
 @appendixsubsec The Thai and Khmer Scripts
 
 The Thai and Khmer scripts presents a different problem for Aspell.  The
-problem is not that there are more than 220 unique symbols, but that
+problem is not that there are more than 210 unique symbols, but that
 there are no spaces between words.  This means that there is no easy way
 to split a sentence into individual words.  However, it is still
 possible to spell check these scripts, it is just a lot more difficult.
@@ -3063,7 +3063,7 @@ Hangul with out any problem.
 
 Aspell should be able to check text written in the same language but
 in multiple scripts with some work.  If the number of unique symbols
-in both scripts is less than 220 than a special character set can be
+in both scripts is less than 210 than a special character set can be
 used to allow both scripts to be encoding in the same dictionary.
 However this may not be the most efficient solution.  An alternate
 solution is to store each script in its own dictionary and allow
@@ -3086,7 +3086,7 @@ support.
 @item fi @tab Finnish 
 @tab Ispell Dictionary available.
 
-@item fi @tab Latin
+@item la @tab Latin
 @tab Ispell/MySpell Dictionary available.
 
 @item sq @tab Albanian
@@ -3628,7 +3628,7 @@ when phonet information is not available.
 @item
 Added support for accepting all input and printing all output in
 @acronym{UTF-8} or some other encoding different from the one Aspell
-uses.  Aspell can now support any language that no more than 220
+uses.  Aspell can now support any language that no more than 210
 distinct characters, including different capitalizations and accents,
 @emph{even if} there is not an existing 8-bit encoding that supports
 the language.
