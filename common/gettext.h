@@ -73,4 +73,14 @@
 #define _(String) dgettext ("aspell", String)
 #define N_(String) gettext_noop (String)
 
+/* use gt_ when there is the possibility that str will be the empty
+   string.  gettext in this case is not guaranteed to return an
+   empty string */
+static inline const char * gt_(const char * str) {
+  return str[0] == '\0' ? str : _(str);
+}
+
+/* NOTE: DO NOT USE "gettext", ALWAYS USE "_" BECAUSE WHEN ASPELL IS USED
+   AS A LIBRARY THE DOMAIN IS NOT GUARANTEED TO BE ASPELL */
+
 #endif /* _LIBGETTEXT_H */

@@ -32,6 +32,7 @@ StackPtr<CheckerString> state;
 const char * last_prompt = 0;
 StackPtr<Choices> word_choices;
 StackPtr<Choices> menu_choices;
+//Conv dconv;
 
 #if   POSIX_TERMIOS
 
@@ -228,6 +229,36 @@ void layout_screen() {
 
 #endif
 void begin_check() {
+  
+  //
+  // Setup display conversion
+  //
+//   const char * gettext_enc = 0;
+//   const char * env_enc = 0;
+//   String enc;
+// #ifdef ENABLE_NLS
+//   gettext_enc = bind_textdomain_codeset("aspell", 0);
+// #endif
+// #ifdef HAVE_LANGINFO_CODESET
+//   env_enc = nl_langinfo(CODESET);
+//   if (is_ascii_enc(env_enc)) env_enc = 0;
+// #endif
+//   if (gettext_enc && env_enc && strcmp(gettext_enc,env_enc) != 0) 
+//   {
+//     puts(("Error: bind_textdomain_codeset != nl_langinfo(CODESET)\n"));
+//     exit(-1);
+//   }
+//   if (gettext_enc)
+//     enc = gettext_enc;
+//   else if (env_enc)
+//     enc = env_enc;
+//   else;
+  
+//   dconv.setup(options, ...);
+
+  //
+  //
+  //
 #if   HAVE_LIBCURSES
 #if   CURSES_ONLY
   use_curses=true;
@@ -265,7 +296,7 @@ void begin_check() {
 #endif
 #if   POSIX_TERMIOS || (HAVE_LIBCURSES && !CURSES_ONLY)
   if (!isatty (STDIN_FILENO)) {
-    puts("Error: Stdin not a terminal.");
+    puts(_("Error: Stdin not a terminal."));
     exit (-1);
   }
   
@@ -667,15 +698,57 @@ void display_menu() {
 	const char * desc;
       };
       static MenuLine menu_items[9] = {
-	{0, "Enter", "", "Accept Changes"} 
-	, {0, "Backspace", "Control-H", "Delete the previous character"}
-	, {"kcub1", "Left", "Control-B", "Move Back 1 space"}
-	, {"kcuf1", "Right", "Control-F", "Move Forward 1 space"}
-	, {"khome", "Home", "Control-A", "Move to the beginning of the line"}
-	, {"kend" , "End",  "Control-E", "Move to the end of the line"}
-	, {"kdch1", "Delete", "Control-D", "Delete the next charcter"}
-	, {0, "", "Control-K", "Kill all characters to the EOL"}
-	, {0, "", "Control-C", "Abort This Operation"}
+	{0, 
+         /* TRANSLATORS: This is a literal Key.  Keep the width under 12 characters.*/
+         N_("Enter"), 
+         "", 
+         N_("Accept Changes")},
+        {0,
+         /* TRANSLATORS: This is a literal Key.  Keep the width under 12 characters.*/
+         N_("Backspace"), 
+         /* TRANSLATORS: This is a literal Key.  Keep the width under 12 characters.*/
+         N_("Control-H"), 
+         N_("Delete the previous character")},
+	{"kcub1", 
+         /* TRANSLATORS: This is a literal Key.  Keep the width under 12 characters.*/
+         N_("Left"), 
+         /* TRANSLATORS: This is a literal Key.  Keep the width under 12 characters.*/
+         N_("Control-B"), 
+         N_("Move Back one space")},
+	{"kcuf1", 
+         /* TRANSLATORS: This is a literal Key.  Keep the width under 12 characters.*/
+         N_("Right"), 
+         /* TRANSLATORS: This is a literal Key.  Keep the width under 12 characters.*/
+         N_("Control-F"), 
+         N_("Move Forward one space")},
+	{"khome", 
+         /* TRANSLATORS: This is a literal Key.  Keep the width under 12 characters.*/
+         N_("Home"), 
+         /* TRANSLATORS: This is a literal Key.  Keep the width under 12 characters.*/
+         N_("Control-A"), 
+         N_("Move to the beginning of the line")},
+	{"kend" , 
+         /* TRANSLATORS: This is a literal Key.  Keep the width under 12 characters.*/
+         N_("End"), 
+         /* TRANSLATORS: This is a literal Key.  Keep the width under 12 characters.*/
+         N_("Control-E"), 
+         N_("Move to the end of the line")},
+	{"kdch1", 
+         /* TRANSLATORS: This is a literal Key.  Keep the width under 12 characters.*/
+         N_("Delete"), 
+         /* TRANSLATORS: This is a literal Key.  Keep the width under 12 characters.*/
+         N_("Control-D"), 
+         N_("Delete the next charcter")},
+	{0, 
+         "", 
+         /* TRANSLATORS: This is a literal Key.  Keep the width under 12 characters.*/
+         N_("Control-K"), 
+         N_("Kill all characters to the EOL")},
+	{0, 
+         "", 
+         /* TRANSLATORS: This is a literal Key.  Keep the width under 12 characters.*/
+         N_("Control-C"), 
+         N_("Abort This Operation")},
       };
       scrollok(menu_w,false);
       werase(menu_w);
@@ -687,15 +760,15 @@ void display_menu() {
 	if (w < fun_key_desc_width) fun_key_desc_width = w;
 	if (menu_items[i].capname == 0 
 	    || tigetstr(const_cast<char *>(menu_items[i].capname)) != 0) 
-	  print_truncate(menu_w, menu_items[i].fun_key, fun_key_desc_width);
+	  print_truncate(menu_w, gt_(menu_items[i].fun_key), fun_key_desc_width);
 	else
 	  print_truncate(menu_w, "", fun_key_desc_width);
 	w -= fun_key_desc_width;
 	if (w < control_key_desc_width) control_key_desc_width = w;
-	print_truncate(menu_w, menu_items[i].control_key, 
+	print_truncate(menu_w, gt_(menu_items[i].control_key), 
 		       control_key_desc_width);
 	w -= control_key_desc_width;
-	print_truncate(menu_w, menu_items[i].desc, w);
+	print_truncate(menu_w, gt_(menu_items[i].desc), w);
       }
       wnoutrefresh(menu_w);
     }

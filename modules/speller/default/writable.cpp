@@ -523,8 +523,6 @@ PosibErr<void> WritableDict::save(FStream & out, ParmString file_name)
   WordLookup::const_iterator i = word_lookup->begin();
   WordLookup::const_iterator e = word_lookup->end();
     
-  StrVector::const_iterator j;
-  
   ConvP conv(oconv);
   for (;i != e; ++i) {
     out.printf("%s\n", conv(*i));

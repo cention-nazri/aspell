@@ -47,6 +47,34 @@ namespace acommon {
                                 refcount(1) {}
     };
     ErrPtr * err_;
+
+  protected:
+
+    void posib_handle_err() const {
+#ifndef NDEBUG
+      if (err_ && !err_->handled)
+	handle_err();
+#endif
+    }
+
+    void copy(const PosibErrBase & other) {
+      err_ = other.err_;
+      if (err_) {
+	++ err_->refcount;
+      }
+    }
+    void destroy() {
+      if (err_ == 0) return;
+      -- err_->refcount;
+      if (err_->refcount == 0) {
+#ifndef NDEBUG
+	if (!err_->handled)
+	  handle_err();
+#endif
+	del();
+      }
+    }
+
   public:
     PosibErrBase() 
       : err_(0) {}
@@ -120,34 +148,6 @@ namespace acommon {
     
     PosibErrBase & set(const ErrorInfo *, 
 		       ParmString, ParmString, ParmString, ParmString);
-
-
-  protected:
-
-    void posib_handle_err() const {
-#ifndef NDEBUG
-      if (err_ && !err_->handled)
-	handle_err();
-#endif
-    }
-
-    void copy(const PosibErrBase & other) {
-      err_ = other.err_;
-      if (err_) {
-	++ err_->refcount;
-      }
-    }
-    void destroy() {
-      if (err_ == 0) return;
-      -- err_->refcount;
-      if (err_->refcount == 0) {
-#ifndef NDEBUG
-	if (!err_->handled)
-	  handle_err();
-#endif
-	del();
-      }
-    }
 
   private:
 

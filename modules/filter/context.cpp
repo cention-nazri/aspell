@@ -76,11 +76,11 @@ namespace {
       return true;
     }
 
-    if (config->retrieve_bool("filter-context-visible-first")) {
+    if (config->retrieve_bool("f-context-visible-first")) {
       state=visible;
     }
 
-    config->retrieve_list("filter-context-delimiters", &delimiters);
+    config->retrieve_list("f-context-delimiters", &delimiters);
     delimiterpairs=delimiters.elements();
     opening.resize(0);
     closing.resize(0);

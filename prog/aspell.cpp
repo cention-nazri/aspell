@@ -60,7 +60,7 @@ using aspeller::Conv;
 // action functions declarations
 
 void print_ver();
-void print_help();
+void print_help(bool verbose = false);
 void config();
 
 void check();
@@ -155,7 +155,8 @@ const PossibleOption possible_options[] = {
   OPTION("dont-guess",       'P', 0),
   
   COMMAND("version",   'v', 0),
-  COMMAND("help",      '?', 0),
+  COMMAND("help",      '\0', 0),
+  COMMAND("usage",     '?', 0),
   COMMAND("config",    '\0', 0),
   COMMAND("check",     'c', 0),
   COMMAND("pipe",      'a', 0),
@@ -352,11 +353,6 @@ int main (int argc, const char *argv[])
     args.erase(args.begin() + to_remove[i]);
   }
 
-  //options->write_to_stream(COUT);
-  //for (int i = 0; i != args.size(); ++i) {
-  //  COUT.printf("ARGV %s\n", args[i].str());
-  //}
-
   if (args.empty()) {
     print_error(_("You must specify an action"));
     return 1;
@@ -367,8 +363,10 @@ int main (int argc, const char *argv[])
   //
   String action_str = args.front();
   args.pop_front();
-  if (action_str == "help")
+  if (action_str == "usage")
     print_help();
+  else if (action_str == "help")
+    print_help(true);
   else if (action_str == "version")
     print_ver();
   else if (action_str == "config")
@@ -511,12 +509,35 @@ void dicts()
   const DictInfo * entry;
 
   while ( (entry = dels->next()) != 0) 
-  {
-    COUT << entry->name << "\n";
-  }
-
+    puts(entry->name);
 }
 
+///////////////////////////
+//
+// list available (filters/filter modes)
+//
+
+void list_available(PosibErr<StringPairEnumeration *> (*fun)(Config *))
+{
+  EXIT_ON_ERR_SET(fun(options), StringPairEnumeration *, els);
+  StringPair sp;
+  while (!els->at_end()) {
+    sp = els->next();
+    printf("%-14s %s\n", sp.first, gt_(sp.second));
+  }
+  delete els;
+}
+
+void filters()
+{
+  load_all_filters(options);
+  list_available(available_filters);
+}
+
+void modes()
+{
+  list_available(available_filter_modes);
+}
 
 ///////////////////////////
 //
@@ -893,7 +914,7 @@ void check()
   out = fopen(new_name.c_str(), "w");
 #endif
   if (!out) {
-    print_error(_("Could not open the file \"%s\"  for writing. File not saved."), file_name);
+    print_error(_("Could not open the file \"%s\" for writing. File not saved."), file_name);
     exit(-1);
   }
 
@@ -1779,17 +1800,36 @@ namespace acommon {
   PosibErr<ConfigModule *> get_dynamic_filter(Config * config, ParmStr value);
 }
 
-static const char * help_text[] = 
+static const char * usage_text[] = 
 {
-  /* TRANSLATORS: This should be formated to fit on an 80 column
-     terminal.*/
+  /* TRANSLATORS: These should all be formated to fit in 80 column or
+     less */
+  N_("Usage: aspell [options] <command>"),
   N_("<command> is one of:"),
-  N_("  -?|help          display this help message"),
+  N_("  -?|usage         display a brief usage message"),
+  N_("  help             display a detailed help message"),
   N_("  -c|check <file>  to check a file"),
   N_("  -a|pipe          \"ispell -a\" compatibility mode"),
-  N_("  list             produce a list of misspelled words from standard input"),
   N_("  [dump] config    dumps the current configuration to stdout"),
   N_("  config <key>     prints the current value of an option"),
+  N_("  [dump] dicts | filters | modes"),
+  N_("    lists available dictionaries / filters / filter modes"),
+  N_("[options] is any of the following:")
+};
+static const unsigned usage_text_size = sizeof(usage_text)/sizeof(const char *);
+
+static const char * help_text[] = 
+{
+  usage_text[0],
+  "",
+  usage_text[1],
+  usage_text[2],
+  usage_text[3],
+  usage_text[4],
+  usage_text[5],
+  N_("  list             produce a list of misspelled words from standard input"),
+  usage_text[6],
+  usage_text[7],
   N_("  soundslike       returns the sounds like equivalent for each word entered"),
   N_("  munch            generate possible root words and affixes"),
   N_("  expand [1-4]     expands affix flags"),
@@ -1800,50 +1840,41 @@ static const char * help_text[] =
   N_("    converts from one encoding to another"),
   N_("  norm (<norm-map> | <from> <norm-map> <to>) [<norm-form>]"),
   N_("    perform unicode normlization"),
-  N_("  [dump] dicts | filters | modes")
-  N_("    lists available dictionaries / filters / filter modes"),
+  usage_text[8],
+  usage_text[9],
   N_("  dump|create|merge master|personal|repl [word list]"),
   N_("    dumps, creates or merges a master, personal, or replacement word list."),
   "",
   N_("  <norm-form>      normalization form to use, either none, internal, or strict"),
   "",
-  N_("[options] is any of the following:"),
+  usage_text[10],
   ""
 };
-static const unsigned help_text_size = 
-            sizeof(help_text)/sizeof(const char *);
+static const unsigned help_text_size = sizeof(help_text)/sizeof(const char *);
 
-void print_help () {
+void print_help (bool verbose) {
   load_all_filters(options);
-  printf(_("\n"
-           "Aspell %s alpha.  Copyright 2000-2004 by Kevin Atkinson.\n"
-           "\n"), VERSION);
-  for (unsigned i = 0; i < help_text_size; ++i)
-  {
-    if (help_text[i][0] == '\0') putchar('\n');
-    else puts(_(help_text[i]));
+  if (verbose) {
+    printf(_("\n"
+             "Aspell %s alpha.  Copyright 2000-2004 by Kevin Atkinson.\n"
+             "\n"), VERSION);
+    for (unsigned i = 0; i < help_text_size; ++i)
+      puts(gt_(help_text[i]));
+  } else {
+    for (unsigned i = 0; i < usage_text_size; ++i)
+      puts(gt_(usage_text[i]));
   }
-  StackPtr<KeyInfoEnumeration> els(options->possible_elements());
+  StackPtr<KeyInfoEnumeration> els(options->possible_elements(true,false));
   const KeyInfo * k;
-  bool in_filter_module = false;
   while (k = els->next(), k) {
     if (k->desc == 0 || k->flags & KEYINFO_HIDDEN) continue;
-    if (els->active_filter_module_changed()) {
-      printf(_("\n"
-               "  %s filter: %s\n"),
-             els->active_filter_module_name(),els->active_filter_module_desc());
-      in_filter_module = true;
-    }
+    if (!verbose && !(k->flags & KEYINFO_COMMON)) continue;
     const PossibleOption * o = find_option(k->name);
     const char * name = k->name;
-    if (in_filter_module) {
-      const KeyInfo * ok = options->keyinfo(name + 7);
-      if (k == ok) name += 7;
-    }
     print_help_line(o->abrv, 
 		    strncmp((o+1)->name, "dont-", 5) == 0 ? (o+1)->abrv : '\0',
 		    name, k->type, k->desc);
-    if (strcmp(name, "mode") == 0) {
+    if (verbose && strcmp(name, "mode") == 0) {
       for (const ModeAbrv * j = mode_abrvs;
            j != mode_abrvs_end;
            ++j)
@@ -1852,33 +1883,55 @@ void print_help () {
       }
     }
   }
-  EXIT_ON_ERR(print_mode_help(options,COUT));
-}
 
-///////////////////////////
-//
-// list available (filters/filter modes)
-//
+  if (verbose) {
+    //
+    putchar('\n');
+    putchar('\n');
+    puts(
+      _("Available Dictionaries:\n"
+        "    Dictionaries can be selected directory via the \"-d\" or \"master\"\n"
+        "    option.  They can also be selected indirectly via the \"lang\",\n"
+        "    \"variety\", and \"size\" options.\n"));
+    
+    const DictInfoList * dlist = get_dict_info_list(options);
+    
+    StackPtr<DictInfoEnumeration> dels(dlist->elements());
+    
+    const DictInfo * entry;
+    
+    while ( (entry = dels->next()) != 0) 
+    {
+      printf("  %s\n", entry->name);
+    }
 
-void list_available(PosibErr<StringPairEnumeration *> (*fun)(Config *))
-{
-  EXIT_ON_ERR_SET(fun(options), StringPairEnumeration *, els);
-  StringPair sp;
-  while (!els->at_end()) {
-    sp = els->next();
-    printf("%-14s %s\n", sp.first, gettext(sp.second));
+
+    //
+    putchar('\n');
+    putchar('\n');
+    fputs(
+      _("Available Filters (and associated options):\n"
+        "    Filters can be added or removed via the \"filter\" option.\n"),
+      stdout);
+    for (Vector<ConfigModule>::const_iterator m = options->filter_modules.begin();
+         m != options->filter_modules.end();
+         ++m)
+    {
+      printf(_("\n  %s filter: %s\n"), m->name, gt_(m->desc));
+      for (k = m->begin; k != m->end; ++k) {
+        const PossibleOption * o = find_option(k->name);
+        const char * name = k->name;
+        const KeyInfo * ok = options->keyinfo(name + 2);
+        if (k == ok) name += 2;
+        print_help_line(o->abrv, 
+                        strncmp((o+1)->name, "dont-", 5) == 0 ? (o+1)->abrv : '\0',
+                        name, k->type, k->desc);
+      }
+    }
+
+    //
+    EXIT_ON_ERR(print_mode_help(options,COUT));
+
   }
-  delete els;
-}
-
-void filters()
-{
-  load_all_filters(options);
-  list_available(available_filters);
-}
-
-void modes()
-{
-  list_available(available_filter_modes);
 }
 

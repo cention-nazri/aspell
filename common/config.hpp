@@ -196,8 +196,9 @@ namespace acommon {
   
     PosibErr<const KeyInfo *> keyinfo(ParmStr key) const;
 
-    KeyInfoEnumeration * possible_elements(bool include_extra = true) const;
-
+    KeyInfoEnumeration * possible_elements(bool include_extra = true,
+                                           bool include_modules = true) const;
+    
     StringPairEnumeration * elements() {return 0;} // FIXME
     
     String get_default(const KeyInfo * ki) const;
@@ -264,6 +265,7 @@ namespace acommon {
   static const unsigned KEYINFO_MAY_CHANGE = 1 << 0;
   static const unsigned KEYINFO_UTF8       = 1 << 1;
   static const unsigned KEYINFO_HIDDEN     = 1 << 2;
+  static const unsigned KEYINFO_COMMON     = 1 << 4;
   
   class AddableContainer;
   class StringList;

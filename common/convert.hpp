@@ -172,7 +172,7 @@ namespace acommon {
       } else {
         buf.clear();
         RET_ON_ERR(decode_->decode_ec(in, size, buf, orig));
-        RET_ON_ERR(encode_->encode_ec(buf.pbegin(), buf.pend(), 
+       RET_ON_ERR(encode_->encode_ec(buf.pbegin(), buf.pend(), 
                                       out, orig));
       }
       return no_err;

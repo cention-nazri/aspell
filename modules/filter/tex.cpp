@@ -91,9 +91,9 @@ namespace {
     //fprintf(stderr,"name %s \n",name_);
 
     commands.clear();
-    opts->retrieve_list("filter-tex-command", &commands);
+    opts->retrieve_list("f-tex-command", &commands);
     
-    check_comments = opts->retrieve_bool("filter-tex-check-comments");
+    check_comments = opts->retrieve_bool("f-tex-check-comments");
 
     reset();
     return true;
@@ -485,7 +485,7 @@ namespace {
 
     StringList multibytechars;
 
-    config->retrieve_list("filter-tex-multi-byte", &multibytechars);
+    config->retrieve_list("f-tex-multi-byte", &multibytechars);
 
     Conv conv; // this a quick and dirty fix witch will only work for
                // iso-8859-1.  Full unicode support needs to be
@@ -587,7 +587,7 @@ namespace {
 
     StringList multibytechars;
     
-    config->retrieve_list("filter-tex-multi-byte", &multibytechars);
+    config->retrieve_list("f-tex-multi-byte", &multibytechars);
 
     Conv conv; // this a quick and dirty fix witch will only work for
                // iso-8859-1.  Full unicode support needs to be
@@ -635,7 +635,7 @@ namespace {
     }
     StringList hyphenChars;
     
-    config->retrieve_list("filter-tex-hyphen", &hyphenChars);
+    config->retrieve_list("f-tex-hyphen", &hyphenChars);
 
     StringEnumeration * hyphenList=hyphenChars.elements();
     const char * hyphen=NULL;

@@ -273,10 +273,10 @@ namespace acommon
 
         cur_opt = module->new_option();
         
-        char * s = (char *)malloc(7 + filter_name.size() + 1 + d.value.size + 1);
+        char * s = (char *)malloc(2 + filter_name.size() + 1 + d.value.size + 1);
         cur_opt->name = s;
-        memcpy(s, "filter-", 7); 
-        s+= 7;
+        memcpy(s, "f-", 2); 
+        s+= 2;
         memcpy(s, filter_name.str(), filter_name.size());
         s += filter_name.size();
         *s++ = '-';

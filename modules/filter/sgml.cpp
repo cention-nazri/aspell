@@ -138,8 +138,8 @@ namespace {
     order_num_ = 0.35;
     check_attribs.clear();
     skip_tags.clear();
-    opts->retrieve_list("filter-" + which + "-skip",  &skip_tags);
-    opts->retrieve_list("filter-" + which + "-check", &check_attribs);
+    opts->retrieve_list("f-" + which + "-skip",  &skip_tags);
+    opts->retrieve_list("f-" + which + "-check", &check_attribs);
     reset();
     return true;
   }

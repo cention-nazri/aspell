@@ -1,12 +1,14 @@
 // This file is part of The New Aspell
-// Copyright (C) 2002 by Christoph Hintermüller (JEH) under the GNU LGPL
+// Copyright (C) 2004 by Christoph Hintermüller (JEH) under the GNU LGPL
 // license version 2.0 or 2.1.  You should have received a copy of the
 // LGPL license along with this library if you did not you can find it
 // at http://www.gnu.org/.
 #include "settings.h"
 
-#include <sys/types.h>
-#include <regex.h>
+#ifdef USE_POSIX_REGEX
+#  include <sys/types.h>
+#  include <regex.h>
+#endif
 
 #include "stack_ptr.hpp"
 #include "cache-t.hpp"
@@ -304,7 +306,9 @@ namespace acommon {
   }
 
 
-  PosibErr<bool> FilterMode::MagicString::testMagic(FILE * seekIn,String & magic,const String & mode) {
+  PosibErr<bool> FilterMode::MagicString::testMagic(FILE * seekIn,String & magic, const String & mode) {
+
+#ifdef USE_POSIX_REGEX
 
     if ( magic.size() == 0 ) {
       return true;
@@ -415,6 +419,13 @@ namespace acommon {
     regfree(&seekMagic);
     rewind(seekIn);
     return true;
+
+#else
+
+    return true;
+
+#endif
+
   }
 
   PosibErr<void> FilterMode::expand(Config * config) {
@@ -731,15 +742,14 @@ namespace acommon {
 
     RET_ON_ERR_SET(static_cast<ModeNotifierImpl *>(config->filter_mode_notifier)
                    ->get_filter_modes(), FilterModeList *, fm);
-    
-    out.write(
-      _("\n\n"
-        "[Filter Modes] reconfigured combinations of filters optimized for files of\n"
-        "               a specific type. A mode is selected by Aspell's \"--mode\"\n"
-        "               parameter. This will happen implicitly if Aspell is able\n"
-        "               to identify the file type from the extension, and possibility\n"
-        "               the contents, of the file.\n"
-        "\n"));
+    out.write("\n\n");
+    out.printl(  
+      /* TRANSLATORS: This should be formated to fit in 80 column or less */
+      _("Available Filter Modes:\n"
+        "    Filter Modes are reconfigured combinations of filters optimized for\n"
+        "    files of a specific type. A mode is selected via the \"mode\" option.\n"
+        "    This will happen implicitly if Aspell is able to identify the file\n"
+        "    type from the extension, and possibility the contents, of the file.\n"));
     for (Vector<FilterMode>::iterator it = fm->begin(); it != fm->end(); it++)
     {
       out.printf("  %-10s ",(*it).modeName().str());
@@ -764,7 +774,7 @@ namespace acommon {
           locate = 74 - preLength;
         }
         
-        String prDesc(desc);
+        String prDesc(gt_(desc.str()));
 
         prDesc.erase(locate,prDesc.size() - locate);
         out.printf("%s\n             ",prDesc.str());
@@ -780,6 +790,7 @@ namespace acommon {
       out.write(desc);
       out.write('\n');
     }
+    out.write('\n');
     return no_err;
   }
 

@@ -71,7 +71,7 @@ while ($filename=shift) {
     ( $_=~s/^TYPE[ \t]+//i) &&
      (${$option}{"TYPE"}=$_) && next;
     ( $_=~s/^DEF(?:AULT)[ \t]+//i) && (($_=~s/\\(?=[ \t])//g) || 1) &&
-     (((${$option}{"DEFAULT"} ne "") && (${$option}{"DEFAULT"}.=",")) ||1) &&
+     (((${$option}{"DEFAULT"} ne "") && (${$option}{"DEFAULT"}.=":")) ||1) &&
      (${$option}{"DEFAULT"}.=prep_str($_)) && next;
     ( $_=~s/^DES(?:CRIPTION)[ \t]+//i) && (($_=~s/\\(?=[ \t])//g) || 1) &&
      (${$option}{"DESCRIPTION"}=prep_str($_)) && next;
@@ -130,28 +130,10 @@ printf STATICFILTERS "\n  };\n";
 printf STATICFILTERS "\n  const unsigned int standard_filters_size = ".
                          "sizeof(standard_filters)/sizeof(FilterEntry);\n";
 
-#create filter mode structure 
-#FIXME obsolete as mode specification is done
-#by user readable and changeable text files
-#printf STATICFILTERS "\n  static KeyInfo modes_module[] = {\n";
-#printf STATICFILTERS "    {\"fm-email\",KeyInfoList,\"url,email\",0},\n";
-#printf STATICFILTERS "    {\"fm-none\",KeyInfoList,\"\",0},\n";
-#printf STATICFILTERS "    {\"fm-sgml\",KeyInfoList,\"url,sgml\",0},\n";
-#printf STATICFILTERS "    {\"fm-tex\",KeyInfoList,\"url,tex\",0},\n";
-#printf STATICFILTERS "    {\"fm-url\",KeyInfoList,\"url\",0},\n  };\n";
-#printf STATICFILTERS "\n  const KeyInfo * modes_module_begin = modes_module;\n";
-#printf STATICFILTERS "\n  const KeyInfo * modes_module_end = modes_module+".
-#                        "sizeof(modes_module)/sizeof(KeyInfo);\n";
 
 #create KeyInfo structures for each static filter
 while ($filter = shift @filterhashes) {
   printf STATICFILTERS "\n  static KeyInfo ".${$filter}{"NAME"}."_options[] = {\n";
-
-#FIXME remove this line as it is obsolete here filter name and description are part of 
-#ConfigModule structure
-#  printf STATICFILTERS "    {\"filter-".${$filter}{"NAME"}."\",KeyInfoDescript,0,\"".
-#                                        ${$filter}{"DESCRIPTION"}."\"}";
-#
 
 #create KeyInfo structs and begin end handles
   $firstopt = 1;
@@ -160,7 +142,7 @@ while ($filter = shift @filterhashes) {
     ( $firstopt != 1 ) && ( printf STATICFILTERS ",\n" );
     $firstopt = 0;
     printf STATICFILTERS "    {\n".
-                            "      \"filter-${$filter}{NAME}-$name\",\n";
+                            "      \"f-${$filter}{NAME}-$name\",\n";
     (    (lc ${$option}{"TYPE"}) eq "bool") &&
       printf STATICFILTERS  "      KeyInfoBool,\n";
     ( (lc ${$option}{"TYPE"}) eq "int") &&

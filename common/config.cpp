@@ -39,7 +39,7 @@
 
 #define DEFAULT_LANG "en_US"
 
-// NOTE: All filter options are now stored with he "filter-" prefix.  However
+// NOTE: All filter options are now stored with he "f-" prefix.  However
 //   during lookup, the non prefix version is also recognized.
 
 // The "place_holder" field in Entry and the "Vector<int>" parameter of
@@ -477,7 +477,7 @@ namespace acommon {
       i = acommon::find(key, extra_begin, extra_end);
       if (i != extra_end) return Ret(i);
       
-      const char * s = strncmp(key, "filter-", 7) == 0 ? key + 7 : key.str();
+      const char * s = strncmp(key, "f-", 2) == 0 ? key + 2 : key.str();
       const char * h = strchr(s, '-');
       if (h == 0) goto err;
 
@@ -500,8 +500,8 @@ namespace acommon {
       i = acommon::find(key, j->begin, j->end);
       if (i != j->end) return Ret(i);
       
-      if (strncmp(key, "filter-", 7) != 0) k = "filter-";
-      else                                 k = "";
+      if (strncmp(key, "f-", 2) != 0) k = "f-";
+      else                            k = "";
       k += key;
       i = acommon::find(k, j->begin, j->end);
       if (i != j->end) return Ret(i);
@@ -1014,13 +1014,15 @@ namespace acommon {
   {
   private:
     bool include_extra;
+    bool include_modules;
     bool module_changed;
     const Config * cd;
     const KeyInfo * i;
     const ConfigModule * m;
   public:
-    PossibleElementsEmul(const Config * d, bool ic)
-      : include_extra(ic), module_changed(false), cd(d), i(d->keyinfo_begin), m(0) {}
+    PossibleElementsEmul(const Config * d, bool ic, bool im)
+      : include_extra(ic), include_modules(im), 
+        module_changed(false), cd(d), i(d->keyinfo_begin), m(0) {}
 
     KeyInfoEnumeration * clone() const {
       return new PossibleElementsEmul(*this);
@@ -1057,7 +1059,7 @@ namespace acommon {
       module_changed = false;
       if (i == cd->extra_end) {
 	m = cd->filter_modules.pbegin();
-	if (m == cd->filter_modules.pend()) return 0;
+	if (!include_modules || m == cd->filter_modules.pend()) return 0;
 	else {
           i = m->begin;
           module_changed = true;
@@ -1090,9 +1092,9 @@ namespace acommon {
   };
 
   KeyInfoEnumeration *
-  Config::possible_elements(bool include_extra) const
+  Config::possible_elements(bool include_extra, bool include_modules) const
   {
-    return new PossibleElementsEmul(this, include_extra);
+    return new PossibleElementsEmul(this, include_extra, include_modules);
   }
 
   struct ListDefaultDump : public AddableContainer 
@@ -1349,18 +1351,20 @@ namespace acommon {
     , {"conf-path",     KeyInfoString, "<conf-dir/conf>", 0}
     , {"data-dir", KeyInfoString, DATA_DIR,
        N_("location of language data files")}
+    , {"dict-alias", KeyInfoList, "",
+       N_("create dictionary aliases")}
     , {"dict-dir", KeyInfoString, DICT_DIR,
        N_("location of the main word list")}
     , {"encoding",   KeyInfoString, "!encoding",
-       N_("encoding to expect data to be in")}
+       N_("encoding to expect data to be in"), KEYINFO_COMMON}
     , {"filter",   KeyInfoList  , "url",
-       N_("add or removes a filter"), KEYINFO_MAY_CHANGE}
+       N_("add or removes a filter"), KEYINFO_MAY_CHANGE | KEYINFO_COMMON}
     , {"filter-path", KeyInfoList, DICT_DIR,
        N_("path(s) aspell looks for filters")}
     //, {"option-path", KeyInfoList, DATA_DIR,
     //   N_("path(s) aspell looks for options descriptions")}
     , {"mode",     KeyInfoString, "url",
-       N_("filter mode")}
+       N_("filter mode"), KEYINFO_COMMON}
     , {"extra-dicts", KeyInfoList, "",
        N_("extra dictionaries to use")}
     , {"home-dir", KeyInfoString, HOME_DIR,
@@ -1374,25 +1378,33 @@ namespace acommon {
     , {"ignore-repl", KeyInfoBool  , "false",
        N_("ignore commands to store replacement pairs"), KEYINFO_MAY_CHANGE}
     , {"jargon",     KeyInfoString, "",
-       N_("extra information for the word list")}
-    , {"variety", KeyInfoList, "",
-       N_("extra information for the word list")}
+       N_("extra information for the word list"), KEYINFO_HIDDEN}
     , {"keyboard", KeyInfoString, "standard",
        N_("keyboard definition to use for typo analysis")}
     , {"lang", KeyInfoString, "<language-tag>",
-       N_("language code")}
+       N_("language code"), KEYINFO_COMMON}
     , {"language-tag", KeyInfoString, "!lang",
        N_("deprecated, use lang instead"), KEYINFO_HIDDEN}
     , {"local-data-dir", KeyInfoString, "<actual-dict-dir>",
        N_("location of local language data files")     }
     , {"master",        KeyInfoString, "<lang>",
-       N_("base name of the main dictionary to use")}
+       N_("base name of the main dictionary to use"), KEYINFO_COMMON}
     , {"master-flags",  KeyInfoString, "", 0}
     , {"master-path",   KeyInfoString, "<dict-dir/master>",   0}
     , {"module",        KeyInfoString, "default",
        N_("set module name"), KEYINFO_HIDDEN}
     , {"module-search-order", KeyInfoList, "",
        N_("search order for modules"), KEYINFO_HIDDEN}
+    , {"normalize", KeyInfoBool, "true",
+       N_("enable Unicode normalization")}
+    , {"norm-required", KeyInfoBool, "false",
+       N_("Unicode normalization required for current lang")}
+    , {"norm-form", KeyInfoString, "nfc",
+       /* TRANSLATORS: the values after the ':' are literal
+          values and should not be translated. */
+       N_("Unicode normalization form: none, nfd, nfc, comp")}
+    , {"norm-strict", KeyInfoBool, "false",
+       N_("avoid lossy conversions when normalization")}
     , {"per-conf", KeyInfoString, ".aspell.conf",
        N_("personal configuration file")}
     , {"per-conf-path", KeyInfoString, "<home-dir/per-conf>", 0}
@@ -1419,7 +1431,7 @@ namespace acommon {
     , {"spelling",   KeyInfoString, "",
        N_("no longer used"), KEYINFO_HIDDEN}
     , {"sug-mode",   KeyInfoString, "normal",
-       N_("suggestion mode"), KEYINFO_MAY_CHANGE}
+       N_("suggestion mode"), KEYINFO_MAY_CHANGE | KEYINFO_COMMON}
     , {"sug-edit-dist", KeyInfoInt, "1",
        /* TRANSLATORS: "sug-mode" is a literal value and should not be
           translated. */
@@ -1430,54 +1442,39 @@ namespace acommon {
        N_("use replacement tables, override sug-mode default")}
     , {"sug-split-char", KeyInfoList, "\\ :-",
        N_("characters to insert when a word is split"), KEYINFO_UTF8}
-    , {"word-list-path", KeyInfoList, DATA_DIR,
-       N_("search path for word list information files"), KEYINFO_HIDDEN}
-    , {"affix-char",          KeyInfoString, "/", // FIXME: Implement
-       N_("indicator for affix flags in word lists"), KEYINFO_UTF8 | KEYINFO_HIDDEN}
     , {"use-other-dicts", KeyInfoBool, "true",
        N_("use personal, replacement & session dictionaries")}
+    , {"variety", KeyInfoList, "",
+       N_("extra information for the word list")}
+    , {"word-list-path", KeyInfoList, DATA_DIR,
+       N_("search path for word list information files"), KEYINFO_HIDDEN}
     , {"warn", KeyInfoBool, "true",
        N_("enable warnings")}
-    , {"normalize", KeyInfoBool, "true",
-       N_("enable Unicode normalization")}
-    , {"norm-required", KeyInfoBool, "false",
-       N_("Unicode normalization required for current lang")}
-    , {"norm-form", KeyInfoString, "nfc",
-       /* TRANSLATORS: the values after the ':' are literal
-          values and should not be translated. */
-       N_("Unicode normalization form: none, nfd, nfc, comp")}
-    , {"norm-strict", KeyInfoBool, "false",
-       N_("avoid lossy conversions when normalization")}
-    , {"dict-alias", KeyInfoList, "",
-       N_("create dictionary aliases")}
     
     
     //
-    // These options are only used when creating dictionaries
+    // These options are generally used when creating dictionaries
     // and may also be specified in the language data file
     //
-    , {"invisible-soundslike", KeyInfoBool, "false",
-       N_("compute soundslike on demand rather than storing")} 
+
+    , {"affix-char",          KeyInfoString, "/", // FIXME: Implement
+       N_("indicator for affix flags in word lists"), KEYINFO_UTF8 | KEYINFO_HIDDEN}
     , {"affix-compress", KeyInfoBool, "false",
        N_("use affix compression when creating dictionaries")}
-    , {"partially-expand",  KeyInfoBool, "false",
-       N_("partially expand affixes for better suggestions")}
-
-    //
-    // 
-    //
-    //
-
-    , {"validate-words", KeyInfoBool, "true",
-       N_("check if words are valid")}
-    , {"validate-affixes", KeyInfoBool, "true",
-       N_("check if affix flags are valid")}
-    , {"clean-words", KeyInfoBool, "false",
-       N_("attempts to clean words so that they are valid")}
-    , {"skip-invalid-words",  KeyInfoBool, "true",
-       N_("skip invalid words")}
     , {"clean-affixes", KeyInfoBool, "true",
        N_("remove invalid affix flags")}
+    , {"clean-words", KeyInfoBool, "false",
+       N_("attempts to clean words so that they are valid")}
+    , {"invisible-soundslike", KeyInfoBool, "false",
+       N_("compute soundslike on demand rather than storing")} 
+    , {"partially-expand",  KeyInfoBool, "false",
+       N_("partially expand affixes for better suggestions")}
+    , {"skip-invalid-words",  KeyInfoBool, "true",
+       N_("skip invalid words")}
+    , {"validate-affixes", KeyInfoBool, "true",
+       N_("check if affix flags are valid")}
+    , {"validate-words", KeyInfoBool, "true",
+       N_("check if words are valid")}
     
     //
     // These options are specific to the "aspell" utility.  They are
@@ -1485,6 +1482,8 @@ namespace acommon {
     //
     , {"backup",  KeyInfoBool, "true",
        N_("create a backup file by appending \".bak\"")}
+    , {"byte-offsets", KeyInfoBool, "false",
+       N_("use byte offsets instead of character offsets")}
     , {"guess", KeyInfoBool, "false",
        N_("create missing root/affix combinations"), KEYINFO_MAY_CHANGE}
     , {"keymapping", KeyInfoString, "aspell",
@@ -1495,8 +1494,6 @@ namespace acommon {
        N_("suggest possible replacements"), KEYINFO_MAY_CHANGE}
     , {"time"   , KeyInfoBool, "false",
        N_("time load time and suggest time in pipe mode"), KEYINFO_MAY_CHANGE}
-    , {"byte-offsets", KeyInfoBool, "false",
-       N_("use byte offsets instead of character offsets")}
     };
 
   const KeyInfo * config_impl_keys_begin = config_keys;
