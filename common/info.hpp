@@ -91,7 +91,7 @@ namespace acommon {
     const ModuleInfo * next();
     ModuleInfoEnumeration * clone() const;
     void assign(const ModuleInfoEnumeration * other);
-    ModuleInfoEnumeration() {}
+    ModuleInfoEnumeration() : node_(0) {}
     virtual ~ModuleInfoEnumeration() {}
   };
 
@@ -108,7 +108,7 @@ namespace acommon {
     const DictInfo * next();
     DictInfoEnumeration * clone() const;
     void assign(const DictInfoEnumeration * other);
-    DictInfoEnumeration() {}
+    DictInfoEnumeration() : node_(0) {}
     virtual ~DictInfoEnumeration() {}
   };
 

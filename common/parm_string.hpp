@@ -42,7 +42,7 @@ namespace acommon {
 
   class ParmString {
   public:
-    ParmString() : str_(0) {}
+    ParmString() : str_(0), size_(0) {}
     ParmString(const char * str, unsigned int sz = UINT_MAX) 
       : str_(str), size_(sz) {}
     inline ParmString(const String &);

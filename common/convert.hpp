@@ -83,7 +83,7 @@ namespace acommon {
       String name;
       NormTable<ToUniNormEntry> * data;
       NormTable<ToUniNormEntry> * ptr;
-      ToUniTable() : data(), ptr() {}
+      ToUniTable() : data(0), ptr(0) {}
     };
     typedef Vector<ToUniTable> ToUni;
     Vector<ToUniTable> to_uni;
