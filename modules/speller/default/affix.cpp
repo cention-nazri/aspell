@@ -62,8 +62,9 @@ void CheckList::reset()
 // First some base level utility routines
 char * mystrdup(const char * s);                   // duplicate string
 char * myrevstrdup(const char * s);                // duplicate reverse of string
-char * mystrsep(const char ** sptr, const char delim); // parse into tokens with char delimiter
-bool   isSubset(const char * s1, const char * s2); // is affix s1 is a "subset" affix s2
+static char * mystrsep(const char ** sptr, const char delim); // parse into tokens with char delimiter
+static bool   isSubset(const char * s1, const char * s2); // is affix s1 is a "subset" affix s2
+static bool   isRevSubset(const char * s1, const char * end_of_s2, int len);
 
 PosibErr<void> AffixMgr::setup(ParmString affpath)
 {
@@ -559,24 +560,19 @@ bool AffixMgr::suffix_check (const LookupInfo & linf, ParmString word,
   }
   
   // now handle the general case
-  char * tmpword = myrevstrdup(word); //FIXME avoid malloc
-  unsigned char sp = *((const unsigned char *)tmpword);
+  unsigned char sp = *((const unsigned char *)(word + word.size() - 1));
   SfxEntry * sptr = (SfxEntry *) sStart[sp];
 
   while (sptr) {
-    if (isSubset(sptr->key(),tmpword)) {
-      bool res = sptr->check(linf, word, ci, gi, sfxopts, ppfx);
-      if (res) {
-        free(tmpword);
+    if (isRevSubset(sptr->key(), word + word.size() - 1, word.size())) {
+      if (sptr->check(linf, word, ci, gi, sfxopts, ppfx))
         return true;
-      }
       sptr = sptr->next_eq;
     } else {
       sptr = sptr->next_ne;
     }
   }
     
-  free(tmpword);
   return false;
 }
 
@@ -757,7 +753,7 @@ int AffixMgr::expand(ParmString word, ParmString af,
 // acts like strsep() but only uses a delim char and not 
 // a delim string
 
-char * mystrsep(const char * * stringp, const char delim)
+static char * mystrsep(const char * * stringp, const char delim)
 {
   char * rv = NULL;
   const char * mp = *stringp;
@@ -811,15 +807,25 @@ char * myrevstrdup(const char * s)
   return d; 
 }
 
-
 /* return 1 if s1 is subset of s2 */
-bool isSubset(const char * s1, const char * s2)
+static bool isSubset(const char * s1, const char * s2)
 {
-  int l1 = strlen(s1);
-  int l2 = strlen(s2);
-  if (l1 > l2) return 0;
-  if (strncmp(s2,s1,l1) == 0) return true;
-  return false;
+  while( *s1 && (*s1 == *s2) ) {
+    s1++;
+    s2++;
+  }
+  return (*s1 == '\0');
+}
+
+// return 1 if s1 (reversed) is a leading subset of end of s2
+static bool isRevSubset(const char * s1, const char * end_of_s2, int len)
+{
+  while( (len > 0) && *s1 && (*s1 == *end_of_s2) ) {
+    s1++;
+    end_of_s2--;
+    len --;
+  }
+  return (*s1 == '\0');
 }
 
 PosibErr<void> AffixMgr::parse_affix(ParmString data, 
