@@ -16,7 +16,7 @@ done
 case $command in
 -A|-c|-e*|-d) echo "Aspell does not support the $command mode.";;
 -a|-l|-v*   ) exec aspell "$@" ;;
-"-"         ) exec aspell check --keymapping=ispell "$@" ;;
+"-"         ) exec aspell check "$@" ;;
 *           ) echo "Ispell compatibility script for Aspell."
               echo "Usage: $0 [options] -a|-l|-v[v]|<file>"
               exit 1 ;;
