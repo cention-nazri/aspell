@@ -86,7 +86,7 @@ namespace aspell {
 
   MultiWS::VirEmul * MultiWS::detailed_elements() const
   {
-    return new MakeVirEmulation<ElementsParms>(wss.begin(), wss.end());
+    return new MakeVirEnumeration<ElementsParms>(wss.begin(), wss.end());
   }
   
   unsigned int MultiWS::size() const 

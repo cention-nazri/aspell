@@ -1,6 +1,6 @@
 
-#ifndef PSPELL_STRING_EMULATION__HPP
-#define PSPELL_STRING_EMULATION__HPP
+#ifndef PSPELL_STRING_ENUMERATION__HPP
+#define PSPELL_STRING_ENUMERATION__HPP
 
 #include "parm_string.hpp"
 #include "type_id.hpp"
@@ -30,4 +30,4 @@ namespace pcommon {
   
 }
 
-#endif /* PSPELL_STRING_EMULATION__HPP */
+#endif /* PSPELL_STRING_ENUMERATION__HPP */

@@ -678,7 +678,7 @@ namespace aspell_default_suggest {
     bool empty() const { return suggestions.empty(); }
     Size size() const { return suggestions.size(); }
     VirEmul * elements() const {
-      return new MakeVirEmulation<Parms, StringEmulation>
+      return new MakeVirEnumeration<Parms, StringEnumeration>
 	(suggestions.begin(), Parms(suggestions.end()));
     }
   };

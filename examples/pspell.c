@@ -10,9 +10,9 @@ static void print_word_list(PspellManager * manager,
   if (wl == 0) {
     printf("Error: %s\n", pspell_manager_error_message(manager));
   } else {
-    PspellStringEmulation * els = pspell_word_list_elements(wl);
+    PspellStringEnumeration * els = pspell_word_list_elements(wl);
     const char * word;
-    while ( (word = pspell_string_emulation_next(els)) != 0) {
+    while ( (word = pspell_string_enumeration_next(els)) != 0) {
       puts(word);
     }
   }

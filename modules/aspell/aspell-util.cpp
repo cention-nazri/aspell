@@ -289,16 +289,16 @@ void config () {
 // master
 //
 
-class IstreamVirEmulation : public StringEmulation {
+class IstreamVirEnumeration : public StringEnumeration {
   FStream * in;
   String data;
 public:
-  IstreamVirEmulation(FStream & i) : in(&i) {}
-  IstreamVirEmulation * clone() const {
-    return new IstreamVirEmulation(*this);
+  IstreamVirEnumeration(FStream & i) : in(&i) {}
+  IstreamVirEnumeration * clone() const {
+    return new IstreamVirEnumeration(*this);
   }
-  void assign (const StringEmulation * other) {
-    *this = *static_cast<const IstreamVirEmulation *>(other);
+  void assign (const StringEnumeration * other) {
+    *this = *static_cast<const IstreamVirEnumeration *>(other);
   }
   Value next() {
     *in >> data;
@@ -345,7 +345,7 @@ void master () {
   if (action == do_create) {
     
     EXIT_ON_ERR(create_default_readonly_word_set
-                (new IstreamVirEmulation(CIN),
+                (new IstreamVirEnumeration(CIN),
                  *config));
 
   } else if (action == do_merge) {
@@ -545,7 +545,7 @@ void print_help () {
     "\n"
     "[options] is any of the following:\n"
     "\n";
-  Emulation<KeyInfoEmulation> els = options->possible_elements();
+  Enumeration<KeyInfoEnumeration> els = options->possible_elements();
   const KeyInfo * k;
   while (k = els.next(), k) {
     if (k->desc == 0) continue;

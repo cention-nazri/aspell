@@ -9,7 +9,7 @@
 #include "clone_ptr.hpp"
 #include "copy_ptr.hpp"
 #include "data.hpp"
-#include "emulation.hpp"
+#include "enumeration.hpp"
 #include "manager.hpp"
 
 using namespace pcommon;
@@ -46,7 +46,7 @@ namespace aspell {
     enum SpecialId {main_id, personal_id, session_id, 
 		    personal_repl_id, none_id};
 
-    typedef Emulation<VirEmulation<DataSet *> > WordLists;
+    typedef Enumeration<VirEnumeration<DataSet *> > WordLists;
 
     WordLists wordlists() const;
     int num_wordlists() const;

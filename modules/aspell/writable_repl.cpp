@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "data_util.hpp"
-#include "emulation.hpp"
+#include "enumeration.hpp"
 #include "errors.hpp"
 #include "fstream.hpp"
 #include "hash-t.hpp"
@@ -141,7 +141,7 @@ namespace aspell_default_writable_repl {
     return false;
   }
     
-  class WritableReplS::ElementsVirEmulImpl : public VirEmulation<ReplacementList> {
+  class WritableReplS::ElementsVirEmulImpl : public VirEnumeration<ReplacementList> {
   private:
     typedef LookupTable::const_iterator  OuterItr;
     typedef RealReplList::const_iterator InnerItr;
@@ -158,7 +158,7 @@ namespace aspell_default_writable_repl {
       return new ElementsVirEmulImpl(*this);
     }
       
-    void assign(const VirEmulation<Value> * other) {
+    void assign(const VirEnumeration<Value> * other) {
       *this = *static_cast<const ElementsVirEmulImpl *>(other);
     }
       
@@ -171,7 +171,7 @@ namespace aspell_default_writable_repl {
       }
       ReplacementList temp
 	(inner_->misspelled_word().c_str(), 
-	 new MakeVirEmulation<StrParms<RealReplacementList::const_iterator> >
+	 new MakeVirEnumeration<StrParms<RealReplacementList::const_iterator> >
 	 (inner_->begin(), inner_->end()));
       ++inner_;
       return temp;
@@ -225,7 +225,7 @@ namespace aspell_default_writable_repl {
     Value deref(Iterator i) const {
       return ReplacementList
 	(i->misspelled_word().c_str(), 
-	 new MakeVirEmulation<StrParms<RealReplacementList::const_iterator> >
+	 new MakeVirEnumeration<StrParms<RealReplacementList::const_iterator> >
 	 (i->begin(), i->end()));
     }
   };
@@ -237,9 +237,9 @@ namespace aspell_default_writable_repl {
       lookup_table->find(SimpleString(soundslike,1));
       
     if (i == lookup_table->end()) {
-      return new MakeAlwaysEndEmulation<ReplacementList>();
+      return new MakeAlwaysEndEnumeration<ReplacementList>();
     } else {
-      return new MakeVirEmulation<ReplsWSoundslikeParms>
+      return new MakeVirEnumeration<ReplsWSoundslikeParms>
 	(i->second.begin(), ReplsWSoundslikeParms(i->second.end()));
     }
   }
@@ -251,7 +251,7 @@ namespace aspell_default_writable_repl {
     const RealReplList * p = 
       reinterpret_cast<const RealReplList *>(soundslike.word_list_pointer);
 
-    return new MakeVirEmulation<ReplsWSoundslikeParms>(p->begin(), p->end());
+    return new MakeVirEnumeration<ReplsWSoundslikeParms>(p->begin(), p->end());
 
   }
 
@@ -270,7 +270,7 @@ namespace aspell_default_writable_repl {
 
   WritableReplS::VirSoundslikeEmul * 
   WritableReplS::soundslike_elements() const {
-    return new MakeVirEmulation<SoundslikeElementsParms>
+    return new MakeVirEnumeration<SoundslikeElementsParms>
       (lookup_table->begin(),SoundslikeElementsParms(lookup_table->end()));
   }
 

@@ -139,9 +139,9 @@ methods: list
 	method: elements
 		const
 		/
-		$ emulation
+		$ enumeration
 
-methods: emulation
+methods: enumeration
 
 	strip => 1
 	
@@ -187,9 +187,9 @@ group: config
 {
 no native
 /
-class: key info emulation
+class: key info enumeration
 	/
-	emulation methods
+	enumeration methods
 	copyable methods
 
 class: config
@@ -222,10 +222,10 @@ class: config
 		string: key
 
 	method: possible elements
-		desc => returns a newly allocated emulation of all the 
+		desc => returns a newly allocated enumeration of all the 
 			possible objects this config class uses
 		/
-		key info emulation
+		key info enumeration
 		int: include extra
 
 	method: get default
@@ -241,11 +241,11 @@ class: config
 		string: key
 
 	method: elements
-		desc => returns a newly alloacted emulation of all the
+		desc => returns a newly alloacted enumeration of all the
 			key/value pairs. This DOES not include ones
 			which are set to their default values
 		/
-		string pair emulation
+		string pair enumeration
 
 	method: replace
 		posib err
@@ -534,7 +534,7 @@ group: word list
 {
 /
 class: word list
-	c impl headers => string emulation
+	c impl headers => string enumeration
 	/
 	cxx member: to encoded
 		headers => parm string, vector
@@ -554,16 +554,16 @@ class: word list
 	method: elements
 		const
 		c impl =>
-			StringEmulation * els = ths->elements();
+			StringEnumeration * els = ths->elements();
 			els->to_encoded_ = ths->to_encoded_;
 			return els;
 		/
-		string emulation
+		string enumeration
 }
-group: string emulation
+group: string enumeration
 {
 /
-class: string emulation
+class: string enumeration
 	/
 	copyable methods
 	method: at end
@@ -624,14 +624,14 @@ class: dict info list
 
 	list methods
 
-class: module info emulation
+class: module info enumeration
 	/
-	emulation methods
+	enumeration methods
 	copyable methods
 
-class: dict info emulation
+class: dict info enumeration
 	/
-	emulation methods
+	enumeration methods
 	copyable methods
 }
 
@@ -702,11 +702,11 @@ struct: string pair
 	string: second
 		default => ""
 }
-group: string pair emulation
+group: string pair enumeration
 {
 /
-class: string pair emulation
+class: string pair enumeration
 	/
-	emulation methods
+	enumeration methods
 	copyable methods
 }

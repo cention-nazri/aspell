@@ -1,7 +1,7 @@
 // Copyright 2000 by Kevin Atkinson under the terms of the LGPL
 
 #include "word_list.hpp"
-#include "emulation.hpp"
+#include "enumeration.hpp"
 #include "parm_string.hpp"
 
 using namespace pcommon;
@@ -12,8 +12,8 @@ namespace aspell {
 
   class SuggestionList : public WordList {
   public:
-    typedef StringEmulation            VirEmul;
-    typedef Emulation<VirEmul>         Emul;
+    typedef StringEnumeration            VirEmul;
+    typedef Enumeration<VirEmul>         Emul;
     typedef const char *               Value;
     typedef unsigned int               Size;
 

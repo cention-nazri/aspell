@@ -6,11 +6,11 @@
 #include <assert.h>
 
 #include "copy_ptr.hpp"
-#include "emulation.hpp"
+#include "enumeration.hpp"
 #include "language.hpp"
 #include "posib_err.hpp"
 #include "string.hpp"
-#include "string_emulation.hpp"
+#include "string_enumeration.hpp"
 #include "word_list.hpp"
 
 using namespace pcommon;
@@ -204,15 +204,15 @@ namespace aspell {
       basic_type =  basic_word_set;
     }
     
-    typedef VirEmulation<BasicWordInfo>   VirEmul;
-    typedef Emulation<VirEmul>            Emul;
+    typedef VirEnumeration<BasicWordInfo>   VirEmul;
+    typedef Enumeration<VirEmul>            Emul;
     typedef const char *                  Value;
     typedef unsigned int                  Size;
     typedef SoundslikeWord                SoundslikeValue;
-    typedef VirEmulation<SoundslikeWord>  VirSoundslikeEmul;
-    typedef Emulation<VirSoundslikeEmul>  SoundslikeEmul;
+    typedef VirEnumeration<SoundslikeWord>  VirSoundslikeEmul;
+    typedef Enumeration<VirSoundslikeEmul>  SoundslikeEmul;
 
-    virtual StringEmulation * elements() const {abort();} //FIXME
+    virtual StringEnumeration * elements() const {abort();} //FIXME
     virtual VirEmul * detailed_elements() const = 0;
     virtual Size   size()     const = 0;
     virtual bool   empty()    const {return !size();}
@@ -243,8 +243,8 @@ namespace aspell {
   };
 
   struct ReplacementList {
-    typedef VirEmulation<const char *> VirEmul;
-    typedef Emulation<VirEmul>         Emul;
+    typedef VirEnumeration<const char *> VirEmul;
+    typedef Enumeration<VirEmul>         Emul;
     typedef const char *               Value;
 
     const char *  misspelled_word;
@@ -264,13 +264,13 @@ namespace aspell {
       basic_type = basic_replacement_set;
     }
     
-    typedef VirEmulation<ReplacementList> VirEmul;
-    typedef Emulation<VirEmul>            Emul;
+    typedef VirEnumeration<ReplacementList> VirEmul;
+    typedef Enumeration<VirEmul>            Emul;
     typedef const char *                  Value;
     typedef unsigned int                  Size;
     typedef SoundslikeWord                SoundslikeValue;
-    typedef VirEmulation<SoundslikeWord>  VirSoundslikeEmul;
-    typedef Emulation<VirSoundslikeEmul>  SoundslikeEmul;
+    typedef VirEnumeration<SoundslikeWord>  VirSoundslikeEmul;
+    typedef Enumeration<VirSoundslikeEmul>  SoundslikeEmul;
 
     virtual VirEmul * elements() const = 0;
     virtual Size   size()     const = 0;
@@ -309,13 +309,13 @@ namespace aspell {
     }
     
     typedef LocalWordSet         Value;
-    typedef VirEmulation<Value>  VirEmul;
-    typedef Emulation<VirEmul>   Emul;
+    typedef VirEnumeration<Value>  VirEmul;
+    typedef Enumeration<VirEmul>   Emul;
     typedef unsigned int         Size;
 
     virtual bool   empty()    const {return !size();}
     virtual Size   size()     const = 0;
-    virtual StringEmulation * elements() const {abort();} //FIXME
+    virtual StringEnumeration * elements() const {abort();} //FIXME
 
     virtual VirEmul * detailed_elements() const = 0;
   };
@@ -337,7 +337,7 @@ namespace aspell {
   
   // implemented in readonly_ws.cc
   BasicWordSet * new_default_readonly_word_set();
-  PosibErr<void> create_default_readonly_word_set(StringEmulation * els,
+  PosibErr<void> create_default_readonly_word_set(StringEnumeration * els,
                                                   Config & config);
 
   // implemented in multi_ws.cc

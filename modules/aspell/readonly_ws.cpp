@@ -260,7 +260,7 @@ namespace aspell_default_readonly_ws {
   };
 
   ReadOnlyWS::VirEmul * ReadOnlyWS::detailed_elements() const {
-    return new MakeVirEmulation<ElementsParms>
+    return new MakeVirEnumeration<ElementsParms>
       (word_lookup.begin(), ElementsParms(block));
   }
 
@@ -505,12 +505,12 @@ namespace aspell_default_readonly_ws {
 
     if (use_soundslike) {
       
-      return new MakeVirEmulation<SoundslikeElementsParms>
+      return new MakeVirEnumeration<SoundslikeElementsParms>
 	(soundslike_lookup.begin(), soundslike_block);
 
     } else {
 
-      return new MakeVirEmulation<SoundslikeElementsParmsNoSL>
+      return new MakeVirEnumeration<SoundslikeElementsParmsNoSL>
 	(word_lookup.begin(), 
 	 SoundslikeElementsParmsNoSL(max_word_length,block,lang()));
       
@@ -524,7 +524,7 @@ namespace aspell_default_readonly_ws {
 
       SoundslikeLookup::const_iterator i = soundslike_lookup.find(soundslike);
       if (i == soundslike_lookup.end()) { 
-	return new MakeAlwaysEndEmulation<BasicWordInfo>();
+	return new MakeAlwaysEndEnumeration<BasicWordInfo>();
       } else {
 	return ReadOnlyWS::words_w_soundslike
 	  (SoundslikeWord(soundslike_block + *i, 0));
@@ -533,7 +533,7 @@ namespace aspell_default_readonly_ws {
     } else {
 
       WordLookup::ConstFindIterator i = word_lookup.multi_find(soundslike);
-      return new MakeVirEmulation<SoundslikeWordsParmsNoSL>(i, block);
+      return new MakeVirEnumeration<SoundslikeWordsParmsNoSL>(i, block);
       
     }
     
@@ -547,7 +547,7 @@ namespace aspell_default_readonly_ws {
       const u32int * end = reinterpret_cast<const u32int *>(w.soundslike - 2);
       u16int size = *reinterpret_cast<const u16int *>(end);
       
-      return new MakeVirEmulation<SoundslikeWordsParms>
+      return new MakeVirEnumeration<SoundslikeWordsParms>
 	(end - size, SoundslikeWordsParms(word_block, end));
 
     } else {
@@ -627,7 +627,7 @@ namespace aspell_default_readonly_ws {
   }
   
   PosibErr<void> create (ParmString base, 
-			 StringEmulation * els,
+			 StringEnumeration * els,
 			 const Language & lang) 
   {
     size_t page_size = ::page_size();
@@ -909,7 +909,7 @@ namespace aspell_default_readonly_ws {
 }
 
 namespace aspell {
-  PosibErr<void> create_default_readonly_word_set(StringEmulation * els,
+  PosibErr<void> create_default_readonly_word_set(StringEnumeration * els,
                                                   Config & config)
   {
     Language lang;

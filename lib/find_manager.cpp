@@ -7,14 +7,14 @@
 
 #include "can_have_error.hpp"
 #include "config.hpp"
-#include "emulation.hpp"
+#include "enumeration.hpp"
 #include "errors.hpp"
 #include "fstream.hpp"
 #include "getdata.hpp"
 #include "info.hpp"
 #include "manager.hpp"
 #include "string_list.hpp"
-#include "string_emulation.hpp"
+#include "string_enumeration.hpp"
 
 #if 0
 #include "preload.h"
@@ -148,7 +148,7 @@ namespace pcommon { // FIXME: Should this be a diffrent namespace?
   }
 
   void BetterList::init() {
-    Emulation<StringEmulation> es = list->elements();
+    Enumeration<StringEnumeration> es = list->elements();
     worst_rank = 0;
     while ( (es.next()) != 0)
       ++worst_rank;
@@ -163,7 +163,7 @@ namespace pcommon { // FIXME: Should this be a diffrent namespace?
 
   void BetterList::set_cur_rank() 
   {
-    Emulation<StringEmulation> es = list->elements();
+    Enumeration<StringEnumeration> es = list->elements();
     const char * m;
     cur_rank = 0;
     while ( (m = es.next()) != 0 && strcmp(m, cur) != 0)
@@ -310,7 +310,7 @@ namespace pcommon { // FIXME: Should this be a diffrent namespace?
     //
 
     DictInfoList * dlist = get_dict_info_list(config);
-    DictInfoEmulation * dels = dlist->elements();
+    DictInfoEnumeration * dels = dlist->elements();
     const DictInfo * entry;
 
     while ( (entry = dels->next()) != 0) {

@@ -4,7 +4,7 @@
 
 #include "copy_ptr-t.hpp"
 #include "data_util.hpp"
-#include "emulation.hpp"
+#include "enumeration.hpp"
 #include "errors.hpp"
 #include "fstream.hpp"
 #include "hash-t.hpp"
@@ -92,7 +92,7 @@ namespace aspell_default_writable_wl {
 
   WritableWS::VirEmul * WritableWS::detailed_elements() const {
 
-    return new MakeVirEmulation<ElementsParms>
+    return new MakeVirEnumeration<ElementsParms>
       (word_lookup->begin(),ElementsParms(word_lookup->end()));
   }
 
@@ -210,9 +210,9 @@ namespace aspell_default_writable_wl {
       soundslike_lookup.find(SimpleString(soundslike,1));
     
     if (i == soundslike_lookup.end()) {
-      return new MakeAlwaysEndEmulation<BasicWordInfo>();
+      return new MakeAlwaysEndEnumeration<BasicWordInfo>();
     } else {
-      return new MakeVirEmulation<SoundslikeWordsParms>
+      return new MakeVirEnumeration<SoundslikeWordsParms>
 	(i->second.begin(), SoundslikeWordsParms(i->second.end()));
     }
   }
@@ -232,7 +232,7 @@ namespace aspell_default_writable_wl {
     
     
   WritableWS::VirSoundslikeEmul * WritableWS::soundslike_elements() const {
-    return new MakeVirEmulation<SoundslikeElementsParms>
+    return new MakeVirEnumeration<SoundslikeElementsParms>
       (soundslike_lookup.begin(), soundslike_lookup.end());
   }
 
@@ -243,7 +243,7 @@ namespace aspell_default_writable_wl {
       = reinterpret_cast<const RealSoundslikeWordList *>
       (word.word_list_pointer);
       
-    return new MakeVirEmulation<SoundslikeWordsParms>
+    return new MakeVirEnumeration<SoundslikeWordsParms>
       (temp->begin(), SoundslikeWordsParms(temp->end()));
   }
 

@@ -7,7 +7,7 @@
 
 #include "clone_ptr-t.hpp"
 #include "config.hpp"
-#include "emulation.hpp"
+#include "enumeration.hpp"
 #include "errors.hpp"
 #include "file_data_util.hpp"
 #include "fstream.hpp"
@@ -77,7 +77,7 @@ namespace aspell {
     //
     //
 
-    Emulation<KeyInfoEmulation> els = data.possible_elements(false);
+    Enumeration<KeyInfoEnumeration> els = data.possible_elements(false);
     const KeyInfo * k;
     while ((k = els.next()) != 0) {
       if (k->otherdata[0] == 'c' 

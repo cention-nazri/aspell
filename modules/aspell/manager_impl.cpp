@@ -61,7 +61,7 @@ namespace aspell {
     DataSetCollection::Iterator i = wls_->locate(personal_repl_id);
     if (i == wls_->end()) return no_err;
     String::size_type pos;
-    Emulation<StringEmulation> sugels 
+    Enumeration<StringEnumeration> sugels 
       = intr_suggest_->suggest(mis.c_str()).elements();
     const char * first_word = sugels.next();
     const char * w1;
@@ -256,7 +256,7 @@ namespace aspell {
   }
 
   ManagerImpl::WordLists ManagerImpl::wordlists() const {
-    return WordLists(MakeVirEmulation<DataSetCollection::Parms>
+    return WordLists(MakeVirEnumeration<DataSetCollection::Parms>
 		     (wls_->begin(), DataSetCollection::Parms(wls_->end())));
   }
 
@@ -544,7 +544,7 @@ namespace aspell {
 
     ClonePtr<StringList> extra_dicts(new_string_list()); // fixme Make ClonePtr StackPtr
     config_->retrieve_list("extra-dicts", extra_dicts);
-    Emulation<StringEmulation> els = extra_dicts->elements();
+    Enumeration<StringEnumeration> els = extra_dicts->elements();
     const char * dict_name;
     while ( (dict_name = els.next()) != 0)
       RET_ON_ERR(add_data_set(dict_name,*config_, this));
