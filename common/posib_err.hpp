@@ -237,7 +237,7 @@ namespace acommon {
   }
 
   inline ParmString::ParmString(const PosibErr<const char *> & s)
-    : str_(s.data) {}
+    : str_(s.data), size_(UINT_MAX) {}
 
   inline ParmString::ParmString(const PosibErr<String> & s)
     : str_(s.data.c_str()), size_(s.data.size()) {}
