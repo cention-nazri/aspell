@@ -106,7 +106,6 @@ namespace {
     int           word_score;
     int           soundslike_score;
     bool          count;
-    bool          too_large;
     WordEntry * repl_list;
     ScoreWordSound() {repl_list = 0;}
     ~ScoreWordSound() {delete repl_list;}
@@ -167,7 +166,7 @@ namespace {
     int threshold;
     int try_harder;
 
-    EditDist (* edit_dist_fun)(const char *, const char *, 
+    EditDist (* edit_dist_fun)(const char *, const char *,
                                const EditDistanceWeights &);
 
     unsigned int max_word_length;
@@ -487,6 +486,9 @@ namespace {
                              int w_score, int sl_score, 
                              bool count, WordEntry * rl)
   {
+    if (word_size * parms->edit_distance_weights.max >= 0x8000) 
+      return; // to prevent overflow in the editdist functions
+
     if (w_score < 0) w_score = LARGE_NUM;
     if (sl_score < 0) sl_score = LARGE_NUM;
     if (!sp->have_soundslike) {
@@ -499,7 +501,6 @@ namespace {
     d.word = word;
     d.soundslike = sl;
     //d.word_size = word_size;
-    d.too_large = word_size * parms->edit_distance_weights.max >= 0x8000;
     
     if (parms->use_typo_analysis) {
       unsigned int l = word_size;
@@ -1014,12 +1015,6 @@ namespace {
 
         //CERR.printf("%s %s %s %d %d\n", i->word, i->word_clean, i->soundslike,
         //            i->word_score, i->soundslike_score);
-
-        if (i->too_large) {
-          // it is assumed that strlen(i->soundslike) <= i->word_score
-          i->word_score = LARGE_NUM - 1;
-          i->soundslike_score = LARGE_NUM - 1;
-        }
 
         if (i->word_score >= LARGE_NUM) {
           int sl_score = i->soundslike_score < LARGE_NUM ? i->soundslike_score : 0;

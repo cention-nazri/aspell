@@ -15,6 +15,8 @@ namespace aspeller {
 
   // Preconditions:
   // max(strlen(a), strlen(b))*max(of the edit weights) <= 2^15
+  //   if violated than an incorrect result may be returned (which may be negative)
+  //   due to overflow of a short integer
   // a,b are not null pointers
   // Returns:
   //   the edit distance between a and b
