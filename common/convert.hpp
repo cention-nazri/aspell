@@ -333,7 +333,7 @@ namespace acommon {
     {
       delete conv;
       conv = 0;
-      PosibErr<Convert *> pe = new_convert_if_needed(c, from, to,norm);
+      PosibErr<Convert *> pe = new_convert_if_needed(c, from, to, norm);
       if (pe.has_err()) return pe;
       conv = pe.data;
       return no_err;

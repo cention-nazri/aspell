@@ -70,7 +70,7 @@ namespace aspeller {
     , {"store-as",            KeyInfoString, "", ""}
     , {"try",                 KeyInfoString, "", ""}
     , {"normalize",           KeyInfoBool, "false", "", 0, FOR_CONFIG}
-    , {"norm-required",       KeyInfoBool, "false", "", }
+    , {"norm-required",       KeyInfoBool, "false", "", 0, FOR_CONFIG}
     , {"norm-form",           KeyInfoString, "nfc", "", 0, FOR_CONFIG}
   };
 
