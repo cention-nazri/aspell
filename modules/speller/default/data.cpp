@@ -69,7 +69,7 @@ namespace aspeller {
   Dictionary::Dictionary(BasicType t, const char * n)
     : Cacheable(&dict_cache), lang_(), id_(), 
       basic_type(t), class_name(n),
-      affix_compressed(false), have_soundslike(false), 
+      invisible_soundslike(false), soundslike_root_only(false),
       fast_scan(false), fast_lookup(false)
   {
     id_.reset(new Id(this));
@@ -177,7 +177,7 @@ namespace aspeller {
 
   PosibErr<void> Dictionary::add_repl(ParmString mis, ParmString cor) 
   {
-    if (have_soundslike) {
+    if (!invisible_soundslike) {
       VARARRAY(char, sl, mis.size() + 1);
       lang()->LangImpl::to_soundslike(sl, mis.str(), mis.size());
       return add_repl(mis, cor, sl);
@@ -188,7 +188,7 @@ namespace aspeller {
 
   PosibErr<void> Dictionary::add(ParmString w) 
   {
-    if (have_soundslike) {
+    if (!invisible_soundslike) {
       VARARRAY(char, sl, w.size() + 1);
       lang()->LangImpl::to_soundslike(sl, w.str(), w.size());
       return add(w, sl);

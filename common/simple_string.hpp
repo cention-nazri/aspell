@@ -13,8 +13,7 @@
 
 namespace acommon {
 
-  class SimpleString {
-  public:
+  struct SimpleString {
     const char * str;
     unsigned int size;
 

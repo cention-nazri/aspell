@@ -58,11 +58,11 @@ namespace aspeller {
     , {"soundslike",          KeyInfoString, "none", ""}
     , {"special",             KeyInfoString, "", ""}
     , {"ignore-accents" ,     KeyInfoBool, "", "", 0, FOR_CONFIG}
-    , {"use-soundslike" ,     KeyInfoBool, "", "", 0, FOR_CONFIG}
-    , {"use-jump-tables",     KeyInfoBool, "", "", 0, FOR_CONFIG}
+    , {"invisible-soundslike",KeyInfoBool, "", "", 0, FOR_CONFIG}
     , {"keyboard",            KeyInfoString, "standard", "", 0, FOR_CONFIG} 
     , {"affix",               KeyInfoString, "none", ""}
     , {"affix-compress",      KeyInfoBool, "false", "", 0, FOR_CONFIG}
+    , {"partially-expand",    KeyInfoBool, "false", "", 0, FOR_CONFIG}
     , {"affix-char",          KeyInfoString, "/", "", 0, FOR_CONFIG}
     , {"flag-char",           KeyInfoString, ":", "", 0, FOR_CONFIG}
     , {"repl-table",          KeyInfoString, "none", ""}
@@ -187,8 +187,8 @@ namespace aspeller {
       de_accent_[i] = to_plain_[i] == 0 ? to_uchar(i) : to_plain_[i];
     }
 
-    to_plain_[0] = 1; // to make things slightly easier // FIXME: Should this be 0x10
-    to_plain_[1] = 1;
+    to_plain_[0] = 0x10; // to make things slightly easier
+    to_plain_[1] = 0x10;
 
     for (unsigned int i = 0; i != 256; ++i) {
       to_stripped_[i] = to_plain_[(unsigned char)to_lower_[i]];
@@ -213,8 +213,9 @@ namespace aspeller {
       clean_is = to_lower_;
     }
 
-    for (int i = 0; i != 256; ++i) {
-      to_clean_[i] = char_type_[i] >= Letter ? clean_is[i] : 0;
+    for (unsigned i = 0; i != 256; ++i) {
+      to_clean_[i] = char_type_[i] > NonLetter ? clean_is[i] : 0;
+      if ((unsigned char)to_clean_[i] == i) char_info_[i] |= CLEAN;
     }
 
     to_clean_[0x00] = 0x10; // to make things slightly easier
@@ -256,6 +257,8 @@ namespace aspeller {
     if (pe.has_err()) return pe;
     soundslike_.reset(pe);
     soundslike_chars_ = soundslike_->soundslike_chars();
+
+    have_soundslike_ = strcmp(soundslike_->name(), "none") != 0;
 
     //
     // prep affix code
@@ -321,32 +324,30 @@ namespace aspeller {
 
   WordInfo Language::get_word_info(ParmString str) const
   {
-    CharInfo first, all = CHAR_INFO_ALL;
+    CharInfo first = CHAR_INFO_ALL, all = CHAR_INFO_ALL;
     const char * p = str;
-    while (first = char_info(*p++), all &= first, !(first & LETTER))
-      if (!*p) return AllUpper | ALL_PLAIN;
+    while (*p && (first = char_info(*p++), all &= first, !(first & LETTER)));
     while (*p) all &= char_info(*p++);
     WordInfo res;
-    if      (all & UPPER)   res = AllUpper;
-    else if (all & LOWER)   res = AllLower;
+    if      (all & LOWER)   res = AllLower;
+    else if (all & UPPER)   res = AllUpper;
     else if (first & TITLE) res = FirstUpper;
     else                    res = Other;
-    if (all & LETTER) res |= ALL_LETTER;
     if (all & PLAIN)  res |= ALL_PLAIN;
+    if (all & CLEAN)  res |= ALL_CLEAN;
     return res;
   }
   
   CasePattern Language::case_pattern(ParmString str) const  
   {
-    CharInfo first, all = CHAR_INFO_ALL;
+    CharInfo first = CHAR_INFO_ALL, all = CHAR_INFO_ALL;
     const char * p = str;
-    while (first = char_info(*p++), all &= first, !(first & LETTER))
-      if (!*p) return AllUpper;
+    while (*p && (first = char_info(*p++), all &= first, !(first & LETTER)));
     while (*p) all &= char_info(*p++);
-      if      (all & UPPER)   return AllUpper;
-      else if (all & LOWER)   return AllLower;
-      else if (first & TITLE) return FirstUpper;
-      else                    return Other;
+    if      (all & LOWER)   return AllLower;
+    else if (all & UPPER)   return AllUpper;
+    else if (first & TITLE) return FirstUpper;
+    else                    return Other;
   }
   
   void Language::fix_case(CasePattern case_pattern,
@@ -370,7 +371,7 @@ namespace aspeller {
   }
 
   const char * Language::fix_case(CasePattern case_pattern, const char * str,
-                                  String buf) const 
+                                  String & buf) const 
   {
     if (!str[0]) return str;
     if (case_pattern == AllUpper) {

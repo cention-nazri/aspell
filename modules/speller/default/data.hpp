@@ -108,7 +108,12 @@ namespace aspeller {
     virtual PosibErr<void> clear();
 
     bool affix_compressed;
-    bool have_soundslike; // only true when there is true phonet data
+    bool invisible_soundslike; // true when words are grouped by the
+                               // soundslike but soundslike data is not
+                               // actually stored with the word
+    bool soundslike_root_only; // true when affix compression is used AND
+                               // the stored soundslike corresponds to the
+                               // root word only
     bool fast_scan;  // can effectly scan for all soundslikes (or
                      // clean words if have_soundslike is false)
                      // with an edit distance of 1 or 2

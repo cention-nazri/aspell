@@ -18,6 +18,8 @@ namespace aspeller {
     EditDistanceWeights     edit_distance_weights;
     CachePtr<const TypoEditDistanceWeights> typo_edit_distance_weights;
 
+    bool try_one_edit_word, try_scan;
+
     bool use_typo_analysis;
     bool use_repl_table;
 

@@ -97,7 +97,8 @@ namespace aspeller {
         cor_orignal_casing += cor2;
       }
       if (first_word == 0 || cor != first_word) {
-        repl_->add_repl(lang().to_lower(buf, mis.str()), cor_orignal_casing);
+        lang().to_lower(buf, mis.str());
+        repl_->add_repl(buf, cor_orignal_casing);
       }
       
       if (memory && prev_cor_repl_ == mis) 
@@ -360,6 +361,7 @@ namespace aspeller {
     }
     static PosibErr<void> run_together(SpellerImpl * m, bool value) {
       m->unconditional_run_together_ = value;
+      m->run_together = m->unconditional_run_together_;
       return no_err;
     }
     static PosibErr<void> run_together_limit(SpellerImpl * m, int value) {
@@ -450,14 +452,6 @@ namespace aspeller {
     RET_ON_ERR(add_data_set(config_->retrieve("master-path"), *config_, res, &to_add, this));
     add_dicts(this, to_add);
 
-    use_soundslike = true;
-
-    for (SpellerDict * i = dicts_; i; i = i->next) {
-      
-      if (i->dict->basic_type == Dict::basic_dict)
-        use_soundslike = use_soundslike && i->dict->have_soundslike;
-    }
-
     StringList extra_dicts;
     config_->retrieve_list("extra-dicts", &extra_dicts);
     StringListEnumeration els = extra_dicts.elements_obj();
@@ -473,7 +467,6 @@ namespace aspeller {
     {
       Dictionary * temp;
       temp = new_default_writable_dict();
-      temp->have_soundslike = use_soundslike;
       PosibErrBase pe = temp->load(config_->retrieve("personal-path"),*config_);
       if (pe.has_err(cant_read_file))
         temp->set_check_lang(lang_name(), *config_);
@@ -486,7 +479,6 @@ namespace aspeller {
     {
       Dictionary * temp;
       temp = new_default_writable_dict();
-      temp->have_soundslike = use_soundslike;
       temp->set_check_lang(lang_name(), *config_);
       add_dict(new SpellerDict(temp, lang_, *config_, session_id));
     }
@@ -494,7 +486,6 @@ namespace aspeller {
     if (use_other_dicts && !repl_)
     {
       ReplacementDict * temp = new_default_replacement_dict();
-      temp->have_soundslike = use_soundslike;
       PosibErrBase pe = temp->load(config_->retrieve("repl-path"),*config_);
       if (pe.has_err(cant_read_file))
         temp->set_check_lang(lang_name(), *config_);
@@ -519,7 +510,8 @@ namespace aspeller {
     from_internal_.reset(conv);
 
     unconditional_run_together_ = config_->retrieve_bool("run-together");
-
+    run_together = unconditional_run_together_;
+    
     run_together_limit_  = config_->retrieve_int("run-together-limit");
     if (run_together_limit_ > 8) {
       config_->replace("run-together-limit", "8");
@@ -580,6 +572,8 @@ namespace aspeller {
     }
     fast_scan   = suggest_ws.front().dict->fast_scan;
     fast_lookup = suggest_ws.front().dict->fast_lookup;
+    invisible_soundslike = suggest_ws.front().dict->invisible_soundslike;
+    soundslike_root_only = suggest_ws.front().dict->soundslike_root_only;
     affix_compress = !affix_ws.empty();
 
     //

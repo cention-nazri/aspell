@@ -21,6 +21,30 @@ using namespace std;
 using namespace aspeller;
 using namespace acommon;
 
+typedef const char * Str;
+typedef unsigned char byte;
+
+struct Hash {
+  InsensitiveHash f;
+  Hash(const Language * l) : f(l) {}
+  size_t operator() (Str s) const {
+    return f(s);
+  }
+};
+
+struct Equal {
+  InsensitiveEqual f;
+  Equal(const Language * l) : f(l) {}
+  bool operator() (Str a, Str b) const {
+    return f(a, b);
+  }
+};
+
+typedef Vector<Str> StrVector;
+
+typedef hash_set<Str,Hash,Equal> WordLookup;
+typedef hash_map<Str,StrVector>  SoundslikeLookup;
+
 class WritableBase : public Dictionary {
 protected:
   String suffix;
@@ -32,9 +56,10 @@ protected:
     
   WritableBase(BasicType t, const char * n, const char * s, const char * cs)
     : Dictionary(t,n),
-      suffix(s), compatibility_suffix(cs) {}
+      suffix(s), compatibility_suffix(cs),
+      use_soundslike(true) {fast_lookup = true;}
   virtual ~WritableBase() {}
-    
+  
   virtual PosibErr<void> save(FStream &, ParmString) = 0;
   virtual PosibErr<void> merge(FStream &, ParmString, Config * = 0) = 0;
     
@@ -54,6 +79,17 @@ protected:
 
   PosibErr<void> synchronize() {return save(true);}
   PosibErr<void> save_noupdate() {return save(false);}
+
+  bool use_soundslike;
+  StackPtr<WordLookup> word_lookup;
+  SoundslikeLookup     soundslike_lookup_;
+  ObjStack             buffer;
+ 
+  void set_lang_hook(Config & c) {
+    set_file_encoding(lang()->data_encoding(), c);
+    word_lookup.reset(new WordLookup(10, Hash(lang()), Equal(lang())));
+    use_soundslike = lang()->have_soundslike();
+  }
 };
 
 PosibErr<void> WritableBase::update_file_date_info(FStream & f) {
@@ -180,52 +216,50 @@ PosibErr<void> WritableBase::set_file_encoding(ParmString enc, Config & c)
 //  Common Stuff
 //
 
-typedef const char * Str;
+// a word is stored in memory as follows
+//   <word info><size><word...><null>
+// the hash table points to the word and not the start of the block
 
-struct Hash {
-  InsensitiveHash f;
-  Hash(const Language * l) : f(l) {}
-  size_t operator() (Str s) const {
-    return f(s);
-  }
-};
+static inline void set_word(WordEntry & res, Str w)
+{
+  res.word      = w;
+  res.word_size = (byte)w[-1];
+  res.word_info = (byte)w[-2];
+  res.aff       = "";
+}
 
-struct Equal {
-  InsensitiveEqual f;
-  Equal(const Language * l) : f(l) {}
-  bool operator() (Str a, Str b) const
-  {
-    return f(a, b);
-  }
-};
+// a soundslike is stored in memory as follows
+//   <word info><size><sl...><null>
+// the hash table points to the sl and not the start of the block
 
-typedef Vector<Str> StrVector;
-
-typedef hash_set<Str,Hash,Equal> WordLookup;
-typedef hash_map<Str,StrVector>  SoundslikeLookup;
+static inline void set_sl(WordEntry & res, Str w)
+{
+  res.word      = w;
+  res.word_size = (byte)w[-1];
+}
 
 static void soundslike_next(WordEntry * w)
 {
-  const char * const * i   = (const char * const *)(w->intr[0]);
-  const char * const * end = (const char * const *)(w->intr[1]);
-  w->word = *i;
+  const Str * i   = (const Str *)(w->intr[0]);
+  const Str * end = (const Str *)(w->intr[1]);
+  set_word(*w, *i);
   ++i;
   if (i == end) w->adv_ = 0;
 }
 
 static void sl_init(const StrVector * tmp, WordEntry & o)
 {
-  const char * const * i   = tmp->pbegin();
-  const char * const * end = tmp->pend();
-  o.word = *i;
-  o.aff  = "";
+  const Str * i   = tmp->pbegin();
+  const Str * end = tmp->pend();
+  o.what = WordEntry::Word;
+  set_word(o, *i);
   ++i;
   if (i != end) {
     o.intr[0] = (void *)i;
     o.intr[1] = (void *)end;
     o.adv_ = soundslike_next;
   } else {
-     o.intr[0] = 0;
+    o.intr[0] = 0;
   }
 }
 
@@ -244,7 +278,7 @@ struct SoundslikeElements : public SoundslikeEnumeration {
 
   WordEntry * next(int) {
     if (i == end) return 0;
-    d.word = i->first;
+    set_sl(d, i->first);
     d.intr[0] = (void *)(&i->second);
     ++i;
     return &d;
@@ -262,12 +296,11 @@ struct CleanElements : public SoundslikeEnumeration {
 
   CleanElements(Itr i0, Itr end0) : i(i0), end(end0) {
     d.what = WordEntry::Word;
-    d.aff  = "";
   }
 
   WordEntry * next(int) {
     if (i == end) return 0;
-    d.word = *i;
+    set_word(d, *i);
     ++i;
     return &d;
   }
@@ -280,7 +313,7 @@ struct ElementsParms {
   WordEntry data;
   ElementsParms(Iterator e) : end_(e) {}
   bool endf(Iterator i) const {return i==end_;}
-  Value deref(Iterator i) {data.word = *i; return &data;}
+  Value deref(Iterator i) {set_word(data, *i); return &data;}
   static Value end_state() {return 0;}
 };
 
@@ -292,24 +325,12 @@ struct ElementsParms {
 class WritableDict : public WritableBase
 {
 public: //but don't use
-  StackPtr<WordLookup> word_lookup;
-  SoundslikeLookup     soundslike_lookup_;
-  ObjStack             buffer;
-
   PosibErr<void> save(FStream &, ParmString);
   PosibErr<void> merge(FStream &, ParmString, Config * config);
 
-protected:
-  void set_lang_hook(Config & c) {
-    set_file_encoding(lang()->data_encoding(), c);
-    word_lookup.reset(new WordLookup(10, Hash(lang()), Equal(lang())));
-  }
-    
 public:
 
-  WritableDict() : WritableBase(basic_dict, "WritableDict", ".pws", ".per") {
-    have_soundslike = true; fast_lookup = true;
-  }
+  WritableDict() : WritableBase(basic_dict, "WritableDict", ".pws", ".per") {}
 
   Size   size()     const;
   bool   empty()    const;
@@ -340,15 +361,14 @@ bool WritableDict::empty() const
 }
 
 bool WritableDict::lookup(ParmString word, WordEntry & o,
-                        const SensitiveCompare & c) const
+                          const SensitiveCompare & c) const
 {
   o.clear();
   pair<WordLookup::iterator, WordLookup::iterator> p(word_lookup->equal_range(word));
   while (p.first != p.second) {
     if (c(word,*p.first)) {
       o.what = WordEntry::Word;
-      o.word = *p.first;
-      o.aff  = "";
+      set_word(o, *p.first);
       return true;
     }
     ++p.first;
@@ -362,15 +382,14 @@ bool WritableDict::clean_lookup(const char * sl, WordEntry & o) const
   pair<WordLookup::iterator, WordLookup::iterator> p(word_lookup->equal_range(sl));
   if (p.first == p.second) return false;
   o.what = WordEntry::Word;
-  o.word = *p.first;
-  o.aff  = "";
+  set_word(o, *p.first);
   return true;
   // FIXME: Deal with multiple entries
 }  
 
 bool WritableDict::soundslike_lookup(const WordEntry & word, WordEntry & o) const 
 {
-  if (have_soundslike) {
+  if (use_soundslike) {
 
     const StrVector * tmp 
       = (const StrVector *)(word.intr[0]);
@@ -383,6 +402,8 @@ bool WritableDict::soundslike_lookup(const WordEntry & word, WordEntry & o) cons
       
     o.what = WordEntry::Word;
     o.word = word.word;
+    o.word_size = word.word_size;
+    o.word_info = word.word_info;
     o.aff  = "";
     
   }
@@ -391,7 +412,7 @@ bool WritableDict::soundslike_lookup(const WordEntry & word, WordEntry & o) cons
 
 bool WritableDict::soundslike_lookup(ParmString word, WordEntry & o) const 
 {
-  if (have_soundslike) {
+  if (use_soundslike) {
 
     o.clear();
     SoundslikeLookup::const_iterator i = soundslike_lookup_.find(word);
@@ -411,12 +432,12 @@ bool WritableDict::soundslike_lookup(ParmString word, WordEntry & o) const
 }
 
 SoundslikeEnumeration * WritableDict::soundslike_elements() const {
-  if (have_soundslike)
+  if (use_soundslike)
     return new SoundslikeElements(soundslike_lookup_.begin(), 
                                   soundslike_lookup_.end());
   else
     return new CleanElements(word_lookup->begin(),
-                                word_lookup->end());
+                             word_lookup->end());
 }
 
 WritableDict::Enum * WritableDict::detailed_elements() const {
@@ -429,10 +450,19 @@ PosibErr<void> WritableDict::add(ParmString w, ParmString s) {
   SensitiveCompare c(lang());
   WordEntry we;
   if (WritableDict::lookup(w,we,c)) return no_err;
-  const char * w2 = buffer.dup(w);
-  word_lookup->insert(w2);
-  if (have_soundslike)
-    soundslike_lookup_[buffer.dup(s)].push_back(w2);
+  byte * w2;
+  w2 = (byte *)buffer.alloc(w.size() + 3);
+  *w2++ = lang()->get_word_info(w);
+  *w2++ = w.size();
+  memcpy(w2, w.str(), w.size() + 1);
+  word_lookup->insert((char *)w2);
+  if (use_soundslike) {
+    byte * s2;
+    s2 = (byte *)buffer.alloc(s.size() + 2);
+    *s2++ = s.size();
+    memcpy(s2, s.str(), s.size() + 1);
+    soundslike_lookup_[(char *)s2].push_back((char *)w2);
+  }
   return no_err;
 }
 
@@ -513,29 +543,17 @@ PosibErr<void> WritableDict::save(FStream & out, ParmString file_name)
 
 static inline StrVector * get_vector(Str s) 
 {
-  return (StrVector *)(s - sizeof(StrVector));
+  return (StrVector *)(s - sizeof(StrVector) - 2);
 }
 
 class WritableReplDict : public WritableBase
 {
-private:
-  StackPtr<WordLookup> word_lookup;
-  SoundslikeLookup         soundslike_lookup_;
-  StringBuffer             buffer;
-
   WritableReplDict(const WritableReplDict&);
   WritableReplDict& operator=(const WritableReplDict&);
-
-protected:
-  void set_lang_hook(Config & c) {
-    set_file_encoding(lang()->data_encoding(), c);
-    word_lookup.reset(new WordLookup(10, Hash(lang()), Equal(lang())));
-  }
 
 public:
   WritableReplDict() : WritableBase(replacement_dict, "WritableReplDict", ".prepl",".rpl") 
   {
-    have_soundslike = true;
     fast_lookup = true;
   }
   ~WritableReplDict();
@@ -583,7 +601,7 @@ bool WritableReplDict::lookup(ParmString word, WordEntry & o,
   while (p.first != p.second) {
     if (c(word,*p.first)) {
       o.what = WordEntry::Misspelled;
-      o.word = *p.first;
+      set_word(o, *p.first);
       o.intr[0] = (void *)*p.first;
       return true;
     }
@@ -598,7 +616,7 @@ bool WritableReplDict::clean_lookup(ParmString sl, WordEntry & o) const
   pair<WordLookup::iterator, WordLookup::iterator> p(word_lookup->equal_range(sl));
   if (p.first == p.second) return false;
   o.what = WordEntry::Misspelled;
-  o.word = *p.first;
+  set_word(o, *p.first);
   o.intr[0] = (void *)*p.first;
   return true;
   // FIXME: Deal with multiple entries
@@ -606,7 +624,7 @@ bool WritableReplDict::clean_lookup(ParmString sl, WordEntry & o) const
 
 bool WritableReplDict::soundslike_lookup(const WordEntry & word, WordEntry & o) const 
 {
-  if (have_soundslike) {
+  if (use_soundslike) {
     const StrVector * tmp = (const StrVector *)(word.intr[0]);
     o.clear();
     o.what = WordEntry::Misspelled;
@@ -620,7 +638,7 @@ bool WritableReplDict::soundslike_lookup(const WordEntry & word, WordEntry & o) 
 
 bool WritableReplDict::soundslike_lookup(ParmString soundslike, WordEntry & o) const
 {
-  if (have_soundslike) {
+  if (use_soundslike) {
     o.clear();
     SoundslikeLookup::const_iterator i = soundslike_lookup_.find(soundslike);
     if (i == soundslike_lookup_.end()) {
@@ -636,7 +654,7 @@ bool WritableReplDict::soundslike_lookup(ParmString soundslike, WordEntry & o) c
 }
 
 SoundslikeEnumeration * WritableReplDict::soundslike_elements() const {
-  if (have_soundslike)
+  if (use_soundslike)
     return new SoundslikeElements(soundslike_lookup_.begin(), 
                                   soundslike_lookup_.end());
   else
@@ -653,7 +671,7 @@ static void repl_next(WordEntry * w)
 {
   const Str * i   = (const Str *)(w->intr[0]);
   const Str * end = (const Str *)(w->intr[1]);
-  w->word = *i;
+  set_word(*w, *i);
   ++i;
   if (i == end) w->adv_ = 0;
 }
@@ -663,8 +681,7 @@ static void repl_init(const StrVector * tmp, WordEntry & o)
   o.what = WordEntry::Word;
   const Str * i   = tmp->pbegin();
   const Str * end = tmp->pend();
-  o.word = *i;
-  o.aff  = "";
+  set_word(o, *i);
   ++i;
   if (i != end) {
     o.intr[0] = (void *)i;
@@ -701,7 +718,7 @@ bool WritableReplDict::repl_lookup(ParmString word, WordEntry & o) const
 
 PosibErr<void> WritableReplDict::add_repl(ParmString mis, ParmString cor, ParmString sl) 
 {
-  Str m, c, s;
+  Str m;
   SensitiveCompare cmp(lang()); // FIXME: I don't think this is completely correct
   WordEntry we;
 
@@ -711,11 +728,13 @@ PosibErr<void> WritableReplDict::add_repl(ParmString mis, ParmString cor, ParmSt
   for (; p != p0.second && !cmp(mis,*p); ++p);
 
   if (p == p0.second) {
-    char * m0  = (char *)buffer.alloc(sizeof(StrVector) + mis.size() + 1, sizeof(void *));
+    byte * m0  = (byte *)buffer.alloc(sizeof(StrVector) + mis.size() + 3, sizeof(void *));
     new (m0) StrVector;
     m0 += sizeof(StrVector);
+    *m0++ = lang()->get_word_info(mis);
+    *m0++ = mis.size();
     memcpy(m0, mis.str(), mis.size() + 1);
-    m = m0;
+    m = (char *)m0;
     p = word_lookup->insert(m).first;
   } else {
     m = *p;
@@ -726,12 +745,17 @@ PosibErr<void> WritableReplDict::add_repl(ParmString mis, ParmString cor, ParmSt
   for (StrVector::iterator i = v->begin(); i != v->end(); ++i)
     if (cmp(cor, *i)) return no_err;
     
-  c = buffer.dup(cor);
-  get_vector(m)->push_back(c);
+  byte * c0 = (byte *)buffer.alloc(cor.size() + 3);
+  *c0++ = lang()->get_word_info(cor);
+  *c0++ = cor.size();
+  memcpy(c0, cor.str(), cor.size() + 1);
+  v->push_back((char *)c0);
 
-  if (have_soundslike) {
-    s = buffer.dup(sl);
-    soundslike_lookup_[s].push_back(m);
+  if (use_soundslike) {
+    byte * s0 = (byte *)buffer.alloc(sl.size() + 2);
+    *s0++ = sl.size();
+    memcpy(s0, sl.str(), sl.size() + 1);
+    soundslike_lookup_[(char *)s0].push_back(m);
   }
 
   return no_err;

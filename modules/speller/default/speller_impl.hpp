@@ -210,7 +210,11 @@ namespace aspeller {
 
     bool affix_info, affix_compress;
 
-    bool use_soundslike, fast_scan, fast_lookup;
+    bool invisible_soundslike, soundslike_root_only;
+
+    bool fast_scan, fast_lookup;
+
+    bool run_together;
 
   };
 

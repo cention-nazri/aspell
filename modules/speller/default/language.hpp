@@ -42,33 +42,18 @@ namespace aspeller {
     }
   };
 
-  // WordInfo
-
-  typedef unsigned int WordInfo; // 4 bits
-
-  enum CasePattern {Other, FirstUpper, AllLower, AllUpper};
-  //   Other      00
-  //   FirstUpper 01
-  //   AllLower   10
-  //   AllUpper   11
-  // First bit : is upper
-  // Second bit: uniform case
-
-  static const WordInfo CASE_PATTERN = 3;
-  static const WordInfo ALL_PLAIN    = (1 << 2);
-  static const WordInfo ALL_LETTER   = (1 << 3);
-
   // CharInfo
 
-  typedef unsigned int CharInfo; // 5 bits
+  typedef unsigned int CharInfo; // 6 bits
 
   static const CharInfo LOWER  = (1 << 0);
   static const CharInfo UPPER  = (1 << 1);
   static const CharInfo TITLE  = (1 << 2);
   static const CharInfo PLAIN  = (1 << 3);
   static const CharInfo LETTER = (1 << 4);
+  static const CharInfo CLEAN  = (1 << 5);
 
-  static const CharInfo CHAR_INFO_ALL = 0x1F;
+  static const CharInfo CHAR_INFO_ALL = 0x3F;
 
   //
 
@@ -124,6 +109,8 @@ namespace aspeller {
     String      soundslike_chars_;
     String      clean_chars_;
 
+    bool have_soundslike_;
+
     StackPtr<Soundslike> soundslike_;
     StackPtr<AffixMgr>   affix_;
     StackPtr<Config>     lang_config_;
@@ -154,6 +141,12 @@ namespace aspeller {
     const Convert * to_utf8() const {return to_utf8_.ptr;}
     const Convert * from_utf8() const {return from_utf8_.ptr;}
 
+    int to_uni(char c) const {return to_uni_[to_uchar(c)];}
+
+    //
+    // case conversion
+    //
+
     char to_upper(char c) const {return to_upper_[to_uchar(c)];}
     bool is_upper(char c) const {return to_upper(c) == c;}
 
@@ -163,8 +156,24 @@ namespace aspeller {
     char to_title(char c) const {return to_title_[to_uchar(c)];}
     bool is_title(char c) const {return to_title(c) == c;}
 
-    char to_stripped(char c) const {return to_stripped_[to_uchar(c)];}
-    bool is_stripped(char c) const {return to_stripped(c) == c;}
+    char * to_lower(char * res, const char * str) const {
+      while (*str) *res++ = to_lower(*str++); *res = '\0'; return res;}
+    char * to_upper(char * res, const char * str) const {
+      while (*str) *res++ = to_upper(*str++); *res = '\0'; return res;}
+
+    void to_lower(String & res, const char * str) const {
+      res.clear(); while (*str) res += to_lower(*str++);}
+    void to_upper(String & res, const char * str) const {
+      res.clear(); while (*str) res += to_upper(*str++);}
+
+    bool is_lower(const char * str) const {
+      while (*str) {if (!is_lower(*str++)) return false;} return true;}
+    bool is_upper(const char * str) const {
+      while (*str) {if (!is_upper(*str++)) return false;} return true;}
+
+    //
+    //
+    //
 
     char to_normalized(char c) const {return to_normalized_[to_uchar(c)];}
     unsigned char max_normalized() const {return max_normalized_;}
@@ -173,58 +182,20 @@ namespace aspeller {
 
     char de_accent(char c) const {return de_accent_[to_uchar(c)];}
     
-    char to_clean(char c) const {return to_clean_[to_uchar(c)];}
-    bool is_clean(char c) const {return to_clean(c) == c;}
-  
-    int to_uni(char c) const {return to_uni_[to_uchar(c)];}
-  
     SpecialChar special(char c) const {return special_[to_uchar(c)];}
   
     CharType char_type(char c) const {return char_type_[to_uchar(c)];}
     bool is_alpha(char c) const {return char_type(c) >  NonLetter;}
 
     CharInfo char_info(char c) const {return char_info_[to_uchar(c)];}
-  
-    const char * to_soundslike(String & res, ParmString word) const {
-      res.resize(word.size());
-      char * e = soundslike_->to_soundslike(res.data(), word.str(), word.size());
-      res.resize(e - res.data());
-      return res.str();
-    }
 
-    const char * soundslike_name() const {
-      return soundslike_->name();
-    }
-    bool have_soundslike() const {return strcmp(soundslike_->name(),"none") == 0;}
+    //
+    // stripped
+    //
 
-    const char * soundslike_version() const {
-      return soundslike_->version();
-    }
-    
-    const char * soundslike_chars() const {return soundslike_chars_.c_str();}
-    const char * clean_chars() const {return clean_chars_.c_str();}
+    char to_stripped(char c) const {return to_stripped_[to_uchar(c)];}
 
-    const AffixMgr * affix() const {return affix_;}
-
-    bool have_affix() const {return affix_;}
-
-    SuggestReplEnumeration * repl() const {
-      return new SuggestReplEnumeration(repls_.pbegin(), repls_.pend());}
-
-    char * to_soundslike(char * res, const char * str, int len = -1) const 
-    { return soundslike_->to_soundslike(res,str,len);}
-
-    void munch(ParmString word, CheckList * cl) const {affix_->munch(word, cl);}
-
-    WordAff * expand(ParmString word, ParmString aff, 
-                     ObjStack & buf, int limit = INT_MAX) const {
-      return affix_->expand(word, aff, buf, limit);
-    }
-    
-    char * to_lower(char * res, const char * str) const {
-      while (*str) *res++ = to_lower(*str++); *res = '\0'; return res;}
-    char * to_upper(char * res, const char * str) const {
-      while (*str) *res++ = to_upper(*str++); *res = '\0'; return res;}
+    // return a pointer to the END of the string
     char * to_stripped(char * res, const char * str) const {
       for (; *str; ++str) {
         char c = to_stripped(*str);
@@ -233,6 +204,29 @@ namespace aspeller {
       *res = '\0';
       return res;
     }
+    void to_stripped(String & res, const char * str) const {
+      res.clear();
+      for (; *str; ++str) {
+        char c = to_stripped(*str);
+        if (c) res += c;
+      }
+    }
+
+    bool is_stripped(char c) const {return to_stripped(c) == c;}
+
+    bool is_stripped(const char * str) const {
+      while (*str) {if (!is_stripped(*str++)) return false;} return true;}
+
+    //
+    // Clean
+    //
+    // The "clean" form is how words are indixed in the dictionary.
+    // It will at very least convert the word to lower case.  It may
+    // also strip accents and non-letters.
+    //
+
+    char to_clean(char c) const {return to_clean_[to_uchar(c)];}
+
     char * to_clean(char * res, const char * str) const {
       for (; *str; ++str) {
         char c = to_clean(*str);
@@ -241,38 +235,86 @@ namespace aspeller {
       *res = '\0';
       return res;
     }
-
-    const char * to_lower(String & res, const char * str) const {
-      res.clear(); while (*str) res += to_lower(*str++); return res.str();}
-    const char * to_upper(String & res, const char * str) const {
-      res.clear(); while (*str) res += to_upper(*str++); return res.str();}
-    const char * to_stripped(String & res, const char * str) const {
-      res.clear();
-      for (; *str; ++str) {
-        char c = to_stripped(*str);
-        if (c) res += c;
-      }
-      return res.str();
-    }
-    const char * to_clean(String & res, const char * str) const {
+    void to_clean(String & res, const char * str) const {
       res.clear();
       for (; *str; ++str) {
         char c = to_clean(*str);
         if (c) res += c;
       }
-      return res.str();
     }
 
-    bool is_lower(const char * str) const {
-      while (*str) {if (!is_lower(*str++)) return false;} return true;}
-    bool is_upper(const char * str) const {
-      while (*str) {if (!is_upper(*str++)) return false;} return true;}
-    bool is_stripped(const char * str) const {
-      while (*str) {if (!is_stripped(*str++)) return false;} return true;}
+    bool is_clean(char c) const {return to_clean(c) == c;}
+
     bool is_clean(const char * str) const {
       while (*str) {if (!is_clean(*str++)) return false;} return true;}
 
+    bool is_clean_wi(WordInfo wi) const {
+      return false;
+      //return wi & CASE_PATTEN == AllLower && 
+    }
+
+
+    const char * clean_chars() const {return clean_chars_.c_str();}
+
+    //
+    // Soundslike
+    // 
+  
+    bool have_soundslike() const {return have_soundslike_;}
+    
+    const char * soundslike_name() const {return soundslike_->name();}
+    const char * soundslike_version() const {return soundslike_->version();}
+
+    void to_soundslike(String & res, ParmString word) const {
+      res.resize(word.size());
+      char * e = soundslike_->to_soundslike(res.data(), word.str(), word.size());
+      res.resize(e - res.data());
+    }
+    
+    // returns a pointer to the END of the string
+    char * to_soundslike(char * res, const char * str, int len = -1) const { 
+      return soundslike_->to_soundslike(res,str,len);
+    }
+
+    char * to_soundslike(char * res, const char * str, int len, WordInfo wi) const {
+      if (!have_soundslike_ && (wi & ALL_CLEAN)) return 0;
+      else return soundslike_->to_soundslike(res,str,len);
+    }
+
+    const char * soundslike_chars() const {return soundslike_chars_.c_str();}
+
+    //
+    // Affix compression methods
+    //
+
+    const AffixMgr * affix() const {return affix_;}
+
+    bool have_affix() const {return affix_;}
+
+    void munch(ParmString word, CheckList * cl) const {affix_->munch(word, cl);}
+
+    WordAff * expand(ParmString word, ParmString aff, 
+                     ObjStack & buf, int limit = INT_MAX) const {
+      return affix_->expand(word, aff, buf, limit);
+    }
+
+    //
+    // Repl
+    //
+
+    SuggestReplEnumeration * repl() const {
+      return new SuggestReplEnumeration(repls_.pbegin(), repls_.pend());}
+    
+    //
+    //
+    //
+
     WordInfo get_word_info(ParmString str) const;
+    
+    //
+    // fix_case
+    //
+
     CasePattern case_pattern(ParmString str) const;
 
     void fix_case(CasePattern case_pattern, char * str)
@@ -284,7 +326,11 @@ namespace aspeller {
     void fix_case(CasePattern case_pattern, 
                   char * res, const char * str) const;
     const char * fix_case(CasePattern case_pattern, 
-                          const char * str, String buf) const;
+                          const char * str, String & buf) const;
+
+    //
+    // for cache
+    //
 
     static inline PosibErr<Language *> get_new(const String & lang, const Config * config) {
       StackPtr<Language> l(new Language());

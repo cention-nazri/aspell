@@ -1069,7 +1069,7 @@ namespace acommon {
     , {"repl-path",     KeyInfoString, "<home-dir/repl>",     0}
     , {"run-together",        KeyInfoBool,  "false",
        N_("consider run-together words legal"), KEYINFO_MAY_CHANGE}
-    , {"run-together-limit",  KeyInfoInt,   "8",
+    , {"run-together-limit",  KeyInfoInt,   "2",
        N_("maximum number that can be strung together"), KEYINFO_MAY_CHANGE}
     , {"run-together-min",    KeyInfoInt,   "3",
        N_("minimal length of interior words"), KEYINFO_MAY_CHANGE}
@@ -1116,13 +1116,12 @@ namespace acommon {
     // These options are only used when creating dictionaries
     // and may also be specified in the language data file
     //
-    , {"use-soundslike", KeyInfoBool, "true",
-       N_("encode soundslike infomation when creating dicts")}
-    , {"use-jump-tables", KeyInfoBool, "true",
-       N_("use jump tables when creating dictionaries")}
+    , {"invisible-soundslike", KeyInfoBool, "false",
+       N_("compute the soundslike on demand rather than storing")} 
     , {"affix-compress", KeyInfoBool, "false",
        N_("use affix compression when creating dictionaries")}
-    
+    , {"partially-expand",  KeyInfoBool, "false",
+       N_("partially expand affixes for better suggestions")}
     //
     // These options are specific to the "aspell" utility.  They are
     // here so that they can be specified in configuration files.

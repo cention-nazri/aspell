@@ -147,8 +147,10 @@ namespace aspeller {
   }
 
   template<class Parms>
-  void VectorHashTable<Parms>::resize(size_type i) {
-    if (i < 7) {
+  VectorHashTable<Parms>::VectorHashTable(size_type i, const Parms & p)
+    : parms_(p), size_(0) 
+  {
+    if (i <= 7) {
       i = 7;
     } else {
       size_type j =  ((i - 3)/4)*4 + 3;
@@ -165,6 +167,12 @@ namespace aspeller {
 	i += 4;
       }
     }
+    vector_.resize(i);
+    nonexistent_vector();
+  }
+
+  template<class Parms>
+  void VectorHashTable<Parms>::resize(size_type i) {
     VectorHashTable temp(i,parms_);
     iterator e = end();
     for (iterator i = begin(); i != e; ++i)

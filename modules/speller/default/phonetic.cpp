@@ -164,8 +164,10 @@ namespace aspeller {
       sl = new SimpileSoundslike(lang);
     } else if (name == "none") {
       sl = new NoSoundslike(lang);
-    } else {
+    } else if (name == lang->name()) {
       sl = new PhonetSoundslike(lang);
+    } else {
+      abort(); // FIXME
     }
     PosibErrBase pe = sl->setup(iconv);
     if (pe.has_err()) {

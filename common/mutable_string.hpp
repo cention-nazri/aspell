@@ -13,8 +13,7 @@
 
 namespace acommon {
 
-  class MutableString {
-  public:
+  struct MutableString {
     char * str;
     unsigned int size;
 
