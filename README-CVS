@@ -28,7 +28,7 @@ something like /opt/aspell.
 Than to build and install:
 
   make
-  make-install
+  make install
 
 You will then need to install a dictionary package for the new aspell.
 You can find them at http://aspell.net.  If aspell is installed
