@@ -33,7 +33,7 @@
 
 using namespace acommon;
 
-namespace acommon { // FIXME: Should this be a diffrent namespace?
+namespace acommon {
 
   static void free_lt_handle(SpellerLtHandle h) 
   {

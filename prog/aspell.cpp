@@ -827,13 +827,12 @@ void print_help_line(char abrv, char dont_abrv, const char * name,
     command += "=<str>";
   if (type == KeyInfoInt)
     command += "=<int>";
-  COUT << "  " /* << setw(27) FIXME */ << command.c_str() << " " << desc << "\n";
+  printf("  %-27s %s\n", command.c_str(), desc);
 }
 
 void print_help () {
-  /* COUT.setf(ios::left); FIXME */
-  COUT << 
-   "\n"
+  printf(
+    "\n"
     "Aspell " VERSION " alpha.  Copyright 2000 by Kevin Atkinson.\n"
     "\n"
     "Usage: aspell [options] <command>\n"
@@ -848,7 +847,7 @@ void print_help () {
     "  -v|version       prints a version line\n"
     "\n"
     "[options] is any of the following:\n"
-    "\n";
+    "\n");
   Enumeration<KeyInfoEnumeration> els = options->possible_elements();
   const KeyInfo * k;
   while (k = els.next(), k) {
