@@ -1,5 +1,5 @@
 \input texinfo   @c -*-texinfo-*-
-@comment $Id: aspell.texi,v 1.36 2004/05/21 14:13:21 kevina Exp $
+@comment $Id: aspell.texi,v 1.37 2004/05/25 03:03:27 kevina Exp $
 @comment %**start of header
 @setfilename aspell.info
 @settitle GNU Aspell 0.60
@@ -688,8 +688,8 @@ default value is based on the value of the @env{LC_MESSAGES} locale.
 @item size (@i{string})
 the preferred size of the word list
 
-@item jargon (@i{string})
-an extra information to distinguish two different words lists that
+@item variety (@i{list})
+any extra information to distinguish two different words lists that
 have the same lang and size.
 
 @item word-list-path (@i{list})
@@ -707,6 +707,9 @@ replacements list file name
 
 @item extra-dicts (@i{list})
 extra dictionaries to use.
+
+@item dict-alias (@i{list})
+@dots{}
 @end table
 
 @subsection Checker Options
@@ -1424,9 +1427,9 @@ not be found, it will complain.
 Otherwise it will use the value of the @option{lang} option to search
 for an appropriate dictionary.  If more than one dictionary is found
 for the given language string then it will look for a dictionary with
-a matching jargon if the @option{jargon} option is set.  If it is not
-set it will look for a dictionary with no jargon.  If after matching
-the @option{lang} and @option{jargon} there is still more than one
+a matching variety if the @option{variety} option is set.  If it is not
+set it will look for a dictionary without a variety.  If after matching
+the @option{lang} and @option{variety} there is still more than one
 dictionary available it will find one with the size closest to the
 value of the @option{size} option.  The default size is 60.  If Aspell
 cannot find a dictionary based on the @option{lang} option then it
@@ -1441,6 +1444,17 @@ already explicitly set the locale then it will use the locale of the
 library rather than the environment variables.  If Aspell cannot
 determine the language from the @env{LC_MESSAGES} locale than it will
 default to @code{en_US}.
+
+The list option @option{dict-alias} can be used to influence which dictionary
+is selected by creating an alias from one dictionary name to another.
+This option is most useful when there is more than one dictionary for a
+given language.  For example @samp{add-dict-alias en_US en_US-w_accents}
+will cause Aspell to chose the accented version of the American English
+dictionary instead of the non-accented version.  To add an alias use:
+
+@example
+add-dict-alias @var{NAME} @var{VAL}
+@end example
 
 @node Listing Available Dictionaries
 @section Listing Available Dictionaries
@@ -1495,25 +1509,48 @@ To use the new word list copy the file to the normal word list
 directory (use @code{aspell config} to find out what it is) and use
 the option @option{--master=@var{base}}.
 
+During the creating of the dictionary you may get a number of warnings
+or errors about invalid words or affixes.  By default aspell will skip
+any invalid words and remove invalid affixes.  If you rather that Aspell
+simply accepts all words given than the option
+@option{--dont-validate-words} can be specified.  To avoid checking if
+affixes are valid use the option @option{--dont-validate-affixes}.
+However, rather than disable checking it is preferable to clean the
+input word list.  This can be done by using the command
+
+@example
+aspell --local-data-dir=./ --lang=@var{lang} clean < @var{wordlist} > @var{result}
+@end example
+
+@noindent
+which will clean the word list and output the results to @var{result}.
+By default it will remove invalid characters from the beginning and end
+of a word before resorting to skipping the word.  If you rather it just
+skip the words than add the keyword strict:
+
+@example
+aspell --local-data-dir=./ --lang=@var{lang} clean strict < @var{wordlist} > @var{result}
+@end example
+
+The option @option{--clean-words} can be be added when creating a
+dictionary if you want Aspell to remove invalid characters from the
+beginning and end of a word like the "clean" command does. In addition
+the options @option{--dont-skip-invalid-words} and
+@option{--dont-clean-affixes} can be specifed to turn the warnings into
+errors.
+
 The compiled dictionary file are endian order dependent.  When a
 dictionary is loaded the endian order is checked.  Please do not
 distribute the compiled dictionaries unless you are only distributing
-them for a particular platform such as you would a binary.  That is why
-is normally installed in @code{lib/aspell} instead of
-@code{share/aspell}.
+them for a particular platform such as you would a binary.  
 
 Aspell is now also able to use special @code{multi} dictionaries.  for
 more information @ref{How Aspell Selects an Appropriate Dictionary}.
 
 A personal and replacement word list can be created in a similar fashion.
 
-Because Aspell does not support any sort of affix compression like
-Ispell does, Ispell word lists will not work as is.  In order to use
-Ispell's word lists simply pipe the word list through @command{ispell
--e} to expand the munched word lists.
-
-FIXME: Add note about affix compression and use-soundslike,
-use-jump-tables, and affix-compress options.
+FIXME: add notes about how affix compression works when creating
+dictionaries.
 
 @subsection Format of the Replacement Word List
 
@@ -1540,6 +1577,10 @@ Specify more than word list to use with the
 Specify special @emph{multi} dictionaries.
 @end enumerate
 
+The @option{extra-dicts} is a list option.  To add a dictionary use
+@option{add-extra-dicts} or to remove a dictionary from the list
+use @option{rem-extra-dicts}.
+
 A @emph{multi} dictionary is a special file which is basically a list
 of dictionary files to use.  A @emph{multi} dictionary must end in
 @file{.multi} and has roughly the same format as a configuration file 
@@ -1562,16 +1603,16 @@ Each dictionary that you expect Aspell to be able to find needs to
 have a name in the following format:
 
 @example
-@var{language}[_@var{region}][-@var{script}][-@var{orthography}][-@var{jargon}][-@var{size}].multi
+@var{language}[_@var{region}][-@var{variety}][-@var{size}].multi
 @end example
 
 @noindent
-where @var{language} is the two letter language code,
-@var{region} is the two letter region code, @var{jargon} is any
-extra information to distinguish the word list from other ones with
-the same language and spelling, and @var{size} is the size of the
-dictionary.  If no size is specified that the default size of 60 will
-be assumed.
+where @var{language} is the two letter language code, @var{region} is
+the two letter region code, @var{variety} is any extra information to
+distinguish the word list from other ones with the same language and
+spelling.  Multiple varieties can be used by seperating them with a '-'.
+Finally, @var{size} is the size of the dictionary.  If no size is
+specified that the default size of 60 will be assumed.
 
 For example:
 
@@ -1595,7 +1636,7 @@ Aspell can find it.
 Each AWLI file has a name in the following format:
 
 @example
-@var{language}[@var{region}][-@var{jargon}][-@var{size}]-@var{module}.awli
+@var{language}[@var{region}][-@var{variety}][-@var{size}]-@var{module}.awli
 @end example
 
 @noindent
@@ -1673,7 +1714,7 @@ which will set the default language to use to American English.  The
 language is expected to be the standard two letter ISO 639 language
 code, with an optional two letter ISO 3166 country code after an
 underscore.  You can set the preferred size via the @option{size}
-option, any extra info via the @option{jargon} option, and the
+option, any extra info via the @option{variety} option, and the
 encoding via the @option{encoding} option.  Other things you might
 want to set is the preferred spell checker to use, the search path for
 dictionaries, and the like --- see @ref{The Options}, for a list of
@@ -1697,7 +1738,7 @@ else
 @noindent
 which will create a new @code{AspellSpeller} class using the defaults
 found in @code{spell_config}.  To find out which dictionary is
-selected the @option{lang}, @option{size}, and @option{jargon} options
+selected the @option{lang}, @option{size}, and @option{variety} options
 may be examined.  To find out the exact name of the dictionary the
 @option{master} option may be examined as well as the
 @option{master-flags} options to see if there were any special flags

@@ -256,8 +256,9 @@ namespace acommon {
       StringListEnumeration es = list.elements_obj();
       const char * m;
       cur_rank = 3;
-      unsigned num;
+      unsigned list_size = 0, num = 0;
       while ( (m = es.next()) != 0 ) {
+        ++list_size;
         unsigned s = strlen(m);
         const char * c = cur;
         unsigned p;
@@ -271,7 +272,7 @@ namespace acommon {
         if (!match) goto fail;
         cur_rank = 0;
       }
-      if (cur_rank == 0 && num != list.size()) cur_rank = 1;
+      if (cur_rank == 0 && num != list_size) cur_rank = 1;
     }
     return;
   fail:
@@ -433,7 +434,13 @@ namespace acommon {
         config->replace("master", main_wl.c_str());
         config->replace("master-flags", flags.c_str());
         config->replace("module", b_module.best);
-        config->replace("jargon", b_variety.best); // FIXME
+        config->replace("jargon", b_variety.best);
+        config->replace("rem-all-variety", "");
+        unsigned p;
+        for (const char * c = b_module.best; *c != '\0'; c += p) {
+          p = strcspn(c, "-");
+          config->replace("add-variety", String(c, p));
+        }
         config->replace("size", b_size.best_str);
       } else {
         delete config;
