@@ -1,5 +1,5 @@
 \input texinfo   @c -*-texinfo-*-
-@comment $Id: aspell.texi,v 1.20 2004/04/02 07:10:19 kevina Exp $
+@comment $Id: aspell.texi,v 1.21 2004/04/13 07:28:06 kevina Exp $
 @comment %**start of header
 @setfilename aspell.info
 @settitle GNU Aspell 0.60
@@ -117,7 +117,6 @@ Implementation Notes
 Languages Which Aspell can Support
 
 * Supported::                   
-* Syllabic::                    
 * Unsupported::                 
 * Multiple Scripts::            
 * Planned Dictionaries::        
@@ -773,12 +772,27 @@ sets the filter mode.  Mode is one of @samp{none}, @samp{url},
 @item encoding (@i{string})
 The encoding the input text is in.  Valid values are @samp{utf-8},
 @samp{iso-8859-*}, @samp{koi8-r}, @samp{viscii}, @samp{cp1252},
-@samp{utf-16}, @samp{utf-32}.  When using the aspell utility the
+@samp{ucs-2}, @samp{ucs-4}.  When using the aspell utility the
 default encoding is based on the current locale.  Thus if your locale
 currently uses the @samp{utf-8} encoding than everything will be in
-@acronym{UTF-8}.  The @samp{utf-16} and @samp{utf-32} encodings are
+@acronym{UTF-8}.  The @samp{ucs-2} and @samp{ucs-4} encodings are
 intended to be used by other programs using the Aspell library and is
 not suppotted by the Aspell utility.
+
+@item normalize (@i{boolean})
+Perform unicode normalization.
+
+@item norm-form (@i{string})
+The normalization form the output should be in.  This option primarly
+effects the normalization form of the suggestions as when spell
+checkering as the actual text is unchanged unless there is an error.
+Valid values are @samp{none}, @samp{nfd} for fully decomposition
+(Normalization Form D), @samp{nfc} for Normalization Form C, or
+@samp{comp} for fully composed.  @samp{comp} is like @samp{nfc} except
+that @emph{full} composition is used rather than @emph{canonical}
+composition.  The @option{normalize} option must be enabled for this
+option to be used.
+
 @end table
 
 These options belong to filters packaged along with Aspell standard
@@ -1665,10 +1679,10 @@ int correct = aspell_speller_check(spell_checker, @var{word}, @var{size});
 
 @noindent
 @var{word} is expected to be a @code{const char *} character
-string.  If the encoding is set to be @code{utf-16} or
-@code{utf-32}.  @var{word} is expected to be a cast
+string.  If the encoding is set to be @code{ucs-2} or
+@code{ucs-4} @var{word} is expected to be a cast
 from either @code{const u16int *} or @code{const u32int *}
-respectively.  @code{U16int} and @code{u32int} are generally
+respectively.  @code{u16int} and @code{u32int} are generally
 @code{unsigned short} and @code{unsigned int} respectively.
 @var{size} is the length of the string or @code{-1} if the string
 is null terminated.  If the string is a cast from @code{const u16int
@@ -2096,6 +2110,10 @@ Unimplemented
 @item flag-char
 
 Unimplemented
+
+@item normalize
+
+@item norm-form
 
 @end table
 
@@ -2828,7 +2846,6 @@ based on h@`anzi which includes Chinese, Japanese, and sometimes Korean.
 
 @menu
 * Supported::                   
-* Syllabic::                    
 * Unsupported::                 
 * Multiple Scripts::            
 * Planned Dictionaries::        
@@ -2928,28 +2945,13 @@ and 25 modifiers which is less than 220 and can thus fit in an Aspell
 language this special character set can be used to reperesnt any word
 written using the Latin script if so desired.
 
-@appendixsubsec Hangul
-
-Koren in generally written in hangul or a mixture of han and hangul.
-Aspell should be able to spell check the hangul part of the writing.  In
-Hangul letters individual letters, known as jamo, are grouped together
-in syllable blocks.  Unicode allows Hangul to be stored in one of three
-ways, individual jamo letters (Hangul Compatibility Jamo, U+3130 -
-U+318F), decomposed jamo (Hangul Jamo, U+1100 - U+11FF), and precoposed
-sylable blocks (Hangul Syllables, U+AC00 - U+D7AF).  Aspell will only
-work with the first form.
-
-@node Syllabic
-@appendixsec Syllabic 
+@appendixsubsec Syllabic 
 
 Syllabic languages use a separate symbol for each syllable of the
-language.  Since most of them have more than 220 distinct characters
-Aspell can not support them as is.  However, all hope is not lost as
-Aspell will most likely be able to support them in the future.
+language.  Even thought most of them have more than 220 distinct
+symbols Aspell can still support them by breaking them up.
 
-@include lang-syllabic.texi
-
-@appendixsubsec The Ethiopic Syllabary
+@appendixsubsubsec The Ethiopic Syllabary
 
 Even though the Ethiopic script has more than 220 distinct characters
 with a little work Aspell can still handle it.  The idea is to split
@@ -2976,21 +2978,33 @@ The code to break up a syllabary into the consonant-vowel parts does
 not exists as of Aspell 0.60.  However, it will be fairly easy to add
 it as part of the Unicode normalization process once that is written.
 
-@appendixsubsec The Yi Syllabary 
+@appendixsubsubsec The Yi Syllabary 
 
 A very large syllabary with 819 distince symbols.  However, like
 Ethiopic, it should be possible to support this script by breaking it
 up.
 
-@appendixsubsec The Unified Canadian Aboriginal Syllabics
+@appendixsubsubsec The Unified Canadian Aboriginal Syllabics
 
 Another very large syllabary.
 
-@appendixsubsec The Ojibwe Syllabary 
+@appendixsubsubsec The Ojibwe Syllabary 
 
 With only 120 distinct symbols, Aspell can actually support this one as
 is.  However, as previously mentioned, it may be beneficial to break it
 up into the consonant-vowel representation anyway.
+
+@appendixsubsec Hangul
+
+Koren in generally written in hangul or a mixture of han and hangul.
+Aspell should be able to spell check the hangul part of the writing.  In
+Hangul letters individual letters, known as jamo, are grouped together
+in syllable blocks.  Unicode allows Hangul to be stored in one of three
+ways, individual jamo letters (Hangul Compatibility Jamo, U+3130 -
+U+318F), decomposed jamo (Hangul Jamo, U+1100 - U+11FF), and precoposed
+sylable blocks (Hangul Syllables, U+AC00 - U+D7AF).  Aspell will only
+work with the first form.
+
 
 @node Unsupported
 @appendixsec Unsupported
@@ -3211,6 +3225,8 @@ language.  Give the choice of
 if the precomposed charter is in the target character set then (1), if
 both the base and combing character is present than (2), otherwise (3).
 
+Unicode Normalization is now implemented in Aspell 0.60.
+
 @node Words With Symbols in Them
 @appendixsec Words With Spaces or other Symbols in Them
 
@@ -3378,8 +3394,6 @@ require that the whole document be made available to the spell checker.
 Also use frequency information to flag words which are found in the
 dictionary but not in common usage, and thus might not be what was
 intended.
-@item
-Perform normization on Unicode input.  @xref{Unicode Normalization}.
 @item
 Support a @strong{"dual-script" mode} where Aspell can use a separate
 dictionary depending on which script it detects the current word in, the
