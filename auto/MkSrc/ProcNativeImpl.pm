@@ -78,7 +78,7 @@ $info{errors}{proc}{native_impl} = sub {
     $ret .= "  ".(defined $isa ? "$isa": 0).", // isa\n";
     $ret .= "  $mesg, // mesg\n";
     $ret .= "  ".scalar @parms.", // num_parms\n";
-    $ret .= "  {".(join ', ', map {"\"$_\""} @parms)."} // parms\n";
+    $ret .= "  {".(join ', ', map {"\"$_\""} (@parms ? @parms : ("")))."} // parms\n";
     $ret .= "};\n";
     $ret .= "extern \"C\" const ErrorInfo * const $name = &$name\_obj;\n";
     $ret .= "\n";

@@ -279,31 +279,31 @@ namespace acommon {
 
   PosibErr<const KeyInfo *> Config::keyinfo(ParmString key) const
   {
-    PosibErr<const KeyInfo *> ret;
+    typedef PosibErr<const KeyInfo *> Ret;
     const KeyInfo * i;
   
     i = acommon::find(key, kmi.main_begin, kmi.main_end);
-    if (i != kmi.main_end) return ret = i;
+    if (i != kmi.main_end) return Ret(i);
   
     i = acommon::find(key, kmi.extra_begin, kmi.extra_end);
-    if (i != kmi.extra_end) return ret = i;
+    if (i != kmi.extra_end) return Ret(i);
   
     const char * h = strchr(key, '-');
 
     if (h == 0) 
-      return ret.prim_err(unknown_key, key);
+      return Ret().prim_err(unknown_key, key);
 
     String k(key,h-key);
     const ConfigModule * j = acommon::find(k, 
-				     kmi.modules_begin, 
-				     kmi.modules_end);
+					   kmi.modules_begin, 
+					   kmi.modules_end);
     if (j == kmi.modules_end)
-      return ret.prim_err(unknown_key, key);
+      return Ret().prim_err(unknown_key, key);
   
     i = acommon::find(key, j->begin, j->end);
-    if (i != j->end) return ret = i;
+    if (i != j->end) return Ret(i);
   
-    return ret.prim_err(unknown_key, key);
+    return Ret().prim_err(unknown_key, key);
   }
 
   static bool proc_locale_str(ParmString lang, String & final_str)

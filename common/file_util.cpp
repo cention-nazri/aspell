@@ -19,8 +19,19 @@
  
 // This needs to be <stdio.h> and not <cstdio>
 #include <stdio.h>
-#include <unistd.h>
 #include <sys/stat.h>
+
+#ifdef WIN32
+
+#  include <io.h>
+#  define ACCESS _access
+
+#else
+
+#  include <unistd.h>
+#  define ACCESS access
+
+#endif
 
 
 namespace acommon {
@@ -130,7 +141,7 @@ namespace acommon {
   }
 
   bool file_exists(ParmString name) {
-    return access(name, F_OK) == 0;
+    return ACCESS(name, F_OK) == 0;
     //struct stat fileinfo;
     //return stat(name, &fileinfo) == 0;
   }

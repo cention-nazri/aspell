@@ -208,7 +208,7 @@ int main (int argc, const char *argv[])
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 #endif
-  
+
   EXIT_ON_ERR(options->read_in_settings());
 
   if (argc == 1) {print_help(); return 0;}
@@ -514,6 +514,8 @@ void pipe()
   for (;;) {
     buf.clear();
     while (c = getchar(), c != '\n' && c != EOF)
+      buf.push_back(static_cast<char>(c));
+    if (c == '\n')
       buf.push_back(static_cast<char>(c));
     buf.push_back('\0');
     line = buf.data();

@@ -43,7 +43,7 @@ namespace acommon {
 
     // NOTE: Use c_stream only as a last resort as it may
     //       disappear if the underlining impl changes
-    std::FILE * c_stream();
+    FILE * c_stream();
     // However, file_no will always be available.
     int file_no();
 

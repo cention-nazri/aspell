@@ -13,5 +13,5 @@ libaspell_speller_default_la_SOURCES = \
 
 libaspell_speller_default_la_LDFLAGS = -release 0.50.2
 
-EXTRA_DIST = *.hpp
+EXTRA_DIST = *.hpp affix.license
 

@@ -14,7 +14,12 @@
  /* BSDi defines u_intXX_t types in machine/types.h */
 #include <machine/types.h>
 #endif
-#include <dirent.h>
+#ifdef WIN32
+#  include <windows.h>
+#  include <winbase.h>
+#else
+#  include <dirent.h>
+#endif
 
 #include "iostream.hpp"
 

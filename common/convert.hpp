@@ -73,7 +73,7 @@ namespace acommon {
 
     void append_null(CharVector & out) const
     {
-      const char nul[8] = {0}; // 8 should be more than enough
+      const char nul[8] = {0,0,0,0,0,0,0,0}; // 8 should be more than enough
       out.write(nul, null_len_);
     }
 

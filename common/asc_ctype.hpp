@@ -14,7 +14,7 @@ namespace acommon {
 
   static inline bool asc_isspace(char c) 
   {
-    return c==' '|c=='\n'|c=='\r'|c=='\t'|c=='\f'|c=='\v';
+    return c==' ' || c=='\n' || c=='\r' || c=='\t' || c=='\f' || c=='\v';
   }
 
   static inline bool asc_isdigit(char c)
