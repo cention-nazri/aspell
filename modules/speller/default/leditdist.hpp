@@ -18,6 +18,7 @@ namespace aspeller {
   //   + (cost of substitutions)(# of substitutions)
 
   // Preconditions:
+  //  max(strlen(a), strlen(b))*max(of the edit weights) <= 2^15
   //  (limit+1)*w.min < limit*w.max
   //  limit <= 5 (use edit_distance if limit > 5)
   // where w.min and w.max is the minimum and maximum cost of an edit

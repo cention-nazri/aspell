@@ -97,6 +97,7 @@ namespace {
   struct ScoreWordSound {
     char * word;
     char * word_clean;
+    //unsigned word_size;
     const char * soundslike;
     int           score;
     int           word_score;
@@ -284,6 +285,9 @@ namespace {
   };
 
   void Working::get_suggestions(NearMissesFinal & sug) {
+
+    if (original.word.size() * parms->edit_distance_weights.max > 0x7FFF)
+      return; // to prevent overflow in the editdist functions
 
     near_misses_final = & sug;
 
@@ -490,6 +494,7 @@ namespace {
     ScoreWordSound & d = near_misses.front();
     d.word = word;
     d.soundslike = sl;
+    //d.word_size = word_size;
     
     if (parms->use_typo_analysis) {
       unsigned int l = word_size;
@@ -993,7 +998,7 @@ namespace {
     int try_for = (parms->word_weight*parms->edit_distance_weights.max)/100;
     while (true) {
       try_for += (parms->word_weight*parms->edit_distance_weights.max)/100;
-	
+
       // put all pairs whose score <= initial_limit*max_weight
       // into the scored list
 
@@ -1010,13 +1015,13 @@ namespace {
             int sl_score = i->soundslike_score < LARGE_NUM ? i->soundslike_score : 0;
             int level = needed_level(try_for, sl_score);
             
-            if (level >= int(sl_score/parms->edit_distance_weights.min))
+            if (level >= int(sl_score/parms->edit_distance_weights.min)) 
               i->word_score = edit_distance(original.clean,
                                             i->word_clean,
                                             level, level,
                                             parms->edit_distance_weights);
         }
-
+        
         if (i->word_score >= LARGE_NUM) goto cont1;
 
         if (i->soundslike_score >= LARGE_NUM) 
