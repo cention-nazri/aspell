@@ -654,6 +654,7 @@ namespace {
   struct WordData {
     WordData * next;
     char * sl;
+    char * aff;
     byte word_size;
     byte sl_size;
     byte data_size;
@@ -867,8 +868,11 @@ namespace {
 
           if (aff_size > 0) {
             b->flags |= HAVE_AFFIX_FLAGS;
+            b->aff = z;
             memcpy(z, p->aff, aff_size + 1);
             z += aff_size + 1;
+          } else {
+            b->aff = 0;
           }
 
           if (sl != w) {
@@ -891,13 +895,32 @@ namespace {
     first = sort(first, SoundslikeLess());
 
     //
-    // duplicate checks
+    // duplicate check
     // 
     WordData * prev = first;
     WordData * cur = first->next;
     while (cur) {
       if (strcmp(prev->word, cur->word) == 0) {
-        CERR.printf("WARNING: Ignoring duplicate: %s\n", cur->word);
+        // merge affix info if necessary
+        if (!prev->aff && cur->aff) {
+          prev->flags |= HAVE_AFFIX_FLAGS;
+          prev->aff = cur->aff;
+          prev->data_size += strlen(prev->aff) + 1;
+        } else if (prev->aff && cur->aff) {
+          unsigned l1 = strlen(prev->aff);
+          unsigned l2 = strlen(cur->aff);
+          char * aff = (char *)buf.alloc(l1 + l2 + 1);
+          memcpy(aff, prev->aff, l1);
+          prev->aff = aff;
+          aff += l1;
+          for (const char * p = cur->aff; *p; ++p) {
+            if (memchr(prev->aff, l1, *p)) continue;
+            *aff = *p;
+            ++aff;
+          }
+          *aff = '\0';
+          prev->data_size = prev->word_size + (aff - prev->aff) + 2;
+        }
         prev->next = cur->next;
       } else {
         prev = cur;
@@ -1007,7 +1030,8 @@ namespace {
       if (invisible_soundslike) {
         
         unsigned pos = data.size();
-        data.write(p->word, p->data_size);
+        data.write(p->word, p->word_size + 1);
+        if (p->aff) data.write(p->aff, p->data_size - p->word_size - 1);
         lookup.insert(pos);
 
         p = p->next;
@@ -1026,7 +1050,8 @@ namespace {
           data.write(p->word_size);
 
           unsigned pos = data.size();
-          data.write(p->word, p->data_size);
+          data.write(p->word, p->word_size + 1);
+          if (p->aff) data.write(p->aff, p->data_size - p->word_size - 1);
           lookup.insert(pos);
 
           prev = p->sl;
