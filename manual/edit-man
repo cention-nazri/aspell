@@ -1,0 +1,5 @@
+#!/bin/bash
+
+export ASPELL_CONF="personal ./manual2.per"
+run-with-aspell lyx manual2.lyx
+

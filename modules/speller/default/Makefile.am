@@ -11,7 +11,7 @@ libaspell_speller_default_la_SOURCES = \
  language.cpp        phonetic.cpp      typo_editdist.cpp
 
 
-libaspell_speller_default_la_LDFLAGS = -release 0.50
+libaspell_speller_default_la_LDFLAGS = -release 0.50.2
 
 EXTRA_DIST = *.hpp
 

@@ -37,6 +37,6 @@ libaspell_common_la_SOURCES = \
   speller.cpp document_checker.cpp filter.cpp \
   strtonum.cpp
 
-libaspell_common_la_LDFLAGS = ${extra_ldflags} -release 0.50.1
+libaspell_common_la_LDFLAGS = ${extra_ldflags} -release 0.50.2
 
 EXTRA_DIST = *.hpp gettext.h

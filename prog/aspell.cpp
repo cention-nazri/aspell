@@ -624,7 +624,7 @@ void pipe()
 	if (!aspell_word_list_empty(suggestions)) {
 	  COUT << "& " << word 
 	       << " " << aspell_word_list_size(suggestions) 
-	       << " " << token.offset
+	       << " " << token.offset + ignore
 	       << ":";
 	  AspellStringEnumeration * els 
 	    = aspell_word_list_elements(suggestions);
