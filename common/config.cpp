@@ -1095,8 +1095,6 @@ namespace acommon {
        N_("search path for word list information files")}
     , {"affix-char",          KeyInfoString, "/", // FIXME: Implement
        N_("indicator for affix flags in word lists"), KEYINFO_UTF8}
-    , {"flag-char",           KeyInfoString, ":", // FIXME: Implement
-       N_("indicator for additional flags in word lists"), KEYINFO_UTF8}
     , {"use-other-dicts", KeyInfoBool, "true",
        N_("use personal, replacement & session dictionaries")}
     , {"warn", KeyInfoBool, "false", // FIXME: Implement
@@ -1120,6 +1118,23 @@ namespace acommon {
        N_("use affix compression when creating dictionaries")}
     , {"partially-expand",  KeyInfoBool, "false",
        N_("partially expand affixes for better suggestions")}
+
+    //
+    // 
+    //
+    //
+
+    , {"validate-words", KeyInfoBool, "true",
+       N_("check if words are valid")}
+    , {"validate-affixes", KeyInfoBool, "true",
+       N_("check if affix flags are valid")}
+    , {"clean-words", KeyInfoBool, "false",
+       N_("attempts to clean words so that they are valid")}
+    , {"skip-invalid-words",  KeyInfoBool, "false",
+       N_("skip invalid words")}
+    , {"clean-affixes", KeyInfoBool, "false",
+       N_("remove invalid affix flags")}
+    
     //
     // These options are specific to the "aspell" utility.  They are
     // here so that they can be specified in configuration files.

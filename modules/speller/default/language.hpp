@@ -12,6 +12,7 @@
 #include "stack_ptr.hpp"
 #include "string.hpp"
 #include "objstack.hpp"
+#include "string_enumeration.hpp"
 
 #include "iostream.hpp"
 
@@ -261,7 +262,7 @@ namespace aspeller {
     const char * soundslike_name() const {return soundslike_->name();}
     const char * soundslike_version() const {return soundslike_->version();}
 
-    void to_soundslike(String & res, ParmString word) const {
+    void to_soundslike(String & res, ParmStr word) const {
       res.resize(word.size());
       char * e = soundslike_->to_soundslike(res.data(), word.str(), word.size());
       res.resize(e - res.data());
@@ -287,9 +288,9 @@ namespace aspeller {
 
     bool have_affix() const {return affix_;}
 
-    void munch(ParmString word, GuessInfo * cl) const {affix_->munch(word, cl);}
+    void munch(ParmStr word, GuessInfo * cl) const {affix_->munch(word, cl);}
 
-    WordAff * expand(ParmString word, ParmString aff, 
+    WordAff * expand(ParmStr word, ParmStr aff, 
                      ObjStack & buf, int limit = INT_MAX) const {
       return affix_->expand(word, aff, buf, limit);
     }
@@ -307,13 +308,13 @@ namespace aspeller {
     //
     //
 
-    WordInfo get_word_info(ParmString str) const;
+    WordInfo get_word_info(ParmStr str) const;
     
     //
     // fix_case
     //
 
-    CasePattern case_pattern(ParmString str) const;
+    CasePattern case_pattern(ParmStr str) const;
 
     void fix_case(CasePattern case_pattern, char * str)
     {
@@ -405,15 +406,59 @@ namespace aspeller {
     bool operator() (const char * word, const char * inlist) const;
   };
 
+  struct CleanAffix {
+    const Language * lang;
+    OStream * log;
+    MsgConv msgconv1;
+    MsgConv msgconv2;
+    CleanAffix(const Language * lang0, OStream * log0);
+    char * operator() (ParmStr word, char * aff);
+  };
+
+  class WordListIterator
+  {
+  public:
+    struct Value {
+      SimpleString word;
+      SimpleString aff;
+    };
+    WordListIterator(StringEnumeration * in,
+                     const Language * lang,
+                     OStream * log);
+    // init may set "norm-strict" to true which is why it is not const
+    PosibErr<void> init (Config & config);
+    const Value * operator-> () const {return &val;}
+    PosibErr<bool> adv();
+  private:
+    bool have_affix;
+    bool validate_words;
+    bool validate_affixes;
+    bool clean_words;
+    bool skip_invalid_words;
+    bool clean_affixes;
+    StringEnumeration * in;
+    const Language * lang;
+    ConvEC iconv;
+    OStream * log;
+    Value val;
+    String data;
+    const char * orig;
+    char * str;
+    char * str_end;
+    char brk[3];
+    CleanAffix clean_affix;
+  };
+
   String get_stripped_chars(const Language & l);
 
   String get_clean_chars(const Language & l);
   
-  PosibErr<void> check_if_valid(const Language & l, ParmString word);
+  PosibErr<void> check_if_valid(const Language & l, ParmStr word);
+  PosibErr<void> validate_affix(const Language & l, ParmStr word, ParmStr aff);
 
   bool find_language(Config & c);
 
-  PosibErr<Language *> new_language(const Config &, ParmString lang = 0);
+  PosibErr<Language *> new_language(const Config &, ParmStr lang = 0);
 
   PosibErr<void> open_affix_file(const Config &, FStream & o);
 }

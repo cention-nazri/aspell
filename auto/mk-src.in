@@ -465,6 +465,12 @@ errors:
 		invalid word
 			mesg => The word "%word" is invalid.
 			parms => word
+		invalid affix
+			mesg => The affix flag '%aff' is invalid for word "%word".
+			parms => aff, word
+		unapplicable affix
+			mesg => The affix flag '%aff' can not be applied to word "%word".
+			parms => aff, word
 		unknown unichar
 			mesg => 
 		word list flags

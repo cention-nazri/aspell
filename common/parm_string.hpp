@@ -68,39 +68,42 @@ namespace acommon {
     const char * str_;
     mutable unsigned int size_;
   };
+
+  typedef const ParmString & ParmStr;
+
 #ifndef __SUNPRO_CC
-  static inline bool operator== (ParmString s1, ParmString s2)
+  static inline bool operator== (ParmStr s1, ParmStr s2)
   {
     if (s1.str() == 0 || s2.str() == 0)
       return s1.str() == s2.str();
     return strcmp(s1,s2) == 0;
   }
 #endif
-  static inline bool operator== (const char * s1, ParmString s2)
+  static inline bool operator== (const char * s1, ParmStr s2)
   {
     if (s1 == 0 || s2.str() == 0)
       return s1 == s2.str();
     return strcmp(s1,s2) == 0;
   }
-  static inline bool operator== (ParmString s1, const char * s2)
+  static inline bool operator== (ParmStr s1, const char * s2)
   {
     if (s1.str() == 0 || s2 == 0)
       return s1.str() == s2;
     return strcmp(s1,s2) == 0;
   }
-  static inline bool operator!= (ParmString s1, ParmString s2)
+  static inline bool operator!= (ParmStr s1, ParmStr s2)
   {
     if (s1.str() == 0 || s2.str() == 0)
       return s1.str() != s2.str();
     return strcmp(s1,s2) != 0;
   }
-  static inline bool operator!= (const char * s1, ParmString s2)
+  static inline bool operator!= (const char * s1, ParmStr s2)
   {
     if (s1 == 0 || s2.str() == 0)
       return s1 != s2.str();
     return strcmp(s1,s2) != 0;
   }
-  static inline bool operator!= (ParmString s1, const char * s2)
+  static inline bool operator!= (ParmStr s1, const char * s2)
   {
     if (s1.str() == 0 || s2 == 0)
       return s1.str() != s2;

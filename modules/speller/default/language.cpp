@@ -332,7 +332,7 @@ namespace aspeller {
     }
   }
 
-  WordInfo Language::get_word_info(ParmString str) const
+  WordInfo Language::get_word_info(ParmStr str) const
   {
     CharInfo first = CHAR_INFO_ALL, all = CHAR_INFO_ALL;
     const char * p = str;
@@ -348,7 +348,7 @@ namespace aspeller {
     return res;
   }
   
-  CasePattern Language::case_pattern(ParmString str) const  
+  CasePattern Language::case_pattern(ParmStr str) const  
   {
     CharInfo first = CHAR_INFO_ALL, all = CHAR_INFO_ALL;
     const char * p = str;
@@ -428,7 +428,7 @@ namespace aspeller {
   }
 
   static PosibErrBase invalid_word_e(const Language & l,
-                                     ParmString word,
+                                     ParmStr word,
                                      const char * msg,
                                      char chr = 0)
   {
@@ -440,7 +440,7 @@ namespace aspeller {
     return make_err(invalid_word, MsgConv(l)(word), msg);
   }
 
-  PosibErr<void> check_if_valid(const Language & l, ParmString word) {
+  PosibErr<void> check_if_valid(const Language & l, ParmStr word) {
     if (*word == '\0') 
       return invalid_word_e(l, word, _("Empty string."));
     const char * i = word;
@@ -468,6 +468,42 @@ namespace aspeller {
         return invalid_word_e(l, word, _("The character '%s' (U+%02X) may not appear at the end of a word."), *i);
     }
     return no_err;
+  }
+
+  PosibErr<void> validate_affix(const Language & l, ParmStr word, ParmStr aff)
+  {
+    for (const char * a = aff; *a; ++a) {
+      CheckAffixRes res = l.affix()->check_affix(word, *a);
+      if (res == InvalidAffix)
+        return make_err(invalid_affix, MsgConv(l)(*a), MsgConv(l)(word));
+      else if (res == UnapplicableAffix)
+        return make_err(unapplicable_affix, MsgConv(l)(*a), MsgConv(l)(word));
+    }
+    return no_err;
+  }
+
+  CleanAffix::CleanAffix(const Language * lang0, OStream * log0)
+    : lang(lang0), log(log0), msgconv1(lang0), msgconv2(lang0)
+  {
+  }
+  
+  char * CleanAffix::operator()(ParmStr word, char * aff)
+  {
+    char * r = aff;
+    for (const char * a = aff; *a; ++a) {
+      CheckAffixRes res = lang->affix()->check_affix(word, *a);
+      if (res == ValidAffix) {
+        *r = *a;
+        ++r;
+      } else if (log) {
+        const char * msg = res == InvalidAffix 
+          ? _("Removing invalid affix '%s' from word %s.\n")
+          : _("Removing unapplicable affix '%s' from word %s.\n");
+        log->printf(msg, msgconv1(*a), msgconv2(word));
+      }
+    }
+    *r = '\0';
+    return r;
   }
 
   String get_stripped_chars(const Language & lang) {
@@ -505,7 +541,7 @@ namespace aspeller {
     return chars_list;
   }
 
-  PosibErr<Language *> new_language(const Config & config, ParmString lang)
+  PosibErr<Language *> new_language(const Config & config, ParmStr lang)
   {
     if (!lang)
       return get_cache_data(&language_cache, &config, config.retrieve("lang"));
@@ -555,4 +591,107 @@ namespace aspeller {
     return false;
   }
 
+  WordListIterator::WordListIterator(StringEnumeration * in0,
+                                   const Language * lang0,
+                                   OStream * log0)
+    : in(in0), lang(lang0), log(log0), val(), str(0), str_end(0), brk(), 
+      clean_affix(lang0, log0)
+  {
+  }
+
+  PosibErr<void>  WordListIterator::init(Config & config)
+  {
+    if (!config.have("norm-strict"))
+      config.replace("norm-strict", "true");
+    have_affix = lang->have_affix();
+    validate_words = config.retrieve_bool("validate-words");
+    validate_affixes = config.retrieve_bool("validate-affixes");
+    clean_words = config.retrieve_bool("clean-words");
+    skip_invalid_words = config.retrieve_bool("skip-invalid-words");
+    clean_affixes = config.retrieve_bool("clean-affixes");
+    if (config.have("encoding")) {
+      RET_ON_ERR(iconv.setup(config, config.retrieve("encoding"), lang->charmap(),NormFrom));
+    } else {
+      RET_ON_ERR(iconv.setup(config, lang->data_encoding(), lang->charmap(), NormFrom));
+    }
+    brk[0] = ' ';
+    if (!lang->special('-').any) brk[1] = '-';
+    return no_err;
+  }
+
+  PosibErr<bool> WordListIterator::adv() 
+  {
+  loop:
+    if (!str) {
+      orig = in->next();
+      if (!orig) return false;
+      if (!*orig) goto loop;
+      PosibErr<const char *> pe = iconv(orig);
+      if (pe.has_err()) {
+        if (!skip_invalid_words) return pe;
+        if (log) log->printf(_("Error: %s Skipping string.\n"), pe.get_err()->mesg);
+        else pe.ignore_err();
+        goto loop;
+      }
+      if (pe.data == orig) {
+        data = orig;
+        data.ensure_null_end();
+        str = data.pbegin();
+        str_end = data.pend();
+      } else {
+        str = iconv.buf.pbegin();
+        str_end = iconv.buf.pend();
+      }
+      while (asc_isspace(*str)) ++str;
+      while (str_end > str && asc_isspace(str_end[-1])) -- str_end;
+      char * aff = str_end;
+      char * aff_end = str_end;
+      if (have_affix) {
+        aff = strchr(str, '/');
+        if (aff == 0) {
+          aff = str_end;
+        } else {
+          *aff = '\0';
+          str_end = aff;
+          ++aff;
+        }
+        if (validate_affixes) {
+          if (clean_affixes)
+            aff_end = clean_affix(str, aff);
+          else
+            RET_ON_ERR(validate_affix(*lang, str, aff));
+        }
+      }
+      val.aff.str = aff;
+      val.aff.size = aff_end - aff;
+      if (!*aff && validate_words && clean_words) {
+        char * s = str;
+        while (s < str_end) {
+          while (s < str_end && !lang->is_alpha(*s) && !lang->special(*s).begin)
+            *s++ = '\0';
+          s += strcspn(s, brk);
+          *s = '\0';
+          char * s2 = s - 1;
+          while (s2 >= str && *s2 && !lang->is_alpha(*s2) && !lang->special(*s2).end)
+            *s2-- = '\0';
+        }
+      }
+    }
+    for (; str < str_end; str += strlen(str) + 1) {
+      if (!*str) continue;
+      PosibErrBase pe2 = validate_words ? check_if_valid(*lang, str) : no_err;
+      if (pe2.has_err()) {
+        if (!skip_invalid_words) return pe2;
+        if (log) log->printf(_("Error: %s Skipping word.\n"), pe2.get_err()->mesg);
+        else pe2.ignore_err();
+      } else {
+        val.word.str = str;
+        val.word.size = strlen(str);
+        str += val.word.size + 1;
+        return true;
+      }
+    }
+    str = 0;
+    goto loop;
+  }
 }

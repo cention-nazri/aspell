@@ -1287,6 +1287,24 @@ void print_ver () {
 // module
 //
 
+class IstreamEnumeration : public StringEnumeration {
+  FStream * in;
+  String data;
+public:
+  IstreamEnumeration(FStream & i) : in(&i) {}
+  IstreamEnumeration * clone() const {
+    return new IstreamEnumeration(*this);
+  }
+  void assign (const StringEnumeration * other) {
+    *this = *static_cast<const IstreamEnumeration *>(other);
+  }
+  Value next() {
+    if (!in->getline(data)) return 0;
+    else return data.c_str();
+  }
+  bool at_end() const {return *in;}
+};
+
 ///////////////////////////
 //
 // clean
@@ -1306,91 +1324,28 @@ void clean()
   PosibErr<Language *> res = new_language(*config);
   if (res.has_err()) {print_error(res.get_err()->mesg); exit(1);}
   lang.reset(res.data);
-  ConvEC iconv; 
+  IstreamEnumeration in(CIN);
+  WordListIterator wl_itr(&in, lang, &CERR);
+  config->replace("validate-words", "true");
+  config->replace("validate-affixes", "true");
+  if (!strict)
+    config->replace("clean-words", "true");
+  config->replace("clean-affixes", "true");
+  config->replace("skip-invalid-words", "true");
+  wl_itr.init(*config);
   Conv oconv, oconv2;
-  bool have_affix = lang->have_affix();
-  if (!config->have("norm-strict"))
-    config->replace("norm-strict", "true");
   if (config->have("encoding")) {
-    EXIT_ON_ERR(iconv.setup(*config, config->retrieve("encoding"), lang->charmap(),NormFrom));
     EXIT_ON_ERR(oconv.setup(*config, lang->charmap(), config->retrieve("encoding"), NormTo));
     oconv2.setup(*config, lang->charmap(), config->retrieve("encoding"), NormTo);
   } else {
-    EXIT_ON_ERR(iconv.setup(*config, lang->data_encoding(), lang->charmap(), NormFrom));
     EXIT_ON_ERR(oconv.setup(*config, lang->charmap(), lang->data_encoding(), NormTo));
     oconv2.setup(*config, lang->charmap(), lang->data_encoding(), NormTo);
   }
-  
-  String data;
-  char * str;
-  char * str_end;
-  char * aff = "";
-  char brk[3] = " ";
-  if (!lang->special('-').any) brk[1] = '-';
-  while (CIN.getline(data)) {
-    data.ensure_null_end();
-    PosibErr<char *> pe = iconv(data.data(), data.size());
-    if (pe.has_err()) {
-      CERR.printf("Error: %s Skipping string.\n", pe.get_err()->mesg);
-      continue;
-    } else {
-      String * s = pe.data == data.data() ? &data : &iconv.buf;
-      str = s->pbegin();
-      str_end = s->pend();
-    }
-    if (have_affix) {
-      aff = strchr(str, '/');
-      if (aff == 0) {
-        aff = str_end;
-      } else {
-        *aff = '\0';
-        str_end = aff;
-        ++aff;
-      }
-    }
-    if (!strict) {
-      char * s = str;
-      while (s < str_end) {
-        while (s < str_end && !lang->is_alpha(*s) && !lang->special(*s).begin)
-          *s++ = '\0';
-        if (*aff) {
-          s = str_end;
-        } else {
-          s += strcspn(s, brk);
-          *s = '\0';
-        }
-        char * s2 = s - 1;
-        while (s2 >= str && *s2 && !lang->is_alpha(*s2) && !lang->special(*s2).end)
-          *s2-- = '\0';
-      }
-    }
-    if (*aff) {
-      char * r = aff;
-      for (const char * a = aff; *a; ++a) {
-        CheckAffixRes res = lang->affix()->check_affix(str, *a);
-        if (res == InvalidAffix) {
-          CERR.printf("Removing invalid affix '%c' from word %s.\n", *a, str);
-        } else if (res == UnapplicableAffix) {
-          CERR.printf("Removing unapplicable affix '%c' from word %s.\n", *a, str);
-        } else {
-          *r = *a;
-          ++r;
-        }
-      }
-      *r = '\0';
-    }
-    for (; str < str_end; str += strlen(str) + 1) {
-      if (!*str) continue;
-      PosibErrBase pe2 = check_if_valid(*lang, str);
-      if (pe2.has_err()) {
-        CERR.printf("Error: %s Skipping word.\n", pe2.get_err()->mesg);
-      } else {
-        if (*aff) 
-          COUT.printf("%s/%s\n", oconv(str), oconv(aff));
-        else
-          COUT.printl(oconv(str));
-      }
-    }
+  while (wl_itr.adv()) {
+    if (*wl_itr->aff.str) 
+      COUT.printf("%s/%s\n", oconv(wl_itr->word), oconv2(wl_itr->aff));
+    else
+      COUT.printl(oconv(wl_itr->word));
   }
 }
 
@@ -1398,24 +1353,6 @@ void clean()
 //
 // master
 //
-
-class IstreamVirEnumeration : public StringEnumeration {
-  FStream * in;
-  String data;
-public:
-  IstreamVirEnumeration(FStream & i) : in(&i) {}
-  IstreamVirEnumeration * clone() const {
-    return new IstreamVirEnumeration(*this);
-  }
-  void assign (const StringEnumeration * other) {
-    *this = *static_cast<const IstreamVirEnumeration *>(other);
-  }
-  Value next() {
-    if (!in->getline(data)) return 0;
-    else return data.c_str();
-  }
-  bool at_end() const {return *in;}
-};
 
 void dump (aspeller::Dict * lws, Convert * conv) 
 {
@@ -1460,7 +1397,7 @@ void master () {
     
     find_language(*config);
     EXIT_ON_ERR(create_default_readonly_dict
-                (new IstreamVirEnumeration(CIN),
+                (new IstreamEnumeration(CIN),
                  *config));
 
   } else if (action == do_merge) {
