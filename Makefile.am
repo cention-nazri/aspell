@@ -220,21 +220,11 @@ CLEANFILES = gen/static_filters.src.cpp
 
 common/config.cpp: gen/dirs.h
 
-noinst_PROGRAMS = gen/mk-dirs_h
-noinst_DATA += gen/dirs.h
+gen/dirs.h: gen/mk-dirs_h.pl
+	cd gen; perl mk-dirs_h.pl ${prefix} ${pkgdatadir} ${pkglibdir}  ${sysconfdir} >  dirs.h
 
-gen/dirs.h: gen/mk-dirs_h
-	cd gen; echo '#define PREFIX "${prefix}"'            >  dirs.h
-	cd gen; ./mk-dirs_h ${prefix} DICT_DIR ${pkglibdir}  >> dirs.h
-	cd gen; ./mk-dirs_h ${prefix} DATA_DIR ${pkgdatadir} >> dirs.h
-	cd gen; ./mk-dirs_h ${prefix} CONF_DIR ${sysconfdir} >> dirs.h
-	cd gen; ./mk-dirs_h ${prefix} FILTER_DIR ${pkglibdir} >> dirs.h
-	cd gen; ./mk-dirs_h ${prefix} FILTER_OPT_DIR ${pkgdatadir} >> dirs.h
-
-gen_mk_dirs_h_SOURCES = gen/mk-dirs_h.cpp
-
+EXTRA_DIST += gen/mk-dirs_h.pl
 CLEANFILES += gen/dirs.h
-
 
 ########################################################################
 #
