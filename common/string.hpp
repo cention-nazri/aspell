@@ -344,9 +344,10 @@ namespace acommon {
       else return res - begin_;
     }
     size_t rfind(char c) const {
-      char * res = (char *)memrchr(begin_, c, size());
-      if (res == 0) return npos;
-      else return res - begin_;
+      for (int i = size() - 1; i >= 0; --i) {
+        if (begin_[i] == c) return i;
+      }
+      return npos;
     }
     String substr(size_t pos = 0, size_t n = npos) const
     {
