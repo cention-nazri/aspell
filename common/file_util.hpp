@@ -9,7 +9,7 @@
 
 #include <time.h>
 #ifdef WIN32PORT
-#include <windows.h> //HANDLE
+#include "minwin.h" //minimum windows declarations.
 #endif
 #include "string.hpp"
 #include "posib_err.hpp"

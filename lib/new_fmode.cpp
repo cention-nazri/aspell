@@ -3,6 +3,9 @@
 // license version 2.0 or 2.1.  You should have received a copy of the
 // LGPL license along with this library if you did not you can find it
 // at http://www.gnu.org/.
+#ifdef WIN32PORT
+#include "minwin.h" //minimum windows declarations.
+#endif
 
 #include "settings.h"
 
@@ -12,7 +15,7 @@
 #endif
 
 #include "stack_ptr.hpp"
-#include "cache-t.hpp"
+#include "cache.hpp"
 #include "string.hpp"
 #include "vector.hpp"
 #include "config.hpp"

@@ -25,8 +25,7 @@
 
 #ifdef WIN32
 #  include <io.h>
-#  include <windows.h>
-#  include <winbase.h>
+#  include "minwin.h" //minimum windows declarations.
 #  include "asc_ctype.hpp"
 #  define F_OK 0 //does the file exist?
 #else

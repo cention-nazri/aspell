@@ -18,8 +18,7 @@
 #include <machine/types.h>
 #endif
 #ifdef WIN32
-#  include <windows.h>
-#  include <winbase.h>
+#include "minwin.h" //minimum windows declarations.
 #endif
 
 #include "iostream.hpp"

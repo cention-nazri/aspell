@@ -13,7 +13,7 @@
 #include "errors.hpp"
 #include "language.hpp"
 #include "speller_impl.hpp"
-#include "cache-t.hpp"
+#include "cache.hpp"
 #include "vararray.hpp"
 
 #include "gettext.h"

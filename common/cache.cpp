@@ -1,7 +1,7 @@
 #include <assert.h>
 
 #include "stack_ptr.hpp"
-#include "cache-t.hpp"
+#include "cache.hpp"
 
 namespace acommon {
 

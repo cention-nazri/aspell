@@ -9,7 +9,7 @@
 #include "indiv_filter.hpp"
 #include "fstream.hpp"
 #include "convert_impl.hpp"
-#include "cache-t.hpp"
+#include "cache.hpp"
 #include "getdata.hpp"
 #include "file_data_util.hpp"
 

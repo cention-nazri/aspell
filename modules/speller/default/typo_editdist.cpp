@@ -7,7 +7,7 @@
 #include "language.hpp"
 #include "file_data_util.hpp"
 #include "getdata.hpp"
-#include "cache-t.hpp"
+#include "cache.hpp"
 #include "asc_ctype.hpp"
 
 // edit_distance is implemented using a straight forward dynamic

@@ -17,7 +17,7 @@
 #include "config.hpp"
 #include "errors.hpp"
 #include "stack_ptr.hpp"
-#include "cache-t.hpp"
+#include "cache.hpp"
 #include "file_util.hpp"
 #include "file_data_util.hpp"
 #include "objstack.hpp"

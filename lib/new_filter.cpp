@@ -9,7 +9,7 @@
 
 #include "settings.h"
 
-#include "cache-t.hpp"
+#include "cache.hpp"
 #include "asc_ctype.hpp"
 #include "config.hpp"
 #include "enumeration.hpp"

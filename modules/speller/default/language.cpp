@@ -17,7 +17,7 @@
 #include "fstream.hpp"
 #include "language.hpp"
 #include "string.hpp"
-#include "cache-t.hpp"
+#include "cache.hpp"
 #include "getdata.hpp"
 
 #ifdef ENABLE_NLS
