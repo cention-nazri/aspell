@@ -97,7 +97,7 @@
 @item kok @tab Konkani @tab Latin @tab Maybe @tab -
 @item kr @tab Kanuri @tab Latin @tab - @tab -
 @item ks @tab Kashmiri @tab Arabic @tab - @tab -
-@item ku @tab Kurdish @tab Arabic, Cyrillic, Latin @tab Maybe @tab -
+@item ku @tab Kurdish @tab Arabic, Cyrillic, Latin @tab 0.50 @tab -
 @item kv @tab Komi @tab Cyrillic @tab - @tab -
 @item kw @tab Cornish @tab Latin @tab Maybe @tab -
 @item ky @tab Kirghiz @tab Cyrillic @tab - @tab -
@@ -112,7 +112,7 @@
 @item luo @tab Luo (Kenya and Tanzania) @tab Latin @tab Maybe @tab -
 @item lv @tab Latvian @tab Latin @tab 0.60 @tab -
 @item
-@item mg @tab Malagasy @tab Latin @tab Maybe @tab -
+@item mg @tab Malagasy @tab Latin @tab 0.50 @tab -
 @item mh @tab Marshallese @tab Latin @tab Maybe @tab -
 @item mi @tab Maori @tab Latin @tab 0.50 @tab -
 @item min @tab Minangkabau @tab Latin @tab Maybe @tab -
