@@ -341,7 +341,6 @@ namespace acommon {
       conv = pe.data;
       return no_err;
     }
-    // assumes str is null terminated
     PosibErr<char *> operator() (char * str, size_t sz)
     {
       if (conv) {

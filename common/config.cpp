@@ -1127,8 +1127,7 @@ namespace acommon {
     , {"backup",  KeyInfoBool, "true",
        N_("create a backup file by appending \".bak\"")}
     , {"guess", KeyInfoBool, "false",
-       // FIXME: shorten description
-       N_("make possible root/affix combinations not in the dictionary"), KEYINFO_MAY_CHANGE} 
+       N_("create missing root/affix combinations"), KEYINFO_MAY_CHANGE}
     , {"keymapping", KeyInfoString, "aspell",
        N_("keymapping for check mode, aspell or ispell")}
     , {"reverse", KeyInfoBool, "false",
