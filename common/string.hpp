@@ -78,6 +78,7 @@ namespace acommon {
     StringIStream(ParmString s, char d = ';')
       : IStream(d), in_str(s) {}
     bool getline(String & str, char c);
+    char * getline(char *, size_t, char c);
     bool read(void * data, unsigned int size);
   };
 

@@ -114,7 +114,8 @@ AffixMgr::~AffixMgr()
 PosibErr<void> AffixMgr::parse_file(const char * affpath)
 {
   // io buffers
-  String key, data;
+  char buf[256];
+  DataPair datapair;
  
   // affix type
   char ft;
@@ -131,7 +132,9 @@ PosibErr<void> AffixMgr::parse_file(const char * affpath)
   // read in each line ignoring any that do not
   // start with a known line type indicator
 
-  while (getdata_pair(afflst,key,data)) {
+  while (getdata_pair(afflst,datapair,buf,256)) {
+    ParmString key(datapair.key, datapair.key_end - datapair.key);
+    ParmString data(datapair.value, datapair.value_end - datapair.value);
 
     ft = ' ';
 
@@ -146,7 +149,7 @@ PosibErr<void> AffixMgr::parse_file(const char * affpath)
 
     /* parse in the flag used by the controlled compound words */
     else if (key == "COMPOUNDMIN")
-      cpdmin = atoi(data.c_str()); // FiXME
+      cpdmin = atoi(data); // FiXME
 
     else if (key == "TRY" || key == "REP");
 
@@ -802,7 +805,7 @@ bool isSubset(const char * s1, const char * s2)
   return false;
 }
 
-PosibErr<void> AffixMgr::parse_affix(String & data, 
+PosibErr<void> AffixMgr::parse_affix(ParmString data, 
                                      const char at, FStream & af)
 {
   int numents = 0;      // number of affentry structures to parse
@@ -810,8 +813,8 @@ PosibErr<void> AffixMgr::parse_affix(String & data,
   short xpflg=0;
   StackPtr<AffEntry> nptr;
 
-  const char * tp = data.c_str();
-  const char * nl = data.c_str();
+  const char * tp = data.str();
+  const char * nl = data.str();
   char * piece;
   int i = 0;
 
@@ -847,11 +850,12 @@ PosibErr<void> AffixMgr::parse_affix(String & data,
     return make_err(bad_file_format, affix_file, msg);
   }
  
-  String key;
+  char buf[256];
+  DataPair datapair;
   // now parse numents affentries for this affix
   for (int j=0; j < numents; j++) {
-    getdata_pair(af, key, data);
-    tp = data.c_str();
+    getdata_pair(af, datapair, buf, 256);
+    tp = datapair.value;
     i = 0;
     np = 0;
 

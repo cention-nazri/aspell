@@ -113,7 +113,7 @@ namespace aspeller {
              
   private:
     PosibErr<void> parse_file(const char * affpath);
-    PosibErr<void> parse_affix(String & line, const char at, FStream & af);
+    PosibErr<void> parse_affix(ParmString line, const char at, FStream & af);
 
     void encodeit(AffEntry * ptr, char * cs);
     PosibErr<void> build_pfxlist(PfxEntry* pfxptr);

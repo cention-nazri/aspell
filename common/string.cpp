@@ -5,7 +5,9 @@
 // it at http://www.gnu.org/.
 
 #include "string.hpp"
-#include <asc_ctype.hpp>
+#include "asc_ctype.hpp"
+
+#include "iostream.hpp"
 
 namespace acommon {
   
@@ -24,19 +26,37 @@ namespace acommon {
     append(static_cast<const char *>(str), size);
   }
 
-  bool StringIStream::getline(String & str, char delem)
+  bool StringIStream::getline(String & str, char d)
   {
     if (in_str[0] == '\0') return false;
     const char * end = in_str;
     bool prev_slash = false;
-    while ((prev_slash || *end != delem) && *end != '\0') {
+    while ((prev_slash || *end != d) && *end != '\0') {
       prev_slash = *end == '\\';
       ++end;
     }
     str.assign(in_str, end - in_str);
     in_str = end;
-    if (*in_str == delem) ++in_str;
+    if (*in_str == d) ++in_str;
     return true;
+  }
+
+  char * StringIStream::getline(char * str, size_t s, char d)
+  {
+    if (in_str[0] == '\0') return 0;
+    const char * end = in_str;
+    bool prev_slash = false;
+    while ((prev_slash || *end != d) && *end != '\0') {
+      prev_slash = *end == '\\';
+      ++end;
+    }
+    size_t size = end - in_str;
+    if (size > s - 1) end = in_str + s - 1;
+    memcpy(str, in_str, size);
+    str[size] = '\0';
+    in_str = end;
+    if (*in_str == d) ++in_str;
+    return str + size;
   }
 
   bool StringIStream::read(void * data, unsigned int size)

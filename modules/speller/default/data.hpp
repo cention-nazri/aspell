@@ -123,10 +123,17 @@ namespace aspeller {
   class BasicWordSet : public LoadableDataSet, public WordList
   {
   public:
-    bool have_affix_info;
-    BasicWordSet() {
+    bool affix_compressed;
+    bool have_soundsliked; // only true when there is true phonet data
+    bool fast_scan;  // can effectly scan for all soundslikes (or
+                     // stripped words if have_soundslike is false)
+                     // with an edit distance of 1 or 2
+    bool fast_lookup; // can effectly find all words with a given soundslike
+                      // when the SoundslikeWord is not given
+    
+    BasicWordSet() : affix_compressed(false), have_soundsliked(false), 
+                     fast_scan(false), fast_lookup(false) {
       basic_type =  basic_word_set;
-      have_affix_info = false;
     }
     
     typedef VirEnumeration<BasicWordInfo>   VirEmul;

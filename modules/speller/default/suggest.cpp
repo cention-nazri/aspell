@@ -785,6 +785,9 @@ namespace aspeller {
   }
 
   PosibErr<void> SuggestParms::fill_distance_lookup(const Config * c, const Language & l) {
+
+    // FIXME: avoid having to recreate the tables each time
+    //        instead, cache the table and use the cached copy
     
     TypoEditDistanceWeights & w = typo_edit_distance_weights;
 
@@ -813,18 +816,19 @@ namespace aspeller {
 	}
       }
 
-      String key, data;
-      while (getdata_pair(in, key, data)) {
-	if (key.size() != 2) 
+      char buf[64];
+      DataPair d;
+      while (getdata_pair(in, d, buf, 64)) {
+	if (d.key_end - d.key != 2)
 	  return make_err(bad_file_format, file);
-	w.repl (l.to_normalized(key[0]),
-		l.to_normalized(key[1])) = w.repl_dis1;
-	w.repl (l.to_normalized(key[1]),
-		l.to_normalized(key[0])) = w.repl_dis1;
-	w.extra(l.to_normalized(key[0]),
-		l.to_normalized(key[1])) = w.extra_dis1;
-	w.extra(l.to_normalized(key[1]),
-		l.to_normalized(key[0])) = w.extra_dis1;
+	w.repl (l.to_normalized(d.key[0]),
+		l.to_normalized(d.key[1])) = w.repl_dis1;
+	w.repl (l.to_normalized(d.key[1]),
+		l.to_normalized(d.key[0])) = w.repl_dis1;
+	w.extra(l.to_normalized(d.key[0]),
+		l.to_normalized(d.key[1])) = w.extra_dis1;
+	w.extra(l.to_normalized(d.key[1]),
+		l.to_normalized(d.key[0])) = w.extra_dis1;
       }
 
       for (int i = 0; i != c; ++i) {

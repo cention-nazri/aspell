@@ -66,7 +66,6 @@ namespace aspeller {
 
       } else {
 	
-fprintf(stderr,"File: %s(%i)\n",__FILE__,__LINE__);
 	return make_err(unknown_key, key).with_file(fn);
 
       }

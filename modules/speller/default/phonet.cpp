@@ -68,6 +68,8 @@ namespace aspeller {
   };
   
   PosibErr<PhonetParms *> load_phonet_rules(const String & file) {
+    char buf[256];
+
     FStream in;
     RET_ON_ERR(in.open(file, "r"));
 
@@ -76,18 +78,19 @@ namespace aspeller {
     parms->followup        = true;
     parms->collapse_result = false;
 
-    String key;
-    String data;
+    DataPair datapair;
     int size = 0;
     int num = 0;
     while (true) {
-      if (!getdata_pair(in, key, data)) break;
+      if (!getdata_pair(in, datapair, buf, 256)) break;
+      ParmString key(datapair.key, datapair.key_end - datapair.key);
+      ParmString value(datapair.value, datapair.value_end - datapair.value);
       if (key != "followup" && key != "collapse_result" &&
 	  key != "version") {
 	++num;
 	size += key.size() + 1;
-	if (data != "_") {
-	  size += data.size() + 1;
+	if (value != "_") {
+	  size += value.size() + 1;
 	}
       }
     }
@@ -101,24 +104,26 @@ namespace aspeller {
     in.restart();
 
     while (true) {
-      if (!getdata_pair(in, key, data)) break;
+      if (!getdata_pair(in, datapair, buf, 256)) break;
+      ParmString key(datapair.key, datapair.key_end - datapair.key);
+      ParmString value(datapair.value, datapair.value_end - datapair.value);
       if (key == "followup") {
-	parms->followup = to_bool(data);
+	parms->followup = to_bool(value);
       } else if (key == "collapse_result") {
-	parms->collapse_result = to_bool(data);
+	parms->collapse_result = to_bool(value);
       } else if (key == "version") {
-	parms->version = data;
+	parms->version = value;
       } else {
-	strncpy(d, key.c_str(), key.size() + 1);
+	strncpy(d, key.str(), key.size() + 1);
 	*r = d;
 	++r;
 	d += key.size() + 1;
-	if (data == "_") {
+	if (value == "_") {
 	  *r = "";
 	} else {
-	  strncpy(d, data.c_str(), data.size() + 1);
+	  strncpy(d, value.str(), value.size() + 1);
 	  *r = d;
-	  d += data.size() + 1;
+	  d += value.size() + 1;
 	}
 	++r;
       }

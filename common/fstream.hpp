@@ -54,11 +54,12 @@ namespace acommon {
 
     void skipws();
 
-    // NOTE: These versions of getline also strip comments
-    //       and skip blank lines
     // Will return false if there is no more data
     bool getline(String & str) {return IStream::getline(str);}
     bool getline(String &, char d);
+
+    char * getline(char * str, size_t s) {return IStream::getline(str,s);}
+    char * getline(char *, size_t, char d);
 
     // These perform raw io with any sort of formating
     bool read(void *, unsigned int i);
