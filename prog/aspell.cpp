@@ -68,6 +68,7 @@ void config();
 
 void check();
 void pipe();
+void convt();
 void filter();
 void list();
 void dicts();
@@ -156,6 +157,7 @@ const PossibleOption possible_options[] = {
   COMMAND("config",    '\0', 0),
   COMMAND("check",     'c', 0),
   COMMAND("pipe",      'a', 0),
+  COMMAND("conv",      '\0', 2),
   COMMAND("filter",    '\0', 0),
   COMMAND("soundslike",'\0', 0),
   COMMAND("munch",     '\0', 0),
@@ -368,6 +370,8 @@ int main (int argc, const char *argv[])
     pipe();
   else if (action_str == "list")
     list();
+  else if (action_str == "conv")
+    convt();
   else if (action_str == "filter")
     filter();
   else if (action_str == "soundslike")
@@ -1141,6 +1145,20 @@ void list()
   
   state.del(); // to close the file handles
   delete_aspell_speller(speller);
+}
+
+///////////////////////////
+//
+// convt
+//
+
+void convt()
+{
+  Conv conv;
+  conv.setup(*options, args[0], args[1]);
+  String line;
+  while (CIN.getline(line))
+    COUT.printl(conv(line));
 }
 
 ///////////////////////////

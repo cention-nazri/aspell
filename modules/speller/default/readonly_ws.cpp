@@ -305,8 +305,12 @@ namespace {
     f.read(word.data(), data_head.lang_name_size);
 
     PosibErr<void> pe = set_check_lang(word.data(),config);
-    if (pe.has_err())
-      return pe.with_file(fn);
+    if (pe.has_err()) {
+      if (pe.prvw_err()->is_a(language_related_error))
+        return pe.with_file(fn);
+      else
+        return pe;
+    }
 
     if (data_head.soundslike_name_size != 0) {
       have_soundslike = true;

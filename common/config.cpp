@@ -857,13 +857,19 @@ namespace acommon {
     delete els;
   }
 
-  PosibErr<void> Config::read_in(IStream & in) 
+  PosibErr<void> Config::read_in(IStream & in, ParmString id) 
   {
-    FixedBuffer<> buf;
+    String buf;
     DataPair dp;
     while (getdata_pair(in, dp, buf)) {
       unescape(dp.value);
-      RET_ON_ERR(replace(dp.key, dp.value));
+      PosibErrBase pe = replace(dp.key, dp.value);
+      if (pe.has_err()) {
+        if (id.empty())
+          return pe;
+        else
+          return pe.with_file(id, dp.line_num);
+      }
     }
     return no_err;
   }
@@ -871,7 +877,7 @@ namespace acommon {
   PosibErr<void> Config::read_in_file(ParmString file) {
     FStream in;
     RET_ON_ERR(in.open(file, "r"));
-    return read_in(in);
+    return read_in(in, file);
   }
 
   PosibErr<void> Config::read_in_string(ParmString str) {

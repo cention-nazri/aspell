@@ -391,7 +391,7 @@ namespace acommon
     int active_option = 0;
     String expand="filter-";
     int norealoption = 0;
-    FixedBuffer<> buf; DataPair d;
+    String buf; DataPair d;
 
     if ((name_len == 6) &&
         !strncmp(key->name,"filter",6)){

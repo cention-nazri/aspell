@@ -46,37 +46,15 @@ namespace acommon {
     return res;
   }
   
-  bool StringIStream::getline(String & str, char d)
+  bool StringIStream::append_line(String & str, char d)
   {
     if (in_str[0] == '\0') return false;
     const char * end = in_str;
-    bool prev_slash = false;
-    while ((prev_slash || *end != d) && *end != '\0') {
-      prev_slash = *end == '\\';
-      ++end;
-    }
-    str.assign(in_str, end - in_str);
+    while (*end != d && *end != '\0') ++end;
+    str.append(in_str, end - in_str);
     in_str = end;
     if (*in_str == d) ++in_str;
     return true;
-  }
-
-  char * StringIStream::getline(char * str, size_t s, char d)
-  {
-    if (in_str[0] == '\0') return 0;
-    const char * end = in_str;
-    bool prev_slash = false;
-    while ((prev_slash || *end != d) && *end != '\0') {
-      prev_slash = *end == '\\';
-      ++end;
-    }
-    size_t size = end - in_str;
-    if (size > s - 1) end = in_str + s - 1;
-    memcpy(str, in_str, size);
-    str[size] = '\0';
-    in_str = end;
-    if (*in_str == d) ++in_str;
-    return str + size;
   }
 
   bool StringIStream::read(void * data, unsigned int size)

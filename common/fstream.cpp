@@ -77,45 +77,16 @@ namespace acommon {
     return *this;
   }
 
-  bool FStream::getline(String & str, char d)
+  bool FStream::append_line(String & str, char d)
   {
-    str.clear();
     int c;
-    bool prev_slash = false;
-    while (true) {
-      c  = getc(file_);
-      if (c == EOF || (!prev_slash && static_cast<char>(c) == d)) break;
+    c = getc(file_);
+    if (c == EOF) return false;
+    if (c == (int)d) return true;
+    str.append(c);
+    while (c = getc(file_), c != EOF && c != (int)d) 
       str.append(c);
-      prev_slash = (c == '\\');
-    }
-    if (c == EOF && str.size() == 0) return false;
     return true;
-  }
-
-  char * FStream::getline(char * str, size_t s, char d)
-  {
-    int c = getc(file_);
-    if (c == EOF) return 0;
-    if (c == d) goto quit;
-    *str = static_cast<char>(c);
-    ++str;
-    s -= 2; // leave room for the null char
-    while (c = getc(file_), c != EOF && (c != d || str[-1] == '\\')) {
-      *str = static_cast<char>(c);
-      ++str;
-      --s;
-      if (s < 0) goto overflow;
-    }
-  quit:
-    *str = '\0';
-    return str;
-  overflow:
-    *str = '\0';
-    while (c = getc(file_), c != EOF) {
-      if (c == '\\') c = getc(file_); // ignore next char
-      else if (c == d) break;
-    }
-    return str;
   }
 
   bool FStream::read(void * str, unsigned int n)

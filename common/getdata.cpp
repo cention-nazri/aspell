@@ -6,24 +6,26 @@
 
 #include <string.h>
 
-#include "istream.hpp"
 #include "getdata.hpp"
+#include "string.hpp"
 #include "asc_ctype.hpp"
+
+#include "iostream.hpp"
 
 namespace acommon {
 
-  bool getdata_pair(IStream & in, DataPair & d, const Buffer & buf)
+  bool getdata_pair(IStream & in, DataPair & d, String & buf)
   {
-    buf.data[0] = '\0'; // to avoid some special cases
     char * p;
-    char * end;
 
     // get first non blank line
     do {
-        p = buf.data + 1;
-        end = in.getline(p, buf.size-1);
-        if (end == 0) return false;
-        while (*p == ' ' || *p == '\t') ++p;
+      buf.clear();
+      buf.append('\0'); // to avoid some special cases
+      if (!in.append_line(buf)) return false;
+      d.line_num++;
+      p = buf.mstr() + 1;
+      while (*p == ' ' || *p == '\t') ++p;
     } while (*p == '#' || *p == '\0');
 
     // get key
@@ -129,24 +131,21 @@ namespace acommon {
     return d.key.size != 0;
   }
 
-  void init(ParmString str, DataPair & d, const Buffer & buf)
+  void init(ParmString str, DataPair & d, String & buf)
   {
     const char * s = str;
     while (*s == ' ' || *s == '\t') ++s;
     size_t l = str.size() - (s - str);
-    if (l > buf.size - 1) l = buf.size - 1;
-    memcpy(buf.data, s, l);
-    buf.data[l] = '\0';
-    d.value.str  = buf.data;
+    buf.assign(s, l);
+    d.value.str  = buf.mstr();
     d.value.size = l;
   }
 
-  bool getline(IStream & in, DataPair & d, Buffer & buf)
+  bool getline(IStream & in, DataPair & d, String & buf)
   {
-    char * end = in.getline(buf.data, buf.size);
-    if (end == 0) return false;
-    d.value.str  = buf.data;
-    d.value.size = end - buf.data;
+    if (!in.getline(buf)) return false;
+    d.value.str  = buf.mstr();
+    d.value.size = buf.size();
     return true;
   }
 

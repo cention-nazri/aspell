@@ -479,7 +479,7 @@ PosibErr<void> WritableWS::merge(FStream & in,
   typedef PosibErr<void> Ret;
   unsigned int ver;
 
-  FixedBuffer<256> buf;
+  String buf;
   DataPair dp;
 
   if (!getline(in, dp, buf))
@@ -801,7 +801,7 @@ PosibErr<void> WritableReplS::merge(FStream & in,
   String word, mis, sound, repl;
   unsigned int num_words, num_repls;
 
-  FixedBuffer<256> buf;
+  String buf;
   DataPair dp;
 
   if (!getline(in, dp, buf))

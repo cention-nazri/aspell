@@ -960,7 +960,7 @@ namespace aspeller {
 	}
       }
 
-      FixedBuffer<64> buf;
+      String buf;
       DataPair d;
       while (getdata_pair(in, d, buf)) {
 	if (d.key.size != 2)

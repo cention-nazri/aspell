@@ -58,7 +58,7 @@ public:
     Data * n = list.find(key);
     if (n) {/*CERR << "FOUND IN CACHE\n";*/ goto ret;}
     { PosibErr<Data *> res = Data::get_new(key, config);
-      if (!res) {/*CERR << "ERROR\n";*/ return res;}
+      if (res.has_err()) {/*CERR << "ERROR\n";*/ return res;}
       n = res.data;}
     list.add(n);
     n->cache = this;

@@ -43,8 +43,8 @@ namespace aspeller {
       strip_accents = false;
     else
       strip_accents = li->convert.strip_accents;
-    char buf[256]; DataPair d;
-    while(getdata_pair(in, d, buf, 256)) 
+    String buf; DataPair d;
+    while(getdata_pair(in, d, buf)) 
     {
       if (d.key == "strip-accents") {
 	if (config->have("strip-accents")) {
@@ -54,7 +54,7 @@ namespace aspeller {
 	} else if (d.value == "false") {
 	  strip_accents = false;
 	} else {
-	  return make_err(bad_value, "strip-accents", d.value, "true or false").with_file(fn);
+	  return make_err(bad_value, "strip-accents", d.value, "true or false").with_file(fn, d.line_num);
 	}
       } else if (d.key == "add") {
 	LocalWordSet ws;
@@ -67,7 +67,7 @@ namespace aspeller {
 
       } else {
 	
-	return make_err(unknown_key, d.key).with_file(fn);
+	return make_err(unknown_key, d.key).with_file(fn, d.line_num);
 
       }
     }

@@ -211,7 +211,7 @@ static inline void MAX(int & lhs, int rhs)
 PosibErr<void> AffixMgr::parse_file(const char * affpath, Conv & iconv)
 {
   // io buffers
-  FixedBuffer<> buf; DataPair dp;
+  String buf; DataPair dp;
  
   // open the affix file
   affix_file = strings.dup(affpath);
@@ -344,8 +344,8 @@ PosibErr<void> AffixMgr::parse_file(const char * affpath, Conv & iconv)
     continue;
   error:
     char msg[32];
-    snprintf(msg, 32, _("affix '%s' is corrupt"), MsgConv(lang)(achar));
-    return make_err(bad_file_format, affix_file, msg);
+    snprintf(msg, 32, _("Affix '%s' is corrupt"), MsgConv(lang)(achar));
+    return make_err(other_error, msg).with_file(affix_file, dp.line_num);
   }
   afflst.close();
 

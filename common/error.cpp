@@ -5,6 +5,7 @@
 // it at http://www.gnu.org/.
 
 #include <string.h>
+#include <stdlib.h>
 
 #include "error.hpp"
 
@@ -23,7 +24,7 @@ namespace acommon {
   Error::Error(const Error & other)
   {
     if (other.mesg) {
-      mesg = new char[strlen(other.mesg) + 1];
+      mesg = (char *)malloc(strlen(other.mesg) + 1);
       strcpy(const_cast<char *>(mesg), other.mesg);
     }
     err = other.err;
@@ -32,10 +33,10 @@ namespace acommon {
   Error & Error::operator=(const Error & other)
   {
     if (mesg)
-      delete[] const_cast<char *>(mesg);
+      free(const_cast<char *>(mesg));
     if (other.mesg) {
       unsigned int len = strlen(other.mesg) + 1;
-      mesg = new char[len];
+      mesg = (char *)malloc(len);
       memcpy(const_cast<char *>(mesg), other.mesg, len);
     }
     err = other.err;
@@ -45,7 +46,7 @@ namespace acommon {
   Error::~Error()
   {
     if (mesg)
-      delete[] const_cast<char *>(mesg);
+      free(const_cast<char *>(mesg));
   }
 
 }

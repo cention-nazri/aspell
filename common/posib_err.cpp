@@ -62,7 +62,7 @@ namespace acommon {
     unsigned int size = 0;
     for (i = 0; m[i].str != 0; ++i)
       size += m[i].size;
-    char * str = new char[size + 1];
+    char * str = (char *)malloc(size + 1);
     s0 = str;
     for (i = 0; m[i].str != 0; str+=m[i].size, ++i)
       strncpy(str, m[i].str, m[i].size);
@@ -70,30 +70,23 @@ namespace acommon {
     Error * e = new Error;
     e->err = inf;
     e->mesg = s0;
-    if (inf != cant_read_file) 
-    {
-      CERR.printl(e->mesg);
-      //abort();
-    }
     err_ = new ErrPtr(e);
     return *this;
   }
 
-  PosibErrBase & PosibErrBase::with_file(ParmString fn)
+  PosibErrBase & PosibErrBase::with_file(ParmString fn, int line_num)
   {
     assert(err_ != 0);
     assert(err_->refcount == 1);
     char * m = const_cast<char *>(err_->err->mesg);
     unsigned int orig_len = strlen(m);
-    unsigned int new_len = fn.size() + 2 + orig_len + 1;
-    char * s = new char[new_len];
-    char * p = s;
-    memcpy(p, fn.str(), fn.size());
-    p += fn.size();
-    memcpy(p, ": ", 2);
-    p += 2;
-    memcpy(p, m, orig_len + 1);
-    delete[] m;
+    unsigned int new_len = fn.size() + (line_num ? 10 : 0) + 2 + orig_len + 1;
+    char * s = (char *)malloc(new_len);
+    if (line_num)
+      snprintf(s, new_len, "%s:%d: %s", fn.str(), line_num, m);
+    else
+      snprintf(s, new_len, "%s: %s", fn.str(), m);
+    free(m);
     const_cast<Error *>(err_->err)->mesg = s;
     return *this;
   }
@@ -102,7 +95,7 @@ namespace acommon {
     assert (err_);
     assert (!err_->handled);
     fputs(_("Unhandled Error: "), stderr);
-    fputs(_(err_->err->mesg), stderr);
+    fputs(err_->err->mesg, stderr);
     fputs("\n", stderr);
     abort();
   }

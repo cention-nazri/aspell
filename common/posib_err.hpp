@@ -104,7 +104,7 @@ namespace acommon {
     }
 
     // This should only be called _after_ set is called
-    PosibErrBase & with_file(ParmString fn);
+    PosibErrBase & with_file(ParmString fn, int lineno = 0);
     
     PosibErrBase & set(const ErrorInfo *, 
 		       ParmString, ParmString, ParmString, ParmString);

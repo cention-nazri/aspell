@@ -77,7 +77,7 @@ namespace aspeller {
                                      Conv & iconv,
                                      const Language * lang) 
   {
-    FixedBuffer<> buf; DataPair dp;
+    String buf; DataPair dp;
 
     FStream in;
     RET_ON_ERR(in.open(file, "r"));

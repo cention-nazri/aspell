@@ -153,7 +153,7 @@ namespace acommon {
 
     PosibErr<void> read_in_settings(const Config * override = 0);
 
-    PosibErr<void> read_in(IStream & in);
+    PosibErr<void> read_in(IStream & in, ParmString id = "");
     PosibErr<void> read_in_file(ParmString file);
     PosibErr<void> read_in_string(ParmString str);
 

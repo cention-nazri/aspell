@@ -18,30 +18,14 @@ namespace acommon {
 
   // NOTE: getdata_pair WILL NOT unescape a string
 
-  struct Buffer {
-    char * data;
-    size_t size;
-    Buffer(char * d = 0, size_t s = 0) : data(d), size(s) {}
-  };
-
-  template <size_t S = 128>
-  struct FixedBuffer : public Buffer
-  {
-    char buf[S];
-    FixedBuffer() : Buffer(buf, S) {}
-  };
-
   struct DataPair {
     MutableString key;
     MutableString value;
+    size_t line_num;
+    DataPair() : line_num(0) {}
   };
 
-  bool getdata_pair(IStream & in, DataPair & d, const Buffer & buf);
-  static inline bool getdata_pair(IStream & in, DataPair & d, 
-                                  char * buf, size_t len)
-  {
-    return getdata_pair(in, d, Buffer(buf, len));
-  }
+  bool getdata_pair(IStream & in, DataPair & d, String & buf);
 
   void unescape(char * dest, const char * src);
   static inline void unescape(char * dest) {unescape(dest, dest);}
@@ -62,8 +46,9 @@ namespace acommon {
   bool split(DataPair & d);
 
   // preps a string for split
-  void init(ParmString str, DataPair & d, const Buffer & buf);
+  void init(ParmString str, DataPair & d, String & buf);
 
-  bool getline(IStream & in, DataPair & d, Buffer & buf);
+  bool getline(IStream & in, DataPair & d, String & buf);
+
 }
 #endif

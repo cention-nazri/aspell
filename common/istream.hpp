@@ -7,8 +7,6 @@
 #ifndef ASPELL_ISTREAM__HPP
 #define ASPELL_ISTREAM__HPP
 
-#include <string.h>
-
 namespace acommon {
 
   class String;
@@ -21,16 +19,11 @@ namespace acommon {
     
     char delim() const {return delem;}
 
-    // getline will read until delem, UNLESS it is protected by
-    // a backslash
-    virtual bool getline(String &, char c) = 0;
-    bool getline(String & str) {return getline(str,delem);}
-
-    // Get a line ending in 'd' unless that d is preceded by
-    // a '\'.  If a line is longer than 's' than the rest of the
-    // line will be ignored. s must be >= 4
-    virtual char * getline(char *, size_t s, char d) = 0;
-    char * getline(char * str, size_t s) {return getline(str,s,delem);}
+    // getline will read until delem
+    virtual bool append_line(String &, char c) = 0;
+    bool append_line(String & str) {return append_line(str, delem);}
+    bool getline(String & str, char c);
+    bool getline(String & str);
 
     virtual bool read(void *, unsigned int) = 0;
 

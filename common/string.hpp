@@ -15,8 +15,8 @@
 #include "hash_fun.hpp"
 #include "parm_string.hpp"
 #include "mutable_string.hpp"
-#include "istream.hpp"
 #include "ostream.hpp"
+#include "istream.hpp"
 
 namespace acommon {
 
@@ -390,12 +390,23 @@ namespace acommon {
   public:
     StringIStream(ParmString s, char d = ';')
       : IStream(d), in_str(s) {}
-    bool getline(String & str, char c);
-    char * getline(char *, size_t, char c);
+    bool append_line(String & str, char c);
     bool read(void * data, unsigned int size);
   };
 
   template <> struct hash<String> : public HashString<String> {};
+
+  inline bool IStream::getline(String & str, char c) 
+  {
+    str.clear(); 
+    return append_line(str,c);
+  }
+
+  inline bool IStream::getline(String & str) 
+  {
+    str.clear(); 
+    return append_line(str,delem);
+  }
 
 }
 

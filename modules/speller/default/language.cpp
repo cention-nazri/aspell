@@ -99,7 +99,7 @@ namespace aspeller {
     Conv iconv;
     iconv.setup(*config, data_encoding_, charset_);
 
-    FixedBuffer<> buf; DataPair d;
+    String buf; DataPair d;
 
     init(data.retrieve("special"), d, buf);
     while (split(d)) {
