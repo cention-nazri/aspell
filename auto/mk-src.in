@@ -468,7 +468,7 @@ errors:
 		invalid affix
 			mesg => The affix flag '%aff' is invalid for word "%word".
 			parms => aff, word
-		unapplicable affix
+		inapplicable affix
 			mesg => The affix flag '%aff' can not be applied to word "%word".
 			parms => aff, word
 		unknown unichar

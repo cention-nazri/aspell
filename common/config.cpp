@@ -1041,7 +1041,7 @@ namespace acommon {
     , {"jargon",     KeyInfoString, "",
        N_("extra information for the word list")}
     , {"variety", KeyInfoList, "",
-       N_("")}
+       N_("extra information for the word list")}
     , {"keyboard", KeyInfoString, "standard",
        N_("keyboard definition to use for typo analysis")}
     , {"lang", KeyInfoString, "<language-tag>",
@@ -1110,7 +1110,7 @@ namespace acommon {
     , {"norm-strict", KeyInfoBool, "false",
        N_("avoid lossy conversions when normalization")}
     , {"dict-alias", KeyInfoList, "",
-       N_("")}
+       N_("create dictionary aliases")}
     
     
     //

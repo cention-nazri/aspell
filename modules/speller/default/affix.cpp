@@ -79,11 +79,11 @@ struct Conds
 
 struct AffEntry
 {
-  char *         appnd;
-  char *         strip;
-  unsigned int   appndl;
-  unsigned int   stripl;
-  int            xpflg;
+  const char *   appnd;
+  const char *   strip;
+  byte           appndl;
+  byte           stripl;
+  byte           xpflg;
   char           achar;
   const Conds *  conds;
   //unsigned int numconds;
@@ -94,15 +94,14 @@ struct AffEntry
   
 struct PfxEntry : public AffEntry
 {
-  AffixMgr * pmyMgr;
-  
   PfxEntry * next;
   PfxEntry * next_eq;
   PfxEntry * next_ne;
   PfxEntry * flag_next;
-  PfxEntry(AffixMgr * pmgr) : pmyMgr(pmgr) {}
+  PfxEntry() {}
 
-  bool check(const LookupInfo &, ParmString, CheckInfo &, GuessInfo *) const;
+  bool check(const LookupInfo &, const AffixMgr * pmyMgr,
+             ParmString, CheckInfo &, GuessInfo *) const;
 
   inline bool          allow_cross() const { return ((xpflg & XPRODUCT) != 0); }
   inline byte flag() const { return achar;  }
@@ -115,15 +114,14 @@ struct PfxEntry : public AffEntry
 
 struct SfxEntry : public AffEntry
 {
-  AffixMgr*    pmyMgr;
-  char *       rappnd; // this is set in AffixMgr::build_sfxlist
+  const char * rappnd; // this is set in AffixMgr::build_sfxlist
   
   SfxEntry *   next;
   SfxEntry *   next_eq;
   SfxEntry *   next_ne;
   SfxEntry *   flag_next;
 
-  SfxEntry(AffixMgr* pmgr) : pmyMgr(pmgr) {}
+  SfxEntry() {}
 
   bool check(const LookupInfo &, ParmString, CheckInfo &, GuessInfo *,
              int optflags, AffEntry * ppfx);
@@ -166,6 +164,28 @@ struct AffixLess
 {
   bool operator() (T * x, T * y) const {return strcmp(x->key(),y->key()) < 0;}
 };
+
+// struct StringLookup {
+//   struct Parms {
+//     typedef const char * Value;
+//     typedef const char * Key;
+//     static const bool is_multi = false;
+//     hash<const char *> hfun;
+//     size_t hash(const char * s) {return hfun(s);}
+//     bool equal(const char * x, const char * y) {return strcmp(x,y) == 0;}
+//     const char * key(const char * c) {return c;}
+//   };
+//   typedef HashTable<Parms> Lookup;
+//   Lookup lookup;
+//   ObjStack * data_buf;
+//   StringLookup(ObjStack * b) : data_buf(b) {}
+//   const char * dup(const char * orig) {
+//     pair<Lookup::iterator, bool> res = lookup.insert(orig);
+//     if (res.second) *res.first = data_buf->dup(orig);
+//     return *res.first;
+//     //return data_buf->dup(orig);
+//   }
+// };
 
 struct CondsLookupParms {
   typedef const Conds * Value;
@@ -291,10 +311,10 @@ PosibErr<void> AffixMgr::parse_file(const char * affpath, Conv & iconv)
 
         if (affix_type == 'P') {
           nptr = (AffEntry *) data_buf.alloc_bottom(sizeof(PfxEntry));
-          new (nptr) PfxEntry(this);
+          new (nptr) PfxEntry;
         } else {
           nptr = (AffEntry *) data_buf.alloc_bottom(sizeof(SfxEntry));
-          new (nptr) SfxEntry(this);
+          new (nptr) SfxEntry;
         }
 
         nptr->xpflg = xpflg;
@@ -320,7 +340,7 @@ PosibErr<void> AffixMgr::parse_file(const char * affpath, Conv & iconv)
           nptr->strip = data_buf.dup(s0);
           nptr->stripl = s0.size();
         } else {
-          nptr->strip= data_buf.dup("");
+          nptr->strip  = "";
           nptr->stripl = 0;
         }
     
@@ -328,10 +348,10 @@ PosibErr<void> AffixMgr::parse_file(const char * affpath, Conv & iconv)
         if (dp.key.empty()) goto error;
         // key is affix string or 0 for null
         if (dp.key != "0") {
-          nptr->appnd = data_buf.dup(iconv(dp.key));
+          nptr->appnd  = data_buf.dup(iconv(dp.key));
           nptr->appndl = strlen(nptr->appnd);
         } else {
-          nptr->appnd  = data_buf.dup("");
+          nptr->appnd  = "";
           nptr->appndl = 0;
         }
     
@@ -387,6 +407,8 @@ PosibErr<void> AffixMgr::parse_file(const char * affpath, Conv & iconv)
   process_pfx_order();
   process_sfx_order();
 
+  //CERR.printf("%u\n", data_buf.calc_size()/1024);
+
   return no_err;
 
 }
@@ -419,7 +441,6 @@ PosibErr<void> AffixMgr::build_pfxlist(PfxEntry* pfxptr)
   return no_err;
 }
 
-
 // we want to be able to quickly access suffix information
 // both by suffix flag, and sorted by the reverse of the
 // suffix string itself; so we need to set up two indexes
@@ -428,12 +449,14 @@ PosibErr<void> AffixMgr::build_sfxlist(SfxEntry* sfxptr)
 {
   SfxEntry * ptr;
   SfxEntry * ep = sfxptr;
-  sfxptr->rappnd = (char *)data_buf.alloc(sfxptr->appndl + 1);
+  char * tmp = (char *)data_buf.alloc(sfxptr->appndl + 1);
+  sfxptr->rappnd = tmp;
+
   // reverse the string
-  sfxptr->rappnd[sfxptr->appndl] = 0;
-  for (char * dest = sfxptr->rappnd + sfxptr->appndl - 1, * src = sfxptr->appnd;
-       dest >= sfxptr->rappnd;
-       --dest, ++src)
+  char * dest = tmp + sfxptr->appndl;
+  *dest-- = 0;
+  const char * src = sfxptr->appnd;
+  for (; dest >= tmp; --dest, ++src)
     *dest = *src;
 
   /* get the right starting point */
@@ -719,7 +742,7 @@ bool AffixMgr::prefix_check (const LookupInfo & linf, ParmString word,
   // first handle the special case of 0 length prefixes
   PfxEntry * pe = pStart[0];
   while (pe) {
-    if (pe->check(linf,word,ci,gi)) return true;
+    if (pe->check(linf,this,word,ci,gi)) return true;
     pe = pe->next;
   }
   
@@ -729,7 +752,7 @@ bool AffixMgr::prefix_check (const LookupInfo & linf, ParmString word,
 
   while (pptr) {
     if (isSubset(pptr->key(),word)) {
-      if (pptr->check(linf,word,ci,gi)) return true;
+      if (pptr->check(linf,this,word,ci,gi)) return true;
       pptr = pptr->next_eq;
     } else {
       pptr = pptr->next_ne;
@@ -903,12 +926,12 @@ CheckAffixRes AffixMgr::check_affix(ParmString word, char aff) const
   CheckAffixRes res = InvalidAffix;
   
   for (PfxEntry * p = pFlag[(unsigned char)aff]; p; p = p->flag_next) {
-    res = UnapplicableAffix;
+    res = InapplicableAffix;
     if (p->applicable(word)) return ValidAffix;
   }
 
   for (SfxEntry * p = sFlag[(unsigned char)aff]; p; p = p->flag_next) {
-    if (res == InvalidAffix) res = UnapplicableAffix;
+    if (res == InvalidAffix) res = InapplicableAffix;
     if (p->applicable(word)) return ValidAffix;
   }
 
@@ -1005,7 +1028,8 @@ SimpleString PfxEntry::add(SimpleString word, ObjStack & buf) const
 }
 
 // check if this prefix entry matches 
-bool PfxEntry::check(const LookupInfo & linf, ParmString word,
+bool PfxEntry::check(const LookupInfo & linf, const AffixMgr * pmyMgr,
+                     ParmString word,
                      CheckInfo & ci, GuessInfo * gi) const
 {
   unsigned int		cond;	// condition number being examined

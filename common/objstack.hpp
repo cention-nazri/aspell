@@ -45,6 +45,8 @@ public:
   ObjStack(size_t chunk_s = 1024, size_t align = sizeof(void *));
   ~ObjStack();
 
+  size_t calc_size();
+
   void reset();
   void trim();
   

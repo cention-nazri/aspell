@@ -56,7 +56,7 @@ namespace aspeller {
     WordAff * next;
   };
 
-  enum CheckAffixRes {InvalidAffix, UnapplicableAffix, ValidAffix};
+  enum CheckAffixRes {InvalidAffix, InapplicableAffix, ValidAffix};
 
   class AffixMgr
   {

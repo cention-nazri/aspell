@@ -476,8 +476,8 @@ namespace aspeller {
       CheckAffixRes res = l.affix()->check_affix(word, *a);
       if (res == InvalidAffix)
         return make_err(invalid_affix, MsgConv(l)(*a), MsgConv(l)(word));
-      else if (res == UnapplicableAffix)
-        return make_err(unapplicable_affix, MsgConv(l)(*a), MsgConv(l)(word));
+      else if (res == InapplicableAffix)
+        return make_err(inapplicable_affix, MsgConv(l)(*a), MsgConv(l)(word));
     }
     return no_err;
   }
@@ -498,7 +498,7 @@ namespace aspeller {
       } else if (log) {
         const char * msg = res == InvalidAffix 
           ? _("Warning: Removing invalid affix '%s' from word %s.\n")
-          : _("Warning: Removing unapplicable affix '%s' from word %s.\n");
+          : _("Warning: Removing inapplicable affix '%s' from word %s.\n");
         log->printf(msg, msgconv1(*a), msgconv2(word));
       }
     }

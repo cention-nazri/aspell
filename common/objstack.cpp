@@ -33,6 +33,15 @@ ObjStack::~ObjStack()
   trim();
 }
 
+size_t ObjStack::calc_size()
+{
+  Node * ptr = first;
+  size_t size = 0;
+  for (Node * p = first; p; p = p->next)
+    size += chunk_size;
+  return size;
+}
+
 void ObjStack::new_chunk()
 {
   if (reserve) {
