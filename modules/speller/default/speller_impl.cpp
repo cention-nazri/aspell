@@ -131,7 +131,7 @@ namespace aspeller {
   {
     w0.clear(); // FIXME: is this necessary?
     const char * x = w;
-    while (*x != '\0' && (x-w) < static_cast<int>(ignore_count)) ++x;
+    while (*x != '\0' && (x-w.str()) < static_cast<int>(ignore_count)) ++x;
     if (*x == '\0') {w0.word = w; return true;}
     WS::const_iterator i   = check_ws.begin();
     WS::const_iterator end = check_ws.end();

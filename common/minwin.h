@@ -42,6 +42,7 @@
 #define NOHELP            
 #define NOPROFILER        
 #define NODEFERWINDOWPOS  
+#define NOCRYPT
 #define NOMCX             
 
 # include <windows.h>

@@ -365,7 +365,7 @@ namespace acommon {
 
     const Entry * cur = lookup(ki->name);
 
-    String value(cur ? cur->value : get_default(ki));
+    String value = cur ? cur->value : get_default(ki);
 
     if (value == "false") return false;
     else                  return true;
@@ -698,7 +698,7 @@ namespace acommon {
           } else { // sep == '|'
             assert(replace[0] == '$');
             const char * env = getenv(replace.c_str()+1);
-            final_str += env ? env : second;
+            final_str += env ? env : second.c_str();
           }
           replace = "";
           in_replace = false;

@@ -155,7 +155,7 @@ namespace acommon {
   {
     const char * s = str;
     while (*s == ' ' || *s == '\t') ++s;
-    size_t l = str.size() - (s - str);
+    size_t l = str.size() - (s - str.str());
     buf.assign(s, l);
     d.value.str  = buf.mstr();
     d.value.size = l;
