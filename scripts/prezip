@@ -87,6 +87,7 @@ do
     force      ) force=t ;;
     stdout     ) stdout=t ;;
     sort       ) sort=t ;;
+    nocwl      ) nocwl=t ;;
     license    ) mode=L ;;
     version    ) mode=V ;;
     help       ) mode=h ;;
@@ -107,6 +108,7 @@ do
       f ) force=t ;;
       c ) stdout=t ;;
       s ) sort=t ;;
+      S ) nocwl=t ;;
       L ) mode=L ;;
       V ) mode=V ;;
       h ) mode=h ;;
@@ -144,6 +146,7 @@ h )
    -f --force       force
    -k --keep        keep input files
    -s --sort        sort and remove duplicates before compressing
+   -S --nocwl       do not transform .wl to .cwl (use .wl.pz instead)
    -q --quiet       suppress all warnings
 
   If invoked as "prezip" the default action is to compress.
@@ -201,9 +204,14 @@ then
             dir=`dirname "$f"`
             file=`basename "$f"`
             base=`basename "$f" .pz`
-            if test $file != $base
+            base2=`basename "$f" .cwl`
+            if test "$file" != "$base"
             then
               out="$dir/$base"
+              zip d "$f" "$out"
+            elif test "$file" != "$base2"
+            then
+              out="$dir/$base2.wl"
               zip d "$f" "$out"
             elif test "$force"
             then 
@@ -211,11 +219,19 @@ then
               warn "can't guess orignal name - using \"$out\""
               zip d "$f" "$out"
             else
-              warn "$f does not end in .pz - ignored"
+              warn "$f does not end in .pz or .cwl - ignored"
             fi
             ;;
           z )
-            zip z "$f" "$f.pz"
+            dir=`dirname "$f"`
+            file=`basename "$f"`
+            base=`basename "$f" .wl`
+            if test "$nocwl" -o "$file" = "$base"
+            then
+              zip z "$f" "$f.pz"
+            else
+              zip z "$f" "$dir/$base.cwl"
+            fi
             ;;
           esac
         fi
