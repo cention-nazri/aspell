@@ -28,7 +28,7 @@
 #include "indiv_filter.hpp"
 #include "string_map.hpp"
 #include "mutable_container.hpp"
-#include "clone_ptr-t.hpp"
+#include "clone_ptr.hpp"
 #include "filter_char_vector.hpp"
 
 //right now unused option
