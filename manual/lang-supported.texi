@@ -4,7 +4,7 @@
 @item aa @tab Afar @tab Latin @tab - @tab -
 @item af @tab Afrikaans @tab Latin @tab 0.50 @tab -
 @item ak @tab Akan @tab Latin @tab - @tab -
-@item am @tab Amharic @tab Ethiopic @tab Planned @tab -
+@item am @tab Amharic @tab Ethiopic @tab 0.60 @tab -
 @item ar @tab Arabic @tab Arabic @tab Planned @tab -
 @item as @tab Assamese @tab Bengali @tab - @tab -
 @item ast @tab Asturian / Bable @tab Latin @tab Maybe @tab -
@@ -90,6 +90,7 @@
 @item ka @tab Georgian @tab Georgian @tab - @tab -
 @item kac @tab Kachin @tab Latin @tab Maybe @tab -
 @item kg @tab Kongo @tab Latin @tab Maybe @tab -
+@item kha @tab Khasi @tab Bengali, Latin, Latin @tab Maybe @tab -
 @item ki @tab Kikuyu / Gikuyu @tab Latin @tab - @tab -
 @item kj @tab Kwanyama @tab Latin @tab - @tab -
 @item kk @tab Kazakh @tab Cyrillic @tab - @tab -
@@ -154,6 +155,7 @@
 @item
 @item qu @tab Quechua @tab Latin @tab 0.60 @tab -
 @item
+@item rar @tab Rarotongan @tab Latin @tab Maybe @tab -
 @item rn @tab Rundi @tab Latin @tab Maybe @tab -
 @item ro @tab Romanian @tab Latin @tab 0.50 @tab Incomplete
 @item ru @tab Russian @tab Cyrillic @tab 0.50 @tab Yes
@@ -162,7 +164,7 @@
 @item sc @tab Sardinian @tab Latin @tab 0.50 @tab -
 @item sd @tab Sindhi @tab Arabic @tab - @tab -
 @item se @tab Northern Sami @tab Latin @tab Maybe @tab -
-@item sg @tab Sango @tab Latin @tab - @tab -
+@item sg @tab Sango @tab Latin @tab Maybe @tab -
 @item si @tab Sinhalese @tab Sinhala @tab - @tab -
 @item sk @tab Slovak @tab Latin @tab 0.50 @tab -
 @item sl @tab Slovenian @tab Latin @tab 0.50 @tab -

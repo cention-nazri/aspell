@@ -1920,8 +1920,8 @@ the word.  Note that prefixes are always expanded.
 The @command{munch-list} command will reduce the size of word list via
 affix compression.  It will reduce a list of words to a minimal (or
 close to it) set of roots and affixes that will match the same list of
-words.  The list of words is read from standard input and writes the
-``munched'' list to standard out.  It's usage is:
+words.  The list of words is read from standard input and the result,
+the ``munched'' list, is written to standard out.  It's usage is:
 
 @example
 aspell munch-list [keep] [single|multi] [simple] < @var{infile} > @var{outfile}
@@ -1938,7 +1938,7 @@ possible.  In the typical case the number of words returned is within
 
 By default Aspell will remove redundant affix flags.  The @option{keep}
 flag will avoid removing them, which can be useful if you want to
-include all possible expansions for each base.
+include all possible expansions for each base word.
 
 When cross products are involved it may be beneficial to list a base
 word more than once.  Unfortunately, the current version of Aspell can
@@ -4024,7 +4024,7 @@ detail.
 Use Lawrence Philips' new @strong{Double Metaphone algorithm}. See
 @uref{http://aspell.net/@/metaphone/}. The main task involved
 here is converting the algorithm into table form. This will take some
-time but their is no real programming experience required. If you want
+time but there is no real programming experience required. If you want
 to help with Aspell but don't have any real programming experience,
 this would be a great place to start.
 @item
@@ -4246,15 +4246,8 @@ a C++ program.
 @node ChangeLog
 @appendix ChangeLog
 
-@heading Changes from 0.60.1 to 0.60.2
-
+@heading Changes from 0.60.2 to 0.61
 @itemize @bullet
-@item
-Added the @command{munch-list} command to the aspell utility.  The
-@command{munch} program in the @file{myspell/} directory will
-disappear in Aspell 0.61.  The @command{munchlist} script will also
-likely disappear or be replaced when Aspell 0.61 is released since it
-doesn't work correctly anyway.
 @item
 Added a generic conversion (genconv) filter for converting from old
 multi-charter ASCII encodings to single-character encoding such as
@@ -4264,7 +4257,22 @@ Added support for recognizing TeX and Texinfo commands used to encode
 non-ASCII letters as well as support for skipping over Tex hyphens.
 @item
 Bug fixes.
+@end itemize
 
+@heading Changes from 0.60.1 to 0.60.2 (December 18, 2004)
+
+@itemize @bullet
+@item
+Added the @command{munch-list} command to the aspell utility.  The
+@command{munch} program in the @file{myspell/} directory will
+disappear in Aspell 0.61.  The @command{munchlist} script will also
+likely disappear or be replaced when Aspell 0.61 is released since it
+doesn't work correctly anyway.
+@item
+Several important bug fixes some of which rendered some non-English
+languages unusable.
+@item
+Other minor changes.
 @end itemize
 
 @heading Changes from 0.60.1 to 0.60.1.1 (November 20, 2004)
