@@ -16,6 +16,8 @@
 #endif
 #include <dirent.h>
 
+#include "iostream.hpp"
+
 #include "asc_ctype.hpp"
 #include "config.hpp"
 #include "errors.hpp"
@@ -28,6 +30,16 @@
 #include "vector.hpp"
 
 namespace acommon {
+
+  class Dir {
+    DIR * d_;
+    Dir(const Dir &);
+    Dir & operator=(const Dir &);
+  public:
+    operator DIR * () {return d_;}
+    Dir(DIR * d) : d_(d) {}
+    ~Dir() {if (d_) closedir(d_);}
+  };
 
   /////////////////////////////////////////////////////////////////
   //
@@ -149,7 +161,7 @@ namespace acommon {
     StringListEnumeration els = list_all.for_dirs.elements_obj();
     const char * dir;
     while ( (dir = els.next()) != 0) {
-      DIR * d = opendir(dir);
+      Dir d(opendir(dir));
       if (d==0) continue;
     
       struct dirent * entry;
@@ -279,7 +291,7 @@ namespace acommon {
     StringListEnumeration els = list_all.dict_dirs.elements_obj();
     const char * dir;
     while ( (dir = els.next()) != 0) {
-      DIR * d = opendir(dir);
+      Dir d(opendir(dir));
       if (d==0) continue;
     
       struct dirent * entry;

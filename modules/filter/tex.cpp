@@ -84,7 +84,7 @@ namespace acommon {
     CommandsIn commands_in(commands);
     RET_ON_ERR(opts->retrieve_list("tex-command", &commands_in));
     check_comments = opts->retrieve_bool("tex-check-comments");
-    push_command(Parm);
+    reset();
     return no_err;
   }
   

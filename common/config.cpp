@@ -123,6 +123,7 @@ namespace acommon {
       unsigned int j = 0;
       for (; j != old_size; ++j)
 	notifier_list[j] = temp[j];
+      delete[] temp;
       notifier_list[j] = n;
       notifier_list[j+1] = 0;
       return true;
@@ -146,6 +147,7 @@ namespace acommon {
 	if (temp[j] != n)
 	  notifier_list[j] = temp[j];
       }
+      delete[] temp;
       notifier_list[j] = 0;
       return true;
     }

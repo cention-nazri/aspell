@@ -397,7 +397,7 @@ void pipe()
          << (clock() - start)/(double)CLOCKS_PER_SEC << "\n";
   EXIT_ON_ERR_SET(new_document_checker(speller,0,0), 
 		  StackPtr<DocumentChecker>, checker);
-  bool print_star;
+  bool print_star = true;
   checker->set_status_fun(status_fun, &print_star);
   const char * w;
   char line[1024];

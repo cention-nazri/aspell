@@ -96,6 +96,8 @@ namespace acommon {
 
   class ModuleInfoEnumeration {
   public:
+    typedef const ModuleInfo * Value;
+
     const ModuleInfoNode * node_;
     ModuleInfoEnumeration(const ModuleInfoNode * n) : node_(n) {}
 
@@ -118,6 +120,8 @@ namespace acommon {
   public:
     const DictInfoNode * node_;
     DictInfoEnumeration(const DictInfoNode * n) : node_(n) {}
+
+    typedef const DictInfo * Value;
 
     bool at_end() const;
     const DictInfo * next();

@@ -50,7 +50,7 @@ namespace acommon {
     m = e;
     while (b != e && *b == ' ' || *b == '\t') ++b;
     while (m > b + 1 && (*(m-1) == ' ' || *(m-1) == '\t')) --m;
-    if (*m == '\\') ++m;
+    if (m != temp.end() && *m == '\\') ++m;
     // (last two lines) remove space at the end.
     data.assign(b, m);
     unescape(data);
