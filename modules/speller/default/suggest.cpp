@@ -184,7 +184,7 @@ namespace {
       }
 
       if (!is_stripped(*lang,word)) { // FIXME: avoid the need for this test
-        d.word_stripped = (char *)buffer.alloc(word.size());
+        d.word_stripped = (char *)buffer.alloc(word.size() + 1);
         to_stripped(*lang, word, (char *)d.word_stripped);
       } else {
 	d.word_stripped = d.word;

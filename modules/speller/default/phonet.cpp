@@ -63,8 +63,9 @@ namespace aspeller {
 #endif
 
   struct PhonetParmsImpl : public PhonetParms {
-    std::vector<const char *> rdata;
-    std::vector<char>         data;
+    void * data;
+    PhonetParmsImpl() : data(0) {}
+    ~PhonetParmsImpl() {if (data) free(data);}
   };
   
   PosibErr<PhonetParms *> load_phonet_rules(const String & file) {
@@ -92,11 +93,13 @@ namespace aspeller {
       }
     }
 
-    parms->data.reserve(size);
-    char * d = &parms->data.front();
+    size_t vsize = sizeof(char *) * (2 * num + 2);
+    parms->data = malloc(size + vsize);
+    
+    char * begin = (char *)parms->data + vsize;
+    char * d = begin;
 
-    parms->rdata.reserve(2 * num + 2);
-    std::vector<const char *>::iterator r = parms->rdata.begin();
+    const char * * r = (const char * *)parms->data;
 
     in.restart();
 
@@ -109,21 +112,21 @@ namespace aspeller {
       } else if (dp.key == "version") {
 	parms->version = dp.value;
       } else {
-	strncpy(d, dp.key.str(), dp.key.size() + 1);
+	memcpy(d, dp.key.str(), dp.key.size() + 1);
 	*r = d;
 	++r;
 	d += dp.key.size() + 1;
 	if (dp.value == "_") {
 	  *r = "";
 	} else {
-	  strncpy(d, dp.value.str(), dp.value.size() + 1);
+	  memcpy(d, dp.value.str(), dp.value.size() + 1);
 	  *r = d;
 	  d += dp.value.size() + 1;
 	}
 	++r;
       }
     }
-    if (d != &parms->data.front() + size) {
+    if (d != begin + size) {
       delete parms;
       return make_err(file_error, file);
     }
@@ -133,7 +136,7 @@ namespace aspeller {
     }
     *(r  ) = PhonetParms::rules_end;
     *(r+1) = PhonetParms::rules_end;
-    parms->rules = &parms->rdata.front();
+    parms->rules = (const char * *)parms->data;
 
     return parms;
   }

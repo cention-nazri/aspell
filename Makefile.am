@@ -65,7 +65,6 @@ libaspell_la_SOURCES =\
   modules/speller/default/primes.cpp\
   modules/speller/default/language.cpp\
   modules/speller/default/leditdist.cpp\
-  modules/speller/default/split.cpp\
   modules/speller/default/affix.cpp\
   modules/tokenizer/basic.cpp\
   lib/filter-c.cpp\

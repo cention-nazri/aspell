@@ -40,6 +40,7 @@ namespace acommon {
     char * end() const {
       return str_ + size_;
     }
+    //char operator[] (size_t s) const {return str_[s];}
   public: // but only use if really necessary
     char * str_;
     unsigned int size_;

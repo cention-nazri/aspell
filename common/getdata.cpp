@@ -58,24 +58,6 @@ namespace acommon {
     return true;
   }
 
-  bool split(DataPair & d)
-  {
-    char * p   = d.value;
-    char * end = p + d.value.size();
-    d.key.str_ = p;
-    while (p != end) {
-      ++p;
-      if ((*p == ' ' || *p == '\t') && *(p-1) != '\\') break;
-    }
-    d.key.size_ = p - d.key.str_;
-    *p = 0;
-    ++p;
-    while (p < end && (*p == ' ' || *p == '\t')) ++p;
-    d.value.str_ = p;
-    d.value.size_ = end - p;
-    return d.key.size_ != 0;
-  }
-
   void unescape(char * dest, const char * src)
   {
     while (*src) {
@@ -126,5 +108,38 @@ namespace acommon {
   {
     for (; *str; str++) *str = asc_tolower(*str);
   }
+
+  bool split(DataPair & d)
+  {
+    char * p   = d.value;
+    char * end = p + d.value.size();
+    d.key.str_ = p;
+    while (p != end) {
+      ++p;
+      if ((*p == ' ' || *p == '\t') && *(p-1) != '\\') break;
+    }
+    d.key.size_ = p - d.key.str_;
+    *p = 0;
+    if (p != end) {
+      ++p;
+      while (p != end && (*p == ' ' || *p == '\t')) ++p;
+    }
+    d.value.str_ = p;
+    d.value.size_ = end - p;
+    return d.key.size_ != 0;
+  }
+
+  void init(ParmString str, DataPair & d, const Buffer & buf)
+  {
+    const char * s = str;
+    while (*s == ' ' || *s == '\t') ++s;
+    size_t l = str.size() - (s - str);
+    if (l > buf.size - 1) l = buf.size - 1;
+    memcpy(buf.data, s, l);
+    buf.data[l] = '\0';
+    d.value.str_  = buf.data;
+    d.value.size_ = l;
+  }
+
 
 }

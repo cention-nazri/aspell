@@ -13,7 +13,6 @@
 #include "file_data_util.hpp"
 #include "fstream.hpp"
 #include "language.hpp"
-#include "split.hpp"
 #include "string.hpp"
 #include "cache-t.hpp"
 #include "getdata.hpp"
@@ -79,16 +78,15 @@ namespace aspeller {
     name_         = data.retrieve("name");
     charset_      = data.retrieve("charset");
 
-    std::vector<String> special_data = split(data.retrieve("special"));
-    for (std::vector<String>::iterator i = special_data.begin();
-	 i != special_data.end();
-	 ++i) 
-      {
-	char c = (*i)[0];
-	++i;
-	special_[to_uchar(c)] = 
-	  SpecialChar ((*i)[0] == '*',(*i)[1] == '*',(*i)[2] == '*');
-      }
+    FixedBuffer<> buf; DataPair d;
+
+    init(data.retrieve("special"), d, buf);
+    while (split(d)) {
+      char c = d.key[0];
+      split(d);
+      special_[to_uchar(c)] = 
+        SpecialChar (d.key[0] == '*',d.key[1] == '*', d.key[2] == '*');
+    }
   
     //
     // fill_in_tables
@@ -172,8 +170,6 @@ namespace aspeller {
       find_file(repl_file, dir1, dir2, repl, "_repl", ".dat");
       RET_ON_ERR(REPL.open(repl_file, "r"));
       
-      FixedBuffer<> buf; DataPair d;
-
       while (getdata_pair(REPL, d, buf), ::to_lower(d.key), d.key != "rep");
       size_t num_repl = atoi(d.value); // FIXME make this more robust
       repls_.resize(num_repl);

@@ -61,5 +61,7 @@ namespace acommon {
   // false when there are no more words to extract
   bool split(DataPair & d);
 
+  // preps a string for split
+  void init(ParmString str, DataPair & d, const Buffer & buf);
 }
 #endif
