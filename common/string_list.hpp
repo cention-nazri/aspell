@@ -20,7 +20,7 @@ namespace acommon {
     // default copy & destructor unsafe
     String           data;
     StringListNode * next;
-    StringListNode(ParmString str,  StringListNode * n = 0)
+    StringListNode(ParmStr str,  StringListNode * n = 0)
       : data(str), next(n) {
     }
   };
@@ -55,7 +55,7 @@ namespace acommon {
   private:
     StringListNode * first;
 
-    StringListNode * * find (ParmString str);
+    StringListNode * * find (ParmStr str);
     void copy(const StringList &);
     void destroy();
   public:
@@ -79,8 +79,8 @@ namespace acommon {
     StringList * clone() const;
     void assign(const StringList *);
 
-    PosibErr<bool> add(ParmString);
-    PosibErr<bool> remove(ParmString);
+    PosibErr<bool> add(ParmStr);
+    PosibErr<bool> remove(ParmStr);
     PosibErr<void> clear();
 
     StringEnumeration * elements() const;

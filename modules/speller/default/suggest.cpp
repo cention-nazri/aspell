@@ -208,9 +208,9 @@ namespace {
     char * Working::form_word(CheckInfo & ci);
     void try_word_n(ParmString str, int score);
     bool check_word_s(ParmString word, CheckInfo * ci);
-    int check_word(char * word, char * word_end, CheckInfo * ci,
-                   /* it WILL modify word */
-                   unsigned pos = 1);
+    unsigned check_word(char * word, char * word_end, CheckInfo * ci,
+                        /* it WILL modify word */
+                        unsigned pos = 1);
     void try_word_c(char * word, char * word_end, int score);
 
     void try_word(char * word, char * word_end, int score) {
@@ -427,11 +427,11 @@ namespace {
     return false;
   }
 
-  int Working::check_word(char * word, char * word_end,  CheckInfo * ci,
+  unsigned Working::check_word(char * word, char * word_end,  CheckInfo * ci,
                           /* it WILL modify word */
                           unsigned pos)
   {
-    int res = check_word_s(word, ci);
+    unsigned res = check_word_s(word, ci);
     if (res) return pos + 1;
     if (pos + 1 >= sp->run_together_limit_) return 0;
     for (char * i = word + sp->run_together_min_; 
@@ -447,19 +447,19 @@ namespace {
       if (res) return res;
     }
     memset(ci, 0, sizeof(CheckInfo));
-    return false;
+    return 0;
   }
 
   void Working::try_word_c(char * word, char * word_end, int score)
   {
-    int res = check_word(word, word_end, check_info);
+    unsigned res = check_word(word, word_end, check_info);
     assert(res <= sp->run_together_limit_);
     //CERR.printf(">%s\n", word);
     if (!res) return;
     buffer.abort_temp();
     char * tmp = form_word(check_info[0]);
     CasePattern cp = lang->case_pattern(tmp);
-    for (int i = 1; i <= res; ++i) {
+    for (unsigned i = 1; i <= res; ++i) {
       char * t = form_word(check_info[i]);
       if (cp == FirstUpper && lang->is_lower(t[1])) 
         t[0] = lang->to_lower(t[0]);

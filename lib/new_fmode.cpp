@@ -19,14 +19,9 @@
 #include "file_util.hpp"
 #include "fstream.hpp"
 #include "getdata.hpp"
-#include "directory.hpp"
 #include "strtonum.hpp"
 #include "asc_ctype.hpp"
 #include "iostream.hpp"
-#include <stdio.h>
-
-#define DEBUG {fprintf(stderr,"File: %s(%i)\n",__FILE__,__LINE__);}
-
 
 namespace acommon {
 
@@ -66,7 +61,7 @@ namespace acommon {
     void setDescription(const String & desc) {desc_ = desc;}
     const String & getDescription() {return desc_;}
     PosibErr<void> expand(Config * config);
-    PosibErr<void> build(FILE * in, Config * config, int line = 1, 
+    PosibErr<void> build(FStream &, Config * config, int line = 1, 
                          const char * name = "mode file");
 
     ~FilterMode();
@@ -345,7 +340,6 @@ namespace acommon {
       }
 
       char regError[256];
-      CERR.printl(magicRegExp.str());
       regerror(regsucess,&seekMagic,&regError[0],256);
       return make_err(bad_magic,mode.str(),magic.str(),regError);
     }
@@ -382,25 +376,21 @@ namespace acommon {
 
   PosibErr<void> FilterMode::expand(Config * config) {
 
-    config->replace("rem-all-filter","");
+    config->replace("clear-filter","");
     for ( Vector<KeyValue>::iterator it = expansion.begin() ;
-          it != expansion.end() ; it++ ) {
-
-      PosibErr<void> repErr = config->replace(it->key, it->value);
-
-      if ( repErr.has_err() ) {
-        return repErr.with_file(file_);
-      }      
+          it != expansion.end() ; it++ ) 
+    {
+      PosibErr<void> pe = config->replace(it->key, it->value);
+      if (pe.has_err()) return pe.with_file(file_);
     }
     return no_err;  
   }
 
-  PosibErr<void> FilterMode::build(FILE * in,Config * config, int line0, const char * name) {
+  PosibErr<void> FilterMode::build(FStream & toParse, Config * config, int line0, const char * name) {
 
     String buf;
     DataPair dp;
     dp.line_num = line0;
-    FStream toParse(in,false);
 
     while ( getdata_pair(toParse, dp, buf) ) {
 
@@ -426,7 +416,8 @@ namespace acommon {
 
     return no_err;
   }
-    
+
+  // FIXME: Use cache
   static Vector<FilterMode> filterModes;
   int filterModesRef = 0;
 
@@ -461,8 +452,8 @@ namespace acommon {
     
     ModeNotifierImpl * clone(Config * c) const {return new ModeNotifierImpl(c);}
 
-    PosibErr<void> item_updated(const KeyInfo * ki, ParmString value);
-    PosibErr<void> item_added(const KeyInfo * ki, ParmString value);
+    PosibErr<void> item_updated(const KeyInfo * ki, ParmStr);
+    PosibErr<void> item_added(const KeyInfo * ki, ParmStr, int pos);
 
     PosibErr<void> initModes();
 
@@ -512,33 +503,22 @@ namespace acommon {
     return *this;
   }
 
-  PosibErr<void> ModeNotifierImpl::item_updated(const KeyInfo * ki, ParmString value) {
-    if ( strcmp(ki->name, "-t" ) == 0 ) {
-      return (config->replace("mode","tex"));
-    }
-    if ( strcmp(ki->name, "-H" ) == 0 ) {
-      return (config->replace("mode","html"));
-    }
-    if ( strcmp(ki->name, "-e" ) == 0 ) {
-
-      return (config->replace("mode","email"));
-    }
+  PosibErr<void> ModeNotifierImpl::item_updated(const KeyInfo * ki, ParmStr value)
+  {
     if ( strcmp(ki->name, "mode") == 0 ) {
       for ( Vector<FilterMode>::iterator it = filterModes.begin() ;
             it != filterModes.end() ; it++ ) {
-        if ( it->modeName() == value ) {
-          config->replace("rem-all-filter","");
+        if ( it->modeName() == value )
           return it->expand(config);
-        }
       }
-      return make_err(unknown_mode,value); 
+      return make_err(unknown_mode, value); 
     }
     return no_err;
   }
 
-  PosibErr<void> ModeNotifierImpl::item_added(const KeyInfo * ki, ParmString value) {
-  
-    if ( strcmp(ki->name, "filter-path") == 0) {
+  PosibErr<void> ModeNotifierImpl::item_added(const KeyInfo * ki, ParmStr value, int)
+  {
+    if (strcmp(ki->name, "filter-path") == 0) {
       return intLoadModes();
     }
     return no_err;
@@ -550,31 +530,24 @@ namespace acommon {
 //FIXME is filter-path proper for filter mode files ???
 //      if filter-options-path better ???
 //      do we need a filter-mode-path ???
+//      should change to use genetic data-path once implemented
+//        and then search filter-path - KevinA
     RET_ON_ERR(config->retrieve_list("filter-path",&mode_path));
-    if ( mode_path.elements()->at_end() ) {
-      return no_err;
-    }
+    if (mode_path.empty()) return no_err;
     
-    PathBrowser mode_files(mode_path);
-    regex_t seekfor;
-
-    int reerr = 0;
-
-//FIXME reset regexp to default possix 
-    reerr = regcomp(&seekfor,"\\w+\\.amf$",
-                    REG_NEWLINE|REG_NOSUB|REG_ICASE|REG_EXTENDED);
-    assert(reerr == 0);
+    PathBrowser els(mode_path, ".amf");
 
     String possMode;
+    String possModeFile;
 
-    while ( mode_files.expand_file_part(&seekfor,possMode) ) {
+    const char * file;
+    while ((file = els.next()) != NULL) 
+    {
+      possModeFile = file;
+      possMode.assign(possModeFile.str(), possModeFile.size() - 4);
 
-      String possModeFile = possMode;
-
-      possMode.erase(possMode.length() - 4,4);
-      
-      int pathPos = 0;
-      int pathPosEnd = 0;
+      unsigned pathPos = 0;
+      unsigned pathPosEnd = 0;
 
       while (    ( (pathPosEnd = possMode.find('/',pathPos)) < possMode.length() )
               && ( pathPosEnd >= 0 ) ) {
@@ -594,18 +567,12 @@ namespace acommon {
         continue;
       }
 
-      FILE * in = NULL;
+      FStream toParse;
 
-      if ( (in = fopen(possModeFile.str(),"rb")) == NULL ) {
-        //FIXME is it desired to issue an warning if file can not be read ?
-        //      don't think so.
-        continue;
-      }
+      RET_ON_ERR(toParse.open(possModeFile.str(),"rb"));
 
       String buf;
       DataPair dp;
-
-      FStream toParse(in,false);
 
       bool get_sucess = getdata_pair(toParse, dp, buf);
       
@@ -613,23 +580,16 @@ namespace acommon {
       to_lower(dp.value);
       if (    !get_sucess
            || ( dp.key != "mode" ) 
-           || ( dp.value != possMode.lower().str() ) ) {
-        fclose(in);
-        regfree(&seekfor);
-
+           || ( dp.value != possMode.lower().str() ) )
         return make_err(expect_mode_key,"mode").with_file(possModeFile, dp.line_num);
-      }
+
       get_sucess = getdata_pair(toParse, dp, buf);
       to_lower(dp.key);
       if (    !get_sucess
            || ( dp.key != "aspell" )
            || ( dp.value == NULL )
-           || ( *(dp.value) == '\0' ) ) { 
-        fclose(in);
-        regfree(&seekfor);
-
+           || ( *(dp.value) == '\0' ) )
         return make_err(mode_version_requirement).with_file(possModeFile, dp.line_num);
-      }
 
       char * requirement = dp.value.str;
       char * relop = requirement;
@@ -680,20 +640,13 @@ namespace acommon {
         *seek = '\0';
       }
 
-      PosibErr<bool> peb = verifyVersion(relOp.str(),act,requirement,"add_filter");
+      PosibErr<bool> peb = verify_version(relOp.str(),act,requirement,"add_filter");
 
       if ( peb.has_err() ) {
         peb.ignore_err();
-        fclose(in);
-        regfree(&seekfor);
-
         return make_err(confusing_mode_version).with_file(possModeFile, dp.line_num);
       }
       if ( peb == false ) {
-        peb.ignore_err();
-        fclose(in);
-        regfree(&seekfor);
-
         return make_err(bad_mode_version).with_file(possModeFile, dp.line_num);
       }
       
@@ -711,21 +664,15 @@ namespace acommon {
 
           char * regbegin = dp.value;
 
-
           while (    regbegin
                   && ( *regbegin != '/' ) ) {
             regbegin++;
           }
           if (    ( regbegin == NULL )
                || ( *regbegin == '\0' ) 
-               || ( *(++regbegin) == '\0' ) ) {
-            fclose(in);
-            regfree(&seekfor);
-
+               || ( *(++regbegin) == '\0' ) )
             return make_err(missing_magic_expression).with_file(possModeFile, dp.line_num);
-          }
           
-
           char * regend = regbegin;
           bool prevslash = false;
 
@@ -741,12 +688,8 @@ namespace acommon {
             }
             regend ++ ;
           }
-          if ( regend == regbegin ) {
-            fclose(in);
-            regfree(&seekfor);
-
+          if ( regend == regbegin )
             return make_err(missing_magic_expression).with_file(possModeFile, dp.line_num);
-          }
 
           char swap = *regend;
 
@@ -766,12 +709,9 @@ namespace acommon {
                     && ( *regend != '\0' ) ) {
               regend++;
             }
-            if ( regend == regbegin ) {
-              fclose(in);
-              regfree(&seekfor);
-
+            if ( regend == regbegin ) 
+            {
               char charCount[64];
-
               sprintf(&charCount[0],"%i",regbegin - (char *)dp.value);
               return  make_err(empty_file_ext,charCount).with_file(possModeFile,dp.line_num);
             }
@@ -787,12 +727,9 @@ namespace acommon {
               remove = true;
               regbegin++;
             }
-            if ( regend == regbegin ) {
-              fclose(in);
-              regfree(&seekfor);
-
+            if ( regend == regbegin ) 
+            {
               char charCount[64];
-
               sprintf(&charCount[0],"%i",regbegin - (char *)dp.value);
               return  make_err(empty_file_ext,charCount).with_file(possModeFile,dp.line_num);
             }
@@ -817,48 +754,31 @@ namespace acommon {
 
             PosibErr<bool> pe;
 
-            if ( remove ) { 
+            if ( remove )
               pe = collect.remModeExtension(ext,magic);
-            }
-            else {
+            else
               pe = collect.addModeExtension(ext,magic);
-            }
-            if ( pe.has_err() ) {
-              fclose(in);
-              regfree(&seekfor);
 
+            if ( pe.has_err() )
               return pe.with_file(possModeFile, dp.line_num);
-            }
           }
-          if ( extCount > 0 ) {
-            continue;
-          }
-          fclose(in);
-          regfree(&seekfor);
-          
-          char charCount[64];
 
+          if (extCount > 0 ) continue;
+
+          char charCount[64];
           sprintf(&charCount[0],"%i",strlen((char *)dp.value));
           return  make_err(empty_file_ext,charCount).with_file(possModeFile,dp.line_num);
         }
-        fclose(in);
-        regfree(&seekfor);
 
         return make_err(expect_mode_key,"ext[tension]/magic/desc[ription]/rel[ation]")
           .with_file(possModeFile,dp.line_num);
       
       }//while getdata_pair
       
-      PosibErr<void> pe = collect.build(in,config,dp.line_num,possMode.str());
+      RET_ON_ERR(collect.build(toParse,config,dp.line_num,possMode.str()));
 
-      fclose(in);
-      if ( pe.has_err() ) {
-        regfree(&seekfor);
-        return PosibErrBase(pe);
-      }
       filterModes.push_back(collect);
     }
-    regfree(&seekfor);
     return no_err;
   }
 
@@ -890,7 +810,7 @@ namespace acommon {
       if ( preLength < 13 ) {
         preLength = 13;
       }
-      while ( desc.length() > 74 - preLength ) {
+      while ( (int)desc.size() > 74 - preLength ) {
 
         int locate = 74 - preLength;
 

@@ -16,7 +16,7 @@
 
 namespace acommon {
 
-  PosibErr<void> FStream::open(ParmString name, const char * mode)
+  PosibErr<void> FStream::open(ParmStr name, const char * mode)
   {
     assert (file_ == 0);
     file_ = fopen(name,mode);
@@ -71,7 +71,7 @@ namespace acommon {
     return *this;
   }
 
-  FStream & FStream::operator<< (ParmString str)
+  FStream & FStream::operator<< (ParmStr str)
   {
     fputs(str, file_);
     return *this;
@@ -100,7 +100,7 @@ namespace acommon {
     putc(c, file_);
   }
 
-  void FStream::write(ParmString str) 
+  void FStream::write(ParmStr str) 
   {
     fputs(str, file_);
   }

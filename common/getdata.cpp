@@ -86,7 +86,14 @@ namespace acommon {
 
   bool escape(char * dest, const char * src, size_t limit, const char * others)
   {
+    const char * begin = src;
     const char * end = dest + limit;
+    if (asc_isspace(*src)) {
+      if (dest == end) return false;
+      *dest++ = '\\';
+      if (dest == end) return false;
+      *dest++ = *src++;
+    }
     while (*src) {
       if (dest == end) return false;
       switch (*src) {
@@ -104,6 +111,12 @@ namespace acommon {
       ++src;
       ++dest;
     }
+    if (src > begin + 1 && asc_isspace(src[-1])) {
+      --dest;
+      *dest++ = '\\';
+      if (dest == end) return false;
+      *dest++ = src[-1];
+    }
     *dest = '\0';
     return true;
   }
@@ -111,6 +124,11 @@ namespace acommon {
   void to_lower(char * str)
   {
     for (; *str; str++) *str = asc_tolower(*str);
+  }
+
+  void to_lower(String & res, const char * str)
+  {
+    for (; *str; str++) res += asc_tolower(*str);
   }
 
   bool split(DataPair & d)

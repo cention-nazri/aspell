@@ -33,7 +33,7 @@ namespace acommon {
       : IStream('\n'), file_(f), own_(own) {}
     ~FStream() {close();}
 
-    PosibErr<void> open(ParmString, const char *);
+    PosibErr<void> open(ParmStr, const char *);
     void close();
  
     operator bool() {return file_ != 0 && !feof(file_) && !ferror(file_);}
@@ -62,7 +62,7 @@ namespace acommon {
 
     // These perform raw io with any sort of formating
     bool read(void *, unsigned int i);
-    void write(ParmString);
+    void write(ParmStr);
     void write(char c);
     void write(const void *, unsigned int i);
 
@@ -90,7 +90,7 @@ namespace acommon {
     FStream & operator>> (String &);
     FStream & operator>> (unsigned int &);
     FStream & operator>> (int &);
-    FStream & operator<< (ParmString);
+    FStream & operator<< (ParmStr);
     FStream & operator<< (unsigned int);
     FStream & operator<< (int);
     FStream & operator<< (double);

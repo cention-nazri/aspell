@@ -20,7 +20,7 @@ namespace acommon {
   class OStream {
   public:
     virtual void write (char c) = 0;
-    virtual void write (ParmString) = 0;
+    virtual void write (ParmStr) = 0;
     virtual void write (const void *, unsigned int) = 0;
 
     virtual int vprintf(const char *format, va_list ap) = 0;
@@ -36,9 +36,9 @@ namespace acommon {
     }
 
     void put (char c) {write(c);}
-    void put (ParmString str) {write(str);}
+    void put (ParmStr str) {write(str);}
 
-    virtual void printl(ParmString l) 
+    virtual void printl(ParmStr l) 
     {
       write(l);
       write('\n');
@@ -52,7 +52,7 @@ namespace acommon {
       return *this;
     }
 
-    OStream & operator << (ParmString in) {
+    OStream & operator << (ParmStr in) {
       write(in);
       return *this;
     }

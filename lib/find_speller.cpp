@@ -25,6 +25,7 @@
 #include "stack_ptr.hpp"
 #include "string_enumeration.hpp"
 #include "string_list.hpp"
+#include "string_map.hpp"
 
 #include "iostream.hpp"
 
@@ -281,7 +282,8 @@ namespace acommon {
 
   PosibErr<Config *> find_word_list(Config * c) 
   {
-    Config * config = c->clone();
+    Config * config = new_config();
+    config->read_in_settings(c);
     String dict_name;
 
     if (config->have("master")) {
@@ -438,7 +440,7 @@ namespace acommon {
         config->replace("master-flags", flags.c_str());
         config->replace("module", b_module.best);
         config->replace("jargon", b_variety.best);
-        config->replace("rem-all-variety", "");
+        config->replace("clear-variety", "");
         unsigned p;
         for (const char * c = b_module.best; *c != '\0'; c += p) {
           p = strcspn(c, "-");

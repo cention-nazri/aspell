@@ -43,13 +43,13 @@ namespace acommon {
   class ToLowerMap : public StringMap
   {
   public:
-    PosibErr<bool> add(ParmString to_add) {
+    PosibErr<bool> add(ParmStr to_add) {
       String new_key;
       for (const char * i = to_add; *i; ++i) new_key += asc_tolower(*i);
       return StringMap::add(new_key);
     }
 
-    PosibErr<bool> remove(ParmString to_rem) {
+    PosibErr<bool> remove(ParmStr to_rem) {
       String new_key;
       for (const char * i = to_rem; *i; ++i) new_key += asc_tolower(*i);
       return StringMap::remove(new_key);

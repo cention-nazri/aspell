@@ -7,6 +7,8 @@
 #ifndef ACOMMON_FILTER__HPP
 #define ACOMMON_FILTER__HPP
 
+#include <assert.h>
+
 #include "string.hpp"
 #include "posib_err.hpp"
 #include "filter_char.hpp"
@@ -14,6 +16,29 @@
 namespace acommon {
 
   class Config;
+
+  class FilterHandle {
+  public:
+    FilterHandle() : handle(0) {}
+    ~FilterHandle() {} // FIXME NOW: dlclose(handle)
+    void * release() {
+      void * tmp = handle;
+      handle = NULL;
+      return tmp;
+    }
+    operator bool() {return handle != NULL;}
+    void * get() {return handle;}
+
+    // The direct interface usually when new_filter ... functions are coded
+    // manually
+    FilterHandle & operator= (void * h) {
+      assert(handle == NULL);
+      handle = h; 
+      return *this;
+    }
+  private:
+    void * handle;
+  };  
 
   class IndividualFilter {
   public:
@@ -57,6 +82,8 @@ namespace acommon {
 
     const char * name() const {return name_;}
     double order_num() const {return order_num_;}
+
+    FilterHandle handle;
 
   protected:
 

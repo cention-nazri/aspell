@@ -5,6 +5,7 @@
 // it at http://www.gnu.org/.
 
 #include "string_list.hpp"
+//#include "iostream.hpp"
 
 namespace acommon {
 
@@ -62,8 +63,9 @@ namespace acommon {
     *this = *(const StringList *)other;
   }
 
-  PosibErr<bool> StringList::add(ParmString str)
+  PosibErr<bool> StringList::add(ParmStr str)
   {
+    //CERR.printf("ADD %s\n", str.str());
     StringListNode * * cur = &first;
     while (*cur != 0 && strcmp((*cur)->data.c_str(), str) != 0) {
       cur = &(*cur)->next;
@@ -76,8 +78,9 @@ namespace acommon {
     }
   }
 
-  PosibErr<bool> StringList::remove(ParmString str)
+  PosibErr<bool> StringList::remove(ParmStr str)
   {
+    //CERR.printf("REM %s\n", str.str());
     StringListNode  * * prev = 0;
     StringListNode  * * cur  = &first;
     while (*cur != 0 && strcmp((*cur)->data.c_str(), str)!=0 )  {
@@ -100,6 +103,7 @@ namespace acommon {
 
   PosibErr<void> StringList::clear()
   {
+    //CERR.printf("CLEAR\n");
     StringListNode * temp;
     while (first != 0) {
       temp = first;

@@ -38,7 +38,7 @@ namespace acommon {
     int res;
     va_list ap;
   loop: {
-      size_t avail = storage_end_ - end_;
+      int avail = storage_end_ - end_;
       if (avail > 1024) return -1;
       va_copy(ap,ap0);
       res = vsnprintf(end_, avail, format, ap);

@@ -9,22 +9,17 @@
 #include "config.hpp"
 #include "errors.hpp"
 #include "filter.hpp"
-#include <stdio.h>
-
-#define DEBUG {fprintf(stderr,"File: %s(%i)\n",__FILE__,__LINE__);}
 
 namespace acommon {
   
-  extern void activate_dynamic_filteroptions(Config *config);
   extern void activate_filter_modes(Config *config);
+  extern PosibErr<ConfigModule *> get_dynamic_filter(Config * config, ParmStr value);
 
-
-  Config * new_config() {
-
+  Config * new_config() 
+  {
     Config * config = new_basic_config();
-
     activate_filter_modes(config);
-    activate_dynamic_filteroptions(config);
+    config->load_filter_hook = get_dynamic_filter;
     return config;
   }
 

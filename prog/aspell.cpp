@@ -14,7 +14,6 @@
 //       internal encoding used by Aspell.
 // 
 
-#include <deque>
 #include <ctype.h>
 #include "settings.h"
 
@@ -53,9 +52,9 @@
 #include "string_map.hpp"
 #include "word_list.hpp"
 
+#include "string_list.hpp"
 #include "speller_impl.hpp"
 #include "data.hpp"
-#include "directory.hpp"
 
 using namespace acommon;
 
@@ -126,8 +125,8 @@ void print_error(ParmString msg, ParmString str)
 // (including main)
 //
 
-typedef std::deque<String> Args;
-typedef Config        Options;
+typedef Vector<String> Args;
+typedef Config         Options;
 enum Action {do_create, do_merge, do_dump, do_test, do_other};
 
 Args              args;
@@ -235,16 +234,15 @@ int main (int argc, const char *argv[])
   setlocale (LC_ALL, "");
 #endif
 
+  options->set_committed_state(false);
+
   EXIT_ON_ERR(intialize_filter_modes(options));
-  EXIT_ON_ERR(options->read_in_settings());
 
   if (argc == 1) {print_help(); return 0;}
 
   int i = 1;
   const PossibleOption * o;
   const char           * parm;
-
-  Vector<StringPair> utf8_opts;
 
   //
   // process command line options by setting the appropriate options
@@ -254,6 +252,7 @@ int main (int argc, const char *argv[])
   String option_name;
   while (i != argc) {
     if (argv[i][0] == '-') {
+      bool have_parm = false;
       if (argv[i][1] == '-') {
 	// a long arg
 	const char * c = argv[i] + 2;
@@ -261,15 +260,11 @@ int main (int argc, const char *argv[])
 	o = find_option(argv[i] + 2, c);
 	if (o == possible_options_end) {
 	  option_name.assign(argv[i] + 2, c - argv[i] - 2);
-	  const char * base_name = Config::base_name(option_name);
-	  PosibErr<const KeyInfo *> ki = options->keyinfo(base_name);
-          if (!ki.has_err(unknown_key)) {
-            other_opt.name    = option_name.c_str();
-            other_opt.num_arg = ki.data->type == KeyInfoBool ? 0 : 1; //FIXME what if --rem-all- given ??;; debug mode ???
-            o = &other_opt;
-          }
-	} 
-	if (*c == '=') ++c;
+          other_opt.name    = option_name.c_str();
+          other_opt.num_arg = -1;
+          o = &other_opt;
+	}
+	if (*c == '=') {have_parm = true; ++c;}
 	parm = c;
       } else {
 	// a short arg
@@ -282,47 +277,58 @@ int main (int argc, const char *argv[])
 	    parm = argv[i] + 3;
 	  else
 	    parm = argv[i] + 2;
-	} else {
+	} else { // mode option
 	  other_opt.name = "mode";
 	  other_opt.num_arg = 1;
 	  o = &other_opt;
 	  parm = j->mode + 5;
 	}
+        if (*parm) have_parm = true;
       }
       if (o == possible_options_end) {
 	print_error(_("Invalid Option: %s"), argv[i]);
 	return 1;
       }
+      int num_parms;
       if (o->num_arg == 0) {
+        num_parms = 0;
 	if (parm[0] != '\0') {
 	  print_error(_(" does not take any parameters."), 
 		      String(argv[i], parm - argv[i]));
 	  return 1;
 	}
 	i += 1;
-      } else { // o->num_arg == 1
-	if (parm[0] == '\0') {
-	  if (i + 1 == argc) {
-	    print_error(_("You must specify a parameter for %s"), argv[i]);
-	    return 1;
-	  }
-	  parm = argv[i + 1];
-	  i += 2;
-	} else {
-	  i += 1;
-	}
+      } else if (have_parm) {
+        num_parms = 1;
+        i += 1;
+      } else if (i + 1 == argc || argv[i+1][0] == '-') {
+        if (o->num_arg == -1) {
+          num_parms = 0;
+          i += 1;
+        } else {
+          print_error(_("You must specify a parameter for %s"), argv[i]);
+          return 1;
+        }
+      } else {
+        num_parms = o->num_arg;
+        parm = argv[i + 1];
+        i += 2;
       }
       if (o->is_command) {
 	args.push_back(o->name);
 	if (o->num_arg == 1)
 	  args.push_back(parm);
-      } else {
-	if (o->name[0] != '\0') {
-          if (options->keyinfo(Config::base_name(o->name)).data->flags & KEYINFO_UTF8)
-            utf8_opts.push_back(StringPair(strdup(o->name), strdup(parm)));
-          else
-            EXIT_ON_ERR(options->replace(o->name, parm));
-	}
+      } else if (o->name[0] != '\0') {
+        Config::Entry * entry = new Config::Entry;
+        entry->key = o->name;
+        entry->value = parm;
+        entry->need_conv = true;
+        CERR.printf("%s %s\n", o->name, parm);
+        if (num_parms == -1) {
+          entry->place_holder = args.size();
+          args.push_back(parm);
+        }
+        options->set(entry);
       }
     } else {
       args.push_back(argv[i]);
@@ -330,35 +336,34 @@ int main (int argc, const char *argv[])
     }
   }
 
-  if (args.empty()) {
-    print_error(_("You must specify an action"));
-    return 1;
-  }
+  options->read_in_settings();
 
   const char * codeset = 0;
 #ifdef HAVE_LANGINFO_CODESET
   codeset = nl_langinfo(CODESET);
   if (is_ascii_enc(codeset)) codeset = 0;
 #endif
-  if (!utf8_opts.empty()) {
-    Conv to_utf8;
-#ifdef USE_LOCALE
-    EXIT_ON_ERR(to_utf8.setup(*options, codeset, "utf-8", NormTo));
-#endif
-    for (Vector<StringPair>::iterator i = utf8_opts.begin(); 
-         i != utf8_opts.end();
-         ++i)
-    {
-      EXIT_ON_ERR(options->replace(i->first, to_utf8(i->second)));
-      free((char *)i->first);
-      free((char *)i->second);
-    }
-    utf8_opts.clear();
-  }
+
 // #ifdef USE_LOCALE
 //   if (!options->have("encoding") && codeset)
 //     EXIT_ON_ERR(options->replace("encoding", codeset));
 // #endif
+
+  Vector<int> to_remove;
+  EXIT_ON_ERR(options->commit_all(&to_remove, codeset));
+  for (int i = to_remove.size() - 1; i >= 0; --i) {
+    args.erase(args.begin() + to_remove[i]);
+  }
+
+  //options->write_to_stream(COUT);
+  for (int i = 0; i != args.size(); ++i) {
+    COUT.printf("ARGV %s\n", args[i].str());
+  }
+
+  if (args.empty()) {
+    print_error(_("You must specify an action"));
+    return 1;
+  }
 
   //
   // perform the requested action
@@ -433,6 +438,7 @@ int main (int argc, const char *argv[])
   }
 
   return 0;
+
 }
 
 
@@ -479,24 +485,22 @@ static Convert * setup_conv(Config * config,
 // config
 //
 
-void config () 
+void config ()
 {
-  StackPtr<Config> config(new_config());
-  EXIT_ON_ERR(config->read_in_settings(options));
   if ((args.size() > 0) &&
       (args[0] == "+e")) {
     args.pop_front();
     if (args.size() == 0) {
       args.push_front("all");
     }
-    expand_expression(config);
+    expand_expression(options);
     args.pop_front();
   }
   if (args.size() == 0) {
-    config->write_to_stream(COUT);
+    options->write_to_stream(COUT);
   }
   else {
-    EXIT_ON_ERR_SET(config->retrieve(args[0]), String, value);
+    EXIT_ON_ERR_SET(options->retrieve(args[0]), String, value);
     COUT << value << "\n";
   }
 }
@@ -618,7 +622,7 @@ void pipe()
   bool include_guesses = options->retrieve_bool("guess");
   clock_t start,finish;
   start = clock();
-
+  
   AspellCanHaveError * ret 
     = new_aspell_speller(reinterpret_cast<AspellConfig *>(options.get()));
   if (aspell_error(ret)) {
@@ -1317,8 +1321,7 @@ void clean()
 
   bool strict = args.size() != 0 && args[0] == "strict";
   
-  StackPtr<Config> config(new_basic_config());
-  EXIT_ON_ERR(config->read_in_settings(options));
+  Config * config = options;
 
   CachePtr<Language> lang;
   find_language(*config);
@@ -1391,8 +1394,7 @@ void master () {
     options->replace("master", args[0].c_str());
   }
 
-  StackPtr<Config> config(new_basic_config());
-  EXIT_ON_ERR(config->read_in_settings(options));
+  Config * config = options;
 
   if (action == do_create) {
     
@@ -1454,8 +1456,7 @@ void personal () {
 
     // FIXME: This is currently broken
 
-    StackPtr<Config> config(new_basic_config());
-    EXIT_ON_ERR(config->read_in_settings(options));
+    Config * config = options;
     Dictionary * per = new_default_writable_dict();
     per->load(config->retrieve("personal-path"), *config);
     StackPtr<WordEntryEnumeration> els(per->detailed_elements());
@@ -1518,23 +1519,20 @@ void repl() {
 
     // FIXME: This is currently broken
 
-    StackPtr<Config> config(new_basic_config());
-    EXIT_ON_ERR(config->read_in_settings());
-
-     ReplacementDict * repl = new_default_replacement_dict();
-     repl->load(config->retrieve("repl-path"), *config);
-     StackPtr<WordEntryEnumeration> els(repl->detailed_elements());
- 
-     WordEntry * rl = 0;
-     WordEntry words;
-     Conv conv(setup_conv(repl->lang(), config));
-     while ((rl = els->next())) {
-       repl->repl_lookup(*rl, words);
-       do {
-         COUT << conv(rl->word) << ": " << conv(words.word) << "\n";
-       } while (words.adv());
-     }
-     delete repl;
+    ReplacementDict * repl = new_default_replacement_dict();
+    repl->load(options->retrieve("repl-path"), *options);
+    StackPtr<WordEntryEnumeration> els(repl->detailed_elements());
+    
+    WordEntry * rl = 0;
+    WordEntry words;
+    Conv conv(setup_conv(repl->lang(), options));
+    while ((rl = els->next())) {
+      repl->repl_lookup(*rl, words);
+      do {
+        COUT << conv(rl->word) << ": " << conv(words.word) << "\n";
+      } while (words.adv());
+    }
+    delete repl;
   }
 }
 
@@ -1785,16 +1783,13 @@ void print_help_line(char abrv, char dont_abrv, const char * name,
   printf("  %-27s %s\n", command.c_str(), tdesc); // FIXME: consider word wrapping
 }
 
-void expand_expression(Config * config){
-  StringList filtpath;
-  StringList optpath;
-  PathBrowser optionpath;
-  PathBrowser filterpath;
-  String candidate;
+namespace acommon {
+  PosibErr<ConfigModule *> get_dynamic_filter(Config * config, ParmStr value);
+}
+
+void expand_expression(Config * config) {
+  StringList filter_path;
   String toload;
-  size_t locate_ending=0;
-  size_t eliminate_path=0;
-  size_t hold_eliminator=0;
 //FIXME if Win(dos) is different
   regex_t seekfor;
   
@@ -1802,40 +1797,26 @@ void expand_expression(Config * config){
     if (args[0] == "all") {
       args[0]=".*";
     }
-    config->retrieve_list("filter-path",&filtpath);
-    config->retrieve_list("option-path",&optpath);
-    filterpath=filtpath;
-    optionpath=optpath;
+    config->retrieve_list("filter-path", &filter_path);
+    PathBrowser els(filter_path, "-filter.opt");
+
     if (regcomp(&seekfor,args[0].c_str(),REG_NEWLINE|REG_NOSUB|REG_EXTENDED)) {
-      make_err(invalid_expression,"help",args[0]);
+      make_err(invalid_expression, args[0]);
       return;
     }
-    while (filterpath.expand_file_part(&seekfor,candidate)) {
+    const char * file;
+    while ((file = els.next()) != NULL) {
 
-      if (!candidate.suffix("-filter.so")) continue;
+      const char * name = strrchr(file, '/');
+      if (!name) name = file;
+      else name++;
+      unsigned len = strlen(name) - 11;
 
-      candidate.pop_back(10);
-      eliminate_path=0;
-      while ((hold_eliminator=candidate.find('/',eliminate_path)) < 
-             candidate.size() && hold_eliminator >= 0) {
-        eliminate_path=hold_eliminator+1;
-      }
-      if (!candidate.prefix("lib",eliminate_path)) {
-        continue;
-      }
-      candidate.erase(0,eliminate_path);
-      candidate.erase(0,3);
-      locate_ending=candidate.size();
-      toload=candidate;
-      if (regexec(&seekfor,toload.c_str(),0,NULL,0)) {
-        continue;
-      }
-      candidate+="-filter.opt";
-      if (!optionpath.expand_filename(candidate)) {
-        continue;
-      }
-      
-      config->replace("add-filter",toload.c_str());
+      toload.assign(name, len);
+
+      if (regexec(&seekfor,toload.c_str(),0,NULL,0) != 0) continue;
+
+      get_dynamic_filter(config, toload);
     }
     regfree(&seekfor);
   }
@@ -1843,38 +1824,40 @@ void expand_expression(Config * config){
 
 void print_help () {
   expand_expression(options);
-  printf(_(
-    "\n"
-    "Aspell %s alpha.  Copyright 2000-2004 by Kevin Atkinson.\n"
-    "\n"
-    "Usage: aspell [options] <command>\n"
-    "\n"
-    "<command> is one of:\n"
-    "  -?|help [<expr>] display this help message\n"
-    "                    and help for filters matching <expr> if installed\n"
-    "  -c|check <file>  to check a file\n"
-    "  -a|pipe          \"ispell -a\" compatibility mode\n"
-    "  list             produce a list of misspelled words from standard input\n"
-    "  [dump] config [-e <expr>]  dumps the current configuration to stdout\n"
-    "  config [+e <expr>] <key>   prints the current value of an option\n"
-    "  soundslike       returns the sounds like equivalent for each word entered\n"
-    "  munch            generate possible root words and affixes\n"
-    "  expand [1-4]     expands affix flags\n"
-    "  clean [strict]   cleans a word list so that every line is a valid word\n"
-    "  filter           passes standard input through filters\n"
-    "  -v|version       prints a version line\n"
-    "  conv <from> <to> [<norm-form>]\n"
-    "    converts from one encoding to another\n"
-    "  norm (<norm-map> | <from> <norm-map> <to>) [<norm-form>]\n"
-    "    perform unicode normlization\n"
-    "  dump|create|merge master|personal|repl [word list]\n"
-    "    dumps, creates or merges a master, personal, or replacement word list.\n"
-    "\n"
-    "  <expr>           regular expression matching filtername(s) or \"all\"\n"
-    "  <norm-form>      normalization form to use, either none, internal, or strict\n"
-    "\n"
-    "[options] is any of the following:\n"
-    "\n"), VERSION);
+  printf(
+    /* TRANSLATORS: This should be formated to fit on an 80 column
+     * terminal.*/
+    _("\n"
+      "Aspell %s alpha.  Copyright 2000-2004 by Kevin Atkinson.\n"
+      "\n"
+      "Usage: aspell [options] <command>\n"
+      "\n"
+      "<command> is one of:\n"
+      "  -?|help [<expr>] display this help message\n"
+      "                    and help for filters matching <expr> if installed\n"
+      "  -c|check <file>  to check a file\n"
+      "  -a|pipe          \"ispell -a\" compatibility mode\n"
+      "  list             produce a list of misspelled words from standard input\n"
+      "  [dump] config [+e <expr>]  dumps the current configuration to stdout\n"
+      "  config [+e <expr>] <key>   prints the current value of an option\n"
+      "  soundslike       returns the sounds like equivalent for each word entered\n"
+      "  munch            generate possible root words and affixes\n"
+      "  expand [1-4]     expands affix flags\n"
+      "  clean [strict]   cleans a word list so that every line is a valid word\n"
+      "  filter           passes standard input through filters\n"
+      "  -v|version       prints a version line\n"
+      "  conv <from> <to> [<norm-form>]\n"
+      "    converts from one encoding to another\n"
+      "  norm (<norm-map> | <from> <norm-map> <to>) [<norm-form>]\n"
+      "    perform unicode normlization\n"
+      "  dump|create|merge master|personal|repl [word list]\n"
+      "    dumps, creates or merges a master, personal, or replacement word list.\n"
+      "\n"
+      "  <expr>           regular expression matching filtername(s) or \"all\"\n"
+      "  <norm-form>      normalization form to use, either none, internal, or strict\n"
+      "\n"
+      "[options] is any of the following:\n"
+      "\n"), VERSION);
   StackPtr<KeyInfoEnumeration> els(options->possible_elements());
   const KeyInfo * k;
   while (k = els->next(), k) {

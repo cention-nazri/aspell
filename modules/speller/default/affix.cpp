@@ -1052,7 +1052,7 @@ bool PfxEntry::check(const LookupInfo & linf, const AffixMgr * pmyMgr,
                      CheckInfo & ci, GuessInfo * gi) const
 {
   unsigned int		cond;	// condition number being examined
-  int	                tmpl;   // length of tmpword
+  unsigned              tmpl;   // length of tmpword
   WordEntry             wordinfo;     // hash entry of root word or NULL
   byte *	cp;		
   VARARRAYM(char, tmpword, word.size()+1, MAXWORDLEN+1);
@@ -1198,7 +1198,7 @@ bool SfxEntry::check(const LookupInfo & linf, ParmString word,
                      CheckInfo & ci, GuessInfo * gi,
                      int optflags, AffEntry* ppfx)
 {
-  int	                tmpl;		 // length of tmpword 
+  unsigned              tmpl;		 // length of tmpword 
   int			cond;		 // condition beng examined
   WordEntry             wordinfo;        // hash entry pointer
   byte *	cp;

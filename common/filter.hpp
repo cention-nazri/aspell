@@ -12,8 +12,8 @@
 #include "filter_char.hpp"
 #include "posib_err.hpp"
 #include "vector.hpp"
+
 #include <stdio.h>
-#include <cstdio>
 
 namespace acommon {
 
@@ -21,41 +21,24 @@ namespace acommon {
   class Speller;
   class IndividualFilter;
   class StringList;
-  class Notifier;
   struct ConfigModule;
 
   class Filter : public CanHaveError {
   public:
     
-    enum FilterType {
-      DECODER=-1,
-      FILTER=0,
-      ENCODER=1
-    };
-
-    bool empty() const { return (filters_.empty() && 
-                                decoders_.empty() && 
-                                encoders_.empty());} 
+    bool empty() const {return filters_.empty();}
     void clear();
     void reset();
-    void decode(FilterChar * & start, FilterChar * & stop);
     void process(FilterChar * & start, FilterChar * & stop);
-    void encode(FilterChar * & start, FilterChar * & stop);
-    void add_filter(IndividualFilter * filter,void* handles=NULL,
-                    int type=FILTER);
+    void add_filter(IndividualFilter * filter);
     // setup the filter where the string list is the list of 
     // filters to use.
     Filter();
     ~Filter();
-  private:
+
+ private:
     typedef Vector<IndividualFilter *> Filters;
-    Filters decoders_;
     Filters filters_;
-    Filters encoders_;
-    typedef Vector<void*> Handled;
-    Handled handledDecoder;
-    Handled handledFilter;
-    Handled handledEncoder;
   };
 
   void set_mode_from_extension(Config * config,
@@ -69,8 +52,8 @@ namespace acommon {
   void activate_filter_modes(Config * config);
   void print_mode_help(FILE * helpScreen);
   PosibErr<void> intialize_filter_modes(Config * config);
-  PosibErr<bool> verifyVersion(const char * relOp, const char * actual,
-                               const char * required, const char * module = "aspell");
+  PosibErr<bool> verify_version(const char * relOp, const char * actual,
+                                const char * required, const char * module = "aspell");
 
 };
 

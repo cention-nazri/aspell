@@ -33,22 +33,22 @@ namespace acommon {
   };
 
   struct Decode : public ConvBase {
-    virtual PosibErr<void> init(ParmString code, const Config &) {return no_err;}
+    virtual PosibErr<void> init(ParmStr code, const Config &) {return no_err;}
     virtual void decode(const char * in, int size,
 			FilterCharVector & out) const = 0;
     virtual PosibErr<void> decode_ec(const char * in, int size,
-                                     FilterCharVector & out, ParmString orig) const = 0;
+                                     FilterCharVector & out, ParmStr orig) const = 0;
     static PosibErr<Decode *> get_new(const String &, const Config *);
     virtual ~Decode() {}
   };
   struct Encode : public ConvBase {
     // null characters should be treated like any other character
     // by the encoder.
-    virtual PosibErr<void> init(ParmString, const Config &) {return no_err;}
+    virtual PosibErr<void> init(ParmStr, const Config &) {return no_err;}
     virtual void encode(const FilterChar * in, const FilterChar * stop, 
                         CharVector & out) const = 0;
     virtual PosibErr<void> encode_ec(const FilterChar * in, const FilterChar * stop, 
-                                     CharVector & out, ParmString orig) const = 0;
+                                     CharVector & out, ParmStr orig) const = 0;
     // may convert inplace
     virtual bool encode(FilterChar * & in, FilterChar * & stop, 
                         FilterCharVector & buf) const {return false;}
@@ -64,7 +64,7 @@ namespace acommon {
     virtual void convert(const char * in, int size, 
 			 CharVector & out) const = 0;
     virtual PosibErr<void> convert_ec(const char * in, int size, 
-                                      CharVector & out, ParmString orig) const = 0;
+                                      CharVector & out, ParmStr orig) const = 0;
     virtual ~DirectConv() {}
   };
   template <class T> struct NormTable;
@@ -119,9 +119,9 @@ namespace acommon {
     // this class in any way.
     Filter filter;
 
-    PosibErr<void> init(const Config &, ParmString in, ParmString out);
-    PosibErr<void> init_norm_to(const Config &, ParmString in, ParmString out);
-    PosibErr<void> init_norm_from(const Config &, ParmString in, ParmString out);
+    PosibErr<void> init(const Config &, ParmStr in, ParmStr out);
+    PosibErr<void> init_norm_to(const Config &, ParmStr in, ParmStr out);
+    PosibErr<void> init_norm_from(const Config &, ParmStr in, ParmStr out);
     
     const char * in_code() const   {return decode_->key.c_str();}
     const char * out_code() const  {return encode_->key.c_str();}
@@ -165,7 +165,7 @@ namespace acommon {
     // does NOT pass it through filters
     // DOES NOT use an internal state
     PosibErr<void> convert_ec(const char * in, int size, CharVector & out, 
-                              ConvertBuffer & buf, ParmString orig) const
+                              ConvertBuffer & buf, ParmStr orig) const
     {
       if (conv_) {
 	RET_ON_ERR(conv_->convert_ec(in,size,out, orig));
@@ -197,9 +197,9 @@ namespace acommon {
 
   bool operator== (const Convert & rhs, const Convert & lhs);
 
-  const char * fix_encoding_str(ParmString enc, String & buf);
+  const char * fix_encoding_str(ParmStr enc, String & buf);
 
-  bool is_ascii_enc(ParmString enc);
+  bool is_ascii_enc(ParmStr enc);
 
   enum Normalize {NormNone, NormFrom, NormTo};
 
@@ -209,14 +209,14 @@ namespace acommon {
                                            Normalize n);
   
   static inline PosibErr<Convert *> new_convert(const Config & c,
-                                                ParmString in, ParmString out,
+                                                ParmStr in, ParmStr out,
                                                 Normalize n)
   {
     return internal_new_convert(c,in,out,false,n);
   }
   
   static inline PosibErr<Convert *> new_convert_if_needed(const Config & c,
-                                                          ParmString in, ParmString out,
+                                                          ParmStr in, ParmStr out,
                                                           Normalize n)
   {
     return internal_new_convert(c,in,out,true,n);
@@ -226,7 +226,7 @@ namespace acommon {
     Convert * ptr;
     ConvObj(Convert * c = 0) : ptr(c) {}
     ~ConvObj() {delete ptr;}
-    PosibErr<void> setup(const Config & c, ParmString from, ParmString to, Normalize norm)
+    PosibErr<void> setup(const Config & c, ParmStr from, ParmStr to, Normalize norm)
     {
       delete ptr;
       ptr = 0;
@@ -250,7 +250,7 @@ namespace acommon {
     ConvP(const ConvObj & c) : conv(c.ptr) {}
     ConvP(const ConvP & c) : conv(c.conv) {}
     void operator=(const ConvP & c) { conv = c.conv; }
-    PosibErr<void> setup(const Config & c, ParmString from, ParmString to, 
+    PosibErr<void> setup(const Config & c, ParmStr from, ParmStr to, 
                          Normalize norm)
     {
       delete conv;
@@ -286,7 +286,7 @@ namespace acommon {
         return str;
       }
     }
-    const char * operator() (ParmString str)
+    const char * operator() (ParmStr str)
     {
       if (conv) {
         buf.clear();
@@ -315,7 +315,7 @@ namespace acommon {
   {
     ConvObj conv_obj;
     Conv(Convert * c = 0) : ConvP(c), conv_obj(c) {}
-    PosibErr<void> setup(const Config & c, ParmString from, ParmString to, Normalize norm)
+    PosibErr<void> setup(const Config & c, ParmStr from, ParmStr to, Normalize norm)
     {
       RET_ON_ERR(conv_obj.setup(c,from,to,norm));
       conv = conv_obj.ptr;
@@ -332,7 +332,7 @@ namespace acommon {
     ConvECP(const ConvObj & c) : conv(c.ptr) {}
     ConvECP(const ConvECP & c) : conv(c.conv) {}
     void operator=(const ConvECP & c) { conv = c.conv; }
-    PosibErr<void> setup(const Config & c, ParmString from, ParmString to, Normalize norm)
+    PosibErr<void> setup(const Config & c, ParmStr from, ParmStr to, Normalize norm)
     {
       delete conv;
       conv = 0;
@@ -367,7 +367,7 @@ namespace acommon {
         return str;
       }
     }
-    PosibErr<const char *> operator() (ParmString str)
+    PosibErr<const char *> operator() (ParmStr str)
     {
       if (conv) {
         buf.clear();
@@ -389,7 +389,7 @@ namespace acommon {
   {
     ConvObj conv_obj;
     ConvEC(Convert * c = 0) : ConvECP(c), conv_obj(c) {}
-    PosibErr<void> setup(const Config & c, ParmString from, ParmString to, Normalize norm)
+    PosibErr<void> setup(const Config & c, ParmStr from, ParmStr to, Normalize norm)
     {
       RET_ON_ERR(conv_obj.setup(c,from,to,norm));
       conv = conv_obj.ptr;
@@ -401,7 +401,7 @@ namespace acommon {
   {
     enum Encoding {Other, UTF8, UCS2, UCS4} encoding;
     MBLen() : encoding(Other) {}
-    PosibErr<void> setup(const Config &, ParmString enc);
+    PosibErr<void> setup(const Config &, ParmStr enc);
     unsigned operator()(const char * str, const char * stop);
     unsigned operator()(const char * str, unsigned byte_size) {
       return operator()(str, str + byte_size);}

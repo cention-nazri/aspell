@@ -9,7 +9,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <assert.h>
-#include <locale.h>
 
 #include "dirs.h"
 #include "settings.h"
@@ -32,29 +31,59 @@
 #include "stack_ptr.hpp"
 #include "char_vector.hpp"
 #include "convert.hpp"
+#include "vararray.hpp"
 
-//#include "iostream.hpp"
+#include "iostream.hpp"
 
 #define DEFAULT_LANG "en_US"
-
-// FIXME: Consider eliminating KeyInfoDescript in favor of a better
-//   solution for string a filters description
 
 // NOTE: All filter options are now stored with he "filter-" prefix.  However
 //   during lookup, the non prefix version is also recognized.
 
+// The "place_holder" field in Entry and the "Vector<int>" parameter of
+// commit_all are there to deal with the fact than when spacing
+// options on the command line such as "--key what" it can not be
+// determined if "what" should be a the value of "key" or if it should
+// be treated as an independent arg.  This is because "key" may
+// be a filter option.  Filter options KeyInfo are not loaded until
+// after a commit which is not done at the time the options are being
+// read in from the command line.  (If the command line arguments are
+// read in after the other settings are read in and committed than any
+// options setting any of the config files will be ignored.  Thus the
+// command line must be parsed and options must be added in an
+// uncommitted state).  So the solution is to assume it is an
+// independent arg until told otherwise, the position in the arg array
+// is stored along with the value in the "place_holder" field.  When
+// the config class is finally committed and it is determined that
+// "what" is really a value for key the stored arg position is pushed
+// onto the Vector<int> so it can be removed from the arg array.  In
+// the case of a "lset-*" this will happen in multiple config
+// "Entry"s, so care is taken to only add the arg position once.
+
 namespace acommon {
 
+  const char * const keyinfo_type_name[4] = {
+    N_("string"), N_("integer"), N_("boolean"), N_("list")
+  };
+
+  void seperate_list(ParmStr value, AddableContainer & out, bool do_unescape);
+
+  const int Config::num_parms_[9] = {1, 1, 0, 0, 0,
+                                     1, 1, 1, 0};
+  
   static const ConfigModule a_module = ConfigModule();
   
   typedef Notifier * NotifierPtr;
   
-  Config::Config(ParmString name,
+  Config::Config(ParmStr name,
 		 const KeyInfo * mainbegin, 
 		 const KeyInfo * mainend)
     : name_(name)
-    , attached_(0)
+    , first_(0), insert_point_(&first_), others_(0)
+    , committed_(true), attached_(false)
     , md_info_list_index(-1)
+    , settings_read_in_(false)
+    , load_filter_hook(0)
   {
     kmi.main_begin = mainbegin;
     kmi.main_end   = mainend;
@@ -65,32 +94,91 @@ namespace acommon {
   }
 
   Config::~Config() {
-    del_notifiers();
+    del();
   }
 
   Config::Config(const Config & other) 
-    : name_(other.name_), data_(other.data_), attached_(0), kmi(other.kmi),
-      md_info_list_index(other.md_info_list_index)
   {
-    copy_notifiers(other);
+    copy(other);
   }
-
+  
   Config & Config::operator= (const Config & other)
   {
-    attached_ = 0;
-    kmi = other.kmi;
-    data_ = other.data_;
-    md_info_list_index = other.md_info_list_index;
-    copy_notifiers(other);
+    del();
+    copy(other);
     return *this;
   }
-
+  
   Config * Config::clone() const {
     return new Config(*this);
   }
 
   void Config::assign(const Config * other) {
     *this = *(const Config *)(other);
+  }
+
+  void Config::copy(const Config & other)
+  {
+    assert(other.others_ == 0);
+    others_ = 0;
+
+    name_ = other.name_;
+
+    committed_ = other.committed_;
+    attached_ = other.attached_;
+    settings_read_in_ = other.settings_read_in_;
+
+    kmi = other.kmi;
+    md_info_list_index = other.md_info_list_index;
+
+    insert_point_ = 0;
+    Entry * const * src  = &other.first_;
+    Entry * * dest = &first_;
+    while (*src) 
+    {
+      *dest = new Entry(**src);
+      if (src == other.insert_point_)
+        insert_point_ = dest;
+      src  = &((*src)->next);
+      dest = &((*dest)->next);
+    }
+    if (insert_point_ == 0)
+      insert_point_ = dest;
+    *dest = 0;
+
+    Vector<Notifier *>::const_iterator i   = other.notifier_list.begin();
+    Vector<Notifier *>::const_iterator end = other.notifier_list.end();
+
+    for(; i != end; ++i) {
+      Notifier * tmp = (*i)->clone(this);
+      if (tmp != 0)
+	notifier_list.push_back(tmp);
+    }
+  }
+
+  void Config::del()
+  {
+    while (first_) {
+      Entry * tmp = first_->next;
+      delete first_;
+      first_ = tmp;
+    }
+
+    while (others_) {
+      Entry * tmp = others_->next;
+      delete first_;
+      others_ = tmp;
+    }
+
+    Vector<Notifier *>::iterator i   = notifier_list.begin();
+    Vector<Notifier *>::iterator end = notifier_list.end();
+
+    for(; i != end; ++i) {
+      delete (*i);
+      *i = 0;
+    }
+    
+    notifier_list.clear();
   }
 
   void Config::set_filter_modules(const ConfigModule * modbegin, 
@@ -121,33 +209,6 @@ namespace acommon {
     return new NotifierEnumeration(notifier_list);
   }
 
-  void Config::copy_notifiers(const Config & other)
-  {
-    notifier_list.clear();
-
-    Vector<Notifier *>::const_iterator i   = other.notifier_list.begin();
-    Vector<Notifier *>::const_iterator end = other.notifier_list.end();
-
-    for(; i != end; ++i) {
-      Notifier * tmp = (*i)->clone(this);
-      if (tmp != 0)
-	notifier_list.push_back(tmp);
-    }
-  }
-
-  void Config::del_notifiers()
-  {
-    Vector<Notifier *>::iterator i   = notifier_list.begin();
-    Vector<Notifier *>::iterator end = notifier_list.end();
-
-    for(; i != end; ++i) {
-      delete (*i);
-      *i = 0;
-    }
-    
-    notifier_list.clear();
-  }
-  
   bool Config::add_notifier(Notifier * n) 
   {
     Vector<Notifier *>::iterator i   = notifier_list.begin();
@@ -211,68 +272,130 @@ namespace acommon {
     }
   }
 
-  bool Config::have(ParmString key) const 
-  {
-    const char * value = data_.lookup(key);
-    if (value == 0 || value[0] == '\x01') {
-      return false;
-    } else {
-      return true;
-    }
-  }
-
   //
   // retrieve methods
   //
 
-  PosibErr<bool> Config::retrieve_bool(ParmString key) const
+  const Config::Entry * Config::lookup(const char * key) const
   {
-    RET_ON_ERR_SET(retrieve(key), String, str);
-    return str[0] == 't';
+    const Entry * res = 0;
+    const Entry * cur = first_;
+
+    while (cur) {
+      if (cur->key == key && cur->action != NoOp)  res = cur;
+      cur = cur->next;
+    }
+
+    if (!res || res->action == Reset) return 0;
+    return res;
   }
 
-  PosibErr<int> Config::retrieve_int(ParmString key) const
+  bool Config::have(ParmStr key) const 
   {
-    RET_ON_ERR_SET(retrieve(key), String, str);
-    int i;
-    sscanf(str.c_str(), "%i", &i);
-    return i;
+    PosibErr<const KeyInfo *> pe = keyinfo(key);
+    if (pe.has_err()) {pe.ignore_err(); return false;}
+    return lookup(pe.data->name);
   }
 
-  PosibErr<String> Config::retrieve(ParmString k) const
+  PosibErr<String> Config::retrieve(ParmStr key) const
   {
-    RET_ON_ERR_SET(expand_key(k), const char *, key);
-    const char * value = data_.lookup(key);
+    RET_ON_ERR_SET(keyinfo(key), const KeyInfo *, ki);
+    if (ki->type == KeyInfoList) return make_err(key_not_string, ki->name);
 
-    if (value != 0) {
-      if (value[0] == '\x01') //FIXME: Why?
-	++value;
-      return String(value);
-    } else {
-      return get_default(key);
+    const Entry * cur = lookup(ki->name);
+
+    return cur ? cur->value : get_default(ki);
+  }
+
+  PosibErr<bool> Config::retrieve_bool(ParmStr key) const
+  {
+    RET_ON_ERR_SET(keyinfo(key), const KeyInfo *, ki);
+    if (ki->type != KeyInfoBool) return make_err(key_not_bool, ki->name);
+
+    const Entry * cur = lookup(ki->name);
+
+    String value(cur ? cur->value : get_default(ki));
+
+    if (value == "false") return false;
+    else                  return true;
+  }
+  
+  PosibErr<int> Config::retrieve_int(ParmStr key) const
+  {
+    assert(committed_); // otherwise the value may not be an integer
+                        // as it has not been verified.
+
+    RET_ON_ERR_SET(keyinfo(key), const KeyInfo *, ki);
+    if (ki->type != KeyInfoInt) return make_err(key_not_int, ki->name);
+
+    const Entry * cur = lookup(ki->name);
+
+    String value(cur ? cur->value : get_default(ki));
+
+    return atoi(value.str());
+  }
+
+  void Config::lookup_list(const KeyInfo * ki,
+                           MutableContainer & m,
+                           bool include_default) const
+  {
+    const Entry * cur = first_;
+    const Entry * first_to_use = 0;
+
+    while (cur) {
+      if (cur->key == ki->name && 
+          (first_to_use == 0 || 
+           cur->action == Reset || cur->action == Set 
+           || cur->action == ListClear)) 
+        first_to_use = cur;
+      cur = cur->next;
+    }
+
+    cur = first_to_use;
+
+    if (include_default && (!cur || cur->action == Reset)) {
+      String def = get_default(ki);
+      seperate_list(def, m, true);
+    }
+
+    if (cur && cur->action == Reset) {
+      cur = cur->next;
+    }
+
+    if (cur && cur->action == Set) {
+      if (!include_default) m.clear();
+      m.add(cur->value);
+      cur = cur->next;
+    }
+
+    if (cur && cur->action == ListClear) {
+      if (!include_default) m.clear();
+      cur = cur->next;
+    }
+
+    while (cur) {
+      if (cur->key == ki->name) {
+        if (cur->action == ListAdd)
+          m.add(cur->value);
+        else if (cur->action == ListRemove)
+          m.remove(cur->value);
+      }
+      cur = cur->next;
     }
   }
 
-  PosibErr<void> Config::retrieve_list(ParmString k, 
+  PosibErr<void> Config::retrieve_list(ParmStr key, 
 				       MutableContainer * m) const
   {
-    RET_ON_ERR_SET(expand_key(k), const char *, key);
-    String def = get_default(key);
+    RET_ON_ERR_SET(keyinfo(key), const KeyInfo *, ki);
+    if (ki->type != KeyInfoList) return make_err(key_not_list, ki->name);
 
-    const char * value = data_.lookup(key);
-    String fkey = "filter-"; fkey += key;
-    if (!value) value = data_.lookup(fkey);
+    lookup_list(ki, *m, true);
 
-    if (value != 0) {
-      def += ',';
-      def += data_.lookup(key);
-    }
-
-    RET_ON_ERR(itemize(def, *m));
     return no_err;
   }
 
-  static const KeyInfo * find(ParmString key, 
+  static const KeyInfo * find(ParmStr key, 
 			      const KeyInfo * i, 
 			      const KeyInfo * end) 
   {
@@ -284,7 +407,7 @@ namespace acommon {
     return i;
   }
 
-  static const ConfigModule * find(ParmString key, 
+  static const ConfigModule * find(ParmStr key, 
 				   const ConfigModule * i, 
 				   const ConfigModule * end) 
   {
@@ -298,43 +421,7 @@ namespace acommon {
     return i;
   }
 
-  const char * Config::base_name(ParmString name)
-  {
-    const char * c = strchr(name, '-');
-    unsigned int p = c ? c - name : -1;
-    bool haveRemove = false;
-    if (    (    ( p == 3 )
-              && (    ( strncmp(name, "add",p) == 0 )
-	           || (    ( strncmp(name, "rem",p) == 0 )
-                        && ( haveRemove = true ) ) ) )
- 	 || (    ( p == 4 )
-              && ( strncmp(name, "dont",p) == 0 ) ) ) {
-      if ( haveRemove ) {
-
-        const char * C = strchr(&name[p + 1],'-');
-        unsigned int rem_all = C ? C - &name[p + 1] : -1;
-
-        if (    ( rem_all == 3 )
-             && ( strncmp(&name[p + 1],"all",rem_all) == 0 ) ) {
-          p += rem_all + 1;
-        }
-      }
-      return name + p + 1;
-    }
-    else {
-      return name;
-    }
-  }
-
-  PosibErr<const char *> Config::expand_key(ParmString k) const
-  // prefix the key name with "filter-" if needed
-  {
-    PosibErr<const KeyInfo *> pe = keyinfo(k);
-    if (!pe.has_err()) return pe.data->name;
-    else               return (PosibErrBase &)pe;
-  }
-
-  PosibErr<const KeyInfo *> Config::keyinfo(ParmString key) const
+  PosibErr<const KeyInfo *> Config::keyinfo(ParmStr key) const
   {
     typedef PosibErr<const KeyInfo *> Ret;
     {
@@ -354,6 +441,15 @@ namespace acommon {
 					     kmi.filter_modules_begin,
 					     kmi.filter_modules_end);
       
+      if (j == kmi.filter_modules_end && load_filter_hook && committed_) {
+        // FIXME: This isn't quite write
+        PosibErrBase pe = load_filter_hook(const_cast<Config *>(this), k);
+        pe.ignore_err();
+        j = acommon::find(k,
+                          kmi.filter_modules_begin,
+                          kmi.filter_modules_end);
+      }
+
       if (j == kmi.filter_modules_end) goto err;
 
       i = acommon::find(key, j->begin, j->end);
@@ -362,7 +458,6 @@ namespace acommon {
       if (strncmp(key, "filter-", 7) != 0) k = "filter-";
       else                                 k = "";
       k += key;
-      
       i = acommon::find(k, j->begin, j->end);
       if (i != j->end) return Ret(i);
     }
@@ -370,7 +465,7 @@ namespace acommon {
     return Ret().prim_err(unknown_key, key);
   }
 
-  static bool proc_locale_str(ParmString lang, String & final_str)
+  static bool proc_locale_str(ParmStr lang, String & final_str)
   {
     if (lang == 0) return false;
     const char * i = lang;
@@ -436,10 +531,8 @@ namespace acommon {
 
 #endif
 
-  PosibErr<String> Config::get_default(ParmString key) const
+  String Config::get_default(const KeyInfo * ki) const
   {
-    RET_ON_ERR_SET(keyinfo(key), const KeyInfo *, ki);
-
     bool   in_replace = false;
     String final_str;
     String replace;
@@ -448,9 +541,10 @@ namespace acommon {
       ++i;
     
       if (strcmp(i, "lang") == 0) {
-
-        if (have("actual-lang")) {
-          final_str = data_.lookup("actual-lang");
+        
+        const Entry * entry;
+        if (entry = lookup("actual-lang"), entry) {
+          return entry->value;
         } else if (have("master")) {
 	  final_str = "<unknown>";
 	} else {
@@ -531,240 +625,298 @@ namespace acommon {
     return final_str;
   }
 
+  PosibErr<String> Config::get_default(ParmStr key) const
+  {
+    RET_ON_ERR_SET(keyinfo(key), const KeyInfo *, ki);
+    return get_default(ki);
+  }
 
-#define notify_all(ki, value, fun)                            \
+
+
+#define TEST(v,l,a)                         \
+  do {                                      \
+    if (len == l && memcmp(s, v, l) == 0) { \
+      if (action) *action = a;              \
+      return c + 1;                         \
+    }                                       \
+  } while (false)
+
+  const char * Config::base_name(const char * s, Action * action)
+  {
+    if (action) *action = Set;
+    const char * c = strchr(s, '-');
+    if (!c) return s;
+    unsigned len = c - s;
+    TEST("reset",   5, Reset);
+    TEST("enable",  6, Enable);
+    TEST("dont",    4, Disable);
+    TEST("disable", 7, Disable);
+    TEST("lset",    4, ListSet);
+    TEST("rem",     3, ListRemove);
+    TEST("remove",  6, ListRemove);
+    TEST("add",     3, ListAdd);
+    TEST("clear",   5, ListClear);
+    return s;
+  }
+
+#undef TEST
+
+  void seperate_list(ParmStr value, AddableContainer & out, bool do_unescape)
+  {
+    unsigned len = value.size();
+    
+    VARARRAY(char, buf, len + 1);
+    memcpy(buf, value, len + 1);
+    
+    len = strlen(buf);
+    char * s = buf;
+    char * end = buf + len;
+      
+    while (s < end)
+    {
+      while (*s == ' ' || *s == '\t') ++s;
+      char * b = s;
+      char * e = s;
+      while (*s != '\0') {
+        if (do_unescape && *s == '\\') {
+          ++s;
+          if (*s == '\0') break;
+          e = s;
+          ++s;
+        } else {
+          if (*s == ':') break;
+          if (*s != ' ' && *s != '\t') e = s;
+          ++s;
+        }
+      }
+      ++e;
+      *e = '\0';
+      if (do_unescape) unescape(b);
+      
+      out.add(b);
+      ++s;
+    }
+  }
+
+  struct ListAddHelper : public AddableContainer 
+  {
+    Config * config;
+    Config::Entry * orig_entry;
+    PosibErr<bool> add(ParmStr val);
+  };
+
+  PosibErr<bool> ListAddHelper::add(ParmStr val)
+  {
+    Config::Entry * entry = new Config::Entry(*orig_entry);
+    entry->value = val;
+    entry->action = Config::ListAdd;
+    config->set(entry);
+    return true;
+  }
+
+  void Config::replace_internal(ParmStr key, ParmStr value)
+  {
+    Entry * entry = new Entry;
+    entry->key = key;
+    entry->value = value;
+    entry->action = Set;
+    entry->next = *insert_point_;
+    *insert_point_ = entry;
+    insert_point_ = &entry->next;
+  }
+
+  PosibErr<void> Config::replace(ParmStr key, ParmStr value)
+  {
+    Entry * entry = new Entry;
+    entry->key = key;
+    entry->value = value;
+    return set(entry);
+  }
+  
+  PosibErr<void> Config::remove(ParmStr key)
+  {
+    Entry * entry = new Entry;
+    entry->key = key;
+    entry->action = Reset;
+    return set(entry);
+  }
+
+  PosibErr<void> Config::set(Entry * entry0, bool do_unescape)
+  {
+    StackPtr<Entry> entry(entry0);
+    if (entry->action == NoOp)
+      entry->key = base_name(entry->key.str(), &entry->action);
+
+    if (num_parms(entry->action) == 0 && !entry->value.empty()) 
+    {
+      if (entry->place_holder == -1) {
+        switch (entry->action) {
+        case Reset:
+          return make_err(no_value_reset, entry->key);
+        case Enable:
+          return make_err(no_value_enable, entry->key);
+        case Disable:
+          return make_err(no_value_disable, entry->key);
+        case ListClear:
+          return make_err(no_value_clear, entry->key);
+        default:
+          abort(); // this shouldn't happen
+        }
+      } else {
+        entry->place_holder = -1;
+      }
+    }
+
+    if (entry->action != ListSet) {
+
+      switch (entry->action) {
+      case Enable:
+        entry->value = "true";
+        entry->action = Set;
+        break;
+      case Disable:
+        entry->value = "false";
+        entry->action = Set;
+        break;
+      default:
+        ;
+      }
+      entry->value.ensure_null_end();
+      if (do_unescape) unescape(entry->value.data());
+
+      entry->next = *insert_point_;
+      *insert_point_ = entry;
+      insert_point_ = &entry->next;
+      entry.release();
+      if (committed_) RET_ON_ERR(commit(entry0)); // entry0 == entry
+      
+    } else { // action == ListSet
+
+      Entry * ent = new Entry;
+      ent->key = entry->key;
+      ent->action = ListClear;
+      set(ent);
+
+      ListAddHelper helper;
+      helper.config = this;
+      helper.orig_entry = entry;
+
+      seperate_list(entry->value.str(), helper, do_unescape);
+    }
+    return no_err;
+  }
+
+  PosibErr<void> Config::merge(const Config & other)
+  {
+    const Entry * src  = other.first_;
+    while (src) 
+    {
+      Entry * entry = new Entry(*src);
+      entry->next = *insert_point_;
+      *insert_point_ = entry;
+      insert_point_ = &entry->next;
+      if (committed_) RET_ON_ERR(commit(entry));
+      src = src->next;
+    }
+    return no_err;
+  }
+
+#define NOTIFY_ALL(fun)                                       \
   do {                                                        \
     Vector<Notifier *>::iterator   i = notifier_list.begin(); \
     Vector<Notifier *>::iterator end = notifier_list.end();   \
     while (i != end) {                                        \
-      RET_ON_ERR((*i)->fun(ki,value));                        \
+      RET_ON_ERR((*i)->fun);                                  \
       ++i;                                                    \
     }                                                         \
   } while (false)
 
-  class NotifyListBlockChange : public MutableContainer 
+  PosibErr<int> Config::commit(Entry * entry, Conv * conv) 
   {
-    const KeyInfo * key_info;
-    Vector<Notifier *> & notifier_list;
-  public:
-    NotifyListBlockChange(const KeyInfo * ki, Vector<Notifier *> & n);
-    PosibErr<bool> add(ParmString);
-    PosibErr<bool> remove(ParmString);
-    PosibErr<void> clear();
-  };
-
-  NotifyListBlockChange::
-  NotifyListBlockChange(const KeyInfo * ki, Vector<Notifier *> & n)
-    : key_info(ki), notifier_list(n) {}
-
-  PosibErr<bool> NotifyListBlockChange::add(ParmString v) {
-    notify_all(key_info, v, item_added);
-    return true;
-  }
-
-  PosibErr<bool> NotifyListBlockChange::remove(ParmString v) {
-    notify_all(key_info, v, item_removed);
-    return true;
-  }
-
-  PosibErr<void> NotifyListBlockChange::clear() {
-    notify_all(key_info, 0, all_removed);
-    return no_err;
-  }
-
-  void Config::replace_internal(ParmString k, ParmString v) {
-    data_.replace(k, v);
-  }
-
-  PosibErr<void> Config::replace(ParmString k, ParmString value) {
-    if (strcmp(value,"<default>") == 0)
-      return remove(k);
-
-    const char * key;
-    const char * i = strchr(k, '-');
-    int p = (i == 0 ? -1 : i - k);
-    if (((p == 3) && 
-         ((strncmp(k, "add",p) == 0) ||
-          (strncmp(k, "rem",p) == 0))) ||
-        ((p == 4) &&
-         (strncmp(k, "dont",p) == 0))) 
+    PosibErr<const KeyInfo *> pe = keyinfo(entry->key);
     {
-      key = k + p + 1;
-      if (strncmp(key, "all-", 4) == 0) {
-	key = key + 4;
-	p = 7;
+      if (pe.has_err()) goto error;
+      
+      const KeyInfo * ki = pe;
+
+      entry->key = ki->name;
+      
+      int place_holder = entry->place_holder;
+      
+      if (conv && ki->flags & KEYINFO_UTF8)
+        entry->value = (*conv)(entry->value);
+
+      if (ki->type != KeyInfoList && list_action(entry->action)) {
+        pe = make_err(key_not_list, entry->key);
+        goto error;
       }
-    } else {
-      key = k;
-      p = 0;
+      
+      assert(ki->def != 0); // if null this key should never have values
+      // directly added to it
+      String value(entry->action == Reset ? get_default(ki) : entry->value);
+      
+      switch (ki->type) {
+        
+      case KeyInfoBool: {
+
+        bool val;
+      
+        if  (value.empty() || entry->place_holder != -1) {
+          // if entry->place_holder != -1 than IGNORE the value no
+          // matter what it is
+          entry->value = "true";
+          val = true;
+          place_holder = -1;
+        } else if (value == "true") {
+          val = true;
+        } else if (value == "false") {
+          val = false;
+        } else {
+          pe = make_err(bad_value, entry->key, value,
+                        /* TRANSLATORS: "true" and "false" are literal
+                         * values and should not be translated.*/
+                        _("either \"true\" or \"false\""));
+          goto error;
+        }
+
+        NOTIFY_ALL(item_updated(ki, val));
+        break;
+        
+      } case KeyInfoString:
+        
+        NOTIFY_ALL(item_updated(ki, value));
+        break;
+        
+      case KeyInfoInt: 
+      {
+        int num;
+        
+        if (sscanf(value.str(), "%i", &num) == 1 && num >= 0) {
+          NOTIFY_ALL(item_updated(ki, num));
+        } else {
+          pe = make_err(bad_value, entry->key, value, _("a positive integer"));
+          goto error;
+        }
+        
+        break;
+      }
+      case KeyInfoList:
+        
+        NOTIFY_ALL(list_updated(ki));
+        break;
+        
+      }
+      return place_holder;
     }
-
-    RET_ON_ERR_SET(keyinfo(key), const KeyInfo *, ki);
-    key = ki->name;
-
-    if (attached_ && !(ki->flags & KEYINFO_MAY_CHANGE))
-      return make_err(cant_change_value, key);
-  
-    assert(ki->def != 0); // if null this key should never have values
-			  // directly added to it
-
-    int num;
-    switch (ki->type) {
-    
-    case KeyInfoBool: {
-    
-      if ((p == 4) || 
-          ((p == 0) &&
-           (strcmp(value,"false") == 0))) {
-
-	data_.replace(key, "false");
-	notify_all(ki, false, item_updated);
-	return no_err;
-
-      } else if (p != 0) {
-
-	return make_err(unknown_key,  k);
-
-      } else if ((value[0] == '\0') || (strcmp(value,"true") == 0)) {
-
-	data_.replace(key, "true");
-	notify_all(ki, true, item_updated);
-	return no_err;
-
-      } else {
-
-	return make_err(bad_value, key, value,
-                         "either \"true\" or \"false\"");
-
-      }
-      break;
-    }  
-    case KeyInfoString: {
-      
-      if (p == 0) {
-
-	data_.replace(key,value);
-	notify_all(ki, value, item_updated);
-	return no_err;
-      
-      } else {
-      
-	return make_err(unknown_key,  key);
-      
-      }
-      break;
-    }  
-    case KeyInfoInt: {
-
-      if (p == 0 && sscanf(value, "%i", &num) == 1 && num >= 0) {
-
-	data_.replace(key,value);
-	notify_all(ki, num, item_updated);
-	return no_err;
-
-      } else if (p != 0) {
-
-	return make_err(unknown_key, key);
-
-      } else {
-
-	return make_err(bad_value, key, value, "a positive integer");
-
-      }
-      break;
-    }
-    case KeyInfoList: {
-
-      char a;
-      if (p == 0) {
-        return make_err(bad_list_operation,key);
-	//abort(); //FIXME done by the above line if valid
-	//return ret.prim_err(list_set, key); 
-      } else if (p == 7) {        // prefix must be "rem-all-"
-	if (value[0] != '\0') {
-	  return make_err(bad_value, k, value, "nothing");
-	}
-	a = '!';
-      } else if (k[0] == 'a') { // prefix must be "add-"
-	a = '+';
-      } else {                  // prefix must be "rem-"
-	a = '-';
-      }
-
-      if (a != '!') {
-	i = data_.lookup(key);
-	if (i == 0) i = "";
-	String s = i;
-	s += ',';
-	s += a;
-	s += value;
-	data_.replace(key, s);
-      } else {
-	data_.replace(key, "!");
-      }
-
-      switch (a) {
-      case '!': 
-	notify_all(ki, value, all_removed);  
-	break;
-      case '+': 
-	notify_all(ki, value, item_added);
-	break;
-      case '-': 
-	notify_all(ki, value, item_removed);
-	break;
-      }
-      }
-      break;
-    }
-
-    return no_err;
+  error:
+    entry->action = NoOp;
+    if (!entry->file.empty())
+      return pe.with_file(entry->file, entry->line_num);
+    else
+      return (PosibErrBase &)pe;
   }
 
-  PosibErr<bool> Config::remove (ParmString k) {
-
-    RET_ON_ERR_SET(keyinfo(k), const KeyInfo *, ki);
-    const char * key = ki->name;
-
-    if (attached_ && !(ki->flags & KEYINFO_MAY_CHANGE))
-      return make_err(cant_change_value, key);
-  
-    assert(ki->def != 0); // if null this key should never have values
-    // directly added to it
-
-    bool success = data_.remove(key);
-
-    switch (ki->type) {
-
-    case KeyInfoString:
-
-      notify_all(ki, retrieve(key), item_updated);
-      break;
-    
-    case KeyInfoBool:
-
-      notify_all(ki, retrieve_bool(key), item_updated);
-      break;
-
-    case KeyInfoInt:
-
-      notify_all(ki, retrieve_int(key), item_updated);
-      break;
-
-    case KeyInfoList:
-    
-      NotifyListBlockChange n(ki, notifier_list);
-      RET_ON_ERR(retrieve_list(key, &n));
-      break;
-    }
-
-    return success;
-  }
-
-  StringPairEnumeration * Config::elements() 
-  {
-    return data_.elements();
-  }
+#undef NOTIFY_ALL
 
 
   /////////////////////////////////////////////////////////////////////
@@ -850,9 +1002,42 @@ namespace acommon {
   };
 
   KeyInfoEnumeration *
-  Config::possible_elements(bool include_extra)
+  Config::possible_elements(bool include_extra) const
   {
     return new PossibleElementsEmul(this, include_extra);
+  }
+
+  struct ListDefaultDump : public AddableContainer 
+  {
+    OStream & out;
+    bool first;
+    const char * first_prefix;
+    unsigned num_blanks;
+    ListDefaultDump(OStream & o);
+    PosibErr<bool> add(ParmStr d);
+  };
+  
+  ListDefaultDump::ListDefaultDump(OStream & o) 
+    : out(o), first(false)
+  {
+    first_prefix = _("# default: ");
+    num_blanks = strlen(first_prefix - 1);
+  }
+
+  PosibErr<bool> ListDefaultDump::add(ParmStr d) 
+  {
+    if (first) {
+      out.write(first_prefix);
+    } else {
+      out.put('#');
+      for (unsigned i = 0; i != num_blanks; ++i)
+        out.put(' ');
+    }
+    VARARRAY(char, buf, d.size() * 2 + 1);
+    escape(buf, d);
+    out.printl(buf);
+    first = false;
+    return true;
   }
 
   class ListDump : public MutableContainer 
@@ -860,21 +1045,29 @@ namespace acommon {
     OStream & out;
     const char * name;
   public:
-    ListDump(OStream & o, ParmString n) 
+    ListDump(OStream & o, ParmStr n) 
       : out(o), name(n) {}
-    PosibErr<bool> add(ParmString d) {
-      out << "add-" << name << ' ' << d << '\n';
-      return true;
-    }
-    PosibErr<bool> remove(ParmString d) {
-      out << "rem-" << name << ' ' << d << '\n';
-      return true;
-    }
-    PosibErr<void> clear() {
-      out << "rem-all-" << name << '\n';
-      return no_err;
-    }
+    PosibErr<bool> add(ParmStr d);
+    PosibErr<bool> remove(ParmStr d);
+    PosibErr<void> clear();
   };
+
+  PosibErr<bool> ListDump::add(ParmStr d) {
+    VARARRAY(char, buf, d.size() * 2 + 1);
+    escape(buf, d);
+    out.printf("add-%s %s\n", name, buf);
+    return true;
+  }
+  PosibErr<bool> ListDump::remove(ParmStr d) {
+    VARARRAY(char, buf, d.size() * 2 + 1);
+    escape(buf, d);
+    out.printf("remove-%s %s\n", name, buf);
+    return true;
+  }
+  PosibErr<void> ListDump::clear() {
+    out.printf("clear-%s\n", name);
+    return no_err;
+  }
 
   void Config::write_to_stream(OStream & out, 
 			       bool include_extra) 
@@ -886,150 +1079,143 @@ namespace acommon {
     while ((i = els->next()) != 0) {
       if (i->desc == 0) continue;
 
-/* FIXME strip this comment as it contains obsolete code 
- * 
-        if (i->type == KeyInfoDescript) {
-        int prefix_end = 0;
-        if(strncmp(i->name,"filter-",7) == 0)
-          prefix_end = 7;
-        out << "###  " << &(i->name)[prefix_end] << " Filter: " << _(i->desc)
-            << "\n###    " << _("configured as follows") << "\n\n\n";
-        continue;
-      }*/
-
       if (els->active_filter_module_changed()) {
-        out << "###  " << els->active_filter_module_name() << " Filter: " 
-            << gettext(els->active_filter_module_desc()) << "\n"
-            << "###    " << _("configured as follows") << "\n\n\n";
+        out.printf(_("\n"
+                     "#######################################################################\n"
+                     "#\n"
+                     "# Filter: %s\n"
+                     "#   %s\n"
+                     "#\n"
+                     "# configured as follows:\n"
+                     "\n"),
+                   els->active_filter_module_name(),
+                   _(els->active_filter_module_desc()));
         continue;
       }
 
-      out << "# " << (i->type ==  KeyInfoList ? "add|rem-" : "") << i->name
-	  << " descrip: " << (i->def == 0 ? "(action option) " : "") << _(i->desc)
-	  << '\n';
+      out.printf("# %s (%s)\n#   %s\n",
+                 i->name, _(keyinfo_type_name[i->type]), _(i->desc));
       if (i->def != 0) {
-	buf.resize(strlen(i->def) * 2 + 1);
-	escape(buf.data(), i->def);
-	out << "# " << i->name << " default: " << buf.data() << '\n';
-	String val = retrieve(i->name);
-	buf.resize(val.size() * 2 + 1);
-	escape(buf.data(), val.c_str());
 	if (i->type != KeyInfoList) {
-	  out << "# " << i->name << " current: " << buf.data() << "\n";
-	  if (have(i->name))
-	    out << i->name << " " <<  buf.data() << "\n";
+          buf.resize(strlen(i->def) * 2 + 1);
+          escape(buf.data(), i->def);
+          out.printf(_("# default: %s\n"), buf.data());
+          const Entry * entry = lookup(i->name);
+	  if (entry) {
+            buf.resize(entry->value.size() * 2 + 1);
+            escape(buf.data(), entry->value.str());
+	    out.printf("%s %s\n", i->name, buf.data());
+          }
 	} else {
-	  const char * value = data_.lookup(i->name);
-	  if (value != 0) {
-	    ListDump ld(out, i->name);
-	    itemize(value, ld);
-	  }
+          ListDump ld(out, i->name);
+          lookup_list(i, ld, false);
 	}
       }
-      out << "\n\n";
+      out << "\n";
     }
     delete els;
   }
 
-  PosibErr<void> Config::read_in(IStream & in, ParmString id) 
+  PosibErr<void> Config::read_in(IStream & in, ParmStr id) 
   {
     String buf;
     DataPair dp;
     while (getdata_pair(in, dp, buf)) {
-      unescape(dp.value);
-      PosibErrBase pe = replace(dp.key, dp.value);
-      if (pe.has_err()) {
-        if (id.empty())
-          return pe;
-        else
-          return pe.with_file(id, dp.line_num);
-      }
+      to_lower(dp.key);
+      Entry * entry = new Entry;
+      entry->key = dp.key;
+      entry->value = dp.value;
+      entry->file = id;
+      entry->line_num = dp.line_num;
+      RET_ON_ERR(set(entry, true));
     }
     return no_err;
   }
 
-  PosibErr<void> Config::read_in_file(ParmString file) {
+  PosibErr<void> Config::read_in_file(ParmStr file) {
     FStream in;
     RET_ON_ERR(in.open(file, "r"));
     return read_in(in, file);
   }
 
-  PosibErr<void> Config::read_in_string(ParmString str) {
+  PosibErr<void> Config::read_in_string(ParmStr str, const char * what) {
     StringIStream in(str);
-    return read_in(in);
+    return read_in(in, what);
   }
 
-  void Config::merge(const Config & other) {
-    StackPtr<KeyInfoEnumeration> els(possible_elements());
-    const KeyInfo * k;
-    const KeyInfo * other_k;
-    const char * other_name;
-    String this_value;
-    String other_value;
-    while ( (k = els->next()) != 0) {
-//      if (k->type == KeyInfoDescript) continue; // FIXME: strip obsolete hack
 
-      other_name = k->name;
-      other_k = other.keyinfo(other_name);
-
-      if (other_k != 0 &&
-          strcmp(k->def, other_k->def) == 0
-          && !other.have(other_name))
-        continue;
-      {
-        PosibErr<String> pe = other.retrieve(other_name);
-        if (pe.get_err() != 0) continue;
-        // if an err then this key does not exist in the other
-        // table.
-        other_value = pe;
-      }
-      if (other_value == "(default)") continue;
-      this_value = retrieve(k->name);
-      if (this_value == other_value &&
-          !other.have(k->name)) continue;
-      // if the two values match there is no need to insert it into the
-      // table unless the other value is specificly set
-      if (k->type != KeyInfoList) {
-        data_.replace(k->name, other_value);
-      } else {
-        String new_value;
-        if (other_value[0] != '!') {
-          new_value  = this_value;
-          new_value += ',';
-        }
-        new_value += other_value;
-        data_.replace(k->name, new_value);
-      }
-    }
-  }
-
-  PosibErr<void> Config::read_in_settings(const Config * override)
+  PosibErr<bool> Config::read_in_settings(const Config * other)
   {
-    // FIXME: make this more robust.  
-    // Catch errors and attach there source of origin
+    if (settings_read_in_) return false;
 
-    {
-      PosibErrBase pe = read_in_file(retrieve("conf-path"));
-      if (pe.has_err() && !pe.has_err(cant_read_file)){
-	return pe;
+    bool was_committed = committed_;
+    set_committed_state(false);
+
+    if (other && other->settings_read_in_) {
+
+      assert(empty());
+      del(); // to clean up any notifiers and similar stuff
+      copy(*other);
+
+    } else {
+
+      if (other) merge(*other);
+
+      const char * env = getenv("ASPELL_CONF");
+      if (env != 0) { 
+        insert_point_ = &first_;
+        RET_ON_ERR(read_in_string(env, _("ASPELL_CONF env var")));
       }
-    }
-
-    {
+      
+      {
+      insert_point_ = &first_;
       PosibErrBase pe = read_in_file(retrieve("per-conf-path"));
-      if (pe.has_err() && !pe.has_err(cant_read_file)){
-	return pe;
+      if (pe.has_err() && !pe.has_err(cant_read_file)) return pe;
       }
-    }
-    const char * env = getenv("ASPELL_CONF");
-    if (env != 0){
-      RET_ON_ERR(read_in_string(env));
+      
+      {
+        insert_point_ = &first_;
+        PosibErrBase pe = read_in_file(retrieve("conf-path"));
+        if (pe.has_err() && !pe.has_err(cant_read_file)) return pe;
+      }
+
+      if (was_committed)
+        RET_ON_ERR(commit_all());
+
+      settings_read_in_ = true;
     }
 
-    if (override != 0){
-      merge(*override);
-    }
+    return true;
+  }
 
+  PosibErr<void> Config::commit_all(Vector<int> * phs, const char * codeset)
+  {
+    committed_ = true;
+    others_ = first_;
+    first_ = 0;
+    insert_point_ = &first_;
+    Conv to_utf8;
+    if (codeset)
+      RET_ON_ERR(to_utf8.setup(*this, codeset, "utf-8", NormTo));
+    while (others_) {
+      *insert_point_ = others_;
+      others_ = others_->next;
+      (*insert_point_)->next = 0;
+      RET_ON_ERR_SET(commit(*insert_point_, codeset ? &to_utf8 : 0), int, place_holder);
+      if (phs && place_holder != -1 && (phs->empty() || phs->back() != place_holder))
+        phs->push_back(place_holder);
+      insert_point_ = &((*insert_point_)->next);
+    }
+    return no_err;
+  }
+
+  PosibErr<void> Config::set_committed_state(bool val) {
+    if (val && !committed_) {
+      RET_ON_ERR(commit_all());
+    } else if (!val && committed_) {
+      assert(empty());
+      committed_ = false;
+    }
     return no_err;
   }
 
@@ -1043,8 +1229,6 @@ namespace acommon {
 #  define PERSONAL ".aspell.<lang>.pws"
 #  define REPL     ".aspell.<lang>.prepl"
 #endif
-
-  char mode_string[128] = "filter mode";
 
   // FIXME: CANT_CHANGE should be the default once attached
 
@@ -1070,10 +1254,10 @@ namespace acommon {
        N_("add or removes a filter"), KEYINFO_MAY_CHANGE}
     , {"filter-path", KeyInfoList, DICT_DIR,
        N_("path(es) aspell looks for filters")}
-    , {"option-path", KeyInfoList, DATA_DIR,
-       N_("path(es) aspell looks for options descriptions")}
+    //, {"option-path", KeyInfoList, DATA_DIR,
+    //   N_("path(es) aspell looks for options descriptions")}
     , {"mode",     KeyInfoString, "url",
-       mode_string}
+       N_("filter mode")}
     , {"extra-dicts", KeyInfoList, "",
        N_("extra dictionaries to use")}
     , {"home-dir", KeyInfoString, HOME_DIR,
@@ -1134,6 +1318,8 @@ namespace acommon {
     , {"sug-mode",   KeyInfoString, "normal",
        N_("suggestion mode"), KEYINFO_MAY_CHANGE}
     , {"sug-edit-dist", KeyInfoInt, "1",
+       /* TRANSLATORS: "sug-mode" is a literal value and should not
+        * be translated.*/
        N_("edit distance to use, override sug-mode default")}
     , {"sug-typo-analysis", KeyInfoBool, "true",
        N_("use typo analysis, override sug-mode default")}
@@ -1154,6 +1340,8 @@ namespace acommon {
     , {"norm-required", KeyInfoBool, "false",
        N_("Unicode normalization required for the current lang")}
     , {"norm-form", KeyInfoString, "nfc",
+       /* TRANSLATORS: the values after the ':' are literal
+        * values and should not be translated.*/
        N_("Unicode normalization form: none, nfd, nfc, comp")}
     , {"norm-strict", KeyInfoBool, "false",
        N_("avoid lossy conversions when normalization")}
@@ -1197,7 +1385,7 @@ namespace acommon {
     , {"guess", KeyInfoBool, "false",
        N_("create missing root/affix combinations"), KEYINFO_MAY_CHANGE}
     , {"keymapping", KeyInfoString, "aspell",
-       N_("keymapping for check mode, aspell or ispell")}
+       N_("keymapping for check mode: \"aspell\" or \"ispell\"")}
     , {"reverse", KeyInfoBool, "false",
        N_("reverse the order of the suggest list")}
     , {"suggest", KeyInfoBool, "true",

@@ -6,15 +6,16 @@
 
 #include "settings.h"
 
+//#include "iostream.hpp"
+
+#include "config.hpp"
 #include "file_util.hpp"
 #include "fstream.hpp"
 #include "errors.hpp"
+#include "string_list.hpp"
 
 #ifdef USE_FILE_LOCKS
- 
-// POSIX headers
-#include <fcntl.h>
- 
+#  include <fcntl.h>
 #endif
  
 // This needs to be <stdio.h> and not <cstdio>
@@ -25,11 +26,14 @@
 
 #  include <io.h>
 #  define ACCESS _access
+#  include <windows.h>
+#  include <winbase.h>
 
 #else
 
 #  include <unistd.h>
 #  define ACCESS access
+#  include <dirent.h>
 
 #endif
 
@@ -138,8 +142,6 @@ namespace acommon {
 
   bool file_exists(ParmString name) {
     return ACCESS(name, F_OK) == 0;
-    //struct stat fileinfo;
-    //return stat(name, &fileinfo) == 0;
   }
 
   bool rename_file(ParmString orig_name, ParmString new_name)
@@ -158,5 +160,72 @@ namespace acommon {
       file_name = 0;
     }
     return file_name;
+  }
+
+  unsigned find_file(const Config * config, const char * option, String & filename)
+  {
+    StringList sl;
+    config->retrieve_list(option, &sl);
+    return find_file(sl, filename);
+  }
+
+  unsigned find_file(const StringList & sl, String & filename)
+  {
+    StringListEnumeration els = sl.elements_obj();
+    const char * dir;
+    String path;
+    while ( (dir = els.next()) != 0 ) 
+    {
+      path = dir;
+      if (path.back() != '/') path += '/';
+      unsigned dir_len = path.size();
+      path += filename;
+      if (file_exists(path)) {
+        filename.swap(path);
+        return dir_len;
+      }
+    }
+    return 0;
+  }
+
+  PathBrowser::PathBrowser(const StringList & sl, const char * suf)
+    : dir_handle(0)
+  {
+    els = sl.elements();
+    suffix = suf;
+  }
+
+  PathBrowser::~PathBrowser() 
+  {
+    delete els;
+    if (dir_handle) closedir((DIR *)dir_handle);
+  }
+
+  const char * PathBrowser::next()
+  {
+    if (dir_handle == 0) goto get_next_dir;
+  begin: {
+      struct dirent * entry = readdir((DIR *)dir_handle);
+      if (entry == 0) goto try_again;
+      const char * name = entry->d_name;
+      unsigned name_len = strlen(name);
+      if (suffix.size() != 0 && 
+          !(name_len > suffix.size() 
+            && memcmp(name + name_len - suffix.size(), suffix.str(), suffix.size()) == 0))
+        goto begin;
+      path = dir;
+      if (path.back() != '/') path += '/';
+      path += name;
+    }
+    return path.str();
+  try_again:
+    closedir((DIR *)dir_handle);
+    dir_handle = 0;
+  get_next_dir:
+    dir = els->next();
+    if (!dir) return 0;
+    dir_handle = opendir(dir);
+    if (dir_handle == 0) goto try_again;
+    goto begin;
   }
 }

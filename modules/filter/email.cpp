@@ -31,12 +31,12 @@ namespace acommon {
         for (; i != end && *i != c; ++i);
         return i != end;
       }
-      PosibErr<bool> add(ParmString s) {
+      PosibErr<bool> add(ParmStr s) {
         Value c = *(Value *)conv(s);
         if (!have(c)) data.push_back(c);
         return true;
       }
-      PosibErr<bool> remove(ParmString s) {
+      PosibErr<bool> remove(ParmStr s) {
         Value c = *(Value *)conv(s);
         Vector<Value>::iterator i = data.begin();
         Vector<Value>::iterator end = data.end();
@@ -61,7 +61,7 @@ namespace acommon {
   {
     name_ = "email-filter";
     order_num_ = 0.85;
-    is_quote_char.conv.setup(*opts, "utf-8", "utf-32", NormNone);
+    is_quote_char.conv.setup(*opts, "utf-8", "ucs-4", NormNone);
     opts->retrieve_list("filter-email-quote", &is_quote_char);
     margin = opts->retrieve_int("filter-email-margin");
     reset();

@@ -468,7 +468,7 @@ namespace aspeller {
     if (!l.is_alpha(*i)) {
       if (*i == '\r')
         return invalid_word_e(l, word, _("The character '\\r' (U+0D) may not appear at the end of a word. " 
-                                         "This probably means means that the file is using MS-DOS EOL instead of Unix EOL. "), *i);
+                                         "This probably means means that the file is using MS-DOS EOL instead of Unix EOL."), *i);
       if (!l.special(*i).end)
         return invalid_word_e(l, word, _("The character '%s' (U+%02X) may not appear at the end of a word."), *i);
     }

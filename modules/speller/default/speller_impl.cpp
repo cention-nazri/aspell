@@ -336,7 +336,7 @@ namespace aspeller {
     PosibErr<void> item_updated(const KeyInfo * ki, bool value) {
       return callback(speller_, ki, value, UpdateMember::Bool);
     }
-    PosibErr<void> item_updated(const KeyInfo * ki, ParmString value) {
+    PosibErr<void> item_updated(const KeyInfo * ki, ParmStr value) {
       return callback(speller_, ki, value, UpdateMember::String);
     }
 

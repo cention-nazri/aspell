@@ -342,6 +342,15 @@ class: config
 		/
 		unsigned int
 		string: key
+
+#	method: read_in_settings
+#		posib err
+#		/
+#		bool
+
+#	method: settings_read_in
+#		/
+#		bool
 }
 group: error
 {
@@ -417,8 +426,6 @@ errors:
 		/
 		unknown key
 			mesg => The key "%key" is unknown.
-		bad list operation
-			mesg => lis key `"%key"' requires one of [add|rem|rem-all]-
 		cant change value
 			mesg => The value for option "%key" can not be changed.
 		bad key
@@ -428,6 +435,22 @@ errors:
 			mesg => The value "%value" is not %accepted and is thus invalid for the key "%key".
 			parms => value, accepted
 		duplicate
+		key not string
+			mesg => The key "%key" is not a string.
+		key not int
+			mesg => The key "%key" is not an integer.
+		key not bool
+			mesg => The key "%key" is not a boolean.
+		key not list
+			mesg => The key "%key" is not a list.
+		no_value_reset
+			mesg => The key "%key" does not take any parameters when prefixed by a "reset-".
+		no_value_enable
+			mesg => The key "%key" does not take any parameters when prefixed by a "enable-".
+		no_value_disable
+			mesg => The key "%key" does not take any parameters when prefixed by a "dont-" or "disable-".
+		no_value_clear
+			mesg => The key "%key" does not take any parameters when prefixed by a "clear-".
 
 	language related
 		parms => lang
@@ -497,21 +520,16 @@ errors:
 		bad version string
 			mesg => not a version number
 	filter
-		mesg => "%filter":
-		parms => filter
 		/
 		cant dlopen file
 			mesg => dlopen returned "%return". 
 			parms => return
 		empty filter
-			mesg => The file "%filter" does not contain any filter.
+			mesg => The file "%filter" does not contain any filters.
 			parms => filter
 		no such filter
-			mesg => Filter "%filter" could not be found in filter paths.
+			mesg => The filter "%filter" does not exist.
 			parms => filter
-		no option file
-			mesg => Can't find the option file "%option".
-			parms => option
 		confusing version
 			mesg => Confused by version control.
 		bad version
@@ -555,7 +573,7 @@ errors:
 		parms => mode
 		/
 		unknown mode
-			mesg => ignoring unknown mode: "%mode".
+			mesg => Unknown mode: "%mode".
 		mode extend expand
 			mesg => "%mode" error while extend Aspell modes. (out of memory?)
 	filter mode magic
@@ -573,11 +591,9 @@ errors:
 			parms => regerr
 
 	expression
-		mesg => "%action": invalid regular expression.
-		parms => action
 		/
 		invalid expression
-			mesg => "%action": "%expression" is not a valid regular expression.
+			mesg => "%expression" is not a valid regular expression.
 			parms => expression
 }
 group: speller

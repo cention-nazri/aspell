@@ -15,6 +15,8 @@
 namespace acommon {
 
   class FStream;
+  class Config;
+  class StringList;
 
   bool need_dir(ParmString file);
   String add_possible_dir(ParmString dir, ParmString file);
@@ -33,5 +35,29 @@ namespace acommon {
   bool rename_file(ParmString orig, ParmString new_name);
   // will return NULL if path is NULL.
   const char * get_file_name(const char * path);
+
+  // expands filename to the full path
+  // returns the length of the directory part or 0 if nothing found
+  unsigned find_file(const Config *, const char * option, String & filename);
+  unsigned find_file(const StringList &, String & filename);
+
+  class StringEnumeration;
+
+  class PathBrowser
+  {
+    String suffix;
+    String path;
+    StringEnumeration * els;
+    void * dir_handle;
+    const char * dir;
+    PathBrowser(const PathBrowser &);
+    void operator= (const PathBrowser &);
+  public:
+    PathBrowser(const StringList &, const char * suf = "");
+    ~PathBrowser();
+    const char * next();
+  };
+
 }
+
 #endif

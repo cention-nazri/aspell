@@ -36,6 +36,7 @@
 #include "stack_ptr.hpp"
 #include "strtonum.hpp"
 #include "lock.hpp"
+#include "string_map.hpp"
 
 namespace acommon {
 
@@ -394,9 +395,9 @@ namespace acommon {
     if (to_add->code.size() >= 2 
 	&& asc_isalpha(to_add->code[0]) && asc_isalpha(to_add->code[1])) 
     {
-      int s = strcspn(to_add->code.str(), "_");
+      unsigned s = strcspn(to_add->code.str(), "_");
       if (s > 3) return no_err;
-      int i = 0;
+      unsigned i = 0;
       for (; i != s; ++i)
         to_add->name[i] = to_add->code[i] = asc_tolower(to_add->code[i]);
       i++;

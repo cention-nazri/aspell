@@ -74,14 +74,9 @@ FILTER tex
 #   value: as stated by aspell manual and by `aspell help all'.
 #
 # option value may be empty if entire option is boolean or in case of list options
-# prefixed by `rem-all'
+# prefixed by `clear'
 OPTION add-tex-hyphen -
 OPTION add-tex-hyphen \-
 OPTION add-tex-hyphen \=
-
-
-#OPTION rem-context-delimiters /* */
-#OPTION rem-context-delimiters // \\0
-#OPTION context-visible-first
 
 FILTER url

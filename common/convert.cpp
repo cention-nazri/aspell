@@ -270,7 +270,7 @@ namespace acommon {
   //
 
   PosibErr<void> read_in_char_data (const Config & config,
-                                    ParmString encoding,
+                                    ParmStr encoding,
                                     ToUniLookup & to,
                                     FromUniLookup & from)
   {
@@ -511,7 +511,7 @@ namespace acommon {
       }
     }
     PosibErr<void> decode_ec(const char * in0, int size, 
-                             FilterCharVector & out, ParmString) const {
+                             FilterCharVector & out, ParmStr) const {
       DecodeDirect::decode(in0, size, out);
       return no_err;
     }
@@ -529,7 +529,7 @@ namespace acommon {
       }
     }
     PosibErr<void> encode_ec(const FilterChar * in, const FilterChar * stop, 
-                             CharVector & out, ParmString orig) const {
+                             CharVector & out, ParmStr orig) const {
       for (; in != stop; ++in) {
         Chr c = in->chr;
         if (c != in->chr) {
@@ -559,7 +559,7 @@ namespace acommon {
       }
     }
     PosibErr<void> convert_ec(const char * in0, int size, 
-                              CharVector & out, ParmString) const {
+                              CharVector & out, ParmStr) const {
       ConvDirect::convert(in0, size, out);
       return no_err;
     }
@@ -573,7 +573,7 @@ namespace acommon {
   struct DecodeLookup : public Decode 
   {
     ToUniLookup lookup;
-    PosibErr<void> init(ParmString code, const Config & c) {
+    PosibErr<void> init(ParmStr code, const Config & c) {
       FromUniLookup unused;
       return read_in_char_data(c, code, lookup, unused);
     }
@@ -588,7 +588,7 @@ namespace acommon {
       }
     }
     PosibErr<void> decode_ec(const char * in, int size, 
-                             FilterCharVector & out, ParmString) const {
+                             FilterCharVector & out, ParmStr) const {
       DecodeLookup::decode(in, size, out);
       return no_err;
     }
@@ -616,7 +616,7 @@ namespace acommon {
       }
     }
     PosibErr<void> decode_ec(const char * in, int size, 
-                             FilterCharVector & out, ParmString) const {
+                             FilterCharVector & out, ParmStr) const {
       DecodeNormLookup::decode(in, size, out);
       return no_err;
     }
@@ -625,7 +625,7 @@ namespace acommon {
   struct EncodeLookup : public Encode 
   {
     FromUniLookup lookup;
-    PosibErr<void> init(ParmString code, const Config & c) 
+    PosibErr<void> init(ParmStr code, const Config & c) 
       {ToUniLookup unused;
       return read_in_char_data(c, code, unused, lookup);}
     void encode(const FilterChar * in, const FilterChar * stop, 
@@ -635,7 +635,7 @@ namespace acommon {
       }
     }
     PosibErr<void> encode_ec(const FilterChar * in, const FilterChar * stop, 
-                             CharVector & out, ParmString orig) const {
+                             CharVector & out, ParmStr orig) const {
       for (; in != stop; ++in) {
         char c = lookup(*in, '\0');
         if (c == '\0' && in->chr != 0) {
@@ -677,7 +677,7 @@ namespace acommon {
       }
     }
     PosibErr<void> encode_ec(const FilterChar * in, const FilterChar * stop, 
-                             CharVector & out, ParmString orig) const {
+                             CharVector & out, ParmStr orig) const {
       while (in < stop) {
         if (*in == 0) {
           out.append('\0');
@@ -803,7 +803,7 @@ namespace acommon {
       }
     }
     PosibErr<void> decode_ec(const char * in, int size, 
-                             FilterCharVector & out, ParmString orig) const {
+                             FilterCharVector & out, ParmStr orig) const {
       const char * begin = in;
       const char * stop = in + size; // this is OK even if size == -1
       while (*in && in != stop) {
@@ -829,7 +829,7 @@ namespace acommon {
       }
     }
     PosibErr<void> encode_ec(const FilterChar * in, const FilterChar * stop, 
-                             CharVector & out, ParmString) const {
+                             CharVector & out, ParmStr) const {
       for (; in != stop; ++in) {
         to_utf8(*in, out);
       }
@@ -857,15 +857,12 @@ namespace acommon {
     decode_->decode(in, size, buf_);
     FilterChar * start = buf_.pbegin();
     FilterChar * stop = buf_.pend();
-    if (!filter.empty()) {
-      filter.decode(start, stop);
+    if (!filter.empty())
       filter.process(start, stop);
-      filter.encode(start, stop);
-    }
     encode_->encode(start, stop, out);
   }
 
-  const char * fix_encoding_str(ParmString enc, String & buf)
+  const char * fix_encoding_str(ParmStr enc, String & buf)
   {
     buf.clear();
     buf.reserve(enc.size() + 1);
@@ -885,7 +882,7 @@ namespace acommon {
       return buf.c_str();
   }
 
-  bool is_ascii_enc(ParmString enc)
+  bool is_ascii_enc(ParmStr enc)
   {
     return (enc == "ASCII" || enc == "ascii" 
             || enc == "ANSI_X3.4-1968");
@@ -954,7 +951,7 @@ namespace acommon {
     return ptr.release();
   }
 
-  PosibErr<void> Convert::init(const Config & c, ParmString in, ParmString out)
+  PosibErr<void> Convert::init(const Config & c, ParmStr in, ParmStr out)
   {
     RET_ON_ERR(setup(decode_d, &decode_cache, &c, in));
     decode_ = decode_d.get();
@@ -982,7 +979,7 @@ namespace acommon {
   }
 
   
-  PosibErr<void> Convert::init_norm_from(const Config & c, ParmString in, ParmString out)
+  PosibErr<void> Convert::init_norm_from(const Config & c, ParmStr in, ParmStr out)
   {
     if (!c.retrieve_bool("normalize") && !c.retrieve_bool("norm-required")) 
       return init(c,in,out);
@@ -1007,7 +1004,7 @@ namespace acommon {
     return no_err;
   }
 
-  PosibErr<void> Convert::init_norm_to(const Config & c, ParmString in, ParmString out)
+  PosibErr<void> Convert::init_norm_to(const Config & c, ParmStr in, ParmStr out)
   {
     String norm_form = c.retrieve("norm-form");
     if ((!c.retrieve_bool("normalize") || norm_form == "none")
@@ -1036,7 +1033,7 @@ namespace acommon {
     return no_err;
   }
 
-  PosibErr<void> MBLen::setup(const Config &, ParmString enc0)
+  PosibErr<void> MBLen::setup(const Config &, ParmStr enc0)
   {
     String buf;
     const char * enc = fix_encoding_str(enc0,buf);

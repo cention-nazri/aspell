@@ -39,7 +39,6 @@ namespace acommon {
     char * e = unescape(d.data(), d.data());
     d.resize(e - d.data());
   }
-  
 
   // if limit is not given than dest should have enough space for 
   // twice the number of characters of src
@@ -47,6 +46,7 @@ namespace acommon {
 	      size_t limit = INT_MAX, const char * others = 0);
 
   void to_lower(char *);
+  void to_lower(String &, const char *);
 
   // extract the first whitespace delimited word from d.value and put
   // it in d.key.  d.value is expected not to have any leading

@@ -62,6 +62,6 @@ DESCRIPTION limit checking to \# started commentary parts
 
 
 FILTER context
-OPTION rem-all-context-delimiters
+OPTION clear-context-delimiters
 OPTION add-context-delimiters \# \0
 

@@ -37,7 +37,7 @@ namespace acommon {
     void assign_only(const char * b, size_t size) 
     {
       begin_ = (char *)malloc(size + 1);
-      memcpy(begin_, b, size);
+      memmove(begin_, b, size);
       end_   = begin_ + size;
       storage_end_ = end_ + 1;
     }
@@ -66,7 +66,10 @@ namespace acommon {
     size_t max_size() const {return INT_MAX;}
     size_t capacity() const {return storage_end_ ? storage_end_ - begin_ - 1 : 0;}
 
-    void ensure_null_end() const {*end_ = '\0';}
+    void ensure_null_end() const {
+      if (!begin_) const_cast<String *>(this)->reserve_i();
+      *end_ = '\0';
+    }
 
     const char * c_str() const {
       if (begin_) {ensure_null_end(); return begin_;}
@@ -110,7 +113,7 @@ namespace acommon {
     String() : begin_(0), end_(0), storage_end_(0) {}
     String(const char * s) {assign_only(s, strlen(s));}
     String(const char * s, unsigned int size) {assign_only(s, size);}
-    String(ParmString s) {assign_only(s, s.size());}
+    String(ParmStr s) {assign_only(s, s.size());}
     String(MutableString s) {assign_only(s.str, s.size);}
     String(const String & other) {assign_only(other.begin_, other.end_-other.begin_);}
 
@@ -123,7 +126,7 @@ namespace acommon {
       clear();
       if (size != 0) {
         reserve(size);
-        memcpy(begin_, b, size);
+        memmove(begin_, b, size);
         end_   = begin_ + size;
       } 
     }
@@ -136,7 +139,7 @@ namespace acommon {
       return *this;
     }
     inline String & operator= (const PosibErr<const char *> & s);
-    String & operator= (ParmString s) {
+    String & operator= (ParmStr s) {
       assign(s, s.size());
       return *this;
     }
@@ -195,7 +198,7 @@ namespace acommon {
       append(c);
       return *this;
     }
-    String & operator+= (ParmString s) {
+    String & operator+= (ParmStr s) {
       if (s.have_size())
         append(s, s.size());
       else
@@ -320,12 +323,12 @@ namespace acommon {
       return pos;
     }
 
-    bool prefix(ParmString str, size_t offset = 0) const
+    bool prefix(ParmStr str, size_t offset = 0) const
     {
       if (str.size() > size() - offset) return false;
       return memcmp(begin_ + offset, str.str(), str.size()) == 0;
     };
-    bool suffix(ParmString str) const
+    bool suffix(ParmStr str) const
     {
       if (str.size() > size()) return false;
       return memcmp(end_ - str.size(), str.str(), str.size()) == 0;
@@ -360,17 +363,19 @@ namespace acommon {
       {return reinterpret_cast<unsigned int &>(operator[](pos));}
 
     void write (char c) {append(c);}
-    void write (ParmString str) {operator+=(str);}
+    void write (ParmStr str) {operator+=(str);}
     void write (const void * str, unsigned int sz) {append(str,sz);}
 
 
-    String & operator << (ParmString str) {
+    String & operator << (ParmStr str) {
       append(str);
       return *this;
     }
 
+    // FIXME: Remove
     String & lower();
     String & upper();
+    // END FIXME
 
     String & operator << (char c) {
       append(c);
@@ -378,7 +383,7 @@ namespace acommon {
     }
   };
 
-  inline String operator+ (ParmString rhs, ParmString lhs)
+  inline String operator+ (ParmStr rhs, ParmStr lhs)
   {
     String tmp;
     tmp.reserve(rhs.size() + lhs.size());
@@ -401,12 +406,12 @@ namespace acommon {
   {
     return strcmp(x, y.c_str()) == 0;
   }
-  inline bool operator== (const String & x, ParmString y)
+  inline bool operator== (const String & x, ParmStr y)
   {
     if (y == 0) return x.size() == 0;
     return strcmp(x.c_str(), y) == 0;
   }
-  inline bool operator== (ParmString x, const String & y)
+  inline bool operator== (ParmStr x, const String & y)
   {
     if (x == 0) return y.size() == 0;
     return strcmp(x, y.c_str()) == 0;
@@ -424,11 +429,11 @@ namespace acommon {
   {
     return strcmp(x, y.c_str()) != 0;
   }
-  inline bool operator!= (const String & x, ParmString y)
+  inline bool operator!= (const String & x, ParmStr y)
   {
     return !(x == y);
   }
-  inline bool operator!= (ParmString x, const String & y)
+  inline bool operator!= (ParmStr x, const String & y)
   {
     return !(x == y);
   }
@@ -439,7 +444,7 @@ namespace acommon {
     const char * in_str;
     char         delem;
   public:
-    StringIStream(ParmString s, char d = ';')
+    StringIStream(ParmStr s, char d = ';')
       : IStream(d), in_str(s) {}
     bool append_line(String & str, char c);
     bool read(void * data, unsigned int size);

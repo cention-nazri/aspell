@@ -52,6 +52,9 @@ namespace acommon
     U * datap(int pos) {
       return reinterpret_cast<U * >(&this->front() + pos);
     }
+
+    void pop_front() {erase(begin());}
+    void push_front(const T & v) {insert(begin(), v);}
   };
 }
 

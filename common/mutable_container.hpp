@@ -11,14 +11,17 @@
 
 namespace acommon {
 
+class AddableContainer {
+public:
+  virtual PosibErr<bool> add(ParmStr to_add) = 0;
+  virtual ~AddableContainer() {}
+};
 
-class MutableContainer {
- public:
-  virtual PosibErr<bool> add(ParmString to_add) = 0;
-  virtual PosibErr<bool> remove(ParmString to_rem) = 0;
+
+class MutableContainer : public AddableContainer {
+public:
+  virtual PosibErr<bool> remove(ParmStr to_rem) = 0;
   virtual PosibErr<void> clear() = 0;
-  MutableContainer() {}
-  virtual ~MutableContainer() {}
 };
 
 

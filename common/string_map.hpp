@@ -62,7 +62,7 @@ public:
   
   // insert a new element.   Will NOT overwrite an existing entry.
   // returns false if the element already exists.
-  bool insert(ParmString key, ParmString value) {
+  bool insert(ParmStr key, ParmStr value) {
     pair<Iter_,bool> res = lookup_.insert(Value_(key,0));
     if (res.second) {
       res.first->first  = buffer_.dup(key);
@@ -72,7 +72,7 @@ public:
       return false;
     }
   }
-  PosibErr<bool> add(ParmString key) {
+  PosibErr<bool> add(ParmStr key) {
     pair<Iter_,bool> res = lookup_.insert(Value_(key,0));
     if (res.second) {
       res.first->first  = buffer_.dup(key);
@@ -84,7 +84,7 @@ public:
   }
   // insert a new element. WILL overwrite an exitsing entry
   // always returns true
-  bool replace(ParmString key, ParmString value) {
+  bool replace(ParmStr key, ParmStr value) {
     pair<Iter_,bool> res = lookup_.insert(Value_(key,0));
     if (res.second) {
       res.first->first  = buffer_.dup(key);
@@ -96,12 +96,12 @@ public:
   }
   
   // removes an element.  Returns true if the element existed.
-  PosibErr<bool> remove(ParmString key) {return lookup_.erase(key);}
+  PosibErr<bool> remove(ParmStr key) {return lookup_.erase(key);}
   
   // looks up an element.  Returns null if the element did not exist.
   // returns an empty string if the element exists but has a null value
   // otherwise returns the value
-  const char * lookup(ParmString key) const 
+  const char * lookup(ParmStr key) const 
   {
     CIter_ i = lookup_.find(key);
     if (i == lookup_.end())
@@ -110,7 +110,7 @@ public:
       return i->second;
   }  
   
-  bool have(ParmString key) const {return lookup(key) != 0;}
+  bool have(ParmStr key) const {return lookup(key) != 0;}
   
   unsigned int size() const {return lookup_.size();}
   bool empty() const {return lookup_.empty();}

@@ -74,10 +74,10 @@ FILTER context
 #
 # option value may be empty if entire option is boolean or in case of list options
 # prefixed by `rem-all'
-OPTION rem-all-context-delimiters 
+OPTION clear-context-delimiters 
 OPTION add-context-delimiters /* */
 OPTION add-context-delimiters // \0
 OPTION add-context-delimiters " "
-option dont-context-visible-first
+option disable-context-visible-first
 
 FILTER url

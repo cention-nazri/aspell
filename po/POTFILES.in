@@ -7,4 +7,5 @@ prog/aspell.cpp
 modules/speller/default/language.cpp
 modules/speller/default/affix.cpp
 modules/speller/default/readonly_ws.cpp
+modules/filter/tex.cpp
 gen/filter.pot

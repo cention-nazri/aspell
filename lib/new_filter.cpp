@@ -11,7 +11,6 @@
 
 #include "asc_ctype.hpp"
 #include "config.hpp"
-#include "directory.hpp"
 #include "enumeration.hpp"
 #include "errors.hpp"
 #include "filter.hpp"
@@ -29,6 +28,7 @@
 #include "string_list.hpp"
 #include "string_map.hpp"
 #include "strtonum.hpp"
+#include "file_util.hpp"
 #include <stdio.h>
 
 #ifdef HAVE_LIBDL
@@ -46,14 +46,6 @@ namespace acommon
 
 #include "static_filters.src.cpp"
 
-  // FIXME moved to new_config and modified 
-  // filter modes
-  /* 
-
-  const char * filter_modes = "none,url,email,sgml,tex";
-  
-  */
-
   class IndividualFilter;
   static int filter_modules_referencing = 0;
 
@@ -61,79 +53,40 @@ namespace acommon
   // actual code
   //
 
-  FilterEntry * find_individual_filter(ParmString);
+  FilterEntry * find_individual_filter(ParmStr);
+  PosibErr<ConfigModule *> get_dynamic_filter(Config * config, ParmStr value);
 
   class ExtsMap : public StringMap 
   {
     const char * cur_mode;
   public:
-    void set_mode (ParmString mode)
+    void set_mode(ParmStr mode)
     {
       cur_mode = mode;
     }
-    PosibErr < bool > add (ParmString key)
+    PosibErr<bool> add(ParmStr key)
     {
       insert (key, cur_mode);
       return true;
     }
   };
 
-
-  class FilterHandle {
-  public:
-    FilterHandle() : handle(0) {}
-    ~FilterHandle() {
-      if (handle) {
-        dlclose(handle);
-      }
-    }
-    void * release() {
-      void * tmp = handle;
-//FIXME shouldn't this set handle to NULL ??? and make the below FIXME obsolete??
-//      hm test later !!!
-      handle = NULL;
-      return tmp;
-    }
-    operator bool() {
-      return handle != NULL;
-    }
-    void * val() {
-      return handle;
-    }
-    // The direct interface usually when new_filter ... functions are coded
-    // manually
-    FilterHandle & operator= (void * h) {
-//FIXME only true for first filter but not for multiple filters 
-//      assert(handle == NULL);
-      handle = h; return *this;
-    }
-  private:
-    void * handle;
-  };
-
   PosibErr<void> setup_filter(Filter & filter, 
 			      Config * config, 
-			      bool use_decoder, 
-			      bool use_filter, bool use_encoder)
+			      bool use_decoder, bool use_filter, bool use_encoder)
   {
     StringList sl;
     config->retrieve_list("filter", &sl);
     StringListEnumeration els = sl.elements_obj();
-    StackPtr<IndividualFilter> ifilter;
     const char * filter_name;
-    FilterHandle filterhandle[3];
-    FilterEntry dynamic_filter;
-    int addcount = 0;
-    ConfigModule * current_filter = NULL;
+
+    StackPtr<IndividualFilter> ifilter;
 
     filter.clear();
+
     while ((filter_name = els.next()) != 0) {
-      filterhandle[0] = filterhandle[1] = filterhandle[2] = (void*)NULL;
-      addcount = 0;
       //fprintf(stderr, "Loading %s ... \n", filter_name);
       FilterEntry * f = find_individual_filter(filter_name);
-      // Changed for reflecting new filter loadability dependent uppon
-      // existance of libdl.
       // In case libdl is not available a filter is only available if made
       // one of the standard filters. This is done by statically linking
       // the filter sources.
@@ -142,73 +95,65 @@ namespace acommon
       // by user are loaded properly or be reported to be missing.
       // 
 #ifdef HAVE_LIBDL
+      FilterHandle decoder_handle, filter_handle, encoder_handle;
+      FilterEntry dynamic_filter;
       if (!f) {
 
-        for (current_filter = (ConfigModule*)filter_modules_begin+standard_filters_size;
-	     current_filter < (ConfigModule*)filter_modules_end; 
-	     current_filter++) 
-	{
-	  if (strcmp(current_filter->name,filter_name) == 0) {
-	    break;
-          }
-        }
-        if (current_filter >= filter_modules_end) {
-          return make_err(other_error);
-        }
+        RET_ON_ERR_SET(get_dynamic_filter(config, filter_name),
+                       ConfigModule *, current_filter);
+
+        assert(current_filter < filter_modules_end);
 	
-        if (((filterhandle[0] = dlopen(current_filter->load,RTLD_NOW)) == NULL) ||
-            ((filterhandle[1] = dlopen(current_filter->load,RTLD_NOW)) == NULL) ||
-            ((filterhandle[2] = dlopen(current_filter->load,RTLD_NOW)) == NULL)) {
+        if (!(decoder_handle = dlopen(current_filter->load,RTLD_NOW)) ||
+            !(encoder_handle = dlopen(current_filter->load,RTLD_NOW)) ||
+            !(filter_handle  = dlopen(current_filter->load,RTLD_NOW)))
           return make_err(cant_dlopen_file,dlerror()).with_file(filter_name);
-        }
-        dynamic_filter.decoder = (FilterFun *)dlsym(filterhandle[0].val(),"new_decoder");
-        dynamic_filter.encoder = (FilterFun *)dlsym(filterhandle[1].val(),"new_encoder");
-        dynamic_filter.filter  = (FilterFun *)dlsym(filterhandle[2].val(),"new_filter");
+        dynamic_filter.decoder = (FilterFun *)dlsym(decoder_handle.get(),"new_decoder");
+        dynamic_filter.encoder = (FilterFun *)dlsym(encoder_handle.get(),"new_encoder");
+        dynamic_filter.filter  = (FilterFun *)dlsym(filter_handle.get(),"new_filter");
         if (!dynamic_filter.decoder && 
 	    !dynamic_filter.encoder &&
-	    !dynamic_filter.filter) {
+	    !dynamic_filter.filter)
           return make_err(empty_filter,filter_name);
-	}
         dynamic_filter.name = filter_name;
         f = &dynamic_filter;
-      } else {
-        addcount = 1;
-      }
+      } 
 #else
-      assert(f); //FIXME: Return Error Condition
+      if (!f)
+        return make_err(no_such_filter, filter_name);
 #endif
       if (use_decoder && f->decoder && (ifilter = f->decoder())) {
         RET_ON_ERR_SET(ifilter->setup(config), bool, keep);
+        ifilter->handle = decoder_handle.release();
 	if (!keep) {
 	  ifilter.del();
 	} else {
-          filter.add_filter(ifilter.release(),filterhandle[0].release(),
-                            Filter::DECODER);
+          filter.add_filter(ifilter.release());
         }
       } 
       if (use_filter && f->filter && (ifilter = f->filter())) {
         RET_ON_ERR_SET(ifilter->setup(config), bool, keep);
+        ifilter->handle = filter_handle.release();
         if (!keep) {
           ifilter.del();
         } else {
-          filter.add_filter(ifilter.release(), filterhandle[2].release(),
-                            Filter::FILTER);
+          filter.add_filter(ifilter.release());
         }
       }
       if (use_encoder && f->encoder && (ifilter = f->encoder())) {
         RET_ON_ERR_SET(ifilter->setup(config), bool, keep);
+        ifilter->handle = encoder_handle.release();
         if (!keep) {
           ifilter.del();
         } else {
-          filter.add_filter(ifilter.release(), filterhandle[1].release(),
-                            Filter::ENCODER);
+          filter.add_filter(ifilter.release());
         }
       }
     }
     return no_err;
   }
 
-  FilterEntry * find_individual_filter(ParmString filter_name) {
+  FilterEntry * find_individual_filter(ParmStr filter_name) {
     unsigned int i = 0;
     while (i != standard_filters_size) {
       if (standard_filters[i].name == filter_name) {
@@ -218,7 +163,9 @@ namespace acommon
     }
     return 0;
   }
-  
+
+#if 0
+
   // the FilterOptionExpandNotifier was added in order to be able to
   // expand filter and corresponding Option list during runtime.
   // It implements the entire loadability if not loaded and handed to
@@ -228,7 +175,7 @@ namespace acommon
   // FilterOptionExpandNotifier class each of them increments the
   // filter_modules_referencing counter in order to indicate that they
   // too changes the filter modules structure
-  class FilterOptionExpandNotifier : public Notifier {
+  class FilterOptionExpandNotifier {
     PathBrowser option_path;
     PathBrowser filter_path;
     FilterOptionExpandNotifier(void) {
@@ -242,16 +189,8 @@ namespace acommon
 
     FilterOptionExpandNotifier(Config * conf);
     virtual ~FilterOptionExpandNotifier(void);
-    virtual Notifier * clone(Config * conf);
-    virtual PosibErr<void> item_added(const KeyInfo * key, ParmString value);
-//FIXME Add item_removed member to clear away filter options 
+    virtual PosibErr<void> item_added(ParmStr value);
   };
-
-
-  void activate_dynamic_filteroptions(Config * config){
-    config->add_notifier(new FilterOptionExpandNotifier(config));
-  }
-
 
   FilterOptionExpandNotifier::FilterOptionExpandNotifier(const FilterOptionExpandNotifier & brother)
   : option_path(),
@@ -265,43 +204,12 @@ namespace acommon
     filter_path = brother.filter_path;
   }
 
-  void FilterOptionExpandNotifier::release_options(const KeyInfo * begin,const KeyInfo * end) {
-    KeyInfo * current = NULL;
-    
-    if (begin == NULL) {
-      return;
-    }
-    for (current = (KeyInfo*)begin;current < end; current++) {
-      if (current->name) {
-        free((char*)current->name);
-      }
-      if (current->def) {
-        free((char*)current->def);
-      }
-      if (current->desc) {
-        free((char*)current->desc);
-      }
-    }
-  }
-
-
   FilterOptionExpandNotifier::FilterOptionExpandNotifier(Config * conf) 
   : option_path(),
     filter_path(), 
     config(conf) 
   {
     filter_modules_referencing++;
-    conf->set_filter_modules(filter_modules_begin, filter_modules_end);
-    do {
-      StringList test;
-      config->retrieve_list("option-path",&test);
-      option_path = test;
-    } while (false);
-    do {
-      StringList test;
-      config->retrieve_list("filter-path",&test);
-      filter_path = test;
-    } while (false);
   }
 
 
@@ -339,330 +247,334 @@ namespace acommon
     }
   }
 
-  Notifier * FilterOptionExpandNotifier::clone(Config * conf) {
-    return new FilterOptionExpandNotifier(conf); 
+#endif
+
+  void release_options(const KeyInfo * begin,const KeyInfo * end) 
+  {
+    KeyInfo * current = NULL;
+    
+    if (begin == NULL) {
+      return;
+    }
+    for (current = (KeyInfo*)begin;current < end; current++) {
+      if (current->name) {
+        free((char*)current->name);
+      }
+      if (current->def) {
+        free((char*)current->def);
+      }
+      if (current->desc) {
+        free((char*)current->desc);
+      }
+    }
   }
 
-  PosibErr<void> FilterOptionExpandNotifier::item_added(const KeyInfo * key, ParmString value) 
+  PosibErr<ConfigModule *> get_dynamic_filter(Config * config, ParmStr value) 
   {
-    int name_len = strlen(key->name);
-    ConfigModule * current = (ConfigModule*)filter_modules_begin;
-    String option_name = "";
-    String filter_name = "lib";
-    FStream options;
-    String option_value;
-    String version = PACKAGE_VERSION;
+    config->set_filter_modules(filter_modules_begin, filter_modules_end);
+
     KeyInfo * begin = NULL;
     KeyInfo * cur_opt = NULL;
     int optsize = 0;
     ConfigModule * mbegin = NULL;
     int modsize = filter_modules_end-filter_modules_begin;
-    StringList filt_path;
-    StringList opt_path;
     int active_option = 0;
-    String expand = "filter-";
-    String buf; DataPair d;
 
-    if ((name_len == 6) &&
-        !strncmp(key->name,"filter",6)){
-      while (current < filter_modules_end) {
-        if (!strncmp(value.str(), current->name,
-                     value.size() <= strlen(current->name) 
-		     ? value.size()
-		     : strlen(current->name))) 
-          return no_err;
-        current++;
-      }
+    ConfigModule * current = (ConfigModule*)filter_modules_begin + standard_filters_size;
+    for (; current < filter_modules_end; ++current) {
+      if (!strncmp(value.str(), current->name,
+                   value.size() <= strlen(current->name) 
+                   ? value.size()
+                   : strlen(current->name))) 
+        return current;
+    }
 
-      String filter_description = "";
-
-      if (current >= filter_modules_end) {
-        option_name += value;
-        option_name += "-filter.opt";
-        filter_name += value;
-        filter_name += "-filter.so";
-        if (!filter_path.expand_filename(filter_name))
-          return make_err(no_such_filter, value);
-        if (!option_path.expand_filename(option_name))
-          return make_err(no_option_file, option_name);
-        if (config->have(value)) {
+    if (config->have(value)) {
 //FEATURE ? rescale priority instead and continue ???
-          fprintf(stderr,"warning: specifying filter twice makes no sense\n");
-          return no_err;
+      fprintf(stderr,"warning: specifying filter twice makes no sense\n");
+      return no_err;
+    }
+    
+    String filter_description = "";
+    
+    String option_name = value;
+    option_name += "-filter.opt";
+    if (!find_file(config, "filter-path", option_name))
+      return make_err(no_such_filter, value);
+
+    const char * slash = strrchr(option_name.str(), '/');
+    assert(slash);
+
+    String filter_name(option_name.str(), slash + 1 - option_name.str());
+    filter_name += "lib";
+    filter_name += value;
+    filter_name += "-filter.so";
+
+    FStream options;
+    RET_ON_ERR(options.open(option_name,"r"));
+
+    String option_value;
+    String expand;
+    String buf; DataPair d;
+    while (getdata_pair(options,d,buf))
+    {
+      to_lower(d.key);
+      option_value = d.value;
+
+      //
+      // key == aspell
+      //
+      if (d.key == "aspell") 
+      {
+        if ( d.value == NULL || *(d.value) == '\0' )
+          return make_err(confusing_version).with_file(option_name,d.line_num);
+
+        char * requirement = d.value.str;
+        char * relop = requirement;
+        char swap = '\0';
+            
+        if ( *requirement == '>' || *requirement == '<' || 
+             *requirement == '!' ) {
+          requirement++;
         }
-        RET_ON_ERR(options.open(option_name,"r"));
+        if ( *requirement == '=' ) {
+          requirement++;
+        }
 
-        while (getdata_pair(options,d,buf))
-	{
-	  to_lower(d.key);
-	  option_value = d.value;
+        String reqVers(requirement);
 
-	  //
-	  // key == aspell
-	  //
-          if (d.key == "aspell") 
-	  {
-            if ( d.value == NULL || *(d.value) == '\0' )
-              return make_err(confusing_version).with_file(option_name,d.line_num);
+        swap = *requirement;
+        *requirement = '\0';
 
-            char * requirement = d.value.str;
-            char * relop = requirement;
-            char swap = '\0';
-            
-            if ( *requirement == '>' || *requirement == '<' || 
-                 *requirement == '!' ) {
-              requirement++;
-            }
-            if ( *requirement == '=' ) {
-              requirement++;
-            }
+        String relOp(relop);
 
-            String reqVers(requirement);
+        *requirement = swap;
 
-            swap = *requirement;
-            *requirement = '\0';
+        char actVersion[] = PACKAGE_VERSION;
+        char * act = &actVersion[0];
+        char * seek = act;
 
-            String relOp(relop);
+        while (    ( seek != NULL )
+                   && ( *seek != '\0' ) 
+                   && ( *seek < '0' )
+                        && ( *seek > '9' ) 
+                   && ( *seek != '.' )
+                   && ( *seek != 'x' )
+                   && ( *seek != 'X' ) ) {
+          seek++;
+        }
+        act = seek;
+        while (    ( seek != NULL )
+                   && ( seek != '\0' ) 
+                   && (    (    ( *seek >= '0' )
+                                && ( *seek <= '9' ) )
+                           || ( *seek == '.' )
+                           || ( *seek == 'x' )
+                           || ( *seek == 'X' ) ) ) {
+          seek++;
+        }
+        if ( seek != NULL ) {
+          *seek = '\0';
+        }
 
-            *requirement = swap;
+        PosibErr<bool> peb = verify_version(relOp.c_str(),act,requirement,"add_filter");
 
-            char actVersion[] = PACKAGE_VERSION;
-            char * act = &actVersion[0];
-            char * seek = act;
-
-            while (    ( seek != NULL )
-                    && ( *seek != '\0' ) 
-                    && ( *seek < '0' )
-                    && ( *seek > '9' ) 
-                    && ( *seek != '.' )
-                    && ( *seek != 'x' )
-                    && ( *seek != 'X' ) ) {
-              seek++;
-            }
-            act = seek;
-            while (    ( seek != NULL )
-                    && ( seek != '\0' ) 
-                    && (    (    ( *seek >= '0' )
-                              && ( *seek <= '9' ) )
-                         || ( *seek == '.' )
-                         || ( *seek == 'x' )
-                         || ( *seek == 'X' ) ) ) {
-              seek++;
-            }
-            if ( seek != NULL ) {
-              *seek = '\0';
-            }
-
-            PosibErr<bool> peb = verifyVersion(relOp.c_str(),act,requirement,"add_filter");
-
-            if ( peb.has_err() ) {
-              peb.ignore_err();
-              return make_err(confusing_version).with_file(option_name,d.line_num);
-            }
-	    if ( peb == false ) {
-              peb.ignore_err();
-              return make_err(bad_version).with_file(option_name,d.line_num);
-            }
-            continue;
-	  } 
+        if ( peb.has_err() ) {
+          peb.ignore_err();
+          return make_err(confusing_version).with_file(option_name,d.line_num);
+        }
+        if ( peb == false ) {
+          peb.ignore_err();
+          return make_err(bad_version).with_file(option_name,d.line_num);
+        }
+        continue;
+      } 
 	  
-	  //
-	  // key == option
-	  //
-	  if (d.key == "option" ) {
-            expand  = "filter-";
-            expand += option_value;
-            if (config->have(expand)) {
-              if (begin != NULL) {
-                release_options(begin,begin+optsize);
-                free(begin);
-              }
-              option_value.insert(0,"(filter-)", 9);
-              return make_err(identical_option).with_file(option_name,d.line_num);
-            }
-
-            // this is safe even if begin is null
-            KeyInfo * expandopt = (KeyInfo *)realloc(begin,sizeof(KeyInfo) * (optsize + 1));
-            begin = expandopt;
-
-            // let cur_opt point to newly generated last element 
-            // ( begin + optsize ) and increment optsize after to indicate
-            // actual number of options 
-            // ( !!! postfix increment !!! returns value before increment !!! )
-            cur_opt = begin + optsize;
-            optsize++;
-            
-	    char * n = (char *)malloc(7 + value.size() + 1 + option_value.size() + 1);
-
-	    cur_opt->name = n;
-	    memcpy(n, "filter-", 7);              n += 7;
-	    memcpy(n, value.str(), value.size()); n += value.size();
-	    *n = '-'; ++n;
-	    memcpy(n, option_value.c_str(), option_value.size() + 1);
-	    cur_opt->type = KeyInfoBool;
-            cur_opt->def  = NULL;
-            cur_opt->desc = NULL;
-            cur_opt->flags = 0;
-            cur_opt->other_data = 0;
-            active_option = 1;
-            continue;
-          }
-
-	  //
-	  // key == static
-	  //
-          if (d.key == "static") {
-            active_option = 0;
-            continue;
-          }
-
-	  //
-	  // key == description
-	  //
-          if ((d.key == "desc") ||
-              (d.key == "description")) {
-
-            //
-            // filter description
-            // 
-            if (!active_option) {
-              filter_description = option_value;
-            }
-
-            //
-            //option description
-            //
-            else {
-
-              //avoid memory leak;
-              if ( cur_opt->desc != NULL) {
-                free((char *)cur_opt->desc);
-                cur_opt->desc = NULL;
-              }
-              cur_opt->desc = strdup(option_value.c_str());
-            }
-            continue;
-          }
-	  
-	  //
-	  // key = endfile
-	  //
-          if (d.key == "endfile") {
-            break;
-          }
-
-	  //
-	  // !active_option
-	  //
-          if (!active_option) {
-            if (begin != NULL) {
-              free(begin);
-            }
-            return make_err(options_only).with_file(option_name,d.line_num);
-          }
-
-	  //
-	  // key == type
-	  //
-          if (d.key == "type") {
-	    to_lower(d.value); // This is safe since normally option_value is used
-            if (d.value == "list") 
-	      cur_opt->type = KeyInfoList;
-            else if (d.value == "int" || d.value == "integer") 
-              cur_opt->type = KeyInfoInt;
-            else if (d.value == "string")
-              cur_opt->type = KeyInfoString;
-	    //FIXME why not force user to ommit type specifier or explicitly say bool ???
-	    else
-	      cur_opt->type = KeyInfoBool;
-            continue;
-          }
-
-	  //
-	  // key == default
-	  //
-          if (d.key == "def" || d.key == "default") {
-            
-            if ( cur_opt->type == KeyInfoList && cur_opt->def != NULL) {
-              option_value += ",";
-              option_value += cur_opt->def;
-              free((void*)cur_opt->def);
-            }
-
-            // FIXME
-            //may try some syntax checking
-            //if ( cur_opt->type == KeyInfoBool ) {
-            //  check for valid bool values true false 0 1 on off ...
-            //  and issue error if wrong or assume false ??
-            //}
-            //if ( cur_opt->type == KeyInfoInt ) {
-            //  check for valid integer or double and issue error if not
-            //}
-            cur_opt->def = strdup(option_value.c_str());
-            continue;
-          }
-          
- 	  //
- 	  // key == flags
- 	  //
-          if (d.key == "flags") {
-            if (d.value == "utf-8" || d.value == "UTF-8")
-              cur_opt->flags = KEYINFO_UTF8;
-            continue;
-          }
-           
-	  //
-	  // key == endoption
-	  //
-          if (d.key=="endoption") {
-            active_option = 0;
-            continue;
-          }
-
-	  // 
-	  // error
-	  // 
+      //
+      // key == option
+      //
+      if (d.key == "option" ) {
+        expand  = "filter-";
+        expand += option_value;
+        if (config->have(expand)) {
           if (begin != NULL) {
             release_options(begin,begin+optsize);
             free(begin);
           }
-          return make_err(invalid_option_modifier).with_file(option_name,d.line_num);
-        
-	} // end while getdata_pair_c
-     
-        if ( filter_modules_begin == filter_modules ) {
-          mbegin = (ConfigModule*)malloc(modsize*sizeof(ConfigModule));
-          memcpy(mbegin,filter_modules_begin,(modsize)*sizeof(ConfigModule));
-          filter_modules_begin = mbegin;
-          filter_modules_end   = mbegin + modsize;
-          config->set_filter_modules(filter_modules_begin,filter_modules_end);
+          option_value.insert(0,"(filter-)", 9);
+          return make_err(identical_option).with_file(option_name,d.line_num);
         }
 
-        mbegin = (ConfigModule*)realloc((ConfigModule*)filter_modules_begin,
-                                        ++modsize*sizeof(ConfigModule));
+        // this is safe even if begin is null
+        KeyInfo * expandopt = (KeyInfo *)realloc(begin,sizeof(KeyInfo) * (optsize + 1));
+        begin = expandopt;
 
-        mbegin[modsize-1].name  = strdup(value);
-        mbegin[modsize-1].load  = strdup(filter_name.c_str());
-        mbegin[modsize-1].desc  = strdup(filter_description.c_str());
-        mbegin[modsize-1].begin = begin;
-        mbegin[modsize-1].end   = begin+optsize;
-        filter_modules_begin = mbegin;
-        filter_modules_end   = mbegin+modsize;
-        config->set_filter_modules(filter_modules_begin,filter_modules_end);
-        return no_err;
-      }// end if (current >= filter_modules_end) 
-      return make_err(no_such_filter,"add_filter",value);
-    }// end if "filter"
-    else if ((name_len == 11) &&
-             !strncmp(key->name,"filter-path",11)) {
-      RET_ON_ERR(config->retrieve_list("filter-path",&filt_path));
-      filter_path = filt_path;
+        // let cur_opt point to newly generated last element 
+        // ( begin + optsize ) and increment optsize after to indicate
+        // actual number of options 
+        // ( !!! postfix increment !!! returns value before increment !!! )
+        cur_opt = begin + optsize;
+        optsize++;
+            
+        char * n = (char *)malloc(7 + value.size() + 1 + option_value.size() + 1);
+
+        cur_opt->name = n;
+        memcpy(n, "filter-", 7);              n += 7;
+        memcpy(n, value.str(), value.size()); n += value.size();
+        *n = '-'; ++n;
+        memcpy(n, option_value.c_str(), option_value.size() + 1);
+        cur_opt->type = KeyInfoBool;
+        cur_opt->def  = NULL;
+        cur_opt->desc = NULL;
+        cur_opt->flags = 0;
+        cur_opt->other_data = 0;
+        active_option = 1;
+        continue;
+      }
+
+      //
+      // key == static
+      //
+      if (d.key == "static") {
+        active_option = 0;
+        continue;
+      }
+
+      //
+      // key == description
+      //
+      if ((d.key == "desc") ||
+          (d.key == "description")) {
+
+        //
+        // filter description
+        // 
+        if (!active_option) {
+          filter_description = option_value;
+        }
+
+        //
+        //option description
+        //
+        else {
+
+          //avoid memory leak;
+          if ( cur_opt->desc != NULL) {
+            free((char *)cur_opt->desc);
+            cur_opt->desc = NULL;
+          }
+          cur_opt->desc = strdup(option_value.c_str());
+        }
+        continue;
+      }
+	  
+      //
+      // key = endfile
+      //
+      if (d.key == "endfile") {
+        break;
+      }
+
+      //
+      // !active_option
+      //
+      if (!active_option) {
+        if (begin != NULL) {
+          free(begin);
+        }
+        return make_err(options_only).with_file(option_name,d.line_num);
+      }
+
+      //
+      // key == type
+      //
+      if (d.key == "type") {
+        to_lower(d.value); // This is safe since normally option_value is used
+        if (d.value == "list") 
+          cur_opt->type = KeyInfoList;
+        else if (d.value == "int" || d.value == "integer") 
+          cur_opt->type = KeyInfoInt;
+        else if (d.value == "string")
+          cur_opt->type = KeyInfoString;
+        //FIXME why not force user to ommit type specifier or explicitly say bool ???
+        else
+          cur_opt->type = KeyInfoBool;
+        continue;
+      }
+
+      //
+      // key == default
+      //
+      if (d.key == "def" || d.key == "default") {
+            
+        if ( cur_opt->type == KeyInfoList && cur_opt->def != NULL) {
+          option_value += ",";
+          option_value += cur_opt->def;
+          free((void*)cur_opt->def);
+        }
+
+        // FIXME
+        //may try some syntax checking
+        //if ( cur_opt->type == KeyInfoBool ) {
+        //  check for valid bool values true false 0 1 on off ...
+        //  and issue error if wrong or assume false ??
+        //}
+        //if ( cur_opt->type == KeyInfoInt ) {
+        //  check for valid integer or double and issue error if not
+        //}
+        cur_opt->def = strdup(option_value.c_str());
+        continue;
+      }
+          
+      //
+      // key == flags
+      //
+      if (d.key == "flags") {
+        if (d.value == "utf-8" || d.value == "UTF-8")
+          cur_opt->flags = KEYINFO_UTF8;
+        continue;
+      }
+           
+      //
+      // key == endoption
+      //
+      if (d.key=="endoption") {
+        active_option = 0;
+        continue;
+      }
+
+      // 
+      // error
+      // 
+      if (begin != NULL) {
+        release_options(begin,begin+optsize);
+        free(begin);
+      }
+      return make_err(invalid_option_modifier).with_file(option_name,d.line_num);
+        
+    } // end while getdata_pair_c
+     
+    if ( filter_modules_begin == filter_modules ) {
+      mbegin = (ConfigModule*)malloc(modsize*sizeof(ConfigModule));
+      memcpy(mbegin,filter_modules_begin,(modsize)*sizeof(ConfigModule));
+      filter_modules_begin = mbegin;
+      filter_modules_end   = mbegin + modsize;
+      config->set_filter_modules(filter_modules_begin,filter_modules_end);
     }
-    else if ((name_len == 11) &&
-             !strncmp(key->name,"option-path",15)) {
-      RET_ON_ERR(config->retrieve_list("option-path",&opt_path));
-      option_path = opt_path;
-    }
-    return no_err;
+
+    mbegin = (ConfigModule*)realloc((ConfigModule*)filter_modules_begin,
+                                    ++modsize*sizeof(ConfigModule));
+    current = mbegin + modsize-1;
+
+    current->name  = strdup(value);
+    current->load  = strdup(filter_name.c_str());
+    current->desc  = strdup(filter_description.c_str());
+    current->begin = begin;
+    current->end   = begin+optsize;
+    filter_modules_begin = mbegin;
+    filter_modules_end   = mbegin+modsize;
+    config->set_filter_modules(filter_modules_begin,filter_modules_end);
+    return current;
   }
+
 }
