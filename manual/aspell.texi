@@ -1,5 +1,5 @@
 \input texinfo   @c -*-texinfo-*-
-@comment $Id: aspell.texi,v 1.35 2004/05/20 04:33:20 kevina Exp $
+@comment $Id: aspell.texi,v 1.36 2004/05/21 14:13:21 kevina Exp $
 @comment %**start of header
 @setfilename aspell.info
 @settitle GNU Aspell 0.60
@@ -2190,7 +2190,7 @@ includes instructions for creating the AWLI file.
 @node Phonetic Code
 @section Phonetic Code
 
-@emph{(The following section was written by Bj@"orn Jacke,
+@emph{(The following section was origanlly written by Bj@"orn Jacke,
 bjoern.jacke at gmx de)}
 
 Aspell is in fact the spell checker that comes up with the best
@@ -2378,6 +2378,21 @@ value to `1'.  The English rules for example strip all vowels from
 words and so the word "GOGO" would be transformed to "K" and not to
 "KK" (as desired) if @code{collapse_result} is set to 1.  That's why
 the English rules have @code{collapse_result} set to @code{0}.
+
+By default all accents are removed from a word before it is matched to
+the soundslike rules.  If you do not want this then add the line
+
+@example
+remove_accents      0
+@end example
+
+at the beginning of your file.  The exact defination of an accent is
+language dependent and is controlled via the character set file.  If you
+set remove_accents to '0' than you should also set "store-as" to "lower"
+in the language data file (not the phonetic transformation file)
+otherwise Aspell will have problems when both the accented and the
+de-accented version of a word appear in the dictoinary; it will consider
+one of them as incorrectly spelled.
 
 @subsection How do I start finally?
 

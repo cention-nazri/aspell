@@ -89,6 +89,7 @@ namespace aspeller {
 
     parms->followup        = true;
     parms->collapse_result = false;
+    parms->remove_accents  = true;
 
     int num = 0;
     while (getdata_pair(in, dp, buf)) {
@@ -114,19 +115,15 @@ namespace aspeller {
 	parms->collapse_result = to_bool(dp.value);
       } else if (dp.key == "version") {
 	parms->version = dp.value;
+      } else if (dp.key == "remove_accents") {
+        parms->remove_accents = to_bool(dp.value);
       } else {
-        const char * str = iconv(dp.key);
-        char * res = (char *)parms->strings.alloc(strlen(str) + 1);
-        lang->LangImpl::to_lower(res, str);
-	*r = res;
+	*r = parms->strings.dup(iconv(dp.key));
 	++r;
 	if (dp.value == "_") {
 	  *r = empty_str;
 	} else {
-          str = iconv(dp.value);
-          res = (char *)parms->strings.alloc(strlen(str) + 1);
-          lang->LangImpl::to_lower(res, str);
-	  *r = res;
+	  *r = parms->strings.dup(iconv(dp.value));
 	}
 	++r;
       }
@@ -138,6 +135,15 @@ namespace aspeller {
     *(r  ) = PhonetParms::rules_end;
     *(r+1) = PhonetParms::rules_end;
     parms->rules = (const char * *)parms->data;
+
+
+    for (unsigned i = 0; i != 256; ++i) {
+      parms->to_clean[i] = (lang->char_type(i) > Language::NonLetter 
+                            ? (parms->remove_accents 
+                               ? lang->to_upper(lang->de_accent(i)) 
+                               : lang->to_upper(i))
+                            : 0);
+    }
 
     init_phonet_hash(*parms);
 
@@ -193,9 +199,14 @@ namespace aspeller {
 
     typedef unsigned char uchar;
     
-    /**  to clean string  **/
-    parms.lang->LangImpl::to_clean(word, inword);
-
+    /**  to convert string to uppercase and possible remove accents **/
+    char * res = word;
+    for (const char * str = inword; *str; ++str) {
+      char c = parms.to_clean[(uchar)*str];
+      if (c) *res++ = c;
+    }
+    *res = '\0';
+    
     /**  check word  **/
     i = j = z = 0;
     while ((c = word[i]) != '\0') {

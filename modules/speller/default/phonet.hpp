@@ -37,10 +37,14 @@ namespace aspeller {
     bool followup;
     bool collapse_result;
 
+    bool remove_accents;
+
     static const char * const rules_end;
     const char * * rules;
 
     const Language * lang;
+
+    char to_clean[256];
 
     static const int hash_size = 256;
     int hash[hash_size];
