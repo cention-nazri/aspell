@@ -261,7 +261,7 @@ AffixMgr::AffixMgr(const Language * l)
 
 AffixMgr::~AffixMgr() {}
 
-static inline void MAX(int & lhs, int rhs) 
+static inline void max_(int & lhs, int rhs) 
 {
   if (lhs < rhs) lhs = rhs;
 }
@@ -369,8 +369,8 @@ PosibErr<void> AffixMgr::parse_file(const char * affpath, Conv & iconv)
         // key is strip 
         if (dp.key != "0") {
           ParmString s0(iconv(dp.key));
-          MAX(max_strip_, s0.size());
-          MAX(max_strip_f[(byte)achar], s0.size());
+          max_(max_strip_, s0.size());
+          max_(max_strip_f[(byte)achar], s0.size());
           nptr->strip = data_buf.dup(s0);
           nptr->stripl = s0.size();
         } else {
