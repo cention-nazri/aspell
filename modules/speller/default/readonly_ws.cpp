@@ -140,9 +140,13 @@ static inline const char * get_next_word_for_sl(const char * d) {
   return d + *reinterpret_cast<const byte *>(d - WORD_SIZE_O) + 3;
 }
 
-// only valid when affix_size > 0
 static inline const char * get_affix(const char * d) {
-  return d + *reinterpret_cast<const byte *>(d - WORD_SIZE_O) +  1;
+  int word_size = *reinterpret_cast<const byte *>(d - WORD_SIZE_O);
+  int affix_size = *reinterpret_cast<const byte *>(d - NEXT_WORD_O) - word_size - 5;
+  if (affix_size > 0) 
+    return d + word_size +  1;
+  else
+    return d + word_size;
 }
 
 static inline int get_word_size(const char * d) {
