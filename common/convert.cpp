@@ -9,6 +9,8 @@
 #include <stdlib.h>
 #include <sys/types.h>
 
+#include "iostream.hpp"
+
 #include "asc_ctype.hpp"
 #include "convert.hpp"
 #include "fstream.hpp"
@@ -188,7 +190,7 @@ namespace acommon {
     String file_name = config.retrieve("data-dir");
     file_name += '/';
     file_name += encoding;
-    file_name += ".map";
+    file_name += ".dat";
     FStream data;
     PosibErrBase err = data.open(file_name, "r");
     if (err.get_err()) { 
@@ -198,54 +200,23 @@ namespace acommon {
       mesg += "\" could not be opened for reading or does not exist.";
       return make_err(unknown_encoding, encoding, mesg);
     }
-    String chr_hex,uni_hex;
-    char  chr;
+    unsigned int chr;
     Uni32 uni;
-    char * p;
-    unsigned long t;
-    while (getdata_pair(data, chr_hex, uni_hex)) {
-      p = (char *)chr_hex.c_str();
-      t = strtoul(p, &p, 16);
-      if (p != chr_hex.c_str() + chr_hex.size() 
-	  || t != (unsigned char)t /* check for overflow */) 
-	return 
-	  make_err(bad_key, chr_hex, "two digit hex string")
-	  .with_file(file_name);
-      
-      chr = (char)t;
-     
-      p = (char *)uni_hex.c_str();
-      t = strtoul(p, &p, 16);
-      if (p != uni_hex.c_str() + uni_hex.size() 
-	  || t != (Uni32)t /* check for overflow */) 
-	return 
-	  make_err(bad_key, chr_hex, "four digit hex string")
-	  .with_file(file_name);
+    int c;
+    while (c = data.get(), c != EOF && c != '\n');
+    while (c = data.get(), c != EOF && c != '\n');
+    for (chr = 0; chr != 256; ++chr) {
+      data >> uni;
 
-      uni = (Uni32)t;
+      if (!data)
+	return make_err(bad_file_format, file_name);
 
-      if (to.have(chr)) 
-	return 
-	  make_err(duplicate, "Character", chr_hex)
-	  .with_file(file_name);
+      while (c = data.get(), c != EOF && c != '\n');
 
       to.insert(chr, uni);
-      if (!from.insert(uni, chr)) 
-	return 
-	  make_err(duplicate, "Uni Character", uni_hex)
-	  .with_file(file_name);
+      from.insert(uni, chr);
     }
   
-    // insert the ascii characters if they are not already there
-    unsigned int i; 
-    for (i = 0; i != 128; ++i) {
-      if (to.insert(i, i))
-	from.insert(i,i);
-    }
-    for (; i != 255; ++i) {
-      to.insert(i, '?');
-    }
-
     return no_err;
   }
 

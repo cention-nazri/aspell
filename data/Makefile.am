@@ -1,5 +1,5 @@
 
-pkgdata_DATA = *.dat *.map *.kbd
+pkgdata_DATA = *.dat *.kbd
 
 EXTRA_DIST = ${pkgdata_DATA}
 
