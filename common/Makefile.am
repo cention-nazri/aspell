@@ -31,7 +31,7 @@ libaspell_common_la_SOURCES = \
   fstream.cpp iostream.cpp info.cpp \
   can_have_error.cpp \
   convert.cpp \
-  speller.cpp document_checker.cpp
+  speller.cpp document_checker.cpp filter.cpp
 
 libaspell_common_la_LDFLAGS = -release 0.50
 

@@ -8,6 +8,7 @@
 #define ACOMMON_FILTER__HPP
 
 #include "string.hpp"
+#include "posib_err.hpp"
 
 namespace acommon {
 
@@ -41,12 +42,17 @@ namespace acommon {
     // results.
     virtual void process(char *, unsigned int size) = 0;
 
+    virtual ~IndividualFilter() {}
+
+    const char * name() const {return name_;}
+    double order_num() const {return order_num_;}
+
   protected:
 
-    Filter() : name_(0), order_(0) {}
+    IndividualFilter() : name_(0), order_num_(0.50) {}
     
     const char * name_; // must consist of 'a-z|-|0-9'
-    double order_; // between 0 and 1 exclusive
+    double order_num_; // between 0 and 1 exclusive
   };
 
 }

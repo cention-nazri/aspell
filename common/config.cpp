@@ -26,7 +26,7 @@
 
 namespace acommon {
 
-  static const Module a_module = Module();
+  static const ConfigModule a_module = ConfigModule();
   
   typedef Notifier * NotifierPtr;
   
@@ -81,8 +81,8 @@ namespace acommon {
     *this = *(const Config *)(other);
   }
 
-  void Config::set_modules(const Module * modbegin, 
-				 const Module * modend)
+  void Config::set_modules(const ConfigModule * modbegin, 
+				 const ConfigModule * modend)
   {
     kmi.modules_begin = modbegin;
     kmi.modules_end   = modend;
@@ -231,9 +231,9 @@ namespace acommon {
     return i;
   }
 
-  static const Module * find(ParmString key, 
-			     const Module * i, 
-			     const Module * end) 
+  static const ConfigModule * find(ParmString key, 
+			     const ConfigModule * i, 
+			     const ConfigModule * end) 
   {
     while (i != end) {
       if (strcmp(key, i->name) == 0) 
@@ -272,7 +272,7 @@ namespace acommon {
       return ret.prim_err(unknown_key, key);
 
     String k(key,h-key);
-    const Module * j = acommon::find(k, 
+    const ConfigModule * j = acommon::find(k, 
 				     kmi.modules_begin, 
 				     kmi.modules_end);
     if (j == kmi.modules_end)
@@ -617,7 +617,7 @@ namespace acommon {
     bool include_extra;
     const Config * cd;
     const KeyInfo * i;
-    const Module  * m;
+    const ConfigModule * m;
   public:
     PossibleElementsEmul(const Config * d, bool ic)
       : include_extra(ic), cd(d), i(d->kmi.main_begin), m(0) {}
@@ -843,6 +843,7 @@ namespace acommon {
     , {"data-dir", KeyInfoString, DATA_DIR,        "location of language data files", "r"}
     , {"dict-dir", KeyInfoString, DICT_DIR,        "location of the main word list"      }
     , {"encoding",   KeyInfoString, "iso8859-1", "encoding to expect data to be in"}
+    , {"filter",   KeyInfoList  , "url",             "add or removes a filter"}
     , {"extra-dicts", KeyInfoList, "", "extra dictionaries to use"}
     , {"home-dir", KeyInfoString, HOME_DIR,   "location for personal files" }
     , {"ignore",   KeyInfoInt   , "1",            "ignore words <= n chars"             }
@@ -880,14 +881,14 @@ namespace acommon {
 
   };
 
-  const KeyInfo * aspell_config_impl_keys_begin = config_keys;
-  const KeyInfo * aspell_config_impl_keys_end   
+  const KeyInfo * config_impl_keys_begin = config_keys;
+  const KeyInfo * config_impl_keys_end   
   = config_keys + sizeof(config_keys)/sizeof(KeyInfo);
 
-  Config * new_config() {
-    return new acommon::Config("aspell",
-			       aspell_config_impl_keys_begin,
-			       aspell_config_impl_keys_end);
+  Config * new_basic_config() {
+    return new Config("aspell",
+		      config_impl_keys_begin,
+		      config_impl_keys_end);
   }
-
+  
 }

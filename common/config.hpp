@@ -32,7 +32,7 @@ namespace acommon {
   // A p in the other datavalue means that is is a placeholder
   // for when a "r" is merged.  It should start with <config name>
 
-  struct Module {
+  struct ConfigModule {
     const char * name;
     const KeyInfo * begin;
     const KeyInfo * end;
@@ -55,12 +55,12 @@ namespace acommon {
   class MDInfoListofLists;
 
   struct ConfigKeyModuleInfo {
-    const KeyInfo * main_begin;
-    const KeyInfo * main_end;
-    const KeyInfo * extra_begin;
-    const KeyInfo * extra_end;
-    const Module  * modules_begin;
-    const Module  * modules_end;
+    const KeyInfo       * main_begin;
+    const KeyInfo       * main_end;
+    const KeyInfo       * extra_begin;
+    const KeyInfo       * extra_end;
+    const ConfigModule  * modules_begin;
+    const ConfigModule  * modules_end;
   };
 
   class Config : public CanHaveError {
@@ -107,7 +107,7 @@ namespace acommon {
 
     void set_extra(const KeyInfo * begin, const KeyInfo * end);
 
-    void set_modules(const Module * modbegin, const Module * modend);
+    void set_modules(const ConfigModule * modbegin, const ConfigModule * modend);
 
     static const char * base_name(ParmString name);
   
@@ -144,6 +144,8 @@ namespace acommon {
   };
 
   Config * new_config();
+  Config * new_basic_config(); // config which doesn't require any
+			       // external symbols
 
   class NotifierEnumeration {
     // no copy and destructor needed

@@ -28,6 +28,9 @@ namespace acommon {
 
   extern "C" const ErrorInfo * const perror_bad_file_format;
 
+  // FIXME: Avoid memory leak with ErrPtr and Error, 
+  //        and in particular err->mesg
+  
   struct ErrPtr {
     const Error * err;
     bool handled;

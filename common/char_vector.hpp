@@ -18,6 +18,12 @@ namespace acommon
     void write (char c) {append(c);}
     void write (ParmString str) {append(str, str.size());}
     void write (const char * str, unsigned int size) {append(str, size);}
+
+    CharVector & operator << (char c) {
+      append(c);
+      return *this;
+    }
+    
   };
 }
 

@@ -23,13 +23,15 @@ namespace acommon {
 	  Config * config, Filter * filter)
   {
     tokenizer_.reset(tokenizer);
+    filter_.reset(filter);
     speller_ = speller;
     return no_err;
   }
 
   void DocumentChecker::reset()
   {
-    
+    if (filter_)
+      filter_->reset();
   }
 
   void DocumentChecker::process(const char * str, int size)
@@ -40,12 +42,15 @@ namespace acommon {
     else
       proc_str_.write(str, size);
     proc_str_ << '\0';
+    if (filter_)
+      filter_->process(proc_str_.data(), strlen(proc_str_.data()));
     tokenizer_->reset(proc_str_.data());
   }
 
   Token DocumentChecker::next_misspelling()
   {
     bool correct;
+    printf("%p\n", tokenizer_);
     do {
       if (!tokenizer_->advance()) break;
       //COUT << ":: \"";

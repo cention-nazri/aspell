@@ -34,6 +34,13 @@ static void check_for_error(AspellSpeller * speller)
   }
 }
 
+static void check_for_config_error(AspellConfig * config)
+{
+  if (aspell_config_error(config) != 0) {
+    printf("Error: %s\n", aspell_config_error_message(config));
+  }
+}
+
 static void check_document(AspellSpeller * speller, const char * file);
 
 int main(int argc, const char *argv[]) 
@@ -42,6 +49,7 @@ int main(int argc, const char *argv[])
   AspellSpeller * speller;
   int have;
   char word[81];
+  char * p;
   char * word_end;
   AspellConfig * config;
 
@@ -116,8 +124,10 @@ int main(int argc, const char *argv[])
 	"  p           dumps the personal word list\n"
 	"  P           dumps the session word list\n"
 	"  m           dumps the main  word list\n"
+        "  o <option> <value> sets a config option\n"
+	"  r <option>         retrieves a config option\n"
 	"  S           saves all word lists\n"
-	"  C           clear the cuurent sesstion word list\n"
+	"  C           clear the curent sesstion word list\n"
 	"  x           quite\n"	);
       break;
     case 'p':
@@ -179,9 +189,31 @@ int main(int argc, const char *argv[])
 	check_for_error(speller);
       }
       break;
+    case 'o':
+      word[80] = '\0'; /* to make sure strchr doesn't run off end of string */
+      p = strchr(word + 3, ' ');
+      if (strlen(word) < 3 || p == 0) {
+	printf("Usage: %c <option> <value>\n", word[0]);
+      } else {
+	*p = '\0';
+	++p;
+	aspell_config_replace(config, word + 2, p);
+	check_for_config_error(config);
+      }
+      break;
+    case 'r':
+      if (strlen(word) < 3) {
+	printf("Usage: %c <option>\n", word[0]);
+      } else {
+	p = aspell_config_retrieve(config, word + 2);
+	check_for_config_error(config);
+	if (p)
+	  printf("%s = \"%s\"\n", word + 2, p);
+      }
+      break;
     case 'd':
       if (strlen(word) < 3) {
-	printf("Usage: %c <word>\n", word[0]);
+	printf("Usage: %c <file>\n", word[0]);
       } else {
 	check_document(speller, word + 2);
 	printf("\n");
@@ -267,7 +299,7 @@ static void check_document(AspellSpeller * speller, const char * filename)
       printf("Replacement? ");
       fgets(repl, 256, stdin);
       printf("\n");
-      if (repl[0] == '\n') continue; // ignore the current misspelling
+      if (repl[0] == '\n') continue; /* ignore the current misspelling */
       repl_len = strlen(repl) - 1;
       repl[repl_len] = '\0';
 
@@ -280,7 +312,10 @@ static void check_document(AspellSpeller * speller, const char * filename)
 
     /* print the line to filename.checked */
     fputs(line, out);
+
   }
+
+  delete_aspell_document_checker(checker);
 
   printf("Done.  Results saved to \"%s\".", checked_filename);
 }

@@ -26,7 +26,7 @@ namespace acommon {
   
   class DocumentChecker : public CanHaveError {
   public:
-    // will take ownership of tokenizer and filter.
+    // will take ownership of tokenizer and filter (even if there is an error)
     // config only used for this method.
     // speller expected to stick around.
     PosibErr<void> setup(Tokenizer *, Speller *, Config *, Filter *);

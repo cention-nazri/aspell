@@ -53,7 +53,7 @@ typedef Config        Options;
 enum Action {do_create, do_merge, do_dump, do_test, do_other};
 
 Args              args;
-StackPtr<Options> options(new_config());
+StackPtr<Options> options(new_basic_config());
 Action            action  = do_other;
 
 struct PossibleOption {
@@ -279,7 +279,7 @@ int main (int argc, const char *argv[])
 //
 
 void config () {
-  StackPtr<Config> config(new_config());
+  StackPtr<Config> config(new_basic_config());
   EXIT_ON_ERR(config->read_in_settings(options));
   config->write_to_stream(COUT);
 }
@@ -339,7 +339,7 @@ void master () {
     options->replace("master", args[0].c_str());
   }
 
-  StackPtr<Config> config(new_config());
+  StackPtr<Config> config(new_basic_config());
   EXIT_ON_ERR(config->read_in_settings(options));
 
   if (action == do_create) {
@@ -399,7 +399,7 @@ void personal () {
 
   } else { // action == do_dump
 
-    StackPtr<Config> config(new_config());
+    StackPtr<Config> config(new_basic_config());
     EXIT_ON_ERR(config->read_in_settings(options));
 
     WritableWordSet * per = new_default_writable_word_set();
@@ -455,7 +455,7 @@ void repl() {
 #endif
   } else if (action == do_dump) {
 
-    StackPtr<Config> config(new_config());
+    StackPtr<Config> config(new_basic_config());
     EXIT_ON_ERR(config->read_in_settings());
 
     WritableReplacementSet * repl = new_default_writable_replacement_set();

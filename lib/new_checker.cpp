@@ -17,6 +17,8 @@ namespace acommon {
   {
     StackPtr<DocumentChecker> checker(new DocumentChecker());
     Tokenizer * tokenizer = new_tokenizer(speller, config);
+    if (!filter) // FIXME deal with error and avoid memory leaks
+      filter = new_filter(speller, config);
     RET_ON_ERR(checker->setup(tokenizer, speller, config, filter));
     return checker.release();
   }
