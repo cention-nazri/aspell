@@ -97,6 +97,7 @@ struct PfxEntry : public AffEntry
   inline bool          allow_cross() const { return ((xpflg & XPRODUCT) != 0); }
   inline byte flag() const { return achar;  }
   inline const char *  key() const  { return appnd;  }
+  bool applicable(SimpleString) const;
   SimpleString add(SimpleString, ObjStack & buf) const;
 };
 
@@ -120,6 +121,7 @@ struct SfxEntry : public AffEntry
   inline bool          allow_cross() const { return ((xpflg & XPRODUCT) != 0); }
   inline byte flag() const { return achar;  }
   inline const char *  key() const  { return rappnd; } 
+  bool applicable(SimpleString) const;
   SimpleString add(SimpleString, ObjStack & buf, int limit, SimpleString) const;
 };
 
@@ -847,6 +849,24 @@ WordAff * AffixMgr::expand_suffix(ParmString word, const byte * aff,
   return head;
 }
 
+CheckAffixRes AffixMgr::check_affix(ParmString word, char aff) const
+{
+  CheckAffixRes res = InvalidAffix;
+  
+  for (PfxEntry * p = pFlag[(unsigned char)aff]; p; p = p->flag_next) {
+    res = UnapplicableAffix;
+    if (p->applicable(word)) return ValidAffix;
+  }
+
+  for (SfxEntry * p = sFlag[(unsigned char)aff]; p; p = p->flag_next) {
+    if (res == InvalidAffix) res = UnapplicableAffix;
+    if (p->applicable(word)) return ValidAffix;
+  }
+
+  return res;
+}
+
+
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -896,6 +916,21 @@ int LookupInfo::lookup (ParmString word, const SensitiveCompare * c,
 //
 // Affix Entry
 //
+
+bool PfxEntry::applicable(SimpleString word) const
+{
+  unsigned int cond;
+  /* make sure all conditions match */
+  if ((word.size > stripl) && (word.size >= numconds)) {
+    const byte * cp = (const byte *) word.str;
+    for (cond = 0;  cond < numconds;  cond++) {
+      if ((conds[*cp++] & (1 << cond)) == 0)
+        break;
+    }
+    if (cond >= numconds) return true;
+  }
+  return false;
+}
 
 // add prefix to this word assuming conditions hold
 SimpleString PfxEntry::add(SimpleString word, ObjStack & buf) const
@@ -1022,6 +1057,21 @@ bool PfxEntry::check(const LookupInfo & linf, ParmString word,
       }
       if (lci == &ci) return true;
     }
+  }
+  return false;
+}
+
+bool SfxEntry::applicable(SimpleString word) const
+{
+  int cond;
+  /* make sure all conditions match */
+  if ((word.size > stripl) && (word.size >= numconds)) {
+    const byte * cp = (const byte *) (word + word.size);
+    for (cond = numconds; --cond >=0; ) {
+      if ((conds[*--cp] & (1 << cond)) == 0)
+        break;
+    }
+    if (cond < 0) return true;
   }
   return false;
 }

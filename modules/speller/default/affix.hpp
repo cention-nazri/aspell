@@ -56,6 +56,8 @@ namespace aspeller {
     WordAff * next;
   };
 
+  enum CheckAffixRes {InvalidAffix, UnapplicableAffix, ValidAffix};
+
   class AffixMgr
   {
     const Language * lang;
@@ -97,6 +99,8 @@ namespace aspeller {
 
     WordAff * expand(ParmString word, ParmString aff, 
                      ObjStack &, int limit = INT_MAX) const;
+
+    CheckAffixRes check_affix(ParmString word, char aff) const;
 
     WordAff * expand_prefix(ParmString word, ParmString aff, 
                             ObjStack & buf) const 

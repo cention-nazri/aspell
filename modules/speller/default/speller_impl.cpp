@@ -245,16 +245,18 @@ namespace aspeller {
     return 0;
   }
 
-  void SpellerImpl::add_dict(SpellerDict * wc)
+  PosibErr<void> SpellerImpl::add_dict(SpellerDict * wc)
   {
     Dict * w = wc->dict;
     assert(locate(w->id()) == 0);
 
-    if (!lang_) 
-    {
+    if (!lang_) {
       lang_.copy(w->lang());
       config_->replace("lang", lang_name());
       config_->replace("language-tag", lang_name());
+    } else {
+      if (strcmp(lang_->name(), w->lang()->name()) != 0)
+        return make_err(mismatched_language, lang_->name(), w->lang()->name());
     }
 
     // add to master list
@@ -282,6 +284,8 @@ namespace aspeller {
     case none_id:
       break;
     }
+
+    return no_err;
   }
 
   //////////////////////////////////////////////////////////////////////
@@ -430,14 +434,15 @@ namespace aspeller {
       dicts_(0), personal_(0), session_(0), repl_(0), main_(0)
   {}
 
-  inline void add_dicts(SpellerImpl * sp, DictList & d)
+  inline PosibErr<void> add_dicts(SpellerImpl * sp, DictList & d)
   {
     for (;!d.empty(); d.pop())
     {
       if (!sp->locate(d.last()->id())) {
-        sp->add_dict(new SpellerDict(d.last()));
+        RET_ON_ERR(sp->add_dict(new SpellerDict(d.last())));
       }
     }
+    return no_err;
   }
 
   PosibErr<void> SpellerImpl::setup(Config * c) {
@@ -449,7 +454,7 @@ namespace aspeller {
 
     DictList to_add;
     RET_ON_ERR(add_data_set(config_->retrieve("master-path"), *config_, &to_add, this));
-    add_dicts(this, to_add);
+    RET_ON_ERR(add_dicts(this, to_add));
 
     s_cmp.lang = lang_;
 
@@ -469,7 +474,7 @@ namespace aspeller {
     const char * dict_name;
     while ( (dict_name = els.next()) != 0) {
       RET_ON_ERR(add_data_set(dict_name,*config_, &to_add, this));
-      add_dicts(this, to_add);
+      RET_ON_ERR(add_dicts(this, to_add));
     }
 
     bool use_other_dicts = config_->retrieve_bool("use-other-dicts");
@@ -483,7 +488,7 @@ namespace aspeller {
         temp->set_check_lang(lang_name(), *config_);
       else if (pe.has_err())
         return pe;
-      add_dict(new SpellerDict(temp, *config_, personal_id));
+      RET_ON_ERR(add_dict(new SpellerDict(temp, *config_, personal_id)));
     }
     
     if (use_other_dicts && !session_)
@@ -491,7 +496,7 @@ namespace aspeller {
       Dictionary * temp;
       temp = new_default_writable_dict();
       temp->set_check_lang(lang_name(), *config_);
-      add_dict(new SpellerDict(temp, *config_, session_id));
+      RET_ON_ERR(add_dict(new SpellerDict(temp, *config_, session_id)));
     }
      
     if (use_other_dicts && !repl_)
@@ -502,7 +507,7 @@ namespace aspeller {
         temp->set_check_lang(lang_name(), *config_);
       else if (pe.has_err())
         return pe;
-      add_dict(new SpellerDict(temp, *config_, personal_repl_id));
+      RET_ON_ERR(add_dict(new SpellerDict(temp, *config_, personal_repl_id)));
     }
 
     const char * sys_enc = lang_->charmap();

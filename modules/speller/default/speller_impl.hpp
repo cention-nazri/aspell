@@ -72,7 +72,7 @@ namespace aspeller {
     //
     // Add a single dictionary that has not been previously added
     //
-    void add_dict(SpellerDict *);
+    PosibErr<void> add_dict(SpellerDict *);
 
     PosibErr<const WordList *> personal_word_list  () const;
     PosibErr<const WordList *> session_word_list   () const;

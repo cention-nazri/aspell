@@ -1304,7 +1304,7 @@ void clean()
   CachePtr<Language> lang;
   find_language(*config);
   PosibErr<Language *> res = new_language(*config);
-  if (!res) {print_error(res.get_err()->mesg); exit(1);}
+  if (res.has_err()) {print_error(res.get_err()->mesg); exit(1);}
   lang.reset(res.data);
   ConvEC iconv; 
   Conv oconv, oconv2;
@@ -1364,8 +1364,23 @@ void clean()
           *s2-- = '\0';
       }
     }
+    if (*aff) {
+      char * r = aff;
+      for (const char * a = aff; *a; ++a) {
+        CheckAffixRes res = lang->affix()->check_affix(str, *a);
+        if (res == InvalidAffix) {
+          CERR.printf("Removing invalid affix '%c' from word %s.\n", *a, str);
+        } else if (res == UnapplicableAffix) {
+          CERR.printf("Removing unapplicable affix '%c' from word %s.\n", *a, str);
+        } else {
+          *r = *a;
+          ++r;
+        }
+      }
+      *r = '\0';
+    }
     for (; str < str_end; str += strlen(str) + 1) {
-      if (!*str || (!strict && !*aff && !str[1])) continue;
+      if (!*str) continue;
       PosibErrBase pe2 = check_if_valid(*lang, str);
       if (pe2.has_err()) {
         CERR.printf("Error: %s Skipping word.\n", pe2.get_err()->mesg);
@@ -1595,7 +1610,7 @@ void soundslike() {
   CachePtr<Language> lang;
   find_language(*options);
   PosibErr<Language *> res = new_language(*options);
-  if (!res) {print_error(res.get_err()->mesg); exit(1);}
+  if (res.has_err()) {print_error(res.get_err()->mesg); exit(1);}
   lang.reset(res.data);
   Conv iconv(setup_conv(options, lang));
   Conv oconv(setup_conv(lang, options));
@@ -1619,7 +1634,7 @@ void munch()
   CachePtr<Language> lang;
   find_language(*options);
   PosibErr<Language *> res = new_language(*options);
-  if (!res) {print_error(res.get_err()->mesg); exit(1);}
+  if (res.has_err()) {print_error(res.get_err()->mesg); exit(1);}
   lang.reset(res.data);
   Conv iconv(setup_conv(options, lang));
   Conv oconv(setup_conv(lang, options));
@@ -1656,7 +1671,7 @@ void expand()
   CachePtr<Language> lang;
   find_language(*options);
   PosibErr<Language *> res = new_language(*options);
-  if (!res) {print_error(res.get_err()->mesg); exit(1);}
+  if (res.has_err()) {print_error(res.get_err()->mesg); exit(1);}
   lang.reset(res.data);
   Conv iconv(setup_conv(options, lang));
   Conv oconv(setup_conv(lang, options));
@@ -1742,7 +1757,7 @@ void combine()
   CachePtr<Language> lang;
   find_language(*options);
   PosibErr<Language *> res = new_language(*options);
-  if (!res) {print_error(res.get_err()->mesg); exit(1);}
+  if (res.has_err()) {print_error(res.get_err()->mesg); exit(1);}
   lang.reset(res.data);
   Conv iconv(setup_conv(options, lang));
   Conv oconv(setup_conv(lang, options));
