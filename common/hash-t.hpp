@@ -1,3 +1,42 @@
+// Copyright (c) 2001
+// Kevin Atkinson
+//
+// Permission to use, copy, modify, distribute and sell this software
+// and its documentation for any purpose is hereby granted without fee,
+// provided that the above copyright notice appear in all copies and
+// that both that copyright notice and this permission notice appear
+// in supporting documentation.  Silicon Graphics makes no
+// representations about the suitability of this software for any
+// purpose.  It is provided "as is" without express or implied warranty.
+
+// prime list taken from SGI STL with the following copyright
+
+/*
+ * Copyright (c) 1996-1998
+ * Silicon Graphics Computer Systems, Inc.
+ *
+ * Permission to use, copy, modify, distribute and sell this software
+ * and its documentation for any purpose is hereby granted without fee,
+ * provided that the above copyright notice appear in all copies and
+ * that both that copyright notice and this permission notice appear
+ * in supporting documentation.  Silicon Graphics makes no
+ * representations about the suitability of this software for any
+ * purpose.  It is provided "as is" without express or implied warranty.
+ *
+ *
+ * Copyright (c) 1994
+ * Hewlett-Packard Company
+ *
+ * Permission to use, copy, modify, distribute and sell this software
+ * and its documentation for any purpose is hereby granted without fee,
+ * provided that the above copyright notice appear in all copies and
+ * that both that copyright notice and this permission notice appear
+ * in supporting documentation.  Hewlett-Packard Company makes no
+ * representations about the suitability of this software for any
+ * purpose.  It is provided "as is" without express or implied warranty.
+ *
+ */
+
 #ifndef autil__hash_t_hh
 #define autil__hash_t_hh
 
@@ -7,34 +46,7 @@
 #include "hash.hpp"
 #include "block_slist-t.hpp"
 
-namespace pcommon {
-  // prime list taken from SGI STL with the following copyright
-  
-  /*
-   * Copyright (c) 1996-1998
-   * Silicon Graphics Computer Systems, Inc.
-   *
-   * Permission to use, copy, modify, distribute and sell this software
-   * and its documentation for any purpose is hereby granted without fee,
-   * provided that the above copyright notice appear in all copies and
-   * that both that copyright notice and this permission notice appear
-   * in supporting documentation.  Silicon Graphics makes no
-   * representations about the suitability of this software for any
-   * purpose.  It is provided "as is" without express or implied warranty.
-   *
-   *
-   * Copyright (c) 1994
-   * Hewlett-Packard Company
-   *
-   * Permission to use, copy, modify, distribute and sell this software
-   * and its documentation for any purpose is hereby granted without fee,
-   * provided that the above copyright notice appear in all copies and
-   * that both that copyright notice and this permission notice appear
-   * in supporting documentation.  Hewlett-Packard Company makes no
-   * representations about the suitability of this software for any
-   * purpose.  It is provided "as is" without express or implied warranty.
-   *
-   */
+namespace acommon {
   
   static const unsigned int primes[] =
   {

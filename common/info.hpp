@@ -1,12 +1,18 @@
-#ifndef PSPELL_INFO__HPP
-#define PSPELL_INFO__HPP
+// This file is part of The New Aspell
+// Copyright (C) 2001 by Kevin Atkinson under the GNU LGPL license
+// version 2.0 or 2.1.  You should have received a copy of the LGPL
+// license along with this library if you did not you can find
+// it at http://www.gnu.org/.
+
+#ifndef ASPELL_INFO__HPP
+#define ASPELL_INFO__HPP
 
 #include <stdio.h> //FIXME: Convert to use FStream
 
 #include "posib_err.hpp"
 #include "type_id.hpp"
 
-namespace pcommon {
+namespace acommon {
 
   class Config;
   struct DictInfo;
@@ -134,4 +140,4 @@ namespace pcommon {
 
 }
 
-#endif /* PSPELL_INFO__HPP */
+#endif /* ASPELL_INFO__HPP */

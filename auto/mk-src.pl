@@ -1,5 +1,14 @@
 #!/usr/bin/perl
 
+#
+# mk-src.pl -- Perl program to automatically generate interface code.
+#
+# This file is part of The New Aspell
+# Copyright (C) 2001 by Kevin Atkinson under the GNU LGPL
+# license version 2.0 or 2.1.  You should have received a copy of the
+# LGPL license along with this library if you did not you can find it
+# at http://www.gnu.org/.
+
 ######################################################################
 #
 # Prologue
@@ -226,12 +235,20 @@ sub create_cc_file ( % )  {
     $body .= $info{$d->{type}}{proc}{$p{type}}->($d, \%accum);
   }
   return unless length($body) > 0;
-  my $file;
-  $file .= "/* Automatically generated file.  Do not edit directly. */\n\n";
-  my $hm = "PSPELL_". to_upper($p{name})."__".to_upper($p{ext});
+  my $file = <<'---';
+/* Automatically generated file.  Do not edit directly. */
+
+/* This file is part of The New Aspell
+ * Copyright (C) 2001 by Kevin Atkinson under the GNU LGPL
+ * license version 2.0 or 2.1.  You should have received a copy of the
+ * LGPL license along with this library if you did not you can find it
+ * at http://www.gnu.org/.                                              */
+
+---
+  my $hm = "ASPELL_". to_upper($p{name})."__".to_upper($p{ext});
   $file .= "#ifndef $hm\n#define $hm\n\n" if $p{header};
   $file .= cmap {"#include \"".to_lower($_).".hpp\"\n"} sort keys %{$accum{headers}};
-  $file .= "\nnamespace pcommon {\n\n" if $p{cxx};
+  $file .= "\nnamespace acommon {\n\n" if $p{cxx};
   $file .= cmap {"$_->{type} ".to_mixed($_->{name}).";\n"}
                 (sort {$a->{name} cmp $b->{name}} values %{$accum{types}})
                                                                     if $p{cxx};
@@ -248,7 +265,7 @@ sub create_cc_file ( % )  {
 
 create_cc_file (type => 'cc',
 		dir => 'interfaces/cc',
-		name => 'pspell',
+		name => 'aspell',
 		header => true,
 		data => $master_data);
 
@@ -351,7 +368,7 @@ INIT {
       } else {
 	$accum->{headers}->{$t->{created_in}} = true;
       }
-      $str .= "$c_type Pspell" if $mode eq 'cc';
+      $str .= "$c_type Aspell" if $mode eq 'cc';
       $str .= to_mixed($name);
     } else {
       print STDERR "Warning: Unknown Type: $name\n";
@@ -384,8 +401,8 @@ INIT {
     my ($name, $d, $p, $accum) = @_;
     $accum = {} unless defined $accum;
     $p->{use_name} = false unless exists $p->{use_name};
-    $name = "pspell $name" unless $name =~ /pspell/;
-    $name =~ s/pspell\ ?// if exists $p->{no_pspell};
+    $name = "aspell $name" unless $name =~ /aspell/;
+    $name =~ s/aspell\ ?// if exists $p->{no_aspell};
     return make_func $name, @$d, $p, %$accum;
   }
 
@@ -401,12 +418,12 @@ INIT {
       if (defined $name) {
 	$func = $name;
       } else {
-	$func = "new pspell $class";
+	$func = "new aspell $class";
       }
       splice @data, 0, 0, {type => $class} unless exists $d->{'returns alt type'};
       return make_c_func $func, @data, $p, %$accum;
     } elsif ($d->{type} eq 'destructor') {
-      $func = "delete pspell $class";
+      $func = "delete aspell $class";
       splice @data, 0, 0, ({type => 'void'}, {type => $class, name=>'ths'});
       return make_c_func $func, @data, $p, %$accum;
     } elsif ($d->{type} eq 'method') {
@@ -415,7 +432,7 @@ INIT {
       } elsif (exists $d->{'prefix'}) {
 	$func = "$d->{prefix} $name";
       } else {
-	$func = "pspell $class $name";
+	$func = "aspell $class $name";
       }
       if (exists $d->{'const'}) {
 	splice @data, 1, 0, {type => "const $class", name=>'ths'};
@@ -464,10 +481,10 @@ INIT {
 
   $info{enum}{proc}{cc} = sub {
     my ($d) = @_;
-    my $n = "Pspell".to_mixed($d->{name});
+    my $n = "Aspell".to_mixed($d->{name});
     return ("enum $n {" .
 	    join(', ',
-		 map {"Pspell".to_mixed($d->{prefix}).to_mixed($_->{type})}
+		 map {"Aspell".to_mixed($d->{prefix}).to_mixed($_->{type})}
 		 @{$d->{data}}).
 	    "};\n" .
 	    "typedef enum $n $n;\n"
@@ -477,7 +494,7 @@ INIT {
   sub make_c_object ( $ @ ) {
     my ($t, $d) = @_;
     my $struct;
-    $struct .= "Pspell";
+    $struct .= "Aspell";
     $struct .= to_mixed($d->{name});
     return (join "\n\n", grep {$_ ne ''}
 	    join ("\n",
@@ -506,7 +523,7 @@ INIT {
   $info{class}{proc}{cc} = sub {
     my ($d) = @_;
     my $class = $d->{name};
-    my $classname = "Pspell".to_mixed($class);
+    my $classname = "Aspell".to_mixed($class);
     return join("\n",
 		"typedef struct $classname $classname;",
 		'',
@@ -525,7 +542,7 @@ INIT {
       my ($level, $data) = @_;
       return unless defined $data;
       foreach my $d (@$data) {
-	$ret .= "extern const struct PspellErrorInfo * const ";
+	$ret .= "extern const struct AspellErrorInfo * const ";
 	$ret .= ' 'x$level;
 	$ret .= "perror_";
 	$ret .= to_lower($d->{type});
@@ -623,7 +640,7 @@ INIT {
     $ret .= "};\n";
     foreach my $d (@{$data->{data}}) {
       next unless $d->{type} eq 'constructor';
-      $ret .= make_c_method $data->{name}, $d, {mode=>'native',no_pspell=>false}, %$accum;
+      $ret .= make_c_method $data->{name}, $d, {mode=>'native',no_aspell=>false}, %$accum;
       $ret .= ";\n";
     }
     return $ret;
@@ -763,7 +780,7 @@ INIT {
 	  $ret .= ";\n";
 	} elsif ($d->{type} eq 'constructor') {
 	  my $name = $d->{name} ? $d->{name} : "new $data->{name}";
-	  $name =~ s/pspell\ ?//; # FIXME: Abstract this in a function
+	  $name =~ s/aspell\ ?//; # FIXME: Abstract this in a function
 	  $name = to_lower($name);
 	  shift @parms if exists $d->{'returns alt type'}; # FIXME: Abstract this in a function
 	  my $parms = '('.(join ', ', map {$_->{name}} @parms).')';

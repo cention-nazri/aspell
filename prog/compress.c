@@ -1,12 +1,27 @@
+/*
+ * Copyright (c) 2000-2001
+ * Kevin Atkinson
+ *
+ * Permission to use, copy, modify, distribute and sell this software
+ * and its documentation for any purpose is hereby granted without
+ * fee, provided that the above copyright notice appear in all copies  
+ * and that both that copyright notice and this permission notice 
+ * appear in supporting documentation.  Kevin Atkinson makes no
+ * representations about the suitability of this software for any
+ * purpose.  It is provided "as is" without express or implied
+ * warranty.
+ *
+ */
+
 #include <stdio.h>
 
 void usage () 
 {
   fputs("Compresses or uncompresses sorted word lists.\n"     , stderr);
-  fputs("For best result the locale should be set to C.\n"    , stderr);
+  fputs("For best result the locale should be set to C\n"    , stderr);
   fputs("before sorting by setting the environmental\n"       , stderr);
   fputs("variable LANG to \"C\" before sorting.\n"            , stderr);
-  fputs("Copyright 2001 by Kevin Atkinson under the LGPL.\n"  , stderr);
+  fputs("Copyright 2001 by Kevin Atkinson.\n"  , stderr);
   fputs("Usage: word-list-compress c[ompress]|d[ecompress]\n" , stderr);
 }
 

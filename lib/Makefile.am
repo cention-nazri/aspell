@@ -1,14 +1,15 @@
 
 INCLUDES = -I../interfaces/cc/ -I../common
 
-lib_LTLIBRARIES = libpspell.la
+lib_LTLIBRARIES = libaspell.la
 
-libpspell_la_SOURCES =\
+libaspell_la_SOURCES =\
   can_have_error-c.cpp  info-c.cpp               string_list-c.cpp\
-  config-c.cpp          manager-c.cpp            string_map-c.cpp\
+  config-c.cpp          speller-c.cpp            string_map-c.cpp\
   error-c.cpp           mutable_container-c.cpp  string_pair_enumeration-c.cpp\
-  find_manager.cpp      string_enumeration-c.cpp   word_list-c.cpp
+  find_speller.cpp      string_enumeration-c.cpp   word_list-c.cpp
 
-libpspell_la_LIBADD = ../common/libpspell-common.la ../modules/aspell/libpspell-aspell.la
+libaspell_la_LIBADD = ../common/libaspell-common.la \
+                      ../modules/speller/default/libaspell-speller-default.la
 
-libpspell_la_LDFLAGS = -version-info 12:0:0
+libaspell_la_LDFLAGS = -version-info 12:0:0

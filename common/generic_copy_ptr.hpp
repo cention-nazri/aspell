@@ -1,4 +1,4 @@
-// Copyright (c) 2000
+// Copyright (c) 2001
 // Kevin Atkinson
 //
 // Permission to use, copy, modify, distribute and sell this software
@@ -13,7 +13,7 @@
 #ifndef autil__generic_copy_ptr
 #define autil__generic_copy_ptr
 
-namespace pcommon {
+namespace acommon {
 
   // Parms is expected to have the following members
   //   T * Parms::clone(const T *);

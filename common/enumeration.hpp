@@ -1,4 +1,4 @@
-// Copyright (c) 2000
+// Copyright (c) 2001
 // Kevin Atkinson
 //
 // Permission to use, copy, modify, distribute and sell this software
@@ -40,7 +40,7 @@
 // If you really love iterators you can very easily wrap an enumeration 
 // in a forward iterator.  
 
-namespace pcommon {
+namespace acommon {
 
   template <typename Val>
   class VirEnumeration {

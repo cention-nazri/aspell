@@ -1,11 +1,8 @@
 
-bin_PROGRAMS = pspell
+bin_PROGRAMS = aspell0
 
 INCLUDES = -I../interfaces/cc/
 
-pspell_SOURCES = pspell.c
+aspell0_SOURCES = aspell0.c
 
-pspell_LDADD = ../lib/libpspell.la
-
-
-
+aspell0_LDADD = ../lib/libaspell.la

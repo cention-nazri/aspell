@@ -1,3 +1,9 @@
+// This file is part of The New Aspell
+// Copyright (C) 2001 by Kevin Atkinson under the GNU LGPL license
+// version 2.0 or 2.1.  You should have received a copy of the LGPL
+// license along with this library if you did not you can find
+// it at http://www.gnu.org/.
+
 #include <stdio.h>
 #include <assert.h>
 #include <stdlib.h>
@@ -8,7 +14,7 @@
 #include "getdata.hpp"
 #include "config.hpp"
 
-namespace pcommon {
+namespace acommon {
 
   typedef unsigned int   Uni32;
   typedef unsigned short Uni16;
@@ -221,7 +227,7 @@ namespace pcommon {
     error.reset_error();
     to.reset();
     from.reset();
-    const char * temp_str = config.retrieve("pspell-data-dir");
+    const char * temp_str = config.retrieve("aspell-data-dir");
     if (temp_str == 0)
       temp_str = config.retrieve("data-dir");
     assert(temp_str != 0);
@@ -665,10 +671,10 @@ namespace pcommon {
 
   //////////////////////////////////////////////////////////////////////
   //
-  // new_pspell_convert
+  // new_aspell_convert
   //
 
-  CanHaveError * new_pspell_convert(Config & c,
+  CanHaveError * new_aspell_convert(Config & c,
 					  const char * in, 
 					  const char * out) 
   {

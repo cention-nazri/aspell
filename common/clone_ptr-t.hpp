@@ -1,4 +1,4 @@
-// Copyright (c) 2000
+// Copyright (c) 2001
 // Kevin Atkinson
 //
 // Permission to use, copy, modify, distribute and sell this software
@@ -17,7 +17,7 @@
 #include <typeinfo>
 #include "generic_copy_ptr-t.hpp"
 
-namespace pcommon {
+namespace acommon {
 
   template <typename T>
   inline T * ClonePtr<T>::Parms::clone(const T * ptr) const {

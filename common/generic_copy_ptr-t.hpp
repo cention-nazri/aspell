@@ -1,4 +1,4 @@
-// Copyright (c) 2000
+// Copyright (c) 2001
 // Kevin Atkinson
 //
 // Permission to use, copy, modify, distribute and sell this software
@@ -15,7 +15,7 @@
 
 #include "generic_copy_ptr.hpp"
 
-namespace pcommon {
+namespace acommon {
 
   template <typename T, typename Parms> 
   GenericCopyPtr<T,Parms>::GenericCopyPtr(const GenericCopyPtr & other) 

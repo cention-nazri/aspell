@@ -1,19 +1,13 @@
-// Copyright (c) 2000
-// Kevin Atkinson
-//
-// Permission to use, copy, modify, distribute and sell this software
-// and its documentation for any purpose is hereby granted without
-// fee, provided that the above copyright notice appear in all copies
-// and that both that copyright notice and this permission notice
-// appear in supporting documentation. Kevin Atkinson makes no
-// representations about the suitability of this software for any
-// purpose.  It is provided "as is" without express or implied
-// warranty.
+// This file is part of The New Aspell
+// Copyright (C) 2001 by Kevin Atkinson under the GNU LGPL license
+// version 2.0 or 2.1.  You should have received a copy of the LGPL
+// license along with this library if you did not you can find
+// it at http://www.gnu.org/.
 
 #ifndef stack_ptr
 #define stack_ptr
 
-namespace pcommon {
+namespace acommon {
   
   template <typename T>
   class StackPtr {

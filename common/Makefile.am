@@ -20,9 +20,9 @@ CLEANFILES = dirs.h
 
 
 
-lib_LTLIBRARIES = libpspell-common.la
+lib_LTLIBRARIES = libaspell-common.la
 
-libpspell_common_la_SOURCES = \
+libaspell_common_la_SOURCES = \
   string.cpp getdata.cpp itemize.cpp file_util.cpp \
   string_buffer.cpp \
   string_map.cpp string_list.cpp \
@@ -32,4 +32,5 @@ libpspell_common_la_SOURCES = \
   can_have_error.cpp
 #  convert.cpp
 
-libpspell_common_la_LDFLAGS = -release 0.15.0
+libaspell_common_la_LDFLAGS = -release 0.15.0
+

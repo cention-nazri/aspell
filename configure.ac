@@ -1,22 +1,22 @@
 
 AC_INIT
 AM_CONFIG_HEADER(common/settings.h)
-AM_INIT_AUTOMAKE(pspell, 0.15)
+AM_INIT_AUTOMAKE(aspell, 0.50)
 
 AM_MAINTAINER_MODE
 
 AC_ARG_ENABLE(docdir, 
 [  --enable-docdir=DIR      documentation files in DIR [PREFIX/doc/aspell] ], 
-pkgdocdir=$enable_docdir, pkgdocdir=\${prefix}/share/doc/pspell )
+pkgdocdir=$enable_docdir, pkgdocdir=\${prefix}/share/doc/aspell )
 AC_SUBST(pkgdocdir)
 
 AC_ARG_ENABLE(pkgdatadir, 
-[  --enable-pkgdatadir=DIR  device independent data files [DATADIR/pspell] ], 
-pkgdatadir=$enable_pkgdatadir, pkgdatadir=\${datadir}/pspell )
+[  --enable-pkgdatadir=DIR  device independent data files [DATADIR/aspell] ], 
+pkgdatadir=$enable_pkgdatadir, pkgdatadir=\${datadir}/aspell )
 AC_SUBST(pkgdatadir)
 
 AC_ARG_ENABLE(pkglibdir, 
-[  --enable-pkglibdir=DIR   device dependent data files [LIBDIR/pspell] ], 
+[  --enable-pkglibdir=DIR   device dependent data files [LIBDIR/aspell] ], 
 pkglibdir=$enable_dictdir, pkglibdir=${libdir}/aspell )
 AC_SUBST(pkglibdir)
 
@@ -116,6 +116,7 @@ AC_TRY_COMPILE(
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 AC_CONFIG_FILES([Makefile common/Makefile lib/Makefile
-                 modules/Makefile modules/aspell/Makefile
+                 modules/Makefile modules/speller/Makefile
+		 modules/speller/default/Makefile
                  examples/Makefile prog/Makefile])
 AC_OUTPUT

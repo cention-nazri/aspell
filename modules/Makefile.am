@@ -1,2 +1,2 @@
 
-SUBDIRS = aspell
+SUBDIRS = speller

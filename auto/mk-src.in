@@ -1,3 +1,13 @@
+#
+# mk-src.in -- Input file for the Perl program to automatically 
+#              generate interface code.
+#
+# This file is part of The New Aspell
+# Copyright (C) 2001 by Kevin Atkinson under the GNU LGPL
+# license version 2.0 or 2.1.  You should have received a copy of the
+# LGPL license along with this library if you did not you can find it
+# at http://www.gnu.org/.
+
 group: type id
 {
 /
@@ -204,7 +214,7 @@ class: config
 	method: set extra
 		desc => sets extra keys which this config class should accept
 			begin and end are expected to point to the begging 
-			and end of an array of Pspell Key Info
+			and end of an array of Aspell Key Info
 		/
 		void
 		const key info: begin
@@ -430,18 +440,18 @@ errors:
 			conflicting flags
 
 }
-group: manager
+group: speller
 # FIXME: Somehow get compatibility macro back in
 {
 no native
 /
-class: manager
+class: speller
 	c impl headers => error
 	/
-	constructor: new pspell manager
+	constructor: new aspell speller
 		returns alt type
 		c impl =>
-			PosibErr<Manager *> ret = new_manager(config);
+			PosibErr<Speller *> ret = new_speller(config);
 			if (ret.has_err()) \{
 			  return new CanHaveError(ret.release_err());
 			\} else \{
@@ -451,8 +461,8 @@ class: manager
 		can have error
 		config: config
 
-	constructor: to pspell manager
-		c impl => return static_cast<Manager *>(obj);
+	constructor: to aspell speller
+		c impl => return static_cast<Speller *>(obj);
 		/
 		can have error: obj
 
@@ -610,7 +620,7 @@ struct: dict info
 
 class: module info list
 	/
-	constructor: get pspell module info list
+	constructor: get aspell module info list
 		/
 		config: config
 
@@ -618,7 +628,7 @@ class: module info list
 
 class: dict info list
 	/
-	constructor: get pspell dict info list
+	constructor: get aspell dict info list
 		/
 		config: config
 

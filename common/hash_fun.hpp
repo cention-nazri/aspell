@@ -1,4 +1,4 @@
-// Copyright (c) 2000
+// Copyright (c) 2001
 // Kevin Atkinson
 //
 // Permission to use, copy, modify, distribute and sell this software
@@ -13,7 +13,7 @@
 #ifndef acommon_hash_fun__hpp
 #define acommon_hash_fun__hpp
 
-namespace pcommon {
+namespace acommon {
   
   template <typename K> struct hash {};
 

@@ -1,3 +1,9 @@
+// This file is part of The New Aspell
+// Copyright (C) 2001 by Kevin Atkinson under the GNU LGPL license
+// version 2.0 or 2.1.  You should have received a copy of the LGPL
+// license along with this library if you did not you can find
+// it at http://www.gnu.org/.
+
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
@@ -19,7 +25,7 @@
 
 #define DEFAULT_LANG "en_US"
 
-namespace pcommon {
+namespace acommon {
 
   static const Module a_module = Module();
   
@@ -255,10 +261,10 @@ namespace pcommon {
     PosibErr<const KeyInfo *> ret;
     const KeyInfo * i;
   
-    i = pcommon::find(key, kmi.main_begin, kmi.main_end);
+    i = acommon::find(key, kmi.main_begin, kmi.main_end);
     if (i != kmi.main_end) return ret = i;
   
-    i = pcommon::find(key, kmi.extra_begin, kmi.extra_end);
+    i = acommon::find(key, kmi.extra_begin, kmi.extra_end);
     if (i != kmi.extra_end) return ret = i;
   
     const char * h = strchr(key, '-');
@@ -267,13 +273,13 @@ namespace pcommon {
       return ret.prim_err(unknown_key, key);
 
     String k(key,h-key);
-    const Module * j = pcommon::find(k, 
+    const Module * j = acommon::find(k, 
 				     kmi.modules_begin, 
 				     kmi.modules_end);
     if (j == kmi.modules_end)
       return ret.prim_err(unknown_key, key);
   
-    i = pcommon::find(key, j->begin, j->end);
+    i = acommon::find(key, j->begin, j->end);
     if (i != j->end) return ret = i;
   
     return ret.prim_err(unknown_key, key);
@@ -832,7 +838,7 @@ namespace pcommon {
 	return pe;
     }
 
-    const char * env = getenv("PSPELL_CONF");
+    const char * env = getenv("ASPELL_CONF");
     if (env != 0)
       RET_ON_ERR(read_in_string(env));
 
@@ -901,14 +907,14 @@ namespace pcommon {
 
   };
 
-  const KeyInfo * pspell_config_impl_keys_begin = config_keys;
-  const KeyInfo * pspell_config_impl_keys_end   
+  const KeyInfo * aspell_config_impl_keys_begin = config_keys;
+  const KeyInfo * aspell_config_impl_keys_end   
   = config_keys + sizeof(config_keys)/sizeof(KeyInfo);
 
   Config * new_config() {
-    return new pcommon::Config("pspell",
-			       pspell_config_impl_keys_begin,
-			       pspell_config_impl_keys_end);
+    return new acommon::Config("aspell",
+			       aspell_config_impl_keys_begin,
+			       aspell_config_impl_keys_end);
   }
 
 }
