@@ -37,21 +37,21 @@ namespace acommon {
     int refcount;
     ErrPtr(const Error * e) : err(e), handled(false), refcount(1) {}
   };
+
+  template <typename Ret> class PosibErr;
   
   class PosibErrBase {
   public:
     PosibErrBase() 
-      : err_(0), has_data_(false) {}
+      : err_(0) {}
     // If the derived type has the potential for data (has_data_ is true)
     // then its copy constructor and assigment operator calls
     // copy and destroy directly overriding the comptaibly check
     PosibErrBase(const PosibErrBase & other) 
-      : has_data_(false)
     {
       copy(other);
     }
     PosibErrBase& operator= (const PosibErrBase & other) {
-      posib_handle_incompat_assign(other);
       copy(other);
       return *this;
     }
@@ -106,15 +106,12 @@ namespace acommon {
     
     PosibErrBase & set(const ErrorInfo *, 
 		       ParmString, ParmString, ParmString, ParmString);
-    
+
     ~PosibErrBase() {
       destroy();
     }
 
   protected:
-
-    PosibErrBase(bool hd) 
-      : err_(0), has_data_(hd) {}
 
     void posib_handle_err() const {
       if (err_ && !err_->handled)
@@ -136,39 +133,31 @@ namespace acommon {
 	del();
       }
     }
-    void posib_handle_incompat_assign(const PosibErrBase & other) {
-      if (has_data_ && other.has_data_ && !other.err_)
-	handle_incompat_assign();
-    }
-    
+
   private:
 
     void handle_err() const;
-    void handle_incompat_assign() const;
     Error * release();
     void del();
     ErrPtr * err_;
-    bool has_data_; // has the *potential* of having data
-
   };
 
   template <typename Ret>
   class PosibErr : public PosibErrBase
   {
   public:
-    PosibErr()
-      : PosibErrBase(true), data() {}
+    PosibErr() {}
+
     PosibErr(const PosibErrBase & other) 
-      : PosibErrBase(true), data()
-    {
-      posib_handle_incompat_assign(other);
-      PosibErrBase::copy(other);
-    }
-    PosibErr(const PosibErr & other)
-      : PosibErrBase(true), data(other.data) 
-    {
-      PosibErrBase::copy(other);
-    }
+      : PosibErrBase(other) {}
+
+    template <typename T>
+    PosibErr(const PosibErr<T> & other)
+      : PosibErrBase(other), data(other.data) {}
+
+    PosibErr(const PosibErr<void> & other)
+      : PosibErrBase(other) {}
+
     PosibErr& operator= (const PosibErr & other) {
       data = other.data;
       PosibErrBase::destroy();
@@ -177,7 +166,7 @@ namespace acommon {
     }
     PosibErr(const Ret & d) : data(d) {}
     operator const Ret & () const {posib_handle_err(); return data;}
-    
+
     Ret data;
   };
 
@@ -187,6 +176,7 @@ namespace acommon {
   public:
     PosibErr(const PosibErrBase & other) 
       : PosibErrBase(other) {}
+
     PosibErr() {}
   };
 
@@ -194,9 +184,9 @@ namespace acommon {
 //
 //
 #define RET_ON_ERR_SET(command, type, var) \
-  type var;do{PosibErr<type> pe=command;if(pe.has_err())return pe;var=pe.data;} while(false)
+  type var;do{PosibErr<type> pe=command;if(pe.has_err())return PosibErrBase(pe);var=pe.data;} while(false)
 #define RET_ON_ERR(command) \
-  do{PosibErrBase pe = command;if(pe.has_err())return pe;}while(false)
+  do{PosibErrBase pe = command;if(pe.has_err())return PosibErrBase(pe);}while(false)
 
   
   //

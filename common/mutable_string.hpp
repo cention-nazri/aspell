@@ -16,6 +16,7 @@ namespace acommon {
   class MutableString {
   public:
     MutableString() : str_(0), size_(0) {}
+    MutableString(char * str) : str_(str), size_(strlen(str)) {}
     MutableString(char * str, unsigned int sz) : str_(str), size_(sz) {}
 
     bool empty() const {

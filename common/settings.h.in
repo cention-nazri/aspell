@@ -1,10 +1,25 @@
 /* common/settings.h.in.  Generated from configure.ac by autoheader.  */
 
+/* Defined if no special Workarounds are needed for Curses headers */
+#undef CURSES_INCLUDE_STANDARD
+
+/* Defined if special Wordaround I is need for Curses headers */
+#undef CURSES_INCLUDE_WORKAROUND_1
+
+/* Defined if curses like POSIX Functions should be used */
+#undef CURSES_ONLY
+
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #undef HAVE_DLFCN_H
 
+/* Defined if msdos getch is supported */
+#undef HAVE_GETCH
+
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
+
+/* Defined if the curses library is available */
+#undef HAVE_LIBCURSES
 
 /* Define to 1 if you have the <memory.h> header file. */
 #undef HAVE_MEMORY_H
@@ -50,6 +65,9 @@
 
 /* Define to the version of this package. */
 #undef PACKAGE_VERSION
+
+/* Defined if Posix Termios is Supported */
+#undef POSIX_TERMIOS
 
 /* Defined if STL rel_ops polute the global namespace */
 #undef REL_OPS_POLLUTION

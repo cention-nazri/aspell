@@ -21,6 +21,7 @@ namespace acommon {
   struct Token {
     unsigned int offset;
     unsigned int len;
+    operator bool () const {return len != 0;}
   };
   
   
@@ -36,13 +37,17 @@ namespace acommon {
     
     Config * config() {return filter_->config();}
     Filter * filter() {return filter_;}
-    
+
+    void set_status_fun(void (*)(void *, Token, int), void *); 
+   
     DocumentChecker();
     ~DocumentChecker();
     
   private:
     CopyPtr<Filter> filter_;
     CopyPtr<Tokenizer> tokenizer_;
+    void (* status_fun_)(void *, Token, int);
+    void * status_fun_data_;
     Speller * speller_;
     CharVector proc_str_;
   };

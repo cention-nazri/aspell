@@ -14,9 +14,9 @@
 
 namespace acommon {
 
-  DocumentChecker::DocumentChecker() {}
+  DocumentChecker::DocumentChecker() 
+    : status_fun_(0), speller_(0) {}
   DocumentChecker::~DocumentChecker() {}
-
 
   PosibErr<void> DocumentChecker
   ::setup(Tokenizer * tokenizer, Speller * speller, 
@@ -27,6 +27,14 @@ namespace acommon {
     speller_ = speller;
     return no_err;
   }
+
+  void DocumentChecker::set_status_fun(void (* sf)(void *, Token, int), 
+				       void * d)
+  {
+    status_fun_ = sf;
+    status_fun_data_ = d;
+  }
+
 
   void DocumentChecker::reset()
   {
@@ -50,8 +58,13 @@ namespace acommon {
   Token DocumentChecker::next_misspelling()
   {
     bool correct;
+    Token tok;
     do {
-      if (!tokenizer_->advance()) break;
+      if (!tokenizer_->advance()) {
+	tok.offset = proc_str_.size();
+	tok.len = 0;
+	return tok;
+      }
       //COUT << ":: \"";
       //COUT.write(tokenizer_->begin, tokenizer_->end - tokenizer_->begin);
       //COUT << ":" << tokenizer_->word.data() 
@@ -59,10 +72,11 @@ namespace acommon {
       correct = speller_->check(MutableString(tokenizer_->word.data(),
 					      tokenizer_->word.size() - 1));
       //COUT << "\" is " << (correct ? "correct" : "incorrect") << "\n";
+      tok.len  = tokenizer_->end - tokenizer_->begin;
+      tok.offset = tokenizer_->begin - proc_str_.data();
+      if (status_fun_)
+	(*status_fun_)(status_fun_data_, tok, correct);
     } while (correct);
-    Token tok;
-    tok.len  = tokenizer_->end - tokenizer_->begin;
-    tok.offset = tok.len > 0 ? tokenizer_->begin - proc_str_.data() : proc_str_.size();
     return tok;
   }
 

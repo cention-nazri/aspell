@@ -84,6 +84,145 @@ AC_TRY_RUN(
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                                                                 #
+#                     Terminal function tests                     #
+#                                                                 #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+AC_SUBST(CURSES_LIB)
+AC_SUBST(CURSES_INCLUDE)
+
+if test "$enable_curses" != "no"
+then
+  use_curses=t
+  case "$enable_curses" in
+    yes | ""                     )                             ;;
+    /* | *lib* | *.a | -l* | -L* ) CURSES_LIB="$enable_curses" ;;
+    *                            ) CURSES_LIB=-l$enable_curses ;;
+  esac
+  case "$enable_curses_include" in
+    yes | no | "")                                         ;;
+    -I*          ) CURSES_INCLUDE="$enable_curses_include" ;;
+    *            ) CURSES_INCLUDE=-I$enable_curses_include ;;
+  esac
+fi
+
+if test "$use_curses"
+then
+ 
+  if test -z "$CURSES_LIB"
+  then
+
+    AC_CHECK_LIB(curses, initscr,
+      [CURSES_LIB=-lcurses],
+      [
+
+    dnl else if
+    AC_CHECK_LIB(ncurses, initscr,
+      [CURSES_LIB=-lncurses])
+    ] )
+    
+  fi
+
+  if test -n "$CURSES_LIB"
+  then
+     AC_MSG_CHECKING(if standard curses include sequence will work)
+     ORIG_LIBS="$LIBS"
+     ORIG_CPPFLAGS="$CPPFLAGS"
+     CPPFLAGS="$CURSES_INCLUDE $CPPFLAGS"
+     LIBS="$CURSES_LIB $LIBS"
+     AC_TRY_LINK(
+       [#include <termios.h>
+	#include <unistd.h>
+	#include <curses.h>
+	#include <term.h>],
+       [tigetstr(const_cast<char *>("cup"));],
+       [AC_MSG_RESULT(yes)
+	AC_DEFINE(HAVE_LIBCURSES, 1, 
+                  [Defined if the curses library is available])
+	posix_termios=t
+	AC_DEFINE(CURSES_INCLUDE_STANDARD, 1, 
+                  [Defined if no special Workarounds are needed for Curses headers])],
+       [AC_MSG_RESULT(no)
+
+     dnl else if
+     AC_MSG_CHECKING(if curses workaround I will work)
+     AC_TRY_LINK(
+       [#include <termios.h>
+	#include <unistd.h>
+	#include <curses.h>
+	extern "C" {char * tigetstr(char * capname);}],
+       [tigetstr(const_cast<char *>("cup"));],
+       [AC_MSG_RESULT(yes)
+	AC_DEFINE(HAVE_LIBCURSES, 1, [])
+        posix_termios=t
+	AC_DEFINE(CURSES_INCLUDE_WORKAROUND_1, 1, 
+                  [Defined if special Wordaround I is need for Curses headers])],
+       [AC_MSG_RESULT(no)
+
+     dnl else if
+     AC_MSG_CHECKING(if curses without Unix stuff will work)
+     AC_TRY_LINK(
+       [#include <curses.h>],
+       [initscr();],
+       [AC_MSG_RESULT(yes)
+	AC_DEFINE(HAVE_LIBCURSES, 1, [])
+	AC_DEFINE(CURSES_ONLY, 1, 
+                  [Defined if curses like POSIX Functions should be used])
+        curses_only=t],
+       [AC_MSG_RESULT(no)
+        
+
+     dnl else if
+     use_curses=false
+     CURSES_LIBS=""
+     CURSES_INCLUDE=""
+
+     ]) ]) ])
+
+     CPPFLAGS="$ORIG_CPPFLAGS"
+     LIBS="$ORIG_LIBS"
+  fi
+fi
+
+if test -z "$posix_termios" -a -z "$curses_only"
+then
+  AC_MSG_CHECKING(if posix termios is supported)
+  AC_TRY_LINK(
+    [#include <termios.h>
+     #include <unistd.h>
+     #include <stdlib.h>],
+    [isatty (STDIN_FILENO);
+     atexit(0);
+     termios attrib;
+     tcgetattr (STDIN_FILENO, &attrib);
+     tcsetattr (STDIN_FILENO, TCSAFLUSH, &attrib);],
+    [AC_MSG_RESULT(yes)
+     posix_termios=t],
+    [AC_MSG_RESULT(no)]
+  )
+fi
+
+if test -z "$posix_termios" -a -z "$use_curses"
+then
+  dnl else if
+  AC_MSG_CHECKING(if getch supported)
+  AC_TRY_LINK(
+    [extern "C" {int getch();}],
+    [char c = getch();],
+    [AC_MSG_RESULT(yes)
+     AC_DEFINE(HAVE_GETCH, 1, [Defined if msdos getch is supported])
+    ],
+    [AC_MSG_RESULT(no)]
+  )
+fi
+
+if test "$posix_termios"
+then
+  AC_DEFINE(POSIX_TERMIOS, 1, [Defined if Posix Termios is Supported])
+fi
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                                                                 #
 #                    Compiler Quirks Tests                        #
 #                                                                 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #

@@ -215,7 +215,7 @@ namespace acommon {
       def += ',';
       def += data_->lookup(key);
     }
-    itemize(def, *m);
+    RET_ON_ERR(itemize(def, *m));
     return no_err;
   }
 
@@ -388,9 +388,9 @@ namespace acommon {
 
 #define notify_all(ki, value, fun)        \
   do {                                    \
-    Notifier * * i = notifier_list; \
+    Notifier * * i = notifier_list;       \
     while (*i != 0) {                     \
-      (*i)->fun(ki,value);                \
+      RET_ON_ERR((*i)->fun(ki,value));    \
       ++i;                                \
     }                                     \
   } while (false)
@@ -402,27 +402,28 @@ namespace acommon {
     Notifier * * notifier_list;
   public:
     NotifyListBlockChange(const KeyInfo * ki, Notifier * * n);
-    bool add(ParmString);
-    bool remove(ParmString);
-    void clear();
+    PosibErr<bool> add(ParmString);
+    PosibErr<bool> remove(ParmString);
+    PosibErr<void> clear();
   };
 
   NotifyListBlockChange::
   NotifyListBlockChange(const KeyInfo * ki, Notifier * * n)
     : key_info(ki), notifier_list(n) {}
 
-  bool NotifyListBlockChange::add(ParmString v) {
+  PosibErr<bool> NotifyListBlockChange::add(ParmString v) {
     notify_all(key_info, v, item_added);
     return true;
   }
 
-  bool NotifyListBlockChange::remove(ParmString v) {
+  PosibErr<bool> NotifyListBlockChange::remove(ParmString v) {
     notify_all(key_info, v, item_removed);
     return true;
   }
 
-  void NotifyListBlockChange::clear() {
+  PosibErr<void> NotifyListBlockChange::clear() {
     notify_all(key_info, 0, all_removed);
+    return no_err;
   }
 
   PosibErr<void> Config::replace(ParmString k, ParmString value) {
@@ -595,7 +596,7 @@ namespace acommon {
     case KeyInfoList:
     
       NotifyListBlockChange n(ki, notifier_list);
-      retrieve_list(key, &n);
+      RET_ON_ERR(retrieve_list(key, &n));
       break;
     }
 
@@ -677,16 +678,17 @@ namespace acommon {
   public:
     ListDump(OStream & o, ParmString n) 
       : out(o), name(n) {}
-    bool add(ParmString d) {
+    PosibErr<bool> add(ParmString d) {
       out << "add-" << name << ' ' << d << '\n';
       return true;
     }
-    bool remove(ParmString d) {
+    PosibErr<bool> remove(ParmString d) {
       out << "rem-" << name << ' ' << d << '\n';
       return true;
     }
-    void clear() {
+    PosibErr<void> clear() {
       out << "rem-all-" << name << '\n';
+      return no_err;
     }
   };
 
@@ -834,6 +836,8 @@ namespace acommon {
 #  define REPL     ".aspell.<actual-lang>.prepl"
 #endif
 
+  char mode_string[128] = "filter mode";
+
   static const KeyInfo config_keys[] = {
     {"actual-dict-dir", KeyInfoString, "<dict-dir^master>", 0}
     , {"actual-lang",     KeyInfoString, "<lang>", 0}
@@ -844,6 +848,7 @@ namespace acommon {
     , {"dict-dir", KeyInfoString, DICT_DIR,        "location of the main word list"      }
     , {"encoding",   KeyInfoString, "iso8859-1", "encoding to expect data to be in"}
     , {"filter",   KeyInfoList  , "url",             "add or removes a filter"}
+    , {"mode",     KeyInfoString, "url",             mode_string }
     , {"extra-dicts", KeyInfoList, "", "extra dictionaries to use"}
     , {"home-dir", KeyInfoString, HOME_DIR,   "location for personal files" }
     , {"ignore",   KeyInfoInt   , "1",            "ignore words <= n chars"             }

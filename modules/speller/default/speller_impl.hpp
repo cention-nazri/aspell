@@ -81,6 +81,8 @@ namespace aspeller {
     //
     // Language methods
     //
+    
+    char * to_lower(char *);
 
     const char * lang_name() const;
 
@@ -109,6 +111,8 @@ namespace aspeller {
       strncpy(&*w.begin(), word, w.size());
       return check(MutableString(&w.front(), w.size() - 1));
     }
+
+    PosibErr<bool> check(const char * word) {return check(ParmString(word));}
 
     BasicWordInfo check_simple(ParmString);
     

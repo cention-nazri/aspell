@@ -75,24 +75,25 @@ namespace acommon {
   }
 
 
-  void itemize (ParmString s, MutableContainer & d) {
+  PosibErr<void> itemize (ParmString s, MutableContainer & d) {
     ItemizeTokenizer els(s);
     ItemizeItem li;
     while (li = els.next(), li.name != 0) {
       switch (li.action) {
       case '+':
-	d.add(li.name);
+	RET_ON_ERR(d.add(li.name));
 	break;
       case '-':
-	d.remove(li.name);
+	RET_ON_ERR(d.remove(li.name));
 	break;
       case '!':
-	d.clear();
+	RET_ON_ERR(d.clear());
 	break;
       default:
 	abort();
       }
     }
+    return no_err;
   }
 
 }

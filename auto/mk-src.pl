@@ -35,7 +35,7 @@ sub need_options ( $ );
 sub valid_option ( $ $ );
 sub valid_group ( $ $ );
 sub store_group ( $ $ );
-sub copy_methods ( $ $ );
+sub copy_methods ( $ $ $ );
 sub create_file ( $ $ );
 
 sub cmap ( & @ ) {
@@ -209,7 +209,7 @@ sub prep ( $ $ $ ) {
   while ($i != @$lst) {
     my $d = $lst->[$i];
     if (exists $methods{$d->{type}}) {
-      splice @$lst, $i, 1, copy_methods($d, $stack->{class}{name});
+      splice @$lst, $i, 1, copy_methods($d, $data, $stack->{class}{name});
     } else {
       prep $d, $group, $stack;
       ++$i;
@@ -715,7 +715,7 @@ INIT {
   $info{class}{proc}{impl} = sub {
     my ($data, $accum) = @_;
     my $ret;
-    foreach (split /\s*,\s*/, $data->{'c impl headers'}) {
+    foreach (grep {$_ ne ''} split /\s*,\s*/, $data->{'c impl headers'}) {
       $accum->{headers}{$_} = true;
     }
     foreach my $d (@{$data->{data}}) {
@@ -773,7 +773,7 @@ INIT {
 	    $exp = "temp_str_0.data()";
 	  }
 	  $ret .= "  ";
-	  $ret .= "return " unless $ret_type eq 'void';
+	  $ret .= "return " unless $ret_type->{type} eq 'void';
 	  $ret .= $exp;
 	  $ret .= ";\n";
 	} elsif ($d->{type} eq 'constructor') {
@@ -916,14 +916,17 @@ sub store_group ( $ $ ) {
 
 sub copy_n_sub ( $ $ );
 
-sub copy_methods ( $ $ ) {
-  my ($d, $class_name) = @_;
+sub copy_methods ( $ $ $ ) {
+  my ($d, $data, $class_name) = @_;
   my $ms = $methods{$d->{type}};
   if (not defined $d->{name}) {
     $d->{name} = $class_name;
     $d->{name} =~ s/ [^ ]+$// if $ms->{strip} == 1;
   }
   my @lst;
+  if (defined $ms->{'c impl headers'}) {
+    $data->{'c impl headers'} .= ",$ms->{'c impl headers'}";
+  }
   foreach my $m (@{$ms->{data}}) {
     push @lst, copy_n_sub($m, $d->{name});
     $lst[-1]{prefix} = $m->{prefix} if exists $d->{prefix};

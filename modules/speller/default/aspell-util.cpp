@@ -1,5 +1,15 @@
-// Aspell test program
-// Copyright 2000 by Kevin Atkinson under the terms of the LGPL
+// This file is part of The New Aspell
+// Copyright (C) 2001-2002 by Kevin Atkinson under the GNU LGPL
+// license version 2.0 or 2.1.  You should have received a copy of the
+// LGPL license along with this library if you did not you can find it
+// at http://www.gnu.org/.
+
+//
+// NOTE: There is a lot of duplicate code between proj/aspell.cpp and
+//       modules/speller/default/aspell-util.cpp.  So when fixing bugs
+//       check if the same bug is present in the other file and fix 
+//       them both at the same time.
+// 
 
 #include <deque>
 
@@ -144,7 +154,7 @@ int main (int argc, const char *argv[])
 	const char * c = argv[i] + 2;
 	while(*c != '=' && *c != '\0') ++c;
 	o = find_option(argv[i] + 2, c);
-	if (o == possible_options_end) /* try FIXME */ {
+	if (o == possible_options_end) {
 	  option_name.assign(argv[i] + 2, 0, c - argv[i] - 2);
 	  const char * base_name = Config::base_name(option_name.c_str());
 	  PosibErr<const KeyInfo *> ki = options->keyinfo(base_name);
@@ -153,7 +163,7 @@ int main (int argc, const char *argv[])
             other_opt.num_arg = ki.data->type == KeyInfoBool ? 0 : 1;
             o = &other_opt;
           }
-	} /* catch (UnknownKey) {} */
+	} 
 	if (*c == '=') ++c;
 	parm = c;
       } else {
@@ -204,7 +214,7 @@ int main (int argc, const char *argv[])
 	  args.push_back(parm);
       } else {
 	if (o->name[0] != '\0') {
-	  options->replace(o->name, parm);
+	  EXIT_ON_ERR(options->replace(o->name, parm));
 	}
       }
     } else {

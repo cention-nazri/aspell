@@ -8,11 +8,12 @@
 #define ITEMIZE__HPP
 
 #include "parm_string.hpp"
+#include "posib_err.hpp"
 
 namespace acommon {
 
   class MutableContainer;
-  void itemize(ParmString, MutableContainer &);
+  PosibErr<void> itemize(ParmString, MutableContainer &);
 
 }
 

@@ -40,12 +40,12 @@ namespace acommon {
 
   class Notifier {
   public:
-    virtual void item_updated(const KeyInfo *, bool)         {}
-    virtual void item_updated(const KeyInfo *, int)          {}
-    virtual void item_updated(const KeyInfo *, ParmString) {} 
-    virtual void item_added  (const KeyInfo *, ParmString) {}
-    virtual void item_removed(const KeyInfo *, ParmString) {}
-    virtual void all_removed (const KeyInfo *, ParmString) {}
+    virtual PosibErr<void> item_updated(const KeyInfo *, bool)         {return no_err;}
+    virtual PosibErr<void> item_updated(const KeyInfo *, int)          {return no_err;}
+    virtual PosibErr<void> item_updated(const KeyInfo *, ParmString) {return no_err;}
+    virtual PosibErr<void> item_added  (const KeyInfo *, ParmString) {return no_err;}
+    virtual PosibErr<void> item_removed(const KeyInfo *, ParmString) {return no_err;}
+    virtual PosibErr<void> all_removed (const KeyInfo *, ParmString) {return no_err;}
     // the second paramater for all_removed should not be used
   };
 

@@ -103,6 +103,7 @@ methods: can have error
 		const error
 
 methods: mutable container
+	c impl headers => posib err
 	/
 	public: mutable container
 	method: add

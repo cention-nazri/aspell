@@ -19,6 +19,14 @@ namespace acommon
     void write (ParmString str) {append(str, str.size());}
     void write (const char * str, unsigned int size) {append(str, size);}
 
+    //FIXME: Make this more efficent by rewriting the implemenation
+    //       to work with more memory rather than using vector<char>
+    template <typename Itr>
+    void replace(iterator start, iterator stop, Itr rstart, Itr rstop) {
+      iterator i = erase(start,stop);
+      insert(i, rstart, rstop);
+    }
+
     CharVector & operator << (char c) {
       append(c);
       return *this;

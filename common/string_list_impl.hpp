@@ -73,9 +73,9 @@ namespace acommon {
     StringList * clone() const;
     void assign(const StringList *);
 
-    bool add(ParmString);
-    bool remove(ParmString);
-    void clear();
+    PosibErr<bool> add(ParmString);
+    PosibErr<bool> remove(ParmString);
+    PosibErr<void> clear();
 
     StringEnumeration * elements() const;
     StringListEnumeration elements_obj() const 

@@ -21,16 +21,17 @@ namespace acommon {
     class QuoteChars : public MutableContainer {
       bool data[256];
     public:
-      bool add(ParmString s) {
+      PosibErr<bool> add(ParmString s) {
         data[static_cast<unsigned char>(s[0])] = true;
         return true;
       }
-      bool remove(ParmString s) {
+      PosibErr<bool> remove(ParmString s) {
         data[static_cast<unsigned char>(s[0])] = false;
         return true;
       }
-      void clear() {
+      PosibErr<void> clear() {
         memset(data, 0, sizeof(bool)*256);
+	return no_err;
       }
       bool have(char c) {
         return data[static_cast<unsigned char>(c)];

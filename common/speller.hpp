@@ -54,6 +54,9 @@ namespace acommon {
     Config * config() {return config_;}
     const Config * config() const {return config_;}
 
+    // utility functions
+
+    virtual char * to_lower(char *) = 0;
 
     // the setup class will take over for config
     virtual PosibErr<void> setup(Config *) = 0;

@@ -8,10 +8,13 @@
 #include "filter.hpp"
 #include "speller.hpp"
 #include "indiv_filter.hpp"
+#include "copy_ptr-t.hpp"
 
 #include "iostream.hpp"
 
 namespace acommon {
+
+  Filter::Filter() {}
 
   PosibErr<void> Filter::setup(Speller * speller, Config * config) 
   {
@@ -45,10 +48,10 @@ namespace acommon {
     Filters::iterator cur, end;
     cur = filters_.begin();
     end = filters_.end();
-    COUT << "BEFORE: " << str;
+    //COUT << "BEFORE: " << str;
     for (; cur != end; ++cur)
       (*cur)->process(str, size);
-    COUT << "AFTER: " << str;
+    //COUT << "AFTER: " << str;
   }
 
   Filter::~Filter() 

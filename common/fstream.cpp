@@ -141,4 +141,10 @@ namespace acommon {
     return *this;
   }
 
+  FStream & FStream::operator<< (double num)
+  {
+    fprintf(file_, "%g", num);
+    return *this;
+  }
+
 }

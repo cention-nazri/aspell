@@ -90,6 +90,7 @@ namespace acommon {
     FStream & operator<< (ParmString);
     FStream & operator<< (unsigned int);
     FStream & operator<< (int);
+    FStream & operator<< (double);
 
   };
 }

@@ -80,7 +80,7 @@ namespace acommon {
     bool insert(ParmString key, ParmString value) {
       return insert(key, value, false);
     }
-    bool add(ParmString key) {
+    PosibErr<bool> add(ParmString key) {
       return insert(key, 0, false);
     }
     // insert a new element. WILL overight an exitsing entry
@@ -90,9 +90,9 @@ namespace acommon {
     }
 
     // removes an element.  Returnes true if the element existed.
-    bool remove(ParmString key) ;
+    PosibErr<bool> remove(ParmString key) ;
 
-    void clear();
+    PosibErr<void> clear();
 
     // looks up an element.  Returns null if the element did not exist.
     // returns an empty string if the element exists but has a null value
@@ -212,7 +212,7 @@ namespace acommon {
     }
   }
 
-  bool StringMapImpl::remove(ParmString key) {
+  PosibErr<bool> StringMapImpl::remove(ParmString key) {
     StringMapImplNode * * i = find(key);
     if (*i == 0) {
       return false;
@@ -248,10 +248,11 @@ namespace acommon {
     size_ = 0;
   }
 
-  void StringMapImpl::clear() {
+  PosibErr<void> StringMapImpl::clear() {
     destroy();
     clear_table(primes);
     size_ = 0;
+    return no_err;
   }
 
   StringMapImpl::StringMapImpl(const StringMapImpl & other) {

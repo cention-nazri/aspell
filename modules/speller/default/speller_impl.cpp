@@ -29,6 +29,17 @@ namespace aspeller {
     return lang_->name();
   }
 
+  //
+  // to lower
+  //
+
+  char * SpellerImpl::to_lower(char * str) 
+  {
+    for (char * i = str; *i; ++i)
+      *i = lang_->to_lower(*i);
+    return str;
+  }
+
   //////////////////////////////////////////////////////////////////////
   //
   // Spell check methods
@@ -84,7 +95,7 @@ namespace aspeller {
       }
       if (first_word == 0 || cor != first_word) {
 	static_cast<WritableReplacementSet *>(i->data_set)
-	  ->add(to_lower(lang(), mis), 
+	  ->add(aspeller::to_lower(lang(), mis), 
 		cor_orignal_casing);
       }
       
@@ -443,14 +454,17 @@ namespace aspeller {
       : speller_(m) 
     {}
 
-    void item_updated(const KeyInfo * ki, int value) {
+    PosibErr<void> item_updated(const KeyInfo * ki, int value) {
       callback(speller_, ki, value, UpdateMember::Int);
+      return no_err;
     }
-    void item_updated(const KeyInfo * ki, bool value) {
+    PosibErr<void> item_updated(const KeyInfo * ki, bool value) {
       callback(speller_, ki, value, UpdateMember::Bool);
+      return no_err;
     }
-    void item_updated(const KeyInfo * ki, const char * value) {
+    PosibErr<void> item_updated(const KeyInfo * ki, const char * value) {
       callback(speller_, ki, value, UpdateMember::String);
+      return no_err;
     }
 
     static void ignore(SpellerImpl * m, int value) {

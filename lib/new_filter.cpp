@@ -16,6 +16,20 @@
 
 namespace acommon {
 
+  //
+  // filter modes
+  // 
+
+  const char * filter_modes = "none,url,email,sgml,tex";
+  
+  static const KeyInfo modes_module[] = {
+    {"fm-email", KeyInfoList  , "url,email",0}
+    , {"fm-none",  KeyInfoList  , "",         0}
+    , {"fm-sgml",  KeyInfoList  , "url,sgml", 0}
+    , {"fm-tex",   KeyInfoList  , "url,tex",  0}
+    , {"fm-url",   KeyInfoList  , "url",      0}
+  };
+
   class IndividualFilter;
 
   //
@@ -29,10 +43,14 @@ namespace acommon {
   
   IndividualFilter * new_url_filter ();
   IndividualFilter * new_email_filter ();
+  IndividualFilter * new_tex_filter ();
+  IndividualFilter * new_sgml_filter ();
 
   static FilterEntry standard_filters[] = {
     {"url",   new_url_filter},
-    {"email", new_email_filter}
+    {"email", new_email_filter},
+    {"tex", new_tex_filter},
+    {"sgml", new_sgml_filter}
   };
   static unsigned int standard_filters_size 
   = sizeof(standard_filters)/sizeof(FilterEntry);
@@ -44,8 +62,17 @@ namespace acommon {
   extern const KeyInfo * email_options_begin;
   extern const KeyInfo * email_options_end;
 
+  extern const KeyInfo * tex_options_begin;
+  extern const KeyInfo * tex_options_end;
+
+  extern const KeyInfo * sgml_options_begin;
+  extern const KeyInfo * sgml_options_end;
+
   static ConfigModule filter_modules[] =  {
-    {"email", email_options_begin, email_options_end}
+    {"fm", modes_module, modes_module + sizeof(modes_module)/sizeof(KeyInfo)},
+    {"email", email_options_begin, email_options_end},
+    {"tex",   tex_options_begin,   tex_options_end},
+    {"sgml",  sgml_options_begin, sgml_options_end}
   };
 
   // these variables are used in the new_config function and
@@ -63,8 +90,6 @@ namespace acommon {
   PosibErr<Filter *> new_filter(Speller * speller, 
 				Config * config)
   {
-    COUT << "new_filter\n";
-
     StackPtr<Filter> filter(new Filter());
     filter->setup(speller, config);
     StackPtr<StringList> sl(new_string_list());

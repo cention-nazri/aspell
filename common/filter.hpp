@@ -25,7 +25,7 @@ namespace acommon {
     void process(char * str, unsigned int size);
     void add_filter(IndividualFilter * filter);
     Config * config() {return config_;} 
-    Filter() {}
+    Filter();
     ~Filter();
   private:
     CopyPtr<Config> config_;

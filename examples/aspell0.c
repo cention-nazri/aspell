@@ -286,8 +286,8 @@ static void check_document(AspellSpeller * speller, const char * filename)
 	 
       word_begin = line + token.offset + diff;
       printf("%.*s*%.*s*%s",
-	     token.offset + diff, line,
-	     token.len, word_begin,
+	     (int)(token.offset + diff), line,
+	     (int)token.len, word_begin,
 	     word_begin + token.len);
 
       printf("Suggestions: ");

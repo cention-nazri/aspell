@@ -98,11 +98,6 @@ namespace acommon {
     abort();
   }
 
-  void PosibErrBase::handle_incompat_assign() const {
-    fputs("Incompatible Assignment of PosibErr.\n", stderr);
-    abort();
-  }
-
   Error * PosibErrBase::release() {
     assert (err_);
     assert (err_->refcount <= 1);

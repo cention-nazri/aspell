@@ -62,7 +62,7 @@ namespace acommon {
     *this = *(const StringListImpl *)other;
   }
 
-  bool StringListImpl::add(ParmString str)
+  PosibErr<bool> StringListImpl::add(ParmString str)
   {
     StringListNode * * cur = & first;
     while (*cur != 0 && strcmp((*cur)->data.c_str(), str) != 0)
@@ -75,7 +75,7 @@ namespace acommon {
     }
   }
 
-  bool StringListImpl::remove(ParmString str)
+  PosibErr<bool> StringListImpl::remove(ParmString str)
   {
     StringListNode * * prev = 0;
     StringListNode * * cur  = & first;
@@ -92,7 +92,7 @@ namespace acommon {
     }
   }
 
-  void StringListImpl::clear()
+  PosibErr<void> StringListImpl::clear()
   {
     StringListNode * temp;
     while (first != 0) {
@@ -101,6 +101,7 @@ namespace acommon {
       delete temp;
     }
     first = 0;
+    return no_err;
   }
 
   StringEnumeration * StringListImpl::elements() const
