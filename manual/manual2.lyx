@@ -93,8 +93,7 @@ kevina@gnu.org
 Introduction
 \layout Standard
 
-GNU Aspell is a free (as in Freedom) spell checker designed to eventually
- replace Ispell.
+GNU Aspell is a spell checker designed to eventually replace Ispell.
  It can either be used as a library or as an independent spell checker.
  Its main feature is that it does a much better job of coming up with possible
  suggestions than just about any other spell checker out there for the English

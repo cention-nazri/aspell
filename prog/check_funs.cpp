@@ -34,6 +34,12 @@
 #include "asc_ctype.hpp"
 #include "check_funs.hpp"
 
+
+StackPtr<CheckerString> state;
+const char * last_prompt = 0;
+StackPtr<Choices> word_choices;
+StackPtr<Choices> menu_choices;
+
 #if   POSIX_TERMIOS
 
 // Posix headers
@@ -49,11 +55,11 @@ extern "C" {int getch();}
 
 #endif
 
-#if   HAVE_LIBCURSES
+#if HAVE_LIBCURSES
 
 #include <curses.h>
 
-#if   CURSES_INCLUDE_STANDARD
+#if CURSES_INCLUDE_STANDARD
 
 #include <term.h>
 
@@ -64,16 +70,12 @@ extern "C" {char * tigetstr(char * capname);}
 
 #endif
 
-StackPtr<CheckerString> state;
-const char * last_prompt = 0;
-StackPtr<Choices> word_choices;
-StackPtr<Choices> menu_choices;
+enum MenuText {StdMenu, ReplMenu};
+static MenuText menu_text = StdMenu;
 
 static bool use_curses = true;
 static WINDOW * text_w = 0;
 static WINDOW * menu_w = 0;
-enum MenuText {StdMenu, ReplMenu};
-static MenuText menu_text = StdMenu;
 static WINDOW * choice_w = 0;
 //static int beg_x = -1;
 static int end_x = -1;
@@ -94,7 +96,7 @@ static SCREEN * term;
 
 #endif
 
-#endif
+#endif // HAVE_LIBCURSES
 
 void cleanup (void) {
 #if   HAVE_LIBCURSES

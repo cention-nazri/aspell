@@ -16,12 +16,13 @@ libaspell_la_LIBADD = ${top_builddir}/common/libaspell-common.la \
                       ${top_builddir}/modules/filter/libaspell-filter-standard.la \
                       ${top_builddir}/modules/tokenizer/libaspell-tokenizer-standard.la
 
-libaspell_la_LDFLAGS = -version-info 15:0:0
+libaspell_la_LDFLAGS = ${extra_ldflags} -version-info 15:1:0
 
 libpspell_la_SOURCES = dummy.cpp
 
 libpspell_la_LIBADD = libaspell.la
 
-libpspell_la_LDFLAGS = -version-info 15:1:0
+libpspell_la_LDFLAGS = ${extra_ldflags} -version-info 15:1:0
+
 
 

@@ -9,6 +9,7 @@
 #include "error.hpp"
 
 namespace acommon {
+
   bool Error::is_a(ErrorInfo const * to_find) const 
   {
     const ErrorInfo * e = err;

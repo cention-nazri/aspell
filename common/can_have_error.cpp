@@ -4,9 +4,31 @@
 // license along with this library if you did not you can find
 // it at http://www.gnu.org/.
 
-#include "copy_ptr-t.hpp"
 #include "error.hpp"
+#include "can_have_error.hpp"
+#include "copy_ptr-t.hpp"
 
 namespace acommon {
-  template class CopyPtr<Error>;
+
+  template void GenericCopyPtr<Error, CopyPtr<Error>::Parms>
+  ::reset(Error*, CopyPtr<Error>::Parms const&);
+
+  CanHaveError::CanHaveError(Error * e)
+    : err_(e)
+  {}
+
+  CanHaveError::~CanHaveError() 
+  {}
+
+  CanHaveError::CanHaveError(const CanHaveError & other)
+    : err_(other.err_) {}
+
+
+  CanHaveError & CanHaveError::operator=(const CanHaveError & other)
+  {
+    err_ = other.err_;
+    return *this;
+  }
+
+
 }

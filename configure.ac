@@ -1,7 +1,7 @@
 
 AC_INIT
 AM_CONFIG_HEADER(common/settings.h)
-AM_INIT_AUTOMAKE(aspell, 0.50.1)
+AM_INIT_AUTOMAKE(aspell, 0.50.1-test2)
 
 AM_MAINTAINER_MODE
 
@@ -20,11 +20,42 @@ AC_ARG_ENABLE(pkglibdir,
 pkglibdir=$enable_dictdir, pkglibdir=${libdir}/aspell )
 AC_SUBST(pkglibdir)
 
+dnl optional features
+
+AC_ARG_ENABLE(win32-relocatable,
+[  --enable-win32-relocatable])
+
+AC_ARG_ENABLE(curses,           
+[  --enable-curses=LIBFILE])
+
+AC_ARG_ENABLE(curses-include,           
+[  --enable-curses-include=DIR])
+
 AC_PROG_CXX
 AC_LANG([C++])
 
 AC_DISABLE_STATIC
 AC_PROG_LIBTOOL
+
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                                                                 #
+#                     Platform Specific Tests                     #
+#                                                                 #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+if test "$GXX" = "yes"
+then
+  case "$host" in
+    *-sun-solaris* ) extra_ldflags="-Wl,-mimpure-text";;
+  esac
+fi
+AC_SUBST(extra_ldflags)
+
+if test "$enable_win32_relocatable" = "yes"
+then
+  AC_DEFINE(ENABLE_WIN32_RELOCATABLE, 1, [Defined if win32 relocation should be used])
+fi
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                                                                 #
