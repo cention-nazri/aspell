@@ -1,5 +1,5 @@
 \input texinfo   @c -*-texinfo-*-
-@comment $Id: aspell.texi,v 1.16 2004/03/18 02:46:16 kevina Exp $
+@comment $Id: aspell.texi,v 1.17 2004/03/23 02:29:38 kevina Exp $
 @comment %**start of header
 @setfilename aspell.info
 @settitle GNU Aspell 0.60
@@ -120,7 +120,8 @@ Languages Which Aspell can Support
 * Syllabic::                    
 * Unsupported::                 
 * Multiple Scripts::            
-* Planned Dictionaries::
+* Planned Dictionaries::        
+* References::                  
 
 Language Related Issues
 
@@ -2815,7 +2816,8 @@ based on h@`anzi which includes Chinese, Japanese, and sometimes Korean.
 * Syllabic::                    
 * Unsupported::                 
 * Multiple Scripts::            
-* Planned Dictionaries::
+* Planned Dictionaries::        
+* References::                  
 @end menu
 
 @node Supported
@@ -2969,21 +2971,21 @@ up into the consonant-vowel representation anyway.
 @node Unsupported
 @appendixsec Unsupported
 
-These languages are currently unsupported by Aspell for one reason or
-another.
+These languages, when written in the given script, are currently
+unsupported by Aspell for one reason or another.
 
 @include lang-unsupported.texi
 
-@appendixsubsec The Thai, Leo, and Khmer Scripts
+@appendixsubsec The Thai and Khmer Scripts
 
-The Thai script presents a different problem for Aspell.  The problem
-is not that there are more than 220 unique symbols, but that there are
-no spaces between words.  This means that there is no easy way to
-split a sentence into individual words.  However, it is still possible
-to spell check Thai, it is just a lot more difficult.  I will be happy
-to work within someone who is interested in adding Thai support to
-Aspell, but it is not likely something I will do in the foreseeable
-future.
+The Thai and Khmer scripts presents a different problem for Aspell.  The
+problem is not that there are more than 220 unique symbols, but that
+there are no spaces between words.  This means that there is no easy way
+to split a sentence into individual words.  However, it is still
+possible to spell check these scripts, it is just a lot more difficult.
+I will be happy to work within someone who is interested in adding Thai
+or Khmer support to Aspell, but it is not likely something I will do in
+the foreseeable future.
 
 @appendixsubsec Languages which use H@`anzi Characters
 
@@ -3032,6 +3034,7 @@ support.
 
 @node Planned Dictionaries
 @appendixsec Notes on Planned Dictionaries
+
 
 @multitable @columnfractions .05 .20 .75
 
@@ -3095,12 +3098,57 @@ version comming soon.
 
 @end multitable
 
+
+@node References
+@appendixsec References
+
+The information in this chapter was gathered from numerous sources,
+including:
+
+@itemize
+
+@item 
+ISO 639-2 Registration Authority,
+@uref{http://www.loc.gov/@/standards/iso639-2/}
+
+@item
+Languages and Scripts (Offical Unicode Site),
+@uref{http://www.unicode.org/@/onlinedat/languages-scripts.html}
+
+@item
+Omniglot - a guide to written language, @uref{http://www.omniglot.com/}
+
+@item
+Winkipedia - The Free Encyclopedia, @uref{http://wikipedia.org/}
+
+@item
+Ethnologue - Languages of the World,
+@uref{http://www.ethnologue.com/}
+
+@item
+World Languages - The Ultimate Language Store,
+@uref{http://www.worldlanguage.com/}
+
+@item
+South African Languages Web,
+@uref{http://www.languages.web.za/}
+
+@item
+The Languages and Writing Systems of Africa (Global Advisor Newsletter),
+@uref{http://www.intersolinc.com/@/newsletters/africa.htm}
+
+@end itemize
+
+Special thanks goes to Era Eriksson for helping me with the information in
+this chapter.
+
 @node Language Related Issues
 @appendix Language Related Issues
 
-Here are some language related issues that a good spell checker need to
-handle.  If you know any more about any of these issues, or a new issue
-not discussed here, please email me at @email{kevina@@gnu.org}.
+Here are some language related issues that a good spell checker needs to
+handle.  If you have any more information about any of these issues, or
+of a new issue not discussed here, please email me at
+@email{kevina@@gnu.org}.
 
 @menu
 * German Sharp S ::             
@@ -3117,9 +3165,9 @@ The German Sharp S or Eszett does not have an uppercase equivalent.
 Instead when @samp{@ss{}} is converted to @samp{SS}.  The conversion of
 @samp{@ss{}} to @samp{SS} requires a special rule, and increases the
 length of a word, thus disallowing inplace case conversion.
-Furthermore, my general rule converting all words to lowercase before
+Furthermore, my general rule of converting all words to lowercase before
 looking them up in the dictionary won't work because the conversion of
-@samp{SS} to lowercase is ambiguous as it can be @samp{ss} or
+@samp{SS} to lowercase is ambiguous; it can be @samp{ss} or
 @samp{@ss{}}.  I do plan on dealing with this eventually, however.
 
 @node Compound Words
@@ -3128,7 +3176,7 @@ looking them up in the dictionary won't work because the conversion of
 In some languages, such as German, it is acceptable to string two words
 together, thus forming a compound word.  However, there are rules to
 when this can be done.  Furthermore, it is not always sufficient to
-simply concatenate the two words.  For example sometimes a letter is
+simply concatenate the two words.  For example, sometimes a letter is
 inserted between the two words.  I tried implementing support for
 compound words in Aspell but it was too limiting and no one used it.
 Before I try implementing it again I want to know all the issues
@@ -3176,19 +3224,19 @@ both the base and combing character is present than (2), otherwise (3).
 
 Many languages, including English, have words with non-letter symbols in
 them.  For example the apostrophe.  These symbols generally appear in
-the middle of a word but they can also appear at the end, such as in an
-abbreviation.  If symbol can @emph{only} appear as part of a word than
-Aspell can treat it as if it were a letter.  
+the middle of a word, but they can also appear at the end, such as in an
+abbreviation.  If a symbol can @emph{only} appear as part of a word than
+Aspell can treat it as if it were a letter.
 
 However, the problem is most of these symbols have other uses.  For
 example, the apostrophe is often used as a single quote and the
-abbreviations marker is also used as a period.  Thus Aspell can not
-blindly assume that them as if they were letters.
+abbreviations marker is also used as a period.  Thus, Aspell can not
+blindly treat them as if they were letters.
 
 Aspell currently handles the case where the symbol can only appear in
 the middle of the word fairly well.  It simply assumes that if there is
 a letter both before and after the symbol than it is part of the word.
-This works most of the time but it is not full proof.  For example, 
+This works most of the time but it is not fool proof.  For example, 
 suppose the user forgot to leave a space after the period:
 
 @display
@@ -3201,7 +3249,7 @@ might be to then try to check ``tree'' and ``Then'' separately.
 But what if one of them is not in the dictionary?  Should Aspell assume
 ``tree.Then'' is one word?
 
-The case where the symbol can appear at the begging or end of the word
+The case where the symbol can appear at the beginning or end of the word
 is more difficult to deal with.  The symbol may or may not actually be
 part of the word.  Aspell currently handles this case by first trying to
 spell check the word with the symbol and if that fails, try it without.
@@ -3218,17 +3266,17 @@ correctly spelled.  But what about something like ``4th''.  Since the
 problem.  The solution would be to have a special symbol for ``any
 number''.
 
-Words with spaces, often foreign phrases, are even more trouble to deal
-with.  The basic problem is that when organizing a string there is no
-good way to keep phrases together. One solution is to use trial and
-error.  If a word is not in the dictionary try grouping it with the
-previous or next word and see if the combined word is the dictionary.
-But what if the combined word is not, should the misspelled word be
-grouped when looking for suggestions?  So one solution is to also store
-each part of the phrase in the dictionary but tag it as part of the
-word a phrase and not an independent word.
+Words with spaces in them, such as foreign phrases, are even more
+trouble to deal with.  The basic problem is that when tokonizing a
+string there is no good way to keep phrases together. One solution is to
+use trial and error.  If a word is not in the dictionary try grouping it
+with the previous or next word and see if the combined word is the
+dictionary.  But what if the combined word is not, should the misspelled
+word be grouped when looking for suggestions?  One solution is to also
+store each part of the phrase in the dictionary, but tag it as part of a
+phrase and not an independent word.
 
-To further complicate things, Most applications that use spell checkers
+To further complicate things, most applications that use spell checkers
 are accustom to parsing the document themselves and sending it to the
 spell checker a word at a time.  In order to support word with spaces in
 them a more complicated interface will be required.

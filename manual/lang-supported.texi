@@ -156,7 +156,7 @@
 @item rm @tab Raeto-Romance @tab Latin @tab - @tab -
 @item rn @tab Rundi @tab Latin @tab - @tab -
 @item ro @tab Romanian @tab Latin @tab Yes @tab Yes
-@item ru @tab Russian @tab Cyrillic @tab Yes @tab Incomplete
+@item ru @tab Russian @tab Cyrillic @tab Yes @tab Yes
 @item rw @tab Kinyarwanda @tab Latin @tab - @tab -
 @item
 @item sa @tab Sanskrit @tab Devanagari @tab - @tab -

@@ -6,7 +6,6 @@
 @item iu @tab Inuktitut @tab Canadian Syllabics
 @item oj @tab Ojibwa @tab Ojibwe
 @item om @tab Oromo @tab Ethiopic
-@item sa @tab Sanskrit @tab Ethiopic
 @item ti @tab Tigrinya @tab Ethiopic
 
 @end multitable
