@@ -215,7 +215,7 @@ namespace acommon {
         if (i->sub_table) {
           // really tail recursion
           if (i->to[1] != T::to_non_char) {def = i->to; prev = s;}
-          d = static_cast<const NormTable<T> *>(i->sub_table);
+          d = (const NormTable<T> *)(i->sub_table);
           s++;
           goto loop;
         } else {
@@ -337,7 +337,7 @@ namespace acommon {
     int size = strtoul(p, (char **)&p, 10);
     VARARRAY(T, d, size);
     memset(d, 0, sizeof(T) * size);
-    int sz = (int)exp2(floor(log2(size <= 1 ? 1 : size - 1)));
+    int sz = 1 >> (unsigned)floor(log(size <= 1 ? 1 : size - 1)/log(2.0));
     VARARRAY(int, tally0_d, sz);   Tally tally0(sz,   tally0_d);
     VARARRAY(int, tally1_d, sz*2); Tally tally1(sz*2, tally1_d);
     VARARRAY(int, tally2_d, sz*4); Tally tally2(sz*4, tally2_d);
@@ -374,8 +374,8 @@ namespace acommon {
     }
     assert(cur - d == size);
     Tally * which = &tally0;
-    if (tally1.max < which->max) which = &tally1;
-    if (tally2.max < which->max) which = &tally2;
+    if (which->max > tally1.max) which = &tally1;
+    if (which->max > tally2.max) which = &tally2;
     NormTable<T> * final = (NormTable<T> *)calloc(1, sizeof(NormTable<T>) + 
                                                   sizeof(T) * which->size * which->max);
     memset(final, 0, sizeof(NormTable<T>) + sizeof(T) * which->size * which->max);

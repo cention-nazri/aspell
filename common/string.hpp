@@ -113,10 +113,6 @@ namespace acommon {
     String(ParmString s) {assign_only(s, s.size());}
     String(MutableString s) {assign_only(s.str, s.size);}
     String(const String & other) {assign_only(other.begin_, other.end_-other.begin_);}
-#ifndef __SUNPRO_CC
-    // This causes a conflict with the copy constructor on Suns comp
-    inline String(const PosibErr<String> & other);
-#endif
 
     //
     // assign

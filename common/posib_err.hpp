@@ -222,12 +222,6 @@ namespace acommon {
   //
   //
   //
-#ifndef __SUNPRO_CC
-  inline String::String(const PosibErr<String> & other)
-  {
-    assign_only(other.data.data(), other.data.size());
-  }
-#endif
   inline String & String::operator= (const PosibErr<const char *> & s)
   {
     *this = s.data;

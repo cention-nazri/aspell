@@ -1,5 +1,5 @@
 \input texinfo   @c -*-texinfo-*-
-@comment $Id: aspell.texi,v 1.32 2004/05/15 19:43:32 kevina Exp $
+@comment $Id: aspell.texi,v 1.33 2004/05/15 23:53:08 kevina Exp $
 @comment %**start of header
 @setfilename aspell.info
 @settitle GNU Aspell 0.60
@@ -1285,7 +1285,7 @@ UTF-8.
 To identify a key use:
 
 @example
-  key @var{base} @var{other} @dots{}
+key @var{base} @var{other} @dots{}
 @end example
 @noindent
 
