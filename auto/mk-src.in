@@ -940,7 +940,7 @@ func: reset cache
 	desc => Reset the global cache(s) so that cache queries will create a new
 		object.  If exiting objects are still in use they are not deleted.
 		If which is NULL than ALL caches will be reset.  Current caches are
-		"encode", "decode", "dictionary", and "language"
+		"encode", "decode", "dictionary", "language", and "keyboard".
 	/
 	bool
 	string: which
