@@ -19,8 +19,6 @@
 #include "vector.hpp"
 #include "can_have_error.hpp"
 #include "string_list.hpp"
-//FIXME below if Win(dos) is different
-#include <regex.h>
 
 #ifndef _WIN32
 #include <sys/types.h>
@@ -35,6 +33,8 @@
  */
 #endif
 
+//FIXME below if Win(dos) is different
+#include <regex.h>
 
 #define ORDINARY 1
 #define DIRECTORY 2

@@ -25,6 +25,7 @@
 
 #include "aspell.h"
 //FIXME if Win(dos) is different
+#include <sys/types.h>
 #include <regex.h>
 
 #include "asc_ctype.hpp"
