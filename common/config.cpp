@@ -558,8 +558,8 @@ namespace acommon {
     RET_ON_ERR_SET(keyinfo(key), const KeyInfo *, ki);
     key = ki->name;
 
-    //if (attached_) // FIXME
-    //  return make_err(cant_change_value, key);
+    if (attached_ && !(ki->flags & KEYINFO_MAY_CHANGE))
+      return make_err(cant_change_value, key);
   
     assert(ki->def != 0); // if null this key should never have values
 			  // directly added to it
@@ -681,8 +681,8 @@ namespace acommon {
     RET_ON_ERR_SET(keyinfo(k), const KeyInfo *, ki);
     const char * key = ki->name;
 
-    //if (attached_) // FIXME
-    //  return make_err(cant_change_value, key);
+    if (attached_ && !(ki->flags & KEYINFO_MAY_CHANGE))
+      return make_err(cant_change_value, key);
   
     assert(ki->def != 0); // if null this key should never have values
     // directly added to it
@@ -999,13 +999,13 @@ namespace acommon {
     , {"home-dir", KeyInfoString, HOME_DIR,
        N_("location for personal files")}
     , {"ignore",   KeyInfoInt   , "1",
-       N_("ignore words <= n chars")}
+       N_("ignore words <= n chars"), KEYINFO_MAY_CHANGE}
     , {"ignore-accents" , KeyInfoBool, "false",
-       N_("ignore accents when checking words")}
+       N_("ignore accents when checking words"), KEYINFO_MAY_CHANGE}
     , {"ignore-case", KeyInfoBool  , "false",
-       N_("ignore case when checking words")}
+       N_("ignore case when checking words"), KEYINFO_MAY_CHANGE}
     , {"ignore-repl", KeyInfoBool  , "false",
-       N_("ignore commands to store replacement pairs")}
+       N_("ignore commands to store replacement pairs"), KEYINFO_MAY_CHANGE}
     , {"jargon",     KeyInfoString, "",
        N_("extra information for the word list")}
     , {"keyboard", KeyInfoString, "standard",
@@ -1036,13 +1036,13 @@ namespace acommon {
        N_("replacements list file name") }
     , {"repl-path",     KeyInfoString, "<home-dir/repl>",     0}
     , {"run-together",        KeyInfoBool,  "false",
-       N_("consider run-together words legal")}
+       N_("consider run-together words legal"), KEYINFO_MAY_CHANGE}
     , {"run-together-limit",  KeyInfoInt,   "8",
-       N_("maxium numbers that can be strung together")}
+       N_("maxium numbers that can be strung together"), KEYINFO_MAY_CHANGE}
     , {"run-together-min",    KeyInfoInt,   "3",
-       N_("minimal length of interior words")}
+       N_("minimal length of interior words"), KEYINFO_MAY_CHANGE}
     , {"save-repl", KeyInfoBool  , "true",
-       N_("save replacement pairs on save all")}
+       N_("save replacement pairs on save all"), KEYINFO_MAY_CHANGE}
     , {"set-prefix", KeyInfoBool, "true",
        N_("set the prefix based on executable location")}
     , {"size",          KeyInfoString, "+60",
@@ -1052,7 +1052,7 @@ namespace acommon {
     , {"strip-accents" , KeyInfoBool, "false",
        N_("strip accents from word lists")}
     , {"sug-mode",   KeyInfoString, "normal",
-       N_("suggestion mode")}
+       N_("suggestion mode"), KEYINFO_MAY_CHANGE}
     , {"sug-edit-dist", KeyInfoInt, "1",
        N_("edit distance to use, override sug-mode default")}
     , {"sug-typo-analysis", KeyInfoBool, "true",
@@ -1087,15 +1087,15 @@ namespace acommon {
        N_("create a backup file by appending \".bak\"")}
     , {"guess", KeyInfoBool, "false",
        // FIXME: shorten description
-       N_("make possible root/affix combinations not in the dictionary")} 
+       N_("make possible root/affix combinations not in the dictionary"), KEYINFO_MAY_CHANGE} 
     , {"keymapping", KeyInfoString, "aspell",
        N_("keymapping for check mode, aspell or ispell")}
     , {"reverse", KeyInfoBool, "false",
        N_("reverse the order of the suggest list")}
     , {"suggest", KeyInfoBool, "true",
-       N_("suggest possible replacements")}
+       N_("suggest possible replacements"), KEYINFO_MAY_CHANGE}
     , {"time"   , KeyInfoBool, "false",
-       N_("time load time and suggest time in pipe mode")}
+       N_("time load time and suggest time in pipe mode"), KEYINFO_MAY_CHANGE}
   };
 
   const KeyInfo * config_impl_keys_begin = config_keys;

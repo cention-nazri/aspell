@@ -193,7 +193,8 @@ namespace acommon {
     virtual ~KeyInfoEnumeration() {}
   };
 
-  static const int KEYINFO_UTF8 = 1 << 1;
+  static const int KEYINFO_MAY_CHANGE = 1 << 0;
+  static const int KEYINFO_UTF8       = 1 << 1;
 }
 
 #endif

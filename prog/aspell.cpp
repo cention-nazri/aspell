@@ -687,11 +687,15 @@ void pipe()
 	      BREAK_ON_ERR(err = config->replace(word, word2));
             if (strcmp(word,"suggest") == 0)
               suggest = config->retrieve_bool("suggest");
+            else if (strcmp(word,"time") == 0)
+              do_time = config->retrieve_bool("time");
+            else if (strcmp(word,"guess") == 0)
+              include_guesses = config->retrieve_bool("guess");
 	    break;
 	  case 'r':
 	    word = trim_wspace(line + 4);
-	    BREAK_ON_ERR_SET(config->retrieve(word), 
-			     PosibErr<String>, ret);
+	    BREAK_ON_ERR_SET(config->retrieve(word), String, ret);
+            COUT << ret << "\n";
 	    break;
 	  }
 	  break;
@@ -737,6 +741,7 @@ void pipe()
                   << oconv(aspeller::fix_case(real_speller->lang(),casep, guess));
           ci = ci->next;
         }
+        CERR << (do_time ? "TIMMING\n" : "");
 	start = clock();
         const AspellWordList * suggestions = 0;
         if (suggest) 
