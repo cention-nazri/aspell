@@ -332,7 +332,7 @@ namespace aspeller {
 
     CasePattern case_pattern(const char * str, unsigned size) const;
 
-    const char * fix_case(CasePattern case_pattern, char * str) const
+    char * fix_case(CasePattern case_pattern, char * str) const
     {
       if (!str[0]) return str;
       if (case_pattern == AllUpper) to_upper(str,str);

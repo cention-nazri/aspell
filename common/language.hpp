@@ -34,8 +34,8 @@ public:
   virtual const char * charmap() const = 0;
   
   virtual CasePattern case_pattern(ParmStr str) const = 0;
-  virtual const char * fix_case(CasePattern cs, char * str) const = 0;
-  virtual const char * to_soundslike(char * str) const = 0;
+  virtual char * fix_case(CasePattern cs, char * str) const = 0;
+  virtual char * to_soundslike(char * str) const = 0;
 
   virtual void munch(ParmStr word, GuessInfo * cl, bool cross = true) const = 0;
   virtual WordAff * expand(ParmStr word, ParmStr aff,
