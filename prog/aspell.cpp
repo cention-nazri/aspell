@@ -1104,7 +1104,7 @@ void check()
         new_word = sug_con[new_word[0]-'1'];
       state->replace(new_word);
       changed = true;
-      if (mapping[choice] == ReplaceAll)
+      if (mapping[choice] == ReplaceAll && (strcmp(word,new_word.str()) != 0))
         replace_list->replace(word, new_word);
       break;
     default:
