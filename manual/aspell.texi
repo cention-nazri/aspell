@@ -5153,7 +5153,7 @@ global configuration file, and finally the compiled in defaults.
 
 @item
 Totally reworked the language class in preparation for my new language
-code.  See @url{http://aspell.sourceforge.net/international/} for more
+code.  See @uref{http://aspell.sourceforge.net/international/} for more
 information of what I have in store.
 
 @item
