@@ -105,7 +105,8 @@ namespace aspeller {
     }
     WordAff * expand_suffix(ParmString word, const unsigned char * new_aff,
                             ObjStack &, int limit = INT_MAX,
-                            unsigned char * new_aff = 0, WordAff * * * l = 0) const;
+                            unsigned char * new_aff = 0, WordAff * * * l = 0,
+                            ParmString orig_word = 0) const;
     
   private:
     PosibErr<void> parse_file(const char * affpath, Conv &);

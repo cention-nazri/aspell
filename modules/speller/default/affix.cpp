@@ -120,7 +120,7 @@ struct SfxEntry : public AffEntry
   inline bool          allow_cross() const { return ((xpflg & XPRODUCT) != 0); }
   inline byte flag() const { return achar;  }
   inline const char *  key() const  { return rappnd; } 
-  SimpleString add(SimpleString, ObjStack & buf, int limit = INT_MAX) const;
+  SimpleString add(SimpleString, ObjStack & buf, int limit, SimpleString) const;
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -806,7 +806,7 @@ WordAff * AffixMgr::expand(ParmString word, ParmString aff,
   for (WordAff * * cur = &head; cur != end; cur = &(*cur)->next) {
     if ((int)(*cur)->word.size - max_strip_ >= limit) continue;
     byte * nsuf = (byte *)buf.alloc(nsuf_s);
-    expand_suffix((*cur)->word, (*cur)->aff, buf, limit, nsuf, &very_end);
+    expand_suffix((*cur)->word, (*cur)->aff, buf, limit, nsuf, &very_end, word);
     (*cur)->aff = nsuf;
   }
 
@@ -815,18 +815,20 @@ WordAff * AffixMgr::expand(ParmString word, ParmString aff,
 
 WordAff * AffixMgr::expand_suffix(ParmString word, const byte * aff, 
                                   ObjStack & buf, int limit,
-                                  byte * new_aff, WordAff * * * l) const
+                                  byte * new_aff, WordAff * * * l,
+                                  ParmString orig_word) const
 {
   WordAff * head = 0;
   if (l) head = **l;
   WordAff * * cur = l ? *l : &head;
   bool expanded     = false;
   bool not_expanded = false;
+  if (!orig_word) orig_word = word;
 
   while (*aff) {
     if ((int)word.size() - max_strip_f[*aff] < limit) {
       for (SfxEntry * p = sFlag[*aff]; p; p = p->flag_next) {
-        SimpleString newword = p->add(word, buf, limit);
+        SimpleString newword = p->add(word, buf, limit, orig_word);
         if (!newword) continue;
         if (newword == EMPTY) {not_expanded = true; continue;}
         *cur = (WordAff *)buf.alloc_bottom(sizeof(WordAff));
@@ -1025,11 +1027,12 @@ bool PfxEntry::check(const LookupInfo & linf, ParmString word,
 }
 
 // add suffix to this word assuming conditions hold
-SimpleString SfxEntry::add(SimpleString word, ObjStack & buf, int limit) const
+SimpleString SfxEntry::add(SimpleString word, ObjStack & buf, 
+                           int limit, SimpleString orig_word) const
 {
   int cond;
   /* make sure all conditions match */
-  if ((word.size > stripl) && (word.size >= numconds)) {
+  if ((orig_word.size > stripl) && (orig_word.size >= numconds)) {
     const byte * cp = (const byte *) (word + word.size);
     for (cond = numconds; --cond >=0; ) {
       if ((conds[*--cp] & (1 << cond)) == 0)
