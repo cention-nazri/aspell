@@ -1,6 +1,9 @@
 
 #INCLUDES = 
 
+pkgdatadir = @pkgdatadir@
+pkglibdir = @pkglibdir@
+
 noinst_PROGRAMS = mk-dirs_h
 
 dirs.h: mk-dirs_h

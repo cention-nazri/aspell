@@ -1,7 +1,7 @@
 
 AC_INIT
 AM_CONFIG_HEADER(common/settings.h)
-AM_INIT_AUTOMAKE(aspell, 0.50.1-test2)
+AM_INIT_AUTOMAKE(aspell, 0.50.1-test3)
 
 AM_MAINTAINER_MODE
 
@@ -10,14 +10,40 @@ AC_ARG_ENABLE(docdir,
 pkgdocdir=$enable_docdir, pkgdocdir=\${prefix}/share/doc/aspell )
 AC_SUBST(pkgdocdir)
 
+dnl pkgdatadir
+
+pkgdatadir=undef
 AC_ARG_ENABLE(pkgdatadir, 
-[  --enable-pkgdatadir=DIR  device independent data files [DATADIR/aspell] ], 
-pkgdatadir=$enable_pkgdatadir, pkgdatadir=\${datadir}/aspell )
+[  --enable-pkgdatadir=DIR   device dependent data files [DATADIR/aspell] ], 
+pkgdatadir=$enable_pkgdatadir)
+
+AC_ARG_ENABLE(pkgdata-dir, 
+[  --enable-data-dir=DIR    alias for pkgdatadir ], 
+pkgdatadir=$enable_dict_dir)
+
+if test "$pkgdatadir" = "undef"
+then
+  pkgdatadir=\${datadir}/aspell
+fi
+
 AC_SUBST(pkgdatadir)
 
+dnl pkglibdir
+
+pkglibdir=undef
 AC_ARG_ENABLE(pkglibdir, 
 [  --enable-pkglibdir=DIR   device dependent data files [LIBDIR/aspell] ], 
-pkglibdir=$enable_dictdir, pkglibdir=${libdir}/aspell )
+pkglibdir=$enable_pkglibdir)
+
+AC_ARG_ENABLE(dict-dir, 
+[  --enable-dict-dir=DIR    alias for pkglibdir ], 
+pkglibdir=$enable_dict_dir)
+
+if test "$pkglibdir" = "undef"
+then
+  pkglibdir=\${libdir}/aspell
+fi
+
 AC_SUBST(pkglibdir)
 
 dnl optional features

@@ -1,11 +1,11 @@
 
-pkgadatadir = ${pkgdatadir}
+pkgdatadir = @pkgdatadir@
 
 bin_SCRIPTS = pspell-config run-with-aspell aspell-import
-pkgadata_SCRIPTS = spell ispell
+pkgdata_SCRIPTS = spell ispell
 
 run-with-aspell: run-with-aspell.create
-	sh run-with-aspell.create ${pkgadatadir} > run-with-aspell
+	sh run-with-aspell.create ${pkgdatadir} > run-with-aspell
 	chmod 755 run-with-aspell
 
 pspell-config: mkconfig
