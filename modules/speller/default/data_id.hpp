@@ -14,8 +14,8 @@ namespace aspeller {
     const DataSet * ptr;
     const char    * file_name;
 #ifdef USE_FILE_INO
-    dev_t           ino;
-    ino_t           dev;
+    ino_t           ino;
+    dev_t           dev;
 #endif
   public:
     Id(DataSet * p, const FileName & fn = FileName());
