@@ -66,10 +66,8 @@ $info{class}{proc}{impl} = sub {
 	    $accum->{headers}{'convert'} = true;
 	    $ret .= "  ths->temp_str_$snum.clear();\n";
 	    $ret .= "  ths->to_internal_->convert($n, ${n}_size, ths->temp_str_$snum);\n";
-	    $ret .= "  ths->temp_str_$snum.ensure_null_end();\n";
 	    $ret .= "  unsigned int s$snum = ths->temp_str_$snum.size();\n";
-	    #$ret .= "  ths->to_internal_->append_null(ths->temp_str_$snum);\n";
-	    $_ = "MutableString(ths->temp_str_$snum.data(), s$snum)";
+	    $_ = "MutableString(ths->temp_str_$snum.mstr(), s$snum)";
 	    $snum++;
 	  } else {
 	    $_ = $n;

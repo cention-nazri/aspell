@@ -562,8 +562,7 @@ namespace acommon {
         pathPos = pathPosEnd + 1;
       }
       possMode.erase(0,pathPos);
-      possMode.ensure_null_end();
-      to_lower(possMode.data());
+      to_lower(possMode.mstr());
 
       Vector<FilterMode>::iterator fmIt = filter_modes->begin();
 
@@ -697,15 +696,14 @@ namespace acommon {
 
             // partially unescape magic
             
-            magic.ensure_null_end();
-            char * dest = magic.data();
-            const char * src  = magic.data();
+            char * dest = magic.mstr();
+            const char * src  = magic.mstr();
             while (*src) {
               if (*src == '\\' && src[1] == '/' || src[1] == '#')
                 ++src;
               *dest++ = *src++;
             }
-            magic.resize(dest - magic.data());
+            magic.resize(dest - magic.mstr());
 
             PosibErr<bool> pe;
 
