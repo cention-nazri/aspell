@@ -77,7 +77,7 @@ namespace acommon {
     assert(err_ != 0);
     assert(err_->refcount == 1);
     char * m = const_cast<char *>(err_->err->mesg);
-    char * mesg = gettext (m);
+    const char * mesg = gettext (m);
     unsigned int orig_len = strlen(mesg);
     unsigned int new_len = fn.size() + 2 + orig_len + 1;
     char * s = new char[new_len];
