@@ -13,9 +13,9 @@ sub prep_str($)
 
 while ($filename=shift) {
 
-#check if filter description file (*-filter.opt) has been read before  
+#check if filter description file (*-filter.info) has been read before  
   $filtername=$filename;
-  $filtername=~s/-filter\.opt$//;
+  $filtername=~s/-filter\.info$//;
   $filtername=~s/[^\/]*\///g;
   ( exists $filters{$filtername}) &&
    (printf STDERR "filter allready defined $filtername($filename); ignored;\n") && next;

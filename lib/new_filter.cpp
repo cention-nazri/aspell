@@ -298,7 +298,7 @@ namespace acommon
     String filter_description = "";
     
     String option_name = value;
-    option_name += "-filter.opt";
+    option_name += "-filter.info";
     if (!find_file(config, "filter-path", option_name))
       return make_err(no_such_filter, value);
 

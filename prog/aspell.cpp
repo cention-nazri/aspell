@@ -356,9 +356,9 @@ int main (int argc, const char *argv[])
   }
 
   //options->write_to_stream(COUT);
-  for (int i = 0; i != args.size(); ++i) {
-    COUT.printf("ARGV %s\n", args[i].str());
-  }
+  //for (int i = 0; i != args.size(); ++i) {
+  //  COUT.printf("ARGV %s\n", args[i].str());
+  //}
 
   if (args.empty()) {
     print_error(_("You must specify an action"));
@@ -1798,7 +1798,7 @@ void expand_expression(Config * config) {
       args[0]=".*";
     }
     config->retrieve_list("filter-path", &filter_path);
-    PathBrowser els(filter_path, "-filter.opt");
+    PathBrowser els(filter_path, "-filter.info");
 
     if (regcomp(&seekfor,args[0].c_str(),REG_NEWLINE|REG_NOSUB|REG_EXTENDED)) {
       make_err(invalid_expression, args[0]);
@@ -1810,7 +1810,7 @@ void expand_expression(Config * config) {
       const char * name = strrchr(file, '/');
       if (!name) name = file;
       else name++;
-      unsigned len = strlen(name) - 11;
+      unsigned len = strlen(name) - 12;
 
       toload.assign(name, len);
 

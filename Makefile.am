@@ -15,7 +15,7 @@ export PERLPROG=@PERLPROG@
 AM_CPPFLAGS = -I${srcdir}/gen -I${srcdir}/common \
               -I${srcdir}/interfaces/cc/ -I${srcdir}/modules/speller/default/
 
-SUFFIXES = .opt
+SUFFIXES = .info
 
 noinst_DATA = 
 EXTRA_DIST = 
@@ -135,7 +135,7 @@ EXTRA_DIST += prog/*.hpp
 # URL filter
 
 libaspell_la_SOURCES += modules/filter/url.cpp
-static_optfiles = modules/filter/url-filter.opt
+static_optfiles = modules/filter/url-filter.info
 
 dynamic_optfiles = 
 
@@ -143,12 +143,12 @@ dynamic_optfiles =
 ### To add a new filter follow the instruction that begin with '###'
 ###
 
-### Add the .opt file your filter comes with
+### Add the .info file your filter comes with
 optfiles = \
-  modules/filter/email-filter.opt\
-  modules/filter/tex-filter.opt\
-  modules/filter/sgml-filter.opt\
-  modules/filter/context-filter.opt
+  modules/filter/email-filter.info\
+  modules/filter/tex-filter.info\
+  modules/filter/sgml-filter.info\
+  modules/filter/context-filter.info
 
 ### Add all your aspell mode files ###
 fltfiles = \
@@ -328,7 +328,7 @@ README: manual/readme.texi
 	makeinfo --no-validate --no-headers $< > README
 
 maintainer-clean-local:
-	@find . \( -name '*.?pp' -o -name '*.h' -o -name '*.opt' \) -print |\
+	@find . \( -name '*.?pp' -o -name '*.h' -o -name '*.info' \) -print |\
 	    xargs grep -l "Automatically generated file." |\
 	    xargs rm
 
