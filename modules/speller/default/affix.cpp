@@ -562,7 +562,7 @@ PosibErr<void> AffixMgr::process_sfx_order()
   return no_err;
 }
 
-// assumds the cond string is valid
+// assumes the cond string is valid
 void Conds::normalize(char * str)
 {
   char * s = str;
@@ -613,9 +613,8 @@ static void encodeit(CondsLookup & l, ObjStack & buf,
   }
 
   //CERR.printf("NOT FOUND %s\n", cs);
-  char * s = buf.dup(cs);
   Conds * cds = (Conds *)buf.alloc_bottom(sizeof(Conds));
-  cds->str = s;
+  cds->str = buf.dup(cs);
   l.insert(cds);
   ptr->conds = cds;
 
