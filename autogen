@@ -3,6 +3,7 @@
 test -d interfaces || mkdir interfaces
 test -d interfaces/cc || mkdir interfaces/cc
 perl auto/mk-src.pl
+touch auto/auto
 
 libtoolize --automake || exit 1
 aclocal $ACLOCAL_FLAGS || exit 1
