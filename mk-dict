@@ -1,0 +1,4 @@
+#!/bin/sh
+
+bunzip2 -c en.cwl.bz2 | prog/word-list-compress d | \
+  modules/aspell/aspell-util --lang=en create master en 
