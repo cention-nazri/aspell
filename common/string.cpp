@@ -32,8 +32,9 @@ namespace pcommon {
     return true;
   }
 
-  bool StringIStream::read(char * str, unsigned int size)
+  bool StringIStream::read(void * data, unsigned int size)
   {
+    char * str = static_cast<char *>(data);
     while (*in_str != '\0' && size != 0) {
       *str = *in_str;
       ++in_str;

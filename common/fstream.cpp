@@ -85,7 +85,7 @@ namespace pcommon {
     return true;
   }
 
-  bool FStream::read(char * str, unsigned int n)
+  bool FStream::read(void * str, unsigned int n)
   {
     fread(str,1,n,file_);
     return operator bool();

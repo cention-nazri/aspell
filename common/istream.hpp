@@ -16,7 +16,7 @@ namespace pcommon {
     IStream(char d = '\n') : delem(d) {}
     bool getline(String & str) {return getline(str,delem);}
     virtual bool getline(String &, char c) = 0;
-    virtual bool read(char *, unsigned int) = 0;
+    virtual bool read(void *, unsigned int) = 0;
 
     virtual ~IStream() {}
   };

@@ -69,13 +69,12 @@ using std::vector;
 using std::pair;
 
 #include <string.h>
-#include <iostream.h>// |
-#include <fstream.h> // | FIXME: convert to using FStream
-#include <stdio.h>   // |
-#include <errno.h>
+#include <stdio.h>
+//#include <errno.h>
 
 #include "settings.h"
 
+#include "fstream.hpp"
 #include "vector_hash-t.hpp"
 #include "block_vector.hpp"
 #include "data.hpp"
@@ -106,11 +105,11 @@ typedef unsigned short u16int;
 #ifdef HAVE_MMAP
 
 static inline char * mmap_open(unsigned int block_size, 
-			       FILE * f, 
+			       FStream & f, 
 			       unsigned int offset) 
 {
-  fflush(f);
-  int fd = fileno(f);
+  f.flush();
+  int fd = f.file_no();
   return static_cast<char *>
     (mmap(NULL, block_size, PROT_READ, MAP_SHARED, fd, offset));
 }
@@ -129,7 +128,7 @@ static inline size_t page_size()
 #else
 
 static inline char * mmap_open(unsigned int, 
-			       FILE *, 
+			       FStream & f, 
 			       unsigned int) 
 {
   return reinterpret_cast<char *>(MAP_FAILED);
@@ -301,19 +300,18 @@ namespace aspell_default_readonly_ws {
     set_file_name(f0);
     const char * fn = file_name();
 
-    FILE * f = fopen(fn, "rb");
-    if (f == 0) 
-      return make_err(cant_read_file, fn);
+    FStream f;
+    RET_ON_ERR(f.open(fn, "rb"));
 
     DataHead data_head;
 
-    fread(&data_head, sizeof(DataHead), 1, f);
+    f.read(&data_head, sizeof(DataHead));
 
     if (strcmp(data_head.check_word, "aspell rowl 1.3") != 0)
       return make_err(bad_file_format, fn);
 
     char * word = new char[data_head.lang_name_size];
-    fread(word, data_head.lang_name_size, 1, f);
+    f.read(word, data_head.lang_name_size);
 
     PosibErr<void> pe = set_check_lang(word,config);
     if (pe.has_err())
@@ -322,7 +320,7 @@ namespace aspell_default_readonly_ws {
     delete[] word;
 
     word = new char[data_head.soundslike_name_size];
-    fread(word, data_head.soundslike_name_size, 1, f);
+    f.read(word, data_head.soundslike_name_size);
 
     if (strcmp(word, lang()->soundslike_name()) != 0)
       return make_err(bad_file_format, fn, "Wrong Soundslike");
@@ -334,7 +332,7 @@ namespace aspell_default_readonly_ws {
     delete[] word;
 
     word = new char[data_head.soundslike_version_size];
-    fread(word, data_head.soundslike_version_size, 1, f);
+    f.read(word, data_head.soundslike_version_size);
 
     if (strcmp(word, lang()->soundslike_version()) != 0)
       return make_err(bad_file_format, fn, "Wrong Soundslike Version");
@@ -343,7 +341,7 @@ namespace aspell_default_readonly_ws {
 
     if (data_head.minimal_specified != u32int_max) {
       word = new char[data_head.middle_chars_size];
-      fread(word, data_head.middle_chars_size, 1, f);
+      f.read(word, data_head.middle_chars_size);
       
       if (strcmp(word, lang()->mid_chars()) != 0)
 	return make_err(bad_file_format, fn, "Different Middle Characters");
@@ -366,9 +364,8 @@ namespace aspell_default_readonly_ws {
     block_mmaped = block != (char *)MAP_FAILED;
     if (!block_mmaped) {
       block = new char[block_size];
-      fseek(f, data_head.head_size, SEEK_SET);
-      unsigned int s = fread(block, 1, block_size, f);
-      assert(s == block_size);
+      f.seek(data_head.head_size, SEEK_SET);
+      f.read(block, block_size);
     }
 
     word_block       = block;
@@ -392,7 +389,6 @@ namespace aspell_default_readonly_ws {
 				     begin + data_head.soundslike_buckets);
       soundslike_lookup.set_size(data_head.soundslike_count);
     }
-    fclose(f);
 
     return no_err;
   }
@@ -623,11 +619,11 @@ namespace aspell_default_readonly_ws {
     return ((i + size - 1)/size)*size;
   }
 
-  static void advance_file(ofstream & OUT, int pos) {
-    int diff = pos - OUT.tellp();
+  static void advance_file(FStream & OUT, int pos) {
+    int diff = pos - OUT.tell();
     assert(diff >= 0);
     for(; diff != 0; --diff)
-      OUT.put('\0');
+      OUT << '\0';
   }
   
   PosibErr<void> create (ParmString base, 
@@ -645,8 +641,9 @@ namespace aspell_default_readonly_ws {
 
     const char * mid_chars = lang.mid_chars();
 
-    ofstream OUT;
-    OUT.open(base, ios::out | ios::binary);
+    FStream OUT;
+   
+    OUT.open(base, "wb");
 
     DataHead data_head;
     memset(&data_head, 0, sizeof(data_head));
@@ -761,7 +758,7 @@ namespace aspell_default_readonly_ws {
       
       vector<u32int> final_hash(word_hash.bucket_count(), u32int_max);
       
-      OUT.put('\0');
+      OUT << '\0';
       for (unsigned int i = 0; i != word_hash.vector().size(); ++i) {
 	
 	const char * value = word_hash.vector()[i];
@@ -770,9 +767,9 @@ namespace aspell_default_readonly_ws {
 
 	// write compound info
 	if (*(value - 1) != '\0')
-	  OUT.put(*(value-1));
+	  OUT << *(value-1);
 
-	final_hash[i] = OUT.tellp() - start;
+	final_hash[i] = OUT.tell() - start;
 
 	OUT << value << '\0';
 	if (use_soundslike) {
@@ -827,7 +824,7 @@ namespace aspell_default_readonly_ws {
 	}
       }
       
-      data_head.word_block_size = round_up(OUT.tellp() - start + 1l, 
+      data_head.word_block_size = round_up(OUT.tell() - start + 1l, 
 					   page_size);
       data_head.total_block_size = data_head.word_block_size;
 
@@ -850,7 +847,7 @@ namespace aspell_default_readonly_ws {
     
       vector<u32int> final_hash(sound_prehash.bucket_count(), u32int_max);
 
-      streampos start = OUT.tellp();
+      streampos start = OUT.tell();
       
       //
       // Writting soundslike words, creating soundslike Final Hash
@@ -873,14 +870,14 @@ namespace aspell_default_readonly_ws {
 
 	OUT.write(reinterpret_cast<char *>(&count),2);
 
-	final_hash[i] = OUT.tellp() - start;
+	final_hash[i] = OUT.tell() - start;
 
 	OUT << value.first << '\0';
 
-	advance_file(OUT, round_up(OUT.tellp(), 4));
+	advance_file(OUT, round_up(OUT.tell(), 4));
       }
       data_head.soundslike_block_size 
-	= round_up(OUT.tellp() - start, page_size);
+	= round_up(OUT.tell() - start, page_size);
       data_head.total_block_size += data_head.soundslike_block_size;
 
       // Witting Final soundslike Hash
@@ -899,7 +896,7 @@ namespace aspell_default_readonly_ws {
     advance_file(OUT, data_head.head_size + data_head.total_block_size);
 
     // write data head to file
-    OUT.seekp(0);
+    OUT.restart();
     OUT.write((char *)&data_head, sizeof(DataHead));
     OUT.write(lang.name(), data_head.lang_name_size);
     OUT.write(lang.soundslike_name(), data_head.soundslike_name_size);

@@ -41,6 +41,8 @@ namespace pcommon {
     int file_no();
 
     void flush() {fflush(file_);}
+
+    // 
     void restart();
 
     void skipws();
@@ -52,10 +54,16 @@ namespace pcommon {
     bool getline(String &, char d);
 
     // These perform raw io with any sort of formating
-    bool read(char *, unsigned int i);
+    bool read(void *, unsigned int i);
     void write(ParmString);
     void write(char c);
     void write(const char *, unsigned int i);
+
+    long int tell() {return ftell(file_);}
+    bool seek(long int offset, int whence) {
+      return fseek(file_, offset, whence) == 0;
+    }
+    
 
     // The << >> operators are designed to work about they same
     // as they would with A C++ stream.

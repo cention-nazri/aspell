@@ -71,7 +71,7 @@ namespace pcommon {
     StringIStream(ParmString s, char d = ';')
       : IStream(d), in_str(s) {}
     bool getline(String & str, char c);
-    bool read(char * str, unsigned int size);
+    bool read(void * data, unsigned int size);
   };
 
   template <> struct hash<String> : public HashString<String> {};
