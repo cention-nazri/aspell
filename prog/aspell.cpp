@@ -28,6 +28,11 @@
 #include <sys/types.h>
 #include <regex.h>
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
+
 #include "asc_ctype.hpp"
 #include "check_funs.hpp"
 #include "config.hpp"
@@ -826,6 +831,7 @@ void check()
   FILE * in = 0;
   FILE * out = 0;
   Mapping mapping;
+  bool changed = false;
 
   if (args.size() == 0) {
     print_error(_("You must specify a file name."));
@@ -846,6 +852,11 @@ void check()
   if (!out) {
     print_error(_("Could not open the file \"%s\"  for writing. File not saved."), file_name);
     exit(-1);
+  }
+  {
+    struct stat st;
+    fstat(fileno(in), &st);
+    fchmod(fileno(out), st.st_mode);
   }
 
   if (!options->have("mode"))
@@ -986,12 +997,14 @@ void check()
       if (new_word[0] >= '1' && new_word[0] < (char)suggestions_size + '1')
         new_word = sug_con[new_word[0]-'1'];
       state->replace(new_word);
+      changed = true;
       if (mapping[choice] == ReplaceAll)
         replace_list->replace(word, new_word);
       break;
     default:
       if (choice >= '1' && choice < (char)suggestions_size + '1') { 
         state->replace(sug_con[choice-'1']);
+        changed = true;
       } else {
         error(_("Sorry that is an invalid choice!"));
         goto choice_loop;
@@ -1003,13 +1016,22 @@ exit_loop:
     aspell_speller_save_all_word_lists(speller);
     state.del(); // to close the file handles
     delete_aspell_speller(speller);
-    
-    bool keep_backup = options->retrieve_bool("backup");
-    String backup_name = file_name;
-    backup_name += ".bak";
-    if (keep_backup)
-      rename_file(file_name, backup_name);
-    rename_file(new_name, file_name);
+
+    if (changed) {
+
+      bool keep_backup = options->retrieve_bool("backup");
+      if (keep_backup) {
+        String backup_name = file_name;
+        backup_name += ".bak";
+        rename_file(file_name, backup_name);
+      }
+      rename_file(new_name, file_name);
+
+    } else {
+
+      remove_file(new_name);
+
+    }
     
     //end_check();
     
