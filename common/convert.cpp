@@ -197,17 +197,12 @@ namespace acommon {
     }
     unsigned int chr;
     Uni32 uni;
-    int c;
-    while (c = data.get(), c != EOF && c != '\n');
-    while (c = data.get(), c != EOF && c != '\n');
+    String line;
+    data.getline(line);
+    data.getline(line);
     for (chr = 0; chr != 256; ++chr) {
-      data >> uni;
-
-      if (!data)
-	return make_err(bad_file_format, file_name);
-
-      while (c = data.get(), c != EOF && c != '\n');
-
+      data.getline(line);
+      uni = strtol(line.str() + 3, 0, 16);
       to.insert(chr, uni);
       from.insert(uni, chr);
     }

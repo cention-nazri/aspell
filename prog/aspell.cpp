@@ -1420,10 +1420,11 @@ void soundslike() {
   Conv iconv(setup_conv(options, lang));
   Conv oconv(setup_conv(lang, options));
   String word;
+  String sl;
   while (CIN.getline(word)) {
-    char * sl = iconv(word.data(), word.size());
-    lang->LangImpl::to_soundslike(sl, sl);
-    printf("%s\t%s\n", word.str(), sl);
+    const char * w = iconv(word);
+    lang->LangImpl::to_soundslike(sl, w);
+    printf("%s\t%s\n", word.str(), oconv(sl));
   }
 }
 

@@ -1,8 +1,8 @@
 \input texinfo   @c -*-texinfo-*-
-@comment $Id: aspell.texi,v 1.14 2004/03/05 04:11:15 kevina Exp $
+@comment $Id: aspell.texi,v 1.15 2004/03/06 08:01:08 kevina Exp $
 @comment %**start of header
 @setfilename aspell.info
-@settitle GNU Aspell 0.51
+@settitle GNU Aspell 0.60
 @syncodeindex pg cp
 @documentencoding ISO-8859-1
 @comment %**end of header
@@ -27,7 +27,7 @@ Documentation License".
 @end direntry
 
 @titlepage
-@title GNU Aspell 0.51
+@title GNU Aspell 0.60
 @author Kevin Atkinson (@email{kevina@@gnu.org})
 @page
 @vskip 0pt plus 1filll
@@ -50,10 +50,11 @@ It can either be used as a library or as an independent spell checker.
 * Writing programs to use Aspell::  
 * Adding Support For Other Languages::  
 * Implementation Notes::        
+* Languages Which Aspell can Support::  
 * Support::                     
 * Helping Out::                 
-* To Do::
-* Installing::
+* To Do::             
+* Installing::          
 * ChangeLog::                   
 * Credits::                     
 * Copying::
@@ -111,7 +112,17 @@ Adding Support For Other Languages
 Implementation Notes
 
 * Aspell Suggestion Strategy::  
-* Notes on 8-bit Characters::   
+* Notes on 8-bit Characters::
+
+Languages Which Aspell can Support
+
+* 220 or Fewer Symbols::  Languages with 220 or Fewer Unique Symbols       
+* Script Unknown::        Languages in Which the Exact Script Used in Unknown
+* Ethiopic::              The Ethiopic Script
+* Thai::                  The Thai Script
+* Hanzi::                 Languages which use Hanzi Characters
+* Japanese::              Japanese
+* Multiple Scripts::      Languages Written in Multiple Scripts
 
 To Do
 
@@ -127,15 +138,6 @@ Notes on Various Items
 * Word skipping by context::    
 * Hidden Markov Model::         
 * Email the Personal Dictionary::  
-
-Installing
-
-* Generic Install Instructions::  
-* Curses Notes::                
-* Upgrading from Aspell 0.50::  
-* Upgrading from Aspell .33/Pspell .12::  
-* Upgrading from a pre-release snapshot::  
-* WIN32 Notes::                 
 
 Copying
 
@@ -198,10 +200,10 @@ does or for that matter any other spell checker I have seen.  If you
 know a spell checker that does a better job please let me know.
 
 @item
-Can learn from users misspellings.
+Can learn from users' misspellings.
 
 @item
-Is an actual library that others programs can link to instead of
+Is an actual library that other programs can link to instead of
 having to use it through a pipe.
 
 @item
@@ -2440,7 +2442,7 @@ REP ch k
 @node Affix Compression
 @section Affix Compression
 
-Aspell, as of version 0.51, now has support for affix compression.
+Aspell, as of version 0.60, now has support for affix compression.
 The codebase comes from MySpell found in OpenOffice.
 
 To add support for affix compression add the following lines to the
@@ -2629,8 +2631,10 @@ If your language has no more than 220 distinct symbols, including
 different capitalizations and accents, than Aspell can support it.
 
 In order to create a new character set you will need to download
-@uref{ftp://ftp.gnu.org/gnu/aspell/mkchardata-0.1.tar.gz} and follow
-the instructions in the @file{README} file.
+@uref{ftp://alpha.gnu.org/gnu/aspell/mkchardata-0.2.tar.gz} and follow
+the instructions in the @file{README} file.  Version 0.1 of mkchardata
+@emph{will not} work as the format of the character data file has
+changed.
 
 @node Implementation Notes
 @appendix Implementation Notes
@@ -2762,6 +2766,386 @@ and quite possible a patch to solve cleanly convert Aspell to Unicode
 internally with out a serious performance lost OR serious memory usage
 increase.
 
+@node Languages Which Aspell can Support
+@appendix Languages Which Aspell can Support
+
+Even though Aspell will remain 8-bit internally it should still be be
+able to support any written languages not based on a logographic
+script.  A only logographic writing system in current use are those
+based on h@`anzi which includes Chinese, Japanese, and sometimes Korean.
+
+@menu
+* 220 or Fewer Symbols::  Languages with 220 or Fewer Unique Symbols       
+* Script Unknown::        Languages in Which the Exact Script Used in Unknown
+* Ethiopic::              The Ethiopic Script
+* Thai::                  The Thai Script
+* Hanzi::                 Languages which use Hanzi Characters
+* Japanese::              Japanese
+* Multiple Scripts::      Languages Written in Multiple Scripts
+@end menu
+
+@c LANG TABLE BEGIN
+
+@node 220 or Fewer Symbols
+@appendixsec Languages with 220 or Fewer Unique Symbols
+
+Aspell 0.60 should be able to support the following languages as, to
+the best of my knowledge, they all contain 220 or fewer symbols and
+can thus, fit within an 8-bit character set.  If an existing character
+set does not exists than a new one can be invented.  This is true even
+if the script is not yet supported by Unicode as the private use area
+can be used.
+
+@multitable {Code} {Kalaallisut/Greenlandic} {Canadian Syllabics} {Dictionary} {Translation}
+@item Code @tab Language Name @tab Script @tab Dictionary Available @tab Gettext Translation
+@item
+@item ab @tab Abkhazian @tab Cyrillic @tab - @tab -
+@item ae @tab Avestan @tab Avestan @tab - @tab -
+@item af @tab Afrikaans @tab Latin @tab Yes @tab -
+@item an @tab Aragonese @tab Latin @tab - @tab -
+@item ar @tab Arabic @tab Arabic @tab - @tab -
+@item as @tab Assamese @tab Bengali @tab - @tab -
+@item ay @tab Aymara @tab Latin @tab - @tab -
+@item az @tab Azerbaijani @tab Arabic @tab - @tab -
+@item az @tab @tab Cyrillic @tab - @tab -
+@item az @tab @tab Latin @tab - @tab -
+@item
+@item ba @tab Bashkir @tab Cyrillic @tab - @tab -
+@item be @tab Belarusian @tab Cyrillic @tab - @tab Yes
+@item bg @tab Bulgarian @tab Cyrillic @tab Yes @tab -
+@item bh @tab Bihari @tab Devanagari @tab - @tab -
+@item bn @tab Bengali @tab Bengali @tab - @tab -
+@item bo @tab Tibetan @tab Tibetan @tab - @tab -
+@item br @tab Breton @tab Latin @tab Yes @tab -
+@item bs @tab Bosnian @tab Latin @tab - @tab -
+@item
+@item ca @tab Catalan/Valencian @tab Latin @tab Yes @tab -
+@item ce @tab Chechen @tab Cyrillic @tab - @tab -
+@item ch @tab Chamorro @tab Latin @tab - @tab -
+@item co @tab Corsican @tab Latin @tab - @tab -
+@item cr @tab Cree @tab Canadian Syllabics @tab - @tab -
+@item cr @tab @tab Latin @tab - @tab -
+@item cs @tab Czech @tab Latin @tab Yes @tab -
+@item cv @tab Chuvash @tab Cyrillic @tab - @tab -
+@item cy @tab Welsh @tab Latin @tab Yes @tab -
+@item
+@item da @tab Danish @tab Latin @tab Yes @tab -
+@item de @tab German @tab Latin @tab Yes @tab -
+@item dv @tab Divehi @tab Dhives Akuru @tab - @tab -
+@item dz @tab Dzongkha @tab Tibetan @tab - @tab -
+@item
+@item el @tab Greek @tab Greek @tab Yes @tab -
+@item en @tab English @tab Latin @tab Yes @tab -
+@item eo @tab Esperanto @tab Latin @tab Yes @tab -
+@item es @tab Spanish @tab Latin @tab Yes @tab Incomplete
+@item et @tab Estonian @tab Latin @tab - @tab -
+@item eu @tab Basque @tab Latin @tab - @tab -
+@item
+@item fa @tab Persian @tab Arabic @tab - @tab -
+@item fi @tab Finnish @tab Latin @tab - @tab -
+@item fj @tab Fijian @tab Latin @tab - @tab -
+@item fo @tab Faroese @tab Latin @tab Yes @tab -
+@item fr @tab French @tab Latin @tab Yes @tab Yes
+@item fy @tab Frisian @tab Latin @tab - @tab -
+@item
+@item ga @tab Irish @tab Latin @tab Yes @tab Yes
+@item gd @tab Scottish Gaelic @tab Latin @tab - @tab -
+@item gl @tab Gallegan @tab Latin @tab Yes @tab -
+@item gn @tab Guarani @tab Latin @tab - @tab -
+@item gu @tab Gujarati @tab Gujarati @tab - @tab -
+@item gv @tab Manx @tab Latin @tab - @tab -
+@item
+@item ha @tab Hausa @tab Latin @tab - @tab -
+@item he @tab Hebrew @tab Hebrew @tab - @tab -
+@item hi @tab Hindi @tab Devanagari @tab - @tab -
+@item hr @tab Croatian @tab Latin @tab Yes @tab -
+@item hu @tab Hungarian @tab Latin @tab - @tab -
+@item hy @tab Armenian @tab Armenian @tab - @tab -
+@item
+@item ia @tab Interlingua (IALA) @tab Latin @tab - @tab -
+@item id @tab Indonesian @tab Arabic @tab - @tab -
+@item id @tab @tab Latin @tab Yes @tab -
+@item io @tab Ido @tab Latin @tab - @tab -
+@item is @tab Icelandic @tab Latin @tab Yes @tab -
+@item it @tab Italian @tab Latin @tab Yes @tab -
+@item iu @tab Inuktitut @tab Canadian Syllabics @tab - @tab -
+@item iu @tab @tab Latin @tab - @tab -
+@item
+@item ja @tab Japanese @tab Latin @tab - @tab -
+@item jv @tab Javanese @tab Javanese @tab - @tab -
+@item jv @tab @tab Latin @tab - @tab -
+@item
+@item ka @tab Georgian @tab Georgian @tab - @tab -
+@item kk @tab Kazakh @tab Cyrillic @tab - @tab -
+@item kl @tab Kalaallisut/Greenlandic @tab Latin @tab - @tab -
+@item km @tab Khmer @tab Khmer @tab - @tab -
+@item kn @tab Kannada @tab Kannada @tab - @tab -
+@item ko @tab Korean @tab Hangeul @tab - @tab -
+@item kr @tab Kanuri @tab Latin @tab - @tab -
+@item ks @tab Kashmiri @tab Arabic @tab - @tab -
+@item ks @tab @tab Devanagari @tab - @tab -
+@item ku @tab Kurdish @tab Arabic @tab - @tab -
+@item ku @tab @tab Cyrillic @tab - @tab -
+@item ku @tab @tab Latin @tab - @tab -
+@item kv @tab Komi @tab Cyrillic @tab - @tab -
+@item kw @tab Cornish @tab Latin @tab - @tab -
+@item ky @tab Kirghiz @tab Arabic @tab - @tab -
+@item ky @tab @tab Cyrillic @tab - @tab -
+@item ky @tab @tab Latin @tab - @tab -
+@item
+@item la @tab Latin @tab Latin @tab - @tab -
+@item lo @tab Lao @tab Lao @tab - @tab -
+@item lt @tab Lithuanian @tab Latin @tab - @tab -
+@item lv @tab Latvian @tab Latin @tab - @tab -
+@item
+@item mi @tab Maori @tab Latin @tab Yes @tab -
+@item mk @tab Makasar @tab Lontara/Makasar @tab - @tab -
+@item ml @tab Malayalam @tab Latin @tab - @tab -
+@item ml @tab @tab Malayalam @tab - @tab -
+@item mn @tab Mongolian @tab Cyrillic @tab - @tab -
+@item mn @tab @tab Mongolian @tab - @tab -
+@item mo @tab Moldavian @tab Cyrillic @tab - @tab -
+@item mr @tab Marathi @tab Devanagari @tab - @tab -
+@item ms @tab Malay @tab Arabic @tab - @tab -
+@item ms @tab @tab Latin @tab Yes @tab -
+@item mt @tab Maltese @tab Latin @tab - @tab -
+@item my @tab Burmese @tab Myanmar @tab - @tab -
+@item
+@item nb @tab Norwegian Bokmal @tab Latin @tab - @tab -
+@item ne @tab Nepali @tab Devanagari @tab - @tab -
+@item nl @tab Dutch @tab Latin @tab Yes @tab Yes
+@item nn @tab Norwegian Nynorsk @tab Latin @tab - @tab -
+@item no @tab Norwegian @tab Latin @tab Yes @tab -
+@item nv @tab Navajo @tab Latin @tab - @tab -
+@item
+@item oc @tab Occitan/Provencal @tab Latin @tab - @tab -
+@item oj @tab Ojibwa @tab Ojibwe @tab - @tab -
+@item or @tab Oriya @tab Oriya @tab - @tab -
+@item os @tab Ossetic @tab Cyrillic @tab - @tab -
+@item
+@item pa @tab Punjabi @tab Gurmukhi @tab - @tab -
+@item pi @tab Pali @tab Devanagari @tab - @tab -
+@item pi @tab @tab Sinhala @tab - @tab -
+@item pl @tab Polish @tab Latin @tab Yes @tab -
+@item ps @tab Pushto @tab Arabic @tab - @tab -
+@item pt @tab Portuguese @tab Latin @tab Yes @tab Yes
+@item
+@item qu @tab Quechua @tab Latin @tab - @tab -
+@item
+@item rm @tab Raeto-Romance @tab Latin @tab - @tab -
+@item ro @tab Romanian @tab Latin @tab Yes @tab -
+@item ru @tab Russian @tab Cyrillic @tab Yes @tab -
+@item
+@item sa @tab Sanskrit @tab Devanagari @tab - @tab -
+@item sa @tab @tab Sinhala @tab - @tab -
+@item sd @tab Sindhi @tab Arabic @tab - @tab -
+@item se @tab Northern Sami @tab Latin @tab - @tab -
+@item sk @tab Slovak @tab Latin @tab Yes @tab -
+@item sl @tab Slovenian @tab Latin @tab Yes @tab -
+@item sn @tab Shona @tab Latin @tab - @tab -
+@item so @tab Somali @tab Latin @tab - @tab -
+@item sq @tab Albanian @tab Latin @tab - @tab -
+@item sr @tab Serbian @tab Cyrillic @tab - @tab Yes
+@item sr @tab @tab Latin @tab - @tab -
+@item su @tab Sundanese @tab Latin @tab - @tab -
+@item sv @tab Swedish @tab Latin @tab Yes @tab -
+@item sw @tab Swahili @tab Latin @tab - @tab -
+@item
+@item ta @tab Tamil @tab Tamil @tab - @tab -
+@item te @tab Telugu @tab Telugu @tab - @tab -
+@item tg @tab Tajik @tab Arabic @tab - @tab -
+@item tg @tab @tab Cyrillic @tab - @tab -
+@item tg @tab @tab Latin @tab - @tab -
+@item tk @tab Turkmen @tab Arabic @tab - @tab -
+@item tk @tab @tab Cyrillic @tab - @tab -
+@item tk @tab @tab Latin @tab - @tab -
+@item tl @tab Tagalog @tab Latin @tab - @tab -
+@item tl @tab @tab Tagalog @tab - @tab -
+@item tr @tab Turkish @tab Arabic @tab - @tab -
+@item tr @tab @tab Latin @tab - @tab -
+@item tt @tab Tatar @tab Cyrillic @tab - @tab -
+@item ty @tab Tahitian @tab Latin @tab - @tab -
+@item
+@item ug @tab Uighur @tab Arabic @tab - @tab -
+@item ug @tab @tab Cyrillic @tab - @tab -
+@item ug @tab @tab Latin @tab - @tab -
+@item ug @tab @tab Uyghur @tab - @tab -
+@item uk @tab Ukrainian @tab Cyrillic @tab Yes @tab -
+@item ur @tab Urdu @tab Arabic @tab - @tab -
+@item uz @tab Uzbek @tab Cyrillic @tab - @tab -
+@item uz @tab @tab Latin @tab - @tab -
+@item
+@item vi @tab Vietnamese @tab Latin @tab - @tab -
+@item vo @tab Volapuk @tab Latin @tab - @tab -
+@item
+@item wa @tab Walloon @tab Latin @tab - @tab Incomplete
+@item
+@item yi @tab Yiddish @tab Hebrew @tab - @tab -
+@item yo @tab Yoruba @tab Latin @tab - @tab -
+@item
+@item zu @tab Zulu @tab Latin @tab - @tab -
+
+@end multitable
+
+@node Script Unknown
+@appendixsec Languages in Which the Exact Script Used in Unknown
+
+Aspell can most likely support any of the following languages;
+however, I am unsure what script they are written in.  Most of them
+are probably written in Latin but I am not sure.  If you have any
+information about these languages please email me at @email{kevina@@gnu.org}.
+
+@multitable {aa} {Haitian Creole}
+@item Code @tab Language Name
+@item
+@item aa @tab Afar
+@item ak @tab Akan
+@item av @tab Avaric
+@item
+@item bi @tab Bislama
+@item bm @tab Bambara
+@item
+@item cu @tab Old Slavonic
+@item
+@item ee @tab Ewe
+@item
+@item ff @tab Fulah
+@item
+@item ho @tab Hiri Motu
+@item ht @tab Haitian Creole
+@item hz @tab Herero
+@item
+@item ie @tab Interlingue
+@item ig @tab Igbo
+@item ii @tab Sichuan Yi
+@item ik @tab Inupiaq
+@item
+@item kg @tab Kongo
+@item ki @tab Kikuyu/Gikuyu
+@item kj @tab Kwanyama
+@item
+@item lb @tab Luxembourgish
+@item lg @tab Ganda
+@item li @tab Limburgan
+@item ln @tab Lingala
+@item lu @tab Luba-Katanga
+@item
+@item mg @tab Malagasy
+@item mh @tab Marshallese
+@item
+@item na @tab Nauru
+@item nd @tab North Ndebele
+@item ng @tab Ndonga
+@item nr @tab South Ndebele
+@item ny @tab Nyanja
+@item
+@item rn @tab Rundi
+@item rw @tab Kinyarwanda
+@item
+@item sc @tab Sardinian
+@item sg @tab Sango
+@item si @tab Sinhalese
+@item sm @tab Samoan
+@item ss @tab Swati
+@item st @tab Southern Sotho
+@item
+@item tn @tab Tswana
+@item to @tab Tonga
+@item ts @tab Tsonga
+@item tw @tab Twi
+@item
+@item ve @tab Venda
+@item
+@item wo @tab Wolof
+@item
+@item xh @tab Xhosa
+@item
+@item za @tab Zhuang
+
+@end multitable
+@c LANG TABLE END
+
+
+@node Ethiopic
+@appendixsec The Ethiopic Script
+
+Even though the Ethiopic script has more than 220 distinct characters
+with a little work Aspell can still handle it.  The idea is to split
+each character into two parts based on the matrix representation.  The
+first 3 bits will be the first part and could be mapped to
+@samp{10000???}.  The next 6 bits will be the second part and could be
+mapped to @samp{11??????}.  The combined character will then be mapped
+with the upper bits coming first.  Thus each Ethiopic syllabary will
+have the form @samp{11?????? 10000???}.  By mapping the first and second
+parts to separate 8-bit characters it is easy to tell which part
+represents the consonant and which part represents the vowel of the
+syllabary.  This encoding of the syllabary is far more useful to Aspell
+than if they were stored in UTF-8 or UTF-16.  In fact, the exiting
+suggestion strategy of Aspell will work well with this encoding with out
+any additional modifications.  However, additional improvements may be
+possible by taking advantage of the consonant-vowel structure of this
+encoding.
+
+In fact, the split consonant-vowel representation may prove to be so
+useful that it may be beneficial to encode other syllabary in this
+fashion, even if they are less than 220 of them.
+
+The code to break up a syllabary into the consonant-vowel parts does
+not exists as of Aspell 0.60.  However, it will be fairly easy to add
+it as part of the Unicode normalization process once that is written.
+
+@node Thai
+@appendixsec The Thai Script
+
+The Thai script presents a different problem for Aspell.  The problem
+is not that there are more than 220 unique symbols, but that there are
+no spaces between words.  This means that there is no easy way to
+split a sentence into individual words.  However, it is still possible
+to spell check Thai, it is just a lot more difficult.  I will be happy
+to work within someone who is interested in adding Thai support to
+Aspell, but it is not likely something I will do in the foreseeable
+future.
+
+@node Hanzi
+@appendixsec Languages which use H@`anzi Characters
+
+H@`anzi Characters are used to write Chinese, Japanese, Korean, and were
+once used to write Vietnamese.  Each h@`anzi character represents a
+syllable of a spoken word and also has a meaning.  Since there are around
+3,000 of them in common usage it is unlikely that Aspell will ever be
+able to support spell checking languages written using h@`anzi.
+However, I am not even sure if these languages need spell checking since
+h@`anzi characters are generally not entered in directly.  Furthermore
+even if Aspell could spell check h@`anzi the exiting suggestion strategy
+will not work well at all, and thus a completely new strategy will need
+to be developed.
+
+@node Japanese
+@appendixsec Japanese
+
+Modern Japanese is written in a mixture of hiragana, katakana, kanji,
+and sometimes romaji.  Hiragana, Katakana are both syllabary unique
+to Japan, kanji is a modified form of h@`anzi, and romaji uses the
+Latin alphabet.  With some work, Aspell should be able to check the
+non-kanji part of Japanese text.  However, based on my limited
+understanding of Japanese hiragana is often used at the end of kanji.
+Thus if Aspell was to simply separate out the hiragana from kanji it
+would end up with a lot of word endings which are not proper words and
+will thus be flagged as misspellings.
+
+@node Multiple Scripts
+@appendixsec Languages Written in Multiple Scripts
+
+Aspell should be able to check text written in the same language but
+in multiple scripts with some work.  If the number of unique symbols
+in both scripts is less than 220 than a special character set can be
+used to allow both scripts to be encoding in the same dictionary.
+However this may not be the most efficient solution.  An alternate
+solution is to store each script in its own dictionary and allow
+Aspell to chose the correct dictionary based on which script the given
+word is written in.  Aspell currently does not support this mode of
+spell checking however it is something that I hope to eventually
+support.
 
 @node Support
 @appendix Support
@@ -2800,7 +3184,7 @@ directly.
 Words in bold indicate how you should refer to the item when
 discussing it with me or others.
 
-@appendixsubsec Things that will be done by Aspell 0.51
+@appendixsubsec Things that will be done by Aspell 0.60
 
 These items are already done, or close to it, in the develpment (this)
 version of Aspell.
@@ -2835,7 +3219,7 @@ unicode} for everything read in and printed out by Aspell.
 These items need to be done before I consider Aspell finished. If you
 are interested in helping me with one of these tasks please email
 me. Good C++ skills are needed for most of these tasks involving
-coding. I hope to have these all done by Aspell 0.51.
+coding. I hope to have these all done by Aspell 0.60.
 
 @itemize @bullet
 @item
@@ -2859,7 +3243,7 @@ implemented. However, I could still use help with them.
 Better @strong{support for compound words}. If you speak a language
 which has a lot of compound of run-together words I would appreciate
 hearing back from you. The current support for @emph{conditional}
-compound words will disappear in Aspell 0.51 since no one seams to be
+compound words will disappear in Aspell 0.60 since no one seams to be
 using it. Support for @emph{unconditional} compound words will still
 be available. However, several people have informed me that they need
 more. I attempted to provide that, but it wasn't powerful enough, and
@@ -3023,7 +3407,7 @@ Ideally the Aspell utility use the @env{LC_CTYPE} for the encoding,
 however using @env{LC_CTYPE} to figure out how the data files are
 encoded will lead to nothing but trouble.
 
-So, I @emph{hope} to get all this done by Aspell 0.51 but I don't know
+So, I @emph{hope} to get all this done by Aspell 0.60 but I don't know
 if I will.  If someone would like to assist me in this task I would
 really appreciate it.
 
@@ -3190,7 +3574,7 @@ a C++ program.
 @node ChangeLog
 @appendix ChangeLog
 
-@heading Changes from 0.50.? to 0.51
+@heading Changes from 0.50.? to 0.60
 
 @itemize @bullet
 @item
@@ -3834,7 +4218,7 @@ Miscellaneous other bug fixes.
 
 @itemize @bullet
 @item
-Improved the @TeX{} filter so that it will accept '@' at the begging
+Improved the @TeX{} filter so that it will accept '@@' at the begging
 of a command name and ignore trailing '*'s.  It also now has better
 defaults for which parameters to skip.
 

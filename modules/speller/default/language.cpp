@@ -23,6 +23,26 @@
 
 namespace aspeller {
 
+  static const char TO_CHAR_TYPE[256] = {
+    // 1  2  3  4  5  6  7  8  9  A  B  C  D  E  F 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 0
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 1
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 2
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 3
+    0, 4, 0, 0, 3, 0, 0, 0, 2, 0, 0, 0, 7, 5, 0, 0, // 4
+    0, 0, 0, 0, 0, 0, 6, 1, 0, 0, 0, 0, 0, 0, 0, 0, // 5
+    0, 4, 0, 0, 3, 0, 0, 0, 2, 0, 0, 0, 7, 5, 0, 0, // 6
+    0, 0, 0, 0, 0, 0, 6, 1, 0, 0, 0, 0, 0, 0, 0, 0, // 7
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 8
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 9
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // A
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // B
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // C
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // D
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // E
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0  // F
+  };
+
   static const int FOR_CONFIG = 1;
 
   static const KeyInfo lang_config_keys[] = {
@@ -126,23 +146,42 @@ namespace aspeller {
     String temp;
     char_data.getline(temp);
     char_data.getline(temp);
-    for (int i = 0; i != 256; ++i) {
-      char_data >> to_uni_[i];
-      char_data >> temp;
-      char_type_[i] = temp == "letter" ? letter 
-	: temp == "space"  ? space 
-	: other;
-      int num = -1;
-      char_data >> num; to_lower_[i]    = static_cast<char>(num);
-      char_data >> num; to_upper_[i]    = static_cast<char>(num);
-      char_data >> num; to_title_[i]    = static_cast<char>(num);
-      char_data >> num; to_sl_[i]       = static_cast<char>(num);
-      char_data >> num; to_stripped_[i] = static_cast<char>(num);
-      char_data >> num; de_accent_[i] = static_cast<char>(num);
-      if (char_data.peek() != '\n') 
-	return make_err(bad_file_format, char_data_name);
-    }
     
+    for (unsigned int i = 0; i != 256; ++i) {
+      char_data.getline(temp);
+      char * p = const_cast<char *>(temp.str());
+      if (strtoul(p, &p, 16) != i) 
+        return make_err(bad_file_format, char_data_name);
+      to_uni_[i] = strtol(p, &p, 16);
+      ++p;
+      char_type_[i] = static_cast<CharType>(TO_CHAR_TYPE[to_uchar(*p++)]);
+      if (char_type_[i] >= Vowel) {
+        CharInfo inf = LETTER;
+        to_upper_[i] = static_cast<char>(strtol(p, &p, 16));
+        inf |= to_uchar(to_upper_[i]) == i ? UPPER : 0;
+        to_lower_[i] = static_cast<char>(strtol(p, &p, 16));
+        inf |= to_uchar(to_lower_[i]) == i ? LOWER : 0;
+        to_title_[i] = static_cast<char>(strtol(p, &p, 16));
+        inf |= to_uchar(to_title_[i]) == i ? TITLE : 0;
+        to_plain_[i] = static_cast<char>(strtol(p, &p, 16));
+        inf |= to_uchar(to_plain_[i]) == i ? PLAIN : 0;
+        char_info_[i] = inf;
+        if (*p != '\0')
+          return make_err(bad_file_format, char_data_name);
+      } else {
+        to_upper_[i] = i;
+        to_lower_[i] = i;
+        to_title_[i] = i;
+        to_plain_[i] = i;
+        char_info_[i] = LOWER | UPPER | TITLE | PLAIN;
+      }
+    }
+
+    for (unsigned int i = 0; i != 256; ++i) {
+      to_stripped_[i] = to_plain_[(unsigned char)to_lower_[i]];
+      to_sl_[i]       = char_type_[i] <= Vowel ? '\0' : to_stripped_[i];
+    }
+
     //
     //
     //
@@ -252,6 +291,74 @@ namespace aspeller {
       }
     }
   }
+
+  WordInfo Language::get_word_info(ParmString str) const
+  {
+    CharInfo first, all = CHAR_INFO_ALL;
+    const char * p = str;
+    while (first = char_info(*p++), all &= first, !(first & LETTER))
+      if (!*p) return AllUpper | ALL_PLAIN;
+    while (*p) all &= char_info(*p++);
+    WordInfo res;
+    if      (all & UPPER)   res = AllUpper;
+    else if (all & LOWER)   res = AllLower;
+    else if (first & TITLE) res = FirstUpper;
+    else                    res = Other;
+    if (all & LETTER) res |= ALL_LETTER;
+    if (all & PLAIN)  res |= ALL_PLAIN;
+    return res;
+  }
+  
+  CasePattern Language::case_pattern(ParmString str) const  
+  {
+    CharInfo first, all = CHAR_INFO_ALL;
+    const char * p = str;
+    while (first = char_info(*p++), all &= first, !(first & LETTER))
+      if (!*p) return AllUpper;
+    while (*p) all &= char_info(*p++);
+      if      (all & UPPER)   return AllUpper;
+      else if (all & LOWER)   return AllLower;
+      else if (first & TITLE) return FirstUpper;
+      else                    return Other;
+  }
+  
+  void Language::fix_case(CasePattern case_pattern,
+                          char * res, const char * str) const 
+  {
+    if (!str[0]) return;
+    if (case_pattern == AllUpper) {
+      to_upper(res,str);
+    } if (case_pattern == FirstUpper && is_lower(str[0])) {
+      *res = to_title(str[0]);
+      if (res == str) return;
+      res++;
+      str++;
+      while (*str) *res++ = *str++;
+      *res = '\0';
+    } else {
+      if (res == str) return;
+      while (*str) *res++ = *str++;
+      *res = '\0';
+    }
+  }
+
+  const char * Language::fix_case(CasePattern case_pattern, const char * str,
+                                  String buf) const 
+  {
+    if (!str[0]) return str;
+    if (case_pattern == AllUpper) {
+      to_upper(buf,str);
+      return buf.str();
+    } if (case_pattern == FirstUpper && is_lower(str[0])) {
+      buf.clear();
+      buf += to_title(str[0]);
+      str++;
+      while (*str) buf += *str++;
+      return buf.str();
+    } else {
+      return str;
+    }
+  }
     
   // FIXME: Bug, returns true when inword is a prefix of word
   //        ie (going, go)
@@ -283,7 +390,7 @@ namespace aspeller {
       } else if (strip_accents) {
 
 	while (*word != '\0' && *inlist != '\0') {
-	  if (lang->to_lower(*word) != lang->de_accent(lang->to_lower(*inlist)))
+	  if (lang->to_lower(*word) != lang->to_plain(lang->to_lower(*inlist)))
 	    return false;
 	  ++word, ++inlist;
 	}
@@ -304,27 +411,27 @@ namespace aspeller {
       bool case_compatible = true;
       if (!ignore_accents) {
 	if (strip_accents) {
-	  if (lang->to_lower(*word) != lang->de_accent(lang->to_lower(*inlist)))
+	  if (lang->to_lower(*word) != lang->to_plain(lang->to_lower(*inlist)))
 	    return false;
 	} else {
 	  if (lang->to_lower(*word) != lang->to_lower(*inlist))
 	    return false;
 	}
       }
-      if (!lang->is_lower(*inlist) && lang->de_accent(*word) != lang->de_accent(*inlist))
+      if (!lang->is_lower(*inlist) && lang->to_plain(*word) != lang->to_plain(*inlist))
 	case_compatible = false;
       bool all_upper = lang->is_upper(*word);
       ++word, ++inlist;
       while (*word != '\0' && *inlist != '\0') {
-	if (lang->char_type(*word) == Language::letter) {
+	if (lang->is_alpha(*word)) {
 	  if (!lang->is_upper(*word))
 	    all_upper = false;
 	  if (ignore_accents) {
-	    if (lang->de_accent(*word) != lang->de_accent(*inlist))
+	    if (lang->to_plain(*word) != lang->to_plain(*inlist))
 	      case_compatible = false;
 	  } else if (strip_accents) {
-	    if (*word != lang->de_accent(*inlist))
-	      if (lang->to_lower(*word) != lang->de_accent(lang->to_lower(*inlist)))
+	    if (*word != lang->to_plain(*inlist))
+	      if (lang->to_lower(*word) != lang->to_plain(lang->to_lower(*inlist)))
 		return false;
 	      else // accents match case does not
 		case_compatible = false;
@@ -338,7 +445,7 @@ namespace aspeller {
 	}
 	++word, ++inlist;
       }
-      //   if word is all upper than casing of inlist can be anything
+      //   if word is all upper than the casing of inlist can be anything
       //   otherwise the casing of tail begin and tail inlist must match
       if (all_upper) 
 	case_compatible = true;
@@ -386,19 +493,19 @@ namespace aspeller {
     if (*word == '\0') 
       return make_err(invalid_word, MsgConv(l)(word), _("Empty string."));
     const char * i = word;
-    if (l.char_type(*i) != Language::letter) {
+    if (!l.is_alpha(*i)) {
       if (!l.special(*i).begin)
 	return invalid_char(MsgConv(l)(word), MsgConv(l)(*i), "beg");
-      else if (l.char_type(*(i+1)) != Language::letter)
+      else if (!l.is_alpha(*(i+1)))
 	return make_err(invalid_word, MsgConv(l)(word), _("Does not contain any letters."));
     }
     for (;*(i+1) != '\0'; ++i) { 
-      if (l.char_type(*i) != Language::letter) {
+      if (!l.is_alpha(*i)) {
 	if (!l.special(*i).middle)
 	  return invalid_char(MsgConv(l)(word), MsgConv(l)(*i), "middle");
       }
     }
-    if (l.char_type(*i) != Language::letter) {
+    if (!l.is_alpha(*i)) {
       if (!l.special(*i).end)
 	return invalid_char(MsgConv(l)(word), MsgConv(l)(*i), "end");
     }
@@ -411,7 +518,7 @@ namespace aspeller {
     for (int i = 0; i != 256; ++i) 
     {
       char c = static_cast<char>(i);
-	if (lang.is_alpha(c) || lang.special(c).any())
+	if (lang.is_alpha(c) || lang.special(c).any)
 	  chars_set[static_cast<unsigned char>(lang.to_stripped(c))] = true;
     }
     for (int i = 0; i != 256; ++i) 
@@ -428,7 +535,7 @@ namespace aspeller {
     for (int i = 0; i != 256; ++i) 
     {
       char c = static_cast<char>(i);
-	if (lang.is_alpha(c) || lang.special(c).any())
+	if (lang.is_alpha(c) || lang.special(c).any)
 	  chars_set[static_cast<unsigned char>(lang.to_clean(c))] = true;
     }
     for (int i = 0; i != 256; ++i) 

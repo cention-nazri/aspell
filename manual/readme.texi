@@ -101,6 +101,15 @@ or the name of the library (for example
 The dictionary format has changed so dictionaries will need to be
 recompiled.
 
+All data, by default, is now included in @file{@var{libdir}/aspell-0.60} so
+that multiple versions of Aspell can more peacefully coexist.  This
+included both the dictionaries and the language data files which were
+stored in @file{@var{sharedir}/aspell} before Aspell 0.60.
+
+The format of the character data files has changed.  The new character
+data files are installed with Aspell so you shouldn't have to worry about
+it unless you made a custom one.
+
 @node Upgrading from Aspell .33/Pspell .12, Upgrading from a pre-release snapshot, Upgrading from Aspell 0.50, Installing
 @appendixsec Upgrading from Aspell .33/Pspell .12
 

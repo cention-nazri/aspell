@@ -1,4 +1,4 @@
-AC_INIT(GNU Aspell, 0.51-20040227)
+AC_INIT(GNU Aspell, 0.60-cvs)
 AC_CONFIG_SRCDIR(prog/aspell.cpp)
 AC_CANONICAL_SYSTEM
 AM_INIT_AUTOMAKE
@@ -15,7 +15,7 @@ dnl pkgdatadir
 
 pkgdatadir=undef
 AC_ARG_ENABLE(pkgdatadir, 
-[  --enable-pkgdatadir=DIR   device dependent data files [LIBDIR/aspell-0.51] ], 
+[  --enable-pkgdatadir=DIR   device dependent data files [LIBDIR/aspell-0.60] ], 
 pkgdatadir=$enable_pkgdatadir)
 
 AC_ARG_ENABLE(pkgdata-dir, 
@@ -24,7 +24,7 @@ pkgdatadir=$enable_dict_dir)
 
 if test "$pkgdatadir" = "undef"
 then
-  pkgdatadir=\${libdir}/aspell-0.51
+  pkgdatadir=\${libdir}/aspell-0.60
 fi
 
 AC_SUBST(pkgdatadir)
@@ -33,7 +33,7 @@ dnl pkglibdir
 
 pkglibdir=undef
 AC_ARG_ENABLE(pkglibdir, 
-[  --enable-pkglibdir=DIR   device dependent data files [LIBDIR/aspell-0.51] ], 
+[  --enable-pkglibdir=DIR   device dependent data files [LIBDIR/aspell-0.60] ], 
 pkglibdir=$enable_pkglibdir)
 
 AC_ARG_ENABLE(dict-dir, 
@@ -42,7 +42,7 @@ pkglibdir=$enable_dict_dir)
 
 if test "$pkglibdir" = "undef"
 then
-  pkglibdir=\${libdir}/aspell-0.51
+  pkglibdir=\${libdir}/aspell-0.60
 fi
 
 AC_SUBST(pkglibdir)

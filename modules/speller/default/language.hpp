@@ -40,7 +40,35 @@ namespace aspeller {
     }
   };
 
-  enum CasePattern {Other, FirstUpper, AllUpper};
+  // WordInfo
+
+  typedef unsigned int WordInfo; // 4 bits
+
+  enum CasePattern {Other, FirstUpper, AllLower, AllUpper};
+  //   Other      00
+  //   FirstUpper 01
+  //   AllLower   10
+  //   AllUpper   11
+  // First bit : is upper
+  // Second bit: uniform case
+
+  static const WordInfo CASE_PATTERN = 3;
+  static const WordInfo ALL_PLAIN    = (1 << 2);
+  static const WordInfo ALL_LETTER   = (1 << 3);
+
+  // CharInfo
+
+  typedef unsigned int CharInfo; // 5 bits
+
+  static const CharInfo LOWER  = (1 << 0);
+  static const CharInfo UPPER  = (1 << 1);
+  static const CharInfo TITLE  = (1 << 2);
+  static const CharInfo PLAIN  = (1 << 3);
+  static const CharInfo LETTER = (1 << 4);
+
+  static const CharInfo CHAR_INFO_ALL = 0x1F;
+
+  //
 
   enum StoreAs {Stripped, Lower};
 
@@ -49,15 +77,17 @@ namespace aspeller {
     typedef const Config CacheConfig;
     typedef String       CacheKey;
 
-    enum CharType {letter, space, other};
+    enum CharType {Unknown, WhiteSpace, Hyphen, Digit, 
+                   NonLetter, Modifier, Vowel, Letter};
 
     struct SpecialChar {
       bool begin;
       bool middle;
       bool end;
-      bool any() const {return begin || middle || end;}
-      SpecialChar() : begin(false), middle(false), end(false) {}
-      SpecialChar(bool b, bool m, bool e) : begin(b), middle(m), end(e) {}
+      bool any;
+      SpecialChar() : begin(false), middle(false), end(false), any(false) {}
+      SpecialChar(bool b, bool m, bool e) : begin(b), middle(m), end(e),
+                                            any(b || m || e) {}
     };
 
   private:
@@ -73,12 +103,13 @@ namespace aspeller {
     unsigned char to_uchar(char c) const {return static_cast<unsigned char>(c);}
 
     SpecialChar special_[256];
+    CharInfo      char_info_[256];
     char          to_lower_[256];
     char          to_upper_[256];
     char          to_title_[256];
     char          to_stripped_[256];
     unsigned char to_normalized_[256];
-    char          de_accent_[256];
+    char          to_plain_[256];
     char          to_sl_[256];
     int           to_uni_[256];
     CharType      char_type_[256];
@@ -131,7 +162,7 @@ namespace aspeller {
     char to_normalized(char c) const {return to_normalized_[to_uchar(c)];}
     unsigned char max_normalized() const {return max_normalized_;}
     
-    char de_accent(char c) const {return de_accent_[to_uchar(c)];}
+    char to_plain(char c) const {return to_plain_[to_uchar(c)];}
 
     char to_sl(char c) const {return to_sl_[to_uchar(c)];}
 
@@ -143,7 +174,9 @@ namespace aspeller {
     SpecialChar special(char c) const {return special_[to_uchar(c)];}
   
     CharType char_type(char c) const {return char_type_[to_uchar(c)];}
-    bool is_alpha(char c) const {return char_type(c) == letter;}
+    bool is_alpha(char c) const {return char_type(c) >  NonLetter;}
+
+    CharInfo char_info(char c) const {return char_info_[to_uchar(c)];}
   
     const char * to_soundslike(String & res, ParmString word) const {
       res.resize(word.size());
@@ -187,7 +220,7 @@ namespace aspeller {
       while (*str) *res++ = to_upper(*str++); *res = '\0'; return res;}
     char * to_stripped(char * res, const char * str) const {
       for (; *str; ++str) {
-        if (special(*str).any()) ++str;
+        if (special(*str).any) ++str;
         *res++ = to_stripped(*str);
       }
       *res = '\0';
@@ -195,7 +228,7 @@ namespace aspeller {
     }
     char * to_clean(char * res, const char * str) const {
       for (; *str; ++str) {
-        if (special(*str).any()) ++str;
+        if (special(*str).any) ++str;
         *res++ = to_clean(*str);
       }
       *res = '\0';
@@ -209,7 +242,7 @@ namespace aspeller {
     const char * to_stripped(String & res, const char * str) const {
       res.clear();
       for (; *str; ++str) {
-        if (special(*str).any()) ++str;
+        if (special(*str).any) ++str;
         res += to_stripped(*str);
       }
       return res.str();
@@ -217,7 +250,7 @@ namespace aspeller {
     const char * to_clean(String & res, const char * str) const {
       res.clear();
       for (; *str; ++str) {
-        if (special(*str).any()) ++str;
+        if (special(*str).any) ++str;
         res += to_clean(*str);
       }
       return res.str();
@@ -232,53 +265,19 @@ namespace aspeller {
     bool is_clean(const char * str) const {
       while (*str) {if (!is_clean(*str++)) return false;} return true;}
 
-    CasePattern case_pattern(ParmString word) const  
-    {
-      if (is_upper(word))
-        return AllUpper;
-      else if (!is_lower(word[0]))
-        return FirstUpper;
-      else
-        return Other;
-    }
-    
-    void fix_case(CasePattern case_pattern,
-                  char * res, const char * str) const 
+    WordInfo get_word_info(ParmString str) const;
+    CasePattern case_pattern(ParmString str) const;
+
+    void fix_case(CasePattern case_pattern, char * str)
     {
       if (!str[0]) return;
-      if (case_pattern == AllUpper) {
-        to_upper(res,str);
-      } if (case_pattern == FirstUpper && is_lower(str[0])) {
-        *res = to_title(str[0]);
-        if (res == str) return;
-        res++;
-        str++;
-        while (*str) *res++ = *str++;
-        *res = '\0';
-      } else {
-        if (res == str) return;
-        while (*str) *res++ = *str++;
-        *res = '\0';
-      }
+      if (case_pattern == AllUpper) to_upper(str,str);
+      else if (case_pattern == FirstUpper) *str = to_title(*str);
     }
-
-    const char * fix_case(CasePattern case_pattern, const char * str,
-                          String buf) const 
-    {
-      if (!str[0]) return str;
-      if (case_pattern == AllUpper) {
-        to_upper(buf,str);
-        return buf.str();
-      } if (case_pattern == FirstUpper && is_lower(str[0])) {
-        buf.clear();
-        buf += to_title(str[0]);
-        str++;
-        while (*str) buf += *str++;
-        return buf.str();
-      } else {
-        return str;
-      }
-    }
+    void fix_case(CasePattern case_pattern, 
+                  char * res, const char * str) const;
+    const char * fix_case(CasePattern case_pattern, 
+                          const char * str, String buf) const;
 
     static inline PosibErr<Language *> get_new(const String & lang, const Config * config) {
       StackPtr<Language> l(new Language());
@@ -340,9 +339,9 @@ namespace aspeller {
     {
       size_t h = 0;
       for (;;) {
-	if (lang->special(*s).any()) ++s;
+	if (lang->special(*s).any) ++s;
 	if (*s == 0) break;
-	if (lang->char_type(*s) == Language::letter)
+	if (lang->char_type(*s) == Language::Letter)
 	  h=5*h + lang->to_clean(*s);
 	++s;
       }
@@ -388,7 +387,7 @@ namespace aspeller {
 	out += in;
       } else {
 	for (unsigned int i = 0; i != in.size(); ++i)
-	  out += lang->de_accent(in[i]);
+	  out += lang->to_plain(in[i]);
       }
     }
     void convert(ParmString in, char * out) const
@@ -398,7 +397,7 @@ namespace aspeller {
       } else {
         unsigned int i = 0;
 	for (; i != in.size(); ++i)
-	  out[i] = lang->de_accent(in[i]);
+	  out[i] = lang->to_plain(in[i]);
         out[i] = '\0';
       }
     }

@@ -48,7 +48,12 @@ namespace aspeller {
       1 bit:  all upper
       1 bit:  title
       1 bit:  with accents
-      1 bit:  clean
+      1 bit:  special characters
+
+      4 Case Possibilities
+        All Upper, All Lower, Title, Other
+      With or without accents
+      With or without "special" characyers
   */
 }
 
