@@ -486,7 +486,7 @@ errors:
 			mesg => %where: "%filter": Line %line Aspell version does not match filter's requirement.
 			parms => line
 		cant extend options
-			mesg => %where: "%filter" error while extend Aspell options. (out of memory?)
+			mesg => %where: "%filter" error while extending Aspell options. (out of memory?)
 		identical option
 			mesg => %where: "%filter" Line %line Filter option already exists.
 			parms => line

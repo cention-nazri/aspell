@@ -1044,7 +1044,7 @@ namespace acommon {
     , {"run-together",        KeyInfoBool,  "false",
        N_("consider run-together words legal"), KEYINFO_MAY_CHANGE}
     , {"run-together-limit",  KeyInfoInt,   "8",
-       N_("maxium numbers that can be strung together"), KEYINFO_MAY_CHANGE}
+       N_("maximum number that can be strung together"), KEYINFO_MAY_CHANGE}
     , {"run-together-min",    KeyInfoInt,   "3",
        N_("minimal length of interior words"), KEYINFO_MAY_CHANGE}
     , {"save-repl", KeyInfoBool  , "true",
