@@ -1,5 +1,5 @@
 \input texinfo   @c -*-texinfo-*-
-@comment $Id: aspell.texi,v 1.15 2004/03/06 08:01:08 kevina Exp $
+@comment $Id: aspell.texi,v 1.16 2004/03/18 02:46:16 kevina Exp $
 @comment %**start of header
 @setfilename aspell.info
 @settitle GNU Aspell 0.60
@@ -44,6 +44,7 @@ It can either be used as a library or as an independent spell checker.
 
 @menu
 * Introduction::                
+* Support::                     
 * Basic Usage::                 
 * Customizing Aspell::          
 * Working With Dictionaries::   
@@ -51,8 +52,7 @@ It can either be used as a library or as an independent spell checker.
 * Adding Support For Other Languages::  
 * Implementation Notes::        
 * Languages Which Aspell can Support::  
-* Support::                     
-* Helping Out::                 
+* Language Related Issues::
 * To Do::             
 * Installing::          
 * ChangeLog::                   
@@ -116,13 +116,19 @@ Implementation Notes
 
 Languages Which Aspell can Support
 
-* 220 or Fewer Symbols::  Languages with 220 or Fewer Unique Symbols       
-* Script Unknown::        Languages in Which the Exact Script Used in Unknown
-* Ethiopic::              The Ethiopic Script
-* Thai::                  The Thai Script
-* Hanzi::                 Languages which use Hanzi Characters
-* Japanese::              Japanese
-* Multiple Scripts::      Languages Written in Multiple Scripts
+* Supported::                   
+* Syllabic::                    
+* Unsupported::                 
+* Multiple Scripts::            
+* Planned Dictionaries::
+
+Language Related Issues
+
+* German Sharp S ::             
+* Compound Words::              
+* Context Sensitive Spelling::  
+* Unicode Normalization::       
+* Words With Symbols in Them::   
 
 To Do
 
@@ -132,9 +138,6 @@ To Do
 
 Notes on Various Items
 
-* Unicode Support::             
-* Unicode Decomposition::       
-* Words With Spaces in Them::   
 * Word skipping by context::    
 * Hidden Markov Model::         
 * Email the Personal Dictionary::  
@@ -252,6 +255,12 @@ Perhaps better support for spell checking (La)TeX files.
 Support for spell checking Nroff files.
 @end itemize
 
+@node Support
+@chapter Support
+
+Support for Aspell can be found on the Aspell mailing lists.
+Instructions for joining the various mailing lists (and an archive of
+them) can be found off the Aspell home page at @uref{http://aspell.net}.
 
 @node Basic Usage
 @chapter Basic Usage
@@ -273,6 +282,7 @@ To use Aspell to spellcheck a file use:
 aspell check [@var{options}] @var{filename}
 @end example
 
+@noindent
 at the command line where @code{@var{filename}} is the file you want to
 check and @code{@var{options}} is any number of optional options.  Some of
 the more useful ones include:
@@ -311,6 +321,7 @@ For example to check the file @file{foo.txt}:
 aspell check foo.txt
 @end example
 
+@noindent
 and to check the file @file{foo.txt} using the @option{bad-spellers}
 suggestion mode and the large American English dictionary:
 
@@ -372,6 +383,7 @@ Ispell in pipe mode.  The format of the script is:
 run-with-aspell @var{command}
 @end example
 
+@noindent
 where @var{command} is the name of the program with any optional
 arguments.
 
@@ -461,6 +473,7 @@ If you have a strong desire to check other people's comments change
 aspell check
 @end example
 
+@noindent
 instead which will avoid switching Aspell into email mode.
 
 @node Customizing Aspell
@@ -480,11 +493,11 @@ configuration file.  Options specified in the environment variable
 configuration file will take effect no matter how Aspell is used which
 includes being used by other applications.
 
-Aspell has three basic type of options: @emph{boolean}, @emph{value},
-and @emph{list}.
+Aspell has three basic type of options: @dfn{boolean}, @dfn{value},
+and @dfn{list}.
  
-@emph{Boolean} options are either enabled or disabled, @emph{value}
-options take a specific value, and @emph{list} options can either have
+@dfn{Boolean} options are either enabled or disabled, @dfn{value}
+options take a specific value, and @dfn{list} options can either have
 entries added or removed from the list.
 
 @menu
@@ -506,12 +519,13 @@ All options specified at the command line have the following basic format:
 --@var{option}[=@var{value}]
 @end example
 
+@noindent
 where the @samp{=} can be replaced by whitespace.
 
 However some options also have single letter abbreviations of the form:
 
 @example
--<letter>[<optional whitespace><value>]
+@var{letter} [@var{optional_whitespace} @var{value}]
 @end example
 
 Any non-@acronym{ASCII} characters are expected to be in the encoding
@@ -584,10 +598,10 @@ global file.  Options specified at either the command line or via an
 environment variable override those specified by either configuration
 file.
 
-@quotation
-@strong{Note:} Filters and corresponding options also may be assembled
-inside a special meta filter file named @file{@i{metafilter}.flt}.  A
-filter has to be loaded via adding a @code{add-filter @i{filtername}}
+@quotation Note
+Filters and corresponding options also may be assembled
+inside a special meta filter file named @file{@var{metafilter}.flt}.  A
+filter has to be loaded via adding a @code{add-filter @var{filtername}}
 line to the meta filter file before its options may be specified.
 @end quotation
 
@@ -640,7 +654,7 @@ options are specified in the following format:
 -<abbreviation to enable>|-<abbreviation to disable>
 @end example
 
-<@var{option}> is one of the following: @emph{boolean}, @emph{string},
+@var{option} is one of the following: @emph{boolean}, @emph{string},
 @emph{file}, @emph{dir}, @emph{integer}, or @emph{list}.
  
 @emph{String}, @emph{file}, @emph{dir}, and @emph{integer} types are all
@@ -834,7 +848,7 @@ the character, or sequences of characters, which should be used to
 switch contexts and and therefore have to be escaped by @samp{\} if
 they should appear literally.  The two delimiting chars belonging to
 one pair have to be separated by a space character.  If multiple pairs
-are specified by one @option{add|rem-context-delimiters} call the
+are specified by one @option{add|rem-@/context-delimiters} call the
 different pairs have to be separated by a literal comma.  Per default
 the delimiters are set to C/C++ comment and string constant
 delimiters.  If the end of line delimits a context than this has to be
@@ -1073,6 +1087,7 @@ check them as normal.  For example the option
 add-tex-command rule pp
 @end example
 
+@noindent
 will skip over the first two parameters of the @code{rule} command
 while the option
 
@@ -1080,6 +1095,7 @@ while the option
 add-tex-command foo Pop
 @end example
 
+@noindent
 will @emph{check} the first parameter of the @code{foo} command, skip
 over the next optional parameter, if it is present, and will skip over
 the second parameter --- even if the optional parameter is not present
@@ -1092,6 +1108,7 @@ the option
 enlargethispage p
 @end example
 
+@noindent
 will ignore the first parameter in both @option{enlargethispage} and 
 @option{enlargethispage*}.
 
@@ -1102,12 +1119,11 @@ For example
 rem-tex-command foo
 @end example
 
+@noindent
 will remove the command foo, if present, from the list of @TeX{}
 commands.
 
-@quotation
-@strong{Note:}
-
+@quotation Note
 The TeXfilter mode is also available via @option{latex} alias name.
 
 The TeXfilter mode also contains a decoding and a encoding filter for
@@ -1147,7 +1163,7 @@ suggestion.
 Each multi character coding conversion has to be specified the
 following way:
 @example
-@i{char}:@i{rep}[:@i{rep}[...]]
+@i{char}:@i{rep}[:@i{rep}[@dots{}]]
 @end example
 where @code{@i{char}} is the character encoded by multiple characters
 and rep stands for a specific representation of that character.  For
@@ -1167,10 +1183,10 @@ value of the @option{[dont-]context-visible-first} option and not by
 the delimiters.
 
 The context delimiters are specified as pairs of delimiters via the
-@option{add|rem-context-delimiters} option.  The delimiters enclosing
+@option{add|rem-@/context-delimiters} option.  The delimiters enclosing
 a specific context are specified as a space separated pair.  If more
 than one delimiter pair is specified by one call of
-@option{add|rem-context-delimiters} they have to be combined to a
+@option{add|rem-@/context-delimiters} they have to be combined to a
 comma separated list.  To indicate that a context is always closed by
 end of line use @code{\0} sequence as closing delimiter.
 
@@ -1359,6 +1375,7 @@ For example the command
 aspell dump personal
 @end example
 
+@noindent
 will simply dump the contents of the current personal word list to
 @file{stdout}.
 
@@ -1372,6 +1389,7 @@ command
 aspell --lang=@var{lang} create master ./@var{base} < @var{wordlist}
 @end example
 
+@noindent
 where @var{base} is the name of the word list and
 @var{wordlist} is the list of words separated by white space.
 The name of the word list will automatically be converted to all
@@ -1461,6 +1479,7 @@ strip-accents no
 add must-accent
 @end example
 
+@noindent
 will strip accents from the English word list but not the
 @file{must-accent} word list.  If the global @option{strip-accents}
 option is specified the local @option{strip-accents} options are
@@ -1483,9 +1502,10 @@ Each dictionary that you expect Aspell to be able to find needs to
 have a name in the following format:
 
 @example
-@var{language}[@var{region}][-@var{jargon}][-@var{size}].multi
+@var{language}[_@var{region}][-@var{script}][-@var{orthography}][-@var{jargon}][-@var{size}].multi
 @end example
 
+@noindent
 where @var{language} is the two letter language code,
 @var{region} is the two letter region code, @var{jargon} is any
 extra information to distinguish the word list from other ones with
@@ -1518,7 +1538,8 @@ Each AWLI file has a name in the following format:
 @var{language}[@var{region}][-@var{jargon}][-@var{size}]-@var{module}.awli
 @end example
 
-Where the names have the same meaning as in @ref{Dictionary Naming},
+@noindent
+where the names have the same meaning as in @ref{Dictionary Naming},
 and @var{module} is the speller module to use, which should be set
 to @var{default} for now since there is only one speller module.
 
@@ -1572,20 +1593,22 @@ should also work.
 When your application first starts you should get a new configuration
 class with the command:
 
-@example
+@smallexample
 AspellConfig * spell_config = new_aspell_config();
-@end example
+@end smallexample
 
+@noindent
 which will create a new @code{AspellConfig} class.  It is allocated
 with @command{new} and it is your responsibility to delete it with
 @code{delete_aspell_config}.  Once you have the config class you
 should set some variables.  The most important one is the language
 variable.  To do so use the command:
 
-@example
+@smallexample
 aspell_config_replace(spell_config, "lang", "en_US");
-@end example
+@end smallexample
 
+@noindent
 which will set the default language to use to American English.  The
 language is expected to be the standard two letter ISO 639 language
 code, with an optional two letter ISO 3166 country code after an
@@ -1602,14 +1625,16 @@ document.  To create a new speller class use the
 @code{new_aspell_speller} and then cast it up using
 @code{to_aspell_speller} like so:
 
-@example
+@smallexample
 AspellCanHaveError * possible_err = new_aspell_speller(spell_config);
-AspellSpeller * spell_checker = 0; if
-(aspell_error_number(possible_err) != 0)
-puts(aspell_error_message(possible_err)); else spell_checker =
-to_aspell_speller(possible_err);
-@end example
+AspellSpeller * spell_checker = 0; 
+if (aspell_error_number(possible_err) != 0)
+  puts(aspell_error_message(possible_err)); 
+else 
+  spell_checker = to_aspell_speller(possible_err);
+@end smallexample
 
+@noindent
 which will create a new @code{AspellSpeller} class using the defaults
 found in @code{spell_config}.  To find out which dictionary is
 selected the @option{lang}, @option{size}, and @option{jargon} options
@@ -1623,20 +1648,21 @@ since there is only one this option will always be the same.
 If for some reason you want to use different defaults simply clone
 @code{spell_config} and change the setting like so:
 
-@example
+@smallexample
 AspellConfig * spell_config2 = aspell_config_clone(spell_config);
 aspell_config_replace(spell_config2, "lang","nl");
 possible_err = new_aspell_speller(spell_config2);
 delete_aspell_config(spell_config2);
-@end example
+@end smallexample
 
 Once the speller class is created you can use the @code{check} method
 to see if a word in the document is correct like so:
 
-@example
+@smallexample
 int correct = aspell_speller_check(spell_checker, @var{word}, @var{size});
-@end example
+@end smallexample
 
+@noindent
 @var{word} is expected to be a @code{const char *} character
 string.  If the encoding is set to be @code{utf-16} or
 @code{utf-32}.  @var{word} is expected to be a cast
@@ -1654,7 +1680,7 @@ and non-zero otherwise.
 If the word is not correct than the @code{suggest} method can be used
 to come up with likely replacements.
 
-@example
+@smallexample
 AspellWordList * suggestions = aspell_speller_suggest(spell_checker,
                                                       @var{word}, @var{size});
 AspellStringEnumeration * elements = aspell_word_list_elements(suggestions);
@@ -1664,7 +1690,7 @@ while ( (word = aspell_string_enumeration_next(aspell_elements)) != NULL )
   // add to suggestion list
 @}
 delete_aspell_string_enumeration(elements);
-@end example
+@end smallexample
 
 Notice how @code{elements} is deleted but @code{suggestions} is not.
 The value returned by @code{suggestions} is only valid to the next
@@ -1673,20 +1699,19 @@ call to @code{suggest}.  Once a replacement is made the
 pair back to the spell checker (for the reason, @pxref{Notes on
 Storing Replacement Pairs}).  Its usage is as follows:
 
-@example
-aspell_speller_store_repl(spell_checker, 
-                          @var{misspelled_word}, @var{size},
+@smallexample
+aspell_speller_store_repl(spell_checker, @var{misspelled_word}, @var{size},
                           @var{correctly_spelled_word}, @var{size});
-@end example
+@end smallexample
 
 If the user decided to add the word to the session or personal
 dictionary the the word can be be added using the
 @code{add_to_session} or @code{add_to_personal} methods respectively
 like so:
 
-@example
+@smallexample
 aspell_speller_add_to_session|personal(spell_checker, @i{word}, @i{size});
-@end example
+@end smallexample
 
 It is better to let the spell checker manage these words rather than
 doing it yourself so that the words have a chance of appearing in the
@@ -1695,9 +1720,9 @@ suggestion list.
 Finally, when the document is closed the @code{AspellSpeller} class
 should be deleted like so:
 
-@example
+@smallexample
 delete_aspell_speller(spell_checker);
-@end example
+@end smallexample
 
 @subsection API Reference
 
@@ -1764,7 +1789,7 @@ These output lines can be summarized as follows:
 
 @example
 @strong{OK}: * 
-@strong{Suggestions}: & @i{original} @i{count} @i{offset}: @i{miss}, @i{miss}, ...
+@strong{Suggestions}: & @i{original} @i{count} @i{offset}: @i{miss}, @i{miss}, @dots{}
 @strong{None}: # @i{original} @i{offset} 
 @end example
 
@@ -1861,15 +1886,17 @@ on the first pass a user misspells @emph{beginning} as @emph{beging}
 so Aspell suggests:
 
 @example
-begging, begin, being, Beijing, bagging, ....
+begging, begin, being, Beijing, bagging, @dots{}.
 @end example
 
+@noindent
 However the user then tries @emph{begning} and Aspell suggests
 
 @example
-beginning, beaning, begging, ...
+beginning, beaning, begging, @dots{}
 @end example
 
+@noindent
 so the user selects @emph{beginning}.  However than, later on in the
 document the user misspells it as @emph{begng} (@strong{not}
 @emph{beging}).  Normally aspell will suggest.
@@ -1878,11 +1905,12 @@ document the user misspells it as @emph{begng} (@strong{not}
 began, begging, begin, begun, @dots{}
 @end example
 
+@noindent
 However because it knows the user mispelled @emph{beginning} as
 @emph{beging} it will instead suggest:
 
 @example
-beginning, began, begging, begin, begun ...
+beginning, began, begging, begin, begun @dots{}
 @end example
 
 I myself often misspelled beginning (and still do) as something close
@@ -1896,18 +1924,21 @@ if you first store the replacement pair:
 sicolagest -> psycolagest
 @end example
 
+@noindent
 then store the replacement pair
 
 @example
 psycolagest -> psychologist
 @end example
 
+@noindent
 The replacement pair
 
 @example
 sicolagest -> psychologist
 @end example
 
+@noindent
 will also get stored so that you don't have to worry about it.
 
 @node Adding Support For Other Languages
@@ -2118,6 +2149,7 @@ replacement string (or switch parameter).  The line
 version   @var{version}
 @end example
 
+@noindent
 is also required to appear somewhere in the translation array.  The
 version string can be anything but it should be changed whenever a new
 version of the translation array is released.  This is important
@@ -2145,6 +2177,7 @@ GH   _
 G    K
 @end example
 
+@noindent
 @samp{GH -> _} has higher priority than @samp{G -> K}
  
 @samp{_} represents the empty string ``''.  If @samp{GH -> _} came
@@ -2220,12 +2253,13 @@ together and may not be taken apart.  After the algorithm has found
 apply it because its priority is lower than the one of the first rule.
 You see that this is a very powerful feature but it also can easily
 lead to mistakes.  If you really don't need this feature you can turn
-it off by putting the line
+it off by putting the line:
 
 @example
 followup      0 
 @end example
 
+@noindent
 at the beginning of the phonetic table file.  As mentioned, for rules
 containing a @samp{-} no follow-up rules are searched but giving such
 rules a priority is not totally senseless because they can be
@@ -2260,12 +2294,13 @@ will continue with the rest of the word.
 
 If you want double letters to be reduced to one you must set up a rule
 like @samp{LL- -> L}.  If double letters in the resulting phonetic
-word should be allowed, you must place the line
+word should be allowed, you must place the line:
 
 @example
 collapse_result     0 
 @end example
 
+@noindent
 at the beginning of your transformation table file; otherwise set the
 value to `1'.  The English rules for example strip all vowels from
 words and so the word "GOGO" would be transformed to "K" and not to
@@ -2293,12 +2328,13 @@ latin1 encoding.  @command{sed s/e'/@'e/g} for example would replace
 all @samp{e'} with @samp{@'e}.
 
 The second is that you know how to use regular expressions and know
-how to use @command{grep}.  You should for example know that
+how to use @command{grep}.  You should for example know that:
 
 @example
 grep ^[^aeiou]qu[io] wordlist | less
 @end example
 
+@noindent
 will show you all words that begin with any character but @samp{a},
 @samp{e}, @samp{i}, @samp{o} or @samp{u} and then continue with
 @samp{qui} or @samp{quo}.  This stuff is important for example to
@@ -2771,303 +2807,123 @@ increase.
 
 Even though Aspell will remain 8-bit internally it should still be be
 able to support any written languages not based on a logographic
-script.  A only logographic writing system in current use are those
+script.  The only logographic writing system in current use are those
 based on h@`anzi which includes Chinese, Japanese, and sometimes Korean.
 
 @menu
-* 220 or Fewer Symbols::  Languages with 220 or Fewer Unique Symbols       
-* Script Unknown::        Languages in Which the Exact Script Used in Unknown
-* Ethiopic::              The Ethiopic Script
-* Thai::                  The Thai Script
-* Hanzi::                 Languages which use Hanzi Characters
-* Japanese::              Japanese
-* Multiple Scripts::      Languages Written in Multiple Scripts
+* Supported::                   
+* Syllabic::                    
+* Unsupported::                 
+* Multiple Scripts::            
+* Planned Dictionaries::
 @end menu
 
-@c LANG TABLE BEGIN
+@node Supported
+@appendixsec Supported
 
-@node 220 or Fewer Symbols
-@appendixsec Languages with 220 or Fewer Unique Symbols
+Aspell 0.60 should be able to support the following languages as, to the
+best of my knowledge, they all contain 220 or fewer symbols and can
+thus, fit within an 8-bit character set. If an existing character set
+does not exists than a new one can be invented. This is true even if the
+script is not yet supported by Unicode as the private use area can be
+used.
 
-Aspell 0.60 should be able to support the following languages as, to
-the best of my knowledge, they all contain 220 or fewer symbols and
-can thus, fit within an 8-bit character set.  If an existing character
-set does not exists than a new one can be invented.  This is true even
-if the script is not yet supported by Unicode as the private use area
-can be used.
+@include lang-supported.texi
 
-@multitable {Code} {Kalaallisut/Greenlandic} {Canadian Syllabics} {Dictionary} {Translation}
-@item Code @tab Language Name @tab Script @tab Dictionary Available @tab Gettext Translation
-@item
-@item ab @tab Abkhazian @tab Cyrillic @tab - @tab -
-@item ae @tab Avestan @tab Avestan @tab - @tab -
-@item af @tab Afrikaans @tab Latin @tab Yes @tab -
-@item an @tab Aragonese @tab Latin @tab - @tab -
-@item ar @tab Arabic @tab Arabic @tab - @tab -
-@item as @tab Assamese @tab Bengali @tab - @tab -
-@item ay @tab Aymara @tab Latin @tab - @tab -
-@item az @tab Azerbaijani @tab Arabic @tab - @tab -
-@item az @tab @tab Cyrillic @tab - @tab -
-@item az @tab @tab Latin @tab - @tab -
-@item
-@item ba @tab Bashkir @tab Cyrillic @tab - @tab -
-@item be @tab Belarusian @tab Cyrillic @tab - @tab Yes
-@item bg @tab Bulgarian @tab Cyrillic @tab Yes @tab -
-@item bh @tab Bihari @tab Devanagari @tab - @tab -
-@item bn @tab Bengali @tab Bengali @tab - @tab -
-@item bo @tab Tibetan @tab Tibetan @tab - @tab -
-@item br @tab Breton @tab Latin @tab Yes @tab -
-@item bs @tab Bosnian @tab Latin @tab - @tab -
-@item
-@item ca @tab Catalan/Valencian @tab Latin @tab Yes @tab -
-@item ce @tab Chechen @tab Cyrillic @tab - @tab -
-@item ch @tab Chamorro @tab Latin @tab - @tab -
-@item co @tab Corsican @tab Latin @tab - @tab -
-@item cr @tab Cree @tab Canadian Syllabics @tab - @tab -
-@item cr @tab @tab Latin @tab - @tab -
-@item cs @tab Czech @tab Latin @tab Yes @tab -
-@item cv @tab Chuvash @tab Cyrillic @tab - @tab -
-@item cy @tab Welsh @tab Latin @tab Yes @tab -
-@item
-@item da @tab Danish @tab Latin @tab Yes @tab -
-@item de @tab German @tab Latin @tab Yes @tab -
-@item dv @tab Divehi @tab Dhives Akuru @tab - @tab -
-@item dz @tab Dzongkha @tab Tibetan @tab - @tab -
-@item
-@item el @tab Greek @tab Greek @tab Yes @tab -
-@item en @tab English @tab Latin @tab Yes @tab -
-@item eo @tab Esperanto @tab Latin @tab Yes @tab -
-@item es @tab Spanish @tab Latin @tab Yes @tab Incomplete
-@item et @tab Estonian @tab Latin @tab - @tab -
-@item eu @tab Basque @tab Latin @tab - @tab -
-@item
-@item fa @tab Persian @tab Arabic @tab - @tab -
-@item fi @tab Finnish @tab Latin @tab - @tab -
-@item fj @tab Fijian @tab Latin @tab - @tab -
-@item fo @tab Faroese @tab Latin @tab Yes @tab -
-@item fr @tab French @tab Latin @tab Yes @tab Yes
-@item fy @tab Frisian @tab Latin @tab - @tab -
-@item
-@item ga @tab Irish @tab Latin @tab Yes @tab Yes
-@item gd @tab Scottish Gaelic @tab Latin @tab - @tab -
-@item gl @tab Gallegan @tab Latin @tab Yes @tab -
-@item gn @tab Guarani @tab Latin @tab - @tab -
-@item gu @tab Gujarati @tab Gujarati @tab - @tab -
-@item gv @tab Manx @tab Latin @tab - @tab -
-@item
-@item ha @tab Hausa @tab Latin @tab - @tab -
-@item he @tab Hebrew @tab Hebrew @tab - @tab -
-@item hi @tab Hindi @tab Devanagari @tab - @tab -
-@item hr @tab Croatian @tab Latin @tab Yes @tab -
-@item hu @tab Hungarian @tab Latin @tab - @tab -
-@item hy @tab Armenian @tab Armenian @tab - @tab -
-@item
-@item ia @tab Interlingua (IALA) @tab Latin @tab - @tab -
-@item id @tab Indonesian @tab Arabic @tab - @tab -
-@item id @tab @tab Latin @tab Yes @tab -
-@item io @tab Ido @tab Latin @tab - @tab -
-@item is @tab Icelandic @tab Latin @tab Yes @tab -
-@item it @tab Italian @tab Latin @tab Yes @tab -
-@item iu @tab Inuktitut @tab Canadian Syllabics @tab - @tab -
-@item iu @tab @tab Latin @tab - @tab -
-@item
-@item ja @tab Japanese @tab Latin @tab - @tab -
-@item jv @tab Javanese @tab Javanese @tab - @tab -
-@item jv @tab @tab Latin @tab - @tab -
-@item
-@item ka @tab Georgian @tab Georgian @tab - @tab -
-@item kk @tab Kazakh @tab Cyrillic @tab - @tab -
-@item kl @tab Kalaallisut/Greenlandic @tab Latin @tab - @tab -
-@item km @tab Khmer @tab Khmer @tab - @tab -
-@item kn @tab Kannada @tab Kannada @tab - @tab -
-@item ko @tab Korean @tab Hangeul @tab - @tab -
-@item kr @tab Kanuri @tab Latin @tab - @tab -
-@item ks @tab Kashmiri @tab Arabic @tab - @tab -
-@item ks @tab @tab Devanagari @tab - @tab -
-@item ku @tab Kurdish @tab Arabic @tab - @tab -
-@item ku @tab @tab Cyrillic @tab - @tab -
-@item ku @tab @tab Latin @tab - @tab -
-@item kv @tab Komi @tab Cyrillic @tab - @tab -
-@item kw @tab Cornish @tab Latin @tab - @tab -
-@item ky @tab Kirghiz @tab Arabic @tab - @tab -
-@item ky @tab @tab Cyrillic @tab - @tab -
-@item ky @tab @tab Latin @tab - @tab -
-@item
-@item la @tab Latin @tab Latin @tab - @tab -
-@item lo @tab Lao @tab Lao @tab - @tab -
-@item lt @tab Lithuanian @tab Latin @tab - @tab -
-@item lv @tab Latvian @tab Latin @tab - @tab -
-@item
-@item mi @tab Maori @tab Latin @tab Yes @tab -
-@item mk @tab Makasar @tab Lontara/Makasar @tab - @tab -
-@item ml @tab Malayalam @tab Latin @tab - @tab -
-@item ml @tab @tab Malayalam @tab - @tab -
-@item mn @tab Mongolian @tab Cyrillic @tab - @tab -
-@item mn @tab @tab Mongolian @tab - @tab -
-@item mo @tab Moldavian @tab Cyrillic @tab - @tab -
-@item mr @tab Marathi @tab Devanagari @tab - @tab -
-@item ms @tab Malay @tab Arabic @tab - @tab -
-@item ms @tab @tab Latin @tab Yes @tab -
-@item mt @tab Maltese @tab Latin @tab - @tab -
-@item my @tab Burmese @tab Myanmar @tab - @tab -
-@item
-@item nb @tab Norwegian Bokmal @tab Latin @tab - @tab -
-@item ne @tab Nepali @tab Devanagari @tab - @tab -
-@item nl @tab Dutch @tab Latin @tab Yes @tab Yes
-@item nn @tab Norwegian Nynorsk @tab Latin @tab - @tab -
-@item no @tab Norwegian @tab Latin @tab Yes @tab -
-@item nv @tab Navajo @tab Latin @tab - @tab -
-@item
-@item oc @tab Occitan/Provencal @tab Latin @tab - @tab -
-@item oj @tab Ojibwa @tab Ojibwe @tab - @tab -
-@item or @tab Oriya @tab Oriya @tab - @tab -
-@item os @tab Ossetic @tab Cyrillic @tab - @tab -
-@item
-@item pa @tab Punjabi @tab Gurmukhi @tab - @tab -
-@item pi @tab Pali @tab Devanagari @tab - @tab -
-@item pi @tab @tab Sinhala @tab - @tab -
-@item pl @tab Polish @tab Latin @tab Yes @tab -
-@item ps @tab Pushto @tab Arabic @tab - @tab -
-@item pt @tab Portuguese @tab Latin @tab Yes @tab Yes
-@item
-@item qu @tab Quechua @tab Latin @tab - @tab -
-@item
-@item rm @tab Raeto-Romance @tab Latin @tab - @tab -
-@item ro @tab Romanian @tab Latin @tab Yes @tab -
-@item ru @tab Russian @tab Cyrillic @tab Yes @tab -
-@item
-@item sa @tab Sanskrit @tab Devanagari @tab - @tab -
-@item sa @tab @tab Sinhala @tab - @tab -
-@item sd @tab Sindhi @tab Arabic @tab - @tab -
-@item se @tab Northern Sami @tab Latin @tab - @tab -
-@item sk @tab Slovak @tab Latin @tab Yes @tab -
-@item sl @tab Slovenian @tab Latin @tab Yes @tab -
-@item sn @tab Shona @tab Latin @tab - @tab -
-@item so @tab Somali @tab Latin @tab - @tab -
-@item sq @tab Albanian @tab Latin @tab - @tab -
-@item sr @tab Serbian @tab Cyrillic @tab - @tab Yes
-@item sr @tab @tab Latin @tab - @tab -
-@item su @tab Sundanese @tab Latin @tab - @tab -
-@item sv @tab Swedish @tab Latin @tab Yes @tab -
-@item sw @tab Swahili @tab Latin @tab - @tab -
-@item
-@item ta @tab Tamil @tab Tamil @tab - @tab -
-@item te @tab Telugu @tab Telugu @tab - @tab -
-@item tg @tab Tajik @tab Arabic @tab - @tab -
-@item tg @tab @tab Cyrillic @tab - @tab -
-@item tg @tab @tab Latin @tab - @tab -
-@item tk @tab Turkmen @tab Arabic @tab - @tab -
-@item tk @tab @tab Cyrillic @tab - @tab -
-@item tk @tab @tab Latin @tab - @tab -
-@item tl @tab Tagalog @tab Latin @tab - @tab -
-@item tl @tab @tab Tagalog @tab - @tab -
-@item tr @tab Turkish @tab Arabic @tab - @tab -
-@item tr @tab @tab Latin @tab - @tab -
-@item tt @tab Tatar @tab Cyrillic @tab - @tab -
-@item ty @tab Tahitian @tab Latin @tab - @tab -
-@item
-@item ug @tab Uighur @tab Arabic @tab - @tab -
-@item ug @tab @tab Cyrillic @tab - @tab -
-@item ug @tab @tab Latin @tab - @tab -
-@item ug @tab @tab Uyghur @tab - @tab -
-@item uk @tab Ukrainian @tab Cyrillic @tab Yes @tab -
-@item ur @tab Urdu @tab Arabic @tab - @tab -
-@item uz @tab Uzbek @tab Cyrillic @tab - @tab -
-@item uz @tab @tab Latin @tab - @tab -
-@item
-@item vi @tab Vietnamese @tab Latin @tab - @tab -
-@item vo @tab Volapuk @tab Latin @tab - @tab -
-@item
-@item wa @tab Walloon @tab Latin @tab - @tab Incomplete
-@item
-@item yi @tab Yiddish @tab Hebrew @tab - @tab -
-@item yo @tab Yoruba @tab Latin @tab - @tab -
-@item
-@item zu @tab Zulu @tab Latin @tab - @tab -
+@appendixsubsec Notes on Latin Languages
 
-@end multitable
+Any word that can be written using on of the Latin ISO-8859 character
+sets (ISO-8859-1,2,3,4,9,10,13,14,15,16) can be written, in decomposed
+form, using the ASCII characters, the 23 additional letters:
 
-@node Script Unknown
-@appendixsec Languages in Which the Exact Script Used in Unknown
+@example
+U+00C6 LATIN CAPITAL LETTER AE
+U+00D0 LATIN CAPITAL LETTER ETH
+U+00D8 LATIN CAPITAL LETTER O WITH STROKE
+U+00DE LATIN CAPITAL LETTER THORN
+U+00DE LATIN SMALL LETTER THORN
+U+00DF LATIN SMALL LETTER SHARP S
+U+00E6 LATIN SMALL LETTER AE
+U+00F0 LATIN SMALL LETTER ETH
+U+00F8 LATIN SMALL LETTER O WITH STROKE
+U+0110 LATIN CAPITAL LETTER D WITH STROKE
+U+0111 LATIN SMALL LETTER D WITH STROKE
+U+0126 LATIN CAPITAL LETTER H WITH STROKE
+U+0127 LATIN SMALL LETTER H WITH STROKE
+U+0131 LATIN SMALL LETTER DOTLESS I
+U+0138 LATIN SMALL LETTER KRA
+U+0141 LATIN CAPITAL LETTER L WITH STROKE
+U+0142 LATIN SMALL LETTER L WITH STROKE
+U+014A LATIN CAPITAL LETTER ENG
+U+014B LATIN SMALL LETTER ENG
+U+0152 LATIN CAPITAL LIGATURE OE
+U+0153 LATIN SMALL LIGATURE OE
+U+0166 LATIN CAPITAL LETTER T WITH STROKE
+U+0167 LATIN SMALL LETTER T WITH STROKE
+@end example
 
-Aspell can most likely support any of the following languages;
-however, I am unsure what script they are written in.  Most of them
-are probably written in Latin but I am not sure.  If you have any
-information about these languages please email me at @email{kevina@@gnu.org}.
+and the 14 modifiers:
 
-@multitable {aa} {Haitian Creole}
-@item Code @tab Language Name
-@item
-@item aa @tab Afar
-@item ak @tab Akan
-@item av @tab Avaric
-@item
-@item bi @tab Bislama
-@item bm @tab Bambara
-@item
-@item cu @tab Old Slavonic
-@item
-@item ee @tab Ewe
-@item
-@item ff @tab Fulah
-@item
-@item ho @tab Hiri Motu
-@item ht @tab Haitian Creole
-@item hz @tab Herero
-@item
-@item ie @tab Interlingue
-@item ig @tab Igbo
-@item ii @tab Sichuan Yi
-@item ik @tab Inupiaq
-@item
-@item kg @tab Kongo
-@item ki @tab Kikuyu/Gikuyu
-@item kj @tab Kwanyama
-@item
-@item lb @tab Luxembourgish
-@item lg @tab Ganda
-@item li @tab Limburgan
-@item ln @tab Lingala
-@item lu @tab Luba-Katanga
-@item
-@item mg @tab Malagasy
-@item mh @tab Marshallese
-@item
-@item na @tab Nauru
-@item nd @tab North Ndebele
-@item ng @tab Ndonga
-@item nr @tab South Ndebele
-@item ny @tab Nyanja
-@item
-@item rn @tab Rundi
-@item rw @tab Kinyarwanda
-@item
-@item sc @tab Sardinian
-@item sg @tab Sango
-@item si @tab Sinhalese
-@item sm @tab Samoan
-@item ss @tab Swati
-@item st @tab Southern Sotho
-@item
-@item tn @tab Tswana
-@item to @tab Tonga
-@item ts @tab Tsonga
-@item tw @tab Twi
-@item
-@item ve @tab Venda
-@item
-@item wo @tab Wolof
-@item
-@item xh @tab Xhosa
-@item
-@item za @tab Zhuang
+@example
+U+0300 COMBINING GRAVE ACCENT
+U+0301 COMBINING ACUTE ACCENT
+U+0302 COMBINING CIRCUMFLEX ACCENT
+U+0303 COMBINING TILDE
+U+0304 COMBINING MACRON
+U+0306 COMBINING BREVE
+U+0307 COMBINING DOT ABOVE
+U+0308 COMBINING DIAERESIS
+U+030A COMBINING RING ABOVE
+U+030B COMBINING DOUBLE ACUTE ACCENT
+U+030C COMBINING CARON
+U+0326 COMBINING COMMA BELOW
+U+0327 COMBINING CEDILLA
+U+0328 COMBINING OGONEK
+@end example
 
-@end multitable
-@c LANG TABLE END
+Which is a total of 37 additional Unicode code points.
 
+All ISO-8859 character leaves the characters 0x00 - 0x19 and 0x80 - 0x99
+unmapped as they are generally used as control characters.  Of those,
+0x02 - 0x19 and 0x80 - 0x99 may be mapped to anything in Aspell.  This
+is a total of 62 characters which can be remapped in any ISO-8859
+character set.  Thus, by remapping 37 of the 62 characters to the
+previously specifed Unicode code-points, any modified ISO-8859 character
+set can be used for any Latin languages covered by ISO-8859.  Of course
+decomposing every single accented character wastes a lot of space, so
+only characters that can be not be represented in the precomposed form
+should be broken up.  By using this trick it is possible to store
+foreign words in the correctly accented form in the dictionary even if
+the precomposed character is not in the current character set.
 
-@node Ethiopic
-@appendixsec The Ethiopic Script
+Any letter in the Unicode range U+0000 - U+0249, U+1E00..U+1EFF (Basic
+Latin, Latin-1 Supplement, Latin Extended-A, Latin Extended-B, and Latin
+Extended Additional) can be represented using around 175 basic letters,
+and 25 modifiers which is less than 220 and can thus fit in an Aspell
+8-bit character set.  Since this unicode range covers any possible Latin
+language this special character set can be used to reperesnt any word
+written using the Latin script if so desired.
+
+@appendixsubsec Hangeul
+
+Koren in generally written in hangeul or a mixture of hanja and hangeul.
+Aspell should be able to spell check the hangeul part of the writing.
+In Hangeul letters individual letters, known as jamo, are grouped
+together in syllable blocks.  Unicode provided code points for both jamo
+and the combined syllable block.  The syllable blocks will need to be
+decomposed into jamo in order for Aspell to spell check it.
+
+@node Syllabic
+@appendixsec Syllabic 
+
+Syllabic languages use a separate symbol for each syllable of the
+language.  Since most of them have more than 240 distinct characters
+Aspell can not support them as is.  However, all hope is not lost as
+Aspell will most likely be able to support them in the future.
+
+@include lang-syllabic.texi
+
+@appendixsubsec The Ethiopic Syllabary
 
 Even though the Ethiopic script has more than 220 distinct characters
 with a little work Aspell can still handle it.  The idea is to split
@@ -3094,8 +2950,31 @@ The code to break up a syllabary into the consonant-vowel parts does
 not exists as of Aspell 0.60.  However, it will be fairly easy to add
 it as part of the Unicode normalization process once that is written.
 
-@node Thai
-@appendixsec The Thai Script
+@appendixsubsec The Yi Syllabary 
+
+A very large syllabary with 819 distince symbols.  However, like
+Ethiopic, it should be possible to support this script by breaking it
+up.
+
+@appendixsubsec The Unified Canadian Aboriginal Syllabics
+
+Another very large syllabary.
+
+@appendixsubsec The Ojibwe Syllabary 
+
+With only 120 distinct symbols, Aspell can actually support this one as
+is.  However, as previously mentioned, it may be beneficial to break it
+up into the consonant-vowel representation anyway.
+
+@node Unsupported
+@appendixsec Unsupported
+
+These languages are currently unsupported by Aspell for one reason or
+another.
+
+@include lang-unsupported.texi
+
+@appendixsubsec The Thai, Leo, and Khmer Scripts
 
 The Thai script presents a different problem for Aspell.  The problem
 is not that there are more than 220 unique symbols, but that there are
@@ -3106,8 +2985,7 @@ to work within someone who is interested in adding Thai support to
 Aspell, but it is not likely something I will do in the foreseeable
 future.
 
-@node Hanzi
-@appendixsec Languages which use H@`anzi Characters
+@appendixsubsec Languages which use H@`anzi Characters
 
 H@`anzi Characters are used to write Chinese, Japanese, Korean, and were
 once used to write Vietnamese.  Each h@`anzi character represents a
@@ -3120,18 +2998,23 @@ even if Aspell could spell check h@`anzi the exiting suggestion strategy
 will not work well at all, and thus a completely new strategy will need
 to be developed.
 
-@node Japanese
-@appendixsec Japanese
+@appendixsubsec Japanese
 
-Modern Japanese is written in a mixture of hiragana, katakana, kanji,
-and sometimes romaji.  Hiragana, Katakana are both syllabary unique
-to Japan, kanji is a modified form of h@`anzi, and romaji uses the
-Latin alphabet.  With some work, Aspell should be able to check the
-non-kanji part of Japanese text.  However, based on my limited
-understanding of Japanese hiragana is often used at the end of kanji.
-Thus if Aspell was to simply separate out the hiragana from kanji it
-would end up with a lot of word endings which are not proper words and
-will thus be flagged as misspellings.
+Modern Japanese is written in a mixture of @dfn{hiragana}, @dfn{katakana},
+@dfn{kanji}, and sometimes @dfn{romaji}.  @dfn{Hiragana} and @dfn{katakana} are
+both syllabaries unique to Japan, @dfn{kanji} is a modified form of
+h@`anzi, and @dfn{romaji} uses the Latin alphabet.  With some work, Aspell
+should be able to check the non-kanji part of Japanese text.  However,
+based on my limited understanding of Japanese hiragana is often used at
+the end of kanji.  Thus if Aspell was to simply separate out the
+hiragana from kanji it would end up with a lot of word endings which are
+not proper words and will thus be flagged as misspellings.  However,
+this can be fairly easily rectified as text is tokenized into words
+before it is converted into Aspell's internal encoding.  In fact, some
+Japanese text is written in entirely in one script.  For example books
+for children and foreigners are sometimes written entirely in hiragana.
+Thus, Aspell could prove at least somewhat useful for spell checking
+Japanese.
 
 @node Multiple Scripts
 @appendixsec Languages Written in Multiple Scripts
@@ -3147,27 +3030,208 @@ word is written in.  Aspell currently does not support this mode of
 spell checking however it is something that I hope to eventually
 support.
 
-@node Support
-@appendix Support
+@node Planned Dictionaries
+@appendixsec Notes on Planned Dictionaries
 
-Support for Aspell can be found on the Aspell mailing lists.
-Instructions for joining the various mailing lists (and an archive of
-them) can be found off the Aspell home page at
-@uref{http://aspell.net}.
+@multitable @columnfractions .05 .20 .75
 
-@node Helping Out
-@appendix Helping Out
+@item be @tab Belarusian
+@tab Ispell Dictionary available
 
-I have very little time to work on Aspell so I desperately need other
-people to help with the development of Aspell.  There are a lot of
-things that need to be done before I consider Aspell complete.  For a
-list of them see @ref{To Do}.  I would really appreciate some help
-with doing them.  If you are interested in helping with one of them
-please let me know.
+@item bn @tab Bengali
+@tab Unoffical Aspell Dictionary available
+@uref{http://www.bengalinux.org/@/downloads/}
 
-I am also looking for someone to eventually take over the maintenance
-and development of Aspell.  If you are interested please contact me
-directly.
+@item et @tab Estonian
+@tab Ispell Dictionary available
+
+@item fi @tab Finnish 
+@tab Ispell Dictionary available
+
+@item gd @tab Scottish Gaelic
+@tab Ispell Dictionary available.
+@uref{http://packages.debian.org/@/unstable/text/igaelic}
+
+@item gv @tab Manx 
+@tab Ispell Dictionary available. 
+@uref{http://packages.debian.org/@/unstable/text/imanx}
+
+@item he @tab Hebrew
+@tab Ispell Dictionary available
+
+@item hu @tab Hungarian 
+@tab MySpell dictionary expanded to over 500 MB.
+Will add once affix support is worked into the dictionary package system.
+
+@item lb @tab Luxembourgish
+@tab MySpell dictionary planned.
+
+@item lt @tab Lithuanian
+@tab MySpell dictionary expanded to over 500 MB.
+Will add once affix support is worked into the dictionary package system.
+
+@item mt @tab Maltese
+@tab Unofficial Aspell Dictionary available, but broken link to source.
+@uref{http://linux.org.mt/@/article/spellcheck}
+
+@item sw @tab Albanian
+@tab Ispell Dictionary available
+
+@item sw @tab Swahili
+@tab Available at @uref{http://sourceforge.net/@/projects/translate}.  Offical 
+version comming soon.
+
+@item ta @tab Tamil
+@tab Word list available at
+@uref{http://www.developer.thamizha.com/@/spellchecker/index.html}.
+Working with them to create an Aspell dictionary.
+
+@item wa @tab Walloon
+@tab Ispell Dictionary available
+
+@item zu @tab Zulu
+@tab Available at @uref{http://sourceforge.net/@/projects/translate}.  Offical 
+version comming soon.
+
+@end multitable
+
+@node Language Related Issues
+@appendix Language Related Issues
+
+Here are some language related issues that a good spell checker need to
+handle.  If you know any more about any of these issues, or a new issue
+not discussed here, please email me at @email{kevina@@gnu.org}.
+
+@menu
+* German Sharp S ::             
+* Compound Words::              
+* Context Sensitive Spelling::  
+* Unicode Normalization::       
+* Words With Symbols in Them::   
+@end menu
+
+@node German Sharp S 
+@appendixsec German Sharp S 
+
+The German Sharp S or Eszett does not have an uppercase equivalent.
+Instead when @samp{@ss{}} is converted to @samp{SS}.  The conversion of
+@samp{@ss{}} to @samp{SS} requires a special rule, and increases the
+length of a word, thus disallowing inplace case conversion.
+Furthermore, my general rule converting all words to lowercase before
+looking them up in the dictionary won't work because the conversion of
+@samp{SS} to lowercase is ambiguous as it can be @samp{ss} or
+@samp{@ss{}}.  I do plan on dealing with this eventually, however.
+
+@node Compound Words
+@appendixsec Compound Words
+
+In some languages, such as German, it is acceptable to string two words
+together, thus forming a compound word.  However, there are rules to
+when this can be done.  Furthermore, it is not always sufficient to
+simply concatenate the two words.  For example sometimes a letter is
+inserted between the two words.  I tried implementing support for
+compound words in Aspell but it was too limiting and no one used it.
+Before I try implementing it again I want to know all the issues
+involved.
+
+@node Context Sensitive Spelling
+@appendixsec Context Sensitive Spelling
+
+In some language, such as Luxembourgish, the spelling of a word depends
+on which words surround it.  For example the the letter @samp{n} at the
+end of a word will disappear if it is followed by another word starting
+with a certain letter such as an @samp{s}.  However, it can probably get
+more complicated than that.  I would like to know how complicated before
+I attempt to implement support for context sensitive spelling.
+
+@node Unicode Normalization
+@appendixsec Unicode Normalization
+
+Because Unicode contains a large number of precomposed characters there
+are multiple ways a character can be represented.  For example letter
+@ringaccent{a} can either be represented as
+
+@example
+U+00E5 LATIN SMALL LETTER A WITH RING ABOVE
+@exdent or
+U+0061 LATIN SMALL LETTER A + U+030A COMBINING RING ABOVE
+@end example
+
+By performing normalization first Aspell will only see one of these
+representations.  The exact form of normalization depends on the
+language.  Give the choice of 
+
+@enumerate
+@item Precomposed character
+@item Base letter + combining character(s)
+@item Base letter only
+@end enumerate
+
+@noindent
+if the precomposed charter is in the target character set then (1), if
+both the base and combing character is present than (2), otherwise (3).
+
+@node Words With Symbols in Them
+@appendixsec Words With Spaces or other Symbols in Them
+
+Many languages, including English, have words with non-letter symbols in
+them.  For example the apostrophe.  These symbols generally appear in
+the middle of a word but they can also appear at the end, such as in an
+abbreviation.  If symbol can @emph{only} appear as part of a word than
+Aspell can treat it as if it were a letter.  
+
+However, the problem is most of these symbols have other uses.  For
+example, the apostrophe is often used as a single quote and the
+abbreviations marker is also used as a period.  Thus Aspell can not
+blindly assume that them as if they were letters.
+
+Aspell currently handles the case where the symbol can only appear in
+the middle of the word fairly well.  It simply assumes that if there is
+a letter both before and after the symbol than it is part of the word.
+This works most of the time but it is not full proof.  For example, 
+suppose the user forgot to leave a space after the period:
+
+@display
+  @dots{} and the dog went up the tree.Then the cat @dots{}
+@end display
+
+@noindent
+Aspell would think ``tree.Then'' is one word.  A better solution
+might be to then try to check ``tree'' and ``Then'' separately.
+But what if one of them is not in the dictionary?  Should Aspell assume
+``tree.Then'' is one word?
+
+The case where the symbol can appear at the begging or end of the word
+is more difficult to deal with.  The symbol may or may not actually be
+part of the word.  Aspell currently handles this case by first trying to
+spell check the word with the symbol and if that fails, try it without.
+The problem is, if the word is misspelled, should Aspell assume the
+symbol belongs with the word or not?  Currently Aspell assumes it does,
+which is not always the correct thing to do.
+
+Numbers in words present a different challenge to Aspell.  If Aspell
+treats numbers as letters than every possible number a user might write
+in a document must be specified in the dictionary.  This could be
+easily be solved by having special code to assume all numbers are
+correctly spelled.  But what about something like ``4th''.  Since the
+``th'' suffix can appear after any number we are left with the same
+problem.  The solution would be to have a special symbol for ``any
+number''.
+
+Words with spaces, often foreign phrases, are even more trouble to deal
+with.  The basic problem is that when organizing a string there is no
+good way to keep phrases together. One solution is to use trial and
+error.  If a word is not in the dictionary try grouping it with the
+previous or next word and see if the combined word is the dictionary.
+But what if the combined word is not, should the misspelled word be
+grouped when looking for suggestions?  So one solution is to also store
+each part of the phrase in the dictionary but tag it as part of the
+word a phrase and not an independent word.
+
+To further complicate things, Most applications that use spell checkers
+are accustom to parsing the document themselves and sending it to the
+spell checker a word at a time.  In order to support word with spaces in
+them a more complicated interface will be required.
 
 @node To Do
 @appendix To Do
@@ -3210,7 +3274,7 @@ enlighten me. @emph{[DONE]}
 Make the fact that Aspell is 8-bit internally (@pxref{Notes on 8-bit
 Characters}) transparent to the end-user. That is @strong{support
 unicode} for everything read in and printed out by Aspell.
-@xref{Unicode Support}. @emph{[In Progress]}
+@emph{[DONE]}
 
 @end itemize
 
@@ -3252,7 +3316,7 @@ know exactly what is involved in correct compound formation.
 @item
 Be able to accept @strong{words with spaces in them} as many languages
 have words, such as a word in a foreign phrase, which only make sense
-when followed by other words. @xref{Words With Spaces in Them}.
+when followed by other words. @xref{Words With Symbols in Them}.
 @item
 Support @strong{soundslike lookup with affix compression}.  I think it
 is possible, although I don't know how effective it will be.  The basic
@@ -3262,7 +3326,7 @@ email @email{aspell-devel@@gnu.org}, and I will explain it in more
 detail.
 @item 
 Use Lawrence Philips' new @strong{Double Metaphone algorithm}. See
-@uref{http://aspell.sourceforge.net/metaphone/}. The main task involved
+@uref{http://aspell.sf.net/@/metaphone/}. The main task involved
 here is converting the algorithm into table form. This will take some
 time but their is no real programming experience is required. If you
 want to help with Aspell but don't have any real programming
@@ -3275,9 +3339,7 @@ Also use frequency information to flag words which are found in the
 dictionary but not in common usage, and thus might not be what was
 intended.
 @item
-Perform @strong{decomposition} according to decomposition form D (see
-@uref{http://www.unicode.org/reports/tr15/}) on Unicode input.
-@xref{Unicode Decomposition}.
+Perform normization on Unicode input.  @xref{Unicode Normalization}.
 @item
 Support a @strong{"dual-script" mode} where Aspell can use a separate
 dictionary depending on which script it detects the current word in, the
@@ -3361,99 +3423,10 @@ the first few lines.
 @appendixsec Notes on Various Items
 
 @menu
-* Unicode Support::             
-* Unicode Decomposition::       
-* Words With Spaces in Them::   
 * Word skipping by context::    
 * Hidden Markov Model::         
 * Email the Personal Dictionary::  
 @end menu
-
-@node  Unicode Support
-@appendixsubsec Unicode Support
-
-The Aspell @emph{library} supports Unicode fairly well.  All one has
-to do is set the encoding and everything is converted on the fly.
-
-The Aspell @emph{utility} doesn't really support Unicode at this time.
-Although if you set the encoding to UTF-8 the 'PIPE' mode will
-probably work and the 'CHECK' mode will sort of work.  The issue with
-the 'check' mode is using Unicode with the curses library correctly.
-
-The @emph{rest} of the Aspell utility does not support Unicode.  The
-encoding used is whatever the dictionary is encoded in.
-
-@emph{Internally} the core Aspell library (everything in
-modules/speller/default) is 8-bit and is very likely to stay that way.
-@xref{Notes on 8-bit Characters}.
-
-However, that @emph{doesn't} mean that the end user has to know this.
-Everything read in by Aspell and everything printed out can be in
-UTF-8 or some other encoding.  The only person that @emph{really} has
-to be aware of the 8-bit issue is the dictionary maintainers as they
-must chose an 8-bit character set for Aspell to use.  Even the word
-list can be in Unicode as Aspell can convert it when creating the
-dictionary.
-
-But, Aspell is not there yet.  There are several issues in supporting
-Unicode.  The main issue is converting everything read in and printed out
-from the internal 8-bit encoding to Unicode.  But an other issue is
-knowing what encoding the various data files are in.  There is no
-reason they can't be in Unicode but Aspell has to know to convert it.
-Thus they need to be tagged in someway.  By data files I mean any human
-readable files that Aspell uses.
-
-Ideally the Aspell utility use the @env{LC_CTYPE} for the encoding,
-however using @env{LC_CTYPE} to figure out how the data files are
-encoded will lead to nothing but trouble.
-
-So, I @emph{hope} to get all this done by Aspell 0.60 but I don't know
-if I will.  If someone would like to assist me in this task I would
-really appreciate it.
-
-@node Unicode Decomposition
-@appendixsubsec Unicode Decomposition
-
-Elias Martenson suggested:
-
-@quotation
-Shouldn't aspell perform decomposition according to decomposition form
-D? Otherwise aspell will fail to spell check certain words. Consider,
-for example the swdish word ``m@ringaccent{a}l''. The ``@ringaccent{a}''
-can be represented by either:
-
-@example
-U+00E5 LATIN SMALL LETTER A WITH RING ABOVE
-@end example
-
-or
-
-@example
-U+0061 LATIN SMALL LETTER A + U+030A COMBINING RING ABOVE
-@end example
-
-By performing decomposition first, aspell will be guaranteed to always
-receive the second form, and there won't be any problem.
-@end quotation
-
-@node Words With Spaces in Them
-@appendixsubsec Words With Spaces in Them
-
-While this is something I would like to do it is not a simple task.
-The basic problem is that when tokenizing a string there is no good
-way to keep phrases together.  So the solution is to somehow add
-special conditions to certain words which will dictate which words can
-come before/after it.  Then there is also a problem of how to come up
-with intelligent suggestions.  What further complicates things is that
-many applications send words to Aspell a word at a time.  So even if
-Aspell did support such a thing many applications that would use
-Aspell will not.  So, in order for this to work applications will need
-to send text to Aspell a document or at least a sentence at a time.
-Unfortunately the framework for doing this is not there yet.  It will
-be once I finish the filter interface.  Another possible is to provide
-callback functions in which Aspell will be able to request the
-previous or next word on request.  Yet again the framework for doing
-this is not there.  Perhaps sometime in the near future.
 
 @node  Word skipping by context
 @appendixsubsec Word skipping by context
@@ -3700,9 +3673,9 @@ Fixed a problem with personal dictionaries on NFS mounted home
 directories.
 
 @item
-Compiled libaspell-common directory into libaspell for now to avoid forcing
- applications to relink whenever a new Aspell version is out which was
- due to the use of the libtool '-release' flag.
+Compiled libaspell-common directory into libaspell for now to avoid
+forcing applications to relink whenever a new Aspell version is out
+which was due to the use of the libtool '-release' flag.
 
 @item
 Fixed Makefiles so that aspell can be built outside the source tree
@@ -4200,7 +4173,7 @@ Improved the edit distance algorithm for slightly faster results.
 
 @item
 Removed the @samp{$$m} command in pipe mode, you should now use
-@samp{$$cs mode,@i{mode}} to set the mode and @strong{$$cr mode} to
+@samp{$$cs mode,@var{mode}} to set the mode and @strong{$$cr mode} to
 find out the current mode.
 
 @item
@@ -4524,7 +4497,7 @@ suggestion list for good.  (If it still does it please send be email.)
 Added the ability for aspell to learn form the users misspellings.
 
 @item
-Library Interface changes.  Still more to come....
+Library Interface changes.  Still more to come @dots{}.
 
 @item
 Is now multiprocess safe.  When a personal dictionary (or replacement

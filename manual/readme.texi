@@ -90,10 +90,10 @@ or the name of the library (for example
 @file{ncurses}) or a combined location and library in the form 
 @option{-L@var{libdir} -l@var{lib}}
  (for example 
-@option{-L/usr/local/ncurses/lib -lncurses}).
+@option{-L/usr/local/@/ncurses/lib -lncurses}).
  
-@option{@var{dir}} is the location of the curses header files (for example
-@file{/usr/local/ncurses/include}).
+@var{dir} is the location of the curses header files (for example
+@file{/usr/local/@/ncurses/include}).
  
 @node Upgrading from Aspell 0.50, Upgrading from Aspell .33/Pspell .12, Curses Notes, Installing
 @appendixsec Upgrading from Aspell 0.50
@@ -229,7 +229,7 @@ DLL resides (see below for further datails).
  
 @item TARGET
 Sets a prefix to be used for cross compilation (e.g.
-@file{/usr/local/bin/i586-mingw32msvc-} to cross compile from Linux).
+@file{/usr/local/bin/@/i586-mingw32msvc-} to cross compile from Linux).
 @end table
 
 
