@@ -1,6 +1,5 @@
 # -*- mode: po; buffer-file-coding-system: iso-8859-1; default-input-method: latin-1-prefix -*-
 #
-# Traduction faite par Michel Robitaille pour cette version uniquement
 # French messages for GNU Aspell
 # Copyright (C) 2002 Th. Thomas
 # This file is distributed under the modified BSD license.
@@ -11,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60-b20040424\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-05-15 19:54-0400\n"
-"PO-Revision-Date: 2004-05-14 18:00+0500\n"
+"POT-Creation-Date: 2004-05-21 18:07-0400\n"
+"PO-Revision-Date: 2004-05-13 08:00+0500\n"
 "Last-Translator: Thierry Thomas <thierry@pompo.net>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -212,11 +211,11 @@ msgstr "autoriser la normalisation Unicode"
 #: common/config.cpp:1107
 #, fuzzy
 msgid "Unicode normalization required for the current lang"
-msgstr "Forme de normalisation Unicode: none (aucune), nfd, nfc, comp"
+msgstr "Forme de normalisation Unicode : none (aucune), nfd, nfc, comp"
 
 #: common/config.cpp:1109
 msgid "Unicode normalization form: none, nfd, nfc, comp"
-msgstr "Forme de normalisation Unicode: none (aucune), nfd, nfc, comp"
+msgstr "Forme de normalisation Unicode : none (aucune), nfd, nfc, comp"
 
 #: common/config.cpp:1111
 msgid "avoid lossy conversions"
@@ -269,7 +268,7 @@ msgid ""
 "This could also mean that the file \"%s\" could not be opened for reading or "
 "does not exist."
 msgstr ""
-"Cela peut aussi vouloir dire que le fichier « %s » peut être ouvert en "
+"Cela peut aussi vouloir dire que le fichier « %s » peut être ouvert en "
 "lecture ou n'existe pas."
 
 #: common/convert.cpp:536 common/convert.cpp:642 common/convert.cpp:688
@@ -284,7 +283,7 @@ msgstr "Séquence UTF-8 invalide à la position %d."
 
 #: common/errors.cpp:26
 msgid "Operation Not Supported: %what:1"
-msgstr "L'opération n'est pas supportée : %what:1"
+msgstr "L'opération n'est pas supportée : %what:1"
 
 #: common/errors.cpp:42
 msgid "The method \"%what:1\" is unimplemented in \"%where:2\"."
@@ -479,7 +478,7 @@ msgstr "Erreur imprévue : "
 #: prog/aspell.cpp:90
 #, c-format
 msgid "Error: %s\n"
-msgstr "Erreur : %s\n"
+msgstr "Erreur : %s\n"
 
 #: prog/aspell.cpp:95
 msgid "Error: "
@@ -531,7 +530,7 @@ msgstr "Temps de chargement du dictionnaire :"
 #: prog/aspell.cpp:811
 #, c-format
 msgid "Suggestion Time: %f\n"
-msgstr "Temps de suggestion : %f\n"
+msgstr "Temps de suggestion : %f\n"
 
 #: prog/aspell.cpp:852
 msgid "You must specify a file name."
@@ -695,7 +694,7 @@ msgstr ""
 
 #: modules/speller/default/language.cpp:101
 msgid "This is probably because: "
-msgstr "Cela est la cause probable : "
+msgstr "Cela est la cause probable : "
 
 #: modules/speller/default/language.cpp:108
 msgid "The required field \"name\" is missing."
@@ -732,7 +731,7 @@ msgstr "Le fichier attendu doit être \"%s\" et non pas \"%s\"."
 #: modules/speller/default/affix.cpp:338
 #, c-format
 msgid "affix '%s' is corrupt, possible incorrect count"
-msgstr "l'affixe '%s' est corrompu, décompte possiblement incorrect"
+msgstr "l'affixe '%s' est corrompu, décompte probablement incorrect"
 
 #: modules/speller/default/affix.cpp:385
 #, c-format
@@ -751,16 +750,16 @@ msgstr "Phonème erroné."
 msgid "Wrong soundslike version."
 msgstr "Version erronée de phonème."
 
-#: modules/speller/default/readonly_ws.cpp:797
+#: modules/speller/default/readonly_ws.cpp:798
 msgid "The total word length is larger than 240 characters."
 msgstr "La longueur totale en mots dépasse 240 caractères."
 
-#: modules/speller/default/readonly_ws.cpp:813
+#: modules/speller/default/readonly_ws.cpp:814
 msgid "Affix flags found in word but no affix file given."
 msgstr ""
 "Les fanions affixes retrouvés dans le mot mais aucun fichier affixe fourni."
 
-#: modules/speller/default/readonly_ws.cpp:851
+#: modules/speller/default/readonly_ws.cpp:852
 #, fuzzy
 msgid ""
 "The total word length, with soundslike data, is larger than 240 characters."
@@ -835,12 +834,10 @@ msgstr "Filtre pour masquer les éléments tels que les URL et les répertoires"
 
 #~ msgid "encode soundslike infomation when creating dicts"
 #~ msgstr ""
-#~ "encoder les informations de phonèmes lors de la création des dictionnaires"
+#~ "encode les informations de phonèmes lors de la création des dictionnaires"
 
 #~ msgid "use jump tables when creating dictionaries"
 #~ msgstr "utiliser les tables de sauts lors de la création des dictionnaires"
 
 #~ msgid "Affix compression is currently incompatible with soundslike lookup."
-#~ msgstr ""
-#~ "La compression affixe est actuellement incompatible avec la recherche de "
-#~ "phonèmes"
+#~ msgstr "La compression affixe est actuellement incompatible avec MRO"

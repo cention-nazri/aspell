@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60-b20040511\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-05-15 19:54-0400\n"
+"POT-Creation-Date: 2004-05-21 18:07-0400\n"
 "PO-Revision-Date: 2004-05-14 17:25+0200\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
@@ -726,15 +726,15 @@ msgstr "Špatná podobnost zvuku."
 msgid "Wrong soundslike version."
 msgstr "Špatná verze podobnosti zvuku."
 
-#: modules/speller/default/readonly_ws.cpp:797
+#: modules/speller/default/readonly_ws.cpp:798
 msgid "The total word length is larger than 240 characters."
 msgstr "Celková délka slova je větší než 240 znaků."
 
-#: modules/speller/default/readonly_ws.cpp:813
+#: modules/speller/default/readonly_ws.cpp:814
 msgid "Affix flags found in word but no affix file given."
 msgstr "Příznaky přípon nalezeny ve slově, ale nezadán soubor přípon."
 
-#: modules/speller/default/readonly_ws.cpp:851
+#: modules/speller/default/readonly_ws.cpp:852
 msgid ""
 "The total word length, with soundslike data, is larger than 240 characters."
 msgstr "Celková délka slova s daty o podobnosti zvuku je větší než 240 znaků."

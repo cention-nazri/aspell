@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60-b20040424\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-05-15 19:54-0400\n"
+"POT-Creation-Date: 2004-05-21 18:07-0400\n"
 "PO-Revision-Date: 2004-04-30 14:14+0300\n"
 "Last-Translator: Pavel Maryanov <acid_jack@ukr.net>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -729,15 +729,15 @@ msgstr "Неверный soundslike."
 msgid "Wrong soundslike version."
 msgstr "Неверная версия soundslike."
 
-#: modules/speller/default/readonly_ws.cpp:797
+#: modules/speller/default/readonly_ws.cpp:798
 msgid "The total word length is larger than 240 characters."
 msgstr "Общая длина слов более 240 символов."
 
-#: modules/speller/default/readonly_ws.cpp:813
+#: modules/speller/default/readonly_ws.cpp:814
 msgid "Affix flags found in word but no affix file given."
 msgstr "В слове найдены флаги аффикса, не указан файл аффикса."
 
-#: modules/speller/default/readonly_ws.cpp:851
+#: modules/speller/default/readonly_ws.cpp:852
 #, fuzzy
 msgid ""
 "The total word length, with soundslike data, is larger than 240 characters."

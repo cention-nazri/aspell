@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60-b20040511\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-05-15 19:54-0400\n"
+"POT-Creation-Date: 2004-05-21 18:07-0400\n"
 "PO-Revision-Date: 2004-05-15 15:22+0200\n"
 "Last-Translator: Elros Cyriatan <cyriatan@fastmail.fm>\n"
 "Language-Team: Dutch <vertaling@nl.linux.org>\n"
@@ -738,17 +738,17 @@ msgstr "Verkeerde klinkt-als."
 msgid "Wrong soundslike version."
 msgstr "Verkeerde klinkt-als versie."
 
-#: modules/speller/default/readonly_ws.cpp:797
+#: modules/speller/default/readonly_ws.cpp:798
 msgid "The total word length is larger than 240 characters."
 msgstr "De totale woordlengte is groter dan 240 tekens."
 
-#: modules/speller/default/readonly_ws.cpp:813
+#: modules/speller/default/readonly_ws.cpp:814
 msgid "Affix flags found in word but no affix file given."
 msgstr ""
 "Achtervoegsel opties gevonden in woord, maar er is geen achtervoegsel "
 "gegeven."
 
-#: modules/speller/default/readonly_ws.cpp:851
+#: modules/speller/default/readonly_ws.cpp:852
 msgid ""
 "The total word length, with soundslike data, is larger than 240 characters."
 msgstr ""
