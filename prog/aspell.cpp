@@ -395,7 +395,8 @@ DocumentChecker * new_checker(Speller * speller,
 
 void pipe() 
 {
-  assert(setvbuf(stdin, 0, _IOLBF, 0) == 0);
+  // set up stdin and stdout to be line buffered
+  assert(setvbuf(stdin, 0, _IOLBF, 0) == 0); 
   assert(setvbuf(stdout, 0, _IOLBF, 0) == 0);
 
   bool terse_mode = true;
@@ -736,6 +737,9 @@ void check(bool interactive)
  exit_loop:
 
   speller->save_all_word_lists();
+  state.release(); // not strictly needed, but to be safe as the
+                   // CheckerString is also responsible for closing
+                   // the files
   
   //end_check();
   

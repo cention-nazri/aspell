@@ -47,14 +47,15 @@ CheckerString::CheckerString(Speller * speller,
 
 CheckerString::~CheckerString()
 {
-  for (cur_line_ = first_line(); !off_end(cur_line_); next_line(cur_line_))
-  {
-    fwrite(cur_line_->data(), cur_line_->size(), 1, out_);
-    cur_line_->resize(0);
-  }
+  if (out_)
+    for (cur_line_ = first_line(); !off_end(cur_line_); next_line(cur_line_))
+    {
+      fwrite(cur_line_->data(), cur_line_->size(), 1, out_);
+      cur_line_->resize(0);
+    }
   if (in_ != stdin)
     fclose(in_);
-  if (out_ != stdout && out_ != stdout)
+  if (out_ && out_ != stdout && out_ != stdout)
     fclose(out_);
 }
 
@@ -67,7 +68,7 @@ bool CheckerString::read_next_line()
   int s = get_line(in_, *end_);
   if (s == 0) return false;
   end_ = next;
-  if (end_->size() > 0)
+  if (out_ && end_->size() > 0)
     fwrite(end_->data(), end_->size(), 1, out_);
   end_->resize(0);
   return true;
