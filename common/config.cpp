@@ -1103,11 +1103,14 @@ namespace acommon {
        N_("use personal, replacement & session dictionaries")}
     , {"warn", KeyInfoBool, "false", // FIXME: Implement
        N_("enable warnings")}
-    , {"normalize", KeyInfoBool, "false",
+    , {"normalize", KeyInfoBool, "true",
        N_("enable Unicode normalization")}
-    , {"norm-required", KeyInfoBool, "false", 0} // FIXME
+    , {"norm-required", KeyInfoBool, "false",
+       N_("Unicode normalization required for the current lang")}
     , {"norm-form", KeyInfoString, "nfc",
        N_("Unicode normalization form: none, nfd, nfc, comp")}
+    , {"norm-strict", KeyInfoBool, "false",
+       N_("avoid lossy conversions")}
     
     //
     // These options are only used when creating dictionaries
@@ -1139,7 +1142,7 @@ namespace acommon {
        N_("time load time and suggest time in pipe mode"), KEYINFO_MAY_CHANGE}
     , {"byte-offsets", KeyInfoBool, "false",
        N_("use byte offsets instead of character offsets")}
-  };
+    };
 
   const KeyInfo * config_impl_keys_begin = config_keys;
   const KeyInfo * config_impl_keys_end   

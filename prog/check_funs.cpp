@@ -456,17 +456,24 @@ void display_misspelled_word() {
     while (!i.off_end()) {
 
       int y,x;
-      getyx(text_w,y,x);
+      int y0,x0;
+      getyx(text_w, y, x);
+      x0 = x;
+      y0 = y;
 
       wattrset(text_w,A_NORMAL);
       int last_space_pos = 0;
       const char * last_space = i->pbegin();
-      int w = 0;
 
-      while (j < i->pend() && w < width && *j != '\n')
+      // NOTE: Combining characters after a character at the very end of
+      //   a line will cause an unnecessary word wrap.  Unfortunately I
+      //   do not know how to avoid it as they is no portable way to
+      //   find out if the next character will combine with the
+      //   previous.
+      while (j < i->pend() && x0 <= x && *j != '\n')
       {
         if (asc_isspace(*j)) {
-          last_space_pos = w;
+          last_space_pos = x;
           last_space = j;
         }
         if (j == word_begin) {
@@ -483,18 +490,21 @@ void display_misspelled_word() {
           len = 1;
         }
         j += len;
-        ++w;
+        x0 = x;
+        getyx(text_w, y, x);
       }
+      y = y0;
       if (j == i->pend() || *j == '\n') {
         ++i;
         j = i->pbegin();
       } else {
-        if (w - last_space_pos < width/3) {
+        if (x - last_space_pos < width/3) {
           wmove(text_w, y, last_space_pos);
           wclrtoeol(text_w);
           j = last_space + 1;
         }
         wmove(text_w, y, width-1);
+        wattrset(text_w,A_NORMAL);
         waddch(text_w,'\\');
       }
 
@@ -522,11 +532,13 @@ void display_misspelled_word() {
     if (post)
       fwrite(word_end, post, 1, stdout);
   }
-
 }
 
-template <class O>
-static void print_truncate(O *out, const char * word, int width) {
+static inline void put (FILE * out, char c) {putc(c, out);}
+static inline void put (FILE * out, const char * s) {fputs(s, out);}
+static inline void put (FILE * out, const char * s, int size) {fwrite(s, size, 1, out);}
+
+static void print_truncate(FILE * out, const char * word, int width) {
   int i;
   int len = 0;
   for (i = 0; i < width-1 && *word; word += len, ++i) {
@@ -551,8 +563,7 @@ static void print_truncate(O *out, const char * word, int width) {
     put(out,' ');
 }
 
-template <class O>
-static void display_menu(O * out, const Choices * choices, int width) {
+static void display_menu(FILE * out, const Choices * choices, int width) {
   if (width <= 11) return;
   Choices::const_iterator i = choices->begin();
   while (i != choices->end()) {
@@ -567,14 +578,9 @@ static void display_menu(O * out, const Choices * choices, int width) {
       print_truncate(out, i->desc, width/2 - 4);
       ++i;
     }
-    new_line(out);
+    putc('\n', out);
   }
 }
-
-static inline void put (FILE * out, char c) {putc(c, out);}
-static inline void put (FILE * out, const char * s) {fputs(s, out);}
-static inline void put (FILE * out, const char * s, int size) {fwrite(s, size, 1, out);}
-static inline void new_line(FILE * out) {putc('\n', out);}
 
 #if   HAVE_LIBCURSES
 
@@ -590,15 +596,53 @@ static inline void put (WINDOW * w, const char * c, int size)
 {
   waddnstr(w,const_cast<char *>(c), size);
 }
-static inline void new_line(WINDOW * w) 
-{
+
+static void print_truncate(WINDOW * out, const char * word, int width) {
+  int len = 0;
   int y,x;
-  getyx(w,y,x);
-  wmove(w,y+1,0);
-} 
+  getyx(out, y, x);
+  int stop = x + width - 1;
+  for (; x <= stop && *word; word += len) {
+    len = mbrlen(word, MB_CUR_MAX, NULL);
+    if (len > 0) {
+      put(out, word, len);
+    } else {
+      put(out, ' ');
+      len = 1;
+    }
+    getyx(out, y, x);
+  }
+  if (x > stop && *word) {
+    wmove(out, y, stop);
+    put(out,'$');
+  }
+}
+
+static void display_menu(WINDOW * out, const Choices * choices, int width) {
+  if (width <= 11) return;
+  Choices::const_iterator i = choices->begin();
+  int y,x;
+  getyx(out, y, x);
+  while (i != choices->end()) {
+    wclrtoeol(out);
+    put(out,i->choice);
+    put(out,") ");
+    print_truncate(out, i->desc, width/2 - 4);
+    ++i;
+    if (i != choices->end()) {
+      wmove(out, y, width/2);
+      put(out,i->choice);
+      put(out,") ");
+      print_truncate(out, i->desc, width/2 - 4);
+      ++i;
+    }
+    ++y;
+    wmove(out, y, 0);
+  }
+}
 
 #endif
-  
+
 void display_menu() {
 #if   HAVE_LIBCURSES
   if (use_curses && menu_w) {

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.51-b20040219\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-04-25 03:58-0400\n"
+"POT-Creation-Date: 2004-04-25 04:07-0400\n"
 "PO-Revision-Date: 2004-03-15 12:10-0300\n"
 "Last-Translator: Marcus Moreira de Souza <marcus@frb.br>\n"
 "Language-Team: Brazilian Portuguese <ldp-br@bazar.conectiva.com.br>\n"
@@ -583,16 +583,16 @@ msgstr "Impossível meclar um vocabulário principal."
 msgid "Sorry \"create/merge personal\" is currently unimplemented.\n"
 msgstr ""
 
-#: prog/aspell.cpp:1318 prog/aspell.cpp:1375
+#: prog/aspell.cpp:1318 prog/aspell.cpp:1377
 #, c-format
 msgid "Sorry I won't overwrite \"%s\""
 msgstr ""
 
-#: prog/aspell.cpp:1366
+#: prog/aspell.cpp:1368
 msgid "Sorry \"create/merge repl\" is currently unimplemented.\n"
 msgstr ""
 
-#: prog/aspell.cpp:1739
+#: prog/aspell.cpp:1743
 #, c-format
 msgid ""
 "\n"
@@ -650,7 +650,7 @@ msgstr ""
 "[options] pode ser uma das seguintes:\n"
 "\n"
 
-#: prog/aspell.cpp:1769
+#: prog/aspell.cpp:1773
 #, c-format
 msgid ""
 "\n"

@@ -721,6 +721,8 @@ namespace {
     bool use_jump_tables = use_soundslike || config.retrieve_bool("use-jump-tables");
 
     ConvEC iconv;
+    if (!config.have("norm-strict"))
+      config.replace("norm-strict", "true");
     if (config.have("encoding"))
       RET_ON_ERR(iconv.setup(config, config.retrieve("encoding"), lang.charset(),NormFrom));
     else

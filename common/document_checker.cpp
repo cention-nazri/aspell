@@ -50,7 +50,7 @@ namespace acommon {
     FilterChar * begin = proc_str_.pbegin();
     FilterChar * end   = proc_str_.pend() - 1;
     if (filter_) {
-      filter_->decode(begin, end);
+      filter_->decode(begin, end); // FIXME: Why is this here
       filter_->process(begin, end);
     }
     tokenizer_->reset(begin, end);

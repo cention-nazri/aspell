@@ -77,6 +77,8 @@ namespace acommon {
     bool cache_key_eq(const char * l) const  {return key == l;}
     static PosibErr<NormTables *> get_new(const String &, const Config *);
     NormTable<FromUniNormEntry> * internal;
+    NormTable<FromUniNormEntry> * strict_d;
+    NormTable<FromUniNormEntry> * strict;
     struct ToUniTable {
       String name;
       NormTable<ToUniNormEntry> * data;

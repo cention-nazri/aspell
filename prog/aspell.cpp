@@ -71,6 +71,7 @@ void config();
 void check();
 void pipe();
 void convt();
+void normlz();
 void filter();
 void list();
 void dicts();
@@ -160,6 +161,7 @@ const PossibleOption possible_options[] = {
   COMMAND("check",     'c', 0),
   COMMAND("pipe",      'a', 0),
   COMMAND("conv",      '\0', 2),
+  COMMAND("norm",      '\0', 1),
   COMMAND("filter",    '\0', 0),
   COMMAND("soundslike",'\0', 0),
   COMMAND("munch",     '\0', 0),
@@ -375,6 +377,8 @@ int main (int argc, const char *argv[])
     list();
   else if (action_str == "conv")
     convt();
+  else if (action_str == "norm")
+    normlz();
   else if (action_str == "filter")
     filter();
   else if (action_str == "soundslike")
@@ -1174,10 +1178,61 @@ void list()
 void convt()
 {
   Conv conv;
-  conv.setup(*options, args[0], args[1], NormNone);
+  String buf1, buf2;
+  const char * from = fix_encoding_str(args[0], buf1);
+  const char * to   = fix_encoding_str(args[1], buf2);
+  Normalize norm = NormNone;
+  if (strcmp(from, "utf-8") == 0 && strcmp(to, "utf-8") != 0)
+    norm = NormFrom;
+  else if (strcmp(from, "utf-8") != 0 && strcmp(to, "utf-8") == 0)
+    norm = NormTo;
+  if (args.size() > 2) {
+    for (String::iterator i = args[2].begin(); i != args[2].end(); ++i)
+      *i = asc_tolower(*i);
+    options->replace("normalize", "true");
+    if (args[2] == "none")
+      options->replace("normalize", "false");
+    else if (args[2] == "internal")
+      options->replace("norm-strict", "false");
+    else if (args[2] == "strict")
+      options->replace("norm-strict", "true");
+    else
+      EXIT_ON_ERR(options->replace("norm-form", args[2]));
+  }
+  EXIT_ON_ERR(conv.setup(*options, args[0], args[1], norm));
   String line;
   while (CIN.getline(line))
     COUT.printl(conv(line));
+}
+
+void normlz()
+{
+  options->replace("normalize", "true");
+  const char * from = args.size() < 3 ? "utf-8" : args[0].str();
+  const char * to   = args.size() < 3 ? "utf-8" : args[2].str();
+  const char * intr = args.size() < 3 ? args[0].str() : args[1].str();
+  String * form = (args.size() == 2   ? &args[1] 
+                   : args.size() == 4 ? &args[3]
+                   : 0);
+  Normalize decode_norm = NormTo;
+  if (form) {
+    for (String::iterator i = form->begin(); i != form->end(); ++i)
+      *i = asc_tolower(*i);
+    if (*form == "internal") {
+      options->replace("norm-strict", "false");
+      decode_norm = NormNone;
+    } else if (*form == "strict") {
+      options->replace("norm-strict", "true");
+      decode_norm = NormNone;
+    }
+    if (decode_norm == NormTo) EXIT_ON_ERR(options->replace("norm-form", *form));
+  }
+  Conv encode,decode;
+  EXIT_ON_ERR(encode.setup(*options, from, intr, NormFrom));
+  EXIT_ON_ERR(decode.setup(*options, intr, to, decode_norm));
+  String line;
+  while (CIN.getline(line))
+    COUT.printl(decode(encode(line)));
 }
 
 ///////////////////////////

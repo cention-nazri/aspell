@@ -5,37 +5,37 @@
 # <char> <uni> <type> <display> <upper> <lower> <title> <plain>
 #                                                         <sl-first> <sl-rest>
 00 0000 - N 00 00 00 00 00 00 # <control>
-01 0001 - N 01 01 01 00 00 00 # <control>
-02 0002 - N 02 02 02 00 00 00 # <unused control>
-03 0003 - N 03 03 03 00 00 00 # <unused control>
-04 0004 - N 04 04 04 00 00 00 # <unused control>
-05 0005 - N 05 05 05 00 00 00 # <unused control>
-06 0006 - N 06 06 06 00 00 00 # <unused control>
-07 0007 - N 07 07 07 00 00 00 # <unused control>
-08 0008 - N 08 08 08 00 00 00 # <unused control>
-09 0009 - N 09 09 09 00 00 00 # <unused control>
-0A 000A - N 0A 0A 0A 00 00 00 # <unused control>
-0B 000B - N 0B 0B 0B 00 00 00 # <unused control>
-0C 000C - N 0C 0C 0C 00 00 00 # <unused control>
-0D 000D - N 0D 0D 0D 00 00 00 # <unused control>
-0E 000E - N 0E 0E 0E 00 00 00 # <unused control>
-0F 000F - N 0F 0F 0F 00 00 00 # <unused control>
-10 0010 - N 10 10 10 00 00 00 # <unused control>
-11 0011 - N 11 11 11 00 00 00 # <unused control>
-12 0012 - N 12 12 12 00 00 00 # <unused control>
-13 0013 - N 13 13 13 00 00 00 # <unused control>
-14 0014 - N 14 14 14 00 00 00 # <unused control>
-15 0015 - N 15 15 15 00 00 00 # <unused control>
-16 0016 - N 16 16 16 00 00 00 # <unused control>
-17 0017 - N 17 17 17 00 00 00 # <unused control>
-18 0018 - N 18 18 18 00 00 00 # <unused control>
-19 0019 - N 19 19 19 00 00 00 # <unused control>
-1A 001A - N 1A 1A 1A 00 00 00 # <unused control>
-1B 001B - N 1B 1B 1B 00 00 00 # <unused control>
-1C 001C - N 1C 1C 1C 00 00 00 # <unused control>
-1D 001D - N 1D 1D 1D 00 00 00 # <unused control>
-1E 001E - N 1E 1E 1E 00 00 00 # <unused control>
-1F 001F - N 1F 1F 1F 00 00 00 # <unused control>
+01 0001 . N 01 01 01 00 00 00 # <unused control>
+02 0002 . N 02 02 02 00 00 00 # <unused control>
+03 0003 . N 03 03 03 00 00 00 # <unused control>
+04 0004 . N 04 04 04 00 00 00 # <unused control>
+05 0005 . N 05 05 05 00 00 00 # <unused control>
+06 0006 . N 06 06 06 00 00 00 # <unused control>
+07 0007 . N 07 07 07 00 00 00 # <unused control>
+08 0008 . N 08 08 08 00 00 00 # <unused control>
+09 0009 . N 09 09 09 00 00 00 # <unused control>
+0A 000A . N 0A 0A 0A 00 00 00 # <unused control>
+0B 000B . N 0B 0B 0B 00 00 00 # <unused control>
+0C 000C . N 0C 0C 0C 00 00 00 # <unused control>
+0D 000D . N 0D 0D 0D 00 00 00 # <unused control>
+0E 000E . N 0E 0E 0E 00 00 00 # <unused control>
+0F 000F . N 0F 0F 0F 00 00 00 # <unused control>
+10 0010 - N 10 10 10 00 00 00 # <control>
+11 0011 . N 11 11 11 00 00 00 # <unused control>
+12 0012 . N 12 12 12 00 00 00 # <unused control>
+13 0013 . N 13 13 13 00 00 00 # <unused control>
+14 0014 . N 14 14 14 00 00 00 # <unused control>
+15 0015 . N 15 15 15 00 00 00 # <unused control>
+16 0016 . N 16 16 16 00 00 00 # <unused control>
+17 0017 . N 17 17 17 00 00 00 # <unused control>
+18 0018 . N 18 18 18 00 00 00 # <unused control>
+19 0019 . N 19 19 19 00 00 00 # <unused control>
+1A 001A . N 1A 1A 1A 00 00 00 # <unused control>
+1B 001B . N 1B 1B 1B 00 00 00 # <unused control>
+1C 001C . N 1C 1C 1C 00 00 00 # <unused control>
+1D 001D . N 1D 1D 1D 00 00 00 # <unused control>
+1E 001E . N 1E 1E 1E 00 00 00 # <unused control>
+1F 001F . N 1F 1F 1F 00 00 00 # <unused control>
 20 0020 W Y 20 20 20 00 00 00 # SPACE
 21 0021 - Y 21 21 21 00 00 00 # EXCLAMATION MARK
 22 0022 - Y 22 22 22 00 00 00 # QUOTATION MARK
@@ -133,14 +133,14 @@
 7E 007E - Y 7E 7E 7E 00 00 00 # TILDE
 7F 007F - N 7F 7F 7F 00 00 00 # <control>
 80 20AC - Y 80 80 80 00 00 00 # EURO SIGN
-81 0081 - N 81 81 81 00 00 00 # <unused control>
+81 0081 . N 81 81 81 00 00 00 # <unused control>
 82 201A - Y 82 82 82 00 00 00 # SINGLE LOW-9 QUOTATION MARK
-83 0083 - N 83 83 83 00 00 00 # <unused control>
+83 0083 . N 83 83 83 00 00 00 # <unused control>
 84 201E - Y 84 84 84 00 00 00 # DOUBLE LOW-9 QUOTATION MARK
 85 2026 - Y 85 85 85 00 00 00 # HORIZONTAL ELLIPSIS
 86 2020 - Y 86 86 86 00 00 00 # DAGGER
 87 2021 - Y 87 87 87 00 00 00 # DOUBLE DAGGER
-88 0088 - N 88 88 88 00 00 00 # <unused control>
+88 0088 . N 88 88 88 00 00 00 # <unused control>
 89 2030 - Y 89 89 89 00 00 00 # PER MILLE SIGN
 8A 0160 L Y 8A 9A 8A 53 73 73 # LATIN CAPITAL LETTER S WITH CARON
 8B 2039 - Y 8B 8B 8B 00 00 00 # SINGLE LEFT-POINTING ANGLE QUOTATION MARK
@@ -148,7 +148,7 @@
 8D 0164 L Y 8D 9D 8D 54 74 74 # LATIN CAPITAL LETTER T WITH CARON
 8E 017D L Y 8E 9E 8E 5A 7A 7A # LATIN CAPITAL LETTER Z WITH CARON
 8F 0179 L Y 8F 9F 8F 5A 7A 7A # LATIN CAPITAL LETTER Z WITH ACUTE
-90 0090 - N 90 90 90 00 00 00 # <unused control>
+90 0090 . N 90 90 90 00 00 00 # <unused control>
 91 2018 - Y 91 91 91 00 00 00 # LEFT SINGLE QUOTATION MARK
 92 2019 - Y 92 92 92 00 00 00 # RIGHT SINGLE QUOTATION MARK
 93 201C - Y 93 93 93 00 00 00 # LEFT DOUBLE QUOTATION MARK
@@ -156,8 +156,8 @@
 95 2022 - Y 95 95 95 00 00 00 # BULLET
 96 2013 - Y 96 96 96 00 00 00 # EN DASH
 97 2014 - Y 97 97 97 00 00 00 # EM DASH
-98 0098 - N 98 98 98 00 00 00 # <unused control>
-99 2122 - Y 99 99 99 00 00 00 # TRADE MARK SIGN
+98 0098 . N 98 98 98 00 00 00 # <unused control>
+99 2122 . N 99 99 99 00 00 00 # <unused special>
 9A 0161 L Y 8A 9A 8A 73 73 73 # LATIN SMALL LETTER S WITH CARON
 9B 203A - Y 9B 9B 9B 00 00 00 # SINGLE RIGHT-POINTING ANGLE QUOTATION MARK
 9C 015B L Y 8C 9C 8C 73 73 73 # LATIN SMALL LETTER S WITH ACUTE

@@ -214,7 +214,7 @@ namespace acommon {
       if (i->from == static_cast<typename T::From>(*s)) {
         if (i->sub_table) {
           // really tail recursion
-          if (i->to[0] != 0) {def = i->to; prev = s;}
+          if (i->to[1] != T::to_non_char) {def = i->to; prev = s;}
           d = static_cast<const NormTable<T> *>(i->sub_table);
           s++;
           goto loop;
@@ -245,6 +245,8 @@ namespace acommon {
     Uni32 from;
     typedef byte To;
     byte  to[4];
+    static const From from_non_char = (From)(-1);
+    static const To   to_non_char   = 0x10;
     static const unsigned max_to = 4;
     void * sub_table;
   } __attribute__ ((aligned (16)));
@@ -255,6 +257,8 @@ namespace acommon {
     byte from;
     typedef Uni16 To;
     Uni16 to[3];
+    static const From from_non_char = 0x10;
+    static const To   to_non_char   = 0x10;
     static const unsigned max_to = 3;
     void * sub_table;
   } __attribute__ ((aligned (16)));
@@ -348,18 +352,23 @@ namespace acommon {
       ++p;
       assert(*p == '>');
       ++p;
+      assert(*p == ' ');
+      ++p;
       unsigned i = 0;
-      for (;; ++i) {
-        const char * q = p;
-        Uni32 t = strtoul(p, (char **)&p, 16);
-        if (q == p) break;
-        assert(i < d->max_to);
-        cur->to[i] = static_cast<typename T::To>(t);
-        assert(t == static_cast<Uni32>(cur->to[i]));
+      if (*p != '-') {
+        for (;; ++i) {
+          const char * q = p;
+          Uni32 t = strtoul(p, (char **)&p, 16);
+          if (q == p) break;
+          assert(i < d->max_to);
+          cur->to[i] = static_cast<typename T::To>(t);
+          assert(t == static_cast<Uni32>(cur->to[i]));
+        } 
+      } else {
+        cur->to[0] = 0;
+        cur->to[1] = T::to_non_char;
       }
       if (*p == ' ') ++p;
-      if (*p == '!') ++p;
-      if (*p == '!') ++p;
       if (*p == '/') cur->sub_table = create_norm_table<T>(in,buf);
       ++cur;
     }
@@ -379,10 +388,14 @@ namespace acommon {
       T * dest = final->data + (cur->from & final->mask);
       while (dest->from != 0) dest += final->height;
       *dest = *cur;
-      if (dest->from == 0) dest->from = 1;
+      if (dest->from == 0) dest->from = T::from_non_char;
     }
-    for (T * dest = final->data; dest < final->end; dest += final->height)
-      if (dest->from == 1) {dest->from = 0; break;}
+    for (T * dest = final->data; dest < final->end; dest += final->height) {
+      if (dest->from == 0 || dest->from == T::from_non_char && dest->to[0] == 0) {
+        dest->from = T::from_non_char;
+        dest->to[0] = T::to_non_char;
+      }
+    }
     return final;
   }
 
@@ -412,6 +425,20 @@ namespace acommon {
     remove_comments(l);
     assert (l == "/");
     d->internal = create_norm_table<FromUniNormEntry>(in, l);
+    get_nb_line(in, l);
+    remove_comments(l);
+    assert (l == "STRICT");
+    char * p = get_nb_line(in, l);
+    remove_comments(l);
+    if (l == "/") {
+      d->strict_d = create_norm_table<FromUniNormEntry>(in, l);
+      d->strict = d->strict_d;
+    } else {
+      assert(*p == '=');
+      ++p; ++p;
+      assert(strcmp(p, "INTERNAL") == 0);
+      d->strict = d->internal;
+    }
     while (get_nb_line(in, l)) {
       remove_comments(l);
       d->to_uni.push_back(ToUniTable());
@@ -422,7 +449,7 @@ namespace acommon {
       char * p = get_nb_line(in, l);
       remove_comments(l);
       if (l == "/") {
-        e.ptr = e.data =create_norm_table<ToUniNormEntry>(in,l);
+        e.ptr = e.data = create_norm_table<ToUniNormEntry>(in,l);
       } else {
         assert(*p == '=');
         ++p; ++p;
@@ -433,13 +460,15 @@ namespace acommon {
         e.ptr = i->ptr;
         get_nb_line(in, l);
       }
-    }
+    }  
     return d;
   }
 
   NormTables::~NormTables()
   {
     free_norm_table<FromUniNormEntry>(internal);
+    if (strict_d)
+      free_norm_table<FromUniNormEntry>(strict_d);
     for (unsigned i = 0; i != to_uni.size(); ++i) {
       if (to_uni[i].data)
         free_norm_table<ToUniNormEntry>(to_uni[i].data);
@@ -494,13 +523,19 @@ namespace acommon {
                 CharVector & out) const {
       for (; in != stop; ++in) {
         Chr c = in->chr;
+        if (c != in->chr) c = '?';
         out.append(&c, sizeof(Chr));
       }
     }
     PosibErr<void> encode_ec(const FilterChar * in, const FilterChar * stop, 
-                             CharVector & out, ParmString) const {
+                             CharVector & out, ParmString orig) const {
       for (; in != stop; ++in) {
         Chr c = in->chr;
+        if (c != in->chr) {
+          char m[70];
+          snprintf(m, 70, _("The Unicode code point U+%04X is unsupported."), in->chr);
+          return make_err(invalid_string, orig, m);
+        }
         out.append(&c, sizeof(Chr));
       }
       return no_err;
@@ -604,7 +639,7 @@ namespace acommon {
         char c = lookup(*in, '\0');
         if (c == '\0' && in->chr != 0) {
           char m[70];
-          snprintf(m, 70, _("The unicode code point U+%04X is unsupported."), in->chr);
+          snprintf(m, 70, _("The Unicode code point U+%04X is unsupported."), in->chr);
           return make_err(invalid_string, orig, m);
         }
         out.append(c);
@@ -650,7 +685,7 @@ namespace acommon {
           NormLookupRet<E,const FilterChar> ret = norm_lookup<E>(data, in, 0, in);
           if (ret.to == 0) {
             char m[70];
-            snprintf(m, 70, _("The unicode code point U+%04X is unsupported."), in->chr);
+            snprintf(m, 70, _("The Unicode code point U+%04X is unsupported."), in->chr);
             return make_err(invalid_string, orig, m);
           }
           for (unsigned i = 0; i < E::max_to && ret.to[i]; ++i)
@@ -673,14 +708,14 @@ namespace acommon {
           unsigned width = 0;
           for (; in != end; ++in) width += in->width;
           buf.append(FilterChar(ret.to[0], width));
-          for (unsigned i = 1; i < E::max_to && ret.to[i]; ++i)
+          for (unsigned i = 1; i < E::max_to && ret.to[i]; ++i) {
             buf.append(FilterChar(ret.to[i],0));
-
+          }
         }
       }
+      buf.append(0);
       in = buf.pbegin();
       stop = buf.pend();
-      buf.append(0);
       return true;
     }
   };
@@ -949,7 +984,8 @@ namespace acommon {
   
   PosibErr<void> Convert::init_norm_from(const Config & c, ParmString in, ParmString out)
   {
-    if (!c.retrieve_bool("normalize")) return init(c,in,out);
+    if (!c.retrieve_bool("normalize") && !c.retrieve_bool("norm-required")) 
+      return init(c,in,out);
 
     RET_ON_ERR(setup(norm_tables_, &norm_tables_cache, &c, out));
 
@@ -957,10 +993,15 @@ namespace acommon {
     decode_ = decode_d.get();
 
     assert(sizeof(EncodeNormLookup) <= memory_size);
-    encode_ = new (memory) EncodeNormLookup(norm_tables_->internal);
-    encode_->key = out;
-    encode_->key += ":internal";
-
+    if (c.retrieve_bool("norm-strict")) {
+      encode_ = new (memory) EncodeNormLookup(norm_tables_->strict);
+      encode_->key = out;
+      encode_->key += ":strict";
+    } else {
+      encode_ = new (memory) EncodeNormLookup(norm_tables_->internal);
+      encode_->key = out;
+      encode_->key += ":internal";
+    }
     conv_ = 0;
 
     return no_err;
@@ -969,8 +1010,11 @@ namespace acommon {
   PosibErr<void> Convert::init_norm_to(const Config & c, ParmString in, ParmString out)
   {
     String norm_form = c.retrieve("norm-form");
-    if (!c.retrieve_bool("normalize") || norm_form == "none") 
+    if ((!c.retrieve_bool("normalize") || norm_form == "none")
+        && !c.retrieve_bool("norm-required"))
       return init(c,in,out);
+    if (norm_form == "none" && c.retrieve_bool("norm-required"))
+      norm_form = "nfc";
 
     RET_ON_ERR(setup(norm_tables_, &norm_tables_cache, &c, in));
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60-b20040402\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-04-25 03:58-0400\n"
+"POT-Creation-Date: 2004-04-25 04:07-0400\n"
 "PO-Revision-Date: 2004-04-07 11:12-0600\n"
 "Last-Translator: Kevin Patrick Scannell <scannell@SLU.EDU>\n"
 "Language-Team: Irish <ga@li.org>\n"
@@ -588,16 +588,16 @@ msgstr "Tá brón orm; ní féidir máistirliosta focal a chumasc go fóill."
 msgid "Sorry \"create/merge personal\" is currently unimplemented.\n"
 msgstr "Tá brón orm; níl \"create/merge personal\" ar fáil faoi láthair.\n"
 
-#: prog/aspell.cpp:1318 prog/aspell.cpp:1375
+#: prog/aspell.cpp:1318 prog/aspell.cpp:1377
 #, c-format
 msgid "Sorry I won't overwrite \"%s\""
 msgstr "Tá brón orm; ní féidir an comhad \"%s\" a fhorscríobh"
 
-#: prog/aspell.cpp:1366
+#: prog/aspell.cpp:1368
 msgid "Sorry \"create/merge repl\" is currently unimplemented.\n"
 msgstr "Tá brón orm; níl \"create/merge repl\" ar fáil faoi láthair.\n"
 
-#: prog/aspell.cpp:1739
+#: prog/aspell.cpp:1743
 #, c-format
 msgid ""
 "\n"
@@ -654,7 +654,7 @@ msgstr ""
 "is iad [roghanna] ceann amháin nó níos mó de:\n"
 "\n"
 
-#: prog/aspell.cpp:1769
+#: prog/aspell.cpp:1773
 #, c-format
 msgid ""
 "\n"

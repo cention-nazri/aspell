@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-04-25 03:58-0400\n"
+"POT-Creation-Date: 2004-04-25 04:07-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -574,16 +574,16 @@ msgstr ""
 msgid "Sorry \"create/merge personal\" is currently unimplemented.\n"
 msgstr ""
 
-#: prog/aspell.cpp:1318 prog/aspell.cpp:1375
+#: prog/aspell.cpp:1318 prog/aspell.cpp:1377
 #, c-format
 msgid "Sorry I won't overwrite \"%s\""
 msgstr ""
 
-#: prog/aspell.cpp:1366
+#: prog/aspell.cpp:1368
 msgid "Sorry \"create/merge repl\" is currently unimplemented.\n"
 msgstr ""
 
-#: prog/aspell.cpp:1739
+#: prog/aspell.cpp:1743
 #, c-format
 msgid ""
 "\n"
@@ -613,7 +613,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: prog/aspell.cpp:1769
+#: prog/aspell.cpp:1773
 #, c-format
 msgid ""
 "\n"
