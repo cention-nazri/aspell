@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60-b20040608\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-07-21 11:19-0400\n"
+"POT-Creation-Date: 2004-07-30 08:25-0400\n"
 "PO-Revision-Date: 2004-06-13 19:07+0200\n"
 "Last-Translator: Elros Cyriatan <cyriatan@fastmail.fm>\n"
 "Language-Team: Dutch <vertaling@nl.linux.org>\n"
@@ -344,7 +344,7 @@ msgstr "mogelijke vervangingen suggereren"
 msgid "time load time and suggest time in pipe mode"
 msgstr "opstarttijd en suggestietijd bijhouden in pijpmodus"
 
-#: common/convert.cpp:289 common/convert.cpp:415
+#: common/convert.cpp:299 common/convert.cpp:425
 #, c-format
 msgid ""
 "This could also mean that the file \"%s\" could not be opened for reading or "
@@ -353,12 +353,12 @@ msgstr ""
 "Dit kan ook betekenen dat het bestand \"%s\" niet kon worden geopend om te "
 "lezen, of niet bestaat."
 
-#: common/convert.cpp:538 common/convert.cpp:644 common/convert.cpp:690
+#: common/convert.cpp:548 common/convert.cpp:654 common/convert.cpp:700
 #, c-format
 msgid "The Unicode code point U+%04X is unsupported."
 msgstr "Het Unicode codepunt U+%04X wordt niet ondersteund."
 
-#: common/convert.cpp:814
+#: common/convert.cpp:824
 #, c-format
 msgid "Invalid UTF-8 sequence at position %d."
 msgstr "Ongeldige UTF-8 reeks op positie %d."
@@ -1185,13 +1185,13 @@ msgstr "Verkeerde klinkt-als."
 msgid "Wrong soundslike version."
 msgstr "Verkeerde klinkt-als versie."
 
-#: modules/speller/default/readonly_ws.cpp:816
+#: modules/speller/default/readonly_ws.cpp:820
 msgid "Affix flags found in word but no affix file given."
 msgstr ""
 "Achtervoegsel opties gevonden in woord, maar er is geen achtervoegsel "
 "gegeven."
 
-#: modules/speller/default/readonly_ws.cpp:854
+#: modules/speller/default/readonly_ws.cpp:858
 msgid ""
 "The total word length, with soundslike data, is larger than 240 characters."
 msgstr ""
@@ -1288,9 +1288,8 @@ msgid "mode for skipping quoted text in email messages"
 msgstr ""
 
 #: modules/filter/modes/html.amf:60
-#, fuzzy
 msgid "mode for checking HTML documents"
-msgstr "Filter voor het herkennen van TeX/LaTeX opdrachten"
+msgstr ""
 
 #: modules/filter/modes/none.amf:61
 msgid "mode to disable all filters"
@@ -1313,31 +1312,32 @@ msgstr "Filter voor het herkennen van TeX/LaTeX opdrachten"
 msgid "mode to skip URL like constructs (default mode)"
 msgstr ""
 
-#~ msgid ""
-#~ "\n"
-#~ "  %s filter: %s\n"
-#~ "    NOTE: in ambiguous case prefix following options by \"filter-\"\n"
-#~ msgstr ""
-#~ "\n"
-#~ "  %s filter: %s\n"
-#~ "    LET OP: in dubbelzinnige zaak, voorvoegsel gevolgd door opties van "
-#~ "\"filter-\"\n"
+#~ msgid "configured as follows"
+#~ msgstr "als volgt geconfigureerd"
 
-#~ msgid "enter Html/Sgml mode."
-#~ msgstr "HTML/SGML modus binnengaan."
+#~ msgid "path(es) aspell looks for options descriptions"
+#~ msgstr "pad(en) waarin aspell zoekt naar optiebeschrijvingen"
+
+#~ msgid "\"%filter:1\":"
+#~ msgstr "\"%filter:1\":"
+
+#~ msgid "Filter \"%filter:1\" could not be found in filter paths."
+#~ msgstr "Filter \"%filter:1\" kon niet worden gevonden in filterpaden."
+
+#~ msgid "Can't find the option file \"%option:2\"."
+#~ msgstr "Kan optiebestand \"%option:2\" niet vinden."
 
 #~ msgid "Empty value; only bool type option and \"rem-all\" list prefix."
 #~ msgstr ""
 #~ "Lege waarde; alleen booleaanse-soort optie en \"rem-all\" (alles "
 #~ "verwijderen) lijstvoorvoegsel."
 
-#~ msgid "Filters for encoding, filtering and decoding sgml characters"
-#~ msgstr "Filters voor het coderen, filteren en decoderen van SGML tekens"
+#~ msgid "\"%action:1\": invalid regular expression."
+#~ msgstr "\"%action:1\": ongeldige reguliere uitdrukking."
 
-#~ msgid "Filter for hiding urls/paths and similar from Aspell"
-#~ msgstr "Filter voor het verbergen van URLs/paden en dergelijke van Aspell"
+#~ msgid "enter Html/Sgml mode."
+#~ msgstr "HTML/SGML modus binnengaan."
 
-#, fuzzy
 #~ msgid ""
 #~ "\n"
 #~ "Aspell %s alpha.  Copyright 2000-2004 by Kevin Atkinson.\n"
@@ -1351,7 +1351,7 @@ msgstr ""
 #~ "  -a|pipe          \"ispell -a\" compatibility mode\n"
 #~ "  list             produce a list of misspelled words from standard "
 #~ "input\n"
-#~ "  [dump] config [+e <expr>]  dumps the current configuration to stdout\n"
+#~ "  [dump] config [-e <expr>]  dumps the current configuration to stdout\n"
 #~ "  config [+e <expr>] <key>   prints the current value of an option\n"
 #~ "  soundslike       returns the sounds like equivalent for each word "
 #~ "entered\n"
@@ -1416,29 +1416,27 @@ msgstr ""
 #~ "[opties] zijn een of meerdere van de volgende:\n"
 #~ "\n"
 
-#~ msgid "configured as follows"
-#~ msgstr "als volgt geconfigureerd"
-
-#~ msgid "path(es) aspell looks for options descriptions"
-#~ msgstr "pad(en) waarin aspell zoekt naar optiebeschrijvingen"
-
-#~ msgid "\"%filter:1\":"
-#~ msgstr "\"%filter:1\":"
-
-#~ msgid "Filter \"%filter:1\" could not be found in filter paths."
-#~ msgstr "Filter \"%filter:1\" kon niet worden gevonden in filterpaden."
-
-#~ msgid "Can't find the option file \"%option:2\"."
-#~ msgstr "Kan optiebestand \"%option:2\" niet vinden."
-
-#~ msgid "\"%action:1\": invalid regular expression."
-#~ msgstr "\"%action:1\": ongeldige reguliere uitdrukking."
+#~ msgid ""
+#~ "\n"
+#~ "  %s filter: %s\n"
+#~ "    NOTE: in ambiguous case prefix following options by \"filter-\"\n"
+#~ msgstr ""
+#~ "\n"
+#~ "  %s filter: %s\n"
+#~ "    LET OP: in dubbelzinnige zaak, voorvoegsel gevolgd door opties van "
+#~ "\"filter-\"\n"
 
 #~ msgid "Filter for eliminating email quote characters"
 #~ msgstr "Filter voor het verwijderen van aanhaaltekens van e-mail"
+
+#~ msgid "Filters for encoding, filtering and decoding sgml characters"
+#~ msgstr "Filters voor het coderen, filteren en decoderen van SGML tekens"
 
 #~ msgid "multi character coded letters (<char>:<rep>[:<rep>[...]])"
 #~ msgstr "multi-teken gecodeerde letters (<teken>:<rep>[:<rep>[...]])"
 
 #~ msgid "characters used to encode hyphenation locations"
 #~ msgstr "tekens gebruikt voor coderen van afbreeklokaties"
+
+#~ msgid "Filter for hiding urls/paths and similar from Aspell"
+#~ msgstr "Filter voor het verbergen van URLs/paden en dergelijke van Aspell"

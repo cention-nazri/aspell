@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60-pre1\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-07-21 11:19-0400\n"
+"POT-Creation-Date: 2004-07-30 08:25-0400\n"
 "PO-Revision-Date: 2004-07-16 19:11+0200\n"
 "Last-Translator: Thierry Thomas <thierry@pompo.net>\n"
 "Language-Team: French <traduc@traduc.org>\n"
@@ -346,7 +346,7 @@ msgstr "suggérer des remplacements possibles"
 msgid "time load time and suggest time in pipe mode"
 msgstr "durée, temps de chargement et de rech. en mode pipe"
 
-#: common/convert.cpp:289 common/convert.cpp:415
+#: common/convert.cpp:299 common/convert.cpp:425
 #, c-format
 msgid ""
 "This could also mean that the file \"%s\" could not be opened for reading or "
@@ -355,12 +355,12 @@ msgstr ""
 "Cela peut aussi vouloir dire que le fichier « %s » peut être ouvert en "
 "lecture ou n'existe pas."
 
-#: common/convert.cpp:538 common/convert.cpp:644 common/convert.cpp:690
+#: common/convert.cpp:548 common/convert.cpp:654 common/convert.cpp:700
 #, c-format
 msgid "The Unicode code point U+%04X is unsupported."
 msgstr "Le code Unicode U+%04X n'est pas supporté."
 
-#: common/convert.cpp:814
+#: common/convert.cpp:824
 #, c-format
 msgid "Invalid UTF-8 sequence at position %d."
 msgstr "Séquence UTF-8 invalide à la position %d."
@@ -1216,12 +1216,12 @@ msgstr "Phonème erroné."
 msgid "Wrong soundslike version."
 msgstr "Version erronée de phonème."
 
-#: modules/speller/default/readonly_ws.cpp:816
+#: modules/speller/default/readonly_ws.cpp:820
 msgid "Affix flags found in word but no affix file given."
 msgstr ""
 "Fanions affixes retrouvés dans le mot mais aucun fichier affixe fourni."
 
-#: modules/speller/default/readonly_ws.cpp:854
+#: modules/speller/default/readonly_ws.cpp:858
 msgid ""
 "The total word length, with soundslike data, is larger than 240 characters."
 msgstr "La longueur totale du mot, phonèmes inclus, dépasse 240 caractères."

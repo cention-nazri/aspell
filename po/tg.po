@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-07-21 11:19-0400\n"
+"POT-Creation-Date: 2004-07-30 08:25-0400\n"
 "PO-Revision-Date: 2004-05-22 19:33+0000\n"
 "Last-Translator: Marina Kolucheva <youth_opportunities@tajik.net>\n"
 "Language-Team: Tajik\n"
@@ -351,7 +351,7 @@ msgstr "тақдими иввази лозимӣ"
 msgid "time load time and suggest time in pipe mode"
 msgstr "вақти пурборкунӣ ва вақти тақдимият дар тартиботи-pipe"
 
-#: common/convert.cpp:289 common/convert.cpp:415
+#: common/convert.cpp:299 common/convert.cpp:425
 #, c-format
 msgid ""
 "This could also mean that the file \"%s\" could not be opened for reading or "
@@ -360,12 +360,12 @@ msgstr ""
 "Ин ҳамчунин маънои онро дорад, ки файл \"%s\" барои хондан кушода намешавад "
 "ёки он вуҷуд надорад."
 
-#: common/convert.cpp:538 common/convert.cpp:644 common/convert.cpp:690
+#: common/convert.cpp:548 common/convert.cpp:654 common/convert.cpp:700
 #, c-format
 msgid "The Unicode code point U+%04X is unsupported."
 msgstr "Ишораи юникоди U+%04X дастгирӣ нашуда истодааст."
 
-#: common/convert.cpp:814
+#: common/convert.cpp:824
 #, c-format
 msgid "Invalid UTF-8 sequence at position %d."
 msgstr "Пайравии нодурусти UTF-8 бо адреси %d."
@@ -1195,12 +1195,12 @@ msgstr "Soundslike-и нодуруст."
 msgid "Wrong soundslike version."
 msgstr "Ривояти нодурусти soundslike."
 
-#: modules/speller/default/readonly_ws.cpp:816
+#: modules/speller/default/readonly_ws.cpp:820
 msgid "Affix flags found in word but no affix file given."
 msgstr ""
 "Дар калима байрақҳои аффикс ёфт шуд ва лекин аффикси файл ишора нашудааст."
 
-#: modules/speller/default/readonly_ws.cpp:854
+#: modules/speller/default/readonly_ws.cpp:858
 msgid ""
 "The total word length, with soundslike data, is larger than 240 characters."
 msgstr "Умуман дарозии калима аз 240 ишора зиёд аст."

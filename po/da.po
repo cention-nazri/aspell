@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Aspell-0.60-b20040424\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-07-21 11:19-0400\n"
+"POT-Creation-Date: 2004-07-30 08:25-0400\n"
 "PO-Revision-Date: 2004-04-25 09:10+0200\n"
 "Last-Translator: Jacob Sparre Andersen <sparre@nbi.dk>\n"
 "Language-Team: Dansk (Danish) <dansk@klid.dk>\n"
@@ -339,7 +339,7 @@ msgstr "foreslå mulige erstatninger"
 msgid "time load time and suggest time in pipe mode"
 msgstr "tag tid på indlæsning og foreslag i kanalmodus"
 
-#: common/convert.cpp:289 common/convert.cpp:415
+#: common/convert.cpp:299 common/convert.cpp:425
 #, c-format
 msgid ""
 "This could also mean that the file \"%s\" could not be opened for reading or "
@@ -348,12 +348,12 @@ msgstr ""
 "Det kunne også betyde at filen \"%s\" ikke findes eller at du ikke har lov "
 "til at læse i den."
 
-#: common/convert.cpp:538 common/convert.cpp:644 common/convert.cpp:690
+#: common/convert.cpp:548 common/convert.cpp:654 common/convert.cpp:700
 #, fuzzy, c-format
 msgid "The Unicode code point U+%04X is unsupported."
 msgstr "Unicode-positionen U+%04X er ikke understøttet."
 
-#: common/convert.cpp:814
+#: common/convert.cpp:824
 #, c-format
 msgid "Invalid UTF-8 sequence at position %d."
 msgstr "Ugyldig UTF-8-sekvens på position %d."
@@ -1156,11 +1156,11 @@ msgstr ""
 msgid "Wrong soundslike version."
 msgstr ""
 
-#: modules/speller/default/readonly_ws.cpp:816
+#: modules/speller/default/readonly_ws.cpp:820
 msgid "Affix flags found in word but no affix file given."
 msgstr ""
 
-#: modules/speller/default/readonly_ws.cpp:854
+#: modules/speller/default/readonly_ws.cpp:858
 msgid ""
 "The total word length, with soundslike data, is larger than 240 characters."
 msgstr ""

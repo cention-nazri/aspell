@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60-b20040608\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-07-21 11:19-0400\n"
+"POT-Creation-Date: 2004-07-30 08:25-0400\n"
 "PO-Revision-Date: 2004-06-17 12:00-0500\n"
 "Last-Translator: Laurentiu Buzdugan <lbuz@rolix.org>\n"
 "Language-Team: Romanian <translation-team-ro@lists.sourceforge.net>\n"
@@ -340,7 +340,7 @@ msgstr "sugereazã înlocuiri posibile"
 msgid "time load time and suggest time in pipe mode"
 msgstr "cronometreazã timpul de încãrcare ºi sugereazã timpul în modul pipe"
 
-#: common/convert.cpp:289 common/convert.cpp:415
+#: common/convert.cpp:299 common/convert.cpp:425
 #, c-format
 msgid ""
 "This could also mean that the file \"%s\" could not be opened for reading or "
@@ -349,12 +349,12 @@ msgstr ""
 "Aceasta ar putea de asemenea însemna cã fiºierul \"%s\" nu a putut fi "
 "deschis pentru citire sau cã nu existã."
 
-#: common/convert.cpp:538 common/convert.cpp:644 common/convert.cpp:690
+#: common/convert.cpp:548 common/convert.cpp:654 common/convert.cpp:700
 #, c-format
 msgid "The Unicode code point U+%04X is unsupported."
 msgstr "Codul Unicode punct U+%04X nu este suportat."
 
-#: common/convert.cpp:814
+#: common/convert.cpp:824
 #, c-format
 msgid "Invalid UTF-8 sequence at position %d."
 msgstr "Secvenþã UTF-8 invalidã la poziþia %d."
@@ -1174,11 +1174,11 @@ msgstr "\"Sunã ca\" greºit."
 msgid "Wrong soundslike version."
 msgstr "Versiune \"Sunã ca\" greºitã."
 
-#: modules/speller/default/readonly_ws.cpp:816
+#: modules/speller/default/readonly_ws.cpp:820
 msgid "Affix flags found in word but no affix file given."
 msgstr "Marcaje affix gãsie în cuvânt dar nici un fiºier de affix-e dat."
 
-#: modules/speller/default/readonly_ws.cpp:854
+#: modules/speller/default/readonly_ws.cpp:858
 msgid ""
 "The total word length, with soundslike data, is larger than 240 characters."
 msgstr ""
@@ -1276,9 +1276,8 @@ msgid "mode for skipping quoted text in email messages"
 msgstr ""
 
 #: modules/filter/modes/html.amf:60
-#, fuzzy
 msgid "mode for checking HTML documents"
-msgstr "Filtru pentru recunoaºterea comenzilor TeX/LaTeX"
+msgstr ""
 
 #: modules/filter/modes/none.amf:61
 msgid "mode to disable all filters"
@@ -1301,30 +1300,34 @@ msgstr "Filtru pentru recunoaºterea comenzilor TeX/LaTeX"
 msgid "mode to skip URL like constructs (default mode)"
 msgstr ""
 
-#~ msgid ""
-#~ "\n"
-#~ "  %s filter: %s\n"
-#~ "    NOTE: in ambiguous case prefix following options by \"filter-\"\n"
-#~ msgstr ""
-#~ "\n"
-#~ "  %s filtru: %s\n"
-#~ "    NOTÃ: în cazurile ambigue puneþi prefixul \"filter-\" pentru "
-#~ "urmãtoarele opþiuni\n"
+#~ msgid "configured as follows"
+#~ msgstr "configurat astfel"
 
-#~ msgid "enter Html/Sgml mode."
-#~ msgstr "intrã mod Html/Sgml."
+#~ msgid "path(es) aspell looks for options descriptions"
+#~ msgstr "cale/cãi unde aspell cautã descrieri de opþiuni"
+
+#~ msgid "lis key `\"%key:1\"' requires one of [add|rem|rem-all]-"
+#~ msgstr "Cheia `\"%key:1\"' necesitã una dintre [add|rem|rem-all]-"
+
+#~ msgid "\"%filter:1\":"
+#~ msgstr "\"%filter:1\":"
+
+#~ msgid "Filter \"%filter:1\" could not be found in filter paths."
+#~ msgstr "Filtrul \"%filter:1\" nu a putut fi gãsit în calea de filtre."
+
+#~ msgid "Can't find the option file \"%option:2\"."
+#~ msgstr "Nu pot gãsi fiºierul de opþiuni \"%option:2\"."
 
 #~ msgid "Empty value; only bool type option and \"rem-all\" list prefix."
 #~ msgstr ""
 #~ "Valoare goalã; numai opþiune de tip boolean ºi listã prefixe \"rem-all\""
 
-#~ msgid "Filters for encoding, filtering and decoding sgml characters"
-#~ msgstr "Filtre pentru encodare, aplicabile caracterelor sgml"
+#~ msgid "\"%action:1\": invalid regular expression."
+#~ msgstr "\"%action:1\": expresie regularã invalidã."
 
-#~ msgid "Filter for hiding urls/paths and similar from Aspell"
-#~ msgstr "Filtru pentru ascundere cãilor/url-urilor ºi similar din Aspell"
+#~ msgid "enter Html/Sgml mode."
+#~ msgstr "intrã mod Html/Sgml."
 
-#, fuzzy
 #~ msgid ""
 #~ "\n"
 #~ "Aspell %s alpha.  Copyright 2000-2004 by Kevin Atkinson.\n"
@@ -1338,7 +1341,7 @@ msgstr ""
 #~ "  -a|pipe          \"ispell -a\" compatibility mode\n"
 #~ "  list             produce a list of misspelled words from standard "
 #~ "input\n"
-#~ "  [dump] config [+e <expr>]  dumps the current configuration to stdout\n"
+#~ "  [dump] config [-e <expr>]  dumps the current configuration to stdout\n"
 #~ "  config [+e <expr>] <key>   prints the current value of an option\n"
 #~ "  soundslike       returns the sounds like equivalent for each word "
 #~ "entered\n"
@@ -1402,35 +1405,30 @@ msgstr ""
 #~ "[opþiuni] este oricare dintre urmãtoarele:\n"
 #~ "\n"
 
-#~ msgid "configured as follows"
-#~ msgstr "configurat astfel"
-
-#~ msgid "path(es) aspell looks for options descriptions"
-#~ msgstr "cale/cãi unde aspell cautã descrieri de opþiuni"
-
-#~ msgid "lis key `\"%key:1\"' requires one of [add|rem|rem-all]-"
-#~ msgstr "Cheia `\"%key:1\"' necesitã una dintre [add|rem|rem-all]-"
-
-#~ msgid "\"%filter:1\":"
-#~ msgstr "\"%filter:1\":"
-
-#~ msgid "Filter \"%filter:1\" could not be found in filter paths."
-#~ msgstr "Filtrul \"%filter:1\" nu a putut fi gãsit în calea de filtre."
-
-#~ msgid "Can't find the option file \"%option:2\"."
-#~ msgstr "Nu pot gãsi fiºierul de opþiuni \"%option:2\"."
-
-#~ msgid "\"%action:1\": invalid regular expression."
-#~ msgstr "\"%action:1\": expresie regularã invalidã."
+#~ msgid ""
+#~ "\n"
+#~ "  %s filter: %s\n"
+#~ "    NOTE: in ambiguous case prefix following options by \"filter-\"\n"
+#~ msgstr ""
+#~ "\n"
+#~ "  %s filtru: %s\n"
+#~ "    NOTÃ: în cazurile ambigue puneþi prefixul \"filter-\" pentru "
+#~ "urmãtoarele opþiuni\n"
 
 #~ msgid "Filter for eliminating email quote characters"
 #~ msgstr "Filtru penntru eliminarea citãrii în email"
+
+#~ msgid "Filters for encoding, filtering and decoding sgml characters"
+#~ msgstr "Filtre pentru encodare, aplicabile caracterelor sgml"
 
 #~ msgid "multi character coded letters (<char>:<rep>[:<rep>[...]])"
 #~ msgstr "litere codate multi-caracter (<char>:<rep>[:<rep>[...]])"
 
 #~ msgid "characters used to encode hyphenation locations"
 #~ msgstr "caractere folosite pentru a encoda locaþii de despãrþire în silabe"
+
+#~ msgid "Filter for hiding urls/paths and similar from Aspell"
+#~ msgstr "Filtru pentru ascundere cãilor/url-urilor ºi similar din Aspell"
 
 #~ msgid "indicator for additional flags in word lists"
 #~ msgstr "indicator pentru marcaje adiþionale în listele de cuvinte"

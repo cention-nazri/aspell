@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60-pre1\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-07-21 11:19-0400\n"
+"POT-Creation-Date: 2004-07-30 08:25-0400\n"
 "PO-Revision-Date: 2004-07-20 16:24-0500\n"
 "Last-Translator: Kevin Patrick Scannell <scannell@SLU.EDU>\n"
 "Language-Team: Irish <ga@li.org>\n"
@@ -343,7 +343,7 @@ msgstr "tabhair moltaí d'fhocail mílitrithe"
 msgid "time load time and suggest time in pipe mode"
 msgstr "tomhais fad ama lódála/molta i modh phíopa"
 
-#: common/convert.cpp:289 common/convert.cpp:415
+#: common/convert.cpp:299 common/convert.cpp:425
 #, c-format
 msgid ""
 "This could also mean that the file \"%s\" could not be opened for reading or "
@@ -352,12 +352,12 @@ msgstr ""
 "Is féidir fosta nach bhfuil an comhad \"%s\" ar fáil le haghaidh léamh, nó "
 "níl sé ann ar chor ar bith."
 
-#: common/convert.cpp:538 common/convert.cpp:644 common/convert.cpp:690
+#: common/convert.cpp:548 common/convert.cpp:654 common/convert.cpp:700
 #, c-format
 msgid "The Unicode code point U+%04X is unsupported."
 msgstr "Ní ghlactar leis an gcarachtar Unicode U+%04X."
 
-#: common/convert.cpp:814
+#: common/convert.cpp:824
 #, c-format
 msgid "Invalid UTF-8 sequence at position %d."
 msgstr "Sraith UTF-8 neamhbhailí san ionad %d."
@@ -1195,11 +1195,11 @@ msgstr "Comhad `soundslike' mícheart."
 msgid "Wrong soundslike version."
 msgstr "Leagan `soundslike' mícheart."
 
-#: modules/speller/default/readonly_ws.cpp:816
+#: modules/speller/default/readonly_ws.cpp:820
 msgid "Affix flags found in word but no affix file given."
 msgstr "Tá brait fhoircinn tugtha, ach níl aon comhad foircinn ann."
 
-#: modules/speller/default/readonly_ws.cpp:854
+#: modules/speller/default/readonly_ws.cpp:858
 msgid ""
 "The total word length, with soundslike data, is larger than 240 characters."
 msgstr ""

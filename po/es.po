@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Aspell 0.50.1\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-07-21 11:19-0400\n"
+"POT-Creation-Date: 2004-07-30 08:25-0400\n"
 "PO-Revision-Date: 2002-09-08 14:18+0300\n"
 "Last-Translator: Sergey Poznyakoff <gray@gnu.org>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -281,9 +281,8 @@ msgstr ""
 
 #. TRANSLATORS: It is OK if this is longer than 50 chars
 #: common/config.cpp:1465
-#, fuzzy
 msgid "indicator for affix flags in word lists -- CURRENTLY IGNORED"
-msgstr "localización del vocabulario principal"
+msgstr ""
 
 #: common/config.cpp:1467
 msgid "use affix compression when creating dictionaries"
@@ -346,19 +345,19 @@ msgstr ""
 msgid "time load time and suggest time in pipe mode"
 msgstr ""
 
-#: common/convert.cpp:289 common/convert.cpp:415
+#: common/convert.cpp:299 common/convert.cpp:425
 #, c-format
 msgid ""
 "This could also mean that the file \"%s\" could not be opened for reading or "
 "does not exist."
 msgstr ""
 
-#: common/convert.cpp:538 common/convert.cpp:644 common/convert.cpp:690
+#: common/convert.cpp:548 common/convert.cpp:654 common/convert.cpp:700
 #, fuzzy, c-format
 msgid "The Unicode code point U+%04X is unsupported."
 msgstr "Codificación «%encod:1» no soportada."
 
-#: common/convert.cpp:814
+#: common/convert.cpp:824
 #, c-format
 msgid "Invalid UTF-8 sequence at position %d."
 msgstr ""
@@ -1168,11 +1167,11 @@ msgstr ""
 msgid "Wrong soundslike version."
 msgstr ""
 
-#: modules/speller/default/readonly_ws.cpp:816
+#: modules/speller/default/readonly_ws.cpp:820
 msgid "Affix flags found in word but no affix file given."
 msgstr ""
 
-#: modules/speller/default/readonly_ws.cpp:854
+#: modules/speller/default/readonly_ws.cpp:858
 msgid ""
 "The total word length, with soundslike data, is larger than 240 characters."
 msgstr ""
@@ -1286,17 +1285,20 @@ msgstr ""
 msgid "mode to skip URL like constructs (default mode)"
 msgstr ""
 
+#~ msgid "strip accents from word lists"
+#~ msgstr "eliminar acentos de las palabras en vocabulario"
+
+#, fuzzy
+#~ msgid "%where:1: Filter \"%filter:2\" could not be found in filter paths."
+#~ msgstr "No se puede abrir archivo «%file:1» para leer"
+
 #~ msgid "enter Html/Sgml mode."
 #~ msgstr "entrar modo Htmp/Sgml"
 
 #, fuzzy
-#~ msgid "Filters for encoding, filtering and decoding sgml characters"
-#~ msgstr "comillas email"
-
-#, fuzzy
 #~ msgid ""
 #~ "\n"
-#~ "Aspell %s alpha.  Copyright 2000-2004 by Kevin Atkinson.\n"
+#~ "Aspell %s alpha.  Copyright 2000 by Kevin Atkinson.\n"
 #~ "\n"
 #~ "Usage: aspell [options] <command>\n"
 #~ "\n"
@@ -1305,28 +1307,19 @@ msgstr ""
 #~ "                    and help for filters matching <expr> if installed\n"
 #~ "  -c|check <file>  to check a file\n"
 #~ "  -a|pipe          \"ispell -a\" compatibility mode\n"
-#~ "  list             produce a list of misspelled words from standard "
+#~ "  -l|list          produce a list of misspelled words from standard "
 #~ "input\n"
-#~ "  [dump] config [+e <expr>]  dumps the current configuration to stdout\n"
+#~ "  [dump] config [-e <expr>]  dumps the current configuration to stdout\n"
 #~ "  config [+e <expr>] <key>   prints the current value of an option\n"
 #~ "  soundslike       returns the sounds like equivalent for each word "
 #~ "entered\n"
-#~ "  munch            generate possible root words and affixes\n"
-#~ "  expand [1-4]     expands affix flags\n"
-#~ "  clean [strict]   cleans a word list so that every line is a valid word\n"
 #~ "  filter           passes standard input through filters\n"
 #~ "  -v|version       prints a version line\n"
-#~ "  conv <from> <to> [<norm-form>]\n"
-#~ "    converts from one encoding to another\n"
-#~ "  norm (<norm-map> | <from> <norm-map> <to>) [<norm-form>]\n"
-#~ "    perform unicode normlization\n"
 #~ "  dump|create|merge master|personal|repl [word list]\n"
 #~ "    dumps, creates or merges a master, personal, or replacement word "
 #~ "list.\n"
 #~ "\n"
-#~ "  <expr>           regular expression matching filtername(s) or \"all\"\n"
-#~ "  <norm-form>      normalization form to use, either none, internal, or "
-#~ "strict\n"
+#~ "  <expr>           regular expression matching filtername(s) or `all'\n"
 #~ "\n"
 #~ "[options] is any of the following:\n"
 #~ "\n"
@@ -1356,12 +1349,9 @@ msgstr ""
 #~ "\n"
 #~ "[opciones] son:\n"
 
-#~ msgid "strip accents from word lists"
-#~ msgstr "eliminar acentos de las palabras en vocabulario"
-
 #, fuzzy
-#~ msgid "%where:1: Filter \"%filter:2\" could not be found in filter paths."
-#~ msgstr "No se puede abrir archivo «%file:1» para leer"
+#~ msgid "Filter for eliminating email quote characters"
+#~ msgstr "comillas email"
 
 #~ msgid "sgml file extensions"
 #~ msgstr "sufijos de archivos SGML"

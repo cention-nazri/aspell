@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60-b20040608\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-07-21 11:19-0400\n"
+"POT-Creation-Date: 2004-07-30 08:25-0400\n"
 "PO-Revision-Date: 2004-06-10 23:44+0100\n"
 "Last-Translator: Roland Illig <roland.illig@gmx.de>\n"
 "Language-Team: German <de@li.org>\n"
@@ -343,7 +343,7 @@ msgstr "mögliche Ersetzungen vorschlagen"
 msgid "time load time and suggest time in pipe mode"
 msgstr "Zeit für das Laden und Vorschlagen im Pipe-Modus messen"
 
-#: common/convert.cpp:289 common/convert.cpp:415
+#: common/convert.cpp:299 common/convert.cpp:425
 #, c-format
 msgid ""
 "This could also mean that the file \"%s\" could not be opened for reading or "
@@ -352,12 +352,12 @@ msgstr ""
 "Das könnte auch heißen, dass die Datei »%s« nicht zum Lesen geöffnet werden "
 "konnte oder nicht existiert."
 
-#: common/convert.cpp:538 common/convert.cpp:644 common/convert.cpp:690
+#: common/convert.cpp:548 common/convert.cpp:654 common/convert.cpp:700
 #, c-format
 msgid "The Unicode code point U+%04X is unsupported."
 msgstr "Das Unicodezeichen an der Stelle U+%04X wird nicht unterstützt."
 
-#: common/convert.cpp:814
+#: common/convert.cpp:824
 #, c-format
 msgid "Invalid UTF-8 sequence at position %d."
 msgstr "Falsche UTF-8-Folge an Position %d."
@@ -1174,11 +1174,11 @@ msgstr "Falscher Wortklang."
 msgid "Wrong soundslike version."
 msgstr "Falsche Wortklangversion."
 
-#: modules/speller/default/readonly_ws.cpp:816
+#: modules/speller/default/readonly_ws.cpp:820
 msgid "Affix flags found in word but no affix file given."
 msgstr "Endungsflags im Wort gefunden, aber keine Endungsdatei angegeben."
 
-#: modules/speller/default/readonly_ws.cpp:854
+#: modules/speller/default/readonly_ws.cpp:858
 msgid ""
 "The total word length, with soundslike data, is larger than 240 characters."
 msgstr ""
@@ -1276,9 +1276,8 @@ msgid "mode for skipping quoted text in email messages"
 msgstr ""
 
 #: modules/filter/modes/html.amf:60
-#, fuzzy
 msgid "mode for checking HTML documents"
-msgstr "Filter, um TeX/LaTeX-Befehle zu erkennen"
+msgstr ""
 
 #: modules/filter/modes/none.amf:61
 msgid "mode to disable all filters"
@@ -1301,26 +1300,27 @@ msgstr "Filter, um TeX/LaTeX-Befehle zu erkennen"
 msgid "mode to skip URL like constructs (default mode)"
 msgstr ""
 
-#~ msgid ""
-#~ "\n"
-#~ "  %s filter: %s\n"
-#~ "    NOTE: in ambiguous case prefix following options by \"filter-\"\n"
-#~ msgstr ""
-#~ "\n"
-#~ "  %s filter: %s\n"
-#~ "    MERKE: Stellen Sie bei Mehrdeutigkeiten den folgenden Optionen "
-#~ "»filter-« voran\n"
+#~ msgid "configured as follows"
+#~ msgstr "wie folgt konfiguriert"
+
+#~ msgid "path(es) aspell looks for options descriptions"
+#~ msgstr "Pfad(e), in denen aspell nach Optionsbeschreibungen sucht"
+
+#~ msgid "\"%filter:1\":"
+#~ msgstr "»%filter:1«:"
+
+#~ msgid "Filter \"%filter:1\" could not be found in filter paths."
+#~ msgstr "Filter »%filter:1« konnte nicht im Filterpfad gefunden werden."
+
+#~ msgid "Can't find the option file \"%option:2\"."
+#~ msgstr "Kann die Optionsdatei »%option:2« nicht finden."
+
+#~ msgid "\"%action:1\": invalid regular expression."
+#~ msgstr "»%action:1«: Ungültiger regulärer Ausdruck."
 
 #~ msgid "enter Html/Sgml mode."
 #~ msgstr "In HTML/SGML-Modus wechseln."
 
-#~ msgid "Filters for encoding, filtering and decoding sgml characters"
-#~ msgstr "Filter zum Codieren, Filtern und Decodieren von SGML-Zeichen"
-
-#~ msgid "Filter for hiding urls/paths and similar from Aspell"
-#~ msgstr "Filter, um URLs, Pfade und ähnliches vor Aspell zu verstecken"
-
-#, fuzzy
 #~ msgid ""
 #~ "\n"
 #~ "Aspell %s alpha.  Copyright 2000-2004 by Kevin Atkinson.\n"
@@ -1334,7 +1334,7 @@ msgstr ""
 #~ "  -a|pipe          \"ispell -a\" compatibility mode\n"
 #~ "  list             produce a list of misspelled words from standard "
 #~ "input\n"
-#~ "  [dump] config [+e <expr>]  dumps the current configuration to stdout\n"
+#~ "  [dump] config [-e <expr>]  dumps the current configuration to stdout\n"
 #~ "  config [+e <expr>] <key>   prints the current value of an option\n"
 #~ "  soundslike       returns the sounds like equivalent for each word "
 #~ "entered\n"
@@ -1395,26 +1395,21 @@ msgstr ""
 #~ "[Optionen] sind beliebige der folgenden:\n"
 #~ "\n"
 
-#~ msgid "configured as follows"
-#~ msgstr "wie folgt konfiguriert"
-
-#~ msgid "path(es) aspell looks for options descriptions"
-#~ msgstr "Pfad(e), in denen aspell nach Optionsbeschreibungen sucht"
-
-#~ msgid "\"%filter:1\":"
-#~ msgstr "»%filter:1«:"
-
-#~ msgid "Filter \"%filter:1\" could not be found in filter paths."
-#~ msgstr "Filter »%filter:1« konnte nicht im Filterpfad gefunden werden."
-
-#~ msgid "Can't find the option file \"%option:2\"."
-#~ msgstr "Kann die Optionsdatei »%option:2« nicht finden."
-
-#~ msgid "\"%action:1\": invalid regular expression."
-#~ msgstr "»%action:1«: Ungültiger regulärer Ausdruck."
+#~ msgid ""
+#~ "\n"
+#~ "  %s filter: %s\n"
+#~ "    NOTE: in ambiguous case prefix following options by \"filter-\"\n"
+#~ msgstr ""
+#~ "\n"
+#~ "  %s filter: %s\n"
+#~ "    MERKE: Stellen Sie bei Mehrdeutigkeiten den folgenden Optionen "
+#~ "»filter-« voran\n"
 
 #~ msgid "Filter for eliminating email quote characters"
 #~ msgstr "Filter, um E-Mail-Zitate zu entfernen"
+
+#~ msgid "Filters for encoding, filtering and decoding sgml characters"
+#~ msgstr "Filter zum Codieren, Filtern und Decodieren von SGML-Zeichen"
 
 #~ msgid "multi character coded letters (<char>:<rep>[:<rep>[...]])"
 #~ msgstr ""
@@ -1422,3 +1417,6 @@ msgstr ""
 
 #~ msgid "characters used to encode hyphenation locations"
 #~ msgstr "Zeichen, um Silbentrennungsstellen zu markieren"
+
+#~ msgid "Filter for hiding urls/paths and similar from Aspell"
+#~ msgstr "Filter, um URLs, Pfade und ähnliches vor Aspell zu verstecken"
