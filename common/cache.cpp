@@ -1,10 +1,11 @@
 #include <assert.h>
 
+#include "stack_ptr.hpp"
 #include "cache-t.hpp"
 
 namespace acommon {
 
-static Mutex * global_cache_lock = new Mutex;
+static StackPtr<Mutex> global_cache_lock(new Mutex);
 static GlobalCacheBase * first_cache = 0;
 
 void Cacheable::copy() const
