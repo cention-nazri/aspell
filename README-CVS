@@ -9,7 +9,6 @@ The following packages need to be installed to use this package:
 
 Before the build:
 
-  tar xfz data.tgz # this should be checked out with the other files
   ./autogen
   ./config-opt # or ./config-debug
 
@@ -26,8 +25,8 @@ Than to build:
 You can then optionally due a "make install" to install the programs in
 the inst/ directory.
 
-To test things out use either pspell or aspell-util. If yoy did a make
-install both of these programs are in inst/bin otherwise they are in
+To test things out use either pspell or aspell-util. If you did a make
+install both of these programs are in inst/bin/ otherwise they are in
 example/ and modules/aspell/ respectfully.  pspell is a slightly modified
 version of the example program distributed with the released version of
 Aspell.  Aspell-util is a skimmed down version of Aspell which can be
@@ -38,13 +37,13 @@ To run the debugger on these programs if there are not installed use
 or
   libtool --mode execute <your debugger> <debugger parms>
 For example to debug aspell-util with ddd use
-libtool --mode execute ddd modules/aspell/aspell-util
+  libtool --mode execute ddd modules/aspell/aspell-util
 
 Using libtool is necessary to make sure the shared libraries get loaded
-right. If you use them after they are installed this will not be
+right. If you debug them after they are installed this will not be
 necessary.
 
 Using static libraries will NOT work due to the mixing of C and C++.
 
 Autogen should be run when ever anything but the source files or
-Makefile.am files are modifed by either yourself or a cvs update.
+Makefile.am files are modified by either yourself or a cvs update.
