@@ -4192,6 +4192,17 @@ a C++ program.
 @node ChangeLog
 @appendix ChangeLog
 
+@heading Changes from 0.60.1 to 0.60.3 
+
+@itemize @bullet
+@item
+Fixed bugs involving several of the C API functions.
+@item
+Fixed the @command{spell} compatibility script.
+@item
+Several other bug fixed.
+@end itemize
+
 @heading Changes from 0.60.1 to 0.60.2 (December 18, 2004)
 
 @itemize @bullet
