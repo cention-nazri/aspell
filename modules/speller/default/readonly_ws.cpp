@@ -109,7 +109,7 @@ static byte HAVE_AFFIX_FLAG = 1 << 7;
 static byte HAVE_CATEGORY_FLAG = 1 << 6;
 
 static byte DUPLICATE_FLAG = 1 << 4;
-// this flag is set when there is is more than one word for a
+// this flag is set when there is more than one word for a
 // particulear "clean" word such as "jello" "Jello".  It is set on all
 // but the last word of the group.  Ie, if it is set than the next
 // word when converted to its "clean" form equals the same value.
@@ -301,7 +301,7 @@ namespace {
   static const char * const cur_check_word = "aspell default speller rowl 1.10";
 
   struct DataHead {
-    // all sizes except the last four must to divisible by:
+    // all sizes except the last four must to divisible by "align":
     static const unsigned int align = 16;
     char check_word[64];
     u32int endian_check; // = 12345678
