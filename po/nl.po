@@ -5,179 +5,232 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: aspell 0.51-b20040106\n"
+"Project-Id-Version: aspell 0.51-b20040204\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-01-06 10:07-0500\n"
-"PO-Revision-Date: 2004-01-12 00:40+0100\n"
+"POT-Creation-Date: 2004-02-19 04:47-0500\n"
+"PO-Revision-Date: 2004-02-08 13:19+0100\n"
 "Last-Translator: Elros Cyriatan <cyriatan@fastmail.fm>\n"
 "Language-Team: Dutch <vertaling@nl.linux.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: common/config.cpp:848
+#: common/config.cpp:831
 msgid "configured as follows"
 msgstr "als volgt geconfigureerd"
 
-#: common/config.cpp:1053
+#. TRANSLATORS: The remaing strings in config.cpp should be kept
+#. under 50 characters, begin with a lower case character and not
+#. include any trailing punctuation marks.
+#: common/config.cpp:993
 msgid "main configuration file"
 msgstr "hoofd configuratiebestand"
 
-#: common/config.cpp:1055
+#: common/config.cpp:995
 msgid "location of main configuration file"
 msgstr "lokatie van hoofd configuratiebestand"
 
-#: common/config.cpp:1058
+#: common/config.cpp:998
 msgid "location of language data files"
 msgstr "lokatie van taal gegevensbestanden"
 
-#: common/config.cpp:1060
+#: common/config.cpp:1000
 msgid "location of the main word list"
 msgstr "lokatie van hoofd woordenlijst"
 
-#: common/config.cpp:1062
+#: common/config.cpp:1002
 msgid "encoding to expect data to be in"
 msgstr "codering waarin gegevens worden verwacht"
 
-#: common/config.cpp:1064
+#: common/config.cpp:1004
 msgid "add or removes a filter"
 msgstr "een filter toevoegen of verwijderen"
 
-#: common/config.cpp:1066
-msgid "path(es) aspell looks for filters (.so/.dll/.flt);"
-msgstr "pad(en) waarin aspell zoekt naar filters (.so/.dll/.flt);"
+#: common/config.cpp:1006
+msgid "path(es) aspell looks for filters"
+msgstr "pad(en) waarin aspell zoekt naar filters"
 
-#: common/config.cpp:1068
-msgid "path(es) aspell looks for options descriptions;"
-msgstr "pad(en) waarin aspell zoekt naar optiebeschrijvingen;"
+#: common/config.cpp:1008
+msgid "path(es) aspell looks for options descriptions"
+msgstr "pad(en) waarin aspell zoekt naar optiebeschrijvingen"
 
-#: common/config.cpp:1071
+#: common/config.cpp:1011
 msgid "extra dictionaries to use"
 msgstr "extra woordenboeken om te gebruiken"
 
-#: common/config.cpp:1073
+#: common/config.cpp:1013
 msgid "location for personal files"
 msgstr "lokatie van persoonlijke bestanden"
 
-#: common/config.cpp:1075
+#: common/config.cpp:1015
 msgid "ignore words <= n chars"
 msgstr "woorden <= n tekens negeren"
 
-#: common/config.cpp:1077
+#: common/config.cpp:1017
 msgid "ignore accents when checking words"
 msgstr "accenten negeren bij controleren woorden"
 
-#: common/config.cpp:1079
+#: common/config.cpp:1019
 msgid "ignore case when checking words"
 msgstr "hoofdletter/kleine letter verschil negeren bij controleren woorden"
 
-#: common/config.cpp:1081
+#: common/config.cpp:1021
 msgid "ignore commands to store replacement pairs"
 msgstr "opdrachten om vervangparen op te slaan negeren"
 
-#: common/config.cpp:1083
+#: common/config.cpp:1023
 msgid "extra information for the word list"
 msgstr "extra informatie voor de woordenlijst"
 
-#: common/config.cpp:1085
+#: common/config.cpp:1025
 msgid "keyboard definition to use for typo analysis"
 msgstr "toetsenbord definitie om te gebruiken voor typfout-analyse"
 
-#: common/config.cpp:1087
+#: common/config.cpp:1027
 msgid "language code"
 msgstr "taalcode"
 
-#: common/config.cpp:1089
+#: common/config.cpp:1029
 msgid "deprecated, use lang instead"
 msgstr "ontraden, gebruik lang in de plaats"
 
-#: common/config.cpp:1091
+#: common/config.cpp:1031
 msgid "location of local language data files"
 msgstr "lokatie van lokale taal gegevensbestanden"
 
-#: common/config.cpp:1093
+#: common/config.cpp:1033
 msgid "base name of the main dictionary to use"
 msgstr "basisnaam van hoofd woordenboek om te gebruiken"
 
-#: common/config.cpp:1097
-msgid "Set module name"
-msgstr "Modulenaam instellen"
+#: common/config.cpp:1037
+msgid "set module name"
+msgstr "modulenaam instellen"
 
-#: common/config.cpp:1099
-msgid "Search order for modules"
-msgstr "Zoekvolgorde voor modules"
+#: common/config.cpp:1039
+msgid "search order for modules"
+msgstr "zoekvolgorde voor modules"
 
-#: common/config.cpp:1101
+#: common/config.cpp:1041
 msgid "personal configuration file"
 msgstr "persoonlijk configuratiebestand"
 
-#: common/config.cpp:1104
-msgid "personal word list file name"
-msgstr "persoonlijke woordenlijst bestandsnaam"
+#: common/config.cpp:1044
+msgid "personal dictionary file name"
+msgstr "persoonlijk woordenboek bestandsnaam"
 
-#: common/config.cpp:1107
+#: common/config.cpp:1047
 msgid "prefix directory"
 msgstr "voorvoegsel map"
 
-#: common/config.cpp:1109
+#: common/config.cpp:1049
 msgid "replacements list file name"
 msgstr "vervangingen lijst bestandsnaam"
 
-#: common/config.cpp:1112
+#: common/config.cpp:1052
 msgid "consider run-together words legal"
-msgstr ""
+msgstr "aan elkaar geschreven woorden goedkeuren"
 
-#: common/config.cpp:1114
+#: common/config.cpp:1054
 msgid "maxium numbers that can be strung together"
 msgstr "maximale aantal dat aan elkaar geschreven mag worden"
 
-#: common/config.cpp:1116
+#: common/config.cpp:1056
 msgid "minimal length of interior words"
 msgstr "minimale lengte van woorden aan binnenkant"
 
-#: common/config.cpp:1119
+#: common/config.cpp:1058
 msgid "save replacement pairs on save all"
 msgstr "vervangingsparen opslaan bij alles opslaan"
 
-#: common/config.cpp:1121
+#: common/config.cpp:1060
 msgid "set the prefix based on executable location"
 msgstr "voorvoegsel instellen op basis van lokatie uitvoerbaar bestand"
 
-#: common/config.cpp:1123
+#: common/config.cpp:1062
 msgid "size of the word list"
 msgstr "grootte van woordenlijst"
 
-#: common/config.cpp:1125
+#: common/config.cpp:1064
 msgid "no longer used"
 msgstr "niet langer gebruikt"
 
-#: common/config.cpp:1127
+#: common/config.cpp:1066
 msgid "strip accents from word lists"
-msgstr ""
+msgstr "accenten uit woordenlijsten weggooien"
 
-#: common/config.cpp:1129
+#: common/config.cpp:1068
 msgid "suggestion mode"
 msgstr "suggestiemodus"
 
-#: common/config.cpp:1131
-msgid "Search path for word list information files"
-msgstr "Zoekpad voor woordenlijst informatiebestanden"
+#: common/config.cpp:1070
+msgid "edit distance to use, override sug-mode default"
+msgstr ""
+"bewerkafstand om te gebruiken, daarmee mogelijk standaardinstelling "
+"suggestiemodus negerend"
 
-#: common/config.cpp:1138
+#: common/config.cpp:1072
+msgid "use typo analysis, override sug-mode default"
+msgstr ""
+"typfout-analyse gebruiken, daarmee mogelijk standaardinstelling "
+"suggestiemodus negerend"
+
+#: common/config.cpp:1074
+msgid "use replacement tables, override sug-mode default"
+msgstr ""
+"vervangingstabellen gebruiken, mogelijk standaardinstelling van "
+"suggereermodus negerend"
+
+#: common/config.cpp:1076
+msgid "characters to insert when a word is split"
+msgstr "tekens om in te voegen als een woord wordt gesplitst"
+
+#: common/config.cpp:1078
+msgid "search path for word list information files"
+msgstr "zoekpad voor woordenlijst informatiebestanden"
+
+#: common/config.cpp:1080
+msgid "indicator for affix flags in word lists"
+msgstr "code om uitgang aan te geven in woordenlijsten"
+
+#: common/config.cpp:1082
+msgid "indicator for additional flags in word lists"
+msgstr "code voor extra opties in woordenlijsten"
+
+#: common/config.cpp:1089
+msgid "encode soundslike infomation when creating dicts"
+msgstr "klinkt-als informatie coderen bij aanmaken woordenboeken"
+
+#: common/config.cpp:1091
+msgid "use jump tables when creating dictionaries"
+msgstr "springtabellen gebruiken bij aanmaken woordenboeken"
+
+#: common/config.cpp:1093
+msgid "use affix compression when creating dictionaries"
+msgstr "uitgangen inpakken bij aanmaken woordenboeken"
+
+#: common/config.cpp:1100
 msgid "create a backup file by appending \".bak\""
 msgstr "een reserviekopie maken door \".bak\" achter te voegen"
 
-#: common/config.cpp:1140
+#: common/config.cpp:1103
+msgid "make possible root/affix combinations not in the dictionary"
+msgstr "mogelijke kern/uitgang combinaties maken die niet in woordenboek staan"
+
+#: common/config.cpp:1105
+msgid "keymapping for check mode, aspell or ispell"
+msgstr "toetsafbeelding voor controlemodus, aspell of ispell"
+
+#: common/config.cpp:1107
 msgid "reverse the order of the suggest list"
 msgstr "omgekeerde volgorde van lijst suggesties"
 
-#: common/config.cpp:1142
+#: common/config.cpp:1109
+msgid "suggest possible replacements"
+msgstr "mogelijke vervangingen suggereren"
+
+#: common/config.cpp:1111
 msgid "time load time and suggest time in pipe mode"
 msgstr "opstarttijd en suggestietijd bijhouden in pijpmodus"
-
-#: common/config.cpp:1144
-msgid "keymapping for check mode, one of aspell ispell"
-msgstr ""
 
 #: common/errors.cpp:42
 #, c-format
@@ -227,255 +280,275 @@ msgid "The key \"%key:1\" is not %accepted:2 and is thus invalid."
 msgstr "De sleutel \"%key:1\" is niet %accepted:2 en is dus ongeldig."
 
 #: common/errors.cpp:138
-msgid "The value \"%value:2\" is not %accepted:3 and is thus invalid for the key \"%key:1\"."
+msgid ""
+"The value \"%value:2\" is not %accepted:3 and is thus invalid for the key \"%"
+"key:1\"."
 msgstr ""
+"De waarde \"%value:2\" is niet %accepted:3, en is dus ongeldig voor de "
+"sleutel \"%key:1\"."
 
 #: common/errors.cpp:162
 #, c-format
 msgid "The language \"%lang:1\" is not known."
-msgstr ""
+msgstr "De taal \"%lang:1\" is onbekend."
 
 #: common/errors.cpp:170
 #, c-format
 msgid "The soundslike \"%sl:2\" is not known."
-msgstr ""
+msgstr "De klinkt-als \"%sl:2\" is onbekend."
 
 #: common/errors.cpp:178
 #, c-format
 msgid "The language \"%lang:1\" is not supported."
-msgstr ""
+msgstr "De taal \"%lang:1\" wordt niet ondersteund."
 
 #: common/errors.cpp:186
 #, c-format
 msgid "No word lists can be found for the language \"%lang:1\"."
 msgstr ""
+"Er kunnen voor de taal \"%lang:1\" geen woordenlijsten worden gevonden."
 
 #: common/errors.cpp:194
 #, c-format
 msgid "Expected language \"%lang:1\" but got \"%prev:2\"."
-msgstr ""
+msgstr "Taal \"%lang:1\" verwacht, maar \"%prev:2\" gekregen."
 
 #: common/errors.cpp:210
 #, c-format
 msgid "The encoding \"%encod:1\" is not known."
-msgstr ""
+msgstr "De codering \"%encod:1\" is onbekend."
 
 #: common/errors.cpp:218
 #, c-format
 msgid "The encoding \"%encod:1\" is not supported."
-msgstr ""
+msgstr "De codering \"%encod:1\" wordt niet ondersteund."
 
 #: common/errors.cpp:226
 #, c-format
 msgid "The conversion from \"%encod:1\" to \"%encod2:2\" is not supported."
 msgstr ""
+"De conversie van \"%encod:1\" naar \"%encod2:2\" wordt niet ondersteund."
 
 #: common/errors.cpp:266
 msgid "The word \"%word:1\" is invalid."
-msgstr ""
+msgstr "Het woord \"%word:1\" is ongeldig."
 
 #: common/errors.cpp:298
 msgid "%where:1: \"%filter:2\":"
-msgstr ""
+msgstr "%where:1: \"%filter:2\":"
 
 #: common/errors.cpp:306
 msgid "%where:1: \"%filter:2\" dlopen returned \"%return:3\"."
-msgstr ""
+msgstr "%where:1: \"%filter:2\" dlopen gaf \"%return:3\" terug."
 
 #: common/errors.cpp:314
 msgid "%where:1: The file \"%filter:2\" does not contain any filter."
-msgstr ""
+msgstr "%where:1: Het bestand \"%filter:2\" bevat geen enkel filter."
 
 #: common/errors.cpp:322
 msgid "%where:1: Filter \"%filter:2\" could not be found in filter paths."
 msgstr ""
+"%where:1: Filter \"%filter:2\" kon niet worden gevonden in filterpaden."
 
 #: common/errors.cpp:330
 msgid "%where:1: %filter:2: can't find option description."
-msgstr ""
+msgstr "%where:1: %filter:2: kan optiebeschrijving niet vinden."
 
 #: common/errors.cpp:338
 msgid "%where:1: \"%filter:2\" Line %line:3 confused by version control"
-msgstr ""
+msgstr "%where:1: \"%filter:2\" Regel %line:3 verward door versiecontrole"
 
 #: common/errors.cpp:346
-msgid "%where:1: \"%filter:2\": Line %line:3 Aspell version does not match filter's requirement."
+msgid ""
+"%where:1: \"%filter:2\": Line %line:3 Aspell version does not match filter's "
+"requirement."
 msgstr ""
+"%where:1: \"%filter:2\": Regel %line:3 Aspell versie komt niet overeen met "
+"vereiste van filter."
 
 #: common/errors.cpp:354
-msgid "%where:1: \"%filter:2\" error while extend Aspell options. (out of memory?)"
+msgid ""
+"%where:1: \"%filter:2\" error while extend Aspell options. (out of memory?)"
 msgstr ""
+"%where:1: \"%filter:2\" fout bij uitbreiden Aspell opties. (geheugentekort?)"
 
 #: common/errors.cpp:362
 msgid "%where:1: \"%filter:2\" Line %line:3 Filter option already exists."
-msgstr ""
+msgstr "%where:1: \"%filter:2\" Regel %line:3 Filteroptie bestaat al."
 
 #: common/errors.cpp:370
-msgid "%where:1: \"%filter:2\" %line:3 Use option modifiers only within named Option."
+msgid ""
+"%where:1: \"%filter:2\" %line:3 Use option modifiers only within named "
+"Option."
 msgstr ""
+"%where:1: \"%filter:2\" %line:3 Gebruik optieveranderaars alleen binnen "
+"genoemde Option."
 
 #: common/errors.cpp:378
 msgid "%where:1: \"%filter:2\" %line:3 Option modifier unknown."
-msgstr ""
+msgstr "%where:1: \"%filter:2\" %line:3 Optieveranderaar onbekend."
 
 #: common/errors.cpp:386
 msgid "%where:1: \"%filter:2\" error setting filter description."
-msgstr ""
+msgstr "%where:1: \"%filter:2\" fout bij instellen filterbeschrijving."
 
 #: common/errors.cpp:394
 #, c-format
 msgid "%action:1: invalid regular expression."
-msgstr ""
+msgstr "%action:1: ongeldige reguliere uitdrukking."
 
 #: common/errors.cpp:402
 #, c-format
 msgid "%action:1: `%expression:2' is not a valid regular expression."
-msgstr ""
+msgstr "%action:1: `%expression:2' is geen geldige reguliere uitdrukking."
 
 #: common/posib_err.cpp:98
 msgid "Unhandled Error: "
-msgstr ""
+msgstr "Niet-behandelde fout: "
 
-#: prog/aspell.cpp:74 prog/aspell.cpp:81
+#: prog/aspell.cpp:81 prog/aspell.cpp:88
 msgid "Error: "
 msgstr "Fout: "
 
-#: prog/aspell.cpp:170
+#: prog/aspell.cpp:182
 msgid "enter Email mode."
-msgstr ""
+msgstr "E-mail modus binnengaan."
 
-#: prog/aspell.cpp:171
+#: prog/aspell.cpp:183
 msgid "enter Html/Sgml mode."
-msgstr ""
+msgstr "HTML/SGML modus binnengaan."
 
-#: prog/aspell.cpp:172
+#: prog/aspell.cpp:184
 msgid "enter TeX mode."
-msgstr ""
+msgstr "TeX modus binnengaan."
 
-#: prog/aspell.cpp:270
+#: prog/aspell.cpp:278
 #, c-format
 msgid "Invalid Option: %s"
-msgstr ""
-
-#: prog/aspell.cpp:275
-msgid " does not take any parameters."
-msgstr ""
+msgstr "Ongeldige optie: %s"
 
 #: prog/aspell.cpp:283
+msgid " does not take any parameters."
+msgstr " neemt geen parameters aan."
+
+#: prog/aspell.cpp:291
 #, c-format
 msgid "You must specify a parameter for %s"
-msgstr ""
+msgstr "U dient een parameter op te geven voor %s"
 
-#: prog/aspell.cpp:308
+#: prog/aspell.cpp:316
 msgid "You must specify an action"
-msgstr ""
+msgstr "U dient een actie op te geven"
 
-#: prog/aspell.cpp:342 prog/aspell.cpp:348 prog/aspell.cpp:364
+#: prog/aspell.cpp:362 prog/aspell.cpp:368 prog/aspell.cpp:386
 #, c-format
 msgid "Unknown Action: %s"
-msgstr ""
+msgstr "Onbekende actie: %s"
 
-#: prog/aspell.cpp:451
+#: prog/aspell.cpp:504
 msgid "Invalid Input"
-msgstr ""
+msgstr "Ongeldige invoer"
 
-#: prog/aspell.cpp:517
+#: prog/aspell.cpp:575
 msgid "Time to load word list: "
-msgstr ""
+msgstr "Tijd voor laden woordenlijst: "
 
-#: prog/aspell.cpp:679
+#: prog/aspell.cpp:764
 msgid "Suggestion Time: "
-msgstr ""
+msgstr "Tijd voor suggestie: "
 
-#: prog/aspell.cpp:720
+#: prog/aspell.cpp:804
 msgid "You must specify a file name."
-msgstr ""
+msgstr "U dient een bestandsnaam op te geven."
 
-#: prog/aspell.cpp:730
+#: prog/aspell.cpp:814
 #, c-format
 msgid "Could not open the file \"%s\" for reading"
-msgstr ""
+msgstr "Kon bestand \"%s\" niet openen om te lezen"
 
-#: prog/aspell.cpp:736
+#: prog/aspell.cpp:820
 #, c-format
 msgid "Could not open the file \"%s\"  for writing. File not saved."
 msgstr ""
+"Kon het bestand \"%s\" niet openen om te schrijven. Bestand niet opgeslagen."
 
-#: prog/aspell.cpp:749
+#: prog/aspell.cpp:833
 #, c-format
 msgid "Invalid keymapping: %s"
-msgstr ""
+msgstr "Ongeldige toetsafbeelding: %s"
 
-#: prog/aspell.cpp:770
+#: prog/aspell.cpp:850
 msgid "Ignore"
 msgstr "Negeren"
 
-#: prog/aspell.cpp:771
+#: prog/aspell.cpp:851
 msgid "Ignore all"
 msgstr "Alle negeren"
 
-#: prog/aspell.cpp:772
+#: prog/aspell.cpp:852
 msgid "Replace"
 msgstr "Vervangen"
 
-#: prog/aspell.cpp:773
+#: prog/aspell.cpp:853
 msgid "Replace all"
 msgstr "Alle vervangen"
 
-#: prog/aspell.cpp:774
+#: prog/aspell.cpp:854
 msgid "Add"
 msgstr "Toevoegen"
 
-#: prog/aspell.cpp:775
+#: prog/aspell.cpp:855
 msgid "Add Lower"
-msgstr ""
+msgstr "Lager toevoegen"
 
-#: prog/aspell.cpp:776
+#: prog/aspell.cpp:856
 msgid "Abort"
 msgstr "Afbreken"
 
-#: prog/aspell.cpp:777
+#: prog/aspell.cpp:857
 msgid "Exit"
 msgstr "Afsluiten"
 
-#: prog/aspell.cpp:858
+#: prog/aspell.cpp:935
 msgid "Are you sure you want to abort? "
 msgstr "Wilt u echt afbreken? "
 
-#: prog/aspell.cpp:878
+#: prog/aspell.cpp:955
 msgid "With: "
 msgstr "Met: "
 
-#: prog/aspell.cpp:892
+#: prog/aspell.cpp:969
 msgid "Sorry that is an invalid choice!"
 msgstr "Sorry, die keuze is ongeldig!"
 
-#: prog/aspell.cpp:1012
+#: prog/aspell.cpp:1115
 msgid "Sorry \"filter\" is currently unimplemented.\n"
-msgstr ""
+msgstr "Sorry, \"filter\" is op dit moment nog niet geïmplementeerd.\n"
 
-#: prog/aspell.cpp:1103
+#: prog/aspell.cpp:1208
 msgid "Can't merge a master word list yet. Sorry."
-msgstr ""
+msgstr "Kan hoofdwoordenlijst nog niet samenvoegen. Sorry."
 
-#: prog/aspell.cpp:1132
+#: prog/aspell.cpp:1237
 msgid "Sorry \"create/merge personal\" is currently unimplemented.\n"
 msgstr ""
+"Sorry, \"aanmaken/samenvoegen persoonlijk\" is nog niet geïmplementeerd.\n"
 
-#: prog/aspell.cpp:1141 prog/aspell.cpp:1197
+#: prog/aspell.cpp:1246 prog/aspell.cpp:1303
 #, c-format
 msgid "Sorry I won't overwrite \"%s\""
 msgstr "Sorry, ik ga \"%s\" niet overschrijven"
 
-#: prog/aspell.cpp:1188
+#: prog/aspell.cpp:1294
 msgid "Sorry \"create/merge repl\" is currently unimplemented.\n"
 msgstr ""
+"Sorry, \"aanmaken/samenvoegen dubbelen\" is nog niet geïmplementeerd.\n"
 
-#: prog/aspell.cpp:1366
-#, c-format
+#: prog/aspell.cpp:1663
+#, fuzzy, c-format
 msgid ""
 "\n"
-"Aspell %s alpha.  Copyright 2000 by Kevin Atkinson.\n"
+"Aspell %s alpha.  Copyright 2000-2004 by Kevin Atkinson.\n"
 "\n"
 "Usage: aspell [options] <command>\n"
 "\n"
@@ -488,100 +561,171 @@ msgid ""
 "  [dump] config [-e <expr>]  dumps the current configuration to stdout\n"
 "  config [+e <expr>] <key>   prints the current value of an option\n"
 "  soundslike       returns the sounds like equivalent for each word entered\n"
+"  munch            generate possible root words and affixes\n"
+"  expand [1-4]     expands affix flags\n"
 "  filter           passes standard input through filters\n"
 "  -v|version       prints a version line\n"
 "  dump|create|merge master|personal|repl [word list]\n"
 "    dumps, creates or merges a master, personal, or replacement word list.\n"
 "\n"
-"  <expr>           regular expression matching filtername(s) or `all'\n"
+"  <expr>           regular expression matching filtername(s) or \"all\"\n"
 "\n"
 "[options] is any of the following:\n"
 "\n"
 msgstr ""
 "\n"
-"Aspell %s alpha.  Copyright 2000 van Kevin Atkinson.\n"
+"Aspell %s alfa.  Copyright 2000-2004 van Kevin Atkinson.\n"
 "\n"
 "Gebruik: aspell [opties] <opdracht>\n"
 "\n"
 "<opdracht> is één van:\n"
-"  -?|help [<uitdrukking>] dit hulpbericht weergeven, en de hulp voor\n"
+"  -?|help [<uitdrukking>] dit hulpbericht weergeven, en de hulp voor "
+"filters\n"
 "                    overeenkomend met <uitdrukking>, als geïnstalleerd\n"
 "  -c|check <bestand>  om een bestand te controleren\n"
 "  -a|pipe          \"ispell -a\" compatibiliteitsmodus\n"
-"  -l|list          een lijst van verkeerd gespelde woorden maken, vanaf standaard invoer\n"
-"  [dump] config [-e <uitdrukking>]  huidige configuratie naar standaard uitvoer sturen\n"
+"  -l|list          een lijst van verkeerd gespelde woorden maken, vanaf "
+"standaard invoer\n"
+"  [dump] config [-e <uitdrukking>]  huidige configuratie naar standaard "
+"uitvoer sturen\n"
 "  config [+e <uitdrukking>] <sleutel>   huidige waarde van optie weergeven\n"
 "  soundslike       geeft een klinkt-als equivalent voor elk ingevoerd woord\n"
+"··munch············mogelijke kernwoorden en uitgangen genereren\n"
+"··expand·[1-4]·····uitgangsopties uitbreiden\n"
 "  filter           standaard invoer door filters laten gaan\n"
 "  -v|version       een versieregel weergeven\n"
 "  dump|create|merge master|personal|repl [woordenlijst]\n"
-"    weergeven, maken of samenvoegen van een woordenlijst die hoofdlijst, persoonlijke of vervangingenlijst is.\n"
+"    weergeven, maken of samenvoegen van een woordenlijst die hoofdlijst, "
+"persoonlijke of vervangingenlijst is.\n"
 "\n"
-"  <uitdrukking>           reguliere uitdrukking overeenkomend met filterna(a)m(en) of `all' voor alles\n"
+"  <uitdrukking>           reguliere uitdrukking overeenkomend met filterna(a)"
+"m(en) of `all' voor alles\n"
 "\n"
 "[opties] is één van de volgende:\n"
 "\n"
 
-#: prog/aspell.cpp:1395
-#, c-format
+#: prog/aspell.cpp:1693
+#, fuzzy, c-format
 msgid ""
 "\n"
-"  %s Filter: %s\n"
-"\tNOTE: in ambiguous case prefix following options by `filter-'\n"
+"  %s filter: %s\n"
+"    NOTE: in ambiguous case prefix following options by \"filter-\"\n"
+msgstr ""
+"\n"
+"  %s filter: %s\n"
+"    LET OP: in dubbelzinnige zaak, voorvoegsel gevolgd door opties van "
+"`filter-'\n"
+
+#: modules/speller/default/language.cpp:70
+msgid "This is probably because: "
+msgstr "Dit is waarschijnlijk, omdat: "
+
+#: modules/speller/default/language.cpp:77
+msgid "The required field \"name\" is missing."
+msgstr "Het vereiste veld \"name\" (naam) ontbreekt."
+
+#: modules/speller/default/language.cpp:335
+#, c-format
+msgid "The character '%s' may not appear at the %s of a word."
 msgstr ""
 
+#: modules/speller/default/language.cpp:342
+msgid "Empty string."
+msgstr "Lege tekst."
+
+#: modules/speller/default/language.cpp:346
+msgid "beginning"
+msgstr ""
+
+#: modules/speller/default/language.cpp:348
+msgid "Does not contain any letters."
+msgstr "Bevat geen letters."
+
+#: modules/speller/default/language.cpp:353
+msgid "middle"
+msgstr ""
+
+#: modules/speller/default/language.cpp:358
+msgid "end"
+msgstr ""
+
+#: modules/speller/default/affix.cpp:295
+#, c-format
+msgid "affix '%s' is corrupt, possible incorrect count"
+msgstr ""
+
+#: modules/speller/default/affix.cpp:342
+#, c-format
+msgid "affix '%s' is corrupt"
+msgstr ""
+
+#: modules/speller/default/readonly_ws.cpp:300
+msgid "Wrong endian order."
+msgstr "Verkeerde endiaanse volgorde."
+
+#: modules/speller/default/readonly_ws.cpp:321
+msgid "Wrong soundslike"
+msgstr "Verkeerde klinkt-als"
+
+#: modules/speller/default/readonly_ws.cpp:327
+msgid "Wrong soundslike version"
+msgstr "Verkeerde klinkt-als versie"
+
+#. TRANSLATORS: Like the strings in config.cpp, all strings in *-filter.opt
+#. should be under 50 characters, begin with a lower case character and 
+#. not include any trailing punctuation marks.
 #: modules/filter/context-filter.opt:7
 msgid "Filter for hiding delimited contexts from Aspell"
-msgstr ""
+msgstr "Filter voor het verbergen van gescheiden contexten van Aspell"
 
 #: modules/filter/context-filter.opt:13
 msgid "add/rem delimiter(s) separated by spaces"
-msgstr ""
+msgstr "scheiding(en) gescheiden door spaties toevoegen/verwijderen"
 
 #: modules/filter/context-filter.opt:21
-msgid "swaps visible and invisible text;(starts invisible)"
-msgstr ""
+msgid "swaps visible and invisible text"
+msgstr "tekst wisselen in zichtbaar/onzichtbaar"
 
 #: modules/filter/email-filter.opt:7
 msgid "Filter for eliminating email quote characters"
-msgstr ""
+msgstr "Filter voor het verwijderen van aanhaaltekens van e-mail"
 
 #: modules/filter/email-filter.opt:13
 msgid "email quote characters"
-msgstr ""
+msgstr "e-mail aanhaaltekens"
 
 #: modules/filter/email-filter.opt:20
 msgid "num chars that can appear before the quote char"
-msgstr ""
+msgstr "aantal tekens dat voor een aanhaalteken kan verschijnen"
 
 #: modules/filter/sgml-filter.opt:7
 msgid "Filters for encoding, filtering and decoding sgml characters"
-msgstr ""
+msgstr "Filters voor het coderen, filteren en decoderen van SGML tekens"
 
 #: modules/filter/sgml-filter.opt:13
 msgid "sgml attributes to always check."
-msgstr ""
+msgstr "SGML attributen om altijd te controleren."
 
 #: modules/filter/tex-filter.opt:7
 msgid "Filter for recognizing TeX/LaTeX commands"
-msgstr ""
+msgstr "Filter voor het herkennen van TeX/LaTeX opdrachten"
 
 #: modules/filter/tex-filter.opt:15
 msgid "check TeX comments"
-msgstr ""
+msgstr "TeX opmerkingen controleren"
 
 #: modules/filter/tex-filter.opt:21
 msgid "TeX commands"
-msgstr ""
+msgstr "TeX opdrachten"
 
 #: modules/filter/tex-filter.opt:90
 msgid "multi character coded letters (<char>:<rep>[:<rep>[...]])"
-msgstr ""
+msgstr "multi-teken gecodeerde letters (<teken>:<rep>[:<rep>[...]])"
 
 #: modules/filter/tex-filter.opt:102
 msgid "characters used to encode hyphenation locations"
-msgstr ""
+msgstr "tekens gebruikt voor coderen van afbreeklokaties"
 
 #: modules/filter/url-filter.opt:7
 msgid "Filter for hiding urls/paths and similar from Aspell"
-msgstr ""
+msgstr "Filter voor het verbergen van URLs/paden en dergelijke van Aspell"
