@@ -45,7 +45,6 @@ namespace acommon {
     int suf_flag;
     int guess;
     int compound;
-    int middle_char;
   };
 
   class Speller : public CanHaveError

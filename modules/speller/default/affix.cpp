@@ -138,11 +138,12 @@ CheckList::CheckList()
  : gi(63)
 {
   memset(data, 0, sizeof(data));
+  gi.reset(data);
 }
 
 void CheckList::reset()
 {
-  for (CheckInfo * p = data + 1; p->word; ++p) {
+  for (CheckInfo * p = data + 1; p != data + 1 + gi.num; ++p) {
     free(const_cast<char *>(p->word));
     p->word = 0;
   }
@@ -810,8 +811,8 @@ void AffixMgr::munch(ParmString word, CheckList * cl) const
 void AffixMgr::expand(ParmString word, ParmString af, CheckList * cl) const
 {
   // first add root word to list
-  GuessInfo * gi = &cl->gi;
   cl->reset();
+  GuessInfo * gi = &cl->gi;
   CheckInfo * ci = gi->add();
   ci->word = strdup(word);
 
@@ -883,6 +884,7 @@ int AffixMgr::expand(ParmString word, ParmString af,
       else
         l[n].af.clear();
       ++n;
+      break;
     }
   }
   l[n].word = word;
@@ -899,16 +901,18 @@ int AffixMgr::expand(ParmString word, ParmString af,
       for (SfxEntry * sfx = sFlag[c]; sfx; sfx = sfx->flag_next) {
         char * newword = sfx->add(word);
         if (!newword) continue;
-        if (strncmp(p->word.c_str(), newword, limit) == 0) continue;
+        if (strncmp(p->word.c_str(), newword, limit) == 0) break;
         remove_flag = true;
         l[n].word = newword;
         l[n].af.clear();
         ++n;
+        break;
       }
-      if (remove_flag)
+      if (remove_flag) {
         p->af.erase(m,1);
-      else
+      } else {
         ++m;
+      }
     }
   }
   return n;
@@ -1074,6 +1078,9 @@ bool PfxEntry::check(const LookupInfo & linf, ParmString word,
         else if (gi)
           lci = gi->add();
 
+        if (lci)
+          lci->word = wordinfo.word;
+
       } else {
               
         // prefix matched but no root word was found 
@@ -1099,7 +1106,6 @@ bool PfxEntry::check(const LookupInfo & linf, ParmString word,
       }
               
       if (lci) {
-        lci->word = wordinfo.word;
         lci->pre_flag = achar;
         lci->pre_add = appnd;
         lci->pre_strip = strip;
@@ -1148,7 +1154,7 @@ bool SfxEntry::check(const LookupInfo & linf, ParmString word,
 {
   int	                tmpl;		 // length of tmpword 
   int			cond;		 // condition beng examined
-  WordEntry             wordinfo;         // hash entry pointer
+  WordEntry             wordinfo;        // hash entry pointer
   unsigned char *	cp;
   char	        tmpword[MAXWORDLEN+1];
   PfxEntry* ep = (PfxEntry *) ppfx;
@@ -1245,7 +1251,6 @@ PosibErr<AffixMgr *> new_affix_mgr(ParmString name,
     return affix;
   }
 }
-
 }
 
 /**************************************************************************

@@ -415,6 +415,7 @@ namespace aspeller {
                   target[j] = c;
                   j++;
                 }
+                // FIXME: This may overlap
                 strcpy (&word[0], &word[0]+i+1);
                 i = 0;
                 z0 = 1;

@@ -33,6 +33,14 @@
 // means.  For more information on the metaphone algorithm please see
 // the file metaphone.cc which included a detailed description of it.
 
+// FIXME: OPTIMIZATIONS
+//   store the number of letters that are the same as the previous 
+//     soundslike so that it can possible be skipped
+//   don't expand every affix immendently as the whole entry may be
+//     able to be skipped based on the scan of the root word.
+//     this will require storing the maxim number of words stripped
+//     with each entry
+
 #include "getdata.hpp"
 
 #include "fstream.hpp"
@@ -305,7 +313,7 @@ namespace {
 
     try_split();
 
-    if (parms.soundslike_level == 1 && !fast_scan)
+    if (parms.soundslike_level == 1 && (!fast_scan || !use_soundslike))
       try_one_edit();
     else
       try_scan();
