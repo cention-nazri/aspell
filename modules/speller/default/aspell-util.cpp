@@ -281,7 +281,7 @@ int main (int argc, const char *argv[])
 void config () {
   StackPtr<Config> config(new_config());
   EXIT_ON_ERR(config->read_in_settings(options));
-  config->write_to_stream(stdout);
+  config->write_to_stream(COUT);
 }
 
 ///////////////////////////

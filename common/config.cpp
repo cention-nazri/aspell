@@ -4,7 +4,6 @@
 // license along with this library if you did not you can find
 // it at http://www.gnu.org/.
 
-#include <stdio.h>
 #include <ctype.h>
 #include <string.h>
 #include <stdlib.h>
@@ -673,67 +672,41 @@ namespace acommon {
 
   class ListDump : public MutableContainer 
   {
-    FILE * out;
+    OStream & out;
     const char * name;
   public:
-    ListDump(FILE * o, ParmString n) 
+    ListDump(OStream & o, ParmString n) 
       : out(o), name(n) {}
     bool add(ParmString d) {
-      fputs("add-", out);
-      fputs(name,   out);
-      putc (' ',    out);
-      fputs(d,      out);
-      putc ('\n',   out);
+      out << "add-" << name << ' ' << d << '\n';
       return true;
     }
     bool remove(ParmString d) {
-      fputs("rem-", out);
-      fputs(name,   out);
-      putc (' ',    out);
-      fputs(d,      out);
-      putc ('\n',   out);
+      out << "rem-" << name << ' ' << d << '\n';
       return true;
     }
     void clear() {
-      fputs("rem-all-",out);
-      fputs(name,      out);
-      putc ('\n',      out);
+      out << "rem-all-" << name << '\n';
     }
   };
 
-  void Config::write_to_stream(FILE * out, 
-				     bool include_extra) 
+  void Config::write_to_stream(OStream & out, 
+			       bool include_extra) 
   {
     KeyInfoEnumeration * els = possible_elements(include_extra);
     const KeyInfo * i;
     while ((i = els->next()) != 0) {
       if (i->desc == 0) continue;
-      fputs("# "                                              , out);
-      fputs(i->type ==  KeyInfoList ? "add|rem-" : ""   , out);
-      fputs(i->name                                           , out);
-      fputs(" descrip: "                                      , out);
-      fputs(i->def == 0 ? "(action option) " : ""             , out);
-      fputs(i->desc                                           , out);
-      fputs("\n"                                              , out);
+      out << "# " << (i->type ==  KeyInfoList ? "add|rem-" : "") << i->name
+	  << " descrip: " << (i->def == 0 ? "(action option) " : "") << i->desc
+	  << '\n';
       if (i->def != 0) {
-	fputs("# "        , out);
-	fputs(i->name     , out);
-	fputs(" default: ", out);
-	fputs(i->def      , out);
-	fputs("\n"        , out);
+	out << "# " << i->name << " default: " << i->def << '\n';
 	String val = retrieve(i->name);
 	if (i->type != KeyInfoList) {
-	  fputs("# "        , out);
-	  fputs(i->name     , out);
-	  fputs(" current: ", out);
-	  fputs(val.c_str() , out);
-	  fputs("\n"        , out);
-	  if (have(i->name)) {
-	    fputs(i->name    , out);
-	    fputs(" "        , out);
-	    fputs(val.c_str(), out);
-	    fputs("\n"       , out);
-	  }
+	  out << "# " << i->name << " current: " << val << "\n";
+	  if (have(i->name))
+	    out << i->name << " " << val << "\n";
 	} else {
 	  const char * value = data_->lookup(i->name);
 	  if (value != 0) {
@@ -742,7 +715,7 @@ namespace acommon {
 	  }
 	}
       }
-      fputs("\n\n", out);
+      out << "\n\n";
     }
     delete els;
   }

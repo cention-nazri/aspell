@@ -7,8 +7,6 @@
 #ifndef ASPELL_CONFIG___HPP
 #define ASPELL_CONFIG___HPP
 
-#include <stdio.h>
-
 #include "can_have_error.hpp"
 #include "key_info.hpp"
 #include "posib_err.hpp"
@@ -132,7 +130,7 @@ namespace acommon {
     PosibErr<void> replace (ParmString, ParmString);
     PosibErr<bool> remove  (ParmString);
     
-    void write_to_stream(FILE * out, bool include_extra = false);
+    void write_to_stream(OStream & out, bool include_extra = false);
 
     PosibErr<void> read_in_settings(const Config * override = 0);
 
