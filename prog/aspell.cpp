@@ -741,12 +741,15 @@ void pipe()
           = real_speller->lang().case_pattern(cword);
         while (ci) {
           guess.clear();
-          if (ci->pre_add && ci->pre_add[0])      guess << ci->pre_add << '+';
-          guess << ci->word;
-          // FIXME NOW!!!!
-          //if (ci->pre_strip && ci->pre_strip[0]) guess << '-' << ci->pre_strip;
-          //if (ci->suf_strip && ci->suf_strip[0]) guess << '-' << ci->suf_strip;
-          if (ci->suf_add   && ci->suf_add[0])   guess << '+' << ci->suf_add;
+          if (ci->pre_add && ci->pre_add[0])
+            guess.append(ci->pre_add, ci->pre_add_len).append('+');
+          guess.append(ci->word);
+          if (ci->pre_strip_len > 0) 
+            guess.append('-').append(ci->word.str(), ci->pre_strip_len);
+          if (ci->suf_strip_len > 0) 
+            guess.append('-').append(ci->word.str() - ci->suf_strip_len, ci->suf_strip_len);
+          if (ci->suf_add && ci->suf_add[0])
+            guess.append('+').append(ci->suf_add, ci->suf_add_len);
           real_speller->lang().fix_case(casep, guess.data(), guess.data());
           guesses << ", " << oconv(guess.str());
           ci = ci->next;
@@ -1418,7 +1421,6 @@ void soundslike() {
   Conv oconv(setup_conv(lang, options));
   String word;
   while (CIN.getline(word)) {
-    COUT << word << '\t';
     char * sl = iconv(word.data(), word.size());
     lang->LangImpl::to_soundslike(sl, sl);
     printf("%s\t%s\n", word.str(), sl);
@@ -1442,7 +1444,7 @@ void munch()
   String word;
   CheckList * cl = new_check_list();
   while (CIN.getline(word)) {
-    lang->affix()->munch(iconv(word), cl);
+    lang->munch(iconv(word), cl);
     COUT << word;
     for (const aspeller::CheckInfo * ci = check_list_data(cl); ci; ci = ci->next)
     {
@@ -1492,7 +1494,7 @@ void expand()
       af = w + s;
     }
     exp_buf.reset();
-    exp_list = lang->affix()->expand(w, af, exp_buf, limit);
+    exp_list = lang->expand(w, af, exp_buf, limit);
     if (level <= 2) {
       if (level == 2) 
         COUT << word << ' ';
