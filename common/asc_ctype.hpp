@@ -7,37 +7,34 @@
 #ifndef ASC_CTYPE__HPP
 #define ASC_CTYPE__HPP
 
-#include "parm_string.hpp"
-#include "posib_err.hpp"
-
 namespace acommon {
 
-  static inline bool asc_isspace(char c) 
+  static inline bool asc_isspace(int c) 
   {
     return c==' ' || c=='\n' || c=='\r' || c=='\t' || c=='\f' || c=='\v';
   }
 
-  static inline bool asc_isdigit(char c)
+  static inline bool asc_isdigit(int c)
   {
     return '0' <= c && c <= '9';
   }
-  static inline bool asc_islower(char c)
+  static inline bool asc_islower(int c)
   {
     return 'a' <= c && c <= 'z';
   }
-  static inline bool asc_isupper(char c)
+  static inline bool asc_isupper(int c)
   {
     return 'A' <= c && c <= 'Z';
   }
-  static inline bool asc_isalpha(char c)
+  static inline bool asc_isalpha(int c)
   {
     return asc_islower(c) || asc_isupper(c);
   }
-  static inline char asc_tolower(char c)
+  static inline int asc_tolower(int c)
   {
     return asc_isupper(c) ? c + 0x20 : c;
   }
-  static inline char asc_toupper(char c)
+  static inline int asc_toupper(int c)
   {
     return asc_islower(c) ? c - 0x20 : c;
   }
