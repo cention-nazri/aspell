@@ -10,7 +10,7 @@
 #include "posib_err.hpp"
 #include "stack_ptr.hpp"
 #include "string.hpp"
-#include "string_buffer.hpp"
+#include "objstack.hpp"
 
 using namespace acommon;
 

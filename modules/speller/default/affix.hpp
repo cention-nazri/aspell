@@ -8,14 +8,15 @@
 // Contributors.  All rights reserved. See the file affix.license for
 // details.
 
-#ifndef _AFFIXMGR_HXX_
-#define _AFFIXMGR_HXX_
+#ifndef ASPELL_AFFIX__HPP
+#define ASPELL_AFFIX__HPP
 
 #include "posib_err.hpp"
 #include "wordinfo.hpp"
 #include "fstream.hpp"
 #include "parm_string.hpp"
 #include "char_vector.hpp"
+#include "objstack.hpp"
 
 #define SETSIZE         256
 #define MAXAFFIXES      256
@@ -47,18 +48,7 @@ namespace aspeller {
   CheckInfo * check_list_data(CheckList *);
 
   struct LookupInfo;
-
-  struct AffEntry
-  {
-    char *       appnd;
-    char *       strip;
-    short        appndl;
-    short        stripl;
-    short        numconds;
-    short        xpflg;
-    char         achar;
-    char         conds[SETSIZE];
-  };
+  struct AffEntry;
   struct PfxEntry;
   struct SfxEntry;
 
@@ -70,7 +60,6 @@ namespace aspeller {
 
   class AffixMgr
   {
-
     const Language * lang;
 
     PfxEntry *          pStart[SETSIZE];
@@ -78,15 +67,18 @@ namespace aspeller {
     PfxEntry *          pFlag[SETSIZE];
     SfxEntry *          sFlag[SETSIZE];
 
-    String              encoding;
-    String              compound;
-    int                 cpdmin;
+    const char *        encoding;
+    //const char *        compound;
+    //int                 cpdmin;
 
-    String affix_file;
+    ObjStack strings;
+    void *   data_;
+
+    const char * affix_file;
 
   public:
  
-    AffixMgr(const Language * l) : lang(l) {}
+    AffixMgr(const Language * l) : lang(l), data_(0) {}
     ~AffixMgr();
 
     PosibErr<void> setup(ParmString affpath);
@@ -102,14 +94,10 @@ namespace aspeller {
     void  expand(ParmString word, ParmString affixes, CheckList *) const;
     // expand enough so the affixes does not effect the first limit
     // characters
-    int                 expand(ParmString word, ParmString af, 
-                               int limit, WordAff * l) const;
+    int  expand(ParmString word, ParmString af, int limit, WordAff * l) const;
 
-    char *              get_encoding();
-             
   private:
     PosibErr<void> parse_file(const char * affpath);
-    PosibErr<void> parse_affix(ParmString line, const char at, FStream & af);
 
     void encodeit(AffEntry * ptr, char * cs);
     PosibErr<void> build_pfxlist(PfxEntry* pfxptr);

@@ -1,5 +1,5 @@
 // This file is part of The New Aspell
-// Copyright (C) 2002 by Kevin Atkinson under the GNU LGPL
+// Copyright (C) 2004 by Kevin Atkinson under the GNU LGPL
 // license version 2.0 or 2.1.  You should have received a copy of the
 // LGPL license along with this library if you did not you can find it
 // at http://www.gnu.org/.
@@ -14,7 +14,6 @@
 
 #include "iostream.hpp"
 
-#include "affentry.hpp"
 #include "affix.hpp"
 #include "errors.hpp"
 #include "getdata.hpp"
@@ -25,6 +24,97 @@
 using namespace std;
 
 namespace aspeller {
+
+//////////////////////////////////////////////////////////////////////
+//
+// *Entry struct definations
+//
+
+struct AffEntry
+{
+  char *         appnd;
+  char *         strip;
+  unsigned short appndl;
+  unsigned short stripl;
+  unsigned short numconds;
+  short        xpflg;
+  char         achar;
+  char         conds[SETSIZE];
+};
+
+// A Prefix Entry
+  
+struct PfxEntry : public AffEntry
+{
+  AffixMgr * pmyMgr;
+  
+  PfxEntry * next;
+  PfxEntry * next_eq;
+  PfxEntry * next_ne;
+  PfxEntry * flag_next;
+  PfxEntry(AffixMgr * pmgr) : pmyMgr(pmgr) {}
+
+  bool check(const LookupInfo &, ParmString, CheckInfo &, GuessInfo *) const;
+
+  inline bool          allow_cross() const { return ((xpflg & XPRODUCT) != 0); }
+  inline unsigned char flag() const { return achar;  }
+  inline const char *  key() const  { return appnd;  }
+  char *               add(ParmString) const;
+};
+
+// A Suffix Entry
+
+struct SfxEntry : public AffEntry
+{
+  AffixMgr*    pmyMgr;
+  char *       rappnd; // this is set in AffixMgr::build_sfxlist
+  
+  SfxEntry *   next;
+  SfxEntry *   next_eq;
+  SfxEntry *   next_ne;
+  SfxEntry *   flag_next;
+
+  SfxEntry(AffixMgr* pmgr) : pmyMgr(pmgr) {}
+
+  bool check(const LookupInfo &, ParmString, CheckInfo &, GuessInfo *,
+             int optflags, AffEntry * ppfx);
+
+  inline bool          allow_cross() const { return ((xpflg & XPRODUCT) != 0); }
+  inline unsigned char flag() const { return achar;  }
+  inline const char *  key() const  { return rappnd; } 
+  char * add(ParmString) const;
+};
+
+//////////////////////////////////////////////////////////////////////
+//
+// Utility functions declarations
+//
+
+/* return 1 if s1 is subset of s2 */
+static bool isSubset(const char * s1, const char * s2)
+{
+  while( *s1 && (*s1 == *s2) ) {
+    s1++;
+    s2++;
+  }
+  return (*s1 == '\0');
+}
+
+// return 1 if s1 (reversed) is a leading subset of end of s2
+static bool isRevSubset(const char * s1, const char * end_of_s2, int len)
+{
+  while( (len > 0) && *s1 && (*s1 == *end_of_s2) ) {
+    s1++;
+    end_of_s2--;
+    len --;
+  }
+  return (*s1 == '\0');
+}
+
+//////////////////////////////////////////////////////////////////////
+//
+// CheckList
+//
 
 CheckList * new_check_list()
 {
@@ -59,17 +149,15 @@ void CheckList::reset()
   gi.reset(data);
 }
 
-// First some base level utility routines
-char * mystrdup(const char * s);                   // duplicate string
-char * myrevstrdup(const char * s);                // duplicate reverse of string
-static char * mystrsep(const char ** sptr, const char delim); // parse into tokens with char delimiter
-static bool   isSubset(const char * s1, const char * s2); // is affix s1 is a "subset" affix s2
-static bool   isRevSubset(const char * s1, const char * end_of_s2, int len);
+//////////////////////////////////////////////////////////////////////
+//
+// Affix Manager
+//
 
 PosibErr<void> AffixMgr::setup(ParmString affpath)
 {
   // register hash manager and load affix data from aff file
-  cpdmin = 3;  // default value
+  //cpdmin = 3;  // default value
   for (int i=0; i < SETSIZE; i++) {
     pStart[i] = NULL;
     sStart[i] = NULL;
@@ -79,9 +167,8 @@ PosibErr<void> AffixMgr::setup(ParmString affpath)
   return parse_file(affpath);
 }
 
-AffixMgr::~AffixMgr() 
+AffixMgr::~AffixMgr()
 {
- 
   // pass through linked prefix entries and clean up
   for (int i=0; i < SETSIZE ;i++) {
     pFlag[i] = NULL;
@@ -89,10 +176,10 @@ AffixMgr::~AffixMgr()
     PfxEntry * nptr = NULL;
     while (ptr) {
       nptr = ptr->next;
-      delete(ptr);
+      delete ptr;
       ptr = nptr;
       nptr = NULL;
-    }  
+    }
   }
 
   // pass through linked suffix entries and clean up
@@ -102,27 +189,21 @@ AffixMgr::~AffixMgr()
     SfxEntry * nptr = NULL;
     while (ptr) {
       nptr = ptr->next;
-      delete(ptr);
+      delete ptr;
       ptr = nptr;
       nptr = NULL;
-    }  
+    }
   }
-
-  cpdmin = 0;
 }
-
 
 // read in aff file and build up prefix and suffix entry objects 
 PosibErr<void> AffixMgr::parse_file(const char * affpath)
 {
   // io buffers
-  FixedBuffer<> buf; DataPair d;
+  FixedBuffer<> buf; DataPair dp;
  
-  // affix type
-  char ft;
-
   // open the affix file
-  affix_file = affpath;
+  affix_file = strings.dup(affpath);
   FStream afflst;
   RET_ON_ERR(afflst.open(affpath,"r"));
 
@@ -135,31 +216,113 @@ PosibErr<void> AffixMgr::parse_file(const char * affpath)
   // read in each line ignoring any that do not
   // start with a known line type indicator
 
-  while (getdata_pair(afflst,d,buf)) {
-    ft = ' ';
+  while (getdata_pair(afflst,dp,buf)) {
+    char affix_type = ' ';
 
     /* parse in the name of the character set used by the .dict and .aff */
 
-    if (d.key == "SET") 
-      encoding = d.value;
+    if (dp.key == "SET") 
+      encoding = strings.dup(dp.value);
 
     /* parse in the flag used by the controlled compound words */
-    else if (d.key == "COMPOUNDFLAG")
-      compound = d.value;
+    //else if (d.key == "COMPOUNDFLAG")
+    //  compound = strings.dup(d.value);
 
     /* parse in the flag used by the controlled compound words */
-    else if (d.key == "COMPOUNDMIN")
-      cpdmin = atoi(d.value); // FiXME
+    //else if (d.key == "COMPOUNDMIN")
+    //  cpdmin = atoi(d.value); // FiXME
 
-    else if (d.key == "TRY" || d.key == "REP");
+    //else if (dp.key == "TRY" || dp.key == "REP");
 
-    else if (d.key == "PFX" || d.key == "SFX")
-      ft = d.key[0];
+    else if (dp.key == "PFX" || dp.key == "SFX")
+      affix_type = dp.key[0];
 
+    if (affix_type == ' ') continue;
+    
+    //
     // parse this affix: P - prefix, S - suffix
-    if (ft != ' ')
-      RET_ON_ERR(parse_affix(d.value, ft, afflst));
+    //
 
+    int numents = 0;      // number of affentry structures to parse
+    char achar='\0';      // affix char identifier
+    short xpflg=0;
+    StackPtr<AffEntry> nptr;
+    {
+      // split affix header line into pieces
+      split(dp);
+      if (dp.key.empty()) goto error;
+      // key is affix char
+      achar = dp.key.str()[0];
+
+      split(dp);
+      if (dp.key.empty()) goto error;
+      // key is cross product indicator 
+      if (dp.key.str()[0] == 'Y') xpflg = XPRODUCT;
+    
+      split(dp);
+      if (dp.key.empty()) goto error;
+      // key is number of affentries
+      numents = atoi(dp.key); 
+  
+      for (int j = 0; j < numents; j++) {
+        getdata_pair(afflst, dp, buf);
+
+        if (affix_type == 'P')
+          nptr.reset(new PfxEntry(this));
+        else
+          nptr.reset(new SfxEntry(this));
+
+        nptr->xpflg = xpflg;
+
+        split(dp);
+        if (dp.key.empty()) goto error;
+        // key is affix charter
+        if (dp.key[0] != achar) {
+          String msg;
+          msg << "affix "<< achar << "is corrupt " << ", possible incorrect count";
+          return make_err(bad_file_format, affix_file, msg);
+        }
+        nptr->achar = achar;
+ 
+        split(dp);
+        if (dp.key.empty()) goto error;
+        if (dp.key != "0") {
+          nptr->strip = strings.dup(dp.key);
+          nptr->stripl = dp.key.size();
+        } else {
+          nptr->strip= strings.dup("");
+          nptr->stripl = 0;
+        }
+    
+        split(dp);
+        if (dp.key.empty()) goto error;
+        // key is affix string or 0 for null
+        if (dp.key != "0") {
+          nptr->appnd = strings.dup(dp.key);
+          nptr->appndl = dp.key.size();
+        } else {
+          nptr->appnd  = strings.dup("");
+          nptr->appndl = 0;
+        }
+    
+        split(dp);
+        if (dp.key.empty()) goto error;
+        // key is the conditions descriptions
+        encodeit(nptr,dp.key);
+    
+        // now create SfxEntry or PfxEntry objects and use links to
+        // build an ordered (sorted by affix string) list
+        if (affix_type == 'P')
+          build_pfxlist(static_cast<PfxEntry *>(nptr.release()));
+        else
+          build_sfxlist(static_cast<SfxEntry *>(nptr.release())); 
+      }
+    }
+    continue;
+  error:
+    String msg;
+    msg << "affix "<< achar << "is corrupt";
+    return make_err(bad_file_format, affix_file, msg);
   }
   afflst.close();
 
@@ -195,6 +358,7 @@ PosibErr<void> AffixMgr::parse_file(const char * affpath)
   process_sfx_order();
 
   return no_err;
+
 }
 
 
@@ -260,7 +424,13 @@ PosibErr<void> AffixMgr::build_sfxlist(SfxEntry* sfxptr)
   SfxEntry * ptr;
   SfxEntry * pptr;
   SfxEntry * ep = sfxptr;
-  sfxptr->rappnd = myrevstrdup(sfxptr->appnd);
+  sfxptr->rappnd = (char *)strings.alloc(sfxptr->appndl + 1);
+  // reverse the string
+  sfxptr->rappnd[sfxptr->appndl] = 0;
+  for (char * dest = sfxptr->rappnd + sfxptr->appndl - 1, * src = sfxptr->appnd;
+       dest >= sfxptr->rappnd;
+       --dest, ++src)
+    *dest = *src;
 
   /* get the right starting point */
   const char * key = ep->key();
@@ -643,7 +813,7 @@ void AffixMgr::expand(ParmString word, ParmString af, CheckList * cl) const
   GuessInfo * gi = &cl->gi;
   cl->reset();
   CheckInfo * ci = gi->add();
-  ci->word = mystrdup(word);
+  ci->word = strdup(word);
 
   // handle prefixes
   for (unsigned int m = 0; m < af.size(); m++) {
@@ -741,225 +911,317 @@ int AffixMgr::expand(ParmString word, ParmString af,
         ++m;
     }
   }
-
   return n;
 }
 
-// strip strings into token based on single char delimiter
-// acts like strsep() but only uses a delim char and not 
-// a delim string
+//////////////////////////////////////////////////////////////////////
+//
+// LookupInfo
+//
 
-static char * mystrsep(const char * * stringp, const char delim)
+static void free_word(WordEntry * w)
 {
-  char * rv = NULL;
-  const char * mp = *stringp;
-  int n = strlen(mp);
-  if (n > 0) {
-    char * dp = (char *)memchr(mp,(int)((unsigned char)delim),n);
-    if (dp) {
-      *stringp = dp+1;
-      int nc = (int)((unsigned long)dp - (unsigned long)mp); 
-      rv = (char *) malloc(nc+1);
-      memcpy(rv,mp,nc);
-      *(rv+nc) = '\0';
-      return rv;
-    } else {
-      rv = (char *) malloc(n+1);
-      memcpy(rv, mp, n);
-      *(rv+n) = '\0';
-      *stringp = mp + n;
-      return rv;
+  free((void *)w->word);
+}
+
+static void free_aff(WordEntry * w)
+{
+  free((void *)w->aff);
+}
+
+struct LookupBookkepping
+{
+  const char * aff;
+  bool alloc;
+  LookupBookkepping() : aff(0), alloc(false) {}
+};
+
+static void append_aff(LookupBookkepping & s, WordEntry & o)
+{
+  size_t s0 = strlen(s.aff);
+  size_t s1 = strlen(o.aff);
+  if (s0 == s1 && memcmp(s.aff, o.aff, s0) == 0) return;
+  char * tmp = (char *)malloc(s0 + s1 + 1);
+  // FIXME: avoid adding duplicate flags
+  memcpy(tmp, o.aff, s1);
+  memcpy(tmp + s1, s.aff, s0);
+  tmp[s0 + s1] = '\0';
+  if (s.alloc) free((void *)s.aff);
+  s.aff = tmp;
+  s.alloc = true;
+}
+
+// FIXME: There are some problems with stripped lookup when accents
+//   are in the word AND the affix conditions depends on those accents
+//   being there as they WONT BE in the stripped word.
+
+inline bool LookupInfo::lookup (ParmString word, WordEntry & o) const
+{
+  SpellerImpl::WS::const_iterator i = begin;
+  const char * w = 0;
+  LookupBookkepping s;
+  if (mode == Word) {
+    do {
+      if (i->ws->lookup(word, o, i->cmp)) {
+        w = o.word;
+        if (s.aff == 0) s.aff = o.aff;
+        else append_aff(s, o); // this should not be a very common case
+      }
+      ++i;
+    } while (i != end);
+  } else if (mode == Soundslike) {
+    do {
+      if (i->ws->soundslike_lookup(word, o)) {
+        w = o.word;
+        if (s.aff == 0) s.aff = o.aff;
+        else append_aff(s, o); // this should not be a very common case
+        while (o.adv()) append_aff(s, o); // neither should this
+      }
+      ++i;
+    } while (i != end);
+  } else {
+    o.word = strdup(word);
+    o.aff  = word + strlen(word);
+    //o.free_ = free_word; //FiXME this isn't right....
+    return true;
+  }
+  if (!w) return false;
+  o.word = w;
+  o.aff = s.aff;
+  if (s.alloc) o.free_ = free_aff;
+  return true;
+}
+
+//////////////////////////////////////////////////////////////////////
+//
+// Affix Entry
+//
+
+// add prefix to this word assuming conditions hold
+char * PfxEntry::add(ParmString word) const
+{
+  int			cond;
+  char	        tword[MAXWORDLEN+1];
+
+  /* make sure all conditions match */
+  if ((word.size() > stripl) && (word.size() >= numconds)) {
+    const unsigned char * cp = (const unsigned char *) word.str();
+    for (cond = 0;  cond < numconds;  cond++) {
+      if ((conds[*cp++] & (1 << cond)) == 0)
+        break;
+    }
+    if (cond >= numconds) {
+      /* we have a match so add prefix */
+      int tlen = 0;
+      if (appndl) {
+        strcpy(tword,appnd);
+        tlen += appndl;
+      } 
+      char * pp = tword + tlen;
+      strcpy(pp, (word + stripl));
+      return strdup(tword);
+    }
+  }
+  return NULL;    
+}
+
+// check if this prefix entry matches 
+bool PfxEntry::check(const LookupInfo & linf, ParmString word,
+                     CheckInfo & ci, GuessInfo * gi) const
+{
+  int			cond;	// condition number being examined
+  int	                tmpl;   // length of tmpword
+  WordEntry             wordinfo;     // hash entry of root word or NULL
+  unsigned char *	cp;		
+  char	        tmpword[MAXWORDLEN+1];
+
+
+  // on entry prefix is 0 length or already matches the beginning of the word.
+  // So if the remaining root word has positive length
+  // and if there are enough chars in root word and added back strip chars
+  // to meet the number of characters conditions, then test it
+
+  tmpl = word.size() - appndl;
+
+  if ((tmpl > 0) &&  (tmpl + stripl >= numconds)) {
+
+    // generate new root word by removing prefix and adding
+    // back any characters that would have been stripped
+
+    if (stripl) strcpy (tmpword, strip);
+    strcpy ((tmpword + stripl), (word + appndl));
+
+    // now make sure all of the conditions on characters
+    // are met.  Please see the appendix at the end of
+    // this file for more info on exactly what is being
+    // tested
+
+    cp = (unsigned char *)tmpword;
+    for (cond = 0;  cond < numconds;  cond++) {
+      if ((conds[*cp++] & (1 << cond)) == 0) break;
+    }
+
+    // if all conditions are met then check if resulting
+    // root word in the dictionary
+
+    if (cond >= numconds) {
+      CheckInfo * lci = 0;
+      tmpl += stripl;
+      if (linf.lookup(tmpword, wordinfo)) {
+
+        if (TESTAFF(wordinfo.aff, achar))
+          lci = &ci;
+        else if (gi)
+          lci = gi->add();
+
+      } else {
+              
+        // prefix matched but no root word was found 
+        // if XPRODUCT is allowed, try again but now 
+        // cross checked combined with a suffix
+                
+        if (gi)
+          lci = gi->last;
+                
+        if (xpflg & XPRODUCT) {
+          if (pmyMgr->suffix_check(linf, ParmString(tmpword, tmpl), 
+                                   ci, gi,
+                                   XPRODUCT, (AffEntry *)this))
+            lci = &ci;
+          else if (gi && gi->last != lci) {
+            while (lci = const_cast<CheckInfo *>(lci->next), lci) {
+              lci->pre_flag = achar;
+              lci->pre_add = appnd;
+              lci->pre_strip = strip;
+            }
+          }
+        }
+      }
+              
+      if (lci) {
+        lci->word = wordinfo.word;
+        lci->pre_flag = achar;
+        lci->pre_add = appnd;
+        lci->pre_strip = strip;
+      }
+      if (lci ==&ci) return true;
+    }
+  }
+  return false;
+}
+
+// add suffix to this word assuming conditions hold
+char * SfxEntry::add(ParmString word) const
+{
+  int			cond;
+  char	        tword[MAXWORDLEN+1];
+
+  /* make sure all conditions match */
+  if ((word.size() > stripl) && (word.size() >= numconds)) {
+    const unsigned char * cp = (const unsigned char *) (word + word.size());
+    for (cond = numconds; --cond >=0; ) {
+      if ((conds[*--cp] & (1 << cond)) == 0)
+        break;
+    }
+    if (cond < 0) {
+      /* we have a match so add suffix */
+      strcpy(tword,word);
+      int tlen = word.size();
+      if (stripl) {
+        tlen -= stripl;
+      }
+      char * pp = (tword + tlen);
+      if (appndl) {
+        strcpy(pp,appnd);
+        tlen += appndl;
+      } else *pp = '\0';
+      return strdup(tword);
     }
   }
   return NULL;
 }
 
-
-char * mystrdup(const char * s)
+// see if this suffix is present in the word 
+bool SfxEntry::check(const LookupInfo & linf, ParmString word,
+                     CheckInfo & ci, GuessInfo * gi,
+                     int optflags, AffEntry* ppfx)
 {
-  char * d = NULL;
-  if (s) {
-    int sl = strlen(s);
-    d = (char *) malloc(((sl+1) * sizeof(char)));
-    if (d) memcpy(d,s,((sl+1)*sizeof(char)));
-  }
-  return d;
-}
+  int	                tmpl;		 // length of tmpword 
+  int			cond;		 // condition beng examined
+  WordEntry             wordinfo;         // hash entry pointer
+  unsigned char *	cp;
+  char	        tmpword[MAXWORDLEN+1];
+  PfxEntry* ep = (PfxEntry *) ppfx;
 
 
-char * myrevstrdup(const char * s)
-{
-  char * d = NULL;
-  if (s) {
-    int sl = strlen(s);
-    d = (char *) malloc((sl+1) * sizeof(char));
-    if (d) {
-      const char * p = s + sl - 1;
-      char * q = d;
-      while (p >= s) *q++ = *p--;
-      *q = '\0';
+  // if this suffix is being cross checked with a prefix
+  // but it does not support cross products skip it
+
+  if ((optflags & XPRODUCT) != 0 &&  (xpflg & XPRODUCT) == 0)
+    return false;
+
+  // upon entry suffix is 0 length or already matches the end of the word.
+  // So if the remaining root word has positive length
+  // and if there are enough chars in root word and added back strip chars
+  // to meet the number of characters conditions, then test it
+
+  tmpl = word.size() - appndl;
+
+  if ((tmpl > 0)  &&  (tmpl + stripl >= numconds)) {
+
+    // generate new root word by removing suffix and adding
+    // back any characters that would have been stripped or
+    // or null terminating the shorter string
+
+    strcpy (tmpword, word);
+    cp = (unsigned char *)(tmpword + tmpl);
+    if (stripl) {
+      strcpy ((char *)cp, strip);
+      tmpl += stripl;
+      cp = (unsigned char *)(tmpword + tmpl);
+    } else *cp = '\0';
+
+    // now make sure all of the conditions on characters
+    // are met.  Please see the appendix at the end of
+    // this file for more info on exactly what is being
+    // tested
+
+    for (cond = numconds;  --cond >= 0; ) {
+      if ((conds[*--cp] & (1 << cond)) == 0) break;
     }
-  }
-  return d; 
-}
 
-/* return 1 if s1 is subset of s2 */
-static bool isSubset(const char * s1, const char * s2)
-{
-  while( *s1 && (*s1 == *s2) ) {
-    s1++;
-    s2++;
-  }
-  return (*s1 == '\0');
-}
+    // if all conditions are met then check if resulting
+    // root word in the dictionary
 
-// return 1 if s1 (reversed) is a leading subset of end of s2
-static bool isRevSubset(const char * s1, const char * end_of_s2, int len)
-{
-  while( (len > 0) && *s1 && (*s1 == *end_of_s2) ) {
-    s1++;
-    end_of_s2--;
-    len --;
-  }
-  return (*s1 == '\0');
-}
+    if (cond < 0) {
+      CheckInfo * lci = 0;
+      tmpl += stripl;
+      if (linf.lookup(tmpword, wordinfo)) {
+        if (TESTAFF(wordinfo.aff, achar) && 
+            ((optflags & XPRODUCT) == 0 || 
+             TESTAFF(wordinfo.aff, ep->achar)))
+          lci = &ci;
+        else if (gi)
+          lci = gi->add();
 
-PosibErr<void> AffixMgr::parse_affix(ParmString data, 
-                                     const char at, FStream & af)
-{
-  int numents = 0;      // number of affentry structures to parse
-  char achar='\0';      // affix char identifier
-  short xpflg=0;
-  StackPtr<AffEntry> nptr;
-
-  const char * tp = data.str();
-  const char * nl = data.str();
-  char * piece;
-  int i = 0;
-
-  // split affix header line into pieces
-
-  int np = 0;
-  while ((piece=mystrsep(&tp,' '))) {
-    if (*piece != '\0') {
-      switch(i) {
-        // piece 2 - is affix char
-      case 0: { np++; achar = *piece; break; }
-
-        // piece 3 - is cross product indicator 
-      case 1: { np++; if (*piece == 'Y') xpflg = XPRODUCT; break; }
-
-        // piece 4 - is number of affentries
-      case 2: { 
-        np++;
-        numents = atoi(piece); 
-        break;
+        if (lci) {
+          lci->word = wordinfo.word;
+          lci->suf_flag = achar;
+          lci->suf_add = appnd;
+          lci->suf_strip = strip;
+        }
+        
+        if (lci == &ci) return true;
       }
-
-      default: break;
-      }
-      i++;
     }
-    free(piece);
   }
-  // check to make sure we parsed enough pieces
-  if (np != 3) {
-    String msg;
-    msg << "affix " << achar << "header has insufficient data in line" << nl;
-    return make_err(bad_file_format, affix_file, msg);
-  }
- 
-  FixedBuffer<> buf;
-  DataPair datapair;
-  // now parse numents affentries for this affix
-  for (int j=0; j < numents; j++) {
-    getdata_pair(af, datapair, buf);
-    tp = datapair.value;
-    i = 0;
-    np = 0;
-
-    if (at == 'P')
-      nptr.reset(new PfxEntry(this));
-    else
-      nptr.reset(new SfxEntry(this));
-
-    nptr->xpflg = xpflg;
-      
-    // split line into pieces
-    while ((piece=mystrsep(&tp,' '))) {
-      if (*piece != '\0') {
-        switch(i) {
-
-          // piece 2 - is affix char
-        case 0: { 
-          np++;
-          if (*piece != achar) {
-            free(piece);
-            String msg;
-            msg << "affix "<< achar << "is corrupt near line " << nl 
-                << ", possible incorrect count";
-            return make_err(bad_file_format, affix_file, msg);
-
-          }
-          nptr->achar = achar;
-          break;
-        }
-
-          // piece 3 - is string to strip or 0 for null 
-        case 1: { 
-          np++;
-          nptr->strip = mystrdup(piece);
-          nptr->stripl = strlen(nptr->strip);
-          if (strcmp(nptr->strip,"0") == 0) {
-            free(nptr->strip);
-            nptr->strip=mystrdup("");
-            nptr->stripl = 0;
-          }   
-          break; 
-        }
-
-          // piece 4 - is affix string or 0 for null
-        case 2: { 
-          np++;
-          nptr->appnd = mystrdup(piece);
-          nptr->appndl = strlen(nptr->appnd);
-          if (strcmp(nptr->appnd,"0") == 0) {
-            free(nptr->appnd);
-            nptr->appnd=mystrdup("");
-            nptr->appndl = 0;
-          }   
-          break; 
-        }
-
-          // piece 5 - is the conditions descriptions
-        case 3: { np++; encodeit(nptr,piece); }
-
-        default: break;
-        }
-        i++;
-      }
-
-
-      free(piece);
-    }
-    // check to make sure we parsed enough pieces
-    if (np != 4) {
-      String msg;
-      msg << "affix "<< achar << "is corrupt near line " << nl;
-      return make_err(bad_file_format, affix_file, msg);
-    }
-
-    // now create SfxEntry or PfxEntry objects and use links to
-    // build an ordered (sorted by affix string) list
-    if (at == 'P')
-      build_pfxlist(static_cast<PfxEntry *>(nptr.release()));
-    else
-      build_sfxlist(static_cast<SfxEntry *>(nptr.release())); 
-
-  }
-         
-  return no_err;
+  return false;
 }
+
+//////////////////////////////////////////////////////////////////////
+//
+// new_affix_mgr
+//
 
 
 PosibErr<AffixMgr *> new_affix_mgr(ParmString name, 
@@ -986,3 +1248,124 @@ PosibErr<AffixMgr *> new_affix_mgr(ParmString name,
 
 }
 
+/**************************************************************************
+
+Appendix:  Understanding Affix Code
+
+
+An affix is either a  prefix or a suffix attached to root words to make 
+other words.
+
+Basically a Prefix or a Suffix is set of AffEntry objects
+which store information about the prefix or suffix along 
+with supporting routines to check if a word has a particular 
+prefix or suffix or a combination.
+
+The structure affentry is defined as follows:
+
+struct AffEntry
+{
+   unsigned char achar;   // char used to represent the affix
+   char * strip;          // string to strip before adding affix
+   char * appnd;          // the affix string to add
+   short  stripl;         // length of the strip string
+   short  appndl;         // length of the affix string
+   short  numconds;       // the number of conditions that must be met
+   short  xpflg;          // flag: XPRODUCT- combine both prefix and suffix 
+   char   conds[SETSIZE]; // array which encodes the conditions to be met
+};
+
+
+Here is a suffix borrowed from the en_US.aff file.  This file 
+is whitespace delimited.
+
+SFX D Y 4 
+SFX D   0     e          d
+SFX D   y     ied        [^aeiou]y
+SFX D   0     ed         [^ey]
+SFX D   0     ed         [aeiou]y
+
+This information can be interpreted as follows:
+
+In the first line has 4 fields
+
+Field
+-----
+1     SFX - indicates this is a suffix
+2     D   - is the name of the character flag which represents this suffix
+3     Y   - indicates it can be combined with prefixes (cross product)
+4     4   - indicates that sequence of 4 affentry structures are needed to
+               properly store the affix information
+
+The remaining lines describe the unique information for the 4 SfxEntry 
+objects that make up this affix.  Each line can be interpreted
+as follows: (note fields 1 and 2 are as a check against line 1 info)
+
+Field
+-----
+1     SFX         - indicates this is a suffix
+2     D           - is the name of the character flag for this affix
+3     y           - the string of chars to strip off before adding affix
+                         (a 0 here indicates the NULL string)
+4     ied         - the string of affix characters to add
+5     [^aeiou]y   - the conditions which must be met before the affix
+                    can be applied
+
+Field 5 is interesting.  Since this is a suffix, field 5 tells us that
+there are 2 conditions that must be met.  The first condition is that 
+the next to the last character in the word must *NOT* be any of the 
+following "a", "e", "i", "o" or "u".  The second condition is that
+the last character of the word must end in "y".
+
+So how can we encode this information concisely and be able to 
+test for both conditions in a fast manner?  The answer is found
+but studying the wonderful ispell code of Geoff Kuenning, et.al. 
+(now available under a normal BSD license).
+
+If we set up a conds array of 256 bytes indexed (0 to 255) and access it
+using a character (cast to an unsigned char) of a string, we have 8 bits
+of information we can store about that character.  Specifically we
+could use each bit to say if that character is allowed in any of the 
+last (or first for prefixes) 8 characters of the word.
+
+Basically, each character at one end of the word (up to the number 
+of conditions) is used to index into the conds array and the resulting 
+value found there says whether the that character is valid for a 
+specific character position in the word.  
+
+For prefixes, it does this by setting bit 0 if that char is valid 
+in the first position, bit 1 if valid in the second position, and so on. 
+
+If a bit is not set, then that char is not valid for that postion in the
+word.
+
+If working with suffixes bit 0 is used for the character closest 
+to the front, bit 1 for the next character towards the end, ..., 
+with bit numconds-1 representing the last char at the end of the string. 
+
+Note: since entries in the conds[] are 8 bits, only 8 conditions 
+(read that only 8 character positions) can be examined at one
+end of a word (the beginning for prefixes and the end for suffixes.
+
+So to make this clearer, lets encode the conds array values for the 
+first two affentries for the suffix D described earlier.
+
+
+  For the first affentry:    
+     numconds = 1             (only examine the last character)
+
+     conds['e'] =  (1 << 0)   (the word must end in an E)
+     all others are all 0
+
+  For the second affentry:
+     numconds = 2             (only examine the last two characters)     
+
+     conds[X] = conds[X] | (1 << 0)     (aeiou are not allowed)
+         where X is all characters *but* a, e, i, o, or u
+         
+
+     conds['y'] = (1 << 1)     (the last char must be a y)
+     all other bits for all other entries in the conds array are zero
+
+
+**************************************************************************/

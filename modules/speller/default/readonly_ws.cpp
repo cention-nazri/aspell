@@ -50,7 +50,7 @@ using std::pair;
 #include "fstream.hpp"
 #include "language.hpp"
 #include "stack_ptr.hpp"
-#include "string_buffer.hpp"
+#include "objstack.hpp"
 #include "vector.hpp"
 #include "vector_hash-t.hpp"
 #include "check_list.hpp"
@@ -857,11 +857,7 @@ namespace aspeller_default_readonly_ws {
         SoundMap::iterator j = sound_map.find(temp.c_str());
         if (j == sound_map.end()) {
           
-          SoundMap::value_type
-            to_insert(buf.alloc(temp.size()+1), SoundslikeList());
-          strncpy(const_cast<char *>(to_insert.first),
-                  temp.c_str(),
-                  temp.size() + 1);
+          SoundMap::value_type to_insert(buf.dup(temp), SoundslikeList());
           sound_map.insert(to_insert)->second.size = 1;
           
         } else {

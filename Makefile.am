@@ -33,7 +33,6 @@ libaspell_la_SOURCES =\
   common/getdata.cpp\
   common/itemize.cpp\
   common/file_util.cpp\
-  common/string_buffer.cpp\
   common/string_map.cpp\
   common/string_list.cpp\
   common/config.cpp\
@@ -49,6 +48,7 @@ libaspell_la_SOURCES =\
   common/speller.cpp\
   common/document_checker.cpp\
   common/filter.cpp\
+  common/objstack.cpp \
   common/strtonum.cpp\
   common/directory.cpp\
   modules/speller/default/readonly_ws.cpp\
@@ -70,7 +70,6 @@ libaspell_la_SOURCES =\
   modules/speller/default/leditdist.cpp\
   modules/speller/default/split.cpp\
   modules/speller/default/affix.cpp\
-  modules/speller/default/affentry.cpp\
   modules/tokenizer/basic.cpp\
   lib/filter-c.cpp\
   lib/word_list-c.cpp\
