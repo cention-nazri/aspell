@@ -147,6 +147,9 @@ namespace acommon {
 
     PosibErr<void> merge(const Config & other);
 
+    void lang_config_merge(const Config & other,
+                           int which, ParmStr codeset);
+
     bool settings_read_in() {return settings_read_in_;}
 
     PosibErr<void> set_committed_state(bool val);

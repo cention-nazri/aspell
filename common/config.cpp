@@ -35,7 +35,7 @@
 #include "vararray.hpp"
 #include "string_list.hpp"
 
-#include "iostream.hpp"
+//#include "iostream.hpp"
 
 #define DEFAULT_LANG "en_US"
 
@@ -697,7 +697,7 @@ namespace acommon {
       
     while (s < end)
     {
-      while (*s == ' ' || *s == '\t') ++s;
+      if (do_unescape) while (*s == ' ' || *s == '\t') ++s;
       char * b = s;
       char * e = s;
       while (*s != '\0') {
@@ -708,15 +708,17 @@ namespace acommon {
           ++s;
         } else {
           if (*s == ':') break;
-          if (*s != ' ' && *s != '\t') e = s;
+          if (!do_unescape || (*s != ' ' && *s != '\t')) e = s;
           ++s;
         }
       }
-      ++e;
-      *e = '\0';
-      if (do_unescape) unescape(b);
+      if (s != b) {
+        ++e;
+        *e = '\0';
+        if (do_unescape) unescape(b);
       
-      out.add(b);
+        out.add(b);
+      }
       ++s;
     }
   }
@@ -860,6 +862,30 @@ namespace acommon {
     }
     return no_err;
   }
+
+  void Config::lang_config_merge(const Config & other,
+                                 int which, ParmStr data_encoding)
+  {
+    Conv to_utf8;
+    to_utf8.setup(*this, data_encoding, "utf-8", NormTo);
+    const Entry * src  = other.first_;
+    Entry * * ip = &first_;
+    while (src)
+    {
+      const KeyInfo * l_ki = other.keyinfo(src->key);
+      if (l_ki->other_data == which) {
+        const KeyInfo * c_ki = keyinfo(src->key);
+        Entry * entry = new Entry(*src);
+        if (c_ki->flags & KEYINFO_UTF8)
+          entry->value = to_utf8(entry->value);
+        entry->next = *ip;
+        *ip = entry;
+        ip = &entry->next;
+      }
+      src = src->next;
+    }
+  }
+
 
 #define NOTIFY_ALL(fun)                                       \
   do {                                                        \
@@ -1364,7 +1390,7 @@ namespace acommon {
        N_("use typo analysis, override sug-mode default")}
     , {"sug-repl-table", KeyInfoBool, "true",
        N_("use replacement tables, override sug-mode default")}
-    , {"sug-split-chars", KeyInfoString, " -", // FIXME: Problem with specifying
+    , {"sug-split-char", KeyInfoList, "\\ :-",
        N_("characters to insert when a word is split"), KEYINFO_UTF8}
     , {"word-list-path", KeyInfoList, DATA_DIR,
        N_("search path for word list information files")}

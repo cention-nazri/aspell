@@ -66,7 +66,7 @@ namespace aspeller {
     , {"affix-char",          KeyInfoString, "/", "", 0, FOR_CONFIG}
     , {"flag-char",           KeyInfoString, ":", "", 0, FOR_CONFIG}
     , {"repl-table",          KeyInfoString, "none", ""}
-    , {"sug-split-chars",     KeyInfoString, "- ", "", 0, FOR_CONFIG}
+    , {"sug-split-char",      KeyInfoList, "", "", 0, FOR_CONFIG}
     , {"store-as",            KeyInfoString, "", ""}
     , {"try",                 KeyInfoString, "", ""}
     , {"normalize",           KeyInfoBool, "false", "", 0, FOR_CONFIG}
@@ -320,21 +320,7 @@ namespace aspeller {
   void Language::set_lang_defaults(Config & config) const
   {
     config.replace_internal("actual-lang", name());
-    StackPtr<KeyInfoEnumeration> els(lang_config_->possible_elements(false));
-    const KeyInfo * k;
-    Conv to_utf8;
-    to_utf8.setup(config, data_encoding_, "utf-8", NormTo);
-    while ((k = els->next()) != 0) {
-      if (k->other_data == FOR_CONFIG 
-	  && lang_config_->have(k->name) && !config.have(k->name))
-      {
-        const KeyInfo * ck = config.keyinfo(k->name);
-        if (ck->flags & KEYINFO_UTF8)
-          config.replace(k->name, to_utf8(lang_config_->retrieve(k->name)));
-        else
-          config.replace(k->name, lang_config_->retrieve(k->name));
-      }
-    }
+    config.lang_config_merge(*lang_config_, FOR_CONFIG, data_encoding_);
   }
 
   WordInfo Language::get_word_info(ParmStr str) const

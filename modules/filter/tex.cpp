@@ -355,7 +355,7 @@ namespace {
       keylen=strlen(code[0]);
     }
     while (begin && end && *begin) {
-      while (end && *end && (*end != ' ')) {
+      while (end && *end && (*end != ',')) {
         end++;
       }
       if (end  && (begin != end)) {
@@ -481,7 +481,7 @@ namespace {
 
   PosibErr<bool> TexEncoder::setup(Config * config) {
     name_ = "tex-encoder";
-    order_num_ = 0.4;
+    order_num_ = 0.40;
 
     StringList multibytechars;
 

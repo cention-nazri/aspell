@@ -1,5 +1,5 @@
 \input texinfo   @c -*-texinfo-*-
-@comment $Id: aspell.texi,v 1.39 2004/06/02 15:07:34 kevina Exp $
+@comment $Id: aspell.texi,v 1.40 2004/06/06 16:42:28 kevina Exp $
 @comment %**start of header
 @setfilename aspell.info
 @settitle GNU Aspell 0.60
@@ -2188,9 +2188,9 @@ used.
 The base name of the keyboard definition file to use.  For more
 information see @ref{Notes on Typo-Analysis}.
 
-@item sug-split-chars
+@item sug-split-char
 
-A string of characters which specifies characters to insert between
+A list of characters which specifies characters to insert between
 two words when a word is split.  FIXME
 
 @item affix

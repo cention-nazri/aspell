@@ -58,6 +58,7 @@
 #include "stack_ptr.hpp"
 #include "suggest.hpp"
 #include "vararray.hpp"
+#include "string_list.hpp"
 
 //#include "iostream.hpp"
 //#define DEBUG_SUGGEST
@@ -1280,7 +1281,14 @@ namespace {
     if (m->config()->have("sug-repl-table"))
       parms_.use_repl_table = m->config()->retrieve_bool("sug-repl-table");
     
-    parms_.split_chars = m->config()->retrieve("sug-split-chars");
+    StringList sl;
+    m->config()->retrieve_list("sug-split-char", &sl);
+    StringListEnumeration els = sl.elements_obj();
+    const char * s;
+    parms_.split_chars.clear();
+    while ((s = els.next()) != 0) {
+      parms_.split_chars.push_back(*s);
+    }
 
     String keyboard = m->config()->retrieve("keyboard");
     if (keyboard == "none")

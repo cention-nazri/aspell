@@ -87,14 +87,14 @@ ENDOPTION
 
 OPTION multi-byte
 TYPE list
-DESCRIPTION multi character coded letters (<char> <rep>[ <rep>[...]])
-DEFAULT Ä \\"A "A
-DEFAULT ä \\"a "a
-DEFAULT Ö \\"O "O
-DEFAULT ö \\"o "o
-DEFAULT Ü \\"U "U
-DEFAULT ü \\"u "u
-DEFAULT ß \\"s "s
+DESCRIPTION multi character coded letters (<char>,<rep>[,<rep>[...]])
+DEFAULT Ä,\\"A,"A
+DEFAULT ä,\\"a,"a
+DEFAULT Ö,\\"O,"O
+DEFAULT ö,\\"o,"o
+DEFAULT Ü,\\"U,"U
+DEFAULT ü,\\"u,"u
+DEFAULT ß,\\"s,"s
 FLAGS utf-8
 ENDOPTION
 
