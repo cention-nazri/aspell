@@ -127,6 +127,7 @@ int main(int argc, const char *argv[])
 	"  m           dumps the main  word list\n"
         "  o <option> <value> sets a config option\n"
 	"  r <option>         retrieves a config option\n"
+        "  l <option>         retrieves a config option as a list\n"
 	"  S           saves all word lists\n"
 	"  C           clear the curent sesstion word list\n"
 	"  x           quite\n"	);
@@ -210,6 +211,25 @@ int main(int argc, const char *argv[])
 	check_for_config_error(config);
 	if (val)
 	  printf("%s = \"%s\"\n", word + 2, val);
+      }
+      break;
+    case 'l':
+      if (strlen(word) < 3) {
+	printf("Usage: %c <option>\n", word[0]);
+      } else {
+	AspellStringList * lst = new_aspell_string_list();
+	AspellMutableContainer * lst0 
+	  = aspell_string_list_to_mutable_container(lst);
+	AspellStringEnumeration * els;
+	const char * val;
+	aspell_config_retrieve_list(config, word + 2, lst0);
+	check_for_config_error(config);
+	els = aspell_string_list_elements(lst);
+	printf("%s:\n", word + 2);
+	while ( (val = aspell_string_enumeration_next(els)) != 0)
+	  printf("  %s\n", val);
+	delete_aspell_string_enumeration(els);
+	delete_aspell_string_list(lst);
       }
       break;
     case 'd':
