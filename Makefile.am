@@ -1,6 +1,6 @@
 AUTOMAKE_OPTIONS = foreign subdir-objects
 SUBDIRS = . po manual
-DIST_SUBDIRS = ${SUBDIRS} examples myspell
+DIST_SUBDIRS = ${SUBDIRS} examples myspell lib5
 
 # These are needed due to a bug in Automake
 pkgdatadir = @pkgdatadir@

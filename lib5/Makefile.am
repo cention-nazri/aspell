@@ -1,5 +1,5 @@
 
-if !if INCREMENTED_SONAME
+if INCREMENTED_SONAME
 
 lib_LTLIBRARIES = libaspell.la
 libaspell_la_SOURCES = aspell-dummy.cpp
