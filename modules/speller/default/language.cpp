@@ -363,6 +363,19 @@ namespace aspeller {
     else if (first & TITLE) return FirstUpper;
     else                    return Other;
   }
+
+  CasePattern Language::case_pattern(const char * str, unsigned size) const  
+  {
+    CharInfo first = CHAR_INFO_ALL, all = CHAR_INFO_ALL;
+    const char * p = str;
+    const char * end = p + size;
+    while (p < end && (first = char_info(*p++), all &= first, !(first & LETTER)));
+    while (p < end) all &= char_info(*p++);
+    if      (all & LOWER)   return AllLower;
+    else if (all & UPPER)   return AllUpper;
+    else if (first & TITLE) return FirstUpper;
+    else                    return Other;
+  }
   
   void Language::fix_case(CasePattern case_pattern,
                           char * res, const char * str) const 

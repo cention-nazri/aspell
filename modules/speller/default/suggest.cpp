@@ -212,7 +212,7 @@ namespace {
       commit_temp(sl);
       return sl;}
 
-    char * Working::form_word(CheckInfo & ci);
+    MutableString form_word(CheckInfo & ci);
     void try_word_n(ParmString str, int score);
     bool check_word_s(ParmString word, CheckInfo * ci);
     unsigned check_word(char * word, char * word_end, CheckInfo * ci,
@@ -378,10 +378,9 @@ namespace {
     transfer();
   }
 
-  // forms a word from into the buffer by growing the temporary
-  // string in "buffer".  Returns a pointer to beginning of
-  // the string
-  char * Working::form_word(CheckInfo & ci) 
+  // Forms a word by combining CheckInfo fields.
+  // It returns a MutableString of what was appended to buffer.
+  MutableString Working::form_word(CheckInfo & ci) 
   {
     size_t slen = ci.word.size() - ci.pre_strip_len - ci.suf_strip_len;
     size_t wlen = slen + ci.pre_add_len + ci.suf_add_len;
@@ -391,7 +390,7 @@ namespace {
     memcpy(tmp + ci.pre_add_len, ci.word.str() + ci.pre_strip_len, slen);
     if (ci.suf_add_len) 
       memcpy(tmp + ci.pre_add_len + slen, ci.suf_add, ci.suf_add_len);
-    return tmp;
+    return MutableString(tmp,wlen);
   }
 
   void Working::try_word_n(ParmString str, int score)  
@@ -468,18 +467,18 @@ namespace {
     //CERR.printf(">%s\n", word);
     if (!res) return;
     buffer.abort_temp();
-    char * tmp = form_word(check_info[0]);
-    CasePattern cp = lang->case_pattern(tmp);
+    MutableString tmp = form_word(check_info[0]);
+    CasePattern cp = lang->case_pattern(tmp, tmp.size);
     for (unsigned i = 1; i <= res; ++i) {
       char * t = form_word(check_info[i]);
       if (cp == FirstUpper && lang->is_lower(t[1])) 
         t[0] = lang->to_lower(t[0]);
     }
     char * end = (char *)buffer.grow_temp(1);
-    tmp = (char *)buffer.temp_ptr(); // since the orignal string may of moved
+    char * beg = (char *)buffer.temp_ptr(); // since the orignal string may of moved
     *end = 0;
     buffer.commit_temp();
-    add_nearmiss(tmp, end - tmp, 0, 0, score, -1, do_count);
+    add_nearmiss(beg, end - beg, 0, 0, score, -1, do_count);
     //CERR.printl(tmp);
     memset(check_info, 0, sizeof(CheckInfo)*res);
   }
