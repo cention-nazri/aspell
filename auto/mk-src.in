@@ -769,6 +769,7 @@ struct: module info
 struct: dict info
 	/
 	string: name
+		desc => name to identify the dictionary by
 	string: code
 	string: jargon
 	int: size
