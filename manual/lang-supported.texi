@@ -10,7 +10,7 @@
 @item ast @tab Asturian / Bable @tab Latin @tab Maybe @tab -
 @item av @tab Avar @tab Cyrillic @tab - @tab -
 @item ay @tab Aymara @tab Latin @tab - @tab -
-@item az @tab Azerbaijani @tab Latin @tab Maybe @tab -
+@item az @tab Azerbaijani @tab Latin @tab Experimental @tab -
 @item
 @item ba @tab Bashkir @tab Cyrillic @tab - @tab -
 @item be @tab Belarusian @tab Cyrillic @tab Planned @tab Yes
@@ -56,7 +56,7 @@
 @item ga @tab Irish @tab Latin @tab Yes @tab Yes
 @item gd @tab Scottish Gaelic @tab Latin @tab Yes @tab -
 @item gl @tab Gallegan @tab Latin @tab Yes @tab -
-@item gn @tab Guarani @tab Latin @tab - @tab -
+@item gn @tab Guarani @tab Latin @tab Maybe @tab -
 @item gu @tab Gujarati @tab Gujarati @tab Maybe @tab -
 @item gv @tab Manx Gaelic @tab Latin @tab Yes @tab -
 @item
@@ -159,7 +159,7 @@
 @item sk @tab Slovak @tab Latin @tab Yes @tab -
 @item sl @tab Slovenian @tab Latin @tab Yes @tab -
 @item sm @tab Samoan @tab Latin @tab Maybe @tab -
-@item sn @tab Shona @tab Latin @tab - @tab -
+@item sn @tab Shona @tab Latin @tab Maybe @tab -
 @item so @tab Somali @tab Latin @tab Maybe @tab -
 @item sq @tab Albanian @tab Latin @tab Maybe @tab -
 @item sr @tab Serbian @tab Cyrillic, Latin @tab Planned @tab Yes

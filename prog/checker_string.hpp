@@ -9,7 +9,8 @@
 #include "aspell.h"
 
 #include "vector.hpp"
-#include "char_vector.hpp"
+#include "string.hpp"
+#include "simple_string.hpp"
 #include "document_checker.hpp"
 
 using namespace acommon;
@@ -17,7 +18,14 @@ using namespace acommon;
 class CheckerString {
 public:
 
-  typedef Vector<CharVector> Lines;
+  struct Line {
+    String       real;
+    SimpleString disp;
+    String       buf;
+    void clear() {real.clear(); disp.str = ""; disp.size = 0; buf.clear();}
+  };
+
+  typedef Vector<Line> Lines;
   CheckerString(AspellSpeller * speller, FILE * in, FILE * out, int lines);
   ~CheckerString();
 
@@ -47,12 +55,14 @@ public:
     CheckerString * cs_;
     Lines::iterator line_;
 
-    CharVector * operator-> () {return &*line_;}
+    SimpleString * operator-> () {return &line_->disp;}
+
+    Line & get() {return *line_;}
 
     void operator-- () {cs_->dec(line_);}
     void operator++ () {cs_->next_line(line_);}
     bool off_end () const {return cs_->off_end(line_);}
-    
+
     LineIterator() {}
 
     LineIterator(CheckerString * cs, Lines::iterator l) : cs_(cs), line_(l) {}
@@ -60,16 +70,16 @@ public:
 
   LineIterator cur_line() {return LineIterator(this, cur_line_);}
 
-  const char * word_begin() {return &*word_begin_;}
-  const char * word_end()   {return &*word_begin_ + word_size_;}
-  size_t word_size()        {return word_size_;}
+  const char * word_begin() {return disp_word_begin_;}
+  const char * word_end()   {return disp_word_begin_ + disp_word_size_;}
+  size_t word_size()        {return disp_word_size_;}
 
   bool next_misspelling();
-  void replace(ParmString repl);
+  void replace(ParmString repl); // encoded in "real" encoding
 
-  char * get_word(String & w) {
+  char * get_real_word(String & w) {
     w.clear();
-    w.insert(w.end(), word_begin_, word_begin_ + word_size_);
+    w.insert(w.end(), real_word_begin_, real_word_begin_ + real_word_size_);
     return w.mstr();
   }
 
@@ -85,8 +95,10 @@ private:
   Lines::iterator cur_line_;
   Lines lines_;
 
-  CharVector::iterator word_begin_;
-  int word_size_;
+  String::iterator real_word_begin_;
+  int real_word_size_;
+  const char * disp_word_begin_;
+  int disp_word_size_;
   
   FILE * in_;
   FILE * out_;
@@ -97,6 +109,8 @@ private:
   int diff_;
   Token tok_;
   bool has_repl_;
+
+  void fix_display_str();
 };
 
 

@@ -55,7 +55,7 @@ It can either be used as a library or as an independent spell checker.
 * To Do::             
 * Installing::          
 * ChangeLog::                   
-* Credits::                     
+* Authors::                     
 * Copying::
 
 @detailmenu
@@ -304,7 +304,15 @@ the suggestion mode to use where mode is one of @code{ultra},
 information on these modes see @ref{Notes on the Different Suggestion
 Modes}.
 
-@item --master=@var{name}
+@item --lang=@var{name}/-l @var{name}
+the language the document is written in.  The default depends on the
+current locale.
+
+@item --encoding=@var{name}
+encoding the document is expected to be in.  The default depends on the
+current locale.
+
+@item --master=@var{name}/-d @var{name}
 the main dictionary to use.
 
 @item --keymapping=@var{name}
@@ -324,10 +332,10 @@ aspell check foo.txt
 
 @noindent
 and to check the file @file{foo.txt} using the @option{bad-spellers}
-suggestion mode and the large American English dictionary:
+suggestion mode and the American English dictionary:
 
 @example
-aspell check --sug-mode=bad-spellers --master=american-lrg foo.txt
+aspell check --sug-mode=bad-spellers -d en_US foo.txt
 @end example
 
 If the @option{mode} option is not given then Aspell will use the
@@ -348,6 +356,17 @@ will use a nice full screen interface.  Otherwise it will use a
 simpler ``dumb'' terminal interface where the misspelled word is
 surrounded by two '*'.  In either case the interface should be self
 explanatory.
+
+If Aspell is compiled with a version of the curses library that support
+wide characters than Aspell can also check UTF-8 text.  Furthermore, the
+document will be displayed in the encoding defined by the current
+locale.  This encoding does not necessary have to be the same encoding
+that the document is in.  This means that is is possible to check an
+8-bit encoding such as ISO-8859-1 on an UTF-8 terminal.  To do so
+simply set the @option{encoding} option to @samp{iso-8859-1}.
+Furthermore it is also possible to check an UTF-8 document on an 8-bit
+terminal provided that the document can be successfully converted into
+that encoding.
 
 @node Using Aspell with other Applications
 @section Using Aspell with other Applications
@@ -540,9 +559,10 @@ To specify a value option simply specify the option with its
 corresponding value.  For example to set the filter mode to TeX use
 @samp{--mode=tex}.
 
-If a value option has a single letter shortcut simply specify the
-single letter shortcut with its corresponding value.  For example to
-use a large American dictionary use @samp{-d en_US-w_accents}.
+If a value option has a single letter shortcut simply specify the single
+letter shortcut with its corresponding value.  For example to use a the
+accented version of the American English dictionary use @samp{-d
+en_US-w_accents}.
 
 @subsubsection Boolean options
 
@@ -737,6 +757,54 @@ create dictionarie aliases.  Each entry has the form @samp{@var{from}
 
 @end table
 
+@subsection Encoding Options
+
+These options control the encoding the document is expected to be in and
+how it is displayed.
+
+@table @option
+
+@item encoding (@i{string})
+The encoding the input text is in.  Valid values include, but not
+limited to, @samp{iso-8859-*}, @samp{utf-8}, @samp{ucs-2},
+@samp{ucs-4}.  When using the aspell utility the default encoding is
+based on the current locale.  Thus if your locale currently uses the
+@samp{utf-8} encoding than everything will be in @acronym{UTF-8}.  The
+@samp{ucs-2} and @samp{ucs-4} encodings are intended to be used by other
+programs using the Aspell library and is not suppotted by the Aspell
+utility.
+
+@item normalize (@i{boolean})
+Perform Unicode normalization.  Enabled by default.
+
+@item norm-strict (@i{boolean})
+
+Avoid lossy conversions when normalizing.  Lossy conversions includes
+compatibility mappings such as splitting the letter @samp{OE} (U+152)
+into @samp{O} and @samp{E} (when the combined letter is not available),
+and mappings which will remove accents.  Disabled by default except when
+creating dictionaries.
+
+@item norm-form (@i{string})
+The normalization form the output should be in.  This option primarly
+effects the normalization form of the suggestions as when spell
+checkering as the actual text is unchanged unless there is an error.
+Valid values are @samp{none}, @samp{nfd} for fully decomposition
+(Normalization Form D), @samp{nfc} for Normalization Form C, or
+@samp{comp} for fully composed.  @samp{comp} is like @samp{nfc} except
+that @emph{full} composition is used rather than @emph{canonical}
+composition.  The @option{normalize} option must be enabled for this
+option to be used.
+
+@item norm-requires (@i{boolean})
+
+Set to true when the current language requires Unicode normalization.
+This is generally the case when private use characters are used
+internally by Aspell or when Normalization Form C is not the same as
+full composition.
+
+@end table
+
 @subsection Checker Options
 
 These options control the behaviour of Aspell when checking
@@ -787,45 +855,6 @@ Sets the filter mode.  Possible values include, but not limited to,
 @samp{none}, @samp{url}, @samp{email}, @samp{sgml}, or @samp{tex}.  (The
 shortcut options @option{-e} may be used for email, @option{-H} for
 HTML/SGML, or @option{-t} for @TeX{}).
-
-@item encoding (@i{string})
-The encoding the input text is in.  Valid values include, but not
-limited to, @samp{iso-8859-*}, @samp{utf-8}, @samp{ucs-2},
-@samp{ucs-4}.  When using the aspell utility the default encoding is
-based on the current locale.  Thus if your locale currently uses the
-@samp{utf-8} encoding than everything will be in @acronym{UTF-8}.  The
-@samp{ucs-2} and @samp{ucs-4} encodings are intended to be used by other
-programs using the Aspell library and is not suppotted by the Aspell
-utility.
-
-@item normalize (@i{boolean})
-Perform Unicode normalization.  Enabled by default.
-
-@item norm-strict (@i{boolean})
-
-Avoid lossy conversions when normalizing.  Lossy conversions includes
-compatibility mappings such as splitting the letter @samp{OE} (U+152)
-into @samp{O} and @samp{E} (when the combined letter is not available),
-and mappings which will remove accents.  Disabled by default except when
-creating dictionaries.
-
-@item norm-form (@i{string})
-The normalization form the output should be in.  This option primarly
-effects the normalization form of the suggestions as when spell
-checkering as the actual text is unchanged unless there is an error.
-Valid values are @samp{none}, @samp{nfd} for fully decomposition
-(Normalization Form D), @samp{nfc} for Normalization Form C, or
-@samp{comp} for fully composed.  @samp{comp} is like @samp{nfc} except
-that @emph{full} composition is used rather than @emph{canonical}
-composition.  The @option{normalize} option must be enabled for this
-option to be used.
-
-@item norm-requires (@i{boolean})
-
-Set to true when the current language requires Unicode normalization.
-This is generally the case when private use characters are used
-internally by Aspell or when Normalization Form C is not the same as
-full composition.
 
 @end table
 
@@ -1070,9 +1099,9 @@ SGML/HTML/XML that Aspell supports is a slight superset of most DTDs
 (Document Type Definitions) and can spell check the often non-conforming
 HTML found on the web.
 
-Two configuration options, @option{skip} and @option{check}, allow you
-to control what is spell checked. The tag and attribute names specified
-are case insensitive.
+Two configuration options, @option{sgml-skip} and @option{sgml-check},
+allow you to control what is spell checked. The tag and attribute names
+specified are case insensitive.
 
 @table @option
 @item sgml-skip
@@ -5020,43 +5049,68 @@ Added documentation for the C++ library
 Other minor bug fixes.
 @end itemize
 
-@node Credits
-@appendix Credits
+@node Authors
+@appendix Authors
 
-The following people have contributed a significant amount of code to
-GNU Aspell:
+The folowing people or companies have contributed a non-trival amount of
+code to Aspell and thus own the Copyright to part of Aspell.
 
-@itemize @bullet
-@item
-To the FSF for adopting the project.
+@table @asis
 
-@item
-To the many authors of Ispell (including R. E. Gorin, Pace Willisson,
-and Geoff Kuenning) for providing me with a good word list as well as
-giving me a few good ideas.
+@item Tom Snyder
+Enhanced the SGML filter to also support skipping sgml tags such as
+"script" blocks.
 
-@item
-Alan Beale for going well beyond the call of duty with helping me create
- a better word list.
+@item Kevin B. Hendricks (and Contributers)
+Wrote MySpell which is a simpile spell checker library that supports
+affix compression.  Aspell affix compression code is based on his code.
 
-@item
-Lawrence Philips for coming up with the original metaphone algorithm
-and Michael Kuhn for writing C code for the algorithm.
+@item Christoph Hinterm@"uller
+Added support for for loadable filters.
 
-@item
-Bj@"orn Jacke for coming up with a generic soundslike algorithm which
-gets all of its data from a file, thus eliminating almost all need for
-language specific code from Aspell.
+@item Bj@"orn Jacke
+Wrote the generic soundslike algorithm which gets all of its data from a
+file, thus eliminating almost all need for language specific code from
+Aspell.
 
-@item
-To the authors of SGI STL version 3.0 and up for proving a great set
-of generic container classes which cut the development time of this
-program in half at least.
+@item Silicon Graphics Computer Systems, Inc.
+@itemx Hewlett-Packard Company
+Parts of the SGI STL code were used in various places throught the
+Aspell source.
 
-@item
-To the LyX development team for giving me a great tool for the
-development of this manual.
-@end itemize
+@end table
+
+In addition the authors of some of translated messages did not release
+their work into the Public Domain, and thus own the copyright to the
+translated text.  See the files @file{*.po} in the @file{po} directory
+for more details.
+
+The folowing people also contributed to the development of Aspell but do
+not own the Copyright to part of Aspell.
+
+@table @asis
+
+@item Sergey Poznyakoff
+Added gettext support.
+
+@item Chris Martin
+Converted the manual to texinfo.
+
+@item Lawrence Philips
+Wrote the original metaphone algorithm; however, he released his work
+into the Public Domain.
+
+@item Michael Kuhn
+Converted the metaphone algorithm into C code and made some enhansments
+to the orignal algorithm.  He also released his work into the Public
+Domain.
+
+@item Geoff Kuenning (and contributers)
+The authors of Ispell.  Many of the ideas used in Aspell, espacally with
+the affix code, were taken from Ispell.  However none of the orignal
+Ispell code is used in Aspell.
+
+@end table
 
 @node Copying
 @appendix Copying
@@ -5070,7 +5124,7 @@ Invariant Sections, no Front-Cover Texts and no Back-Cover Texts.  A
 copy of the license is included in the section entitled "GNU Free
 Documentation License".
 
-The library and utility program is copyright @copyright{} 2000-2002 by
+The library and utility program is copyright @copyright{} 2000--2004 by
 Kevin Atkinson.  You can redistribute it and/or modify it under the
 terms of the GNU Lesser General Public License as (LGPL) published by
 the Free Software Foundation; either version 2.1 of the License, or

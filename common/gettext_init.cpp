@@ -1,9 +1,9 @@
 
 #include "settings.h"
 
-#include "lock.hpp"
-
 #if ENABLE_NLS
+
+#include "lock.hpp"
 
 static acommon::Mutex lock;
 
@@ -17,6 +17,12 @@ extern "C" void aspell_gettext_init()
     did_init = true;
   }
   bindtextdomain("aspell", LOCALEDIR);
+}
+
+#else
+
+extern "C" void aspell_gettext_init()
+{
 }
 
 #endif

@@ -27,12 +27,18 @@
 
 #include "asc_ctype.hpp"
 #include "check_funs.hpp"
+#include "convert.hpp"
+#include "config.hpp"
+
+using namespace acommon;
 
 StackPtr<CheckerString> state;
 const char * last_prompt = 0;
 StackPtr<Choices> word_choices;
 StackPtr<Choices> menu_choices;
-//Conv dconv;
+Conv null_conv;
+extern Conv dconv;
+extern Conv uiconv;
 
 #if   POSIX_TERMIOS
 
@@ -96,7 +102,7 @@ static SCREEN * term;
 
 #endif // HAVE_LIBCURSES
 
-void cleanup (void) {
+static void cleanup (void) {
 #if   HAVE_LIBCURSES
   if (use_curses) {
     endwin();
@@ -111,9 +117,9 @@ void cleanup (void) {
 
 #if   HAVE_LIBCURSES
 
-void do_nothing(int) {}
+//static void do_nothing(int) {}
 
-void layout_screen();
+static void layout_screen();
 
 #ifdef CURSES_ONLY
 
@@ -121,7 +127,7 @@ inline void handle_last_signal() {}
 
 #else
 
-void save_state() {
+static void save_state() {
   getyx(choice_w,cur_y,cur_x);
   choice_text_size = COLS;
   choice_text = new char[choice_text_size];
@@ -131,7 +137,7 @@ void save_state() {
   endwin();
 }
 
-void restore_state() {
+static void restore_state() {
   delscreen(term);
   term = newterm(0,stdout,stdin);
   set_term(term);
@@ -155,35 +161,35 @@ void restore_state() {
 }
 
 
-void suspend_handler(int) {
+static void suspend_handler(int) {
   last_signal = SIGTSTP;
 }
   
-void continue_handler(int) {
+static void continue_handler(int) {
   restore_state();
   signal(SIGTSTP, suspend_handler);
   signal(SIGCONT,  continue_handler),
     last_signal = 0;
 }
 
-void resize_handler(int ) {
+static void resize_handler(int ) {
   last_signal = SIGWINCH;
 }
   
-void resize() {
+static void resize() {
   save_state();
   restore_state();
   last_signal = 0;
 }
 
-void suspend() {
+static void suspend() {
   save_state();
   signal(SIGTSTP, SIG_DFL);
   raise(SIGTSTP);
   last_signal = 0;
 }
 
-inline void handle_last_signal() {
+static inline void handle_last_signal() {
   switch (last_signal) {
   case SIGWINCH:
     resize();
@@ -197,7 +203,7 @@ inline void handle_last_signal() {
 
 #endif
 
-void layout_screen() {
+static void layout_screen() {
   text_w = 0;
   menu_w = 0;
   choice_w = 0;
@@ -228,34 +234,9 @@ void layout_screen() {
 }
 
 #endif
+
 void begin_check() {
   
-  //
-  // Setup display conversion
-  //
-//   const char * gettext_enc = 0;
-//   const char * env_enc = 0;
-//   String enc;
-// #ifdef ENABLE_NLS
-//   gettext_enc = bind_textdomain_codeset("aspell", 0);
-// #endif
-// #ifdef HAVE_LANGINFO_CODESET
-//   env_enc = nl_langinfo(CODESET);
-//   if (is_ascii_enc(env_enc)) env_enc = 0;
-// #endif
-//   if (gettext_enc && env_enc && strcmp(gettext_enc,env_enc) != 0) 
-//   {
-//     puts(("Error: bind_textdomain_codeset != nl_langinfo(CODESET)\n"));
-//     exit(-1);
-//   }
-//   if (gettext_enc)
-//     enc = gettext_enc;
-//   else if (env_enc)
-//     enc = env_enc;
-//   else;
-  
-//   dconv.setup(options, ...);
-
   //
   //
   //
@@ -321,9 +302,19 @@ void begin_check() {
 #endif
 }
 
+#ifdef HAVE_WIDE_CURSES
+#  define IS_KEY(k) (res == KEY_CODE_YES && c == KEY_##k)
+#  define NOT_KEY (res != KEY_CODE_YES)
+#else
+#  define IS_KEY(k) (c == KEY_##k)
+#  define NOT_KEY (c < 256)
+#endif
+
 void get_line(String & line) {
 #if   HAVE_LIBCURSES
   if (use_curses) {
+    // FIXME: This won't work correctly when combing characters are
+    // involved.
     menu_text = ReplMenu;
     display_menu();
     wnoutrefresh(choice_w);
@@ -337,7 +328,13 @@ void get_line(String & line) {
     int end_x = begin_x;
     while (true) {
       handle_last_signal();
+#ifdef HAVE_WIDE_CURSES
+      wint_t wi = 0;
+      int res = wget_wch(choice_w, &wi);
+      c = wi;
+#else
       c = wgetch(choice_w);
+#endif
       if (c == ERR) continue;
       if (c == '\r' || c == '\n' || c == KEY_ENTER) 
 	break;
@@ -347,27 +344,32 @@ void get_line(String & line) {
       }
       int y,x;
       getyx(choice_w,y,x);
-      if ((c == KEY_LEFT || c == control('b')) && begin_x < x) {
+      if ((IS_KEY(LEFT) || c == control('b')) && begin_x < x) {
 	wmove(choice_w, y,x-1);
-      } else if ((c == KEY_RIGHT || c == control('f')) && x < end_x) {
+      } else if ((IS_KEY(RIGHT) || c == control('f')) && x < end_x) {
 	wmove(choice_w, y,x+1);
-      } else if (c == KEY_HOME || c == control('a')) {
+      } else if (IS_KEY(HOME) || c == control('a')) {
 	wmove(choice_w, y, begin_x);
-      } else if (c == KEY_END  || c == control('e')) {
+      } else if (IS_KEY(END)  || c == control('e')) {
 	wmove(choice_w, y, end_x);
-      } else if ((c == KEY_BACKSPACE || c == control('h') || c == '\x7F') 
+      } else if ((IS_KEY(BACKSPACE) || c == control('h') || c == '\x7F') 
 		 && begin_x < x) {
 	wmove(choice_w, y,x-1);
 	wdelch(choice_w);
 	--end_x;
-      } else if (c == KEY_DC || c == control('d')) {
+      } else if (IS_KEY(DC) || c == control('d')) {
 	wdelch(choice_w);
 	--end_x;
-      } else if (c == KEY_EOL || c == control('k')) {
+      } else if (IS_KEY(EOL) || c == control('k')) {
 	wclrtoeol(choice_w);
 	end_x = x;
-      } else if (x < max_x && 32 <= c && c != '\x7F' && c < 256) {
+      } else if (x < max_x && 32 <= c && c != '\x7F' && NOT_KEY /*c < 256*/) {
+#ifdef HAVE_WIDE_CURSES
+        wchar_t wc = c;
+        wins_nwstr(choice_w, &wc, 1);
+#else
 	winsch(choice_w, c);
+#endif
 	wmove(choice_w, y, x+1);
 	++end_x;
       }
@@ -393,7 +395,13 @@ void get_line(String & line) {
     tcsetattr (STDIN_FILENO, TCSANOW, &new_attributes);
 #endif
   }
+  if (uiconv.conv) {
+    line = uiconv(line);
+  }
 }
+
+#undef IS_KEY
+#undef NOT_KEY
     
 void get_choice(int & c) {
 #if   HAVE_LIBCURSES
@@ -435,7 +443,7 @@ void get_choice(int & c) {
 }
 
 #if   HAVE_LIBCURSES
-void new_line(int & l, int y, int height) {
+static void new_line(int & l, int y, int height) {
   --l;
   if (y == height - 1) {
     wmove(text_w, 0, 0);
@@ -445,7 +453,7 @@ void new_line(int & l, int y, int height) {
     wmove(text_w,y+1,0);
   }
 }
-void new_line(int & l, int height) {
+static void new_line(int & l, int height) {
   int y,x;
   getyx(text_w,y,x);
   new_line(l,y,height);
@@ -483,7 +491,7 @@ void display_misspelled_word() {
 
     l = -1;
 
-    const char * j = i->pbegin();
+    const char * j = i->begin();
     while (!i.off_end()) {
 
       int y,x;
@@ -494,14 +502,14 @@ void display_misspelled_word() {
 
       wattrset(text_w,A_NORMAL);
       int last_space_pos = 0;
-      const char * last_space = i->pbegin();
+      const char * last_space = i->begin();
 
       // NOTE: Combining characters after a character at the very end of
       //   a line will cause an unnecessary word wrap.  Unfortunately I
       //   do not know how to avoid it as they is no portable way to
       //   find out if the next character will combine with the
       //   previous.
-      while (j < i->pend() && x0 <= x && *j != '\n')
+      while (j < i->end() && x0 <= x && *j != '\n')
       {
         if (asc_isspace(*j)) {
           last_space_pos = x;
@@ -525,9 +533,9 @@ void display_misspelled_word() {
         getyx(text_w, y, x);
       }
       y = y0;
-      if (j == i->pend() || *j == '\n') {
+      if (j == i->end() || *j == '\n') {
         ++i;
-        j = i->pbegin();
+        j = i->begin();
       } else {
         if (x - last_space_pos < width/3) {
           wmove(text_w, y, last_space_pos);
@@ -553,10 +561,10 @@ void display_misspelled_word() {
   } else
 #endif
   {
-    int pre  = word_begin - cur_line->pbegin();
-    int post = cur_line->pend() - word_end;
+    int pre  = word_begin - cur_line->begin();
+    int post = cur_line->end() - word_end;
     if (pre)
-      fwrite(cur_line->pbegin(), pre, 1, stdout);
+      fwrite(cur_line->begin(), pre, 1, stdout);
     putchar('*');
     fwrite(word_begin, word_end - word_begin, 1, stdout);
     putchar('*');
@@ -594,19 +602,21 @@ static void print_truncate(FILE * out, const char * word, int width) {
     put(out,' ');
 }
 
-static void display_menu(FILE * out, const Choices * choices, int width) {
+static void display_menu(FILE * out, const Choices * choices, int width, 
+                         Conv & conv = null_conv) 
+{
   if (width <= 11) return;
   Choices::const_iterator i = choices->begin();
   while (i != choices->end()) {
     put(out,i->choice);
     put(out,") ");
-    print_truncate(out, i->desc, width/2 - 4);
+    print_truncate(out, conv(i->desc), width/2 - 4);
     put(out,' ');
     ++i;
     if (i != choices->end()) {
       put(out,i->choice);
       put(out,") ");
-      print_truncate(out, i->desc, width/2 - 4);
+      print_truncate(out, conv(i->desc), width/2 - 4);
       ++i;
     }
     putc('\n', out);
@@ -651,7 +661,9 @@ static void print_truncate(WINDOW * out, const char * word, int width) {
   }
 }
 
-static void display_menu(WINDOW * out, const Choices * choices, int width) {
+static void display_menu(WINDOW * out, const Choices * choices, int width,
+                         Conv & conv = null_conv) 
+{
   if (width <= 11) return;
   Choices::const_iterator i = choices->begin();
   int y,x;
@@ -660,13 +672,13 @@ static void display_menu(WINDOW * out, const Choices * choices, int width) {
     wclrtoeol(out);
     put(out,i->choice);
     put(out,") ");
-    print_truncate(out, i->desc, width/2 - 4);
+    print_truncate(out, conv(i->desc), width/2 - 4);
     ++i;
     if (i != choices->end()) {
       wmove(out, y, width/2);
       put(out,i->choice);
       put(out,") ");
-      print_truncate(out, i->desc, width/2 - 4);
+      print_truncate(out, conv(i->desc), width/2 - 4);
       ++i;
     }
     ++y;
@@ -685,7 +697,7 @@ void display_menu() {
       getmaxyx(menu_w,height,width);
       werase(menu_w);
       wmove(menu_w,0,0);
-      display_menu(menu_w, word_choices.get(), width);
+      display_menu(menu_w, word_choices.get(), width, dconv);
       wmove(menu_w,5,0);
       display_menu(menu_w, menu_choices.get(), width);
       wnoutrefresh(menu_w);
@@ -740,7 +752,7 @@ void display_menu() {
          N_("Delete"), 
          /* TRANSLATORS: This is a literal Key. */
          N_("Control-D"), 
-         N_("Delete the next charcter")},
+         N_("Delete the next character")},
 	{0, 
          "", 
          /* TRANSLATORS: This is a literal Key. */
@@ -789,7 +801,7 @@ void display_menu() {
   } else 
 #endif
   {
-    display_menu(stdout, word_choices.get(), 80);
+    display_menu(stdout, word_choices.get(), 80, dconv);
     display_menu(stdout, menu_choices.get(), 80);
   }
 }

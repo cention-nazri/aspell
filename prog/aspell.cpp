@@ -229,6 +229,9 @@ static const PossibleOption * find_option(const char * str) {
   return i;
 }
 
+Conv dconv;
+Conv uiconv;
+
 int main (int argc, const char *argv[]) 
 {
 #ifdef USE_LOCALE
@@ -477,6 +480,37 @@ static Convert * setup_conv(Config * config,
   } else {
     return 0;
   }
+}
+
+void setup_display_conv()
+{
+  const char * gettext_enc = 0;
+  const char * env_enc = 0;
+  String doc_enc = options->retrieve("encoding");
+  String enc;
+#ifdef ENABLE_NLS
+  gettext_enc = bind_textdomain_codeset("aspell", 0);
+  if (gettext_enc && is_ascii_enc(gettext_enc)) gettext_enc = 0;
+#endif
+#ifdef HAVE_LANGINFO_CODESET
+  env_enc = nl_langinfo(CODESET);
+  if (is_ascii_enc(env_enc)) env_enc = 0;
+#endif
+  if (gettext_enc && env_enc && strcmp(gettext_enc,env_enc) != 0) 
+  {
+    fputs(("Error: bind_textdomain_codeset != nl_langinfo(CODESET)\n"), stderr);
+    exit(-1);
+  }
+  if (gettext_enc)
+    enc = gettext_enc;
+  else if (env_enc)
+    enc = env_enc;
+  else
+    enc = doc_enc;
+
+  fprintf(stderr, "'%s' '%s' '%s' '%s'\n", gettext_enc, env_enc, doc_enc.str(), enc.str());
+  EXIT_ON_ERR(dconv.setup(*options, doc_enc, enc, NormNone));
+  EXIT_ON_ERR(uiconv.setup(*options, enc, doc_enc, NormNone));
 }
 
 
@@ -880,6 +914,8 @@ struct Mapping {
 
 void abort_check();
 
+void setup_display_conv();
+
 void check()
 {
   String file_name;
@@ -938,6 +974,9 @@ void check()
     print_error(aspell_error_message(ret));
     exit(1);
   }
+
+  setup_display_conv();
+
   AspellSpeller * speller = to_aspell_speller(ret);
 
   state = new CheckerString(speller,in,out,64);
@@ -963,7 +1002,7 @@ void check()
 
   while (state->next_misspelling()) {
 
-    char * word = state->get_word(word0);
+    char * word = state->get_real_word(word0);
 
     //
     // check if it is in the replace list
@@ -1202,7 +1241,7 @@ void list()
  
   while (state->next_misspelling()) {
 
-    state->get_word(word);
+    state->get_real_word(word);
     COUT.printl(word);
 
   }
@@ -1840,7 +1879,7 @@ static const char * help_text[] =
   N_("  conv <from> <to> [<norm-form>]"),
   N_("    converts from one encoding to another"),
   N_("  norm (<norm-map> | <from> <norm-map> <to>) [<norm-form>]"),
-  N_("    perform unicode normlization"),
+  N_("    perform Unicode normalization"),
   usage_text[8],
   usage_text[9],
   N_("  dump|create|merge master|personal|repl [word list]"),

@@ -271,6 +271,16 @@ namespace acommon {
         return str;
       }
     }
+    const char * operator() (const char * str, size_t sz)
+    {
+      if (conv) {
+        buf.clear();
+        conv->convert(str, sz, buf, buf0);
+        return buf.str();
+      } else {
+        return str;
+      }
+    }
     char * operator() (MutableString str)
     {
       return operator()(str.str, str.size);
@@ -367,6 +377,7 @@ namespace acommon {
         return str;
       }
     }
+
     PosibErr<const char *> operator() (ParmStr str)
     {
       if (conv) {

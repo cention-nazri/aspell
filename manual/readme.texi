@@ -8,7 +8,7 @@ any major problems provided that the compile can handle all of the
 advanced C++ features Aspell uses.  C++ compilers for non-Unix systems
 might work but it will take some work.  Aspell at very least requires a
 Unix-like environment (@file{sh}, @file{grep}, @file{sed}, @file{tr},
-&c@dots{}), and perl in order to build.  Aspell also uses a few POSIX
+@dots{}), and Perl in order to build.  Aspell also uses a few POSIX
 functions when necessary.
 
 The latest version can always be found at GNU Aspell's home page at 
@@ -17,7 +17,6 @@ The latest version can always be found at GNU Aspell's home page at
 @menu
 * Generic Install Instructions::  
 * Curses Notes::                
-* Upgrading from Aspell 0.60.::  
 * Upgrading from Aspell 0.50::  
 * Upgrading from Aspell .33/Pspell .12::  
 * Upgrading from a pre-release snapshot::  
@@ -67,13 +66,12 @@ directory into your binary directory which is usually
 @node Curses Notes
 @appendixsec Curses Notes
 
-If you are having problems compiling @file{termios.cc} than the most
-likely reason is due to incompatibilities with the curses
-implementation on your system.  If this is the case than you can
-explicitly disable the curses library with @option{--disable-curses}.
-By doing this you will lose the nice full screen interface but
-hopefully you will be able to at least get Aspell to compile
-correctly.
+If you are having problems compiling @file{check_funs.cpp} than the most
+likely reason is due to incompatibilities with the curses implementation
+on your system.  If this is the case than you can explicitly disable the
+curses library with @option{--disable-curses}.  By doing this you will
+lose the nice full screen interface but hopefully you will be able to at
+least get Aspell to compile correctly.
 
 If the curses library is installed in a non-standard location than you
 can specify the library and include directory with
@@ -92,14 +90,18 @@ or the name of the library (for example
 @option{-L@var{libdir} -l@var{lib}}
  (for example 
 @option{-L/usr/local/@/ncurses/lib -lncurses}).
- 
+
 @var{dir} is the location of the curses header files (for example
 @file{/usr/local/@/ncurses/include}).
 
-@node Upgrading from Aspell 0.60.
-@appendixsec Upgrading from Aspell 0.60
+@appendixsubsec Unicode Support
 
-@c FIXME: WRITE ME.
+In order for Aspell to correctly spell check UTF-8 documents the "wide"
+version of the curses library must be installed.  This is different from
+the normal version of curses library and is normally named
+@file{libcursesw} (with a @samp{w} at the end) or @file{libncursesw}.
+With out the right curses version installed UTF-8 documents will not
+be display correctly.
  
 @node Upgrading from Aspell 0.50
 @appendixsec Upgrading from Aspell 0.50
@@ -116,7 +118,34 @@ The format of the character data files has changed.  The new character
 data files are installed with Aspell so you shouldn't have to worry about
 it unless you made a custom one.
 
-@node Upgrading from Aspell .33/Pspell .12, Upgrading from a pre-release snapshot, Upgrading from Aspell 0.50, Installing
+@appendixsubsec Binary Compatibility
+
+The Aspell 0.60 library is binary compatible with the Aspell 0.50
+library.  For this reason I chose @emph{not} to increment the major
+version number of the shared (so-name) library by default which means
+programs that were compiled for Aspell 0.50 will also work for Aspell
+0.60.  However, this means that having both Aspell 0.50 and Aspell 0.60
+installed at the same time can be pragmatic.  If you wish to allow both
+Aspell 0.50 and 0.60 to be installed at the same time than you can use
+the configure option @option{--incremented-soname} which will increment
+so-name.  You should only use this option if you know what you are
+doing.  It is up to you to some how insure that both the Aspell 0.50 and
+0.60 executables can coexist.
+
+If after incrementing the so-name you wish to allow programs complied
+for Aspell 0.50 to use Aspell 0.60 instead (thus implying that Aspell
+0.50 is not installed) than you can use a special compatibility library
+which can be found in the @file{lib5} directory.  This directory will
+not be entered when building or installing Aspell so you must manually
+build and install this library.  You should build it after the rest of
+Aspell is built.  The order in which this library is installed, with
+relation to the rest of Aspell, is also important.  If it is installed
+@emph{after} the rest of Aspell than new programs will link to the old
+library (which will work for Aspell 0.50 or 0.60) when built, if
+installed @emph{before}, new programs will link with the new library
+(Aspell 0.60 only).
+
+@node Upgrading from Aspell .33/Pspell .12
 @appendixsec Upgrading from Aspell .33/Pspell .12
 
 Aspell has undergone an extremely large number of changes since the

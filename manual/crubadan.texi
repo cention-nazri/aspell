@@ -1,6 +1,5 @@
 @itemize
 @item Asturian (ast)
-@item Azerbaijani (az)
 @item Bemba (bem)
 @item Bislama (bi)
 @item Cebuano (ceb)
@@ -10,6 +9,7 @@
 @item Fijian (fj)
 @item Friulian (fur)
 @item Frisian (fy)
+@item Guarani (gn)
 @item Hausa (ha)
 @item Hawaiian (haw)
 @item Hiligaynon (hil)
@@ -36,6 +36,7 @@
 @item Rundi (rn)
 @item Northern Saami (se)
 @item Samoan (sm)
+@item Shona (sn)
 @item Somali (so)
 @item Swati (ss)
 @item Southern Sotho (st)
