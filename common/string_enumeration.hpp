@@ -8,9 +8,9 @@
 
 namespace pcommon {
 
-  class StringEmulation;
+  class StringEnumeration;
 
-  class StringEmulation {
+  class StringEnumeration {
   public:
     typedef const char * Value;
     virtual bool at_end() const = 0;
@@ -20,12 +20,12 @@ namespace pcommon {
     unsigned int type_id() { return type_id_.num; }
     int copyable_;
     int copyable() { return copyable_; }
-    virtual StringEmulation * clone() const = 0;
-    virtual void assign(const StringEmulation * other) = 0;
+    virtual StringEnumeration * clone() const = 0;
+    virtual void assign(const StringEnumeration * other) = 0;
     Vector<char> temp_str;
     void (* to_encoded_)(ParmString, Vector<char> &);
-    StringEmulation() : ref_count_(0), copyable_(2), to_encoded_(0) {}
-    virtual ~StringEmulation() {}
+    StringEnumeration() : ref_count_(0), copyable_(2), to_encoded_(0) {}
+    virtual ~StringEnumeration() {}
   };
   
 }

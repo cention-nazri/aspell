@@ -10,10 +10,10 @@ namespace pcommon {
 
   class Config;
   struct DictInfo;
-  class DictInfoEmulation;
+  class DictInfoEnumeration;
   class DictInfoList;
   struct ModuleInfo;
-  class ModuleInfoEmulation;
+  class ModuleInfoEnumeration;
   class ModuleInfoList;
   class StringList;
   struct StringListImpl;
@@ -63,7 +63,7 @@ namespace pcommon {
   public:
     bool empty() const;
     unsigned int size() const;
-    ModuleInfoEmulation * elements() const;
+    ModuleInfoEnumeration * elements() const;
     virtual ~ModuleInfoList() {}
     PosibErr<void> proc_file(MDInfoListAll &,
 			     Config *,
@@ -81,7 +81,7 @@ namespace pcommon {
   public:
     bool empty() const;
     unsigned int size() const;
-    DictInfoEmulation * elements() const;
+    DictInfoEnumeration * elements() const;
     virtual ~DictInfoList() {}
     PosibErr<void> proc_file(MDInfoListAll &,
 			     Config *,
@@ -93,10 +93,10 @@ namespace pcommon {
 
   DictInfoList * get_dict_info_list(Config *);
 
-  class ModuleInfoEmulation {
+  class ModuleInfoEnumeration {
   public:
     const ModuleInfoNode * node_;
-    ModuleInfoEmulation(const ModuleInfoNode * n) : node_(n) {}
+    ModuleInfoEnumeration(const ModuleInfoNode * n) : node_(n) {}
 
     bool at_end() const;
     const ModuleInfo * next();
@@ -105,18 +105,18 @@ namespace pcommon {
     unsigned int type_id() { return type_id_.num; }
     int copyable_;
     int copyable() { return copyable_; }
-    ModuleInfoEmulation * clone() const;
-    void assign(const ModuleInfoEmulation * other);
-    ModuleInfoEmulation() : ref_count_(0), copyable_(2) {}
-    virtual ~ModuleInfoEmulation() {}
+    ModuleInfoEnumeration * clone() const;
+    void assign(const ModuleInfoEnumeration * other);
+    ModuleInfoEnumeration() : ref_count_(0), copyable_(2) {}
+    virtual ~ModuleInfoEnumeration() {}
   };
 
   struct DictInfoNode;
 
-  class DictInfoEmulation {
+  class DictInfoEnumeration {
   public:
     const DictInfoNode * node_;
-    DictInfoEmulation(const DictInfoNode * n) : node_(n) {}
+    DictInfoEnumeration(const DictInfoNode * n) : node_(n) {}
 
     bool at_end() const;
     const DictInfo * next();
@@ -125,10 +125,10 @@ namespace pcommon {
     unsigned int type_id() { return type_id_.num; }
     int copyable_;
     int copyable() { return copyable_; }
-    DictInfoEmulation * clone() const;
-    void assign(const DictInfoEmulation * other);
-    DictInfoEmulation() : ref_count_(0), copyable_(2) {}
-    virtual ~DictInfoEmulation() {}
+    DictInfoEnumeration * clone() const;
+    void assign(const DictInfoEnumeration * other);
+    DictInfoEnumeration() : ref_count_(0), copyable_(2) {}
+    virtual ~DictInfoEnumeration() {}
   };
 
 

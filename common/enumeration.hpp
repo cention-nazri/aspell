@@ -10,14 +10,14 @@
 // purpose.  It is provided "as is" without express or implied
 // warranty.
 
-#ifndef __autil_emulation__
-#define __autil_emulation__
+#ifndef __autil_enumeration__
+#define __autil_enumeration__
 
 #include "clone_ptr-t.hpp"
 
-// An emulation is an efficient way to iterate through elements much
+// An enumeration is an efficient way to iterate through elements much
 // like a forward iterator.  The at_end method is a convince method
-// as emulations will return a null pointer or some other sort of
+// as enumerations will return a null pointer or some other sort of
 // special end state when they are at the end.
 // Unlike an iterator iterating through x elements on a list can be 
 // done in x function calls while an iterator will require 3*x.
@@ -37,24 +37,24 @@
 // Normally all three calls are inline so it doesn't really matter
 // but when the container type is not visible there are not inline
 // and probably even virtual.
-// If you really love iterators you can very easily wrap an emulation 
+// If you really love iterators you can very easily wrap an enumeration 
 // in a forward iterator.  
 
 namespace pcommon {
 
   template <typename Val>
-  class VirEmulation {
+  class VirEnumeration {
   public:
     typedef Val Value;
-    virtual VirEmulation * clone() const = 0;
-    virtual void assign(const VirEmulation *) = 0;
+    virtual VirEnumeration * clone() const = 0;
+    virtual void assign(const VirEnumeration *) = 0;
     virtual Value next() = 0;
     virtual bool at_end() const = 0;
-    virtual ~VirEmulation() {}
+    virtual ~VirEnumeration() {}
   };
 
   template <typename Base>
-  class Emulation {
+  class Enumeration {
   public:
     typedef typename Base::Value Value;
     typedef Base                 VirEmul;
@@ -63,10 +63,10 @@ namespace pcommon {
     ClonePtr<VirEmul> p_;
 
   public:
-    Emulation() : p_(0) {}
-    Emulation(VirEmul * p) : p_(p) {}
-    Emulation(const VirEmul & p) : p_(p.clone()) {}
-    Emulation & operator=(VirEmul * p) {
+    Enumeration() : p_(0) {}
+    Enumeration(VirEmul * p) : p_(p) {}
+    Enumeration(const VirEmul & p) : p_(p.clone()) {}
+    Enumeration & operator=(VirEmul * p) {
       p_.reset(p);
       return *this;
     }
@@ -75,14 +75,14 @@ namespace pcommon {
     bool at_end() const {return p_->at_end();}
   };
 
-  template <class Parms, class VirEmul = VirEmulation<typename Parms::Value> > 
+  template <class Parms, class VirEmul = VirEnumeration<typename Parms::Value> > 
   // Parms is expected to have the following members:
   //   typename Value
   //   typename Iterator;
   //   bool endf(Iterator)  
   //   Value end_state()
   //   Value deref(Iterator)
-  class MakeVirEmulation : public VirEmul {
+  class MakeVirEnumeration : public VirEmul {
   public:
     typedef typename Parms::Iterator Iterator;
     typedef typename Parms::Value    Value;
@@ -91,15 +91,15 @@ namespace pcommon {
     Parms     parms_;
   public:
 
-    MakeVirEmulation(const Iterator i, const Parms & p = Parms()) 
+    MakeVirEnumeration(const Iterator i, const Parms & p = Parms()) 
       : i_(i), parms_(p) {}
 
     VirEmul * clone() const {
-      return new MakeVirEmulation(*this);
+      return new MakeVirEnumeration(*this);
     }
 
     void assign (const VirEmul * other) {
-      *this = *static_cast<const MakeVirEmulation *>(other);
+      *this = *static_cast<const MakeVirEnumeration *>(other);
     }
 
     Value next() {
@@ -116,24 +116,24 @@ namespace pcommon {
   };
 
   template <class Value>
-  struct MakeAlwaysEndEmulationParms {
+  struct MakeAlwaysEndEnumerationParms {
     Value end_state() const {return Value();}
   };
 
   template <class Value>
-  struct MakeAlwaysEndEmulationParms<Value *> {
+  struct MakeAlwaysEndEnumerationParms<Value *> {
     Value * end_state() const {return 0;}
   };
   
   template <class Value> 
-  class MakeAlwaysEndEmulation : public VirEmulation<Value> {
-    MakeAlwaysEndEmulationParms<Value> parms_;
+  class MakeAlwaysEndEnumeration : public VirEnumeration<Value> {
+    MakeAlwaysEndEnumerationParms<Value> parms_;
   public:
-    MakeAlwaysEndEmulation * clone() const {
-      return new MakeAlwaysEndEmulation(*this);
+    MakeAlwaysEndEnumeration * clone() const {
+      return new MakeAlwaysEndEnumeration(*this);
     }
-    void assign(const VirEmulation<Value> * that) {
-      *this = *static_cast<const MakeAlwaysEndEmulation *>(that);
+    void assign(const VirEnumeration<Value> * that) {
+      *this = *static_cast<const MakeAlwaysEndEnumeration *>(that);
     }
     Value next() {return parms_.end_state();}
     bool at_end() const {return true;}

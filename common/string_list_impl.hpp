@@ -1,5 +1,5 @@
 #include "string.hpp"
-#include "string_emulation.hpp"
+#include "string_enumeration.hpp"
 #include "string_list.hpp"
 
 namespace pcommon {
@@ -13,15 +13,15 @@ namespace pcommon {
       : data(str), next(n) {}
   };
 
-  class StringListEmulation : public StringEmulation {
+  class StringListEnumeration : public StringEnumeration {
     // default copy and destructor safe
   private:
     StringListNode * n_;
   public:
-    StringEmulation * clone() const;
-    void assign(const StringEmulation *);
+    StringEnumeration * clone() const;
+    void assign(const StringEnumeration *);
 
-    StringListEmulation(StringListNode * n) : n_(n) {}
+    StringListEnumeration(StringListNode * n) : n_(n) {}
     const char * next() {
       const char * temp;
       if (n_ == 0) {
@@ -71,10 +71,10 @@ namespace pcommon {
     bool remove(ParmString);
     void clear();
 
-    StringEmulation * elements() const;
-    StringListEmulation elements_obj() const 
+    StringEnumeration * elements() const;
+    StringListEnumeration elements_obj() const 
     {
-      return StringListEmulation(first);
+      return StringListEnumeration(first);
     }
 
     bool empty() const { return first == 0; }

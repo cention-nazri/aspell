@@ -13,9 +13,9 @@
 namespace pcommon {
 
   class OStream;
-  class KeyInfoEmulation;
+  class KeyInfoEnumeration;
   class StringMap;
-  class StringPairEmulation;
+  class StringPairEnumeration;
   class MutableContainer;
 
   // The Config class is used to hold configuration information.
@@ -48,7 +48,7 @@ namespace pcommon {
   };
 
   class PossibleElementsEmul;
-  class NotifierEmulation;
+  class NotifierEnumeration;
   class GetLine;
   class MDInfoListofLists;
 
@@ -97,7 +97,7 @@ namespace pcommon {
 
     const char * name() const {return name_.c_str();}
 
-    NotifierEmulation * notifiers() const;
+    NotifierEnumeration * notifiers() const;
   
     bool add_notifier    (      Notifier *);
     bool remove_notifier (const Notifier *);
@@ -111,9 +111,9 @@ namespace pcommon {
   
     PosibErr<const KeyInfo *> keyinfo(ParmString key) const;
 
-    KeyInfoEmulation * possible_elements(bool include_extra = true);
+    KeyInfoEnumeration * possible_elements(bool include_extra = true);
 
-    StringPairEmulation * elements();
+    StringPairEnumeration * elements();
     
     PosibErr<String> get_default (ParmString key) const;
 
@@ -143,11 +143,11 @@ namespace pcommon {
 
   Config * new_config();
 
-  class NotifierEmulation {
+  class NotifierEnumeration {
     // no copy and destructor needed
     Notifier * * i;
   public:
-    NotifierEmulation(Notifier * * b) : i(b) {}
+    NotifierEnumeration(Notifier * * b) : i(b) {}
     const Notifier * next() {
       Notifier * * temp = i;
       if (*i != 0)
@@ -157,14 +157,14 @@ namespace pcommon {
     bool at_end() const {return *i == 0;}
   };
 
-  class KeyInfoEmulation {
+  class KeyInfoEnumeration {
   public:
     typedef const KeyInfo * Value;
-    virtual KeyInfoEmulation * clone() const = 0;
-    virtual void assign(const KeyInfoEmulation *) = 0;
+    virtual KeyInfoEnumeration * clone() const = 0;
+    virtual void assign(const KeyInfoEnumeration *) = 0;
     virtual bool at_end() const = 0;
     virtual const KeyInfo * next() = 0;
-    virtual ~KeyInfoEmulation() {}
+    virtual ~KeyInfoEnumeration() {}
   };
 
 }

@@ -136,7 +136,7 @@ namespace pcommon {
   {
     unsigned int suffix_size = strlen(suffix);
 
-    StringListEmulation els = dirs.elements_obj();
+    StringListEnumeration els = dirs.elements_obj();
     const char * dir;
     while ( (dir = els.next()) != 0) {
       DIR * d = opendir(dir);
@@ -360,7 +360,7 @@ namespace pcommon {
   PosibErr<void> MDInfoListAll::fill_pwli_dir_list()
   {
     for (MDInfoNode * n = module_info_list.head_; n != 0; n = n->next) {
-      StringListEmulation e = 
+      StringListEnumeration e = 
 	((ModuleInfoNode *)n)->pwli_dirs.elements_obj();
       const char * dir;
       while ( (dir = e.next()) != 0 )
@@ -430,7 +430,7 @@ namespace pcommon {
 
   /////////////////////////////////////////////////////////////////
   //
-  // user visable functions and emulation impl
+  // user visable functions and enumeration impl
   //
 
   //
@@ -444,9 +444,9 @@ namespace pcommon {
     else return &la->module_info_list;
   }
 
-  ModuleInfoEmulation * ModuleInfoList::elements() const
+  ModuleInfoEnumeration * ModuleInfoList::elements() const
   {
-    return new ModuleInfoEmulation((ModuleInfoNode *)head_);
+    return new ModuleInfoEnumeration((ModuleInfoNode *)head_);
   }
 
   unsigned int ModuleInfoList::size() const
@@ -459,22 +459,22 @@ namespace pcommon {
     return size_ != 0;
   }
 
-  ModuleInfoEmulation * ModuleInfoEmulation::clone () const
+  ModuleInfoEnumeration * ModuleInfoEnumeration::clone () const
   {
-    return new ModuleInfoEmulation(*this);
+    return new ModuleInfoEnumeration(*this);
   }
 
-  void ModuleInfoEmulation::assign(const ModuleInfoEmulation * other)
+  void ModuleInfoEnumeration::assign(const ModuleInfoEnumeration * other)
   {
     *this = *other;
   }
   
-  bool ModuleInfoEmulation::at_end () const
+  bool ModuleInfoEnumeration::at_end () const
   {
     return node_ == 0;
   }
 
-  const ModuleInfo * ModuleInfoEmulation::next ()
+  const ModuleInfo * ModuleInfoEnumeration::next ()
   {
     if (node_ == 0) return 0;
     const ModuleInfo * data = &(node_->c_struct);
@@ -493,9 +493,9 @@ namespace pcommon {
     else return &la->dict_info_list;
   }
 
-  DictInfoEmulation * DictInfoList::elements() const
+  DictInfoEnumeration * DictInfoList::elements() const
   {
-    return new DictInfoEmulation(static_cast<DictInfoNode *>(head_));
+    return new DictInfoEnumeration(static_cast<DictInfoNode *>(head_));
   }
 
   unsigned int DictInfoList::size() const
@@ -508,22 +508,22 @@ namespace pcommon {
     return size_ != 0;
   }
 
-  DictInfoEmulation * DictInfoEmulation::clone() const
+  DictInfoEnumeration * DictInfoEnumeration::clone() const
   {
-    return new DictInfoEmulation(*this);
+    return new DictInfoEnumeration(*this);
   }
 
-  void DictInfoEmulation::assign(const DictInfoEmulation * other)
+  void DictInfoEnumeration::assign(const DictInfoEnumeration * other)
   {
     *this = *other;
   }
 
-  bool DictInfoEmulation::at_end() const
+  bool DictInfoEnumeration::at_end() const
   {
     return node_ == 0;
   }
 
-  const DictInfo * DictInfoEmulation::next ()
+  const DictInfo * DictInfoEnumeration::next ()
   {
     if (node_ == 0) return 0;
     const DictInfo * data = &(node_->c_struct);

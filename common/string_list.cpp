@@ -37,14 +37,14 @@ namespace pcommon {
     return rhs_cur == 0 && lhs_cur == 0;
   }
 
-  StringEmulation * StringListEmulation::clone() const
+  StringEnumeration * StringListEnumeration::clone() const
   {
-    return new StringListEmulation(*this);
+    return new StringListEnumeration(*this);
   }
 
-  void StringListEmulation::assign(const StringEmulation * other)
+  void StringListEnumeration::assign(const StringEnumeration * other)
   {
-    *this = *(const StringListEmulation *)other;
+    *this = *(const StringListEnumeration *)other;
   }
 
 
@@ -99,9 +99,9 @@ namespace pcommon {
     first = 0;
   }
 
-  StringEmulation * StringListImpl::elements() const
+  StringEnumeration * StringListImpl::elements() const
   {
-    return new StringListEmulation(first);
+    return new StringListEnumeration(first);
   }
 
   StringList * new_string_list() {

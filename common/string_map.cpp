@@ -4,7 +4,7 @@
 #include "parm_string.hpp"
 #include "string_map.hpp"
 #include "string_pair.hpp"
-#include "string_pair_emulation.hpp"
+#include "string_pair_enumeration.hpp"
 
 // prime list and hash_string taken from SGI STL with the following 
 // copyright:
@@ -67,7 +67,7 @@ namespace pcommon {
       *this = *(const StringMapImpl *)(other);
     }
 
-    StringPairEmulation * elements() const;
+    StringPairEnumeration * elements() const;
 
     // insert a new element.   Will NOT overright an existing entry.
     // returns false if the element already exists.
@@ -326,22 +326,22 @@ namespace pcommon {
   //
   //
 
-  class StringMapImplEmulation : public StringPairEmulation {
+  class StringMapImplEnumeration : public StringPairEnumeration {
     unsigned int i;
     const StringMapImplNode    * j;
     const StringMapImplNodePtr * data;
     unsigned int size;
   public:
-    StringMapImplEmulation(const StringMapImplNodePtr * d, 
+    StringMapImplEnumeration(const StringMapImplNodePtr * d, 
 				 unsigned int s);    
-    StringPairEmulation * clone() const;
-    void assign(const StringPairEmulation *);
+    StringPairEnumeration * clone() const;
+    void assign(const StringPairEnumeration *);
     bool at_end() const;
     StringPair next();
   };
 
-  StringMapImplEmulation
-  ::StringMapImplEmulation(const StringMapImplNodePtr * d, 
+  StringMapImplEnumeration
+  ::StringMapImplEnumeration(const StringMapImplNodePtr * d, 
 				 unsigned int s) 
   {
     data = d;
@@ -353,22 +353,22 @@ namespace pcommon {
       j = data[i];
   }
 
-  StringPairEmulation * StringMapImplEmulation::clone() const {
-    return new StringMapImplEmulation(*this);
+  StringPairEnumeration * StringMapImplEnumeration::clone() const {
+    return new StringMapImplEnumeration(*this);
   }
 
   void 
-  StringMapImplEmulation::assign
-  (const StringPairEmulation * other)
+  StringMapImplEnumeration::assign
+  (const StringPairEnumeration * other)
   {
-    *this = *(const StringMapImplEmulation *)(other);
+    *this = *(const StringMapImplEnumeration *)(other);
   }
 
-  bool StringMapImplEmulation::at_end() const {
+  bool StringMapImplEnumeration::at_end() const {
     return i == size;
   }
 
-  StringPair StringMapImplEmulation::next() {
+  StringPair StringMapImplEnumeration::next() {
     StringPair temp;
     if (i == size)
       return temp;
@@ -383,8 +383,8 @@ namespace pcommon {
     return temp;
   }
 
-  StringPairEmulation * StringMapImpl::elements() const {
-    return new StringMapImplEmulation(data, *buckets);
+  StringPairEnumeration * StringMapImpl::elements() const {
+    return new StringMapImplEnumeration(data, *buckets);
   }
 
   StringMap * new_string_map() 

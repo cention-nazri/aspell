@@ -94,9 +94,9 @@ namespace pcommon {
   // Notifier methods
   //
 
-  NotifierEmulation * Config::notifiers() const 
+  NotifierEnumeration * Config::notifiers() const 
   {
-    return new NotifierEmulation(notifier_list);
+    return new NotifierEnumeration(notifier_list);
   }
   
   bool Config::add_notifier(Notifier * n) 
@@ -597,7 +597,7 @@ namespace pcommon {
     return success;
   }
 
-  StringPairEmulation * Config::elements() 
+  StringPairEnumeration * Config::elements() 
   {
     return data_->elements();
   }
@@ -606,7 +606,7 @@ namespace pcommon {
   /////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////
 
-  class PossibleElementsEmul : public KeyInfoEmulation
+  class PossibleElementsEmul : public KeyInfoEnumeration
   {
   private:
     bool include_extra;
@@ -617,11 +617,11 @@ namespace pcommon {
     PossibleElementsEmul(const Config * d, bool ic)
       : include_extra(ic), cd(d), i(d->kmi.main_begin), m(0) {}
 
-    KeyInfoEmulation * clone() const {
+    KeyInfoEnumeration * clone() const {
       return new PossibleElementsEmul(*this);
     }
 
-    void assign(const KeyInfoEmulation * other) {
+    void assign(const KeyInfoEnumeration * other) {
       *this = *(const PossibleElementsEmul *)(other);
     }
 
@@ -659,7 +659,7 @@ namespace pcommon {
     }
   };
 
-  KeyInfoEmulation *
+  KeyInfoEnumeration *
   Config::possible_elements(bool include_extra)
   {
     return new PossibleElementsEmul(this, include_extra);
@@ -698,7 +698,7 @@ namespace pcommon {
   void Config::write_to_stream(FILE * out, 
 				     bool include_extra) 
   {
-    KeyInfoEmulation * els = possible_elements(include_extra);
+    KeyInfoEnumeration * els = possible_elements(include_extra);
     const KeyInfo * i;
     while ((i = els->next()) != 0) {
       if (i->desc == 0) continue;
@@ -762,7 +762,7 @@ namespace pcommon {
   }
 
   void Config::merge(const Config & other) {
-    KeyInfoEmulation * els = possible_elements();
+    KeyInfoEnumeration * els = possible_elements();
     bool diff_name = strcmp(name(), other.name()) != 0;
     const KeyInfo * k;
     const KeyInfo * other_k;

@@ -61,7 +61,7 @@ namespace pcommon {
     virtual PosibErr<void> add_to_session (MutableString) = 0;
     
     // because the word lists may potently have to convert from one
-    // encoding to another the pointer returned by the emulation is only
+    // encoding to another the pointer returned by the enumeration is only
     // valid to the next call.
 
     virtual PosibErr<const WordList *> personal_word_list() const = 0;
