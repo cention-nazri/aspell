@@ -1,7 +1,7 @@
 \input texinfo   @c -*-texinfo-*-
 
 @setfilename aspell.info
-@settitle GNU Aspell 0.60.2
+@settitle GNU Aspell 0.61
 @syncodeindex pg cp
 @documentencoding ISO-8859-1
 
@@ -22,11 +22,11 @@ Documentation License''.
 
 @dircategory GNU Packages
 @direntry
-* Aspell: (aspell).        GNU Aspell spelling checker
+* Aspell: (aspell).        GNU Aspell spell checker
 @end direntry
 
 @titlepage
-@title GNU Aspell 0.60.2
+@title GNU Aspell 0.61
 @author Kevin Atkinson (@email{kevina@@gnu.org})
 @page
 @vskip 0pt plus 1filll
