@@ -1046,10 +1046,10 @@ Texinfo paramaters and envirments not corresponding to readable text.
 
 @table @b
 @item texinfo-ignore
-Texinfo command to ignore the parameters of.
+@i{(list)} Texinfo command to ignore the parameters of.
 
 @item texinfo-ignore-env
-Texinfo environments to ignore.
+@i{(list)} Texinfo environments to ignore.
 
 @end table
 
@@ -1419,12 +1419,29 @@ The TeX filter mode is also available via @option{latex} alias name.
 
 @subsubsection Texinfo Filter
 
-FIXME: writeme
+The @option{texinfo} filter allows you to spell check Texinfo files.
+It will skip over any Texinfo commands and their parameters when
+appropriate.  It will also skip over some Texinfo environments such as
+@command{example}.  The list option @option{texinfo-ignore}
+controls which commands to ignore the parameters of and the list option
+@option{texinfo-ignore-env} controls which Texinfo
+environments to ignore.
+
+The Texinfo filter has special code to deal with the @command{@@table}
+and related commands.  It will apply the formating command to each of
+the @command{@@item} or @command{@@itemx} commands just like Texinfo
+will.  This means that if the formatting command is @command{@@code}
+and and the @command{@@code} command is a member of the
+@option{texinfo-ignore} option than the Texinfo filter will ignore the
+parameter of the @command{@@item} command as if the parameter was also
+the parameter of the @command{@@code} command.
+
+The Texinfo filter will also skip over the @samp{\input texinfo} line.
 
 @subsubsection Nroff Filter
 
 The @option{nroff} filter mode allows you to check the spelling of
-@command{nroff} documents. The mode is enabled by giving
+Nroff documents. The mode is enabled by giving
 @option{--add-filter=nroff} or @option{-n} command line option to
 @command{aspell}. It is also automatically enabled if the first three
 characters of the file being checked are @code{.\"} (a @command{nroff} comment
@@ -4077,14 +4094,14 @@ Lots of compile fixes for various platforms.
 @item
 Miscellaneous bug fixes.
 @item
-Nroff filter thanks to Sergey Poznyakoff.
+Added Nroff filter thanks to Sergey Poznyakoff.
 @item
 The default filter mode when in pipe mode is now nroff for compatibility with
 Ispell.
 @item
-Texinfo filter.
+Added Texinfo filter.
 @item
-Added a section detailes the differences between Ispell and Aspell.
+Added a section detailing the differences between Ispell and Aspell.
 @item
 Updated the section on thread safety.
 @end itemize

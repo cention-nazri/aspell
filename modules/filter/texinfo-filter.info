@@ -10,7 +10,7 @@ STATIC filter
 
 OPTION ignore
 TYPE list
-DESCRIPTION Texinfo commands to ignore
+DESCRIPTION Texinfo commands to ignore the parameters of
 DEFAULT setfilename
 DEFAULT syncodeindex
 DEFAULT documentencoding
