@@ -18,7 +18,10 @@ SUFFIXES = .info
 
 noinst_DATA = 
 pkgdata_DATA = 
-EXTRA_DIST = win32/Makefile win32/settings.h
+EXTRA_DIST = win32/Makefile\
+             win32/settings.h\
+             win32/dirs.h\
+             win32/libstub.cpp
 
 ########################################################################
 #

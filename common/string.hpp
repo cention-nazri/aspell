@@ -496,7 +496,7 @@ namespace acommon {
 
 namespace std
 {
-  template<> static inline void swap(acommon::String & x, acommon::String & y) {return x.swap(y);}
+  template<> static inline void swap(acommon::String & x, acommon::String & y) {x.swap(y);}
 }
 
 #endif
