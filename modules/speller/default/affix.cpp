@@ -1033,7 +1033,7 @@ SimpleString SfxEntry::add(SimpleString word, ObjStack & buf,
   int cond;
   /* make sure all conditions match */
   if ((orig_word.size > stripl) && (orig_word.size >= numconds)) {
-    const byte * cp = (const byte *) (word + word.size);
+    const byte * cp = (const byte *) (orig_word + orig_word.size);
     for (cond = numconds; --cond >=0; ) {
       if ((conds[*--cp] & (1 << cond)) == 0)
         break;

@@ -432,13 +432,12 @@ namespace aspeller {
                                      const char * msg,
                                      char chr = 0)
   {
+    char m[200];
     if (chr) {
-      char m[200];
       snprintf(m, 200, msg, MsgConv(l)(chr));
-      return make_err(invalid_word, MsgConv(l)(word), m);
-    } else {
-      return make_err(invalid_word, MsgConv(l)(word), msg);
+      msg = m;
     }
+    return make_err(invalid_word, MsgConv(l)(word), msg);
   }
 
   PosibErr<void> check_if_valid(const Language & l, ParmString word) {
@@ -468,7 +467,7 @@ namespace aspeller {
         return invalid_word_e(l, word, _("The character '\\r' may not appear at the end of a word. " 
                                          "This probably means means that the file is using MS-DOS EOL instead of Unix EOL. "), *i);
       if (!l.special(*i).end)
-        return invalid_word_e(l, word, _("The character '%s' may not appear at the end of a word."), *i);        
+        return invalid_word_e(l, word, _("The character '%s' may not appear at the end of a word."), *i);
       else if (!l.is_alpha(*(i-1)))
         return invalid_word_e(l, word, _("The character '%s' must be preceded by a alphabetic character."), *i);
     }
