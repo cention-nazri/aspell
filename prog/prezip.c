@@ -115,18 +115,16 @@ int main (int argc, const char *argv[]) {
 
       /* get the length of the prefix */
       l = 0;
-      while (p[l] != '\0' && p[l] == w[l]) ++l;
+      while (*p != '\0' && *p == *w) {++l; ++w; ++p;}
 
       /* prefix compress, and write word */
-      if (l < 30) {
-        putc(l, stdout);
-      } else {
-        int i = l - 30;
+      if (l >= 30) {
         putc(30, stdout);
-        while (i >= 255) {putc(255, stdout); i -= 255;}
-	putc(i, stdout);
+        l -= 30;
+        while (l >= 255) {putc(255, stdout); l -= 255;}
       }
-      fputs(w+l, stdout);
+      putc(l, stdout);
+      fputs(w, stdout);
 
       /* swap prev and next */
       {
