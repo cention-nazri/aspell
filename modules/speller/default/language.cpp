@@ -253,30 +253,6 @@ namespace aspeller {
     }
 
     //
-    //
-    //
-    
-    for (int i = 0; i != 256; ++i) 
-      to_normalized_[i] = 0;
-
-    int c = 1;
-    for (int i = 0; i != 256; ++i) {
-      if (is_alpha(i)) {
-	if (to_normalized_[to_uchar(to_stripped_[i])] == 0) {
-	  to_normalized_[i] = c;
-	  to_normalized_[to_uchar(to_stripped_[i])] = c;
-	  ++c;
-	} else {
-	  to_normalized_[i] = to_normalized_[to_uchar(to_stripped_[i])];
-	}
-      }
-    }
-    for (int i = 0; i != 256; ++i) {
-      if (to_normalized_[i]==0) to_normalized_[i] = c;
-    }
-    max_normalized_ = c;
-
-    //
     // prep phonetic code
     //
 

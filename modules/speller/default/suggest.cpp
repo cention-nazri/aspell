@@ -1162,7 +1162,7 @@ namespace {
       CharVector orig_norm, word;
       orig_norm.resize(original.word.size() + 1);
       for (j = 0; j != original.word.size(); ++j)
-          orig_norm[j] = lang->to_normalized(original.word[j]);
+          orig_norm[j] = parms->ti->to_normalized(original.word[j]);
       orig_norm[j] = 0;
       ParmString orig(orig_norm.data(), j);
       word.resize(max_word_length + 1);
@@ -1172,11 +1172,10 @@ namespace {
 	   ++i)
       {
 	for (j = 0; (i->word)[j] != 0; ++j)
-	  word[j] = lang->to_normalized((i->word)[j]);
+	  word[j] = parms->ti->to_normalized((i->word)[j]);
 	word[j] = 0;
 	int word_score 
-	  = typo_edit_distance(ParmString(word.data(), j), orig,
-			       *parms->typo_edit_distance_weights);
+	  = typo_edit_distance(ParmString(word.data(), j), orig, *parms->ti);
 	i->score = weighted_average(i->soundslike_score, word_score);
 	if (max < i->score) max = i->score;
       }
@@ -1297,7 +1296,7 @@ namespace {
     if (keyboard == "none")
       parms_.use_typo_analysis = false;
     else
-      RET_ON_ERR(aspeller::setup(parms_.typo_edit_distance_weights, m->config(), &m->lang(), keyboard));
+      RET_ON_ERR(aspeller::setup(parms_.ti, m->config(), &m->lang(), keyboard));
 
     return no_err;
   }

@@ -17,7 +17,7 @@ namespace aspeller {
     // implementation at the end of suggest.cc
 
     EditDistanceWeights     edit_distance_weights;
-    CachePtr<const TypoEditDistanceWeights> typo_edit_distance_weights;
+    CachePtr<const TypoEditDistanceInfo> ti;
 
     bool try_one_edit_word, try_scan_1, try_scan_2, try_ngram;
 

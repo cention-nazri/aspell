@@ -14,7 +14,7 @@ namespace aspeller {
 
   using namespace acommon;
 
-  struct TypoEditDistanceWeights : public Cacheable {
+  struct TypoEditDistanceInfo : public Cacheable {
     int missing; // the cost of having to insert a character
     int swap;    // the cost of swapping two adjecent letters
     short * data; // memory for repl and extra
@@ -26,10 +26,16 @@ namespace aspeller {
     int extra_dis1;// 
     int extra_dis2;//
 
+    unsigned char to_normalized_[256];
+    int max_normalized;
+
+    unsigned char to_normalized(char c) const {
+      return to_normalized_[(unsigned char)c];}
+    
     // IMPORTANT: It is still necessary to initialize and fill in
     //            repl and extra
   private:
-    TypoEditDistanceWeights(int m = 85,  int s = 60, 
+    TypoEditDistanceInfo(int m = 85,  int s = 60, 
 			    int r1 = 70, int r = 110, 
 			    int e1 = 70, int e = 100)
       : missing(m), swap(s), data(0) 
@@ -37,20 +43,20 @@ namespace aspeller {
       , extra_dis1(e1), extra_dis2(e)
     {}
   public:
-    ~TypoEditDistanceWeights() {if (data) free(data);}
+    ~TypoEditDistanceInfo() {if (data) free(data);}
 
     String keyboard;
     typedef const Config CacheConfig;
     typedef const Language CacheConfig2;
     typedef const char * CacheKey;
     bool cache_key_eq(const char * kb) const {return keyboard == kb;}
-    static PosibErr<TypoEditDistanceWeights *> get_new(const char *, const Config *, const Language *);
+    static PosibErr<TypoEditDistanceInfo *> get_new(const char *, const Config *, const Language *);
   private:
-    TypoEditDistanceWeights(const TypoEditDistanceWeights &);
-    void operator=(const TypoEditDistanceWeights &);
+    TypoEditDistanceInfo(const TypoEditDistanceInfo &);
+    void operator=(const TypoEditDistanceInfo &);
   };
 
-  PosibErr<void> setup(CachePtr<const TypoEditDistanceWeights> & res,
+  PosibErr<void> setup(CachePtr<const TypoEditDistanceInfo> & res,
                        const Config * c, const Language * l, ParmString kb);
 
   // edit_distance finds the shortest edit distance. 
@@ -66,7 +72,7 @@ namespace aspeller {
 
   short typo_edit_distance(ParmString word, 
 			   ParmString target,
-			   const TypoEditDistanceWeights & w);
+			   const TypoEditDistanceInfo & w);
 }
 
 #endif

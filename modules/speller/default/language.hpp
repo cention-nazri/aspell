@@ -96,7 +96,6 @@ namespace aspeller {
     char          to_upper_[256];
     char          to_title_[256];
     char          to_stripped_[256];
-    unsigned char to_normalized_[256];
     char          to_plain_[256];
     int           to_uni_[256];
     CharType      char_type_[256];
@@ -104,8 +103,6 @@ namespace aspeller {
     char          de_accent_[256];
 
     StoreAs       store_as_;
-
-    int max_normalized_;
 
     String      soundslike_chars_;
     String      clean_chars_;
@@ -177,9 +174,6 @@ namespace aspeller {
     //
     //
 
-    char to_normalized(char c) const {return to_normalized_[to_uchar(c)];}
-    unsigned char max_normalized() const {return max_normalized_;}
-    
     char to_plain(char c) const {return to_plain_[to_uchar(c)];}
 
     char de_accent(char c) const {return de_accent_[to_uchar(c)];}

@@ -722,7 +722,6 @@ namespace {
     else if (!full_soundslike)
       invisible_soundslike = true;
 
-
     ConvEC iconv;
     if (!config.have("norm-strict"))
       config.replace("norm-strict", "true");

@@ -8,11 +8,14 @@
 #include "file_data_util.hpp"
 #include "getdata.hpp"
 #include "cache-t.hpp"
+#include "asc_ctype.hpp"
 
 // edit_distance is implemented using a straight forward dynamic
 // programming algorithm with out any special tricks.  Its space
 // usage AND running time is tightly asymptotically bounded by
 // strlen(a)*strlen(b)
+
+typedef unsigned char uchar;
 
 namespace aspeller {
 
@@ -20,14 +23,12 @@ namespace aspeller {
 
   short typo_edit_distance(ParmString word0, 
 			   ParmString target0,
-			   const TypoEditDistanceWeights & w) 
+			   const TypoEditDistanceInfo & w) 
   {
     int word_size   = word0.size() + 1;
     int target_size = target0.size() + 1;
-    const unsigned char * word 
-      = reinterpret_cast<const unsigned char *>(word0.str());
-    const unsigned char * target 
-      = reinterpret_cast<const unsigned char *>(target0.str());
+    const uchar * word   = reinterpret_cast<const uchar *>(word0.str());
+    const uchar * target = reinterpret_cast<const uchar *>(target0.str());
     VARARRAY(short, e_d, word_size * target_size);
     ShortMatrix e(word_size,target_size, e_d);
     e(0,0) = 0;
@@ -75,19 +76,24 @@ namespace aspeller {
     return e(word_size-1,target_size-1);
   }
 
-  static GlobalCache<TypoEditDistanceWeights> typo_edit_dist_weights_cache("keyboard");
+  static GlobalCache<TypoEditDistanceInfo> typo_edit_dist_info_cache("keyboard");
 
-  PosibErr<void> setup(CachePtr<const TypoEditDistanceWeights> & res,
+  PosibErr<void> setup(CachePtr<const TypoEditDistanceInfo> & res,
                        const Config * c, const Language * l, ParmString kb)
   {
-    PosibErr<TypoEditDistanceWeights *> pe = get_cache_data(&typo_edit_dist_weights_cache, c, l, kb);
+    PosibErr<TypoEditDistanceInfo *> pe = get_cache_data(&typo_edit_dist_info_cache, c, l, kb);
     if (pe.has_err()) return pe;
     res.reset(pe.data);
     return no_err;
   }
 
-  PosibErr<TypoEditDistanceWeights *> 
-  TypoEditDistanceWeights::get_new(const char * kb, const Config * cfg, const Language * l)
+  struct CharPair {
+    char d[2];
+    CharPair(char a, char b) {d[0] = a; d[1] = b;}
+  };
+
+  PosibErr<TypoEditDistanceInfo *> 
+  TypoEditDistanceInfo::get_new(const char * kb, const Config * cfg, const Language * l)
   {
     FStream in;
     String file, dir1, dir2;
@@ -95,10 +101,65 @@ namespace aspeller {
     find_file(file, dir1, dir2, kb, ".kbd");
     RET_ON_ERR(in.open(file.c_str(), "r"));
 
-    TypoEditDistanceWeights * w = new TypoEditDistanceWeights();
+    ConvEC iconv;
+    RET_ON_ERR(iconv.setup(*cfg, "utf-8", l->charmap(), NormFrom));
+
+    Vector<CharPair> data;
+
+    char to_stripped[256];
+    for (int i = 0; i <= 255; ++i)
+      to_stripped[i] = l->to_stripped(i);
+
+    String buf;
+    DataPair d;
+    while (getdata_pair(in, d, buf)) {
+      if (d.key == "key") {
+        PosibErr<char *> pe(iconv(d.value.str, d.value.size));
+        if (pe.has_err()) 
+          return pe.with_file(file, d.line_num);
+        char * v = pe.data;
+        char base = *v;
+        while (*v) {
+          to_stripped[(uchar)*v] = base;
+          ++v;
+          while (asc_isspace(*v)) ++v;
+        }
+      } else {
+        PosibErr<char *> pe(iconv(d.key.str, d.key.size));
+        if (pe.has_err()) 
+          return pe.with_file(file, d.line_num);
+        char * v = pe.data;
+        if (strlen(v) != 2) 
+          return make_err(invalid_string, d.key.str).with_file(file, d.line_num);
+        to_stripped[(uchar)v[0]] = v[0];
+        to_stripped[(uchar)v[1]] = v[1];
+        data.push_back(CharPair(v[0], v[1]));
+      }
+    }
+
+    TypoEditDistanceInfo * w = new TypoEditDistanceInfo();
     w->keyboard = kb;
+
+    memset(w->to_normalized_, 0, sizeof(w->to_normalized_));
+
+    int c = 1;
+    for (int i = 0; i <= 255; ++i) {
+      if (l->is_alpha(i)) {
+	if (w->to_normalized_[(uchar)to_stripped[i]] == 0) {
+	  w->to_normalized_[i] = c;
+	  w->to_normalized_[(uchar)to_stripped[i]] = c;
+	  ++c;
+	} else {
+	  w->to_normalized_[i] = w->to_normalized_[(uchar)to_stripped[i]];
+	}
+      }
+    }
+    for (int i = 0; i != 256; ++i) {
+      if (w->to_normalized_[i]==0) w->to_normalized_[i] = c;
+    }
+    w->max_normalized = c;
     
-    int c = l->max_normalized() + 1;
+    c = w->max_normalized + 1;
     int cc = c * c;
     w->data = (short *)malloc(cc * 2 * sizeof(short));
     w->repl .init(c, c, w->data);
@@ -111,19 +172,16 @@ namespace aspeller {
       }
     }
     
-    String buf;
-    DataPair d;
-    while (getdata_pair(in, d, buf)) {
-      if (d.key.size != 2)
-        return make_err(bad_file_format, file);
-      w->repl (l->to_normalized(d.key[0]),
-               l->to_normalized(d.key[1])) = w->repl_dis1;
-      w->repl (l->to_normalized(d.key[1]),
-               l->to_normalized(d.key[0])) = w->repl_dis1;
-      w->extra(l->to_normalized(d.key[0]),
-               l->to_normalized(d.key[1])) = w->extra_dis1;
-      w->extra(l->to_normalized(d.key[1]),
-               l->to_normalized(d.key[0])) = w->extra_dis1;
+    for (unsigned i = 0; i != data.size(); ++i) {
+      const char * d = data[i].d;
+      w->repl (w->to_normalized(d[0]),
+               w->to_normalized(d[1])) = w->repl_dis1;
+      w->repl (w->to_normalized(d[1]),
+               w->to_normalized(d[0])) = w->repl_dis1;
+      w->extra(w->to_normalized(d[0]),
+               w->to_normalized(d[1])) = w->extra_dis1;
+      w->extra(w->to_normalized(d[1]),
+               w->to_normalized(d[0])) = w->extra_dis1;
     }
     
     for (int i = 0; i != c; ++i) {

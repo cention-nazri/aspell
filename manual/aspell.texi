@@ -1,5 +1,5 @@
 \input texinfo   @c -*-texinfo-*-
-@comment $Id: aspell.texi,v 1.30 2004/05/10 11:37:30 kevina Exp $
+@comment $Id: aspell.texi,v 1.31 2004/05/11 21:39:59 kevina Exp $
 @comment %**start of header
 @setfilename aspell.info
 @settitle GNU Aspell 0.60
@@ -728,9 +728,9 @@ ignore accents when checking words
 ignore commands to store replacement pairs
 
 @item save-repl (@i{boolean})
-save the replacement word list on 
+save the replacement word list on save all.
 
-@item save allkeyboard (@i{file})
+@item keyboard (@i{file})
 the base name of the keyboard definition file to use (@pxref{Notes on
 Typo-Analysis})
 
@@ -1275,29 +1275,53 @@ directory option.
 Aspell .33 and better will, in general, give a higher priority to
 certain misspellings which are likely to be due to typos such as
 @code{teh} instead of @code{the} or @code{hapoy} instead of
-@code{happy}.  However in order to do this well Aspell needs to know
-the layout of the keyboard.  The keyboard definition file simply
-identifies keys that are right next to each other.  The file has an
-extension of @file{.kbd} and each line consists of two letters
-corresponding to two keys that are right next to each other.  For
-example the line @samp{as} will indicate that @samp{a} and @samp{s}
-are right next to each other.  If @samp{as} is listed as a entry it
-is not necessary to list @samp{sa} as an entry as that will be done
-automatically.  Also by @emph{right next to each other} I mean to keys
-that are close enough together that it is easy to type one instead of
-the other.  On most keyboards this means keys that are to the left or
-to the right of each other and @emph{not} keys that are below or above
-it.
+@code{happy}.  However in order to do this well Aspell needs to know the
+layout of the keyboard via the keyboard definition file.  The keyboard
+definition file simply identifies the keys on the keyboard and and which
+of them are right next to each other.  It has an extension of
+@file{.kbd} and and all non-ASCII characters are expected to be in
+UTF-8.
+
+To identify a key use:
+
+@example
+  key @var{base} @var{other} @dots{}
+@end example
+@noindent
+
+where @var{base} is the base character that the key types, and
+@var{other} are other keys that the key can produce.  For example
+
+@example
+key a A @'a @'A
+@end example
+
+It generally only necessary to list keys which type more than one
+distinct letter as Aspell can derive the rest from the language data
+file.  For example, it is not necessary to include the previously
+mentioned key.
+
+To identify two keys as being right next to each other simpile list the
+type keys right after each other.  For example the line:
+
+@example
+as
+@end example
+
+@noindent
+will indicate that @samp{a} and @samp{s} are right next to each other.
+If @samp{as} is listed as a entry it is not necessary to list @samp{sa}
+as an entry as that will be done automatically.  Also by @dfn{right
+next to each other} I mean to keys that are close enough together that
+it is easy to type one instead of the other.  On most keyboards this
+means keys that are to the left or to the right of each other and
+@emph{not} keys that are below or above it.
 
 The default for this option is normally @option{standard}.  However
 the default can be changed via the language data file.  The normal
 default, @option{standard}, should work well for most QWERTY like
 keyboard layouts.  It may need minor adjusting for foreign keyboards.
-The @option{dvorak} option can be used for a Dvorak layout.  When
-creating a keyboard definition file for a foreign language please keep
-in mind that Aspell completely ignores accents when scoring words so
-that the key @samp{o} and @samp{@"o} will appear to be the same key
-to aspell even if they are in fact separate keys on your keyboard.
+The @option{dvorak} option can be used for a Dvorak layout.
 
 @node Notes on the Different Suggestion Modes
 @subsection Notes on the Different Suggestion Modes
