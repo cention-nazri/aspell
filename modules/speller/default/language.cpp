@@ -497,8 +497,8 @@ namespace aspeller {
         ++r;
       } else if (log) {
         const char * msg = res == InvalidAffix 
-          ? _("Removing invalid affix '%s' from word %s.\n")
-          : _("Removing unapplicable affix '%s' from word %s.\n");
+          ? _("Warning: Removing invalid affix '%s' from word %s.\n")
+          : _("Warning: Removing unapplicable affix '%s' from word %s.\n");
         log->printf(msg, msgconv1(*a), msgconv2(word));
       }
     }
@@ -629,7 +629,7 @@ namespace aspeller {
       PosibErr<const char *> pe = iconv(orig);
       if (pe.has_err()) {
         if (!skip_invalid_words) return pe;
-        if (log) log->printf(_("Error: %s Skipping string.\n"), pe.get_err()->mesg);
+        if (log) log->printf(_("Warning: %s Skipping string.\n"), pe.get_err()->mesg);
         else pe.ignore_err();
         goto loop;
       }
@@ -675,20 +675,25 @@ namespace aspeller {
         }
       }
     }
-    for (; str < str_end; str += strlen(str) + 1) {
-      if (!*str) continue;
+    while (str < str_end) 
+    {
+      if (!*str) {++str; continue;}
+
       PosibErrBase pe2 = validate_words ? check_if_valid(*lang, str) : no_err;
-      if (pe2.has_err()) {
-        if (!skip_invalid_words) return pe2;
-        if (log) log->printf(_("Error: %s Skipping word.\n"), pe2.get_err()->mesg);
-        else pe2.ignore_err();
-      } else {
-        val.word.str = str;
-        val.word.size = strlen(str);
-        str += val.word.size + 1;
-        return true;
-      }
-    }
+
+      val.word.str = str;
+      val.word.size = strlen(str);
+      str += val.word.size + 1;
+
+      if (!pe2.has_err() && val.word.size + (*val.aff ? val.aff.size + 1 : 0) > 240)
+        pe2 = make_err(invalid_word, MsgConv(lang)(val.word),
+                       _("The total length is larger than 240 characters."));
+
+      if (!pe2.has_err()) return true;
+      if (!skip_invalid_words) return pe2;
+      if (log) log->printf(_("Warning: %s Skipping word.\n"), pe2.get_err()->mesg);
+      else pe2.ignore_err();
+    } 
     str = 0;
     goto loop;
   }

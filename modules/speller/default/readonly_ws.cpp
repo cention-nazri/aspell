@@ -791,7 +791,8 @@ namespace {
     // Read in Wordlist
     //
     {
-      const char * w0;
+      WordListIterator wl_itr(els, &lang, config.retrieve_bool("warn") ? &CERR : 0);
+      wl_itr.init(config);
       ObjStack exp_buf;
       WordAff * exp_list;
       WordAff single;
@@ -799,29 +800,16 @@ namespace {
       Vector<WordAff> af_list;
       WordData * * prev = &first;
 
-      while ( (w0 = els->next()) != 0) {
+      for (;;) {
 
-	unsigned int s = strlen(w0);
-	CharVector tstr;
-	tstr.append(w0, s+1);
-	RET_ON_ERR_SET(iconv(tstr.data(), tstr.size()), char *, w);
-        s = strlen(w);
+        PosibErr<bool> pe = wl_itr.adv();
+        if (pe.has_err()) return pe;
+        if (!pe.data) break;
 
-        if (s > 240)
-          return make_err(invalid_word, MsgConv(lang)(w),
-                          _("The total word length is larger than 240 characters."));
+        const char * w = wl_itr->word.str;
+        unsigned int s = wl_itr->word.size;
 
-        char * p0 = strchr(w, '/');
-
-        if (p0) { // affix info
-	  s = p0 - w;
-          *p0 = '\0';
-          ++p0;
-        }
-
-        const char * affixes = p0;
-
-	RET_ON_ERR(check_if_valid(lang,w));
+        const char * affixes = wl_itr->aff.str;
 
         if (affixes && !lang.affix())
           return make_err(other_error, 

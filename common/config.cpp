@@ -1097,7 +1097,7 @@ namespace acommon {
        N_("indicator for affix flags in word lists"), KEYINFO_UTF8}
     , {"use-other-dicts", KeyInfoBool, "true",
        N_("use personal, replacement & session dictionaries")}
-    , {"warn", KeyInfoBool, "false", // FIXME: Implement
+    , {"warn", KeyInfoBool, "true",
        N_("enable warnings")}
     , {"normalize", KeyInfoBool, "true",
        N_("enable Unicode normalization")}
@@ -1130,9 +1130,9 @@ namespace acommon {
        N_("check if affix flags are valid")}
     , {"clean-words", KeyInfoBool, "false",
        N_("attempts to clean words so that they are valid")}
-    , {"skip-invalid-words",  KeyInfoBool, "false",
+    , {"skip-invalid-words",  KeyInfoBool, "true",
        N_("skip invalid words")}
-    , {"clean-affixes", KeyInfoBool, "false",
+    , {"clean-affixes", KeyInfoBool, "true",
        N_("remove invalid affix flags")}
     
     //
