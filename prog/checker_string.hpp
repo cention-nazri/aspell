@@ -21,7 +21,7 @@ public:
   CheckerString(AspellSpeller * speller, FILE * in, FILE * out, int lines);
   ~CheckerString();
 
-private:
+public: // but don't use
   void inc(Lines::iterator & i) {
     ++i;
     if (i == lines_.end())
