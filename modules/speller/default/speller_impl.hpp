@@ -40,9 +40,11 @@ namespace aspeller {
     bool              save_on_saveall;
     SpecialId         special_id;
     SpellerDict     * next;
-    SpellerDict(Dict *);
+    SpellerDict(Dict * d) : special_id(none_id) {set(d);}
     SpellerDict(Dict *, const Config &, SpecialId id = none_id);
     ~SpellerDict() {if (dict) dict->release();}
+  private:
+    void set(Dict *);
   };
 
   class SpellerImpl : public Speller

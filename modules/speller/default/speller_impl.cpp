@@ -244,7 +244,7 @@ namespace aspeller {
   }
 
   PosibErr<const WordList *> SpellerImpl::main_word_list() const {
-    const WordList * wl = dynamic_cast<const WordList *>(main_);
+    const WordList * wl = static_cast<const WordList *>(main_);
     if (!wl) return make_err(operation_not_supported_error, 
                              _("The main word list is unavailable."));
     return wl;
@@ -451,7 +451,7 @@ namespace aspeller {
       dicts_(0), personal_(0), session_(0), repl_(0), main_(0)
   {}
 
-  inline PosibErr<void> add_dicts(SpellerImpl * sp, DictList & d)
+  static inline PosibErr<void> add_dicts(SpellerImpl * sp, DictList & d)
   {
     for (;!d.empty(); d.pop())
     {
@@ -471,6 +471,9 @@ namespace aspeller {
 
     DictList to_add;
     RET_ON_ERR(add_data_set(config_->retrieve("master-path"), *config_, &to_add, this));
+    assert(!to_add.empty());
+    RET_ON_ERR(add_dict(new SpellerDict(to_add.last(), *config_, main_id)));
+    to_add.pop();
     RET_ON_ERR(add_dicts(this, to_add));
 
     s_cmp.lang = lang_;
@@ -661,9 +664,10 @@ namespace aspeller {
   //
   //
 
-  SpellerDict::SpellerDict(Dict * d) 
-    : dict(d), special_id(none_id), next(0) 
+  void SpellerDict::set(Dict * d) 
   {
+    dict = d;
+    next = 0;
     switch (dict->basic_type) {
     case Dict::basic_dict:
       use_to_check = true;
@@ -681,46 +685,17 @@ namespace aspeller {
   }
 
   SpellerDict::SpellerDict(Dict * w, const Config & c, SpecialId id)
-    : next(0) 
+    : special_id(id)
   {
-    dict = w;
-    special_id = id;
+    set(w);
     switch (id) {
-    case main_id:
-      if (dict->basic_type == Dict::basic_dict) {
-
-        use_to_check    = true;
-        use_to_suggest  = true;
-        save_on_saveall = false;
-
-      } else if (dict->basic_type == Dict::replacement_dict) {
-        
-        use_to_check    = false;
-        use_to_suggest  = false;
-        save_on_saveall = false;
-        
-      } else {
-        
-        abort();
-        
-      }
-      break;
     case personal_id:
-      use_to_check = true;
-      use_to_suggest = true;
       save_on_saveall = true;
       break;
-    case session_id:
-      use_to_check = true;
-      use_to_suggest = true;
-      save_on_saveall = false;
-      break;
     case personal_repl_id:
-      use_to_check = false;
-      use_to_suggest = true;
       save_on_saveall = c.retrieve_bool("save-repl");
       break;
-    case none_id:
+    default: // to avoid warnings with gcc
       break;
     }
   }

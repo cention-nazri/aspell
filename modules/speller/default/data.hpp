@@ -171,8 +171,7 @@ namespace aspeller {
   }
 
   class DictList {
-    // well a stack at the moment but it may eventually become a list
-    // NOT necessarily first in first out
+    // a stack
     Vector<Dict *> data;
   private:
     DictList(const DictList &);
@@ -183,6 +182,7 @@ namespace aspeller {
     void add(Dict * o) {data.push_back(o);}
     Dict * last() {return data.back();}
     void pop() {data.pop_back();}
+    unsigned size() {return data.size();}
     bool empty() {return data.empty();}
     ~DictList() {for (; !empty(); pop()) last()->release();}
   };
@@ -194,7 +194,11 @@ namespace aspeller {
   static const DataType DT_Multi        = 1<<3;
   static const DataType DT_Any          = 0xFF;
 
-  // any new extra dictionaries that were loaded will be ii
+  // Prep a dictionary for adding to the SpellerImpl
+  // Store any new dictionaries to add in other_dicts.  If the current
+  // dict is a multi-dict than there may be more than one.  The
+  // last element in other_dicts in garnateed to the the same 
+  // as the dictionary returned.
   PosibErr<Dict *> add_data_set(ParmString file_name,
                                 Config &,
                                 DictList * other_dicts = 0,

@@ -544,6 +544,27 @@ void setup_display_conv(Config * config)
   EXIT_ON_ERR(uiconv.setup(*options, enc, doc_enc, NormNone));
 }
 
+AspellSpeller * new_speller()
+{
+  AspellCanHaveError * ret 
+    = new_aspell_speller(reinterpret_cast<AspellConfig *>(options.get()));
+  if (aspell_error(ret)) {
+    print_error(aspell_error_message(ret));
+    exit(1);
+  }
+  return to_aspell_speller(ret);
+}
+
+AspellChecker * new_checker(AspellSpeller * sp)
+{
+  AspellCanHaveError * ret = new_aspell_checker(sp);
+  if (aspell_error(ret)) {
+    print_error(aspell_error_message(ret));
+    exit(1);
+  }
+  return to_aspell_checker(ret);
+}
+
 
 ///////////////////////////
 //
@@ -653,13 +674,6 @@ void print_elements(const AspellWordList * wl) {
   COUT.printf("%u: %s\n", count, line.c_str());
 }
 
-Checker * new_checker(AspellSpeller * speller)
-{
-  EXIT_ON_ERR_SET(new_checker(reinterpret_cast<Speller *>(speller)),
-		  StackPtr<Checker>, checker);
-  return checker.release();
-}
-
 #define BREAK_ON_SPELLER_ERR\
   do {if (aspell_speller_error(speller)) {\
     print_error(aspell_speller_error_message(speller)); break;\
@@ -688,13 +702,7 @@ void pipe()
 
   start = clock();
   
-  AspellCanHaveError * ret 
-    = new_aspell_speller(reinterpret_cast<AspellConfig *>(options.get()));
-  if (aspell_error(ret)) {
-    print_error(aspell_error_message(ret));
-    exit(1);
-  }
-  AspellSpeller * speller = to_aspell_speller(ret);
+  AspellSpeller * speller = new_speller();
   aspeller::SpellerImpl * real_speller = reinterpret_cast<aspeller::SpellerImpl *>(speller);
   Config * config = real_speller->config();
   FullConv iconv(real_speller->to_internal_);
@@ -705,7 +713,7 @@ void pipe()
   if (do_time)
     COUT << _("Time to load word list: ")
          << (clock() - start)/(double)CLOCKS_PER_SEC << "\n";
-  StackPtr<Checker> checker(new_checker(speller));
+  AspellChecker * checker = new_checker(speller);
   int c;
   const char * w;
   CharVector buf;
@@ -822,9 +830,9 @@ void pipe()
     default:
       line0 = line;
       line += ignore;
-      checker->process(line, strlen(line));
-      const CheckerToken * token = 0;
-      while (token = checker->next(), token) {
+      aspell_checker_process(checker, line, strlen(line), 0, 0);
+      const AspellCheckerToken * token = 0;
+      while (token = aspell_checker_next(checker), token) {
         if (token->correct) {
           if (!terse_mode) {
             const CheckInfo * ci = real_speller->check_info();
@@ -912,13 +920,14 @@ void pipe()
   reload_filters:
     BREAK_ON_ERR(config->replace("encoding", word));
     BREAK_ON_ERR(reload_filters(real_speller));
-    checker.del();
+    //checker.del(); // FIXME.  Why?
     //checker = new_checker(speller, status_fun_inf);
     iconv.reset(real_speller->to_internal_);
     oconv.reset(real_speller->from_internal_);
     continue;
   }
 
+  delete_aspell_checker(checker);
   delete_aspell_speller(speller);
 }
 
@@ -996,24 +1005,8 @@ void check()
     exit(-1);
   }
 
-  AspellCanHaveError * ret 
-    = new_aspell_speller(reinterpret_cast<AspellConfig *>(options.get()));
-  if (aspell_error(ret)) {
-    print_error(aspell_error_message(ret));
-    exit(1);
-  }
-
-  AspellSpeller * speller = to_aspell_speller(ret);
-  aspeller::SpellerImpl * real_speller = reinterpret_cast<aspeller::SpellerImpl *>(speller);
-
-  setup_display_conv(real_speller->config());
-
-  ret = new_aspell_checker(speller);
-  if (aspell_error(ret)) {
-    print_error(aspell_error_message(ret));
-    exit(1);
-  }
-  AspellChecker * checker = to_aspell_checker(ret);
+  AspellSpeller * speller = new_speller();
+  AspellChecker * checker = new_checker(speller);
 
   state = new CheckerString(checker, speller,in,out,64);
  
@@ -1269,20 +1262,8 @@ void Mapping::to_ispell()
 
 void list()
 {
-  AspellCanHaveError * ret 
-    = new_aspell_speller(reinterpret_cast<AspellConfig *>(options.get()));
-  if (aspell_error(ret)) {
-    print_error(aspell_error_message(ret));
-    exit(1);
-  }
-  AspellSpeller * speller = to_aspell_speller(ret);
-
-  ret = new_aspell_checker(speller);
-  if (aspell_error(ret)) {
-    print_error(aspell_error_message(ret));
-    exit(1);
-  }
-  AspellChecker * checker = to_aspell_checker(ret);
+  AspellSpeller * speller = new_speller();
+  AspellChecker * checker = new_checker(speller);
 
   state = new CheckerString(checker, speller,stdin,0,64);
 
@@ -1489,6 +1470,18 @@ void dump (aspeller::Dict * lws, Convert * conv)
   }
 }
 
+void dump (AspellSpeller * speller, 
+           const AspellWordList * (* get_word_list)(AspellSpeller *))
+{
+  const AspellWordList * wl = get_word_list(speller);
+  if (!wl) {print_error(aspell_speller_error_message(speller)); return;}
+  AspellStringEnumeration * els = aspell_word_list_elements(wl);
+  const char * w;
+  while ( (w = aspell_string_enumeration_next(els)) != 0 ) {
+    COUT.printl(w);
+  }
+}
+
 void master () {
   using namespace aspeller;
 
@@ -1512,9 +1505,9 @@ void master () {
     
   } else if (action == do_dump) {
 
-    EXIT_ON_ERR_SET(add_data_set(config->retrieve("master-path"), *config), Dict *, d);
-    StackPtr<Convert> conv(setup_conv(d->lang(), config));
-    dump(d, conv);
+    AspellSpeller * speller = new_speller();
+    dump(speller, aspell_speller_main_word_list);
+    delete_aspell_speller(speller);
   }
 }
 
@@ -1556,20 +1549,10 @@ void personal () {
 
   } else { // action == do_dump
 
-    // FIXME: This is currently broken
+    AspellSpeller * speller = new_speller();
+    dump(speller, aspell_speller_personal_word_list);
+    delete_aspell_speller(speller);
 
-    Config * config = options;
-    Dictionary * per = new_default_writable_dict();
-    per->load(config->retrieve("personal-path"), *config);
-    StackPtr<WordEntryEnumeration> els(per->detailed_elements());
-    StackPtr<Convert> conv(setup_conv(per->lang(), config));
-
-    WordEntry * wi;
-    while (wi = els->next(), wi) {
-      wi->write(COUT,*(per->lang()), conv);
-      COUT.put('\n');
-    }
-    delete per;
   }
 }
 

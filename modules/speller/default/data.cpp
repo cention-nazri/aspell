@@ -159,17 +159,21 @@ namespace aspeller {
   class DictStringEnumeration : public StringEnumeration 
   {
     ClonePtr<Dict::Enum> real_;
+    const Language  * lang_;
+    String temp_str;
   public:
-    DictStringEnumeration(Dict::Enum * r) : real_(r) {}
+    DictStringEnumeration(Dict::Enum * r, const Language  * l) 
+      : real_(r), lang_(l) {}
     
     bool at_end() const {
       return real_->at_end();
     }
     const char * next() {
-      // FIXME: It's not this simple when affixes are involved
+      temp_str.clear();
       WordEntry * w =  real_->next(); 
       if (!w) return 0;
-      return w->word;
+      w->write(temp_str, *lang_);
+      return temp_str.str();
     }
     StringEnumeration * clone() const {
       return new DictStringEnumeration(*this);
@@ -240,7 +244,7 @@ namespace aspeller {
   {
     Enum * e = detailed_elements();
     if (!e) return 0;
-    return new DictStringEnumeration(e);
+    return new DictStringEnumeration(e, lang());
   }
   
   Dict::Enum * Dictionary::detailed_elements() const
@@ -333,7 +337,7 @@ namespace aspeller {
     CharVector buf;
     write_conv(word);
     if (aff && *aff) {
-      o << '/';
+      o << '/'; // FIXME: This isn't write for UCS-2,4
       write_conv(aff);
     }
     return o;
