@@ -5,11 +5,11 @@ bin_SCRIPTS = pspell-config run-with-aspell aspell-import
 pkgdata_SCRIPTS = spell ispell
 
 run-with-aspell: run-with-aspell.create
-	sh run-with-aspell.create ${pkgdatadir} > run-with-aspell
+	sh ${srcdir}/run-with-aspell.create ${pkgdatadir} > run-with-aspell
 	chmod 755 run-with-aspell
 
 pspell-config: mkconfig
-	sh mkconfig ${VERSION} ${datadir} ${pkgdatadir}
+	sh ${srcdir}/mkconfig ${VERSION} ${datadir} ${pkgdatadir}
 
 CLEANFILES = pspell-config run-with-aspell
 

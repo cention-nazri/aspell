@@ -93,7 +93,8 @@ namespace aspeller {
 
   PosibErr<void> WritableBaseCode::save(bool do_update) {
     FStream inout;
-    bool prev_existed = open_file_writelock(inout, file_name());
+    RET_ON_ERR_SET(open_file_writelock(inout, file_name()),
+		   bool, prev_existed);
 
     if (do_update
 	&& prev_existed 

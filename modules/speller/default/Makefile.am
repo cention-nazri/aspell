@@ -10,8 +10,6 @@ libaspell_speller_default_la_SOURCES = \
  l2editdist.cpp      phonet.cpp        suggest.cpp\
  language.cpp        phonetic.cpp      typo_editdist.cpp
 
+EXTRA_DIST = *.hpp
 
-libaspell_speller_default_la_LDFLAGS = -release 0.50.2
-
-EXTRA_DIST = *.hpp affix.license
 

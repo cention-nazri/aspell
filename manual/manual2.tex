@@ -1,11 +1,10 @@
-%% LyX 1.1 created this file.  For more info, see http://www.lyx.org/.
+%% LyX 1.2 created this file.  For more info, see http://www.lyx.org/.
 %% Do not edit unless you really know what you are doing.
 \documentclass[11pt,oneside,english]{book}
 \usepackage[T1]{fontenc}
 \usepackage[latin1]{inputenc}
 \usepackage{geometry}
 \geometry{verbose,letterpaper,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
-\usepackage{babel}
 \setcounter{secnumdepth}{3}
 \setlength\parskip{\medskipamount}
 \setlength\parindent{0pt}
@@ -72,10 +71,11 @@
 
 \end{htmlonly}
 
+\usepackage{babel}
 \makeatother
 \begin{document}
 
-\title{GNU Aspell 0.50.2}
+\title{GNU Aspell 0.50.3}
 
 
 \author{Copyright (c) 2000-2002\\
@@ -101,7 +101,7 @@ dictionaries when more than one Aspell process is open at once.
 \section{Comparison to other spell checker engines}
 
 \vspace{0.3cm}
-{\centering \begin{tabular}{|r|l|c|c|c|}
+\begin{center}\begin{tabular}{|r|l|c|c|c|}
 \hline 
 &
 Aspell&
@@ -139,7 +139,7 @@ x&
 ?&
 ?\\
 \hline
-\end{tabular}\par}
+\end{tabular}\end{center}
 \vspace{0.3cm}
 
 The suggestion Intelligence is based on a small test kernel of misspelled/correct
@@ -150,7 +150,7 @@ and 98 in \textbf{bad spellers} mode see section \ref{suggestion}
 for more information about the various suggestion modes.
 
 If you have any other information you would like to add to this chart
-please contact me at kevina at users sourceforge net.
+please contact me at kevina@gnu.org.
 
 
 \subsection{Comparison to Ispell}
@@ -365,31 +365,20 @@ release.
 
 Due to limited time and my general dislike for Microsoft Windows,
 Win32 is not an officially supported platform for Aspell. However,
-with a little effort, it should be possible for someone with experience
-with the Cgiwin development environment to create an Aspell binary
-and library (dll) using gcc. The library in theory should be able
-to be used by any Win32 compiler if it is compiled right, but this
-theory has never been tested.
-
-If you have experience with using Cgiwin or a Unix like environment
-and are willing to maintain an Aspell binary and/or library I would
-be willing to work with you to get Aspell to compile. If you are seriously
-interested please post to aspell-devel@gnu.org after you have given
-it an initial try. However, if, after reading this section, you do
-not know how to start then you most likely do not have the necessary
-experience to be able to get Aspell to compile. Please do not bother
-me with questions such as {}``I would like to use Aspell on Win32
-but I have no idea what to do.'', as I am not willing to teach you
-the basics of working with a Unix like environment.
+it is possible for someone with experience with the Cgiwin development
+environment to create an Aspell binary and library (dll) using gcc
+as others have done so. The library, in theory, should be able to
+be used by any Win32 compiler if it is compiled right, but this theory
+has never been tested.
 
 Aspell requires Gcc 2.95 (or better) and the Cgiwin development environment
 in order to compile on Win32. Both the Cgiwin or the Mingw version
 of Gcc should work. The Mingw version of Aspell will have slightly
 less functionality, but none of which is noticeable to the end user.
-Microsoft Visual C++, however, will not work as the compiler is far
-to buggy as far as C++ compliance goes. You are more than welcome
-to try but be warned that others in the past have tried and given
-up.
+Microsoft Visual C++, however, will not work with the released version
+of Aspell as the compiler is far to buggy as far as C++ compliance
+goes. However, there is a patch available which should allow Aspell
+to compile using Microsoft Visual C++ which you can find at \url{ftp://ftp.gnu.org/gnu/aspell}.
 
 In order to get the nice full screen interface with Mingw when spell
 checking files a curses implementation that does not require Cygwin
@@ -416,6 +405,17 @@ in aspell.conf. If Aspell is compiled with --enable-win32-relocatable
 than the personal word lists are saved in the \textbf{prefix} directory
 and the name is changed from {}``\texttt{.aspell.<lang>.{*}}'' to''
 \texttt{<lang>.{*}}''.
+
+If you have experience with using Cgiwin or a Unix like environment
+and are willing to maintain an Aspell binary and/or library I would
+be willing to work with you to get Aspell to compile. If you are seriously
+interested please post to aspell-devel@gnu.org after you have given
+it an initial try. However, if, after reading this section, you do
+not know how to start then you most likely do not have the necessary
+experience to be able to get Aspell to compile. Please do not bother
+me with questions such as {}``I would like to use Aspell on Win32
+but I have no idea what to do.'', as I am not willing to teach you
+the basics of working with a Unix like environment.
 
 
 \section{Using aspell-import}
@@ -465,9 +465,10 @@ mode to use where mode is one of ultra, fast, normal, or bad-spellers.
 See section \ref{suggestion} for more information on these modes.
 \item [--master=<\,{}<name>\,{}>]the main
 dictionary to use.
-\item [--keymapping=<\,{}<name>\,{}>]the keymapping
-to use. Either \textbf{aspell} for the default mapping or \textbf{ispell}
-to use the same mapping that the ispell utility uses.
+\item [--keymapping=<\,{}<name>\,{}>]the
+keymapping to use. Either \textbf{aspell} for the default mapping
+or \textbf{ispell} to use the same mapping that the ispell utility
+uses.
 \end{description}
 Please see Chapter \ref{customizing} for more information on the
 available options.
@@ -765,7 +766,7 @@ The following is a list of available options broken down by category.
 Each entry has the following format:
 
 \begin{quote}\begin{description}
-\item [<<option>>[,<<single letter abbreviations>>]] \textit{(<<type>>)} <<description>>
+\item [<<option>>[,<<single letter abbreviations>>]] (<<type>>) <<description>>
 \end{description}\end{quote}
 
 Where single letter options are specified as they would appear at
@@ -789,8 +790,8 @@ The following options may be used to control which dictionaries to
 use and how they behave (see section \ref{dict-opts} for more information):
 
 \begin{description}
-\item [master,-d]\textit{(string)} base name of the dictionary to use. If
-this option is specifed than Aspell with either use this dictionary
+\item [master,-d]\textit{(string)} base name of the dictionary to use.
+If this option is specifed than Aspell with either use this dictionary
 or die.
 \item [dict-dir]\textit{(dir)} location of the main word list
 \item [lang]\textit{(string)} language to use, it follows the same format
@@ -894,8 +895,10 @@ location (only works on Win32 and when compiled with --enable-win32-relocatable)
 \begin{description}
 \item [backup,-b|-x]\textit{(boolean)} create a backup file by appending
 {}``.bak'' to the file name. (Only applies when the command is \textbf{check})
-\item [time]\textit{(boolean)} time load time and suggest time in pipe mode.
-\item [reverse]\textit{(boolean)} reverse the order of the suggestions list.
+\item [time]\textit{(boolean)} time load time and suggest time in pipe
+mode.
+\item [reverse]\textit{(boolean)} reverse the order of the suggestions
+list.
 \item [keymapping]\textit{(string)} the keymapping to use. Either \textbf{aspell}
 for the default mapping or \textbf{ispell} to use the same mapping
 that the ispell utility uses.
@@ -1086,9 +1089,9 @@ of how aspell works is required. See section \ref{works} for that.
 The suggestion modes are as follows.
 
 \begin{description}
-\item [ultra]This method will use the fastest method available to come up
-with decent suggestions. This currently means that it will look for
-soundslikes within one edit distance apart without doing any typo
+\item [ultra]This method will use the fastest method available to come
+up with decent suggestions. This currently means that it will look
+for soundslikes within one edit distance apart without doing any typo
 analysis. It is slower than Ispell by a factor of 1.5 to 2 when a
 single word list is used. It speed is only minor affected by the size
 of the word list, if at all, but it is strongly effected by the number
@@ -1578,8 +1581,8 @@ to protect themselves against future changes in Aspell.
 To summarize these: 
 
 \begin{description}
-\item [{*}<\,{}<word>\,{}>]Add a word to the
-personal dictionary 
+\item [{*}<\,{}<word>\,{}>]Add a word to
+the personal dictionary 
 \item [\&<\,{}<word>\,{}>]Insert the all-lowercase
 version of the word in the personal dictionary
 \item [@<\,{}<word>\,{}>]Accept the word,
@@ -1611,8 +1614,8 @@ command. Aspell currently supports the following command.
 \begin{description}
 \item [cs~<\,{}<option>\,{}>,<\,{}<value>\,{}>]Change
 a configuration option.
-\item [cr~<\,{}<option>\,{}>]Prints the value
-of a configuration option.
+\item [cr~<\,{}<option>\,{}>]Prints the
+value of a configuration option.
 \item [pp]Returns a list of all words in the current personal wordlist.
 \item [ps]Returns a list of all words in the current session dictionary.
 \item [l]Returns the current language name.
@@ -1851,12 +1854,12 @@ GH~~~~~\_~~\\
 G~~~~~~K~~\\
 ~
 \end{lyxcode}
-{}``GH \nach \_'' has higher priority than {}``G \nach K''. {}``\_''
-represents the empty string {}``''. If {}``GH \nach \_'' would
-stand after {}``G \nach K'', the second rule would never match because
-the algorithm would stop searching for more rules after the first
-match. The above rules transform any {}``GH'' to an empty string
-(delete them) and transform any other {}``G'' to {}``K''.
+{}``GH \nach \_'' has higher priority than {}``G \nach K''.
+{}``\_'' represents the empty string {}``''. If {}``GH \nach \_''
+would stand after {}``G \nach K'', the second rule would never
+match because the algorithm would stop searching for more rules after
+the first match. The above rules transform any {}``GH'' to an empty
+string (delete them) and transform any other {}``G'' to {}``K''.
 
 At the end of the first string of a line (the search string) there
 may optionally stand a number of characters in brackets. One (only
@@ -1881,8 +1884,8 @@ rules will continue with the replacement string and not with the next
 character of the word. The rule {}``PH< \nach F'' for example would
 replace {}``PH'' with {}``F'' and then again start to search for
 a replacement rule for {}``F\ldots{}''. If there would also be
-rules like {}``FO \nach O'' and {}``F \nach \_'' then words like
-{}``PHOXYZ'' would be transformed to {}``OXYZ'' and any occurrences
+rules like {}``FO \nach O'' and {}``F \nach \_'' then words
+like {}``PHOXYZ'' would be transformed to {}``OXYZ'' and any occurrences
 of {}``PH'' that are not followed by an {}``O'' will be deleted
 like {}``PHIXYZ \nach IXYZ''. The second replacement however is
 not applied if the priority of this rule is lower than the priority
@@ -1952,8 +1955,8 @@ The same way as \char`\"{}\hoch\char`\"{} works does \char`\"{}\$\char`\"{}
 only apply on words that end with the search string. \char`\"{}GN\$ \nach N\char`\"{}
 only matches on words like \char`\"{}SIGN\char`\"{} but not \char`\"{}SIGNUM\char`\"{}.
 If you use \char`\"{}\hoch\char`\"{} and \char`\"{}\$\char`\"{} together,
-both of them must fit \char`\"{}ENOUGH\hoch\$ \nach NF\char`\"{} will
-only match the word \char`\"{}ENOUGH\char`\"{} and nothing else.
+both of them must fit \char`\"{}ENOUGH\hoch\$ \nach NF\char`\"{}
+will only match the word \char`\"{}ENOUGH\char`\"{} and nothing else.
 
 Of course you can combine all of the mentioned control characters
 but they must occur in this order: \texttt{< - priority \^{} \$}.
@@ -2037,8 +2040,8 @@ letters to the only really necessary ones.
 
 Characters that sound similar should be reduced to one. In English
 language for example `Z' sounds like `S' and that's why the transformation
-rule {}``Z \nach S'' is present in the replacement table. `PH' is
-spoken like `F' and so we have a {}``PH \nach F'' rule.
+rule {}``Z \nach S'' is present in the replacement table. `PH'
+is spoken like `F' and so we have a {}``PH \nach F'' rule.
 
 If you take a closer look you will even see that vowels sound very
 similar in English language: `contradiction', `cuntradiction', `cantradiction'
@@ -2250,6 +2253,21 @@ algorithm please see the data file \textbf{english\_phonet.dat}.
 
 \chapter{Changelog}
 
+
+\section*{Changes from 0.50.2 to 0.50.3 (Nov 23, 2002)}
+
+\begin{itemize}
+\item Hopefully fixed the ispell alignment error problem when Aspell is
+used with ispell.el.
+\item Fixed a problem with personal dictionaries on NFS mounted home directories.
+\item Compiled libaspell-common directory into libaspell for now to avoid
+forcing applications to relink when ever a new Aspell version is out
+which was due to the use of the libtool '-release' flag.
+\item Fixed Makefiles so that aspell can be built outside the source tree
+(i.e. with VPATH).
+\item Updated the section on compiling with Win32.
+\item Updated to Autoconf 2.56.
+\end{itemize}
 
 \section*{Changes from 0.50.1 to 0.50.2 (Sep 28, 2002)}
 
@@ -3112,8 +3130,9 @@ allows a client to access dictionary definitions from a set of natural
 language dictionary databases. \url{http://www.dict.org/}
 \item [Gnome]A project to build a complete, user-friendly desktop based
 entirely on free software. \url{http://www.gnome.org/}
-\item [GTK+]A library for creating graphical user interfaces for the X Window
-System. It is designed to be small, efficient, and flexible. \url{http://www.gtk.org/}
+\item [GTK+]A library for creating graphical user interfaces for the X
+Window System. It is designed to be small, efficient, and flexible.
+\url{http://www.gtk.org/}
 \item [GUI]Graphics User Interface
 \item [Ispell.el]Emacs interface for ispell. \url{http://www.kdstevens.com/~stevens/ispell-page.html}
 \item [Ispell]An international spell checker which is just about the only
@@ -3125,8 +3144,8 @@ though a pipe.
 \url{http://www.kde.org}
 \item [Linux]A Open Source version of Unix which runs on many platforms.
 \url{http://www.linux.org/}
-\item [\LyX{}]An What You See is What You Mean document editor for the X
-environment, \url{http://www.lyx.org}
+\item [\LyX{}]An What You See is What You Mean document editor for the
+X environment, \url{http://www.lyx.org}
 \item [Open~Source]Software where the source code is available for anyone
 to extend or modify. \url{http://www.opensource.org/}
 \item [Red~Hat]A commercial Linux distribution. \url{http://www.redhat.com}

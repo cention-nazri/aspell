@@ -1,5 +1,5 @@
-#LyX 1.1 created this file. For more info see http://www.lyx.org/
-\lyxformat 218
+#LyX 1.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 220
 \textclass book
 \begin_preamble
 
@@ -55,6 +55,8 @@
 \paperpackage a4
 \use_geometry 1
 \use_amsmath 0
+\use_natbib 0
+\use_numerical_citations 0
 \paperorientation portrait
 \leftmargin 1in
 \topmargin 1in
@@ -72,7 +74,7 @@
 
 \layout Title
 
-GNU Aspell 0.50.2
+GNU Aspell 0.50.3
 \layout Author
 
 Copyright (c) 2000-2002
@@ -108,22 +110,22 @@ Comparison to other spell checker engines
 \added_space_top 0.3cm \added_space_bottom 0.3cm \align center 
 
 \begin_inset  Tabular
-<lyxtabular version="2" rows="6" columns="5">
-<features rotate="false" islongtable="false" endhead="0" endfirsthead="0" endfoot="0" endlastfoot="0">
-<column alignment="right" valignment="top" leftline="true" rightline="false" width="" special="">
-<column alignment="left" valignment="top" leftline="true" rightline="false" width="" special="">
-<column alignment="center" valignment="top" leftline="true" rightline="false" width="" special="">
-<column alignment="center" valignment="top" leftline="true" rightline="false" width="" special="">
-<column alignment="center" valignment="top" leftline="true" rightline="true" width="" special="">
-<row topline="true" bottomline="false" newpage="false">
-<cell multicolumn="0" alignment="right" valignment="top" topline="true" bottomline="true" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
+<lyxtabular version="3" rows="6" columns="5">
+<features>
+<column alignment="right" valignment="top" leftline="true" width="0pt">
+<column alignment="left" valignment="top" leftline="true" width="0pt">
+<column alignment="center" valignment="top" leftline="true" width="0pt">
+<column alignment="center" valignment="top" leftline="true" width="0pt">
+<column alignment="center" valignment="top" leftline="true" rightline="true" width="0pt">
+<row topline="true">
+<cell alignment="right" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \layout Standard
 
 \end_inset 
 </cell>
-<cell multicolumn="0" alignment="left" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \layout Standard
@@ -131,7 +133,7 @@ Comparison to other spell checker engines
 Aspell
 \end_inset 
 </cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \layout Standard
@@ -139,7 +141,7 @@ Aspell
 Ispell
 \end_inset 
 </cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \layout Standard
@@ -147,7 +149,7 @@ Ispell
 Netscape 4.0
 \end_inset 
 </cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="true" rotate="false" usebox="none" width="" special="">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
 \layout Standard
@@ -156,8 +158,8 @@ Microsoft Word 97
 \end_inset 
 </cell>
 </row>
-<row topline="true" bottomline="false" newpage="false">
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \layout Standard
@@ -165,7 +167,7 @@ Microsoft Word 97
 Open Source
 \end_inset 
 </cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \layout Standard
@@ -173,7 +175,7 @@ Open Source
 x
 \end_inset 
 </cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \layout Standard
@@ -181,14 +183,14 @@ x
 x
 \end_inset 
 </cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \layout Standard
 
 \end_inset 
 </cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="true" rotate="false" usebox="none" width="" special="">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
 \layout Standard
@@ -196,8 +198,8 @@ x
 \end_inset 
 </cell>
 </row>
-<row topline="true" bottomline="false" newpage="false">
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \layout Standard
@@ -205,7 +207,7 @@ x
 Suggestion Intelligence
 \end_inset 
 </cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \layout Standard
@@ -213,7 +215,7 @@ Suggestion Intelligence
 88-98
 \end_inset 
 </cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \layout Standard
@@ -221,7 +223,7 @@ Suggestion Intelligence
 54
 \end_inset 
 </cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \layout Standard
@@ -229,7 +231,7 @@ Suggestion Intelligence
 55-70?
 \end_inset 
 </cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="true" rotate="false" usebox="none" width="" special="">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
 \layout Standard
@@ -238,8 +240,8 @@ Suggestion Intelligence
 \end_inset 
 </cell>
 </row>
-<row topline="true" bottomline="false" newpage="false">
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \layout Standard
@@ -247,7 +249,7 @@ Suggestion Intelligence
 Personal part of Suggestions
 \end_inset 
 </cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \layout Standard
@@ -255,7 +257,7 @@ Personal part of Suggestions
 x
 \end_inset 
 </cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \layout Standard
@@ -263,7 +265,7 @@ x
 x
 \end_inset 
 </cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \layout Standard
@@ -271,7 +273,7 @@ x
 x
 \end_inset 
 </cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="true" rotate="false" usebox="none" width="" special="">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
 \layout Standard
@@ -279,8 +281,8 @@ x
 \end_inset 
 </cell>
 </row>
-<row topline="true" bottomline="false" newpage="false">
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \layout Standard
@@ -288,7 +290,7 @@ x
 Alternate Dictionaries
 \end_inset 
 </cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \layout Standard
@@ -296,7 +298,7 @@ Alternate Dictionaries
 x
 \end_inset 
 </cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \layout Standard
@@ -304,7 +306,7 @@ x
 x
 \end_inset 
 </cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \layout Standard
@@ -312,7 +314,7 @@ x
 ?
 \end_inset 
 </cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="true" rotate="false" usebox="none" width="" special="">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
 \layout Standard
@@ -321,8 +323,8 @@ x
 \end_inset 
 </cell>
 </row>
-<row topline="true" bottomline="true" newpage="false">
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \layout Standard
@@ -330,7 +332,7 @@ x
 International Support
 \end_inset 
 </cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \layout Standard
@@ -338,7 +340,7 @@ International Support
 x
 \end_inset 
 </cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \layout Standard
@@ -346,7 +348,7 @@ x
 x
 \end_inset 
 </cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \layout Standard
@@ -354,7 +356,7 @@ x
 ?
 \end_inset 
 </cell>
-<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="true" rotate="false" usebox="none" width="" special="">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
 \layout Standard
@@ -399,7 +401,7 @@ mode, 93 in
 \layout Standard
 
 If you have any other information you would like to add to this chart please
- contact me at kevina at users sourceforge net.
+ contact me at kevina@gnu.org.
 \layout Subsection
 
 Comparison to Ispell
@@ -817,31 +819,11 @@ Win32 Notes
 
 Due to limited time and my general dislike for Microsoft Windows, Win32
  is not an officially supported platform for Aspell.
- However, with a little effort, it should be possible for someone with experienc
-e with the Cgiwin development environment to create an Aspell binary and
- library (dll) using gcc.
- The library in theory should be able to be used by any Win32 compiler if
- it is compiled right, but this theory has never been tested.
-\layout Standard
-
-If you have experience with using Cgiwin or a Unix like environment and
- are willing to maintain an Aspell binary and/or library I would be willing
- to work with you to get Aspell to compile.
- If you are seriously interested please post to aspell-devel@gnu.org after
- you have given it an initial try.
- However, if, after reading this section, you do not know how to start then
- you most likely do not have the necessary experience to be able to get
- Aspell to compile.
- Please do not bother me with questions such as 
-\begin_inset Quotes eld
-\end_inset 
-
-I would like to use Aspell on Win32 but I have no idea what to do.
-\begin_inset Quotes erd
-\end_inset 
-
-, as I am not willing to teach you the basics of working with a Unix like
- environment.
+ However, it is possible for someone with experience with the Cgiwin development
+ environment to create an Aspell binary and library (dll) using gcc as others
+ have done so.
+ The library, in theory, should be able to be used by any Win32 compiler
+ if it is compiled right, but this theory has never been tested.
 \layout Standard
 
 Aspell requires Gcc 2.95 (or better) and the Cgiwin development environment
@@ -849,10 +831,15 @@ Aspell requires Gcc 2.95 (or better) and the Cgiwin development environment
  Both the Cgiwin or the Mingw version of Gcc should work.
  The Mingw version of Aspell will have slightly less functionality, but
  none of which is noticeable to the end user.
- Microsoft Visual C++, however, will not work as the compiler is far to
- buggy as far as C++ compliance goes.
- You are more than welcome to try but be warned that others in the past
- have tried and given up.
+ Microsoft Visual C++, however, will not work with the released version
+ of Aspell as the compiler is far to buggy as far as C++ compliance goes.
+ However, there is a patch available which should allow Aspell to compile
+ using Microsoft Visual C++ which you can find at 
+\begin_inset LatexCommand \url{ftp://ftp.gnu.org/gnu/aspell}
+
+\end_inset 
+
+.
 \layout Standard
 
 In order to get the nice full screen interface with Mingw when spell checking
@@ -922,6 +909,26 @@ prefix
 \end_inset 
 
 .
+\layout Standard
+
+If you have experience with using Cgiwin or a Unix like environment and
+ are willing to maintain an Aspell binary and/or library I would be willing
+ to work with you to get Aspell to compile.
+ If you are seriously interested please post to aspell-devel@gnu.org after
+ you have given it an initial try.
+ However, if, after reading this section, you do not know how to start then
+ you most likely do not have the necessary experience to be able to get
+ Aspell to compile.
+ Please do not bother me with questions such as 
+\begin_inset Quotes eld
+\end_inset 
+
+I would like to use Aspell on Win32 but I have no idea what to do.
+\begin_inset Quotes erd
+\end_inset 
+
+, as I am not willing to teach you the basics of working with a Unix like
+ environment.
 \layout Section
 
 Using aspell-import
@@ -1757,8 +1764,13 @@ The Options
 
 The following is a list of available options broken down by category.
  Each entry has the following format:
-\layout LaTeX
+\layout Standard
 
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
 
 \backslash 
 begin{quote}
@@ -1767,17 +1779,16 @@ begin{description}
 \newline 
 
 \backslash 
-item [<<option>>[,<<single letter abbreviations>>]] 
-\shape italic 
-(<<type>>)
-\shape default 
- <<description>>
+item [<<option>>[,<<single letter abbreviations>>]] (<<type>>) <<description>>
 \newline 
 
 \backslash 
 end{description}
 \backslash 
 end{quote}
+\end_inset 
+
+
 \layout Standard
 
 Where single letter options are specified as they would appear at the command
@@ -4345,11 +4356,15 @@ G      K
 \end_inset 
 
 GH 
-\latex latex 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
 
 \backslash 
 nach 
-\latex default 
+\end_inset 
+
 _
 \begin_inset Quotes erd
 \end_inset 
@@ -4359,11 +4374,15 @@ _
 \end_inset 
 
 G 
-\latex latex 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
 
 \backslash 
 nach 
-\latex default 
+\end_inset 
+
 K
 \begin_inset Quotes erd
 \end_inset 
@@ -4391,11 +4410,15 @@ _
 \end_inset 
 
 GH 
-\latex latex 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
 
 \backslash 
 nach 
-\latex default 
+\end_inset 
+
 _
 \begin_inset Quotes erd
 \end_inset 
@@ -4405,11 +4428,15 @@ _
 \end_inset 
 
 G 
-\latex latex 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
 
 \backslash 
 nach 
-\latex default 
+\end_inset 
+
 K
 \begin_inset Quotes erd
 \end_inset 
@@ -4452,11 +4479,15 @@ y stand a number of characters in brackets.
 \end_inset 
 
 DG(EIY) 
-\latex latex 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
 
 \backslash 
 nach 
-\latex default 
+\end_inset 
+
 J
 \begin_inset Quotes erd
 \end_inset 
@@ -4507,11 +4538,15 @@ Behind the search string there can stand one or more dashes (-).
 \end_inset 
 
 TCH-- 
-\latex latex 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
 
 \backslash 
 nach 
-\latex default 
+\end_inset 
+
 _
 \begin_inset Quotes erd
 \end_inset 
@@ -4571,11 +4606,15 @@ If a
 \end_inset 
 
 PH< 
-\latex latex 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
 
 \backslash 
 nach 
-\latex default 
+\end_inset 
+
 F
 \begin_inset Quotes erd
 \end_inset 
@@ -4611,11 +4650,15 @@ F\SpecialChar \ldots{}
 \end_inset 
 
 FO 
-\latex latex 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
 
 \backslash 
 nach 
-\latex default 
+\end_inset 
+
 O
 \begin_inset Quotes erd
 \end_inset 
@@ -4625,11 +4668,15 @@ O
 \end_inset 
 
 F 
-\latex latex 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
 
 \backslash 
 nach 
-\latex default 
+\end_inset 
+
 _
 \begin_inset Quotes erd
 \end_inset 
@@ -4671,11 +4718,15 @@ O
 \end_inset 
 
 PHIXYZ
-\latex latex 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
  
 \backslash 
 nach
-\latex default 
+\end_inset 
+
  IXYZ
 \begin_inset Quotes erd
 \end_inset 
@@ -4691,11 +4742,15 @@ Priorities are added to a rule by putting a number between 0 and 9 at the
 \end_inset 
 
 ING6 
-\latex latex 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
 
 \backslash 
 nach 
-\latex default 
+\end_inset 
+
 N
 \begin_inset Quotes erd
 \end_inset 
@@ -4815,11 +4870,15 @@ S
 \end_inset 
 
 SCH 
-\latex latex 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
 
 \backslash 
 nach 
-\latex default 
+\end_inset 
+
 SH
 \begin_inset Quotes erd
 \end_inset 
@@ -4846,18 +4905,26 @@ SCH
 
  belongs together and may not be torn apart.
  After the algorithm has found "SCH 
-\latex latex 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
 
 \backslash 
 nach 
-\latex default 
+\end_inset 
+
 SH" it searches for a follow-up rule for "H"+"AUKEL".
  It finds "HAU--1 
-\latex latex 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
 
 \backslash 
 nach 
-\latex default 
+\end_inset 
+
 H", but does not apply it because its priority is lower than the one of
  the first rule.
  You see that this is a very powerful feature but it also can easily lead
@@ -4878,74 +4945,110 @@ at the beginning of the phonetic table file.
 \layout Standard
 
 The control character "
-\latex latex 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
 
 \backslash 
 hoch
-\latex default 
+\end_inset 
+
 " says that the search string only matches at the beginning of words so
  that the rule "RH
-\latex latex 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
 
 \backslash 
 hoch 
 \backslash 
 nach 
-\latex default 
+\end_inset 
+
 R" will only apply to words like "RHESUS" but not "PERHAPS".
  You can append another "
-\latex latex 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
 
 \backslash 
 hoch
-\latex default 
+\end_inset 
+
 " to the search string.
  In that case the algorithm treats the rest of the word totally separately
  from first matched string in at beginning.
  This is useful for prefixes whose pronunciation does not depend on the
  rest of the word and vice versa like "OVER
-\latex latex 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
 
 \backslash 
 hoch
 \backslash 
 hoch
-\latex default 
+\end_inset 
+
 " in English for example.
 \layout Standard
 
 The same way as "
-\latex latex 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
 
 \backslash 
 hoch
-\latex default 
+\end_inset 
+
 " works does "$" only apply on words that end with the search string.
  "GN$
-\latex latex 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
  
 \backslash 
 nach 
-\latex default 
+\end_inset 
+
 N" only matches on words like "SIGN" but not "SIGNUM".
  If you use "
-\latex latex 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
 
 \backslash 
 hoch
-\latex default 
+\end_inset 
+
 " and "$" together, both of them must fit "ENOUGH
-\latex latex 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
 
 \backslash 
 hoch
-\latex default 
+\end_inset 
+
 $ 
-\latex latex 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
 
 \backslash 
 nach 
-\latex default 
+\end_inset 
+
 NF" will only match the word "ENOUGH" and nothing else.
 \layout Standard
 
@@ -4967,11 +5070,15 @@ s for which you don't have any replacement rule --- the next character will
 
 If you want double letters to be reduced to one you must set up a rule like
  "LL- 
-\latex latex 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
 
 \backslash 
 nach 
-\latex default 
+\end_inset 
+
 L".
  If double letters in the resulting phonetic word should be allowed, you
  must place the line
@@ -5099,11 +5206,15 @@ Characters that sound similar should be reduced to one.
 \end_inset 
 
 Z 
-\latex latex 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
 
 \backslash 
 nach 
-\latex default 
+\end_inset 
+
 S
 \begin_inset Quotes erd
 \end_inset 
@@ -5114,11 +5225,15 @@ S
 \end_inset 
 
 PH 
-\latex latex 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
 
 \backslash 
 nach 
-\latex default 
+\end_inset 
+
 F
 \begin_inset Quotes erd
 \end_inset 
@@ -5571,14 +5686,47 @@ Please note that the soundslike equivalent is a rough approximation of how
 english_phonet.dat
 \series default 
 .
-\layout LaTeX
+\layout Standard
 
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
 
 \backslash 
 appendix
+\end_inset 
+
+
 \layout Chapter
 
 Changelog
+\layout Section*
+
+Changes from 0.50.2 to 0.50.3 (Nov 23, 2002)
+\layout Itemize
+
+Hopefully fixed the ispell alignment error problem when Aspell is used with
+ ispell.el.
+\layout Itemize
+
+Fixed a problem with personal dictionaries on NFS mounted home directories.
+\layout Itemize
+
+Compiled libaspell-common directory into libaspell for now to avoid forcing
+ applications to relink when ever a new Aspell version is out which was
+ due to the use of the libtool '-release' flag.
+\layout Itemize
+
+Fixed Makefiles so that aspell can be built outside the source tree (i.e.
+ with VPATH).
+\layout Itemize
+
+Updated the section on compiling with Win32.
+\layout Itemize
+
+Updated to Autoconf 2.56.
 \layout Section*
 
 Changes from 0.50.1 to 0.50.2 (Sep 28, 2002)
@@ -7134,67 +7282,103 @@ For example when asked to check the following C++ code:
 \layout LyX-Code
 
 cout <
-\latex latex 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
 
 \backslash 
 /
-\latex default 
+\end_inset 
+
 < "My age is: " <
-\latex latex 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
 
 \backslash 
 /
-\latex default 
+\end_inset 
+
 < num <
-\latex latex 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
 
 \backslash 
 /
-\latex default 
+\end_inset 
+
 < endl; 
 \newline 
 cout <
-\latex latex 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
 
 \backslash 
 /
-\latex default 
+\end_inset 
+
 < "Next year I will be " <
-\latex latex 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
 
 \backslash 
 /
-\latex default 
+\end_inset 
+
 < num + 1 <
-\latex latex 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
 
 \backslash 
 /
-\latex default 
+\end_inset 
+
 < endl; 
 \layout Standard
 
 cout, num, and endl will all be skipped.
  "cout" will be skipped because it is always preceded by a <
-\latex latex 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
 
 \backslash 
 /
-\latex default 
+\end_inset 
+
 <.
  "num" will be skipped because it is always preceded by a <
-\latex latex 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
 
 \backslash 
 /
-\latex default 
+\end_inset 
+
 <.
  And "endl" will be skipped because it is always between a <
-\latex latex 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
 
 \backslash 
 /
-\latex default 
+\end_inset 
+
 < and a ;.
 \layout Standard
 

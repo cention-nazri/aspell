@@ -4,7 +4,7 @@ noinst_PROGRAMS = example-c list-dicts
 filterdir = "$(libdir)/aspell"
 filter_PROGRAMS = po-filter.la
 
-INCLUDES = -I../interfaces/cc/
+INCLUDES = -I${top_srcdir}/interfaces/cc/
 
 
 example_c_SOURCES = example-c.c

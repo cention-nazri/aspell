@@ -89,10 +89,7 @@ namespace acommon {
     fl.l_whence = SEEK_SET;
     fl.l_start  = 0;
     fl.l_len    = 0;
-    if (fcntl(fd, F_SETLKW, &fl) == -1) {
-      in.close();
-      return make_err(cant_read_file, file);
-    }
+    fcntl(fd, F_SETLKW, &fl); // ignore errors
 #endif
     return no_err;
   }
@@ -116,8 +113,7 @@ namespace acommon {
     fl.l_whence = SEEK_SET;
     fl.l_start  = 0;
     fl.l_len    = 0;
-    if (fcntl(fd, F_SETLKW, &fl) == -1)
-      return Ret().prim_err(cant_write_file, file);
+    fcntl(fd, F_SETLKW, &fl); // ignore errors
     struct stat s;
     fstat(fd, &s);
     return s.st_size != 0;

@@ -21,9 +21,7 @@ dist-hook:
 
 CLEANFILES = dirs.h
 
-
-
-lib_LTLIBRARIES = libaspell-common.la
+noinst_LTLIBRARIES = libaspell-common.la
 
 libaspell_common_la_SOURCES = \
   string.cpp getdata.cpp itemize.cpp file_util.cpp \
@@ -36,7 +34,5 @@ libaspell_common_la_SOURCES = \
   convert.cpp tokenizer.cpp \
   speller.cpp document_checker.cpp filter.cpp \
   strtonum.cpp
-
-libaspell_common_la_LDFLAGS = ${extra_ldflags} -release 0.50.2
 
 EXTRA_DIST = *.hpp gettext.h
