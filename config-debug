@@ -1,5 +1,5 @@
 #!/bin/sh
 
-./configure --enable-maintainer-mode \
+./configure --enable-maintainer-mode --disable-shared --disable-pspell-compatibility \
   --prefix=`pwd`/inst CFLAGS='-g -Wall' CXXFLAGS='-g -Wall' "$@"
 

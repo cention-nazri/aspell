@@ -114,13 +114,15 @@ EXTRA_DIST += common/*.hpp common/*.h\
 
 AM_CPPFLAGS += -DLOCALEDIR=\"$(localedir)\"
 
-bin_PROGRAMS = word-list-compress aspell
+bin_PROGRAMS = word-list-compress aspell wlzip-bin
 
 word_list_compress_SOURCES = prog/compress.c
 
 aspell_SOURCES = prog/aspell.cpp prog/check_funs.cpp prog/checker_string.cpp
 
 aspell_LDADD = libaspell.la $(CURSES_LIB)
+
+wlzip_bin_SOURCES = prog/wlzip.c
 
 EXTRA_DIST += prog/*.hpp
 
@@ -306,7 +308,8 @@ endif
 # Misc Top level
 #
 
-pkgdata_DATA = ${top_srcdir}/data/*.cset ${top_srcdir}/data/*.kbd
+pkgdata_DATA = ${top_srcdir}/data/*.cset ${top_srcdir}/data/*.cmap \
+               ${top_srcdir}/data/*.kbd
 
 EXTRA_DIST += config.rpath  README ${pkgdata_DATA} m4/*.m4 \
               misc/po-filter.c
