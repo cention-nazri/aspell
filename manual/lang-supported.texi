@@ -108,9 +108,9 @@
 @item lg @tab Ganda @tab Latin @tab Maybe @tab -
 @item li @tab Limburgian @tab Latin @tab Maybe @tab -
 @item ln @tab Lingala @tab Latin @tab Maybe @tab -
+@item loz @tab Lozi @tab Latin @tab Maybe @tab -
 @item lt @tab Lithuanian @tab Latin @tab 0.60 @tab -
 @item lu @tab Luba-Katanga @tab Latin @tab - @tab -
-@item lua @tab Luba-Lulua @tab Latin @tab Maybe @tab -
 @item luo @tab Luo (Kenya and Tanzania) @tab Latin @tab Maybe @tab -
 @item lv @tab Latvian @tab Latin @tab 0.60 @tab -
 @item
@@ -203,7 +203,7 @@
 @item vi @tab Vietnamese @tab Latin @tab 0.60 @tab -
 @item
 @item wa @tab Walloon @tab Latin @tab 0.50 @tab Incomplete
-@item wo @tab Wolof @tab Latin @tab - @tab -
+@item wo @tab Wolof @tab Latin @tab Maybe @tab -
 @item
 @item xh @tab Xhosa @tab Latin @tab Maybe @tab -
 @item
