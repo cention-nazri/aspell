@@ -31,7 +31,7 @@
 @item cv @tab Chuvash @tab Cyrillic @tab - @tab -
 @item cy @tab Welsh @tab Latin @tab Yes @tab -
 @item
-@item da @tab Danish @tab Latin @tab Yes @tab -
+@item da @tab Danish @tab Latin @tab Yes @tab Yes
 @item de @tab German @tab Latin @tab Yes @tab Yes
 @item
 @item ee @tab Ewe @tab Latin @tab - @tab -
@@ -139,7 +139,7 @@
 @item rn @tab Rundi @tab Latin @tab - @tab -
 @item ro @tab Romanian @tab Latin @tab Yes @tab Yes
 @item ru @tab Russian @tab Cyrillic @tab Yes @tab Yes
-@item rw @tab Kinyarwanda @tab Latin @tab Maybe @tab -
+@item rw @tab Kinyarwanda @tab Latin @tab Planned @tab -
 @item
 @item sc @tab Sardinian @tab Latin @tab Maybe @tab -
 @item sd @tab Sindhi @tab Arabic @tab - @tab -
@@ -177,17 +177,17 @@
 @item ug @tab Uighur @tab Arabic @tab - @tab -
 @item uk @tab Ukrainian @tab Cyrillic @tab Yes @tab Yes
 @item ur @tab Urdu @tab Arabic @tab Maybe @tab -
-@item uz @tab Uzbek @tab Cyrillic @tab Maybe @tab -
+@item uz @tab Uzbek @tab Cyrillic @tab Planned @tab -
 @item
 @item ve @tab Venda @tab Latin @tab Maybe @tab -
-@item vi @tab Vietnamese @tab Latin @tab Planned @tab -
+@item vi @tab Vietnamese @tab Latin @tab Experimental @tab -
 @item
 @item wa @tab Walloon @tab Latin @tab Yes @tab Incomplete
 @item wo @tab Wolof @tab Latin @tab - @tab -
 @item
 @item xh @tab Xhosa @tab Latin @tab Maybe @tab -
 @item
-@item yi @tab Yiddish @tab Hebrew @tab Planned @tab -
+@item yi @tab Yiddish @tab Hebrew @tab Experimental @tab -
 @item yo @tab Yoruba @tab Latin @tab - @tab -
 @item
 @item za @tab Zhuang @tab Latin @tab - @tab -

@@ -1,5 +1,5 @@
 \input texinfo   @c -*-texinfo-*-
-@comment $Id: aspell.texi,v 1.29 2004/05/08 19:37:45 kevina Exp $
+@comment $Id: aspell.texi,v 1.30 2004/05/10 11:37:30 kevina Exp $
 @comment %**start of header
 @setfilename aspell.info
 @settitle GNU Aspell 0.60
@@ -1068,25 +1068,54 @@ considered quote characters, the defaults are @samp{>} and @samp{|}.
 @subsubsection @option{sgml} Filter Mode
 @anchor{SGML Filter Mode}
 
-FIXME: This needs updating for the new SGML filter.
+The SGML filter allows you to spell check SGML, HTML, XHTML, and XML
+files. In most cases everything within a tag @samp{<tag attrib=value
+attrib2="a whole sentance">} will be skipped by the spell checker. The
+SGML/HTML/XML that Aspell supports is a slight superset of most DTDs
+(Document Type Definitions) and can spell check the often non-conforming
+HTML found on the web.
 
-The @option{sgml} filter mode will skip over SGML commands.  It
-currently does not handle nested @samp{< >} unless they are in quotes.
-It also does not handle the null end tag (net) minimization feature of
-sgml such as
+Two configuration options, skip and check, allow you to control what is
+spell checked. The tag and attribute names specified are case
+insensitive.
 
+@table @option
+@item sgml-skip
+This is a list of tags whose contents will also be skipped by the spell
+checker.  For example, if you wish to leave a misspelling in a document
+and not have them flagged as misspellings, you could surround them with
+a <nospellcheck> tag:
 @example
-<emphasis/important/
+  <TD><FONT size=2><NOSPELLCHECK>leviosa</NOSPELLCHECK> 
+  is what Mr. Potter said</FONT></TD>
 @end example
+@noindent
+And put that word in the skip config directive:
+@example
+add-sgml-skip nospellcheck
+@end example
+
+By default, 'script' and 'style' are members of the skip list.
+
+@item sgml-check 
+
+This is a list of attributes whose values you do want spell checked. By
+default, 'alt' (<img> alternate text) is a member of the check list
+since it is text th at is seen by a web page viewer. You may also want
+'value' to be on the check li st since that is the text put on buttons:
+@example
+add-filter-sgml-check value
+@end example
+@noindent
+In this case @samp{<input type=button value="Donr">} will be flagged as a
+misspelling.
+@end table
 
 This filter will also translate SGML characters of the form
 @samp{&#num;}.  Other SGML characters such as @samp{&amp;} will simply
 be skipped over so that the word @samp{amp}, for example, will not be
 spell checked.  Eventually full support for properly translating SGML
 characters will be added.
-
-The option @option{add|rem-sgml-check} controls which SGML tags should
-always be checked.  The default is @option{alt}.
 
 The option @option{add|rem-sgml-extension} controls which file
 extensions are recognized as SGML/HTML files.  The default is
@@ -2704,22 +2733,13 @@ Support for unconditionally accepting run-together words can either be
 turned on in the language data file or as a normal option via the
 @option{run-together} option.  The @option{run-together-limit} options
 controls the maximum number of words that can be strung together, the
-default is normally 255.  The @option{run-together-min} options
+default is normally 2.  The @option{run-together-min} options
 controls the minimum length of the individual components of the run
 together word, the default is normally 3.  Both the
 @option{run-together-limit} and @option{run-together-min} option may
 be specified in both the language data file or as a normal option.
-The @option{run-together-mid} option, which may only be specified in
-the language data file, may be used to specify up to three optional
-characters that may appear between individual words.
 
-Currently Aspell only supports run-together words when checking if a
-word is in the dictionary.  When coming up with suggestions Aspell
-treats the word as a normal word and does not do anything special.
-This means that the suggestions will be virtually meaningless when the
-actual word is a run-together.  I plan on more intelligently
-supporting run-together words when coming up with suggestions in a
-future version of Aspell.
+FIXME: Add note about compound word support when suggesting.
 
 @node Creating A New Character Set
 @section Creating A New Character Set
@@ -3126,32 +3146,46 @@ support.
 @node Planned Dictionaries
 @appendixsec Notes on Planned Dictionaries
 
-@multitable @columnfractions .05 .20 .75
+MySpell or Ispell dictionaries are available for the following languages:
 
-@item be @tab Belarusian
-@tab Ispell Dictionary available.
+@itemize
+@item Belarusian (be)
+@item Estonian (et)
+@item Finnish (fi)
+@item Latin (la)
+@item Albanian (sq)
+@end itemize
 
-@item et @tab Estonian
-@tab Ispell Dictionary available.
+Kevin Patrick Scannell has word lists available for the following
+languages based on his web crawling software
+(@uref{http://borel.slu.edu/crubadan/}) but needs someone to proofread
+them:
 
-@item fi @tab Finnish 
-@tab Ispell Dictionary available.
+@itemize
+@item Asturian (ast)
+@item Cebuano (ceb)
+@item Chamorro (ch)
+@item Cornish (kw)
+@item Frisian (fy)
+@item Hawaiian (haw)
+@item Occitan (oc)
+@item Tok Pisin (tpi)
+@end itemize
 
-@item la @tab Latin
-@tab Ispell/MySpell Dictionary available.
+@noindent
+If you are interested please contact him at scannell at slu edu.
 
-@item sq @tab Albanian
-@tab Ispell Dictionary available.
+An Ispell hash table has been discovered for Sardinian (sc) at
+@uref{http://@/www.ditzionariu.org/@/correttore.asp}.  However, the raw
+word list is not provided and the author has not been responding to
+emails.  If you know how to disassemble a Ispell hash table or know of
+the wear abouts of the word list he used to create the hash table I
+would appreciate hearing from you.
 
-@item vi @tab Vietnamese
-@tab Word list available at 
-@uref{http://@/www.informatik.uni-leipzig.de/@/~duc/software/misc/@/wordlist.html}.
-Working with them to create an Aspell dictionary. 
-
-@item yi @tab Yiddish
-@tab Word list available.
-
-@end multitable
+A dictionary marked as "Planned" or "Maybe" but not listed in
+the section means that someone has expressed an interest in creating
+one.  If you are interested in helping please contact me at
+@email{kevina@@gnu.org} so that I can put you in touch with them.
 
 @node References
 @appendixsec References
@@ -3740,6 +3774,9 @@ Enhanced TEX filter to support recognizing accent commands, such as
 the German umlaute, and to treat words with hyphenation characters in
 them as one word, also thanks to Christoph Hintermüller
 @item
+Enhanced SGML filter to also support skipping sgml tags such as "script"
+blocks.
+@item
 Added gettext support thanks to Sergey Poznyakoff
 @item
 Reworked how the dictionary is stored to take up less space (around
@@ -3752,11 +3789,11 @@ Support for Affix Compression.  Affix compression stores the root word
 and then a list of prefixes and suffixes that the word can take, and
 thus saves a lot of space.  The codebase comes from MySpell found in
 OpenOffice.  It uses the same affix file OpenOffice (and Mozilla) use.
-However, affix compression is currently incompatible with sounds like
-look up which means that the suggestion quality will suffer.
 @item
 Added support for MySpell Replacement Tables for better suggestions
 when phonet information is not available.
+@item
+Additional suggestion improvments...
 @item
 Added support for accepting all input and printing all output in
 @acronym{UTF-8} or some other encoding different from the one Aspell
