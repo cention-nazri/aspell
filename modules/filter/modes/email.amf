@@ -1,82 +1,8 @@
-# HTML mode description file
-# all keys and key like values in this mode file are case insensitive
-
-# the mode file header
-# first non comment and non blank line states the mode label 
-# this is expected by aspell --mode <label>. This label has to be 
-# identical to the file name of the entire .amf (aspell mode file)i
-# like <aabe>.amf. In case of HTML mode this is html.amf
-# Key: MODE
-# Value: <label>
-
 MODE email 
 
-# This mode file requires the following Aspell version(s)
-# Key: ASPELL
-# Value: [<relation operator>]<requiredversion>
-# 
-# the relation operator can be one of `<', `<=', `=', `>=' or '>'
-# for allowing Aspell version with version number being 
-# lower, lower or equal, equal, greater or equal or greater than
-# required version number.
-# if relation operator is omitted `=' is assumed.
-ASPELL >=0.51
+ASPELL >=0.60
 
-# the magic line contains a description which requirements files
-# have to fulfill in order to implicitly activate the entire mode
-# at least one such line is required.
-# Its value has the following format:
-#    /<magic key>/<fileextention>{/<fileextention>}
-#
-# The magic key consist of three `:' separated fields:
-# The first two are byte counts the last is a regular expression.
-# The first byte count indicates the first byte the regular expression
-# will be applied to the second byte count indicates the number of
-# bytes to test against the regular expression.
-#
-# If mode selection should only occur on basis of the listed file
-# extensions the magic key may be empty or contain the following two
-# special strings:
-#   <nomagic>
-#   <empty>
-#
-# At least one <fileextention> is required per MAGIC line.
-# <fileextions may not be empty and may not contain a leading `.'
-# as this is assumed implicitly.
-#
-# Multiple MAGIC lines are allowed. Modes may be extended limited by additional
-# <label>.amf files located in --filter-path
-# Thus file extensions may be preceded by `+' or `-' to indicate that
-# the entire extension has to be added ore removed from this <magic key>
-# if none of both is given `+' is assumed implicitly.
-#note mail magics not set jet use mode as non matching or via -e switch
-#MAGIC /0:256:^[ \t]*<[Hh][Tt][Mm][Ll]([ \t]*(<[^>]*>|[^<>]*))*>/htm/html
-#MAGIC /0:256:^[ \t]*<[h][Tt][Mm][Ll]([ \t]*(<[^>]*>|[^<>]*))*>/HTM/HTML
-
-# This line will be printed when typing `aspell help' 
-# NOTE: this line is required as it indicates the end of the mode file header.
-#       thus if missing mode will be rejected by Aspell.
-#       keep it as short as possible although line wrapping will be done implicitly
-#       possible abbreviations are `des' and `desc' 
 DESCRIPTION mode for skipping quoted text in email messages
 
-# the mode file body 
-# the following lines may appear as often as needed in the below.
-
-# states an additional filter to load it has to preceded all OPTION keys dealing
-# with options specific to FILTER
-# NOTE: if FILTER key is preceded by `!' filter will be removed from mode
-FILTER email
-
-# this selects proper values for the filters options.
-# its Value consists of the following two space separated fields
-#   name: the name of the Aspell option like [add-|rem-|dont-][filter-]<option>
-#   value: as stated by Aspell manual and by `aspell help all'.
-#
-# option value may be empty if entire option is boolean or in case of list options
-# prefixed by `rem-all'
-#
-# adjust options of email filter accordingly
-
-
 FILTER url
+FILTER email

@@ -290,9 +290,9 @@ the more useful ones include:
 @table @b
 @item --mode=@var{mode}
 the mode to use when checking files.  The available modes are
-@code{none}, @code{url}, @code{email}, @code{sgml}, @code{ccpp} or @code{tex}.
-for more information on the various modes see @ref{Notes on Various
-Filters and Filter Modes}.
+@code{none}, @code{url}, @code{email}, @code{sgml}, @code{tex},
+@code{texinfo}, @code{nroff}, amoung others.  For more information on the
+various modes see @ref{Notes on Various Filters and Filter Modes}.
 
 @item --dont-backup
 don't create a backup file.
@@ -414,7 +414,7 @@ Ispell such as Ispell's own scripts.
 Nevertheless, Aspell is not Ispell, nor is it meant to completely
 emulate the behavior of Ispell.  The @command{aspell} command is not
 identical to the @command{ispell} command when not used in ``pipe''
-mode.  If an application expects to the @command{ispell} command than
+mode.  If an application expects the @command{ispell} command than
 the Ispell compatibility script should be used.  
 
 @subsubsection Functionally of the Ispell Compatibility Script
@@ -438,12 +438,10 @@ being identical to the line Ispell returns, is sufficient to fool most
 programs.
 
 @item
-The munch or -c mode.  When an affix file is availably for the
-underlying language.
+The munch or -c mode.
 
 @item
-The expand or -e mode.  Again, when an affix file is availably for the
-underlying language.
+The expand or -e mode.
 
 @item
 The ability to dump the affix file when called with '-D'.  However the
@@ -454,7 +452,7 @@ have an affix file.
 
 However the Ispell script currently unable to emulate the 
 the '-A' pipe mode.  This is different from the normal pipe mode in
-that the special @code{&Include_File&} is recognized.
+that the special @code{&Include_File&} command is recognized.
 
 @subsubsection Recognized Options
 
@@ -498,8 +496,12 @@ converted to Aspell format, except for Albanian (sq) as I was unable
 to find the source word list.
 
 The naming and format of the personal dictionary is also different.
-However, ... FIXME (WRITEME)
- n  
+However, ispell personal dictionaries can be imported using the
+@command{aspell-import} script.  @xref{Using aspell-import}.  The
+Ispell personal dictionary is simpily a list of words while the Aspell
+one is a list of words with a header line.  Thus it is also fairly
+easy to convert between the two.  @xref{Format of the Personal Dictionary}.
+
 @subsubsection Missing Functionally
 
 The only major area where Ispell is superior to Aspell is in the
@@ -599,7 +601,6 @@ instead which will avoid switching Aspell into email mode.
 
 @node Customizing Aspell
 @chapter Customizing Aspell
-@anchor{customizing}
 
 The behavior of Aspell can be changed by any number of options which
 can be specified at either the command line, the environment variable
@@ -1609,6 +1610,7 @@ to the @option{normal} if jump tables were used.
 * Listing Available Dictionaries::  
 * Dumping the Contents of the Word List::  
 * Creating an Individual Word List::  
+* Format of the Personal and Replacement Dictionaries::  
 * Using Multi Dictionaries::    
 * Dictionary Naming::           
 * AWLI files::                  
@@ -1777,6 +1779,52 @@ the following format
 
 @example
 @i{misspelled_word} @i{correction}
+@end example
+
+@node Format of the Personal and Replacement Dictionaries
+@section Format of the Personal and Replacement Dictionaries
+
+@anchor{Format of the Personal Dictionary}
+@subsection Format of the Personal Dictionary
+                                   
+The personal dictionarie generally has a name of the form:
+@example
+.aspell.@var{lang}.pws
+@end example
+
+The file has a header line of the
+form:
+@example
+personal_ws-1.1 @var{lang} @var{num}
+@end example  
+@noindent
+where @var{num} is the number of words in the list.  This number is
+only used as a hint, and thus does not have to be accurate.  When
+creating a new dictionary it is perfectly acceptable for @var{num} to
+be 0.
+
+The rest of the file is simply a word list with one line per word.
+
+@subsection Format of the Personal Replacement Dictionary
+
+The personal replasment dictionary generally has a name of the form:
+@example
+.aspell.@var{lang}.prepl
+@end example
+
+The file has a header line of the
+form:
+@example
+personal_repl-1.1 @var{lang} @var{num}
+@end example  
+@noindent
+where @var{num} is currently unused and thus always 0.
+
+The rest of the file is simply of replacements with one replacement
+per line with each replacement pair has the following format:
+
+@example
+@var{misspelled_word} @var{correction}
 @end example
 
 @node Using Multi Dictionaries
@@ -2076,14 +2124,12 @@ object.
 
 @node Through A Pipe
 @section Through A Pipe
-@anchor{pipe}
 
 When given the @command{pipe} or @command{-a} command, Aspell goes
 into a pipe mode that is compatible with @command{ispell -a}.  Aspell
 also defines its own set of extensions to Ispell pipe mode.
 
 @subsection Format of the Data Stream
-@anchor{data_stream}
 
 In this mode, Aspell prints a one-line version identification message,
 and then begins reading lines of input.  For each input line, a single
@@ -4029,12 +4075,14 @@ a C++ program.
 @item
 Lots of compile fixes for various platforms.
 @item
-Minor bug fixes.
+Miscellaneous bug fixes.
 @item
 Nroff filter thanks to Sergey Poznyakoff.
 @item
 The default filter mode when in pipe mode is now nroff for compatibility with
 Ispell.
+@item
+Texinfo filter.
 @item
 Added a section detailes the differences between Ispell and Aspell.
 @item

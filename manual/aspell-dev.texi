@@ -47,7 +47,7 @@ Documentation License".
 This manual is designed for those who wish to develop Aspell.  It is
 currently very sketchy.  However, it should improve over time.  The
 latest version of this document can be found at
-@url{http://savannah.gnu.org/download/aspell/manual/devel/devel.html}.
+@uref{http://savannah.gnu.org/download/aspell/manual/devel/devel.html}.
 
 @menu
 * Style Guidelines::            
@@ -113,7 +113,7 @@ appropriate.
 @node Templates, Error Handling, C++ Standard Library, Top
 @chapter Templates
 
-Templates are used in aspell when there is a clear advantage to doing
+Templates are used in Aspell when there is a clear advantage to doing
 so.  Whenever you use templates please use them carefully and try very
 hard not to create code bloat by generating a lot of unnecessary and
 duplicate code.
@@ -121,7 +121,7 @@ duplicate code.
 @node Error Handling, Source Code Layout , Templates, Top
 @chapter Error Handling
 
-Exceptions are not used in aspell as I find them more trouble than
+Exceptions are not used in Aspell as I find them more trouble than
 they are worth.  Instead an alternate method of error handling is used
 which is based around the PosibErr class.  PosibErr is a special Error
 handling device that will make sure that an error is properly handled.
@@ -135,8 +135,8 @@ of a function returning an error condition.  An error condition is
 handled by simply checking for the presence of an error, calling
 ignore, or taking ownership of the error.
 
-The PosibErr class is used extensively throughout aspell.  Please
-refer to the aspell source for examples of using PosibErr until better
+The PosibErr class is used extensively throughout Aspell.  Please
+refer to the Aspell source for examples of using PosibErr until better
 documentation is written.
 
 @node Source Code Layout , Strings, Error Handling, Top
@@ -144,16 +144,16 @@ documentation is written.
 
 @table @file
 @item common/
- Common code used by all parts of aspell
+ Common code used by all parts of Aspell
 
 @item lib/
- Library code used only by the actual aspell library
+ Library code used only by the actual Aspell library
 
 @item data/
- Data files used by aspell
+ Data files used by Aspell
 
 @item modules/
- aspell modules which are eventually meant to be pluggable
+ Aspell modules which are eventually meant to be pluggable
 
 @table @file
   @item speller/ 
@@ -168,29 +168,29 @@ documentation is written.
 @end table
 
 @item auto/
-Scripts and data files to automatically generate code used by aspell
+Scripts and data files to automatically generate code used by Aspell
 
 @item interface/
 Header files and such that external programs should use when in order
-to use the aspell library.
+to use the Aspell library.
 @table @file
 
 @item cc/
 The external C interface that programs should be using when they wish
-to use aspell.
+to use Aspell.
 @end table
 
 @item prog/
-Actual programs based on the aspell library. The main aspell utility
+Actual programs based on the Aspell library. The main Aspell utility
 is included here.
 
 @item scripts/
-Miscellaneous scripts used by aspell
+Miscellaneous scripts used by Aspell
 
 @item manual/
 
 @item examples/
-Example programs demonstrating the use of the aspell library
+Example programs demonstrating the use of the Aspell library
 @end table
 
 
@@ -247,7 +247,7 @@ can write to.
 @node Smart Pointers, I/O, Strings, Top
 @chapter Smart Pointers
 
-Smart pointers are used extensively in aspell to
+Smart pointers are used extensively in Aspell to
 simplify memory management tasks and to avoid memory leaks. 
 
 @section CopyPtr
@@ -286,7 +286,7 @@ implemented in @code{generic_copy_ptr-t.hpp}.
 @node I/O, Config Class, Smart Pointers, Top
 @chapter I/O
 
-aspell does not use C++ I/O classes and functions in any way since
+Aspell does not use C++ I/O classes and functions in any way since
 they do not provide a way to get at the underlying file number and can
 often be slower than the highly tuned C I/O functions found in the
 standard C library.  However, some lightweight wrapper classes are
@@ -323,7 +323,7 @@ defined in @code{common/config.hpp}.
 @section Overview
 @anchor{Filter Overview}
 
-In aspell there are 5 types of filters:
+In Aspell there are 5 types of filters:
 @enumerate
 @item
 @emph{Decoders} which take input in some standard format such as
@@ -430,7 +430,7 @@ inherited from the @code{IndividualFilter} class.
 @section Adding a New Filter
 
 A new filter basically is added by placing the corresponding loadable
-object inside a directory reachable by aspell via @option{filter-path}
+object inside a directory reachable by Aspell via @option{filter-path}
 list.  Further it is necessary that the corresponding filter
 description file is located in one of the directories listed by the
 @option{option-path} list.
@@ -482,8 +482,8 @@ be defined, however they all need a separate constructor function.
 @anchor{Filter Description File}
 
 This file contains the description of a filter which is loaded by
-aspell immediately when the @option{add-filter} option is invoked.  If
-this file is missing aspell will complain about it.  It consists of
+Aspell immediately when the @option{add-filter} option is invoked.  If
+this file is missing Aspell will complain about it.  It consists of
 lines containing comments which must be started by a @kbd{#}
 character and lines containing key value pairs describing the filter.
 Each file at least has to contain the following two lines in the given
@@ -495,7 +495,7 @@ DESCRIPTION this is short filter description
 @end example
 
 The first non blank, non comment line has to contain the keyword
-@code{ASPELL} followed by the version of aspell which the filter is
+@code{ASPELL} followed by the version of Aspell which the filter is
 usable with.  To denote multiple Aspell versions the version number may
 be prefixed by `@kbd{<}', `@kbd{<=}', `@kbd{=}', `@kbd{>=}' or `@kbd{>}.
 If the range prefix is omitted `@kbd{=}' is assumed.  The
@@ -512,7 +512,7 @@ STATIC @code{@i{filtertype}}
 @code{@i{filtertype}} stands for one of @code{decoder}, @code{filter}
 or @code{encoder} denoting the entire filter type.  This line allows
 to statically (see @ref{Link Filters Static}) link the filter into
-aspell if requested by the user or by the system aspell is built for.
+Aspell if requested by the user or by the system Aspell is built for.
 
 @example
 OPTION newoption
@@ -524,7 +524,7 @@ ENDOPTION
 
 An option is added by a line containing the keyword @code{OPTION}
 followed by the name of the option.  If this name is not prefixed by
-the name of the filter aspell will implicitly do that.  For the
+the name of the filter Aspell will implicitly do that.  For the
 @code{DESCRIPTION} of a filter option the same holds as for the filter
 description.  The @code{TYPE} of the option may be one of @code{bool},
 @code{int}, @code{string} or @code{list}.  If the @code{TYPE} is
@@ -573,7 +573,7 @@ config->retrieve_bool("filter-@i{filtername}-newoption");
 @end example
 
 The prefix @code{filter-} allows user to relate option uniquely to the
-specific filter when @code{@i{filtername}-newoption} ambiguates an
+specific filter when @code{@i{filtername}-newoption} ambiguous an
 existing option of Aspell.  The @code{@i{filtername}} stands for the
 name of the filter the option belongs to and @code{-@i{newoption}} is
 the name of the option as specified in the corresponding @file{.opt}
@@ -686,71 +686,97 @@ Submit a Patch}) containing your changes.
 @end enumerate
 @c Following this comes the section ``Filter Modes''
 @node Filter Modes, Data Structures,Filter Interface, Top
-@chapter Filter Modeso
+@chapter Filter Modes
 
-Filter modes are the preferd way to specify combinations of
-filters which are used regularily and thus abreviate aspell's
+Filter modes are the preferred way to specify combinations of
+filters which are used regularly and thus abbreviate Aspell's
 command line arguments.
 
 A new filter mode is specified by a file named like the filter
-new mode and prefixed by .amf (AspellModeFile). If such a file
-is acessible by the path set via filter-path option Aspell
-will try to load the contained mode specification @footnote{ 
-Any line beeing blank or containing a comment will be skiped}.
-
+new mode and prefixed by .amf (Aspell Mode File). If such a file
+is accessible by the path set via filter-path option Aspell
+will try to load the contained mode specification.
 
 @section Aspell Mode File
-The first key in the maode file has be the @code{mode} key.
+The first key in the made file has be the @code{mode} key.
 It is checked against the mode name part of the .amf file.
 If the @code{mode} key is missing mode file will be rejected.
 
 The same holds for the @code{aspell} key which specifies the
-verion(s) of aspell wich is(are) required by the filter.
+version(s) of Aspell which is(are) required by the filter.
 
-If these two keys are followed by at least one @code{madgic} key
-aspell will be able to select the entire mode from extention and
+If these two keys are followed by at least one @code{magic} key
+Aspell will be able to select the entire mode from extension and
 if required from contents of the file to spell implicitly.
 
-The last key of the initial section is the @code{des[c[ription]]}
+The last key of the required keys is the @code{des[c[ription]]}
 key. It gives a short description of the filter mode which will
-displayed when type 
-@verbatim 
-  aspell help
-@end verbatim 
-This key again is required as it indicates the end of the 
-Aspell Mode File's header section. Any line following specifies
-filters and their options required by the mode.
+displayed when type @command{aspell help}.
 
-The only two keys valid are @code{filter} and @code{option}.
-The value of the @code{filter} key is equal to the value of aspell's
-@code{[add|rem]-filter} option. The option key has to be followed by
-the name of a valid aspell option and the corresponding values
-@footnote{these may be empty if the option is of boolean type or 
-of list type and prefixed by rem-all}.
+The rest of the file consists of the keys @code{filter} and
+@code{option} to load filters are set various options.
 
-@subsection MAGIC line format
+@subsection Version Line
 
-The value of the magic key consist of at least two fields separated
- by a`/' the first field specifes a magic expression used to verify
-mode selection found by looking at the filename extention. The second
-and any following field contain the file name extensions which may trigger
-a selection of the mode.
+Each version line must start with @code{aspell} and be followed by a
+version, optionally prefixed by a relational operator. The relation
+operator can be one of `<', `<=', `=', `>=' or '>' for allowing Aspell
+version with version number being lower, lower or equal, equal to,
+greater or equal or greater than required version number,
+respectfully. If the relation operator is omitted `=' is assumed.
 
-The magic expression may be one of: <empty> or  <nomagic> if mode
-selection should be base uppon file extentions only. In any other
-case magic expression is a `:' separated list of three elements.
+@subsection Magic Line
 
-Thre the last element is assumed to be a valid extended possix regular
-expression @footnote{brackets may be specifed differntly eg: \( <-> ( }.
-It is checked against a maximum count of bytes. This maximum number of bytes
-is given by the second element.  
-The first is the number of bytes to skip from the file to spell before 
-trying to match regular expression. A value of 0 means the verry first
-byte of the file.
+The magic line contains a description which requirements files
+have to fulfill in order to implicitly activate the entire mode
+at least one such line is required.  Each magic line has the following
+format:
+@example
+MAGIC /<magic key>/<fileextention>[/<fileextention>]
+@end example
 
-For a commented example of Aspell mode files and their layout see @code{html.amf}
+The magic key consist of three `:' separated fields.
+The first two are byte counts the last is a regular expression.
+The first byte count indicates the first byte the regular expression
+will be applied to the second byte count indicates the number of
+bytes to test against the regular expression.
 
+If mode selection should only occurred on basis of the listed file
+extensions the magic key should consist of the ``<noregex>'' special
+string.
 
+At least one <fileextention> is required per MAGIC line.
+<fileextention> may not be empty and should not contain a leading `.'
+as this is assumed implicitly.
+
+Multiple MAGIC lines are allowed. Modes may be extended limited by additional
+<label>.amf files located in --filter-path
+Thus file extensions may be prefixed by `+' or `-' to indicate that
+the entire extension has to be added ore removed from this <magic key>
+if neither is specified than a `+' is assumed implicitly.
+
+@subsection Description Line
+
+The required description line will be printed when typing
+@command{aspell help}.  Keep it as short as possible.  Possible
+abbreviations are @code{des} and @code{desc}.
+
+@subsection Filter and Option Lines
+
+The @code{filter} and @code{option} keys load filters and set filter
+options.
+
+The value of the @code{filter} key is equal to the value of Aspell's
+@code{[add|rem]-filter} option. 
+
+Each @code{option} line has the following format:
+
+@example
+  OPTION <option> [<value>]
+@end example
+
+The format of the <option> and <value> is the same format as 
+found in the Aspell configuration file.
 
 @c Following this comes the section ``Data Structures''
 
@@ -806,7 +832,7 @@ A good deal of interface code is automatically generated by the
 @file{mk-src.pl} Perl script.  I am doing it this way to avoid having
 to write a lot of relative code for the C++ interface.  This should
 also make adding interface for other languages a lot less tedious and
-will allow the interface to automatically take advantage of new aspell
+will allow the interface to automatically take advantage of new Aspell
 functionality as it is made available.  The @code{mk-src.pl} script
 uses @code{mk-src.in} as its input.
 

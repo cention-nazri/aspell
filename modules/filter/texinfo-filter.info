@@ -29,6 +29,10 @@ DEFAULT url
 DEFAULT uref
 DEFAULT email
 DEFAULT verbatiminclude
+DEFAULT xref
+DEFAULT ref
+DEFAULT pxref
+DEFAULT inforef
 DEFAULT c
 ENDOPTION
 

@@ -676,7 +676,9 @@ void pipe()
 
   if (!options->have("mode")) {
     PosibErrBase err(options->replace("mode", "nroff"));
-    if (err.get_err()) CERR << _("WARNING: Unable to enter Nroff mode.\n");
+    if (err.has_err()) 
+      CERR.printf(_("WARNING: Unable to enter Nroff mode: %s\n"),
+                  err.get_err()->mesg);
   }
 
   start = clock();

@@ -133,6 +133,7 @@ namespace acommon {
     bool extOnly = false;
     
     if (    ( toMagic == "" )
+         || ( toMagic == "<noregex>" )
          || ( toMagic == "<nomagic>" )
          || ( toMagic == "<empty>" ) ) {
       extOnly = true;
