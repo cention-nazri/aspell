@@ -12,7 +12,7 @@
    CURSES_INCLUDE_WORKAROUND_1
    CURSES_ONLY
    HAVE_GETCH
-   HAVE_MBRLEN
+   HAVE_MBLEN
    All these macros need to have a true value and not just be defined
 */
 
@@ -56,13 +56,7 @@ extern "C" {int getch();}
 
 #if HAVE_LIBCURSES
 
-#  if HAVE_LIBNCURSESW
-#    include <ncursesw/curses.h>
-#  elif HAVE_LIBNCURSES
-#    include <ncurses/curses.h>
-#  else
-#    include <curses.h>
-#  endif
+#include CURSES_HEADER
 
 #if CURSES_INCLUDE_STANDARD
 
@@ -103,10 +97,10 @@ static SCREEN * term;
 
 #endif // HAVE_LIBCURSES
 
-#ifdef HAVE_MBRLEN
+#ifdef HAVE_MBLEN
 #  include <wchar.h>
 #else
-#  define mbrlen(x,y,z) 1
+#  define mblen(x,y) (*(x) ? 1 : 0)
 #endif
 
 static void cleanup (void) {
@@ -528,7 +522,7 @@ void display_misspelled_word() {
         } else if (j == word_end) {
           wattrset(text_w,A_NORMAL);
         }
-        int len = mbrlen(j, MB_CUR_MAX, NULL);
+        int len = mblen(j, MB_CUR_MAX);
         if (len > 0) {
           waddnstr(text_w, const_cast<char *>(j), len);
         } else {
@@ -588,7 +582,7 @@ static void print_truncate(FILE * out, const char * word, int width) {
   int i;
   int len = 0;
   for (i = 0; i < width-1 && *word; word += len, ++i) {
-    len = mbrlen(word, MB_CUR_MAX, NULL);
+    len = mblen(word, MB_CUR_MAX);
     if (len > 0) {
       put(out, word, len);
     } else {
@@ -652,8 +646,8 @@ static void print_truncate(WINDOW * out, const char * word, int width) {
   getyx(out, y, x);
   int stop = x + width - 1;
   while (x <= stop && *word) {
-    len = mbrlen(word, MB_CUR_MAX, NULL);
-    assert(len > 0);
+    len = mblen(word, MB_CUR_MAX);
+    if (len <= 0) len = 1;
     put(out, word, len);
     word += len;
     y0 = y;

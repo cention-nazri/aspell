@@ -10,4 +10,5 @@ aspell_dev_TEXINFOS = mksrc.texi fdl.texi
 man_MANS = aspell.1         pspell-config.1    word-list-compress.1\
            aspell-import.1  run-with-aspell.1
 
-EXTRA_DIST = $(man_MANS)
+EXTRA_DIST = $(man_MANS) aspell.html aspell-dev.html
+

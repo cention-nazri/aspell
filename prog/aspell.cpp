@@ -511,7 +511,6 @@ void setup_display_conv()
   else
     enc = doc_enc;
 
-  fprintf(stderr, "'%s' '%s' '%s' '%s'\n", gettext_enc, env_enc, doc_enc.str(), enc.str());
   EXIT_ON_ERR(dconv.setup(*options, doc_enc, enc, NormNone));
   EXIT_ON_ERR(uiconv.setup(*options, enc, doc_enc, NormNone));
 }

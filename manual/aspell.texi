@@ -447,8 +447,8 @@ utility.
 
 @subsection With VIM
 
-@emph{(The following section was written by ``R.  Marc'', rmarc at
-copacetic net.)}
+@c @emph{(The following section was written by ``R.  Marc'', rmarc at
+@c copacetic net.)}
 
 To use Aspell in VIM you simply need to add the following line to your
 @file{.vimrc} file:
@@ -3601,10 +3601,12 @@ I attempt to implement support for context sensitive spelling.
 Words in bold indicate how you should refer to the item when
 discussing it with me or others.
 
-@appendixsubsec Things that will be done by Aspell 0.60
+@appendixsubsec Things that need to be done
 
-These items are already done, or close to it, in the develpment (this)
-version of Aspell.
+These items need to be done before I consider Aspell finished. If you
+are interested in helping me with one of these tasks please email
+me. Good C++ skills are needed for most of these tasks involving
+coding. 
 
 @itemize @bullet
 @item
@@ -3613,35 +3615,13 @@ multi-threaded I would like it to be thread safe so that it can be
 used by multi-threaded programs. There are several areas of Aspell
 that that are potently thread unsafe (such as accessing a global pool)
 and several several classes which have the potential of being used by
-more than one thread (such as the personal dictionary). @emph{[In Progress]}
+more than one thread (such as the personal dictionary). @emph{[In Progress]}.
 @item
 Enhance @strong{ispell.el} so that it will work better with the new Aspell. 
-@emph{[In Progress]}
-@item
-Allow Aspell to @strong{check documents which are in UTF-8}. I don't know the
-proper way to use Unicode characters with the curses library, and I
-can't seam to find any concrete documentation on how to do it. If you
-have experience in this area I would really appreciate it if you could
-enlighten me. @emph{[DONE]}
-@item
-Make the fact that Aspell is 8-bit internally (@pxref{Notes on 8-bit
-Characters}) transparent to the end-user. That is @strong{support
-unicode} for everything read in and printed out by Aspell.
-@emph{[DONE]}
-
-@end itemize
-
-@appendixsubsec Things that need to be done
-
-These items need to be done before I consider Aspell finished. If you
-are interested in helping me with one of these tasks please email
-me. Good C++ skills are needed for most of these tasks involving
-coding. I hope to have these all done by Aspell 0.60.
-
-@itemize @bullet
+@emph{[In Progress]}.
 @item
 Clean up copyright notices and bring the Aspell package up to
-@strong{GNU Standards}.
+@strong{GNU Standards}. @emph{[In Progress]}.
 @item
 Come up with a @strong{nroff mode} for spell checking. I know nothing about
 nroff. I would gladly write the filter if someone would be willing to
@@ -3657,10 +3637,11 @@ implemented. However, I could still use help with them.
 
 @itemize @bullet
 @item
-Better support for @strong{compound words}. The current support for
-@emph{conditional} compound words will disappear in Aspell 0.60 since no
-one seams to be using it. Support for @emph{unconditional} compound
-words will still be available. @xref{Compound Words}.
+Better support for @strong{compound words}. The support for
+@emph{conditional} compound words found in Aspell versions 0.50
+and earlier is no longer available since no one seams to be using
+it. Support for @emph{unconditional} compound words will still be
+available. @xref{Compound Words}.
 @item
 Be able to accept @strong{words with spaces in them} as many languages
 have words, such as a word in a foreign phrase, which only make sense
@@ -3893,42 +3874,47 @@ a C++ program.
 @node ChangeLog
 @appendix ChangeLog
 
-@heading Changes from 0.50.? to 0.60
+@heading Changes from 0.50.5 to 0.60
 
 @itemize @bullet
-@item
-Added support for loadable filters thanks to Christoph Hinterm@"uller.
-@item
-Enhanced SGML filter to also support skipping sgml tags such as "script"
-blocks thanks to Tom Snyder.
-@item
-Added gettext support thanks to Sergey Poznyakoff
-@item
-Reworked how the dictionary is stored to take up less space (around
-80% for the English language) and be faster in some cases.
-@c FIXME: ^^ double check size.  Expand
-@item
-Reworked the build system so that a single Makefile is used for most
-of the code.
 @item
 Added support for Affix Compression.  Affix compression stores the root
 word and then a list of prefixes and suffixes that the word can take,
 and thus saves a lot of space.  The codebase comes from MySpell found in
 OpenOffice.  It uses the same affix file OpenOffice (and Mozilla) use.
 @item
-Reworked suggestion code.  It is significantly faster when dealing with
-short words.  Added support for MySpell Replacement Tables, n-gram
-lookup.  Also added basic support for compound words.
+Added support for accepting all input and printing all output in UTF-8
+or some other encoding different from the one Aspell uses.  This
+includes support for Unicode normalization.  Aspell can now support any
+language that no more than 210 distinct characters, including different
+capitalizations and accents, @emph{even if} there is not an existing
+8-bit encoding that supports the language.
 @item
-Added support for accepting all input and printing all output in
-@acronym{UTF-8} or some other encoding different from the one Aspell
-uses.  Aspell can now support any language that no more than 210
-distinct characters, including different capitalizations and accents,
-@emph{even if} there is not an existing 8-bit encoding that supports
-the language.
+Added support for loadable filters and customizable filter modes thanks
+to Christoph Hinterm@"uller.
+@item
+Enhanced SGML filter to also support skipping sgml tags such as "script"
+blocks thanks to Tom Snyder.
+@item
+Added gettext support thanks to Sergey Poznyakoff
+@item
+Reworked the compiled dictionary format.  Compiled dictionaries now take
+up less space less space (less than 80% for the English language) and
+creating them is significantly faster (over 4 times for the
+English language).
+@item
+Reworked suggestion code.  It is significantly faster when dealing with
+short words (up to 10 times), added support for MySpell Replacement
+Tables, n-gram lookup.  Also added basic support for compound words.
 @item
 Manual has has been converted to texinfo format thanks to the work of
 Chris Martin.
+@item
+Reworked the build system so that a single Makefile is used for most
+of the code.
+@item
+Lots of other minor changes due to another massive overhaul of the
+source code.
 
 @end itemize
 
@@ -4051,10 +4037,11 @@ Additional Win32 portability fixes
 
 @item
 Added the Ukrainian KOI8-U charset.
+@end itemize
 
-@item
-Changes from 0.50 to 0.50.1 (Aug 28, 2002)
+@heading Changes from 0.50 to 0.50.1 (Aug 28, 2002)
 
+@itemize @bullet
 @item
 A rather large number of portability fixes for non GNU/Linux platforms.
 

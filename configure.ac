@@ -277,6 +277,18 @@ fi
 #                                                                 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
+AC_MSG_CHECKING(if mblen is supported)
+AC_TRY_LINK(
+  [#include <wchar.h>
+   #include <stddef.h>
+   #include <stdlib.h>],
+  [size_t s = mblen("bla", MB_CUR_MAX);],
+  [AC_MSG_RESULT(yes)
+   AC_DEFINE(HAVE_MBLEN, 1, [Defined if mblen is supported])
+   have_mblen=1],
+  [AC_MSG_RESULT(no)]
+)
+
 AC_SUBST(CURSES_LIB)
 AC_SUBST(CURSES_INCLUDE)
 
@@ -305,29 +317,38 @@ then
   if test -z "$CURSES_LIB"
   then
 
-    AC_MSG_CHECKING(for working curses libraray)
+    AC_MSG_CHECKING(for working curses library)
   
     LIBS="-lncursesw $ORIG_LIBS"
     AC_TRY_LINK(
       [#include <ncursesw/curses.h>], [initscr()],
       [CURSES_LIB=-lncursesw
-       AC_DEFINE(HAVE_LIBNCURSESW, 1, [Defined to 1 if libncursesw is available])],
+       AC_DEFINE(CURSES_HEADER, <ncursesw/curses.h>, [Defined to curses header file])],
       [
-
-    dnl else if
     LIBS="-lncurses $ORIG_LIBS"
     AC_TRY_LINK(
       [#include <ncurses/curses.h>], [initscr()],
       [CURSES_LIB=-lncurses
-       AC_DEFINE(HAVE_LIBNCURSES, 1, [Defined to 1 if libncurses is available])],
+       AC_DEFINE(CURSES_HEADER, <ncurses/curses.h>, [Defined to curses header file])],
       [
-
-    dnl else if
+    LIBS="-lncurses $ORIG_LIBS"
+    AC_TRY_LINK(
+      [#include <ncurses.h>], [initscr()],
+      [CURSES_LIB=-lncurses
+       AC_DEFINE(CURSES_HEADER, <ncurses.h>, [Defined to curses header file])],
+      [
     LIBS="-lcurses $ORIG_LIBS"
     AC_TRY_LINK(
       [#include <curses.h>], [initscr()],
-      [CURSES_LIB=-lcurses]
-    ) ]) ])
+      [CURSES_LIB=-lcurses
+       AC_DEFINE(CURSES_HEADER, <curses.h>, [Defined to curses header file])],
+      [
+    LIBS="-lncurses $ORIG_LIBS"
+    AC_TRY_LINK(
+      [#include <curses.h>], [initscr()],
+      [CURSES_LIB=-lcurses
+       AC_DEFINE(CURSES_HEADER, <curses.h>, [Defined to curses header file])],
+    ) ]) ]) ]) ])
 
     if test -n "$CURSES_LIB"
     then
@@ -336,6 +357,10 @@ then
       AC_MSG_RESULT([not found])
     fi
 
+  else
+
+    AC_DEFINE(CURSES_HEADER, <curses.h>, [Defined to curses header file])
+
   fi
 
   if test -n "$CURSES_LIB"
@@ -343,33 +368,28 @@ then
      LIBS="$CURSES_LIB $ORIG_LIBS"
 
      AC_MSG_CHECKING(for wide character support in curses libraray)
-     AC_TRY_LINK(
-       [#include <wchar.h>
-        #if HAVE_LIBNCURSESW
-        #  include <ncursesw/curses.h>
-        #elif HAVE_LIBNCURSES
-        #  include <ncurses/curses.h>
-        #else
-        #  include <curses.h>
-        #endif
-       ],
-       [wchar_t wch = 0;
-        addnwstr(&wch, 1);],
-       [AC_MSG_RESULT(yes)
-        AC_DEFINE(HAVE_WIDE_CURSES, 1, [Defined if curses libraray includes wide character support])],
-       [AC_MSG_RESULT(no)])
-
+     if test -n "$have_mblen"
+     then
+       AC_TRY_LINK(
+         [#include <wchar.h>
+          #include CURSES_HEADER
+         ],
+         [wchar_t wch = 0;
+          addnwstr(&wch, 1);],
+         [AC_MSG_RESULT(yes)
+          AC_DEFINE(HAVE_WIDE_CURSES, 1, [Defined if curses libraray includes wide character support])],
+         [AC_MSG_RESULT(no)
+          AC_MSG_WARN([Aspell will not be able to Display UTF-8 characters correctly.])])
+     else
+       AC_MSG_RESULT([no, because "mblen" is not support])
+       AC_MSG_WARN([Aspell will not be able to Display UTF-8 characters correctly.])
+     fi
+ 
      AC_MSG_CHECKING(if standard curses include sequence will work)
      AC_TRY_LINK(
        [#include <termios.h>
 	#include <unistd.h>
-        #if HAVE_LIBNCURSESW
-        #  include <ncursesw/curses.h>
-        #elif HAVE_LIBNCURSES
-        #  include <ncurses/curses.h>
-        #else
-        #  include <curses.h>
-        #endif
+        #include CURSES_HEADER
 	#include <term.h>
        ],
        [tigetstr(const_cast<char *>("cup"));],
@@ -386,13 +406,7 @@ then
      AC_TRY_LINK(
        [#include <termios.h>
 	#include <unistd.h>
-        #if HAVE_LIBNCURSESW
-        #  include <ncursesw/curses.h>
-        #elif HAVE_LIBNCURSES
-        #  include <ncurses/curses.h>
-        #else
-        #  include <curses.h>
-        #endif
+        #include CURSES_HEADER
 	extern "C" {char * tigetstr(char * capname);}],
        [tigetstr(const_cast<char *>("cup"));],
        [AC_MSG_RESULT(yes)
@@ -405,13 +419,7 @@ then
      dnl else if
      AC_MSG_CHECKING(if curses without Unix stuff will work)
      AC_TRY_LINK(
-       [#if HAVE_LIBNCURSESW
-        #  include <ncursesw/curses.h>
-        #elif HAVE_LIBNCURSES
-        #  include <ncurses/curses.h>
-        #else
-        #  include <curses.h>
-        #endif
+       [#include CURSES_HEADER
        ],
        [initscr();],
        [AC_MSG_RESULT(yes)
@@ -420,7 +428,6 @@ then
                   [Defined if curses like POSIX Functions should be used])
         curses_only=t],
        [AC_MSG_RESULT(no)
-        
 
      dnl else
      use_curses=false
@@ -472,18 +479,6 @@ if test "$posix_termios"
 then
   AC_DEFINE(POSIX_TERMIOS, 1, [Defined if Posix Termios is Supported])
 fi
-
-AC_MSG_CHECKING(if mbrlen is supported)
-AC_TRY_LINK(
-  [#include <wchar.h>
-   #include <stddef.h>
-   #include <stdlib.h>],
-  [size_t s = mbrlen("bla", MB_CUR_MAX, 0);],
-  [AC_MSG_RESULT(yes)
-   AC_DEFINE(HAVE_MBRLEN, 1, [Defined if mbrlen is supported])
-  ],
-  [AC_MSG_RESULT(no)]
-)
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                                                                 #
