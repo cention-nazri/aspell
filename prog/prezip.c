@@ -63,10 +63,8 @@ typedef struct Word {
     p = (cur)->str + pos;\
   } while (0)
 
-#define ADV(w, c) do {char * s = w + c;\
-                      while(w != s) {\
-                        if (*w == 0) ret = 3;\
-                        ++w;}} while (0)
+//Advance through "prefix" until reached "rest" of line
+#define ADV(w, c) while (c--) {if (*w == 0) {ret = 3; break;} ++w;}
 
 int main (int argc, const char *argv[]) {
 
@@ -166,11 +164,11 @@ int main (int argc, const char *argv[]) {
         c = getc(stdin);
         while (ret < 0) {
           w = cur.str;
-          ADV(w, c);
           if (c == 30) {
-            while (c = getc(stdin), c == 255) ADV(w, 255);
             ADV(w, c);
+            while (c = getc(stdin), c == 255) ADV(w, c);
           }
+          ADV(w, c);
           while (c = getc(stdin), c > 30) {
             INSURE_SPACE(&cur,w,1);
             *w++ = (char)c;
