@@ -72,7 +72,7 @@ void soundslike();
   } while(false)
 #define BREAK_ON_ERR(command) \
   do{PosibErrBase pe(command);\
-  if(pe.has_err()){CERR<<"Error: "<< pe.get_err()->mesg << "\n"; return;}\
+  if(pe.has_err()){CERR<<"Error: "<< pe.get_err()->mesg << "\n"; break;}\
   } while(false)
 #define BREAK_ON_ERR_SET(command, type, var)\
   type var;\
@@ -447,6 +447,11 @@ DocumentChecker * new_checker(AspellSpeller * speller,
   return checker.release();
 }
 
+#define BREAK_ON_SPELLER_ERR\
+  do {if (aspell_speller_error(speller)) {\
+    CERR<<"Error: "<< aspell_speller_error_message(speller) << "\n"; break;\
+  } } while (false)
+
 void pipe() 
 {
   // set up stdin and stdout to be line buffered
@@ -496,21 +501,23 @@ void pipe()
     case '*':
       word = trim_wspace(line + 1);
       aspell_speller_add_to_personal(speller, word, -1);
+      BREAK_ON_SPELLER_ERR;
       break;
     case '&':
       word = trim_wspace(line + 1);
       aspell_speller_add_to_personal
 	(speller, 
 	 reinterpret_cast<Speller *>(speller)->to_lower(word), -1);
+      BREAK_ON_SPELLER_ERR;
       break;
     case '@':
       word = trim_wspace(line + 1);
       aspell_speller_add_to_session(speller, word, -1);
+      BREAK_ON_SPELLER_ERR;
       break;
     case '#':
       aspell_speller_save_all_word_lists(speller);
-      if (aspell_speller_error(speller))
-	CERR << "Error: " << aspell_speller_error_message(speller) << "\n";
+      BREAK_ON_SPELLER_ERR;
       break;
     case '+':
       word = trim_wspace(line + 1);
