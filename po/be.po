@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.51\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-03-17 21:46-0500\n"
+"POT-Creation-Date: 2004-03-22 15:59-0500\n"
 "PO-Revision-Date: 2004-01-06 16:34+0200\n"
 "Last-Translator: Vital khilko <dojlid@mova.org>\n"
 "Language-Team: Belarusian <i18n@mova.org>\n"
@@ -686,23 +686,23 @@ msgstr ""
 msgid "Affix '%s' is corrupt"
 msgstr ""
 
-#: modules/speller/default/readonly_ws.cpp:339
+#: modules/speller/default/readonly_ws.cpp:343
 msgid "Wrong endian order."
 msgstr ""
 
-#: modules/speller/default/readonly_ws.cpp:364
+#: modules/speller/default/readonly_ws.cpp:368
 msgid "Wrong soundslike."
 msgstr ""
 
-#: modules/speller/default/readonly_ws.cpp:370
+#: modules/speller/default/readonly_ws.cpp:374
 msgid "Wrong soundslike version."
 msgstr ""
 
-#: modules/speller/default/readonly_ws.cpp:729
+#: modules/speller/default/readonly_ws.cpp:736
 msgid "Affix compression is currently incompatible with soundslike lookup."
 msgstr ""
 
-#: modules/speller/default/readonly_ws.cpp:810
+#: modules/speller/default/readonly_ws.cpp:817
 msgid "Affix flags found in word but no affix file given."
 msgstr ""
 

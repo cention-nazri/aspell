@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.51-b20040219\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-03-17 21:46-0500\n"
+"POT-Creation-Date: 2004-03-22 15:59-0500\n"
 "PO-Revision-Date: 2004-02-19 11:12-0600\n"
 "Last-Translator: Kevin Patrick Scannell <scannell@SLU.EDU>\n"
 "Language-Team: Irish <ga@li.org>\n"
@@ -679,25 +679,25 @@ msgstr "foirceann '%s' truaillithe, b'fhéidir líon mícheart"
 msgid "Affix '%s' is corrupt"
 msgstr "foirceann '%s' truaillithe"
 
-#: modules/speller/default/readonly_ws.cpp:339
+#: modules/speller/default/readonly_ws.cpp:343
 msgid "Wrong endian order."
 msgstr "Ord caolcheannach/mórcheannach mícheart"
 
-#: modules/speller/default/readonly_ws.cpp:364
+#: modules/speller/default/readonly_ws.cpp:368
 #, fuzzy
 msgid "Wrong soundslike."
 msgstr "Comhad `soundslike' mícheart"
 
-#: modules/speller/default/readonly_ws.cpp:370
+#: modules/speller/default/readonly_ws.cpp:374
 #, fuzzy
 msgid "Wrong soundslike version."
 msgstr "Leagan `soundslike' mícheart"
 
-#: modules/speller/default/readonly_ws.cpp:729
+#: modules/speller/default/readonly_ws.cpp:736
 msgid "Affix compression is currently incompatible with soundslike lookup."
 msgstr ""
 
-#: modules/speller/default/readonly_ws.cpp:810
+#: modules/speller/default/readonly_ws.cpp:817
 msgid "Affix flags found in word but no affix file given."
 msgstr ""
 

@@ -6,10 +6,10 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: aspell 0.51-b20040219\n"
+"Project-Id-Version: aspell 0.60-b20040317\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-03-17 21:46-0500\n"
-"PO-Revision-Date: 2004-03-04 21:15+0100\n"
+"POT-Creation-Date: 2004-03-22 15:59-0500\n"
+"PO-Revision-Date: 2004-03-18 22:44+0100\n"
 "Last-Translator: Elros Cyriatan <cyriatan@fastmail.fm>\n"
 "Language-Team: Dutch <vertaling@nl.linux.org>\n"
 "MIME-Version: 1.0\n"
@@ -132,9 +132,8 @@ msgid "consider run-together words legal"
 msgstr "aan elkaar geschreven woorden goedkeuren"
 
 #: common/config.cpp:1069
-#, fuzzy
 msgid "maximum number that can be strung together"
-msgstr "maximale aantal dat aan elkaar geschreven mag worden"
+msgstr "maximale aantal dat achter elkaar geplakt mag worden"
 
 #: common/config.cpp:1071
 msgid "minimal length of interior words"
@@ -199,13 +198,12 @@ msgid "indicator for additional flags in word lists"
 msgstr "code voor extra opties in woordenlijsten"
 
 #: common/config.cpp:1099
-#, fuzzy
 msgid "use personal, replacement & session dictionaries"
-msgstr "springtabellen gebruiken bij aanmaken woordenboeken"
+msgstr "persoonlijke, vervangings- & sessiewoordenboeken gebruiken"
 
 #: common/config.cpp:1101
 msgid "enable warnings"
-msgstr ""
+msgstr "waarschuwingen aanzetten"
 
 #: common/config.cpp:1108
 msgid "encode soundslike infomation when creating dicts"
@@ -245,11 +243,11 @@ msgstr "opstarttijd en suggestietijd bijhouden in pijpmodus"
 
 #: common/errors.cpp:26
 msgid "Operation Not Supported: %what:1"
-msgstr ""
+msgstr "Bewerking niet ondersteund: %what:1"
 
 #: common/errors.cpp:42
 msgid "The method \"%what:1\" is unimplemented in \"%where:2\"."
-msgstr ""
+msgstr "De methode \"%what:1\" is niet geïmplementeerd in \"%where:2\"."
 
 #: common/errors.cpp:50
 #, c-format
@@ -386,7 +384,6 @@ msgstr ""
 "vereiste van filter."
 
 #: common/errors.cpp:362
-#, fuzzy
 msgid ""
 "%where:1: \"%filter:2\" error while extending Aspell options. (out of "
 "memory?)"
@@ -428,9 +425,9 @@ msgid "Unhandled Error: "
 msgstr "Niet-behandelde fout: "
 
 #: prog/aspell.cpp:89
-#, fuzzy, c-format
+#, c-format
 msgid "Error: %s\n"
-msgstr "Fout: "
+msgstr "Fout: %s\n"
 
 #: prog/aspell.cpp:94
 msgid "Error: "
@@ -480,9 +477,9 @@ msgid "Time to load word list: "
 msgstr "Tijd voor laden woordenlijst: "
 
 #: prog/aspell.cpp:798
-#, fuzzy, c-format
+#, c-format
 msgid "Suggestion Time: %f\n"
-msgstr "Tijd voor suggestie: "
+msgstr "Tijd voor suggestie: %f\n"
 
 #: prog/aspell.cpp:839
 msgid "You must specify a file name."
@@ -652,19 +649,19 @@ msgid "The required field \"name\" is missing."
 msgstr "Het vereiste veld \"name\" (naam) ontbreekt."
 
 #: modules/speller/default/language.cpp:473
-#, fuzzy, c-format
+#, c-format
 msgid "The character '%s' may not appear at the beginning of a word."
-msgstr "Het teken '%s' mag niet voorkomen aan het %s van een woord."
+msgstr "Het teken '%s' mag niet voorkomen aan het begin van een woord."
 
 #: modules/speller/default/language.cpp:478
-#, fuzzy, c-format
+#, c-format
 msgid "The character '%s' may not appear at the middle of a word."
-msgstr "Het teken '%s' mag niet voorkomen aan het %s van een woord."
+msgstr "Het teken '%s' mag niet voorkomen aan het einde van een woord."
 
 #: modules/speller/default/language.cpp:483
-#, fuzzy, c-format
+#, c-format
 msgid "The character '%s' may not appear at the end of a word."
-msgstr "Het teken '%s' mag niet voorkomen aan het %s van een woord."
+msgstr "Het teken '%s' mag niet voorkomen aan het einde van een woord."
 
 #: modules/speller/default/language.cpp:494
 msgid "Empty string."
@@ -677,7 +674,7 @@ msgstr "Bevat geen letters."
 #: modules/speller/default/affix.cpp:277
 #, c-format
 msgid "Expected the file to be in \"%s\" not \"%s\"."
-msgstr ""
+msgstr "Het bestand werd verwacht in \"%s\", niet \"%s\"."
 
 #: modules/speller/default/affix.cpp:338
 #, c-format
@@ -685,31 +682,33 @@ msgid "affix '%s' is corrupt, possible incorrect count"
 msgstr "aanhangsel '%s' is kapot, mogelijk onjuist getal"
 
 #: modules/speller/default/affix.cpp:385
-#, fuzzy, c-format
+#, c-format
 msgid "Affix '%s' is corrupt"
-msgstr "aanhangsel '%s' is kapot"
+msgstr "Achtervoegsel '%s' is kapot"
 
-#: modules/speller/default/readonly_ws.cpp:339
+#: modules/speller/default/readonly_ws.cpp:343
 msgid "Wrong endian order."
 msgstr "Verkeerde endiaanse volgorde."
 
-#: modules/speller/default/readonly_ws.cpp:364
-#, fuzzy
+#: modules/speller/default/readonly_ws.cpp:368
 msgid "Wrong soundslike."
-msgstr "Verkeerde klinkt-als"
+msgstr "Verkeerde klinkt-als."
 
-#: modules/speller/default/readonly_ws.cpp:370
-#, fuzzy
+#: modules/speller/default/readonly_ws.cpp:374
 msgid "Wrong soundslike version."
-msgstr "Verkeerde klinkt-als versie"
+msgstr "Verkeerde klinkt-als versie."
 
-#: modules/speller/default/readonly_ws.cpp:729
+#: modules/speller/default/readonly_ws.cpp:736
 msgid "Affix compression is currently incompatible with soundslike lookup."
 msgstr ""
+"Achtervoegsel compressie gaat op dit moment niet samen met klinkt-als "
+"opzoeken."
 
-#: modules/speller/default/readonly_ws.cpp:810
+#: modules/speller/default/readonly_ws.cpp:817
 msgid "Affix flags found in word but no affix file given."
 msgstr ""
+"Achtervoegsel opties gevonden in woord, maar er is geen achtervoegsel "
+"gegeven."
 
 #. TRANSLATORS: Like the strings in config.cpp, all strings in *-filter.opt
 #. should be under 50 characters, begin with a lower case character and 
@@ -769,12 +768,3 @@ msgstr "tekens gebruikt voor coderen van afbreeklokaties"
 #: modules/filter/url-filter.opt:7
 msgid "Filter for hiding urls/paths and similar from Aspell"
 msgstr "Filter voor het verbergen van URLs/paden en dergelijke van Aspell"
-
-#~ msgid "beginning"
-#~ msgstr "begin"
-
-#~ msgid "middle"
-#~ msgstr "midden"
-
-#~ msgid "end"
-#~ msgstr "eind"
