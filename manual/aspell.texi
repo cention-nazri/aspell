@@ -1073,7 +1073,9 @@ The data file to use for the conversion.
 
 @item genconv-form
 @i{(string)} The preferred form that output should be in.  Currently
-either @samp{single} or @samp{multi} to use the multi character encoding.
+either @samp{single} or @samp{multi} to use the multi character
+encoding.
+@end table
 
 @subsubsection context
 @c FIXME: Shorten
