@@ -522,16 +522,14 @@ PosibErr<void> WritableDict::save(FStream & out, ParmString file_name)
   out.printf("personal_ws-1.1 %s %i %s\n", 
              lang_name(), word_lookup->size(), file_encoding.c_str());
 
-  SoundslikeLookup::const_iterator i = soundslike_lookup_.begin();
-  SoundslikeLookup::const_iterator e = soundslike_lookup_.end();
+  WordLookup::const_iterator i = word_lookup->begin();
+  WordLookup::const_iterator e = word_lookup->end();
     
   StrVector::const_iterator j;
   
   ConvP conv(oconv);
   for (;i != e; ++i) {
-    for (j = i->second.begin(); j != i->second.end(); ++j) {
-      out.printf("%s\n", conv(*j));
-    }
+    out.printf("%s\n", conv(*i));
   }
   return no_err;
 }
