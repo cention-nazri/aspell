@@ -4204,6 +4204,8 @@ doesn't work correctly anyway.
 @item
 Several important bug fixes some of which rendered some non-English
 languages unusable.
+@item
+Other minor changes.
 @end itemize
 
 @heading Changes from 0.60.1 to 0.60.1.1 (November 20, 2004)
