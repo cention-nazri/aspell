@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60-b20040402\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-04-25 04:07-0400\n"
+"POT-Creation-Date: 2004-04-29 03:56-0400\n"
 "PO-Revision-Date: 2004-04-07 11:12-0600\n"
 "Last-Translator: Kevin Patrick Scannell <scannell@SLU.EDU>\n"
 "Language-Team: Irish <ga@li.org>\n"
@@ -204,51 +204,59 @@ msgstr "cumasaigh rabhaidh"
 msgid "enable Unicode normalization"
 msgstr ""
 
-#: common/config.cpp:1110
+#: common/config.cpp:1109
+msgid "Unicode normalization required for the current lang"
+msgstr ""
+
+#: common/config.cpp:1111
 msgid "Unicode normalization form: none, nfd, nfc, comp"
 msgstr ""
 
-#: common/config.cpp:1117
+#: common/config.cpp:1113
+msgid "avoid lossy conversions"
+msgstr ""
+
+#: common/config.cpp:1120
 msgid "encode soundslike infomation when creating dicts"
 msgstr "códaigh eolas soundslike agus ag cruthú foclóirí"
 
-#: common/config.cpp:1119
+#: common/config.cpp:1122
 msgid "use jump tables when creating dictionaries"
 msgstr "úsáid táblaí léime agus ag cruthú foclóirí"
 
-#: common/config.cpp:1121
+#: common/config.cpp:1124
 msgid "use affix compression when creating dictionaries"
 msgstr "úsáid comhbhrú foircinn agus ag cruthú foclóirí"
 
-#: common/config.cpp:1128
+#: common/config.cpp:1131
 msgid "create a backup file by appending \".bak\""
 msgstr "cruthaigh comhad cúltaca le sínteán \".bak\""
 
-#: common/config.cpp:1131
+#: common/config.cpp:1134
 msgid "make possible root/affix combinations not in the dictionary"
 msgstr "déan gach cuingir fréamh/foirceann atá indéanta"
 
-#: common/config.cpp:1133
+#: common/config.cpp:1136
 msgid "keymapping for check mode, aspell or ispell"
 msgstr "eochairmhapáil do mhodh seiceála, aspell nó ispell"
 
-#: common/config.cpp:1135
+#: common/config.cpp:1138
 msgid "reverse the order of the suggest list"
 msgstr "aisiompaigh liosta na moltaí"
 
-#: common/config.cpp:1137
+#: common/config.cpp:1140
 msgid "suggest possible replacements"
 msgstr "tabhair moltaí d'fhocail mílitrithe"
 
-#: common/config.cpp:1139
+#: common/config.cpp:1142
 msgid "time load time and suggest time in pipe mode"
 msgstr "tomhais fad ama lódála/molta i modh phíopa"
 
-#: common/config.cpp:1141
+#: common/config.cpp:1144
 msgid "use byte offsets instead of character offsets"
 msgstr ""
 
-#: common/convert.cpp:283 common/convert.cpp:400
+#: common/convert.cpp:287 common/convert.cpp:413
 #, c-format
 msgid ""
 "This could also mean that the file \"%s\" could not be opened for reading or "
@@ -257,12 +265,12 @@ msgstr ""
 "Is féidir fosta nach bhfuil an comhad \"%s\" ar fáil le haghaidh léamh, nó "
 "níl sé ann ar chor ar bith."
 
-#: common/convert.cpp:607 common/convert.cpp:653
-#, c-format
-msgid "The unicode code point U+%04X is unsupported."
+#: common/convert.cpp:536 common/convert.cpp:642 common/convert.cpp:688
+#, fuzzy, c-format
+msgid "The Unicode code point U+%04X is unsupported."
 msgstr "Ní ghlactar leis an gcarachtar Unicode U+%04X."
 
-#: common/convert.cpp:777
+#: common/convert.cpp:812
 #, c-format
 msgid "Invalid UTF-8 sequence at position %d."
 msgstr "Sraith UTF-8 neamhbhailí san ionad %d."
@@ -455,149 +463,149 @@ msgstr "%action:1: níl `%expression:2' ina slonn ionadaíochta bhailí."
 msgid "Unhandled Error: "
 msgstr "Earráid Gan Réiteach: "
 
-#: prog/aspell.cpp:89
+#: prog/aspell.cpp:90
 #, c-format
 msgid "Error: %s\n"
 msgstr "Earráid: %s\n"
 
-#: prog/aspell.cpp:94
+#: prog/aspell.cpp:95
 msgid "Error: "
 msgstr "Earráid: "
 
-#: prog/aspell.cpp:189
+#: prog/aspell.cpp:191
 msgid "enter Email mode."
 msgstr "bain úsáid as an mhodh R-phoist."
 
-#: prog/aspell.cpp:190
+#: prog/aspell.cpp:192
 msgid "enter Html/Sgml mode."
 msgstr "bain úsáid as an mhodh Html/Sgml."
 
-#: prog/aspell.cpp:191
+#: prog/aspell.cpp:193
 msgid "enter TeX mode."
 msgstr "bain úsáid as an mhodh TeX."
 
-#: prog/aspell.cpp:287
+#: prog/aspell.cpp:289
 #, c-format
 msgid "Invalid Option: %s"
 msgstr "Rogha Neamhbhailí: %s"
 
-#: prog/aspell.cpp:292
+#: prog/aspell.cpp:294
 msgid " does not take any parameters."
 msgstr " -- ní ghlactar aon pharaiméadar."
 
-#: prog/aspell.cpp:300
+#: prog/aspell.cpp:302
 #, c-format
 msgid "You must specify a parameter for %s"
 msgstr "Ní foláir paraiméadar don rogha %s"
 
-#: prog/aspell.cpp:328
+#: prog/aspell.cpp:330
 msgid "You must specify an action"
 msgstr "Ní foláir duit feidhm a thabhairt"
 
-#: prog/aspell.cpp:395 prog/aspell.cpp:401 prog/aspell.cpp:419
+#: prog/aspell.cpp:399 prog/aspell.cpp:405 prog/aspell.cpp:423
 #, c-format
 msgid "Unknown Action: %s"
 msgstr "Feidhm Anaithnid: %s"
 
-#: prog/aspell.cpp:539
+#: prog/aspell.cpp:543
 msgid "Invalid Input"
 msgstr "Ionchur Neamhbhailí"
 
-#: prog/aspell.cpp:613
+#: prog/aspell.cpp:617
 msgid "Time to load word list: "
 msgstr "Fad ama chun an liosta focal a lódáil: "
 
-#: prog/aspell.cpp:807
+#: prog/aspell.cpp:811
 #, c-format
 msgid "Suggestion Time: %f\n"
 msgstr "Fad ama chun na moltaí a ghineadh: %f\n"
 
-#: prog/aspell.cpp:848
+#: prog/aspell.cpp:852
 msgid "You must specify a file name."
 msgstr "Is gá ainm comhaid ar a laghad a thabhairt."
 
-#: prog/aspell.cpp:858
+#: prog/aspell.cpp:862
 #, c-format
 msgid "Could not open the file \"%s\" for reading"
 msgstr "Níorbh fhéidir an comhad \"%s\" a oscailt chun é a léamh"
 
-#: prog/aspell.cpp:873
+#: prog/aspell.cpp:877
 #, c-format
 msgid "Could not open the file \"%s\"  for writing. File not saved."
 msgstr ""
 "Níorbh fhéidir an comhad \"%s\" a oscailt chun é a scríobh.  Ní shábháladh."
 
-#: prog/aspell.cpp:886
+#: prog/aspell.cpp:890
 #, c-format
 msgid "Invalid keymapping: %s"
 msgstr "Eochairmhapáil neamhbhailí: %s"
 
-#: prog/aspell.cpp:903
+#: prog/aspell.cpp:907
 msgid "Ignore"
 msgstr "Déan neamhshuim"
 
-#: prog/aspell.cpp:904
+#: prog/aspell.cpp:908
 msgid "Ignore all"
 msgstr "Déan neamhshuim ar gach"
 
-#: prog/aspell.cpp:905
+#: prog/aspell.cpp:909
 msgid "Replace"
 msgstr "Ionadaigh"
 
-#: prog/aspell.cpp:906
+#: prog/aspell.cpp:910
 msgid "Replace all"
 msgstr "Ionadaigh gach"
 
-#: prog/aspell.cpp:907
+#: prog/aspell.cpp:911
 msgid "Add"
 msgstr "Coinnigh"
 
-#: prog/aspell.cpp:908
+#: prog/aspell.cpp:912
 msgid "Add Lower"
 msgstr "Coinnigh le litir bheag"
 
-#: prog/aspell.cpp:909
+#: prog/aspell.cpp:913
 msgid "Abort"
 msgstr "Tobscoir"
 
-#: prog/aspell.cpp:910
+#: prog/aspell.cpp:914
 msgid "Exit"
 msgstr "Fág"
 
-#: prog/aspell.cpp:986
+#: prog/aspell.cpp:990
 msgid "Are you sure you want to abort? "
 msgstr "Ar mhaith leat an clár a thobscor? "
 
-#: prog/aspell.cpp:1006
+#: prog/aspell.cpp:1010
 msgid "With: "
 msgstr "Le: "
 
-#: prog/aspell.cpp:1022
+#: prog/aspell.cpp:1026
 msgid "Sorry that is an invalid choice!"
 msgstr "Tá brón orm; is neamhbhailí an rogha sin!"
 
-#: prog/aspell.cpp:1192
+#: prog/aspell.cpp:1247
 msgid "Sorry \"filter\" is currently unimplemented.\n"
 msgstr "Tá brón orm; níl \"filter\" ar fáil faoi láthair.\n"
 
-#: prog/aspell.cpp:1284
+#: prog/aspell.cpp:1339
 msgid "Can't merge a master word list yet. Sorry."
 msgstr "Tá brón orm; ní féidir máistirliosta focal a chumasc go fóill."
 
-#: prog/aspell.cpp:1309
+#: prog/aspell.cpp:1364
 msgid "Sorry \"create/merge personal\" is currently unimplemented.\n"
 msgstr "Tá brón orm; níl \"create/merge personal\" ar fáil faoi láthair.\n"
 
-#: prog/aspell.cpp:1318 prog/aspell.cpp:1377
+#: prog/aspell.cpp:1373 prog/aspell.cpp:1432
 #, c-format
 msgid "Sorry I won't overwrite \"%s\""
 msgstr "Tá brón orm; ní féidir an comhad \"%s\" a fhorscríobh"
 
-#: prog/aspell.cpp:1368
+#: prog/aspell.cpp:1423
 msgid "Sorry \"create/merge repl\" is currently unimplemented.\n"
 msgstr "Tá brón orm; níl \"create/merge repl\" ar fáil faoi láthair.\n"
 
-#: prog/aspell.cpp:1743
+#: prog/aspell.cpp:1798
 #, c-format
 msgid ""
 "\n"
@@ -654,7 +662,7 @@ msgstr ""
 "is iad [roghanna] ceann amháin nó níos mó de:\n"
 "\n"
 
-#: prog/aspell.cpp:1773
+#: prog/aspell.cpp:1828
 #, c-format
 msgid ""
 "\n"
@@ -724,16 +732,16 @@ msgstr "Comhad `soundslike' mícheart."
 msgid "Wrong soundslike version."
 msgstr "Leagan `soundslike' mícheart."
 
-#: modules/speller/default/readonly_ws.cpp:736
+#: modules/speller/default/readonly_ws.cpp:738
 msgid "Affix compression is currently incompatible with soundslike lookup."
 msgstr ""
 "Níl comhbhrú foircinn comhoiriúnach le cuardach soundsalike faoi láthair."
 
-#: modules/speller/default/readonly_ws.cpp:805
+#: modules/speller/default/readonly_ws.cpp:807
 msgid "The total word length is larger than 240 characters."
 msgstr ""
 
-#: modules/speller/default/readonly_ws.cpp:821
+#: modules/speller/default/readonly_ws.cpp:823
 msgid "Affix flags found in word but no affix file given."
 msgstr "Tá brait fhoircinn tugtha, ach níl on comhad foircinn ann."
 

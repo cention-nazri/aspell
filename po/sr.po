@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.51-b20040219\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-04-25 04:07-0400\n"
+"POT-Creation-Date: 2004-04-29 03:56-0400\n"
 "PO-Revision-Date: 2004-03-01 12:59+0100\n"
 "Last-Translator: Danilo Segan <dsegan@gmx.net>\n"
 "Language-Team: Serbian <gnu@prevod.org>\n"
@@ -205,64 +205,72 @@ msgstr ""
 msgid "enable Unicode normalization"
 msgstr ""
 
-#: common/config.cpp:1110
+#: common/config.cpp:1109
+msgid "Unicode normalization required for the current lang"
+msgstr ""
+
+#: common/config.cpp:1111
 msgid "Unicode normalization form: none, nfd, nfc, comp"
 msgstr ""
 
-#: common/config.cpp:1117
+#: common/config.cpp:1113
+msgid "avoid lossy conversions"
+msgstr ""
+
+#: common/config.cpp:1120
 msgid "encode soundslike infomation when creating dicts"
 msgstr "кодирај податке о звучи-као при прављењу речника"
 
-#: common/config.cpp:1119
+#: common/config.cpp:1122
 msgid "use jump tables when creating dictionaries"
 msgstr "користи таблице скока при прављењу речника"
 
-#: common/config.cpp:1121
+#: common/config.cpp:1124
 msgid "use affix compression when creating dictionaries"
 msgstr "користи компресију афикса при прављењу речника"
 
-#: common/config.cpp:1128
+#: common/config.cpp:1131
 msgid "create a backup file by appending \".bak\""
 msgstr "направи резервни примерак додавањем „.bak“"
 
 # bug: original not shorter than 50
-#: common/config.cpp:1131
+#: common/config.cpp:1134
 msgid "make possible root/affix combinations not in the dictionary"
 msgstr "учини могућим корене/афиксне комбинације које нису у речнику"
 
-#: common/config.cpp:1133
+#: common/config.cpp:1136
 msgid "keymapping for check mode, aspell or ispell"
 msgstr "распоред тастера при провери, aspell или ispell"
 
-#: common/config.cpp:1135
+#: common/config.cpp:1138
 msgid "reverse the order of the suggest list"
 msgstr "обрни редослед списка предлога"
 
-#: common/config.cpp:1137
+#: common/config.cpp:1140
 msgid "suggest possible replacements"
 msgstr "предложи могуће замене"
 
-#: common/config.cpp:1139
+#: common/config.cpp:1142
 msgid "time load time and suggest time in pipe mode"
 msgstr "мери време учитавања и време предлога у цевкама"
 
-#: common/config.cpp:1141
+#: common/config.cpp:1144
 msgid "use byte offsets instead of character offsets"
 msgstr ""
 
-#: common/convert.cpp:283 common/convert.cpp:400
+#: common/convert.cpp:287 common/convert.cpp:413
 #, c-format
 msgid ""
 "This could also mean that the file \"%s\" could not be opened for reading or "
 "does not exist."
 msgstr ""
 
-#: common/convert.cpp:607 common/convert.cpp:653
+#: common/convert.cpp:536 common/convert.cpp:642 common/convert.cpp:688
 #, fuzzy, c-format
-msgid "The unicode code point U+%04X is unsupported."
+msgid "The Unicode code point U+%04X is unsupported."
 msgstr "Није подржано кодирање „%encod:1“."
 
-#: common/convert.cpp:777
+#: common/convert.cpp:812
 #, c-format
 msgid "Invalid UTF-8 sequence at position %d."
 msgstr ""
@@ -454,150 +462,150 @@ msgstr "%action:1: „%expression:2“ не представља исправа�
 msgid "Unhandled Error: "
 msgstr "Необрађена грешка: "
 
-#: prog/aspell.cpp:89
+#: prog/aspell.cpp:90
 #, fuzzy, c-format
 msgid "Error: %s\n"
 msgstr "Грешка: "
 
-#: prog/aspell.cpp:94
+#: prog/aspell.cpp:95
 msgid "Error: "
 msgstr "Грешка: "
 
-#: prog/aspell.cpp:189
+#: prog/aspell.cpp:191
 msgid "enter Email mode."
 msgstr "уђи у режим е-поште."
 
-#: prog/aspell.cpp:190
+#: prog/aspell.cpp:192
 msgid "enter Html/Sgml mode."
 msgstr "уђи у ХТМЛ/СГМЛ режим."
 
-#: prog/aspell.cpp:191
+#: prog/aspell.cpp:193
 msgid "enter TeX mode."
 msgstr "уђи у ТеХ режим."
 
-#: prog/aspell.cpp:287
+#: prog/aspell.cpp:289
 #, c-format
 msgid "Invalid Option: %s"
 msgstr "Неисправна опција: %s"
 
-#: prog/aspell.cpp:292
+#: prog/aspell.cpp:294
 msgid " does not take any parameters."
 msgstr " не прихвата никакве параметре."
 
-#: prog/aspell.cpp:300
+#: prog/aspell.cpp:302
 #, c-format
 msgid "You must specify a parameter for %s"
 msgstr "Морате навести параметар за %s"
 
-#: prog/aspell.cpp:328
+#: prog/aspell.cpp:330
 msgid "You must specify an action"
 msgstr "Морате навести акцију"
 
-#: prog/aspell.cpp:395 prog/aspell.cpp:401 prog/aspell.cpp:419
+#: prog/aspell.cpp:399 prog/aspell.cpp:405 prog/aspell.cpp:423
 #, c-format
 msgid "Unknown Action: %s"
 msgstr "Непозната акција: %s"
 
-#: prog/aspell.cpp:539
+#: prog/aspell.cpp:543
 msgid "Invalid Input"
 msgstr "Неисправан улаз"
 
-#: prog/aspell.cpp:613
+#: prog/aspell.cpp:617
 msgid "Time to load word list: "
 msgstr "Време за учитавање списка речи: "
 
-#: prog/aspell.cpp:807
+#: prog/aspell.cpp:811
 #, fuzzy, c-format
 msgid "Suggestion Time: %f\n"
 msgstr "Време за предлог: "
 
-#: prog/aspell.cpp:848
+#: prog/aspell.cpp:852
 msgid "You must specify a file name."
 msgstr "Морате навести име датотеке."
 
-#: prog/aspell.cpp:858
+#: prog/aspell.cpp:862
 #, c-format
 msgid "Could not open the file \"%s\" for reading"
 msgstr "Не могу да отворим датотеку „%s“ ради читања"
 
-#: prog/aspell.cpp:873
+#: prog/aspell.cpp:877
 #, c-format
 msgid "Could not open the file \"%s\"  for writing. File not saved."
 msgstr "Не могу да отворим датотеку „%s“ ради уписа. Датотека није сачувана."
 
-#: prog/aspell.cpp:886
+#: prog/aspell.cpp:890
 #, c-format
 msgid "Invalid keymapping: %s"
 msgstr "Неисправна мапа тастера: %s"
 
-#: prog/aspell.cpp:903
+#: prog/aspell.cpp:907
 msgid "Ignore"
 msgstr "Занемари"
 
-#: prog/aspell.cpp:904
+#: prog/aspell.cpp:908
 msgid "Ignore all"
 msgstr "Занемари све"
 
-#: prog/aspell.cpp:905
+#: prog/aspell.cpp:909
 msgid "Replace"
 msgstr "Замени"
 
-#: prog/aspell.cpp:906
+#: prog/aspell.cpp:910
 msgid "Replace all"
 msgstr "Замени све"
 
-#: prog/aspell.cpp:907
+#: prog/aspell.cpp:911
 msgid "Add"
 msgstr "Додај"
 
 # Да ли је ово у вези малих слова?
-#: prog/aspell.cpp:908
+#: prog/aspell.cpp:912
 msgid "Add Lower"
 msgstr "Додај мала"
 
-#: prog/aspell.cpp:909
+#: prog/aspell.cpp:913
 msgid "Abort"
 msgstr "Одустани"
 
-#: prog/aspell.cpp:910
+#: prog/aspell.cpp:914
 msgid "Exit"
 msgstr "Изађи"
 
-#: prog/aspell.cpp:986
+#: prog/aspell.cpp:990
 msgid "Are you sure you want to abort? "
 msgstr "Сигурно желите да одустанете?"
 
 # Уз, са?
-#: prog/aspell.cpp:1006
+#: prog/aspell.cpp:1010
 msgid "With: "
 msgstr "Са: "
 
-#: prog/aspell.cpp:1022
+#: prog/aspell.cpp:1026
 msgid "Sorry that is an invalid choice!"
 msgstr "Нажалост, то је неисправан избор!"
 
-#: prog/aspell.cpp:1192
+#: prog/aspell.cpp:1247
 msgid "Sorry \"filter\" is currently unimplemented.\n"
 msgstr "Нажалост „filter“ није досад направљен.\n"
 
-#: prog/aspell.cpp:1284
+#: prog/aspell.cpp:1339
 msgid "Can't merge a master word list yet. Sorry."
 msgstr "Још увек не могу да стопим главни списак речи. Жао ми је."
 
-#: prog/aspell.cpp:1309
+#: prog/aspell.cpp:1364
 msgid "Sorry \"create/merge personal\" is currently unimplemented.\n"
 msgstr "Нажалост „create/merge personal“ није досад направљено.\n"
 
-#: prog/aspell.cpp:1318 prog/aspell.cpp:1377
+#: prog/aspell.cpp:1373 prog/aspell.cpp:1432
 #, c-format
 msgid "Sorry I won't overwrite \"%s\""
 msgstr "Нажалост, нећу преснимити „%s“"
 
-#: prog/aspell.cpp:1368
+#: prog/aspell.cpp:1423
 msgid "Sorry \"create/merge repl\" is currently unimplemented.\n"
 msgstr "Нажалост „create/merge repl“ није досад направљено.\n"
 
-#: prog/aspell.cpp:1743
+#: prog/aspell.cpp:1798
 #, c-format
 msgid ""
 "\n"
@@ -653,7 +661,7 @@ msgstr ""
 "[OPCIJE] могу бити неке од следећих:\n"
 "\n"
 
-#: prog/aspell.cpp:1773
+#: prog/aspell.cpp:1828
 #, c-format
 msgid ""
 "\n"
@@ -728,15 +736,15 @@ msgstr "Лоше звучи-као"
 msgid "Wrong soundslike version."
 msgstr "Лоше издање звучи-као"
 
-#: modules/speller/default/readonly_ws.cpp:736
+#: modules/speller/default/readonly_ws.cpp:738
 msgid "Affix compression is currently incompatible with soundslike lookup."
 msgstr ""
 
-#: modules/speller/default/readonly_ws.cpp:805
+#: modules/speller/default/readonly_ws.cpp:807
 msgid "The total word length is larger than 240 characters."
 msgstr ""
 
-#: modules/speller/default/readonly_ws.cpp:821
+#: modules/speller/default/readonly_ws.cpp:823
 msgid "Affix flags found in word but no affix file given."
 msgstr ""
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60-b20040402\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-04-25 04:07-0400\n"
+"POT-Creation-Date: 2004-04-29 03:56-0400\n"
 "PO-Revision-Date: 2004-04-02 20:13+0200\n"
 "Last-Translator: Elros Cyriatan <cyriatan@fastmail.fm>\n"
 "Language-Team: Dutch <vertaling@nl.linux.org>\n"
@@ -209,51 +209,59 @@ msgstr "waarschuwingen aanzetten"
 msgid "enable Unicode normalization"
 msgstr ""
 
-#: common/config.cpp:1110
+#: common/config.cpp:1109
+msgid "Unicode normalization required for the current lang"
+msgstr ""
+
+#: common/config.cpp:1111
 msgid "Unicode normalization form: none, nfd, nfc, comp"
 msgstr ""
 
-#: common/config.cpp:1117
+#: common/config.cpp:1113
+msgid "avoid lossy conversions"
+msgstr ""
+
+#: common/config.cpp:1120
 msgid "encode soundslike infomation when creating dicts"
 msgstr "klinkt-als informatie coderen bij aanmaken woordenboeken"
 
-#: common/config.cpp:1119
+#: common/config.cpp:1122
 msgid "use jump tables when creating dictionaries"
 msgstr "springtabellen gebruiken bij aanmaken woordenboeken"
 
-#: common/config.cpp:1121
+#: common/config.cpp:1124
 msgid "use affix compression when creating dictionaries"
 msgstr "uitgangen inpakken bij aanmaken woordenboeken"
 
-#: common/config.cpp:1128
+#: common/config.cpp:1131
 msgid "create a backup file by appending \".bak\""
 msgstr "een reserviekopie maken door \".bak\" achter te voegen"
 
-#: common/config.cpp:1131
+#: common/config.cpp:1134
 msgid "make possible root/affix combinations not in the dictionary"
 msgstr "mogelijke kern/uitgang combinaties maken die niet in woordenboek staan"
 
-#: common/config.cpp:1133
+#: common/config.cpp:1136
 msgid "keymapping for check mode, aspell or ispell"
 msgstr "toetsafbeelding voor controlemodus, aspell of ispell"
 
-#: common/config.cpp:1135
+#: common/config.cpp:1138
 msgid "reverse the order of the suggest list"
 msgstr "omgekeerde volgorde van lijst suggesties"
 
-#: common/config.cpp:1137
+#: common/config.cpp:1140
 msgid "suggest possible replacements"
 msgstr "mogelijke vervangingen suggereren"
 
-#: common/config.cpp:1139
+#: common/config.cpp:1142
 msgid "time load time and suggest time in pipe mode"
 msgstr "opstarttijd en suggestietijd bijhouden in pijpmodus"
 
-#: common/config.cpp:1141
+#: common/config.cpp:1144
 msgid "use byte offsets instead of character offsets"
 msgstr ""
 
-#: common/convert.cpp:283 common/convert.cpp:400
+#: common/convert.cpp:287 common/convert.cpp:413
 #, c-format
 msgid ""
 "This could also mean that the file \"%s\" could not be opened for reading or "
@@ -262,12 +270,12 @@ msgstr ""
 "Dit kan ook betekenen dat het bestand \"%s\" niet kon worden geopend om te "
 "lezen, of niet bestaat."
 
-#: common/convert.cpp:607 common/convert.cpp:653
-#, c-format
-msgid "The unicode code point U+%04X is unsupported."
+#: common/convert.cpp:536 common/convert.cpp:642 common/convert.cpp:688
+#, fuzzy, c-format
+msgid "The Unicode code point U+%04X is unsupported."
 msgstr "Het unicode codepunt U+%04X wordt niet ondersteund."
 
-#: common/convert.cpp:777
+#: common/convert.cpp:812
 #, c-format
 msgid "Invalid UTF-8 sequence at position %d."
 msgstr "Ongeldige UTF-8 reeks op positie %d."
@@ -460,151 +468,151 @@ msgstr "%action:1: `%expression:2' is geen geldige reguliere uitdrukking."
 msgid "Unhandled Error: "
 msgstr "Niet-behandelde fout: "
 
-#: prog/aspell.cpp:89
+#: prog/aspell.cpp:90
 #, c-format
 msgid "Error: %s\n"
 msgstr "Fout: %s\n"
 
-#: prog/aspell.cpp:94
+#: prog/aspell.cpp:95
 msgid "Error: "
 msgstr "Fout: "
 
-#: prog/aspell.cpp:189
+#: prog/aspell.cpp:191
 msgid "enter Email mode."
 msgstr "E-mail modus binnengaan."
 
-#: prog/aspell.cpp:190
+#: prog/aspell.cpp:192
 msgid "enter Html/Sgml mode."
 msgstr "HTML/SGML modus binnengaan."
 
-#: prog/aspell.cpp:191
+#: prog/aspell.cpp:193
 msgid "enter TeX mode."
 msgstr "TeX modus binnengaan."
 
-#: prog/aspell.cpp:287
+#: prog/aspell.cpp:289
 #, c-format
 msgid "Invalid Option: %s"
 msgstr "Ongeldige optie: %s"
 
-#: prog/aspell.cpp:292
+#: prog/aspell.cpp:294
 msgid " does not take any parameters."
 msgstr " neemt geen parameters aan."
 
-#: prog/aspell.cpp:300
+#: prog/aspell.cpp:302
 #, c-format
 msgid "You must specify a parameter for %s"
 msgstr "U dient een parameter op te geven voor %s"
 
-#: prog/aspell.cpp:328
+#: prog/aspell.cpp:330
 msgid "You must specify an action"
 msgstr "U dient een actie op te geven"
 
-#: prog/aspell.cpp:395 prog/aspell.cpp:401 prog/aspell.cpp:419
+#: prog/aspell.cpp:399 prog/aspell.cpp:405 prog/aspell.cpp:423
 #, c-format
 msgid "Unknown Action: %s"
 msgstr "Onbekende actie: %s"
 
-#: prog/aspell.cpp:539
+#: prog/aspell.cpp:543
 msgid "Invalid Input"
 msgstr "Ongeldige invoer"
 
-#: prog/aspell.cpp:613
+#: prog/aspell.cpp:617
 msgid "Time to load word list: "
 msgstr "Tijd voor laden woordenlijst: "
 
-#: prog/aspell.cpp:807
+#: prog/aspell.cpp:811
 #, c-format
 msgid "Suggestion Time: %f\n"
 msgstr "Tijd voor suggestie: %f\n"
 
-#: prog/aspell.cpp:848
+#: prog/aspell.cpp:852
 msgid "You must specify a file name."
 msgstr "U dient een bestandsnaam op te geven."
 
-#: prog/aspell.cpp:858
+#: prog/aspell.cpp:862
 #, c-format
 msgid "Could not open the file \"%s\" for reading"
 msgstr "Kon bestand \"%s\" niet openen om te lezen"
 
-#: prog/aspell.cpp:873
+#: prog/aspell.cpp:877
 #, c-format
 msgid "Could not open the file \"%s\"  for writing. File not saved."
 msgstr ""
 "Kon het bestand \"%s\" niet openen om te schrijven. Bestand niet opgeslagen."
 
-#: prog/aspell.cpp:886
+#: prog/aspell.cpp:890
 #, c-format
 msgid "Invalid keymapping: %s"
 msgstr "Ongeldige toetsafbeelding: %s"
 
-#: prog/aspell.cpp:903
+#: prog/aspell.cpp:907
 msgid "Ignore"
 msgstr "Negeren"
 
-#: prog/aspell.cpp:904
+#: prog/aspell.cpp:908
 msgid "Ignore all"
 msgstr "Alle negeren"
 
-#: prog/aspell.cpp:905
+#: prog/aspell.cpp:909
 msgid "Replace"
 msgstr "Vervangen"
 
-#: prog/aspell.cpp:906
+#: prog/aspell.cpp:910
 msgid "Replace all"
 msgstr "Alle vervangen"
 
-#: prog/aspell.cpp:907
+#: prog/aspell.cpp:911
 msgid "Add"
 msgstr "Toevoegen"
 
-#: prog/aspell.cpp:908
+#: prog/aspell.cpp:912
 msgid "Add Lower"
 msgstr "Lager toevoegen"
 
-#: prog/aspell.cpp:909
+#: prog/aspell.cpp:913
 msgid "Abort"
 msgstr "Afbreken"
 
-#: prog/aspell.cpp:910
+#: prog/aspell.cpp:914
 msgid "Exit"
 msgstr "Afsluiten"
 
-#: prog/aspell.cpp:986
+#: prog/aspell.cpp:990
 msgid "Are you sure you want to abort? "
 msgstr "Wilt u echt afbreken? "
 
-#: prog/aspell.cpp:1006
+#: prog/aspell.cpp:1010
 msgid "With: "
 msgstr "Met: "
 
-#: prog/aspell.cpp:1022
+#: prog/aspell.cpp:1026
 msgid "Sorry that is an invalid choice!"
 msgstr "Sorry, die keuze is ongeldig!"
 
-#: prog/aspell.cpp:1192
+#: prog/aspell.cpp:1247
 msgid "Sorry \"filter\" is currently unimplemented.\n"
 msgstr "Sorry, \"filter\" is op dit moment nog niet geïmplementeerd.\n"
 
-#: prog/aspell.cpp:1284
+#: prog/aspell.cpp:1339
 msgid "Can't merge a master word list yet. Sorry."
 msgstr "Kan hoofdwoordenlijst nog niet samenvoegen. Sorry."
 
-#: prog/aspell.cpp:1309
+#: prog/aspell.cpp:1364
 msgid "Sorry \"create/merge personal\" is currently unimplemented.\n"
 msgstr ""
 "Sorry, \"aanmaken/samenvoegen persoonlijk\" is nog niet geïmplementeerd.\n"
 
-#: prog/aspell.cpp:1318 prog/aspell.cpp:1377
+#: prog/aspell.cpp:1373 prog/aspell.cpp:1432
 #, c-format
 msgid "Sorry I won't overwrite \"%s\""
 msgstr "Sorry, ik ga \"%s\" niet overschrijven"
 
-#: prog/aspell.cpp:1368
+#: prog/aspell.cpp:1423
 msgid "Sorry \"create/merge repl\" is currently unimplemented.\n"
 msgstr ""
 "Sorry, \"aanmaken/samenvoegen dubbelen\" is nog niet geïmplementeerd.\n"
 
-#: prog/aspell.cpp:1743
+#: prog/aspell.cpp:1798
 #, c-format
 msgid ""
 "\n"
@@ -664,7 +672,7 @@ msgstr ""
 "[opties] is één van de volgende:\n"
 "\n"
 
-#: prog/aspell.cpp:1773
+#: prog/aspell.cpp:1828
 #, c-format
 msgid ""
 "\n"
@@ -734,17 +742,17 @@ msgstr "Verkeerde klinkt-als."
 msgid "Wrong soundslike version."
 msgstr "Verkeerde klinkt-als versie."
 
-#: modules/speller/default/readonly_ws.cpp:736
+#: modules/speller/default/readonly_ws.cpp:738
 msgid "Affix compression is currently incompatible with soundslike lookup."
 msgstr ""
 "Achtervoegsel compressie gaat op dit moment niet samen met klinkt-als "
 "opzoeken."
 
-#: modules/speller/default/readonly_ws.cpp:805
+#: modules/speller/default/readonly_ws.cpp:807
 msgid "The total word length is larger than 240 characters."
 msgstr ""
 
-#: modules/speller/default/readonly_ws.cpp:821
+#: modules/speller/default/readonly_ws.cpp:823
 msgid "Affix flags found in word but no affix file given."
 msgstr ""
 "Achtervoegsel opties gevonden in woord, maar er is geen achtervoegsel "
