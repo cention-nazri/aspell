@@ -10,6 +10,7 @@
 #include "indiv_filter.hpp"
 #include "string_map.hpp"
 #include "vector.hpp"
+#include "convert_filter.hpp"
 
 namespace {
 
@@ -226,6 +227,22 @@ namespace {
 
 }
 
-C_EXPORT 
-IndividualFilter * new_aspell_texinfo_filter() {return new TexInfoFilter;}
+C_EXPORT IndividualFilter * new_aspell_texinfo_filter() 
+{
+  return new TexInfoFilter;
+}
+
+C_EXPORT IndividualFilter * new_aspell_texinfo_decoder() 
+{
+  ConvertFilterParms parms("texinfo");
+  parms.file = "texinfo";
+  return new_convert_filter_decoder(parms);
+}
+
+C_EXPORT IndividualFilter * new_aspell_texinfo_encoder() 
+{
+  ConvertFilterParms parms("texinfo");
+  parms.file = "texinfo";
+  return new_convert_filter_encoder(parms);
+}
 

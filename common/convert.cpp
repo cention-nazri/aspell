@@ -4,12 +4,14 @@
 // license along with this library if you did not you can find
 // it at http://www.gnu.org/.
 
+#include <algorithm>
+
 #include <assert.h>
 #include <string.h>
 #include <math.h>
 
 #include "asc_ctype.hpp"
-#include "convert.hpp"
+#include "convert_impl.hpp"
 #include "fstream.hpp"
 #include "getdata.hpp"
 #include "config.hpp"
@@ -18,19 +20,13 @@
 #include "cache-t.hpp"
 #include "file_util.hpp"
 #include "file_data_util.hpp"
-#include "vararray.hpp"
+#include "objstack.hpp"
 
 #include "iostream.hpp"
 
 #include "gettext.h"
 
 namespace acommon {
-
-  typedef unsigned char  byte;
-  typedef unsigned char  Uni8;
-  typedef unsigned short Uni16;
-  typedef unsigned int   Uni32;
-
 
   //////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////
@@ -181,80 +177,59 @@ namespace acommon {
 
   //////////////////////////////////////////////////////////////////////
   //
-  // NormLookup
+  // NormLookup Parms
   //
 
-  template <class T>
-  struct NormTable
+  template <typename T>
+  struct AppendToFixed
   {
-    static const unsigned struct_size;
-    unsigned mask;
-    unsigned height;
-    unsigned width;
-    unsigned size;
-    T * end;
-    T data[1]; // hack for data[]
-  };
-
-  template <class T>
-  const unsigned NormTable<T>::struct_size = sizeof(NormTable<T>) - 1;
-
-  template <class T, class From>
-  struct NormLookupRet
-  {
-    const typename T::To   * to;
-    const From * last;
-    NormLookupRet(const typename T::To * t, From * l) 
-      : to(t), last(l) {}
+    T * d;
+    unsigned i;
+    AppendToFixed(T * d0, void *)
+      : d(d0), i(0) {}
+    void operator() (unsigned c) {
+      assert(i < d->max_to);
+      d->to[i] = static_cast<typename T::To>(c);
+      assert(c == static_cast<Uni32>(d->to[i]));
+      ++i;
+    }
+    void finish() {}
   };
   
-  template <class T, class From>
-  static inline NormLookupRet<T,From> norm_lookup(const NormTable<T> * d, 
-                                                  From * s, From * stop,
-                                                  const typename T::To * def,
-                                                  From * prev) 
-  {
-  loop:
-    if (s != stop) {
-      const T * i = d->data + (static_cast<typename T::From>(*s) & d->mask);
-      for (;;) {
-        if (i->from == static_cast<typename T::From>(*s)) {
-          if (i->sub_table) {
-            // really tail recursion
-            if (i->to[1] != T::to_non_char) {def = i->to; prev = s;}
-            d = (const NormTable<T> *)(i->sub_table);
-            s++;
-            goto loop;
-          } else {
-            return NormLookupRet<T,From>(i->to, s);
-          }
-        } else {
-          i += d->height;
-          if (i >= d->end) break;
-        }
-      }
-    }
-    return NormLookupRet<T,From>(def, prev);
-  }
+#if 0 // currently unused
 
-  template <class T>
-  static void free_norm_table(NormTable<T> * d)
+  template <typename T>
+  struct AppendToDynamic
   {
-    for (T * cur = d->data; cur != d->end; ++cur) {
-      if (cur->sub_table) 
-        free_norm_table<T>(static_cast<NormTable<T> *>(cur->sub_table));
+    T * d;
+    unsigned i;
+    ObjStack * buf;
+    AppendToDynamic(T * d0, ObjStack * buf)
+      : d(d0), i(0) {tmp->abort_temp();}
+    void operator() (unsigned c) {
+      d = buf->resize_temp((i+2)*sizeof(typename T::To));
+      d->to[i] = static_cast<typename T::To>(c);
+      assert(c == static_cast<Uni32>(d->to[i]));
+      ++i;
     }
-    free(d);
-  }
+    void finish() {
+      d->to[i] = static_cast<typename T::To>(0);
+      tmp->commit_temp();
+    }
+  };
+
+#endif
 
   struct FromUniNormEntry
   {
     typedef Uni32 From;
     Uni32 from;
     typedef byte To;
+    typedef AppendToFixed<FromUniNormEntry> AppendTo;
     byte  to[4];
     static const From from_non_char = (From)(-1);
     static const To   to_non_char   = 0x10;
+    void set_to_to_non_char() {to[0] = to_non_char;} 
     static const unsigned max_to = 4;
     void * sub_table;
   } 
@@ -268,9 +243,11 @@ namespace acommon {
     typedef byte From;
     byte from;
     typedef Uni16 To;
+    typedef AppendToFixed<ToUniNormEntry> AppendTo;
     Uni16 to[3];
     static const From from_non_char = 0x10;
     static const To   to_non_char   = 0x10;
+    void set_to_to_non_char() {to[0] = to_non_char;}
     static const unsigned max_to = 3;
     void * sub_table;
   } 
@@ -278,7 +255,7 @@ namespace acommon {
     __attribute__ ((aligned (16)))
 #endif
   ;
-  
+
   //////////////////////////////////////////////////////////////////////
   //
   // read in char data
@@ -325,95 +302,68 @@ namespace acommon {
 
   //////////////////////////////////////////////////////////////////////
   //
-  // read in norm data
+  // read in norm tables
   //
 
-  struct Tally 
-  {
-    int size;
-    Uni32 mask;
-    int max;
-    int * data;
-    Tally(int s, int * d) : size(s), mask(s - 1), max(0), data(d) {
-      memset(data, 0, sizeof(int)*size);
-    }
-    void add(Uni32 chr) {
-      Uni32 p = chr & mask;
-      data[p]++;
-      if (data[p] > max) max = data[p];
-    }
-  };
-
   template <class T>
-  static PosibErr< NormTable<T> * > create_norm_table(IStream & in, String & buf)
-  {
-    const char * p = get_nb_line(in, buf);
-    assert(*p == 'N');
-    ++p;
-    int size = strtoul(p, (char **)&p, 10);
-    VARARRAY(T, d, size);
-    memset(d, 0, sizeof(T) * size);
-    int sz = 1 << (unsigned)floor(log(size <= 1 ? 1.0 : size - 1)/log(2.0));
-    VARARRAY(int, tally0_d, sz);   Tally tally0(sz,   tally0_d);
-    VARARRAY(int, tally1_d, sz*2); Tally tally1(sz*2, tally1_d);
-    VARARRAY(int, tally2_d, sz*4); Tally tally2(sz*4, tally2_d);
-    T * cur = d;
-    while (p = get_nb_line(in, buf), *p != '.') {
+  struct TableFromIStream {
+  private:
+    IStream & in;
+    String  & buf;
+    ObjStack * os;
+    void operator=(const TableFromIStream &);
+  public:
+    TableFromIStream(IStream & in0, String & buf0, ObjStack * os0 = 0) 
+      : in(in0), buf(buf0), os(os0) {}
+    TableFromIStream(const TableFromIStream & other) 
+      : in(other.in), buf(other.buf), os(other.os) {}
+    int size; // only valid after init is called
+    // "cur" and "have_sub_table" will be updated on each call to get_next()
+    T * cur;
+    bool have_sub_table; // if a sub_table exits get_sub_table MUST be called
+    PosibErr<void> init() // sets up the table for input and sets size
+    {
+      const char * p = get_nb_line(in, buf);
+      assert(*p == 'N');
+      ++p;
+      size = strtoul(p, (char **)&p, 10);
+      return no_err;
+    }
+    PosibErr<bool> get_next() // fills in next entry pointed to by
+                              // cur and sets have_sub_table
+    {
+      char * p = get_nb_line(in, buf);
+      if (*p == '.') return false;
       Uni32 f = strtoul(p, (char **)&p, 16);
       cur->from = static_cast<typename T::From>(f);
       assert(f == cur->from);
-      tally0.add(f);
-      tally1.add(f);
-      tally2.add(f);
       ++p;
       assert(*p == '>');
       ++p;
       assert(*p == ' ');
       ++p;
-      unsigned i = 0;
-      if (*p != '-') {
-        for (;; ++i) {
-          const char * q = p;
-          Uni32 t = strtoul(p, (char **)&p, 16);
-          if (q == p) break;
-          assert(i < d->max_to);
-          cur->to[i] = static_cast<typename T::To>(t);
-          assert(t == static_cast<Uni32>(cur->to[i]));
-        } 
-      } else {
-        cur->to[0] = 0;
-        cur->to[1] = T::to_non_char;
+      {
+        typename T::AppendTo append_to(cur, os);
+        if (*p != '-') {
+          for (;;) {
+            const char * q = p;
+            Uni32 t = strtoul(p, (char **)&p, 16);
+            if (q == p) break;
+            append_to(t);
+          } 
+        } else {
+          append_to(0);
+          append_to(T::to_non_char);
+        }
+        append_to.finish();
       }
       if (*p == ' ') ++p;
-      if (*p == '/') cur->sub_table = create_norm_table<T>(in,buf);
-      ++cur;
-    }
-    assert(cur - d == size);
-    Tally * which = &tally0;
-    if (which->max > tally1.max) which = &tally1;
-    if (which->max > tally2.max) which = &tally2;
-    NormTable<T> * final = (NormTable<T> *)calloc(1, NormTable<T>::struct_size + 
-                                                  sizeof(T) * which->size * which->max);
-    memset(final, 0, NormTable<T>::struct_size + sizeof(T) * which->size * which->max);
-    final->mask = which->size - 1;
-    final->height = which->size;
-    final->width = which->max;
-    final->end = final->data + which->size * which->max;
-    final->size = size;
-    for (cur = d; cur != d + size; ++cur) {
-      T * dest = final->data + (cur->from & final->mask);
-      while (dest->from != 0) dest += final->height;
-      *dest = *cur;
-      if (dest->from == 0) dest->from = T::from_non_char;
-    }
-    for (T * dest = final->data; dest < final->end; dest += final->height) {
-      if (dest->from == 0 || dest->from == T::from_non_char && dest->to[0] == 0) {
-        dest->from = T::from_non_char;
-        dest->to[0] = T::to_non_char;
-      }
-    }
-    return final;
-  }
+      if (*p == '/') have_sub_table = true;
+      else           have_sub_table = false;
+      return true;
+    }      
+    void get_sub_table(TableFromIStream & d) {}
+  };
 
   PosibErr<NormTables *> NormTables::get_new(const String & encoding, 
                                              const Config * config)
@@ -440,14 +390,18 @@ namespace acommon {
     get_nb_line(in, l);
     remove_comments(l);
     assert (l == "/");
-    d->internal = create_norm_table<FromUniNormEntry>(in, l);
+    { 
+      TableFromIStream<FromUniNormEntry> tin(in, l);
+      d->internal = create_norm_table<FromUniNormEntry>(tin);
+    }
     get_nb_line(in, l);
     remove_comments(l);
     assert (l == "STRICT");
     char * p = get_nb_line(in, l);
     remove_comments(l);
     if (l == "/") {
-      d->strict_d = create_norm_table<FromUniNormEntry>(in, l);
+      TableFromIStream<FromUniNormEntry> tin(in, l);
+      d->strict_d = create_norm_table<FromUniNormEntry>(tin);
       d->strict = d->strict_d;
     } else {
       assert(*p == '=');
@@ -465,7 +419,8 @@ namespace acommon {
       char * p = get_nb_line(in, l);
       remove_comments(l);
       if (l == "/") {
-        e.ptr = e.data = create_norm_table<ToUniNormEntry>(in,l);
+        TableFromIStream<ToUniNormEntry> tin(in, l);
+        e.ptr = e.data = create_norm_table<ToUniNormEntry>(tin);
       } else {
         assert(*p == '=');
         ++p; ++p;
@@ -623,7 +578,7 @@ namespace acommon {
           out.append(0);
           ++in;
         } else {
-          NormLookupRet<E,const char> ret = norm_lookup<E>(data, in, stop, 0, in);
+          NormLookupRet<E,char> ret = norm_lookup<E>(data, in, stop, 0, in);
           for (unsigned i = 0; ret.to[i] && i < E::max_to; ++i)
             out.append(ret.to[i]);
           in = ret.last + 1;
@@ -684,7 +639,7 @@ namespace acommon {
           out.append('\0');
           ++in;
         } else {
-          NormLookupRet<E,const FilterChar> ret = norm_lookup<E>(data, in, stop, (const byte *)"?", in);
+          NormLookupRet<E,FilterChar> ret = norm_lookup<E>(data, in, stop, (const byte *)"?", in);
           for (unsigned i = 0; i < E::max_to && ret.to[i]; ++i)
             out.append(ret.to[i]);
           in = ret.last + 1;
@@ -698,7 +653,7 @@ namespace acommon {
           out.append('\0');
           ++in;
         } else {
-          NormLookupRet<E,const FilterChar> ret = norm_lookup<E>(data, in, stop, 0, in);
+          NormLookupRet<E,FilterChar> ret = norm_lookup<E>(data, in, stop, 0, in);
           if (ret.to == 0) {
             char m[70];
             snprintf(m, 70, _("The Unicode code point U+%04X is unsupported."), in->chr);

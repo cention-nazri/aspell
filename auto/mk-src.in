@@ -434,6 +434,8 @@ errors:
 		bad value
 			mesg => The value "%value" is not %accepted and is thus invalid for the key "%key".
 			parms => value, accepted
+		empty value
+			mesg => You must specify a value for the key "%key".
 		duplicate
 		key not string
 			mesg => The key "%key" is not a string.
@@ -593,6 +595,11 @@ errors:
 		invalid expression
 			mesg => "%expression" is not a valid regular expression.
 			parms => expression
+	convert filter
+		/
+		invalid table entry
+			mesg => Each row in the table must have at least %cols columns.
+			parms => cols
 }
 group: speller
 {

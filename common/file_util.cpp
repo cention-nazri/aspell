@@ -154,6 +154,7 @@ namespace acommon {
     return rename(orig_name, new_name) == 0;
   }
  
+#if 0
   const char * get_file_name(const char * path) {
     const char * file_name;
     if (path != 0) {
@@ -165,7 +166,8 @@ namespace acommon {
     }
     return file_name;
   }
-
+#endif
+   
   unsigned find_file(const Config * config, const char * option, String & filename)
   {
     StringList sl;

@@ -34,7 +34,7 @@ namespace acommon {
   bool file_exists(ParmString name);
   bool rename_file(ParmString orig, ParmString new_name);
   // will return NULL if path is NULL.
-  const char * get_file_name(const char * path);
+  //const char * get_file_name(const char * path);
 
   // expands filename to the full path
   // returns the length of the directory part or 0 if nothing found

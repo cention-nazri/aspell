@@ -139,7 +139,7 @@ public:
   }
   // returns a pointer to the beginning of the new memory (in
   // otherwords the END of the temp memory BEFORE the call to grow
-  // temp) NOT the beginning if the temp memory
+  // temp) NOT the beginning of the temp memory
   void * grow_temp(size_t s) {
     if (temp_end == 0)
       return alloc_temp(s);
