@@ -41,7 +41,7 @@ static void usage ()
   fputs("For best result the locale should be set to C before sorting by\n",    stderr);
   fputs("  setting the environmental variable LANG to \"C\" before sorting.\n", stderr);
   fputs("Copyright 2000-2004 by Kevin Atkinson.\n",                             stderr);
-  fputs("Usage: word-list-compress c[ompress]|d[ecompress]|v[version]\n",       stderr);
+  fputs("Usage: word-list-compress c[ompress]|d[ecompress]\n",       stderr);
 }
 
 // PRECOND: bufsize >= 2
@@ -50,7 +50,7 @@ static int get_word(FILE * in, char * w)
   int bufsize = BUFSIZE - 1;
   register int c;
 
-  while (c = getc(in), c != EOF && c <= 32);
+  while (c = getc(in), c <= 32 && c != EOF);
   if (c != EOF) {
     do {
       *w++ = (char)(c);
@@ -75,8 +75,8 @@ int main (int argc, const char *argv[]) {
       char s2[BUFSIZE];
       char * prev = s2;
       char * cur = s1;
-      *prev = '\0';
       int errFlag;
+      *prev = '\0';
 
       SETBIN (stdout);
 
