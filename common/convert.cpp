@@ -1012,11 +1012,39 @@ namespace acommon {
     return !file_exists(file_name);
   }
 
+  static PosibErr<bool> add_conv_filters(const Config & c, FullConvert * & fc,
+                                         Vector<String> & els,
+                                         bool decoder, bool prev_err)
+  {
+    Vector<String>::const_iterator i;
+    for (i = els.begin(); i != els.end(); ++i) 
+    {
+      const char * name0 = i->str();
+      const char * colon = strchr(name0, ':');
+      String name;
+      if (colon) name.assign(name0, colon);
+      else       name.assign(name0);
+      GenConvFilterParms p(name);
+      p.file = p.name;
+      p.form = colon ? colon + 1 : "multi";
+      StackPtr<IndividualFilter> f(new_convert_filter(decoder, p));
+      PosibErr<bool> pe = f->setup((Config *)&c); // FIXME: Cast shold not
+                                                  // be necessary
+      if (prev_err && pe.has_err(aerror_cant_read_file)) {return false;}
+      else if (pe.has_err()) return pe;
+      if (fc == 0) return make_err(not_simple_encoding, name);
+      if (pe.data)
+        fc->add_filter(f.release());
+    }
+    return true;
+  }
+
   PosibErr<Convert *> internal_new_convert(const Config & c,
                                            ParmString in_s, ParmString out_s,
                                            bool if_needed,
                                            Normalize norm,
-                                           bool simple)
+                                           bool simple,
+                                           Convert::InitRet prev_err)
   {
     Encoding in, out;
     RET_ON_ERR(decode_encoding_string(c, in_s,  in));
@@ -1037,44 +1065,58 @@ namespace acommon {
     if (simple) conv = new SimpleConvert;
     else        conv = new FullConvert;
 
+    Convert::InitRet ret;
     if (norm == NormNone) {
-      RET_ON_ERR(conv->init(c, in.base, out.base));
+      ret = conv->init(c, in.base, out.base);
     } else if (norm == NormFrom) {
       if (in.norm_form == "none")
-        RET_ON_ERR(conv->init(c, in.base, out.base));
+        ret = conv->init(c, in.base, out.base);
       else
-        RET_ON_ERR(conv->init_norm_from(c, in.base, out.base));
+        ret = conv->init_norm_from(c, in.base, out.base);
     } else if (norm == NormTo) {
       if (out.norm_form == "none")
-        RET_ON_ERR(conv->init(c, in.base, out.base));
+        ret = conv->init(c, in.base, out.base);
       else
-        RET_ON_ERR(conv->init_norm_to(c, in.base, out.base, out.norm_form));
+        ret = conv->init_norm_to(c, in.base, out.base, out.norm_form);
     }
 
-    if (simple) return conv.release();
-    FullConvert * fc = (FullConvert *)conv.get();
+    if (ret.error != Convert::NoError) 
+    {
+      if (ret.error == prev_err.error) {
+        return 0;
+      } else if (!prev_err.error && ret.error == Convert::UnknownDecoder)  {
+        String tmp = "/";
+        tmp += in_s;
+        PosibErr<Convert *> pe = internal_new_convert(c, tmp, out_s, if_needed, norm, simple, ret);
+        if (pe.has_err() || pe.data) {ret.error_obj.ignore_err(); return pe;}
+        return ret.error_obj;
+      } else if (!prev_err.error && ret.error == Convert::UnknownEncoder)  {
+        String tmp = "/";
+        tmp += out_s;
+        PosibErr<Convert *> pe = internal_new_convert(c, in_s, tmp, if_needed, norm, simple, ret);
+        if (pe.has_err() || pe.data) {ret.error_obj.ignore_err(); return pe;}
+        return ret.error_obj;
+      } else {
+        return ret.error_obj;
+      };
+    }
 
+    FullConvert * fc = (FullConvert *)(simple ? 0 : conv.get());
+    
     Vector<String>::const_iterator i;
-    for (i = in.extra.begin(); i != in.extra.end(); ++i) 
+    
     {
-      GenConvFilterParms p(*i);
-      p.file = p.name;
-      p.form = "multi";
-      StackPtr<IndividualFilter> f(new_convert_filter_decoder(p));
-      RET_ON_ERR(f->setup((Config *)&c)); // FIXME: Cast should not be
-                                          // necessary
-      fc->add_filter(f.release());
+      PosibErr<bool> pe = add_conv_filters(c, fc, in.extra, true,
+                                           prev_err.error == Convert::UnknownDecoder);
+      if (pe.has_err()) return (PosibErrBase &)pe;
+      if (!pe.data) return 0;
+    } {
+      PosibErr<bool> pe = add_conv_filters(c, fc, out.extra, false,
+                                           prev_err.error == Convert::UnknownEncoder);
+      if (pe.has_err()) return (PosibErrBase &)pe;
+      if (!pe.data) return 0;
     }
-    for (i = out.extra.begin(); i != out.extra.end(); ++i)
-    {
-      GenConvFilterParms p(*i);
-      p.file = p.name;
-      p.form = "multi";
-      StackPtr<IndividualFilter> f(new_convert_filter_encoder(p));
-      RET_ON_ERR(f->setup((Config *)&c));
-      fc->add_filter(f.release());
-    }
-
+     
     //printf("%s => %s\n", conv->in_code(),  conv->out_code());
 
     return conv.release();
@@ -1118,12 +1160,30 @@ namespace acommon {
 
   Convert::~Convert() {}
 
-  PosibErr<void> Convert::init(const Config & c, ParmStr in, ParmStr out)
+#define FAILED_decode  ret.error = UnknownDecoder
+#define FAILED_encode  ret.error = UnknownEncoder
+#define FAILED_neither ret.error = OtherError
+
+#define INIT_RET_ON_ERR(what, command) \
+  do {\
+    PosibErrBase pe(command);\
+    if (pe.has_err()) {\
+      InitRet ret;\
+      if (pe.prvw_err()->is_a(unknown_encoding)) FAILED_##what;\
+      else                                       ret.error = OtherError;\
+      ret.error_obj = PosibErrBase(pe);\
+      return ret;\
+    }\
+  } while(false)\
+
+#define INIT_NO_ERR InitRet();
+
+  Convert::InitRet Convert::init(const Config & c, ParmStr in, ParmStr out)
   {
-    RET_ON_ERR(setup(decode_c, &decode_cache, &c, in));
+    INIT_RET_ON_ERR(decode, setup(decode_c, &decode_cache, &c, in));
     decode_ = decode_c.get();
     in_code_ = decode_->key;
-    RET_ON_ERR(setup(encode_c, &encode_cache, &c, out));
+    INIT_RET_ON_ERR(encode, setup(encode_c, &encode_cache, &c, out));
     encode_ = encode_c.get();
     out_code_ = encode_->key;
 
@@ -1139,17 +1199,17 @@ namespace acommon {
     }
 
     if (conv_)
-      RET_ON_ERR(conv_->init(decode_, encode_, c));
+      INIT_RET_ON_ERR(neither, conv_->init(decode_, encode_, c));
 
-    return no_err;
+    return INIT_NO_ERR;
   }
 
   
-  PosibErr<void> Convert::init_norm_from(const Config & c, ParmStr in, ParmStr out)
+  Convert::InitRet Convert::init_norm_from(const Config & c, ParmStr in, ParmStr out)
   {
-    RET_ON_ERR(setup(norm_tables_, &norm_tables_cache, &c, out));
+    INIT_RET_ON_ERR(encode, setup(norm_tables_, &norm_tables_cache, &c, out));
 
-    RET_ON_ERR(setup(decode_c, &decode_cache, &c, in));
+    INIT_RET_ON_ERR(decode, setup(decode_c, &decode_cache, &c, in));
     decode_ = decode_c.get();
     in_code_ = decode_->key;
 
@@ -1168,15 +1228,15 @@ namespace acommon {
     }
     conv_ = 0;
 
-    return no_err;
+    return INIT_NO_ERR;
   }
 
-  PosibErr<void> Convert::init_norm_to(const Config & c, ParmStr in, ParmStr out,
-                                       ParmStr norm_form)
+  Convert::InitRet Convert::init_norm_to(const Config & c, ParmStr in, ParmStr out,
+                                      ParmStr norm_form)
   {
-    RET_ON_ERR(setup(norm_tables_, &norm_tables_cache, &c, in));
+    INIT_RET_ON_ERR(decode, setup(norm_tables_, &norm_tables_cache, &c, in));
 
-    RET_ON_ERR(setup(encode_c, &encode_cache, &c, out));
+    INIT_RET_ON_ERR(encode, setup(encode_c, &encode_cache, &c, out));
     encode_ = encode_c.get();
     out_code_ = encode_->key;
 
@@ -1193,7 +1253,7 @@ namespace acommon {
 
     conv_ = 0;
 
-    return no_err;
+    return INIT_NO_ERR;
   }
 
   PosibErr<void> MBLen::setup(const Config &, ParmStr enc0)

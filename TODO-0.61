@@ -12,7 +12,7 @@ normalization code if possible.  [DONE]  Also:
   Allow language specific multi-character conversions.
 
   Allow the encoding option to use the generic multi-character
-  conversions when it makes sense. [IN PROGRESS]
+  conversions when it makes sense. [ALMOST DONE]
 
 This will effectly allow Aspell to handle multi-character letters as
 well as Ispell which is the one major area Ispell is currently better

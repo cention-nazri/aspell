@@ -115,10 +115,18 @@ namespace acommon {
     Convert() {}
     virtual ~Convert();
 
-    PosibErr<void> init(const Config &, ParmStr in, ParmStr out);
-    PosibErr<void> init_norm_to(const Config &, ParmStr in, ParmStr out,
-                                ParmStr norm_form);
-    PosibErr<void> init_norm_from(const Config &, ParmStr in, ParmStr out);
+    enum InitError {NoError = 0, UnknownDecoder, UnknownEncoder, OtherError};
+
+    struct InitRet {
+      InitError error;
+      PosibErr<void> error_obj;
+      InitRet() : error(NoError) {}
+    };
+
+    InitRet init(const Config &, ParmStr in, ParmStr out);
+    InitRet init_norm_to(const Config &, ParmStr in, ParmStr out, 
+                         ParmStr norm_form);
+    InitRet init_norm_from(const Config &, ParmStr in, ParmStr out);
 
     const char * in_code()  const {return in_code_.str();}
     const char * out_code() const {return out_code_.str();}
@@ -278,7 +286,8 @@ namespace acommon {
                                            ParmString in, ParmString out,
                                            bool if_needed,
                                            Normalize n,
-                                           bool simple);
+                                           bool simple,
+                                           Convert::InitRet = Convert::InitRet());
   
   static inline PosibErr<SimpleConvert *> 
   new_simple_convert(const Config & c, ParmStr in, ParmStr out, Normalize n)
