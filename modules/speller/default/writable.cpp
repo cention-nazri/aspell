@@ -70,6 +70,7 @@ protected:
   PosibErr<void> load(ParmString, Config &, DictList *, SpellerImpl *);
   PosibErr<void> merge(ParmString);
   PosibErr<void> save_as(ParmString);
+  PosibErr<void> clear();
 
   String file_encoding;
   ConvObj iconv;
@@ -192,6 +193,13 @@ PosibErr<void> WritableBase::save(bool do_update) {
     compatibility_file_name = "";
   }
 
+  return no_err;
+}
+
+PosibErr<void> WritableBase::clear() {
+  word_lookup->clear();
+  soundslike_lookup_.clear();
+  buffer.reset();
   return no_err;
 }
 

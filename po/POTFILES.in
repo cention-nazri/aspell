@@ -11,5 +11,6 @@ modules/speller/default/affix.cpp
 modules/speller/default/readonly_ws.cpp
 modules/speller/default/suggest.cpp
 modules/speller/default/data.cpp
+modules/speller/default/speller_impl.cpp
 modules/filter/tex.cpp
 gen/filter.pot

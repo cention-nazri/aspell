@@ -99,7 +99,8 @@ $info{class}{proc}{impl} = sub {
 	}
 	if ($ret_type->{type} eq 'const word list') {
 	  $accum->{headers}{'word list'} = true;
-	  $ret .= "  const_cast<WordList *>(ret.data)->from_internal_ = ths->from_internal_;\n";
+          $ret .= "  if (ret.data)\n";
+	  $ret .= "    const_cast<WordList *>(ret.data)->from_internal_ = ths->from_internal_;\n";
 	}
 	$ret .= "  ";
 	$ret .= "return " unless $ret_type->{type} eq 'void';

@@ -20,7 +20,9 @@
 #include "convert.hpp"
 #include "stack_ptr.hpp"
 
-#include "iostream.hpp"
+//#include "iostream.hpp"
+
+#include "gettext.h"
 
 namespace aspeller {
   //
@@ -226,15 +228,24 @@ namespace aspeller {
   }
 
   PosibErr<const WordList *> SpellerImpl::personal_word_list() const {
-    return static_cast<const WordList *>(personal_);
+    const WordList * wl = static_cast<const WordList *>(personal_);
+    if (!wl) return make_err(operation_not_supported_error, 
+                             _("The personal word list is unavailable."));
+    return wl;
   }
 
   PosibErr<const WordList *> SpellerImpl::session_word_list() const {
-    return static_cast<const WordList *>(session_);
+    const WordList * wl = static_cast<const WordList *>(session_);
+    if (!wl) return make_err(operation_not_supported_error, 
+                             _("The session word list is unavailable."));
+    return wl;
   }
 
   PosibErr<const WordList *> SpellerImpl::main_word_list() const {
-    return dynamic_cast<const WordList *>(main_);
+    const WordList * wl = dynamic_cast<const WordList *>(main_);
+    if (!wl) return make_err(operation_not_supported_error, 
+                             _("The main word list is unavailable."));
+    return wl;
   }
 
   const SpellerDict * SpellerImpl::locate (const Dict::Id & id) const

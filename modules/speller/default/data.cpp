@@ -154,27 +154,28 @@ namespace aspeller {
   // BasicDict
   //
 
-//   class BasicDictEnumeration : public StringEnumeration 
-//   {
-//     BasicDict::Emul real_;
-//   public:
-//     BasicDictEnumeration(BasicDict::VirEmul * r) : real_(r) {}
-
-//     bool at_end() const {
-//       return real_.at_end();
-//     }
-//     const char * next() {
-//       return real_.next().word; // FIXME: It's not this simple
-//     }
-//     StringEnumeration * clone() const {
-//       return new BasicDictEnumeration(*this);
-//     }
-//     void assign(const StringEnumeration * other) {
-//       *this = *static_cast<const BasicDictEnumeration *>(other);
-//     }
-//   };
-
-
+  class DictStringEnumeration : public StringEnumeration 
+  {
+    ClonePtr<Dict::Enum> real_;
+  public:
+    DictStringEnumeration(Dict::Enum * r) : real_(r) {}
+    
+    bool at_end() const {
+      return real_->at_end();
+    }
+    const char * next() {
+      // FIXME: It's not this simple when affixes are involved
+      WordEntry * w =  real_->next(); 
+      if (!w) return 0;
+      return w->word;
+    }
+    StringEnumeration * clone() const {
+      return new DictStringEnumeration(*this);
+    }
+    void assign(const StringEnumeration * other) {
+      *this = *static_cast<const DictStringEnumeration *>(other);
+    }
+  };
 
   PosibErr<void> Dictionary::add_repl(ParmString mis, ParmString cor) 
   {
@@ -235,7 +236,9 @@ namespace aspeller {
 
   StringEnumeration * Dictionary::elements() const
   {
-    return 0;
+    Enum * e = detailed_elements();
+    if (!e) return 0;
+    return new DictStringEnumeration(e);
   }
   
   Dict::Enum * Dictionary::detailed_elements() const
