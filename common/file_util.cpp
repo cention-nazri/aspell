@@ -18,9 +18,6 @@
 #  include <fcntl.h>
 #  include <unistd.h>
 #  include <sys/types.h>
-// Uncomment the next line (remove the leading "//") if you are
-// getting errors with ftruncate being undefined:
-//   int ftruncate(int fd, off_t length);
 #endif
 
 #include <stdio.h>
