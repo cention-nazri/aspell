@@ -427,11 +427,9 @@ If the \textbf{mode} option is not given then aspell will use the
 extension of the file to determine the current mode. If the extension
 is .tex, then \TeX{} mode will be uses, if the extension is .html,
 .htm, .php, or .sgml it will check the file in sgml mode, otherwise
-it will use url mode. Please note that the \textbf{sgml-options} can
-be used to change what extension are used for the sgml mode. See chapter
-\ref{filter} for more information on the various modes that can be
-used. {[}FIXME: Make sure this still works, and if it doesn't add
-support for it{]}
+it will use url mode. These extensions can be changed via the \textbf{tex-extension}
+and \textbf{sgml-extension} options respectfully. See chapter \ref{filter}
+for more information on the various modes that can be used.
 
 If Aspell was compiled with curses support and the TERM environmental
 variable is set to a capable terminal type than Aspell will use a

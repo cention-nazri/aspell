@@ -949,18 +949,21 @@ mode
  If the extension is .tex, then TeX mode will be uses, if the extension is
  .html, .htm, .php, or .sgml it will check the file in sgml mode, otherwise
  it will use url mode.
- Please note that the 
+ These extensions can be changed via the 
 \series bold 
-sgml-options
+tex-extension
 \series default 
- can be used to change what extension are used for the sgml mode.
+ and 
+\series bold 
+sgml-extension
+\series default 
+ options respectfully.
  See chapter 
 \begin_inset LatexCommand \ref{filter}
 
 \end_inset 
 
  for more information on the various modes that can be used.
- [FIXME: Make sure this still works, and if it doesn't add support for it]
 \layout Standard
 
 If Aspell was compiled with curses support and the TERM environmental variable
