@@ -14,7 +14,7 @@ class ObjStack
   struct Node
   {
     Node * next;
-    byte data[];
+    byte data[1]; // hack for data[]
   };
   size_t chunk_size;
   size_t min_align;

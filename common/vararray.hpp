@@ -8,17 +8,20 @@
 #ifndef ASPELL_VARARRAY__HPP
 #define ASPELL_VARARRAY__HPP
 
+#ifndef __GNUC__
+#  include <stdlib.h>
+#endif
+
 namespace acommon {
 
 // only use this on types with a trivial constructors destructor
 
+#ifdef __GNUC__ // use variable arrays
+
 #define VARARRAY(type, name, num) type name[num]
 #define VARARRAYM(type, name, num, max) type name[num]
 
-#if 0
-
-#define VARARRAY(type, name, num) \
-  type * name = (type *)alloca(sizeof(type) * (num))
+#else // use malloc
 
   struct MallocPtr {
     void * ptr; 
@@ -27,15 +30,21 @@ namespace acommon {
   };
 
 #define VARARRAY(type, name, num) \
-  MallocPtr name##_data;\
-  name##_data = malloc(sizeof(type) * (num)); \
+  acommon::MallocPtr name##_data;             \
+  name##_data.ptr = malloc(sizeof(type) * (num)); \
   type * name = (type *)name##_data.ptr
 
+#define VARARRAYM(type, name, num, max) type name[max]
+
+#endif
+
+#if 0 // this version uses alloca
+
+#define VARARRAY(type, name, num) \
+  type * name = (type *)alloca(sizeof(type) * (num))
 
 #define VARARRAYM(type, name, num, max) \
   type * name = (type *)alloca(sizeof(type) * (num))
-
-#define VARARRAYM(type, name, num, max) type name[max]
 
 #endif
 

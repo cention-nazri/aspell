@@ -25,7 +25,9 @@ namespace acommon {
 
     virtual int vprintf(const char *format, va_list ap) = 0;
 
+#ifdef __GNUC__
     __attribute__ ((format (printf,2,3)))
+#endif
       int printf(const char * format, ...)
     {
       va_list ap;
