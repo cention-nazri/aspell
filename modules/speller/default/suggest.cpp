@@ -865,11 +865,9 @@ namespace {
   }
 
   // generate an n-gram score comparing s1 and s2
-  static int ngram(int n, char * s1, const char * s2)
+  static int ngram(int n, char * s1, int l1, const char * s2, int l2)
   {
     int nscore = 0;
-    int l1 = strlen(s1);
-    int l2 = strlen(s2);
     int ns;
     for (int j=1;j<=n;j++) {
       ns = 0;
@@ -936,7 +934,8 @@ namespace {
         
         if (already_have.have(sl)) continue;
 
-        int ng = ngram(3, original_soundslike.data(), sl);
+        int ng = ngram(3, original_soundslike.data(),  original_soundslike.size(),
+                       sl, strlen(sl));
 
         if (ng >= min_score) {
           commit_temp(sl);
