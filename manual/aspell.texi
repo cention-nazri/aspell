@@ -1,5 +1,5 @@
 \input texinfo   @c -*-texinfo-*-
-@comment $Id: aspell.texi,v 1.19 2004/03/31 01:44:14 kevina Exp $
+@comment $Id: aspell.texi,v 1.20 2004/04/02 07:10:19 kevina Exp $
 @comment %**start of header
 @setfilename aspell.info
 @settitle GNU Aspell 0.60
@@ -2846,6 +2846,12 @@ script is not yet supported by Unicode as the private use area can be
 used.
 
 @include lang-supported.texi
+
+Dictionaries marked as @dfn{Yes} are available for Aspell 0.50.  Ones
+marked as @dfn{Experimental} are available for Aspell 0.60 only.  Ones
+marked as @dfn{Planned} should eventually be available (@pxref{Planned
+Dictionaries}).  Ones marked as @dfn{Maybe} might be available in the
+future.
 
 @appendixsubsec Notes on Latin Languages
 
