@@ -167,7 +167,6 @@ namespace acommon {
   {
     buf.clear();
     FilterChar * i = start;
-    --stop;
     while (i != stop)
     {
       if (*i == '&') {
@@ -196,9 +195,9 @@ namespace acommon {
 	++i;
       }
     }
-    buf.append(*i); // to append final null character
+    buf.append('\0');
     start = buf.pbegin();
-    stop  = buf.pend();
+    stop  = buf.pend() - 1;
   }
 
   //
@@ -238,8 +237,9 @@ namespace acommon {
       }
       ++i;
     }
+    buf.append('\0');
     start = buf.pbegin();
-    stop  = buf.pend();
+    stop  = buf.pend() - 1;
   }
 
   //

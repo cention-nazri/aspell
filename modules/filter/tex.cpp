@@ -345,5 +345,5 @@ namespace acommon {
     {"tex-extension", KeyInfoList, "tex", "TeX file extensions"}
   };
   const KeyInfo * tex_options_begin = tex_options;
-  const KeyInfo * tex_options_end = tex_options + 2;
+  const KeyInfo * tex_options_end = tex_options + 3;
 }

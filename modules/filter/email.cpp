@@ -71,8 +71,10 @@ namespace acommon {
       if (prev_newline && is_quote_char.have(*cur))
 	in_quote = true;
       if (*cur == '\n') {
-	if (in_quote)
-	  memset(line_begin, ' ', cur - line_begin);
+	if (in_quote) {
+	  for (FilterChar * i = line_begin; i != cur; ++i)
+	    *i = ' ';
+	}
 	line_begin = cur;
 	in_quote = false;
 	prev_newline = true;

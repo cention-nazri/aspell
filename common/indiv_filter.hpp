@@ -47,8 +47,8 @@ namespace acommon {
     //
     // The following properties are garanteed to be true and must
     // stay true:
-    //   strlen    == stop - start - 1;
-    //   *stop[-1] == '\0';
+    //   *stop  == '\0';
+    //   strlen == stop - start;
     // this way it is always safe to look one character ahead.
     //
     virtual void process(FilterChar * & start, FilterChar * & stop) = 0;

@@ -11,8 +11,6 @@
 #include "config.hpp"
 #include "copy_ptr-t.hpp"
 
-#include "iostream.hpp"
-
 namespace acommon {
 
   DocumentChecker::DocumentChecker() 
@@ -50,7 +48,7 @@ namespace acommon {
     conv_->decode(str, size, proc_str_);
     proc_str_.append(0);
     FilterChar * begin = proc_str_.pbegin();
-    FilterChar * end   = proc_str_.pend();
+    FilterChar * end   = proc_str_.pend() - 1;
     if (filter_)
       filter_->process(begin, end);
     tokenizer_->reset(begin, end);
@@ -66,13 +64,8 @@ namespace acommon {
 	tok.len = 0;
 	return tok;
       }
-      //COUT << ":: \"";
-      //COUT.write(tokenizer_->begin, tokenizer_->end - tokenizer_->begin);
-      //COUT << ":" << tokenizer_->word.data() 
-      //     << '(' << tokenizer_->word.size() << ')';
       correct = speller_->check(MutableString(tokenizer_->word.data(),
 					      tokenizer_->word.size() - 1));
-      //COUT << "\" is " << (correct ? "correct" : "incorrect") << "\n";
       tok.len  = tokenizer_->end_pos - tokenizer_->begin_pos;
       tok.offset = tokenizer_->begin_pos;
       if (status_fun_)

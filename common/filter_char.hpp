@@ -10,8 +10,8 @@
 namespace acommon {
 
   struct FilterChar {
-    unsigned int chr;
-    unsigned int width;
+    unsigned int chr; 
+    unsigned int width; // width must always be < 256
     typedef unsigned int Chr;
     typedef unsigned int Width;
     explicit FilterChar(Chr c = 0, Width w = 1) 
@@ -45,7 +45,6 @@ namespace acommon {
     return lhs.chr != rhs.chr;
   }
 
-  
 }
 
 #endif

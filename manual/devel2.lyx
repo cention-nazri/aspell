@@ -208,7 +208,6 @@ speller/
 \layout Description
 
 default/ Main speller Module.
- The speller-util program is also included in this directory
 \end_deeper 
 \layout Description
 
@@ -399,8 +398,8 @@ char_vector.hpp
 Smart Pointers
 \layout Standard
 
-Smart pointers are used extensively in Aspell to avoid simply memory management
- takes and to avoid memory leaks.
+Smart pointers are used extensively in Aspell to avoid simplify memory managemen
+t tasks and to avoid memory leaks.
 \layout Subsection
 
 CopyPtr
@@ -508,7 +507,7 @@ I/O
 Aspell does not use C++ I/O classes and function in any way since they do
  not provide a way to get at the underlying file number and can often be
  slower than the highly tuned C I/O functions found in the standard C library.
- However, some light weight wrapper classes are provided to that standard
+ However, some light weight wrapper classes are provided so that standard
  C I/O can be used in a more C++ like way.
 \layout Subsection
 

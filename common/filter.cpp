@@ -10,8 +10,6 @@
 #include "indiv_filter.hpp"
 #include "copy_ptr-t.hpp"
 
-#include "iostream.hpp"
-
 namespace acommon {
 
   Filter::Filter() {}
@@ -40,10 +38,8 @@ namespace acommon {
     Filters::iterator cur, end;
     cur = filters_.begin();
     end = filters_.end();
-    //COUT << "BEFORE: " << str;
     for (; cur != end; ++cur)
       (*cur)->process(start, stop);
-    //COUT << "AFTER: " << str;
   }
 
   void Filter::clear()
