@@ -58,7 +58,7 @@ void print_help();
 void expand_expression(Config * config);
 void config();
 
-void check(bool interactive);
+void check();
 void pipe();
 void filter();
 void list();
@@ -70,6 +70,8 @@ void repl();
 void soundslike();
 void munch();
 void expand();
+void combine();
+void dump_affix();
 
 void print_error(ParmString msg)
 {
@@ -152,6 +154,7 @@ const PossibleOption possible_options[] = {
   COMMAND("soundslike",'\0', 0),
   COMMAND("munch",     '\0', 0),
   COMMAND("expand",    '\0', 0),
+  COMMAND("combine",   '\0', 0),
   COMMAND("list",      'l', 0),
   COMMAND("dicts",     '\0', 0),
 
@@ -329,11 +332,11 @@ int main (int argc, const char *argv[])
   else if (action_str == "dicts")
     dicts();
   else if (action_str == "check")
-    check(true);
+    check();
   else if (action_str == "pipe")
     pipe();
   else if (action_str == "list")
-    check(false);
+    list();
   else if (action_str == "filter")
     filter();
   else if (action_str == "soundslike")
@@ -342,6 +345,8 @@ int main (int argc, const char *argv[])
     munch();
   else if (action_str == "expand")
     expand();
+  else if (action_str == "combine")
+    combine();
   else if (action_str == "dump")
     action = do_dump;
   else if (action_str == "create")
@@ -370,6 +375,8 @@ int main (int argc, const char *argv[])
       personal();
     else if (what_str == "repl")
       repl();
+    else if (what_str == "affix")
+      dump_affix();
     else {
       print_error(_("Unknown Action: %s"),
 		  String(action_str + " " + what_str));
@@ -747,7 +754,7 @@ struct Mapping {
 
 void abort_check();
 
-void check(bool interactive)
+void check()
 {
   String file_name;
   String new_name;
@@ -755,43 +762,38 @@ void check(bool interactive)
   FILE * out = 0;
   Mapping mapping;
 
-  if (interactive) {
-    if (args.size() == 0) {
-      print_error(_("You must specify a file name."));
-      exit(-1);
-    }
+  if (args.size() == 0) {
+    print_error(_("You must specify a file name."));
+    exit(-1);
+  }
     
-    file_name = args[0];
-    new_name = file_name;
-    new_name += ".new";
+  file_name = args[0];
+  new_name = file_name;
+  new_name += ".new";
 
-    in = fopen(file_name.c_str(), "r");
-    if (!in) {
-      print_error(_("Could not open the file \"%s\" for reading"), file_name);
-      exit(-1);
-    }
+  in = fopen(file_name.c_str(), "r");
+  if (!in) {
+    print_error(_("Could not open the file \"%s\" for reading"), file_name);
+    exit(-1);
+  }
     
-    out = fopen(new_name.c_str(), "w");
-    if (!out) {
-      print_error(_("Could not open the file \"%s\"  for writing. File not saved."), file_name);
-      exit(-1);
-    }
+  out = fopen(new_name.c_str(), "w");
+  if (!out) {
+    print_error(_("Could not open the file \"%s\"  for writing. File not saved."), file_name);
+    exit(-1);
+  }
 
-    if (!options->have("mode"))
-      set_mode_from_extension(options, file_name);
+  if (!options->have("mode"))
+    set_mode_from_extension(options, file_name);
     
-    String m = options->retrieve("keymapping");
-    if (m == "aspell")
-      mapping.to_aspell();
-    else if (m == "ispell")
-      mapping.to_ispell();
-    else {
-      print_error(_("Invalid keymapping: %s"), m);
-      exit(-1);
-    }
-
-  } else {
-    in = stdin;
+  String m = options->retrieve("keymapping");
+  if (m == "aspell")
+    mapping.to_aspell();
+  else if (m == "ispell")
+    mapping.to_ispell();
+  else {
+    print_error(_("Invalid keymapping: %s"), m);
+    exit(-1);
   }
 
   AspellCanHaveError * ret 
@@ -821,123 +823,114 @@ void check(bool interactive)
   StackPtr<StringMap> replace_list(new_string_map());
   const char * w;
 
-  if (interactive)
-    begin_check();
+  begin_check();
 
   while (state->next_misspelling()) {
 
     CharVector word0;
     char * word = state->get_word(word0);
 
-    if (interactive) {
+    //
+    // check if it is in the replace list
+    //
 
-      //
-      // check if it is in the replace list
-      //
+    if ((w = replace_list->lookup(word)) != 0) {
+      state->replace(w);
+      continue;
+    }
 
-      if ((w = replace_list->lookup(word)) != 0) {
-	state->replace(w);
-	continue;
-      }
+    //
+    // print the line with the misspelled word highlighted;
+    //
 
-      //
-      // print the line with the misspelled word highlighted;
-      //
+    display_misspelled_word();
 
-      display_misspelled_word();
+    //
+    // print the suggestions and menu choices
+    //
 
-      //
-      // print the suggestions and menu choices
-      //
+    const AspellWordList * suggestions = aspell_speller_suggest(speller, 
+                                                                word, -1);
+    AspellStringEnumeration * els = aspell_word_list_elements(suggestions);
+    sug_con.resize(0);
+    while (sug_con.size() != 10 
+           && (w = aspell_string_enumeration_next(els)) != 0)
+      sug_con.push_back(w);
+    delete_aspell_string_enumeration(els);
 
-      const AspellWordList * suggestions = aspell_speller_suggest(speller, 
-								  word, -1);
-      AspellStringEnumeration * els = aspell_word_list_elements(suggestions);
-      sug_con.resize(0);
-      while (sug_con.size() != 10 
-	     && (w = aspell_string_enumeration_next(els)) != 0)
-	sug_con.push_back(w);
-      delete_aspell_string_enumeration(els);
+    // disable suspend
+    unsigned int suggestions_size = sug_con.size();
+    unsigned int suggestions_mid = suggestions_size / 2;
+    if (suggestions_size % 2) suggestions_mid++; // if odd
+    word_choices->resize(0);
+    for (unsigned int j = 0; j != suggestions_mid; ++j) {
+      word_choices->push_back(Choice('0' + j+1, sug_con[j]));
+      if (j + suggestions_mid != suggestions_size) 
+        word_choices
+          ->push_back(Choice(j+suggestions_mid+1 == 10 
+                             ? '0' 
+                             : '0' + j+suggestions_mid+1,
+                             sug_con[j+suggestions_mid]));
+    }
+    //enable suspend
+    display_menu();
 
-      // disable suspend
-      unsigned int suggestions_size = sug_con.size();
-      unsigned int suggestions_mid = suggestions_size / 2;
-      if (suggestions_size % 2) suggestions_mid++; // if odd
-      word_choices->resize(0);
-      for (unsigned int j = 0; j != suggestions_mid; ++j) {
-	word_choices->push_back(Choice('0' + j+1, sug_con[j]));
-	if (j + suggestions_mid != suggestions_size) 
-	  word_choices
-	    ->push_back(Choice(j+suggestions_mid+1 == 10 
-			       ? '0' 
-			       : '0' + j+suggestions_mid+1,
-			       sug_con[j+suggestions_mid]));
-      }
-      //enable suspend
-      display_menu();
+  choice_prompt:
 
-    choice_prompt:
+    prompt("? ");
 
-      prompt("? ");
+  choice_loop:
 
-    choice_loop:
+    //
+    // Handle the users choice
+    //
 
-      //
-      // Handle the users choice
-      //
-
-      int choice;
-      get_choice(choice);
+    int choice;
+    get_choice(choice);
       
-      if (choice == '0') choice = '9' + 1;
+    if (choice == '0') choice = '9' + 1;
     
-      switch (mapping[choice]) {
-      case Exit:
-	goto exit_loop;
-      case Abort:
-	prompt(_("Are you sure you want to abort? "));
-	get_choice(choice);
-	if (choice == 'y' || choice == 'Y')
-	  goto abort_loop;
-	goto choice_prompt;
-      case Ignore:
-	break;
-      case IgnoreAll:
-	aspell_speller_add_to_session(speller, word, -1);
-	break;
-      case Add:
-	aspell_speller_add_to_personal(speller, word, -1);
-	break;
-      case AddLower:
-	aspell_speller_add_to_personal
-	  (speller, 
-	   reinterpret_cast<Speller *>(speller)->to_lower(word), -1);
-	break;
-      case Replace:
-      case ReplaceAll:
-	prompt(_("With: "));
-	get_line(new_word);
-	if (new_word.size() == 0)
-	  goto choice_prompt;
-	if (new_word[0] >= '1' && new_word[0] < (char)suggestions_size + '1')
-	  new_word = sug_con[new_word[0]-'1'];
-	state->replace(new_word);
-	if (mapping[choice] == ReplaceAll)
-	  replace_list->replace(word, new_word);
-	break;
-      default:
-	if (choice >= '1' && choice < (char)suggestions_size + '1') { 
-	  state->replace(sug_con[choice-'1']);
-	} else {
-	  error(_("Sorry that is an invalid choice!"));
-	  goto choice_loop;
-	}
+    switch (mapping[choice]) {
+    case Exit:
+      goto exit_loop;
+    case Abort:
+      prompt(_("Are you sure you want to abort? "));
+      get_choice(choice);
+      if (choice == 'y' || choice == 'Y')
+        goto abort_loop;
+      goto choice_prompt;
+    case Ignore:
+      break;
+    case IgnoreAll:
+      aspell_speller_add_to_session(speller, word, -1);
+      break;
+    case Add:
+      aspell_speller_add_to_personal(speller, word, -1);
+      break;
+    case AddLower:
+      aspell_speller_add_to_personal
+        (speller, 
+         reinterpret_cast<Speller *>(speller)->to_lower(word), -1);
+      break;
+    case Replace:
+    case ReplaceAll:
+      prompt(_("With: "));
+      get_line(new_word);
+      if (new_word.size() == 0)
+        goto choice_prompt;
+      if (new_word[0] >= '1' && new_word[0] < (char)suggestions_size + '1')
+        new_word = sug_con[new_word[0]-'1'];
+      state->replace(new_word);
+      if (mapping[choice] == ReplaceAll)
+        replace_list->replace(word, new_word);
+      break;
+    default:
+      if (choice >= '1' && choice < (char)suggestions_size + '1') { 
+        state->replace(sug_con[choice-'1']);
+      } else {
+        error(_("Sorry that is an invalid choice!"));
+        goto choice_loop;
       }
-
-    } else { // !interactive
-      
-      COUT << word << "\n";
-      
     }
   }
 exit_loop:
@@ -1042,6 +1035,35 @@ void Mapping::to_ispell()
   reverse[U'x'] = Exit;
 }
 #undef U
+
+///////////////////////////
+//
+// list
+//
+
+void list()
+{
+  AspellCanHaveError * ret 
+    = new_aspell_speller(reinterpret_cast<AspellConfig *>(options.get()));
+  if (aspell_error(ret)) {
+    print_error(aspell_error_message(ret));
+    exit(1);
+  }
+  AspellSpeller * speller = to_aspell_speller(ret);
+
+  state = new CheckerString(speller,stdin,0,64);
+ 
+  while (state->next_misspelling()) {
+
+    CharVector word0;
+    char * word = state->get_word(word0);
+
+    COUT << word << "\n";
+  }
+  
+  state.del(); // to close the file handles
+  delete_aspell_speller(speller);
+}
 
 ///////////////////////////
 //
@@ -1310,7 +1332,7 @@ void munch()
   lang.reset(res.data);
   String word;
   CheckList * cl = new_check_list();
-  while (CIN >> word) {
+  while (CIN.getline(word)) {
     lang->affix()->munch(word, cl);
     COUT << word;
     for (const aspeller::CheckInfo * ci = check_list_data(cl); ci; ci = ci->next)
@@ -1342,7 +1364,7 @@ void expand()
   lang.reset(res.data);
   String word;
   CheckList * cl = new_check_list();
-  while (CIN >> word) {
+  while (CIN.getline(word)) {
     CharVector buf; buf.append(word.c_str(), word.size() + 1);
     char * w = buf.data();
     char * af = strchr(w, '/');
@@ -1366,14 +1388,110 @@ void expand()
       }
       COUT << '\n';
     } else if (level >= 3) {
+      double ratio = 0;
+      if (level >= 4) {
+        for (const aspeller::CheckInfo * cip = ci; cip; cip = cip->next)
+          ratio += strlen(cip->word);
+        ratio /= strlen(ci->word); // it is assumed the first
+                                   // expansion is just the root
+      }
       while (ci) {
-        COUT << word << ' ' << ci->word << '\n';
+        COUT << word << ' ' << ci->word;
+        if (level >= 4) COUT.print(" %f\n", ratio);
+        else COUT << '\n';
         ci = ci->next;
       }
     }
   }
   delete_check_list(cl);
 }
+
+//////////////////////////
+//
+// combine
+//
+
+void combine_aff(String & aff, const char * app)
+{
+  for (; *app; ++app) {
+    if (!memchr(aff.c_str(),*app,aff.size()))
+      aff.push_back(*app);
+  }
+}
+
+void print_wordaff(const String & base, const String & affs)
+{
+  if (base.empty()) return;
+  COUT << base;
+  if (affs.empty())
+    COUT << '\n';
+  else
+    COUT.print("/%s\n", affs.c_str());
+}
+
+bool lower_equal(aspeller::Language * l, ParmString a, ParmString b)
+{
+  if (a.size() != b.size()) return false;
+  if (l->to_lower(a[0]) != l->to_lower(b[0])) return false;
+  return memcmp(a + 1, b + 1, a.size() - 1) == 0;
+}
+
+void combine() 
+{
+  using namespace aspeller;
+  CachePtr<Language> lang;
+  PosibErr<Language *> res = new_language(*options);
+  if (!res) {print_error(res.get_err()->mesg); exit(1);}
+  lang.reset(res.data);
+  String word;
+  String base;
+  String affs;
+  while (CIN.getline(word)) {
+
+    CharVector buf; buf.append(word.c_str(), word.size() + 1);
+    char * w = buf.data();
+    char * af = strchr(w, '/');
+    size_t s;
+    if (af != 0) {
+      s = af - w;
+      *af++ = '\0';
+    } else {
+      s = strlen(w);
+      af = w + s;
+    }
+
+    if (lower_equal(lang, base, w)) {
+      if (is_lower(*lang, base)) {
+        combine_aff(affs, af);
+      } else {
+        base = w;
+        combine_aff(affs, af);
+      }
+    } else {
+      print_wordaff(base, affs);
+      base = w;
+      affs = af;
+    }
+
+  }
+  print_wordaff(base, affs);
+}
+
+//////////////////////////
+//
+// dump affix
+//
+
+void dump_affix()
+{
+  FStream in;
+  EXIT_ON_ERR(aspeller::open_affix_file(*options, in));
+  
+  String line;
+  while (in.getline(line))
+    COUT << line << '\n';
+}
+
 
 
 ///////////////////////////////////////////////////////////////////////

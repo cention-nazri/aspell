@@ -51,7 +51,7 @@ namespace acommon {
     {
       va_list ap;
       va_start(ap, format);
-      int res = vprintf(format, ap);
+      int res = vfprintf(file_, format, ap);
       va_end(ap);
       return res;
     }

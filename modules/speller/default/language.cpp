@@ -201,7 +201,10 @@ namespace aspeller {
       }
     }
   }
-
+  
+  
+  // FIXME: Bug, returns true when inword is a prefix of word
+  //        ie (going, go)
   bool SensitiveCompare::operator() (const char * word, 
 				     const char * inlist) const
   {
@@ -361,6 +364,26 @@ namespace aspeller {
       return language_cache.get(config.retrieve("actual-lang"), &config);
     else
       return language_cache.get(lang, &config);
+  }
+
+  PosibErr<void> open_affix_file(Config & c, FStream & f)
+  {
+
+    String lang = c.retrieve("actual-lang");
+
+    String dir1,dir2,path;
+    fill_data_dir(&c, dir1, dir2);
+    String dir = find_file(path,dir1,dir2,lang,".dat");
+
+    String file;
+    file += dir;
+    file += '/';
+    file += lang;
+    file += "_affix.dat";
+    
+    RET_ON_ERR(f.open(file,"r"));
+
+    return no_err;
   }
 
 }

@@ -1,5 +1,5 @@
 \input texinfo   @c -*-texinfo-*-
-@comment $Id: aspell.texi,v 1.4 2004/02/02 01:30:49 kevina Exp $
+@comment $Id: aspell.texi,v 1.5 2004/02/05 01:23:08 kevina Exp $
 @comment %**start of header
 @setfilename aspell.info
 @settitle GNU Aspell 0.51
@@ -8,7 +8,7 @@
 @comment %**end of header
 @copying
 This is the user's manual for Aspell
-($Revision: 1.4 $ $Date: 2004/02/02 01:30:49 $).
+($Revision: 1.5 $ $Date: 2004/02/05 01:23:08 $).
 
 Copyright @copyright{} 2000--2004 Kevin Atkinson.
 
@@ -39,7 +39,7 @@ are LGPL Compatible.
 
 @titlepage
 @title GNU Aspell 0.51
-@subtitle for $Revision: 1.4 $ $Date: 2004/02/02 01:30:49 $
+@subtitle for $Revision: 1.5 $ $Date: 2004/02/05 01:23:08 $
 @author Kevin Atkinson (@email{kevina@@gnu.org})
 @page
 @vskip 0pt plus 1filll
@@ -2775,8 +2775,11 @@ affix compression.
 
 The affix file is expected to be named @file{@var{lang}_affix.dat}.  It is
 the exact same format as those used by MySpell.  More information can
-be found at
+be found in the myspell/ directory of the distribution or at 
 @url{http://lingucomponent.openoffice.org/dictionary.html}.
+
+An existing word list can be "munched" using the @command{munch} program
+in the myspell/ directory.
 
 In order for Aspell to efficiently come up with with suggestions words
 are partially expanded when creating a dictionary.  They are expanded so

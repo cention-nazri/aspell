@@ -97,10 +97,12 @@ PosibErr<void> WritableBaseCode::load(ParmString f0, Config * config)
   set_file_name(f0);
   const String f = file_name();
   FStream in;
-    
+
   if (file_exists(f)) {
       
     RET_ON_ERR(open_file_readlock(in, f));
+    if (in.peek() == EOF) return make_err(cant_read_file,f); 
+    // ^^ FIXME 
     RET_ON_ERR(merge(in, f, config));
       
   } else if (f.substr(f.size()-suffix.size(),suffix.size()) 
@@ -769,7 +771,6 @@ PosibErr<void> WritableReplS::merge(FStream & in,
     return make_err(bad_file_format, file_name);
 
   in >> word;
-
   {
     Ret pe = set_check_lang(word, config);
     if (pe.has_err())

@@ -666,10 +666,10 @@ namespace {
    
     bool use_jump_tables = use_soundslike || config.retrieve_bool("use-jump-tables");
 
-    CERR << (affix_compress ? "  AFFIX COMPRESS" : "")
-         << (use_soundslike ? "  USING SOUNDSLIKE" : "") 
-         << (use_jump_tables ? "  USING JUMP TABLES" : "")
-         << "\n";
+    //CERR << (affix_compress ? "  AFFIX COMPRESS" : "")
+    //     << (use_soundslike ? "  USING SOUNDSLIKE" : "") 
+    //     << (use_jump_tables ? "  USING JUMP TABLES" : "")
+    //     << "\n";
 
     assert(!(affix_compress && use_soundslike)); // FIXME: return error
 
