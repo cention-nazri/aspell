@@ -10,6 +10,7 @@
 
 namespace aspeller {
   class Speller;
+  class SpellerImpl;
   class Suggest;
 
   struct SuggestParms {
@@ -18,7 +19,11 @@ namespace aspeller {
     EditDistanceWeights     edit_distance_weights;
     CachePtr<const TypoEditDistanceWeights> typo_edit_distance_weights;
 
-    bool try_one_edit_word, try_scan;
+    bool try_one_edit_word, try_scan_1, try_scan_2, try_ngram;
+
+    int ngram_threshold, ngram_keep;
+
+    bool check_after_one_edit_word;
 
     bool use_typo_analysis;
     bool use_repl_table;
@@ -31,8 +36,6 @@ namespace aspeller {
     int soundslike_weight;
     int word_weight;
 
-    int soundslike_level; // either 1 or 2
-    
     int skip;
     int span;
     int limit;
@@ -41,7 +44,7 @@ namespace aspeller {
 
     SuggestParms() {}
     
-    PosibErr<void> set(ParmString mode = "normal");
+    PosibErr<void> set(ParmString mode, SpellerImpl * sp);
     PosibErr<void> fill_distance_lookup(const Config * c, const Language & l);
     
     virtual ~SuggestParms() {}

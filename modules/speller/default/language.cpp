@@ -271,6 +271,7 @@ namespace aspeller {
     //
 
     String repl = data.retrieve("repl-table");
+    have_repl_ = false;
     if (repl != "none") {
 
       String repl_file;
@@ -287,6 +288,8 @@ namespace aspeller {
         }
       }
       repls_.resize(num_repl);
+      if (num_repl > 0)
+        have_repl_ = true;
 
       for (size_t i = 0; i != num_repl; ++i) {
         bool res = getdata_pair(REPL, d, buf);
@@ -295,7 +298,9 @@ namespace aspeller {
         assert(d.key == "rep"); // FIXME
         split(d);
         repls_[i].substr = buf_.dup(iconv(d.key));
+        repls_[i].substr = to_clean((char *)repls_[i].substr, repls_[i].substr);
         repls_[i].repl   = buf_.dup(iconv(d.value));
+        repls_[i].repl   = to_clean((char *)repls_[i].repl, repls_[i].repl);
       }
 
     }

@@ -110,6 +110,7 @@ namespace aspeller {
     String      clean_chars_;
 
     bool have_soundslike_;
+    bool have_repl_;
 
     StackPtr<Soundslike> soundslike_;
     StackPtr<AffixMgr>   affix_;
@@ -301,6 +302,8 @@ namespace aspeller {
     //
     // Repl
     //
+
+    bool have_repl() const {return have_repl_;}
 
     SuggestReplEnumeration * repl() const {
       return new SuggestReplEnumeration(repls_.pbegin(), repls_.pend());}

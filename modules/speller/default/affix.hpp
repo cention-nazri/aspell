@@ -98,6 +98,8 @@ namespace aspeller {
 
     void munch(ParmString word, CheckList *) const;
 
+    // None of the expand methods reset the objstack
+
     WordAff * expand(ParmString word, ParmString aff, 
                      ObjStack &, int limit = INT_MAX) const;
 

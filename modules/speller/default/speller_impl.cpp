@@ -572,6 +572,8 @@ namespace aspeller {
     }
     fast_scan   = suggest_ws.front().dict->fast_scan;
     fast_lookup = suggest_ws.front().dict->fast_lookup;
+    have_soundslike = lang_->have_soundslike();
+    have_repl = lang_->have_repl();
     invisible_soundslike = suggest_ws.front().dict->invisible_soundslike;
     soundslike_root_only = suggest_ws.front().dict->soundslike_root_only;
     affix_compress = !affix_ws.empty();
