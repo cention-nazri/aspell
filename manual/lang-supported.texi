@@ -162,7 +162,7 @@
 @item ta @tab Tamil @tab Tamil @tab Experimental @tab -
 @item te @tab Telugu @tab Telugu @tab Maybe @tab -
 @item tet @tab Tetum @tab Latin @tab Maybe @tab -
-@item tg @tab Tajik @tab Cyrillic @tab Planned @tab -
+@item tg @tab Tajik @tab Cyrillic @tab Planned @tab Yes
 @item ti @tab Tigrinya @tab Ethiopic @tab Planned @tab -
 @item tk @tab Turkmen @tab Latin @tab - @tab -
 @item tl @tab Tagalog @tab Latin @tab Planned @tab -

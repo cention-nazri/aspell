@@ -14,10 +14,6 @@
 
 // data block laid out as follows:
 //
-// The lower 4 bits are used for word info.  The upper 4 bits can be used to store 
-//   info on additional info.
-// * have affix flags
-// * have compound category flags
 // Words:
 //   (<8 bit frequency><8 bit: flags><8 bit: offset>
 //      <8 bit: word size><word><null>
@@ -25,11 +21,14 @@
 // Words with soundslike:
 //   (<8 bit: offset to next item><8 bit: soundslike size><soundslike>
 //      <words>)+
-// An extra <null> is inserted at the end of each "group".
-//
+// Flags are mapped as follows:
+//   bits 0-3: word info
+//   bit    4: duplicate flag
+//   bit    5: <unused>
+//   bit    6: have affix info
+//   bit    7: have compound info
 
-#include <map>
-
+#include <utility>
 using std::pair;
 
 #include <string.h>
@@ -89,16 +88,6 @@ static inline void mmap_free(char * block, unsigned int size)
   munmap(block, size);
 }
 
-// static inline size_t page_size() 
-// {
-// #ifdef _SC_PAGESIZE
-//  /* BSDi does not expose this limit via the sysconf function */
-//   return sysconf (_SC_PAGESIZE);
-// #else
-//   return getpagesize ();
-// #endif
-//}
-
 #else
 
 static inline char * mmap_open(unsigned int, 
@@ -112,11 +101,6 @@ static inline void mmap_free(char *, unsigned int)
 {
   abort();
 }
-
-// static inline size_t page_size() 
-// {
-//   return 1024;
-// }
 
 #endif
 
@@ -185,7 +169,6 @@ static inline bool duplicate_flag(const char * d) {
   return get_flags(d) & DUPLICATE_FLAG;
 }
 
-
 namespace {
 
   using namespace aspeller;
@@ -214,8 +197,7 @@ namespace {
       typedef u32int                    Value;
       typedef const char *              Key;
       static const bool is_multi = false;
-      Key key(Value v) const {assert (v != u32int_max);
-				return block_begin + v;}
+      Key key(Value v) const {return block_begin + v;}
       InsensitiveHash  hash;
       InsensitiveEqual equal;
       bool is_nonexistent(Value v) const {return v == u32int_max;}
@@ -232,13 +214,13 @@ namespace {
     const Jump * jump2;
     WordLookup       word_lookup;
     const char *     word_block;
+    const char *     first_word;
     
     ReadOnlyDict(const ReadOnlyDict&);
     ReadOnlyDict& operator= (const ReadOnlyDict&);
 
-    struct ElementsParms;
+    struct Elements;
     struct SoundslikeElements;
-    struct CleanElements;
 
   public:
     WordEntryEnumeration * detailed_elements() const;
@@ -284,22 +266,27 @@ namespace {
   //  
   //
 
-  struct ReadOnlyDict::ElementsParms {
-    typedef WordEntry *                Value;
-    typedef WordLookup::const_iterator Iterator; 
-    const ReadOnlyDict * ws;
-    WordEntry data;
-    ElementsParms(const ReadOnlyDict * w) : ws(w) {}
-    bool endf(const Iterator & i) const {return i.at_end();}
-    Value end_state() const {return 0;}
-    WordEntry * deref(const Iterator & i) {
-      convert(ws->word_block + *i, data);
-      return & data;
+  struct ReadOnlyDict::Elements : public WordEntryEnumeration 
+  {
+    const char * w;
+    WordEntry wi;
+    Elements(const char * w0) : w(w0) {wi.what = WordEntry::Word;}
+    WordEntry * next() {
+      if (get_offset(w) == 0) w += 2; // FIXME: This needs to be 3
+                                      //        when freq info is used
+      if (get_offset(w) == 0) return 0;
+      convert(w, wi);
+      w = get_next(w);
+      return &wi;
     }
+    bool at_end() const {return get_offset(w) == 0;}
+    WordEntryEnumeration * clone() const {return new Elements(*this);}
+    void assign (const WordEntryEnumeration * other) {
+      *this = *static_cast<const Elements *>(other);}
   };
 
   WordEntryEnumeration * ReadOnlyDict::detailed_elements() const {
-    return new MakeEnumeration<ElementsParms>(word_lookup.begin(), ElementsParms(this));
+    return new Elements(first_word);
   }
 
   ReadOnlyDict::Size ReadOnlyDict::size() const {
@@ -334,6 +321,8 @@ namespace {
     u32int lang_name_size;
     u32int soundslike_name_size;
     u32int soundslike_version_size;
+
+    u32int first_word_offset; // from word block
 
     byte affix_info; // 0 = none, 1 = partially expanded, 2 = full
     byte invisible_soundslike;
@@ -421,6 +410,7 @@ namespace {
     }
 
     word_block = block + data_head.word_offset;
+    first_word = word_block + data_head.first_word_offset;
 
     word_lookup.parms().block_begin = word_block;
     word_lookup.parms().hash .lang     = lang();
@@ -573,33 +563,9 @@ namespace {
     return &data;
   }
 
-  struct ReadOnlyDict::CleanElements : public SoundslikeEnumeration
-  {
-    WordEntry data;
-    const char * cur;
-
-    WordEntry * next(int stopped_at);
-
-    CleanElements(const ReadOnlyDict * o)
-      : cur(o->word_block + 3) {data.what = WordEntry::Word;}
-  };
-
-  WordEntry * ReadOnlyDict::CleanElements::next(int) {
-
-    const char * tmp = cur;
-    cur = get_next(cur);
-    if (cur == tmp) return 0;
-    data.intr[0] = (void *)tmp;
-    convert(tmp, data);
-    return &data;
-  }
-
   SoundslikeEnumeration * ReadOnlyDict::soundslike_elements() const {
 
-    if (jump1)
-      return new SoundslikeElements(this);
-    else
-      return new CleanElements(this);
+    return new SoundslikeElements(this);
 
   }
     
@@ -725,8 +691,7 @@ namespace {
     typedef u32int              Value;
     typedef const char *        Key;
     static const bool is_multi = false;
-    Key key(Value v) const {assert (v != u32int_max);
-                            return block_begin + v;}
+    Key key(Value v) const {return block_begin + v;}
     InsensitiveHash  hash;
     InsensitiveEqual equal;
     bool is_nonexistent(Value v) const {return v == u32int_max;}
@@ -802,7 +767,7 @@ namespace {
     data_head.invisible_soundslike = invisible_soundslike;
     data_head.soundslike_root_only = affix_compress  && !partially_expand ? 1 : 0;
 
-//#if 0
+#if 0
     CERR.printl("FLAGS:  ");
     if (full_soundslike) CERR.printl("  full soundslike");
     if (invisible_soundslike) CERR.printl("  invisible soundslike");
@@ -810,7 +775,7 @@ namespace {
     if (affix_compress) CERR.printl("  affix compress");
     if (partially_expand) CERR.printl("  partially expand");
     CERR.printl("---");
-//#endif
+#endif
     
     String temp;
 
@@ -1022,6 +987,7 @@ namespace {
     data.write32(0); // to avoid nasty special cases
     unsigned int prev_pos = data.size();
     data.write32(0);
+    unsigned prev_w_pos = data.size();
 
     WordLookup lookup;
     lookup.parms().block_begin = data.begin();
@@ -1033,7 +999,6 @@ namespace {
 
     const int head_size = invisible_soundslike ? 3 : 2;
 
-    unsigned prev_w_pos = data.size();
     const char * prev_sl = "";
     p = first;
     while (p)
@@ -1121,7 +1086,6 @@ namespace {
     data.write16(0);
     data.write16(0);
     data[prev_pos - NEXT_O] |= (byte)(data.size() - prev_pos);
-    data.at32(4) = 0;
     
     jump2.push_back(Jump());
     jump1.push_back(Jump());
@@ -1129,6 +1093,13 @@ namespace {
     data.write(0);
     data.write(0);
     data.write(0);
+
+    if (invisible_soundslike)
+      data_head.first_word_offset = data[4 - NEXT_O] + 4;
+    else
+      data_head.first_word_offset = data[8 - NEXT_O] + 8;
+
+    memset(data.data(), 0, 8);
     
     //CERR.printf("%d == %d\n", lookup.size(), uniq_entries);
     //assert(lookup.size() == uniq_entries);
