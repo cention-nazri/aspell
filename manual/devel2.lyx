@@ -824,5 +824,8 @@ mk-src.in
  as its input.
 \layout Standard
 
+((MKSRC))
+\layout Standard
+
 ((FDL))
 \the_end

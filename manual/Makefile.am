@@ -64,7 +64,7 @@ devel: @MAINTAINER_MODE_TRUE@ devel-text
 devel2.tex: @MAINTAINER_MODE_TRUE@ devel2.lyx
 	-lyx --export latex devel2.lyx
 
-devel.tex: @MAINTAINER_MODE_TRUE@ man-proc.pl devel2.tex
+devel.tex: @MAINTAINER_MODE_TRUE@ man-proc.pl devel2.tex mk-src.tex
 	perl man-proc.pl devel
 
 devel.dvi: @MAINTAINER_MODE_TRUE@ devel.tex

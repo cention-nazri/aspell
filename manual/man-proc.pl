@@ -10,6 +10,11 @@ $doc = <DOC>;
 open IN, "fdl.tex";
 $fdl = <IN>;
 
+open IN, "mk-src.tex";
+$mksrc = <IN>;
+$mksrc =~ s/\\subsection/\\subsubsection/g;
+$mksrc =~ s/\\section/\\subsection/g;
+
 open IN, "lgpl.txt";
 $lgpl = <IN>;
 $lgpl = <<"---";
@@ -38,6 +43,7 @@ $doc =~ s/\\textasciicircum{}/\\\^{}/g;
 
 $doc =~ s/\(\(FDL\)\)/$fdl/g;
 $doc =~ s/\(\(LGPL\)\)/$lgpl/g;
+$doc =~ s/\(\(MKSRC\)\)/$mksrc/g;
 
 open DOC, ">$what.tex";
 print DOC $doc;

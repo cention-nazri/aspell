@@ -8,6 +8,26 @@
 # LGPL license along with this library if you did not you can find it
 # at http://www.gnu.org/.
 
+=head1 mk-src.in
+
+The format of mk-src.in is as follows:
+
+  The following charaters are literals: { } / '\ ' \n = >
+
+  <items>
+  <items> := (<item>\n)+
+  <items> := <category>:\ <name> {\n<details>\n} | <<tab>><details>
+  <details> := <options>\n /\n <items>
+  <options> := (<option>\n)*
+  <option> := <key> [=> <value>]
+
+  <<tab>> means everything should be indented by one tab
+
+See MkSrc::Info for a description of the categorys and options
+
+=cut
+
+
 group: type id
 {
 /
