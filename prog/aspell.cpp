@@ -1586,7 +1586,7 @@ void expand()
       WordAff * p = exp_list;
       while (p) {
         COUT << oconv(p->word);
-        if (p->aff[0]) COUT << '/' << oconv((const char *)p->aff);
+        if (limit < INT_MAX && p->aff[0]) COUT << '/' << oconv((const char *)p->aff);
         p = p->next;
         if (p) COUT << ' ';
       }
@@ -1601,7 +1601,7 @@ void expand()
       }
       for (WordAff * p = exp_list; p; p = p->next) {
         COUT << word << ' ' << oconv(p->word);
-        if (p->aff[0]) COUT << '/' << oconv((const char *)p->aff);
+        if (limit < INT_MAX && p->aff[0]) COUT << '/' << oconv((const char *)p->aff);
         if (level >= 4) COUT.printf(" %f\n", ratio);
         else COUT << '\n';
       }
