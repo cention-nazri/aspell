@@ -1,5 +1,5 @@
-#LyX 1.2 created this file. For more info see http://www.lyx.org/
-\lyxformat 220
+#LyX 1.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 221
 \textclass book
 \begin_preamble
 
@@ -74,10 +74,13 @@
 
 \layout Title
 
-GNU Aspell 0.50.3
+GNU Aspell 0.51
+\layout Date
+
+???
 \layout Author
 
-Copyright (c) 2000-2002
+Copyright (c) 2000-2003
 \newline 
 Kevin Atkinson
 \newline 
@@ -815,37 +818,103 @@ aspell
 \layout Subsection
 
 Win32 Notes
+\layout Subsubsection
+
+Getting
 \layout Standard
 
-Due to limited time and my general dislike for Microsoft Windows, Win32
- is not an officially supported platform for Aspell.
- However, it is possible for someone with experience with the Cgiwin development
- environment to create an Aspell binary and library (dll) using gcc as others
- have done so.
- The library, in theory, should be able to be used by any Win32 compiler
- if it is compiled right, but this theory has never been tested.
-\layout Standard
-
-Aspell requires Gcc 2.95 (or better) and the Cgiwin development environment
- in order to compile on Win32.
- Both the Cgiwin or the Mingw version of Gcc should work.
- The Mingw version of Aspell will have slightly less functionality, but
- none of which is noticeable to the end user.
- Microsoft Visual C++, however, will not work with the released version
- of Aspell as the compiler is far to buggy as far as C++ compliance goes.
- However, there is a patch available which should allow Aspell to compile
- using Microsoft Visual C++ which you can find at 
-\begin_inset LatexCommand \url{ftp://ftp.gnu.org/gnu/aspell}
+The latest version of the native Aspell/Win32 port can be found at 
+\begin_inset LatexCommand \url{http://aspell.net/win32}
 
 \end_inset 
 
 .
+ 
+\layout Subsubsection
+
+Building
 \layout Standard
 
-In order to get the nice full screen interface with Mingw when spell checking
- files a curses implementation that does not require Cygwin is required.
+There are two basically different ways of building ASpell using GCC for
+ Win32: You can either use the Cygwin compiler, which will produce binaries
+ that depend on the posix layer in cygwin1.dll.
+ The other way is using MinGW GCC, those binaries use the native C runtime
+ from Microsoft (MSVCRT.DLL).
+ If you intend to use or link against the Aspell libraries using a native
+ Win32 compiler (e.g.
+ MS Visual C++), you will need the MinGW built ones to avoid problems caused
+ by the different runtime libraries.
+\layout Standard
+
+Building Aspell using Cygwin: This works exactly like on other posix compatible
+ systems using the "configure && make && make install" cycle.
+ Some versions of Cygwin GCC will fail to link, this is caused by an incorrect
+ libstdc++.la in the /lib directory.
+ After removing or renaming this file, the build progress should work (GCC-2.95
+ and GCC-3.x should work).
+\layout Standard
+
+Building Aspell using MinGW: To compile Aspell with the MinGW compiler,
+ you will need at least GCC-3.2 (as shipped with MinGW-2.0.3) and some GNU
+ tools like rm and cp.
+ The origin of those tools doesn't matter, it has shown to work with any
+ tools from MinGW/MSys, Cygwin or Linux.
+ To build Aspell, move into the win32 subdirectory and type "make".
+ You can enable some additional build options by either commenting out the
+ definitions at the head of the Makefile or passing those values as environment
+ variables or at the make command line.
+ Following options are supported: 
+\layout Description
+
+DEBUGVERSION If set to "1", the binaries will include debugging information
+ (resulting in a much bigger size).
+\layout Description
+
+CURSESDIR Enter the path to the pdcurses library here, in order to get a
+ nicer console interface (see below).
+ 
+\layout Description
+
+MSVCLIB Enter the filename of MS lib.exe here, if you want to build libraries
+ that can be imported from MS Visual C++.
+ 
+\layout Description
+
+WIN32_RELOCATABLE If set to "1", Aspell will detect the prefix from the
+ path where the DLL resides (see below for further datails).
+ 
+\layout Description
+
+TARGET Sets a prefix to be used for cross compilation (e.g.
+ "/usr/local/bin/i586-mingw32msvc-" to cross compile from linux).
+ 
+\layout Standard
+
+There are also a MinGW compilers available for Cygwin and Linux, both versions
+ are able to compile Aspell using the prebuilt Makefile.
+ While the Cygwin port automatically detects the correct compiler, the Linux
+ version depends on setting the "TARGET" variable in the Makefile (or environmen
+t) to the correct compiler prefix.
+\layout Standard
+
+Other compilers may work.
+ There is a patch for MS Visual C++ 6.0 available at 
+\begin_inset LatexCommand \url{ftp://ftp.gnu.org/gnu/aspell}
+
+\end_inset 
+
+, but it needs a lot of changes to the Aspell sources.
+ It has also been reported that the Intel C++ compiler can be used for compilati
+on.
+\layout Subsubsection
+
+(PD)Curses
+\layout Standard
+
+In order to get the nice full screen interface when spell checking files
+ a curses implementation that does not require Cygwin is required.
  The PDCurses (
-\begin_inset LatexCommand \url{http://www.lightlink.com/hessling/PDCurses/}
+\begin_inset LatexCommand \url{http://pdcurses.sourceforge.net}
 
 \end_inset 
 
@@ -855,36 +924,43 @@ In order to get the nice full screen interface with Mingw when spell checking
  the curses library and include file.
 \layout Standard
 
-If Aspell is compiled with --enable-win32-relocatable and the 
-\series bold 
-bindir
-\series default 
- is set to the same value as 
-\series bold 
-prefix
-\series default 
- (ie not <<prefix>>/bin) then the Aspell directory (what prefix is set to)
- can be relocated anywhere provided that none of the data files are moved
- around within the Aspell directory.
- Please not that this feature has not been tested with GNU Aspell 0.50 so
- it may or may not work.
+Curses notes:
+\layout Itemize
+
+PDcurses built with MinGW needs to be compiled with 
+\family typewriter 
+-DPDC_STATIC_BUILD
+\family default 
+ to avoid duplicate declaration of DllMain when compiling aspell.exe.
+\layout Itemize
+
+The curses enabled version can cause trouble in some shells (MSys rxvt,
+ emacs) and will produce errors like 
+\begin_inset Quotes eld
+\end_inset 
+
+
+\family typewriter 
+initscr() LINES=1 COLS=1: too small
+\family default 
+
+\begin_inset Quotes erd
+\end_inset 
+
+.
+ Use a non-curses version for those purposes.
+\layout Subsubsection
+
+Directories
 \layout Standard
 
-The default paths for Aspell are designed for a Unix system and not a Win32
- system so you might want to specify different ones when compiling Aspell.
- Also if the HOME environmental variable is not set Aspell will assume it
- is the current working directly.
- This may lead to your personal word lists being saved in unpredictable
- locations.
- To solve this either compile with --enable-win32-relocatable (see above)
- or specify the complete path of the personal and replacement word lists
- in aspell.conf.
- If Aspell is compiled with --enable-win32-relocatable than the personal
- word lists are saved in the 
-\series bold 
-prefix
-\series default 
- directory and the name is changed from 
+If Aspell is compiled with WIN32_RELOCATABLE=1, it can be run from any directory
+: It will set «prefix» according to its install location (assuming it resides
+ in «prefix»
+\backslash 
+bin).
+ Your personal wordlists will be saved in the «prefix» directory with their
+ names changed from 
 \begin_inset Quotes eld
 \end_inset 
 
@@ -896,13 +972,85 @@ prefix
 \begin_inset Quotes erd
 \end_inset 
 
- to
+ to 
+\begin_inset Quotes eld
+\end_inset 
+
+
+\family typewriter 
+<lang>.*
+\family default 
+
 \begin_inset Quotes erd
 \end_inset 
 
+ (you can override the path by setting the HOME environment variable).
  
+\layout Subsubsection
+
+Installer
+\layout Standard
+
+The installer registers the DLLs as shared libraries, you should increase
+ the reference counter to avoid the libraries being uninstalled if your
+ application still depends on them (and decrease it again when uninstalling
+ your program).
+ The reference counters are located under:
+\layout Standard
+
+
 \family typewriter 
-<lang>.*
+HKLM
+\backslash 
+SOFTWARE
+\backslash 
+Microsoft
+\backslash 
+Windows
+\backslash 
+CurrentVersion
+\backslash 
+SharedDLLs
+\layout Standard
+
+The install location and version numbers are stored under
+\layout Standard
+
+
+\family typewriter 
+HKLM
+\backslash 
+SOFTWARE
+\backslash 
+Aspell
+\layout Subsubsection
+
+Win32 consoles
+\layout Standard
+
+The console uses a different encoding than GUI applications, changing this
+ to to a Windows encoding (e.g.
+ 1252) is not supported on Win9x/Me.
+ On WinNT (and later) those codepages can be set by first changing the console
+ font to 
+\begin_inset Quotes eld
+\end_inset 
+
+
+\family typewriter 
+lucida console
+\family default 
+
+\begin_inset Quotes erd
+\end_inset 
+
+, then changing the codepage using 
+\begin_inset Quotes eld
+\end_inset 
+
+
+\family typewriter 
+chcp 1252
 \family default 
 
 \begin_inset Quotes erd
@@ -911,24 +1059,9 @@ prefix
 .
 \layout Standard
 
-If you have experience with using Cgiwin or a Unix like environment and
- are willing to maintain an Aspell binary and/or library I would be willing
- to work with you to get Aspell to compile.
- If you are seriously interested please post to aspell-devel@gnu.org after
- you have given it an initial try.
- However, if, after reading this section, you do not know how to start then
- you most likely do not have the necessary experience to be able to get
- Aspell to compile.
- Please do not bother me with questions such as 
-\begin_inset Quotes eld
-\end_inset 
-
-I would like to use Aspell on Win32 but I have no idea what to do.
-\begin_inset Quotes erd
-\end_inset 
-
-, as I am not willing to teach you the basics of working with a Unix like
- environment.
+Some alternative shells (e.g.
+ MSys' rxvt or Cygwin's bash) do a codepage conversion (if correctly set
+ up), so running Aspell inside those shells might be a workaround for Win9x.
 \layout Section
 
 Using aspell-import
@@ -3416,19 +3549,19 @@ Writing programs to use Aspell
 \layout Standard
 
 There are two main ways to use aspell from within your application.
- Through the external C API or though a pipe.
+ Through the external C API or through a pipe.
  The internal Aspell API can be used directly but that is not recommended
  as the actual Aspell API is constantly changing.
 \layout Section
 
-Though the C API
+Through the C API
 \layout Standard
 
 The Aspell library contains two main classes and several helper classes.
- The two main classes are AspellConfig and AspellMaster.
- The AspellConfig class is used to set initial defaults and to change spell
- checker specific options.
- The AspellManager class does most of the real work.
+ The two main classes are AspellConfig and AspellSpeller The AspellConfig
+ class is used to set initial defaults and to change spell checker specific
+ options.
+ The AspellSpeller class does most of the real work.
  It is responsible for managing the dictionaries, checking if a word is
  in the dictionary, and coming up with suggestions among other things.
  There are many helper classes the important ones are AspellWordList, AspellMuta
@@ -3519,7 +3652,7 @@ encoding
  for a list of all available options.
 \layout Standard
 
-When ever a new document is created a new AspellManager class should also
+When ever a new document is created a new AspellSpeller class should also
  be created.
  There should be one speller class per document.
  To create a new speller class use the new_aspell_speller and then cast
@@ -3529,7 +3662,7 @@ When ever a new document is created a new AspellManager class should also
 AspellCanHaveError * possible_err = new_aspell_speller(spell_config);
 \layout LyX-Code
 
-AspellManager * spell_checker = 0;
+AspellSpeller * spell_checker = 0;
 \layout LyX-Code
 
 if (aspell_error_number(possible_err) != 0)
@@ -3544,7 +3677,7 @@ else
   spell_checker = to_aspell_speller(possible_err);
 \layout Standard
 
-which will create a new AspellManager class using the defaults found in
+which will create a new AspellSpeller class using the defaults found in
  spell_config.
  To find out which dictionary is selected the 
 \series bold 
@@ -3696,7 +3829,7 @@ It is better to let the spell checker manage these words rather than doing
  list.
 \layout Standard
 
-Finally, when the document is closed the AspellManager class should be deleted
+Finally, when the document is closed the AspellSpeller class should be deleted
  like so.
 \layout LyX-Code
 
@@ -5702,6 +5835,53 @@ appendix
 \layout Chapter
 
 Changelog
+\layout Section*
+
+Changes from ?? to 0.51 (??)
+\layout Itemize
+
+Added support for loadable filters thanks to Christoph Hintermüller
+\layout Itemize
+
+Added gettext support thanks to ...
+\layout Section*
+
+Changes from 0.50.4 to 0.50.4.1 (Oct 11, 2003)
+\layout Itemize
+
+Fixed major bug in pipe mode which caused the last character to be chopped
+ off words before they were stored.
+\layout Itemize
+
+Minor formating fixes in the manual.
+\layout Section*
+
+Changes from 0.50.3 to 0.50.4 (Sep 26, 2003)
+\layout Itemize
+
+Minor changes in URL filter to avoid treating the double quote character
+ as part of the URL, and to avoid treating words ending in more than one
+ period as a URL.
+\layout Itemize
+
+Document fixes in Aspell API
+\layout Itemize
+
+Small compile fixes, including one for GCC 3.3
+\layout Itemize
+
+Updated Win32 section since a port now exists thanks to Thorsten Maerz.
+\layout Itemize
+
+Complain instead of doing nothing or aborting for unimplemented functions
+ in Aspell utility.
+\layout Itemize
+
+Portability bug fixes.
+\layout Itemize
+
+Upgraded to Autoconf 2.57, Automake 1.7.7, Libtool 1.5 (no longer use CVS version
+ of libtool).
 \layout Section*
 
 Changes from 0.50.2 to 0.50.3 (Nov 23, 2002)

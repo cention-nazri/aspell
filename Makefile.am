@@ -1,5 +1,5 @@
 AUTOMAKE_OPTIONS = foreign subdir-objects
-SUBDIRS = manual po
+SUBDIRS = . po manual examples
 
 # These are needed due to a bug in Automake
 pkgdatadir = @pkgdatadir@
@@ -95,6 +95,10 @@ libpspell_la_LIBADD = libaspell.la
 
 libpspell_la_LDFLAGS = ${extra_ldflags} -version-info 15:2:0
 
+EXTRA_DIST += common/*.hpp common/*.h\
+              modules/speller/default/*.hpp\
+              lib/*.hpp
+
 ########################################################################
 #
 # Aspell Program
@@ -109,6 +113,8 @@ word_list_compress_SOURCES = prog/compress.c
 aspell_SOURCES = prog/aspell.cpp prog/check_funs.cpp prog/checker_string.cpp
 
 aspell_LDADD = libaspell.la $(CURSES_LIB)
+
+EXTRA_DIST += prog/*.hpp
 
 ########################################################################
 #
@@ -191,6 +197,9 @@ gen/static_filters.src.cpp: ${static_optfiles} gen/mk-static-filter.pl gen/setti
 	${PERLPROG} gen/mk-static-filter.pl ${static_optfiles}
 
 lib/new_filter.cpp: gen/static_filters.src.cpp
+
+EXTRA_DIST += ${static_optfiles} ${dynamic_optfiles} ${fltfiles} \
+              gen/mk-static-filter.pl
 
 CLEANFILES = gen/static_filters.src.cpp
 
@@ -276,7 +285,6 @@ pspell_includedir = ${includedir}/pspell
 pspell_include_HEADERS = interfaces/cc/pspell.h
 
 
-
 ########################################################################
 #
 # Misc Top level
@@ -284,7 +292,8 @@ pspell_include_HEADERS = interfaces/cc/pspell.h
 
 pkgdata_DATA = ${top_srcdir}/data/*.dat ${top_srcdir}/data/*.kbd
 
-EXTRA_DIST += config.rpath  README ${pkgdata_DATA} m4/*.m4
+EXTRA_DIST += config.rpath  README ${pkgdata_DATA} m4/*.m4 \
+              misc/po-filter.c
 
 README: manual/man-text/2_Getting.txt
 	cp manual/man-text/2_Getting.txt README
@@ -293,6 +302,11 @@ maintainer-clean-local:
 	@find . \( -name '*.?pp' -o -name '*.h' -o -name '*.opt' \) -print |\
 	    xargs grep -l "Automatically generated file." |\
 	    xargs rm
+
+dist-hook:
+	mkdir $(distdir)/maintainer
+	cp autogen config-opt config-debug TODO FIXMEs README-CVS \
+           $(distdir)/maintainer
 
 ACLOCAL_AMFLAGS = -I m4
 

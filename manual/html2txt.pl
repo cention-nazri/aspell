@@ -6,7 +6,7 @@ $/ = undef;
 
 foreach (readdir(DIR)) {
   next unless /(.+?)\.html$/;
-  $command = "$ENV{'TEXT_DUMP'} -dump -$ENV{'DUMP_WIDTH'} 75 $what-html/$_  > $what-text/$1.txt";
+  $command = "w3m -dump -cols 75 $what-html/$_  > $what-text/$1.txt";
   $name = $1;
   print "$command\n" ;
   system $command;

@@ -1364,10 +1364,10 @@ collapsed false
 \begin_inset  Tabular
 <lyxtabular version="3" rows="5" columns="3">
 <features>
+<column alignment="left" valignment="top" leftline="true" rightline="true" width="0pt">
 <column alignment="left" valignment="top" rightline="true" width="0pt">
 <column alignment="left" valignment="top" rightline="true" width="0pt">
-<column alignment="left" valignment="top" width="0pt">
-<row bottomline="true">
+<row topline="true">
 <cell alignment="left" valignment="top" bottomline="true" rightline="true" usebox="none">
 \begin_inset Text
 
@@ -1393,7 +1393,7 @@ available
 \end_inset 
 </cell>
 </row>
-<row bottomline="true">
+<row topline="true">
 <cell alignment="left" valignment="top" bottomline="true" rightline="true" usebox="none">
 \begin_inset Text
 
@@ -1419,7 +1419,7 @@ true false
 \end_inset 
 </cell>
 </row>
-<row bottomline="true">
+<row topline="true">
 <cell alignment="left" valignment="top" bottomline="true" rightline="true" usebox="none">
 \begin_inset Text
 
@@ -1445,7 +1445,7 @@ any number value
 \end_inset 
 </cell>
 </row>
-<row bottomline="true">
+<row topline="true">
 <cell alignment="left" valignment="top" bottomline="true" rightline="true" usebox="none">
 \begin_inset Text
 
@@ -1470,7 +1470,7 @@ any printable string
 \end_inset 
 </cell>
 </row>
-<row bottomline="true">
+<row topline="true" bottomline="true">
 <cell alignment="left" valignment="top" bottomline="true" rightline="true" usebox="none">
 \begin_inset Text
 
