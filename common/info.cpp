@@ -35,6 +35,7 @@
 #include "vector.hpp"
 #include "stack_ptr.hpp"
 #include "strtonum.hpp"
+#include "lock.hpp"
 
 namespace acommon {
 
@@ -78,12 +79,14 @@ namespace acommon {
     DictInfoList   dict_info_list;
     void clear();
     PosibErr<void> fill(Config *, StringList &);
-    bool has_data() {return module_info_list.head_ != 0;}
+    bool has_data() const {return module_info_list.head_ != 0;}
     void fill_helper_lists(const StringList &);
   };
 
-  struct MDInfoListofLists
+  class MDInfoListofLists
   {
+    Mutex lock;
+
     MDInfoListAll * data;
   
     int       offset;
@@ -91,13 +94,15 @@ namespace acommon {
   
     int valid_pos(int pos) {return offset <= pos && pos < size + offset;}
 
-    MDInfoListofLists();
-    ~MDInfoListofLists();
-
     void clear(Config * c);
     int find(const StringList &);
 
-    PosibErr<MDInfoListAll *> get_lists(Config * c);
+  public:
+
+    MDInfoListofLists();
+    ~MDInfoListofLists();
+
+    PosibErr<const MDInfoListAll *> get_lists(Config * c);
 
     void flush() {} // unimplemented
   };
@@ -232,7 +237,6 @@ namespace acommon {
 	to_add->c_struct.dict_dirs = &(to_add->dict_exts);
 	itemize(data, to_add->dict_exts);
       } else {
-fprintf(stderr,"File: %s(%i)\n",__FILE__,__LINE__);
 	err.prim_err(unknown_key, key);
 	goto RETURN_ERROR;
       }
@@ -551,10 +555,11 @@ fprintf(stderr,"File: %s(%i)\n",__FILE__,__LINE__);
     return -1;
   }
 
-  PosibErr<MDInfoListAll *>
+  PosibErr<const MDInfoListAll *>
   MDInfoListofLists::get_lists(Config * c)
   {
-    Config * config = (Config *)c;
+    LOCK(lock);
+    Config * config = (Config *)c; // FIXME: WHY?
     int & pos = config->md_info_list_index;
     StringList dirs;
     if (!valid_pos(pos)) {
@@ -617,9 +622,9 @@ fprintf(stderr,"File: %s(%i)\n",__FILE__,__LINE__);
   // ModuleInfo
   //
 
-  ModuleInfoList * get_module_info_list(Config * c)
+  const ModuleInfoList * get_module_info_list(Config * c)
   {
-    MDInfoListAll * la = md_info_list_of_lists.get_lists(c);
+    const MDInfoListAll * la = md_info_list_of_lists.get_lists(c);
     if (la == 0) return 0;
     else return &la->module_info_list;
   }
@@ -666,9 +671,9 @@ fprintf(stderr,"File: %s(%i)\n",__FILE__,__LINE__);
   // DictInfo
   //
 
-  DictInfoList * get_dict_info_list(Config * c)
+  const DictInfoList * get_dict_info_list(Config * c)
   {
-    MDInfoListAll * la = md_info_list_of_lists.get_lists(c);
+    const MDInfoListAll * la = md_info_list_of_lists.get_lists(c);
     if (la == 0) return 0;
     else return &la->dict_info_list;
   }

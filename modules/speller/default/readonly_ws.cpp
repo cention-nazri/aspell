@@ -906,10 +906,12 @@ namespace aspeller {
   PosibErr<void> create_default_readonly_word_set(StringEnumeration * els,
                                                   Config & config)
   {
-    Language lang;
-    RET_ON_ERR(lang.setup("",&config));
+    CachePtr<Language> lang;
+    PosibErr<Language *> res = new_language(config);
+    if (!res) return res;
+    lang.reset(res.data);
     aspeller_default_readonly_ws::create(config.retrieve("master-path"),
-				       els,lang);
+                                         els,*lang);
     return no_err;
   }
 }

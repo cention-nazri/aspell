@@ -13,8 +13,6 @@ namespace aspeller {
  
   class Soundslike {
   public:
-    virtual Soundslike * clone() const = 0;
-    virtual void assign(const Soundslike *) = 0;
     virtual String soundslike_chars() const = 0;
     virtual String to_soundslike(ParmString) const = 0;
     virtual const char * name() const = 0;

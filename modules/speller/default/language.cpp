@@ -15,10 +15,11 @@
 #include "language.hpp"
 #include "split.hpp"
 #include "string.hpp"
+#include "cache-t.hpp"
 
 namespace aspeller {
 
-  // FIXME: The "c" might conflict with ConfigData Use of taht slot
+  // FIXME: The "c" might conflict with ConfigData Use of that slot
   //   work on a policy to avoid that such resering the first half
   //   for ConfigData's use and the otehr for users.
   static const KeyInfo lang_config_keys[] = {
@@ -34,39 +35,36 @@ namespace aspeller {
     , {"use-soundslike" ,     KeyInfoBool, "",  ""}
     , {"keyboard",            KeyInfoString, "standard", "", "c"} 
   };
-  
-  PosibErr<void> Language::setup(ParmString l, Config * config) 
+
+  static GlobalCache<Language> language_cache;
+
+  PosibErr<void> Language::setup(const String & lang, Config * config)
   {
-    //if (!config)      config = new Config(); FIXME
-    assert(config != 0);
-    String lang = l;
-    if (lang.empty()) lang   = config->retrieve("actual-lang");
-
-    String dir1, dir2;
-    fill_data_dir(config, dir1, dir2);
-
     //
     // get_lang_info
     //
+
+    String dir1,dir2,path;
+
+    fill_data_dir(config, dir1, dir2);
+    dir_ = find_file(path,dir1,dir2,lang,".dat");
     
     Config data("aspeller-lang",
 		lang_config_keys, 
 		lang_config_keys + sizeof(lang_config_keys)/sizeof(KeyInfo));
-    String path;
-    dir_ = find_file(path,dir1,dir2,lang,".dat");
     {
       PosibErrBase pe = data.read_in_file(path);
       if (pe.has_err(cant_read_file)) {
 	String mesg = pe.get_err()->mesg;
 	mesg[0] = asc_tolower(mesg[0]);
-	mesg = "This is probably becuase " + mesg;
-	return make_err(unknown_language, l, mesg);
+	mesg = _("This is probably because: ") + mesg;
+	return make_err(unknown_language, lang, mesg);
       } else if (pe.has_err())
 	return pe;
     }
 
     if (!data.have("name"))
-      return make_err(bad_file_format, path, "The required field \"name\" is missing.");
+      return make_err(bad_file_format, path, _("The required field \"name\" is missing."));
 
     name_         = data.retrieve("name");
     charset_      = data.retrieve("charset");
@@ -281,13 +279,13 @@ namespace aspeller {
 
   PosibErr<void> check_if_valid(const Language & l, ParmString word) {
     if (*word == '\0') 
-      return make_err(invalid_word, word, "Empty string.");
+      return make_err(invalid_word, word, _("Empty string."));
     const char * i = word;
     if (l.char_type(*i) != Language::letter) {
       if (!l.special(*i).begin)
 	return invalid_char(word, *i, "beginning");
       else if (l.char_type(*(i+1)) != Language::letter)
-	return make_err(invalid_word, word, "Does not contain any letters.");
+	return make_err(invalid_word, word, _("Does not contain any letters."));
     }
     for (;*(i+1) != '\0'; ++i) { 
       if (l.char_type(*i) != Language::letter) {
@@ -325,4 +323,19 @@ namespace aspeller {
     
   }
 
+  PosibErr<Language *> new_language(Config & config)
+  {
+    return language_cache.get(config.retrieve("actual-lang"),
+                              &config);
+  }
+
+}
+
+namespace acommon {
+
+  using aspeller::Language;
+  
+  template
+  void release_cache_data(GlobalCache<Language> *, const Language *);
+  
 }

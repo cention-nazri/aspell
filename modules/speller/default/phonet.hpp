@@ -42,8 +42,6 @@ namespace aspeller {
     static const int hash_size = 256;
     int hash[hash_size];
 
-    virtual PhonetParms * clone() const = 0;
-    virtual void assign(const PhonetParms *) = 0;
     virtual ~PhonetParms() {}
   };
 

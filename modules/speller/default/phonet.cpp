@@ -65,31 +65,6 @@ namespace aspeller {
   struct PhonetParmsImpl : public PhonetParms {
     std::vector<const char *> rdata;
     std::vector<char>         data;
-    void assign(const PhonetParms * other) {
-      abort();
-      *this = *(const PhonetParmsImpl *)other;
-      this->rules = &rdata.front();
-    }
-    PhonetParmsImpl * clone() const {
-      PhonetParmsImpl * other = new PhonetParmsImpl(*this);
-      return other;
-    }
-    PhonetParmsImpl() {}
-    PhonetParmsImpl(const PhonetParmsImpl & other) 
-      : PhonetParms(other), rdata(other.rdata.size()), data(other.data)
-    {
-      fix_pointers(other);
-    }
-    void fix_pointers(const PhonetParmsImpl & other) {
-      if (other.rdata.empty()) return;
-      rules = &rdata.front();
-      int i = 0;
-      for (;other.rules[i] != rules_end; ++i) {
-	rules[i] = &data.front() + (&other.data.front() - other.rules[i]);
-      }
-      rules[i]   = rules_end;
-      rules[i+1] = rules_end;
-    }
   };
   
   PosibErr<PhonetParms *> load_phonet_rules(const String & file) {

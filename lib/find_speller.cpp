@@ -329,7 +329,7 @@ namespace acommon {
     // 
     //
 
-    DictInfoList * dlist = get_dict_info_list(config);
+    const DictInfoList * dlist = get_dict_info_list(config);
     DictInfoEnumeration * dels = dlist->elements();
     const DictInfo * entry;
 

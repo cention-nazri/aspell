@@ -147,7 +147,7 @@ namespace aspeller {
 
     friend class ConfigNotifier;
 
-    CopyPtr<Language>          lang_;
+    CachePtr<const Language>   lang_;
     CopyPtr<SensitiveCompare>  sensitive_compare_;
     CopyPtr<DataSetCollection> wls_;
     ClonePtr<Suggest>       suggest_;

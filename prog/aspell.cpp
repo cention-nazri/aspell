@@ -410,7 +410,7 @@ void config ()
 
 void dicts() 
 {
-  DictInfoList * dlist = get_dict_info_list(options);
+  const DictInfoList * dlist = get_dict_info_list(options);
 
   StackPtr<DictInfoEnumeration> dels(dlist->elements());
 
@@ -1241,12 +1241,13 @@ void repl() {
 
 void soundslike() {
   using namespace aspeller;
-
-  Language lang;
-  EXIT_ON_ERR(lang.setup("",options));
+  CachePtr<Language> lang;
+  PosibErr<Language *> res = new_language(*options);
+  if (!res) {print_error(res.get_err()->mesg); exit(1);}
+  lang.reset(res.data);
   String word;
   while (CIN >> word) {
-    COUT << word << '\t' << lang.to_soundslike(word) << "\n";
+    COUT << word << '\t' << lang->to_soundslike(word) << "\n";
   } 
 }
 

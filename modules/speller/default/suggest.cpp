@@ -315,7 +315,7 @@ namespace aspeller_default_suggest {
       delete[] new_word;
     }
     const char * original_soundslike = original_word.soundslike.c_str();
-    unsigned int original_soundslike_len = strlen(original_soundslike);
+    //unsigned int original_soundslike_len = strlen(original_soundslike);
       
     EditDist (* edit_dist_fun)(const char *, const char *, 
 			       const EditDistanceWeights &);

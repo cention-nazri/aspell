@@ -54,7 +54,7 @@ namespace aspeller {
   PosibErr<void> DataSet::attach(const Language &l) {
     if (lang_ && strcmp(l.name(),lang_->name()) != 0)
       return make_err(mismatched_language, lang_->name(), l.name());
-    if (!lang_) lang_.reset(new Language(l));
+    if (!lang_) lang_.copy(&l);
     ++attach_count_;
     return no_err;
   }
@@ -89,8 +89,9 @@ namespace aspeller {
   PosibErr<void> DataSet::set_check_lang (ParmString l, Config * config)
   {
     if (lang_ == 0) {
-      lang_.reset(new Language());
-      RET_ON_ERR(lang_->setup(l,config));
+      PosibErr<Language *> res = new_language(*config);
+      if (!res) return res;
+      lang_.reset(res.data);
       set_lang_hook(config);
     } else {
       if (l != lang_->name())

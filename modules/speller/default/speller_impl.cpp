@@ -329,7 +329,7 @@ namespace aspeller {
     } else {
       if (!lang_) 
       {
-	lang_.reset(new Language(*w->lang()));
+	lang_.copy(w->lang());
 	config_->replace("lang", lang_name());
 	config_->replace("language-tag", lang_name());
       }
@@ -718,9 +718,5 @@ namespace aspeller {
   {
     return new SpellerImpl();
   }
-}
-
-namespace acommon {
-  template class CopyPtr<aspeller::Language>;
 }
 

@@ -69,7 +69,7 @@ namespace acommon {
     ModuleInfoNode * head_;
   };
   
-  ModuleInfoList * get_module_info_list(Config *);
+  const ModuleInfoList * get_module_info_list(Config *);
 
   struct DictInfoNode;
 
@@ -92,7 +92,7 @@ namespace acommon {
     DictInfoNode * head_;
   };
 
-  DictInfoList * get_dict_info_list(Config *);
+  const DictInfoList * get_dict_info_list(Config *);
 
   class ModuleInfoEnumeration {
   public:

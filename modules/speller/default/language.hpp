@@ -5,7 +5,8 @@
 
 #include "string.hpp"
 #include "posib_err.hpp"
-#include "clone_ptr.hpp"
+#include "stack_ptr.hpp"
+#include "cache.hpp"
 
 #include "phonetic.hpp"
 
@@ -17,8 +18,11 @@ namespace acommon {
 
 namespace aspeller {
 
-  class Language {
+  class Language : public Cacheable {
   public:
+    typedef Config  CacheConfig;
+    typedef String  CacheKey;
+
     enum CharType {letter, space, other};
 
     struct SpecialChar {
@@ -53,11 +57,14 @@ namespace aspeller {
 
     String      soundslike_chars_;
 
-    ClonePtr<Soundslike> soundslike_;
+    StackPtr<Soundslike> soundslike_;
+
+    Language(const Language &);
+    void operator=(const Language &);
 
   public:
     Language() {}
-    PosibErr<void> setup(ParmString lang, Config *);
+    PosibErr<void> setup(const String & lang, Config * config);
 
     const char * data_dir() const {return dir_.c_str();}
     const char * name() const {return name_.c_str();}
@@ -114,6 +121,13 @@ namespace aspeller {
 
     const char * soundslike_chars() const {return soundslike_chars_.c_str();}
 
+    static inline PosibErr<Language *> get_new(const String & lang, Config * config) {
+      StackPtr<Language> l(new Language());
+      RET_ON_ERR(l->setup(lang, config));
+      return l.release();
+    }
+
+    bool cache_key_eq(const String & l) const  {return name_ == l;}
   };
 
   struct InsensitiveCompare {
@@ -303,6 +317,8 @@ namespace aspeller {
   PosibErr<void> check_if_valid(const Language & l, ParmString word);
 
   void normalize_mid_characters(const Language & l, String & s);
+
+  PosibErr<Language *> new_language(Config &);
   
 }
 

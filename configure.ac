@@ -1,4 +1,4 @@
-AC_INIT(GNU Aspell, 0.51-cvs)
+AC_INIT(GNU Aspell, 0.51-20040106)
 AC_CONFIG_SRCDIR(prog/aspell.cpp)
 AC_CANONICAL_SYSTEM
 AM_INIT_AUTOMAKE
@@ -187,6 +187,19 @@ AC_TRY_COMPILE(
   [AC_MSG_RESULT(yes)
    AC_DEFINE(USE_LOCALE, 1, [Defined if Posix locales are supported])],
   [AC_MSG_RESULT(no)] )
+
+AC_MSG_CHECKING(if posix mutexes are supported)
+AC_TRY_COMPILE(
+  [#include <pthread.h>],
+  [pthread_mutex_t lck;
+   pthread_mutex_init(&lck, 0);
+   pthread_mutex_lock(&lck);
+   pthread_mutex_unlock(&lck);
+   pthread_mutex_destroy(&lck);],
+  [AC_MSG_RESULT(yes)
+   AC_DEFINE(USE_POSIX_MUTEX, 1, [Defined if Posix mutexes are supported])],
+  [AC_MSG_RESULT(no)
+   AC_MSG_WARN([Unable to find locking mechanism, Aspell will not be thread safe.])] )
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                                                                 #

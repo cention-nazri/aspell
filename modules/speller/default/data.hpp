@@ -12,6 +12,7 @@
 #include "string.hpp"
 #include "string_enumeration.hpp"
 #include "word_list.hpp"
+#include "cache.hpp"
 
 using namespace acommon;
 
@@ -31,8 +32,8 @@ namespace aspeller {
   class DataSet {
     friend class SpellerImpl;
   private:
-    CopyPtr<Language>       lang_;
-    int                     attach_count_;
+    CachePtr<const Language> lang_;
+    int                      attach_count_;
   private:
     PosibErr<void> attach(const Language &);
     void detach();

@@ -20,11 +20,6 @@ namespace aspeller {
 
     PosibErr<void> setup() {return no_err;}
     
-    Soundslike * clone() const {return new GenericSoundslike(*this);}
-    void assign(const Soundslike * other) {
-      *this = *static_cast<const GenericSoundslike *>(other);
-    }
- 
     String soundslike_chars() const {
       bool chars_set[256] = {0};
       String     chars_list;
@@ -72,11 +67,6 @@ namespace aspeller {
 
     PosibErr<void> setup() {return no_err;}
     
-    Soundslike * clone() const {return new NoSoundslike(*this);}
-    void assign(const Soundslike * other) {
-      *this = *static_cast<const NoSoundslike *>(other);
-    }
- 
     String soundslike_chars() const {
       bool chars_set[256] = {0};
       String     chars_list;
@@ -113,14 +103,9 @@ namespace aspeller {
   class PhonetSoundslike : public Soundslike {
 
     const Language * lang;
-    ClonePtr<PhonetParms> phonet_parms;
+    StackPtr<PhonetParms> phonet_parms;
     
   public:
-
-    Soundslike * clone() const {return new PhonetSoundslike(*this);}
-    void assign(const Soundslike * other) {
-      *this = *static_cast<const PhonetSoundslike *>(other);
-    }
 
     PhonetSoundslike(const Language * l) : lang(l) {}
 
@@ -204,6 +189,3 @@ namespace aspeller {
 
 }
 
-namespace acommon {
-  template class ClonePtr<aspeller::Soundslike>;
-}

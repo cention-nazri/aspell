@@ -27,6 +27,7 @@ EXTRA_DIST =
 lib_LTLIBRARIES = libaspell.la libpspell.la
 
 libaspell_la_SOURCES =\
+  common/cache.cpp\
   common/string.cpp\
   common/getdata.cpp\
   common/itemize.cpp\
@@ -86,6 +87,8 @@ libaspell_la_SOURCES =\
   lib/speller-c.cpp\
   lib/string_pair_enumeration-c.cpp\
   lib/new_checker.cpp
+
+libaspell_la_LIBADD =  $(LIBINTL)
 
 libaspell_la_LDFLAGS = ${extra_ldflags} -version-info 15:5:0
 

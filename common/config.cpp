@@ -358,7 +358,6 @@ namespace acommon {
 
   static void get_lang_env(String & str) 
   {
-    // NOTE: THIS IS NOT THREAD SAFE
     if (proc_locale_str(getenv("LC_MESSAGES"), str)) return;
     if (proc_locale_str(getenv("LANG"), str)) return;
     if (proc_locale_str(getenv("LANGUAGE"), str)) return;
@@ -369,7 +368,7 @@ namespace acommon {
 
   static void get_lang(String & final_str) 
   {
-    // NOTE: THIS IS NOT THREAD SAFE
+    // FIXME: THIS IS NOT THREAD SAFE
     String locale = setlocale (LC_ALL, NULL);
     if (locale == "C")
       setlocale (LC_ALL, "");
