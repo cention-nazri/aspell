@@ -1,0 +1,3 @@
+FIXME: consider Eliminate string classes and use VirEmulation
+FIXME: make each methods collection a (possible templates) base clas
+FIXME: fix bug with suggestion when typo-analy is not used
