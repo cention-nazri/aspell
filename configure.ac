@@ -230,24 +230,58 @@ then
   if test -z "$CURSES_LIB"
   then
 
-    AC_CHECK_LIB(curses, initscr,
-      [CURSES_LIB=-lcurses],
+    AC_CHECK_LIB(ncursesw, initscr,
+      [CURSES_LIB=-lncursesw],
       [
 
     dnl else if
     AC_CHECK_LIB(ncurses, initscr,
-      [CURSES_LIB=-lncurses])
-    ] )
-    
+      [CURSES_LIB=-lncurses],
+      [
+
+    dnl else if
+    AC_CHECK_LIB(curses, initscr,
+      [CURSES_LIB=-lcurses]) ] ) ] )
+
   fi
 
   if test -n "$CURSES_LIB"
   then
-     AC_MSG_CHECKING(if standard curses include sequence will work)
      ORIG_LIBS="$LIBS"
      ORIG_CPPFLAGS="$CPPFLAGS"
      CPPFLAGS="$CURSES_INCLUDE $CPPFLAGS"
      LIBS="$CURSES_LIB $LIBS"
+
+     AC_MSG_CHECKING(for wide character support in curses libraray)
+     AC_TRY_LINK(
+       [#include <wchar.h>
+        #include <ncursesw/curses.h>
+       ],
+       [wchar_t wch = 0;
+        addnwstr(&wch, 1);],
+       [AC_MSG_RESULT(yes)
+        AC_DEFINE(USE_NCURSESW, 1,
+                  [Defined if wide character support found in ncursesw/])
+        AC_DEFINE(HAVE_WIDE_CURSES, 1,
+                  [Defined if curses libraray includes wide character support])],
+       [
+
+     dnl else if
+     AC_TRY_LINK(
+       [#include <wchar.h>
+        #include <curses.h>
+       ],
+       [wchar_t wch = 0;
+        addnwstr(&wch, 1);],
+       [AC_MSG_RESULT(yes)
+        AC_DEFINE(HAVE_WIDE_CURSES, 1, [])],
+       [
+
+     dnl else
+     AC_MSG_RESULT(no)
+     ] ) ] )
+
+     AC_MSG_CHECKING(if standard curses include sequence will work)
      AC_TRY_LINK(
        [#include <termios.h>
 	#include <unistd.h>
@@ -290,7 +324,7 @@ then
        [AC_MSG_RESULT(no)
         
 
-     dnl else if
+     dnl else
      use_curses=false
      CURSES_LIBS=""
      CURSES_INCLUDE=""

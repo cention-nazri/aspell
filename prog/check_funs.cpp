@@ -15,13 +15,7 @@
    All these macros need to have a true value and not just be defined
 */
 
-//
-// NOTE: The best way to debug this file when the behavior of "aspell
-//       check" differs from the behavior of the orignal Aspell is to
-//       compare against terminos.cc in the old Aspell and look for
-//       differences.  If everthing looks the same then it might be 
-//       a bug in CheckerString.
-//
+#include <wchar.h>
 
 #include "settings.h"
 
@@ -33,7 +27,6 @@
 
 #include "asc_ctype.hpp"
 #include "check_funs.hpp"
-
 
 StackPtr<CheckerString> state;
 const char * last_prompt = 0;
@@ -57,7 +50,11 @@ extern "C" {int getch();}
 
 #if HAVE_LIBCURSES
 
-#include <curses.h>
+#  if USE_NCURSESW
+#    include <ncursesw/curses.h>
+#  else
+#    include <curses.h>
+#  endif
 
 #if CURSES_INCLUDE_STANDARD
 
@@ -426,8 +423,9 @@ void new_line(int & l, int height) {
 
 void display_misspelled_word() {
 
-  CheckerString::Iterator word_begin = state->word_begin();
-  CheckerString::Iterator word_end   = state->word_end();
+  const char * word_begin = &*state->word_begin_;
+  const char * word_end   = word_begin + state->word_size_;
+  CheckerString::Lines::iterator cur_line = state->cur_line_;  
 
 #if   HAVE_LIBCURSES
 
@@ -437,93 +435,93 @@ void display_misspelled_word() {
     getmaxyx(text_w,height,width);
     assert(height > 0 && width > 0);
 
-    CheckerString::Iterator i = word_begin;
-      
+    //CheckerString::Iterator i = word_begin;
+
+    CheckerString::Lines::iterator i = cur_line;
+    
     //
     // backup height/3 lines
     //
     int l = height/3;
-    while (!i.off_end()) {
-      if (*i == '\n') {
-	--l;
-	if (l == 0)
-	  break;
-      }
+    while (i > state->lines_.begin() && l > 0) {
+      --l;
       --i;
     }
-    ++i;
-      
-    int last_space_pos = 0;
-    CheckerString::Iterator last_space = i;
-      
+    
     while (l != 0)
       new_line(l,height);
 
-    int y, x;
     l = -1;
-    int attr = A_NORMAL;
-      
-    while (!i.off_end()) {
+
+    const char * j = i->pbegin();
+    while (i != state->lines_.end()) {
+
+      int y,x;
       getyx(text_w,y,x);
-      if (x == width-1 || *i == '\n') {
-	if (*i != '\n') {
-	  if (dist(last_space, i) < width/3) {
-	    wmove(text_w, y, last_space_pos);
-	    wclrtoeol(text_w);
-	    i = last_space;
-	    ++i;
-	  } 
-	  wmove(text_w, y, width-1);
-	  waddch(text_w,'\\');
-	} 
-	last_space = i;
-	last_space_pos = 0;
-	if (l == 0) break;
-	new_line(l,y,height);
+
+      wattrset(text_w,A_NORMAL);
+      int last_space_pos = 0;
+      const char * last_space = i->pbegin();
+      int w = 0;
+
+      while (j < i->pend() && w < width && *j != '\n')
+      {
+        if (asc_isspace(*j)) {
+          last_space_pos = w;
+          last_space = j;
+        }
+        if (j == word_begin) {
+          wattrset(text_w,A_REVERSE);
+          l = height*2/3;
+        } else if (j == word_end) {
+          wattrset(text_w,A_NORMAL);
+        }
+        int len = mbrlen(j, MB_CUR_MAX, NULL);
+        if (len > 0) {
+          waddnstr(text_w, j, len);
+        } else {
+          waddch(text_w, ' ');
+          len = 1;
+        }
+        j += len;
+        ++w;
+      }
+      if (j == i->pend() || *j == '\n') {
+        ++i;
+        j = i->pbegin();
       } else {
-	if (asc_isspace(*i)) {
-	  getyx(text_w,y,last_space_pos);
-	  last_space = i;
-	}
+        if (w - last_space_pos < width/3) {
+          wmove(text_w, y, last_space_pos);
+          wclrtoeol(text_w);
+          j = last_space + 1;
+        }
+        wmove(text_w, y, width-1);
+        waddch(text_w,'\\');
       }
-      if (i == word_begin) {
-	attr = A_REVERSE;
-	l = height*2/3;
-      } else if (i == word_end) {
-	attr = A_NORMAL;
-      }
-      if (*i != '\n')
-	waddch(text_w, (unsigned char)*i | attr);
-      ++i;
+
+      if (l == 0) break;
+      new_line(l,y,height);
     }
 
-    while (l != 0) {
+    while (l != 0)
       new_line(l,height);
-    }
       
     wnoutrefresh(text_w);
+
   } else if (use_curses && !text_w) {
     // do nothing
   } else
 #endif
   {
-    CheckerString::Iterator  i, line_begin, line_end;
-    for (line_begin = word_begin; 
-	 !line_begin.off_end() && *line_begin != '\n';
-	 --line_begin);
-    ++line_begin;
-    for (line_end = word_end;
-	 !line_end.off_end() && *line_end != '\n';
-	 ++line_end);
-    for(i = line_begin; i != word_begin; ++i)
-      putchar(*i);
+    int pre  = word_begin - cur_line->pbegin();
+    int post = cur_line->pend() - word_end;
+    if (pre)
+      fwrite(cur_line->pbegin(), pre, 1, stdout);
     putchar('*');
-    for(; i != word_end; ++i)
-      putchar(*i);
+    fwrite(word_begin, word_end - word_begin, 1, stdout);
     putchar('*');
-    for(; i != line_end; ++i) 
-      putchar(*i);
-    putchar('\n');
+    if (post)
+      fwrite(word_end, post, 1, stdout);
   }
 
 }
@@ -531,13 +529,21 @@ void display_misspelled_word() {
 template <class O>
 static void print_truncate(O *out, const char * word, int width) {
   int i;
-  for (i = 0; i < width-1 && word[i]; ++i)
-    put(out,word[i]);
+  int len = 0;
+  for (i = 0; i < width-1 && *word; word += len, ++i) {
+    len = mbrlen(word, MB_CUR_MAX, NULL);
+    if (len > 0) {
+      put(out, word, len);
+    } else {
+      put(out, ' ');
+      len = 1;
+    }
+  }
   if (i == width-1) {
-    if (word[i] == '\0')
+    if (word == '\0')
       put(out,' ');
-    else if (word[i+1] == '\0')
-      put(out,word[i]);
+    else if (word[len] == '\0')
+      put(out, word, len);
     else
       put(out,'$');
     ++i;
@@ -568,6 +574,7 @@ static void display_menu(O * out, const Choices * choices, int width) {
 
 static inline void put (FILE * out, char c) {putc(c, out);}
 static inline void put (FILE * out, const char * s) {fputs(s, out);}
+static inline void put (FILE * out, const char * s, int size) {fwrite(s, size, 1, out);}
 static inline void new_line(FILE * out) {putc('\n', out);}
 
 #if   HAVE_LIBCURSES
@@ -579,6 +586,10 @@ static inline void put (WINDOW * w, char c)
 static inline void put (WINDOW * w, const char * c) 
 {
   waddstr(w,const_cast<char *>(c));
+}
+static inline void put (WINDOW * w, const char * c, int size)
+{
+  waddnstr(w,const_cast<char *>(c), size);
 }
 static inline void new_line(WINDOW * w) 
 {

@@ -122,19 +122,3 @@ void CheckerString::replace(ParmString repl)
   word_size_ = repl.size();
   has_repl_ = true;
 }
-
-int dist(CheckerString::Iterator smaller, 
-	 CheckerString::Iterator larger)
-{
-  if (smaller.line_ == larger.line_)
-    return larger.i_ - smaller.i_;
-  int d = 0;
-  d += smaller.line_->end() - smaller.i_;
-  smaller.cs_->inc(smaller.line_);
-  while (smaller.line_ != larger.line_) {
-    d += smaller.line_->size();
-    smaller.cs_->inc(smaller.line_);
-  }
-  d += larger.i_ - larger.line_->begin() + 1;
-  return d;
-}

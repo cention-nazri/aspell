@@ -431,25 +431,30 @@ namespace acommon {
     encode_->encode(start, stop, out);
   }
 
+  static inline const char * fix_encoding_str(ParmString enc, String & buf)
+  {
+    buf.reserve(enc.size() + 1);
+    for (size_t i = 0; i != enc.size(); ++i)
+      buf.push_back(asc_tolower(enc[i]));
+
+    if (strncmp(buf.c_str(), "iso8859", 7) == 0)
+      buf.insert(3, 1, '-'); // For backwards compatibility
+    
+    if (buf == "ascii")
+      return "iso-8859-1";
+    else
+      return buf.c_str();
+  }
+
   PosibErr<Convert *> new_convert(Config & c,
 				  ParmString in, 
 				  ParmString out) 
   {
-    String in_s  = in;
-    String out_s = out;
+    String in_s;
+    in = fix_encoding_str(in, in_s);
 
-    unsigned int i;
-    for (i = 0; i != in_s.size(); ++i)
-      in_s[i] = asc_tolower(in_s[i]);
-    for (i = 0; i != out_s.size(); ++i)
-      out_s[i] = asc_tolower(out_s[i]);
-    in  = in_s .c_str();
-    out = out_s.c_str();
-
-    if (in == "ascii") 
-      in = "iso8859-1";
-    if (out == "ascii") 
-      out = "iso8859-1";
+    String out_s;
+    out = fix_encoding_str(out, out_s); 
 
     StackPtr<Convert> conv(new Convert);
     RET_ON_ERR(conv->init(c, in, out));

@@ -318,6 +318,12 @@ int main (int argc, const char *argv[])
     return 1;
   }
 
+#ifdef USE_LOCALE
+  const char * codeset = nl_langinfo(CODESET);
+  if (!options->have("encoding") && codeset && strcmp(codeset, "ANSI_X3.4-1968") != 0)
+    EXIT_ON_ERR(options->replace("encoding", codeset));
+#endif
+
   //
   // perform the requested action
   //

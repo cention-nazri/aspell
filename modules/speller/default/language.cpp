@@ -23,7 +23,7 @@ namespace aspeller {
   //   work on a policy to avoid that such resering the first half
   //   for ConfigData's use and the otehr for users.
   static const KeyInfo lang_config_keys[] = {
-    {"charset",             KeyInfoString, "iso8859-1", "", ""}
+    {"charset",             KeyInfoString, "iso-8859-1", "", ""}
     , {"name",                KeyInfoString, "", "", ""}
     , {"run-together",        KeyInfoBool,   "", "", "c"}
     , {"run-together-limit",  KeyInfoInt,    "", "", "c"}
@@ -77,6 +77,9 @@ namespace aspeller {
 
     name_         = data.retrieve("name");
     charset_      = data.retrieve("charset");
+
+    if (strncmp(charset_.c_str(), "iso8859", 7) == 0)
+      charset_.insert(3, 1, '-'); // For backwards compatibility
 
     FixedBuffer<> buf; DataPair d;
 
