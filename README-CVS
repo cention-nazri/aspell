@@ -1,5 +1,9 @@
 
-This is still rather incomplete so only use for development purposes.
+2002/01/06
+
+The New Aspell is complete enough to function as a replasment for
+Pspell however not complete enough to use as a stand alone spell
+checker.
 
 The following packages need to be installed to use this package:
   perl (I use v5.6.0 but other versions may work)
@@ -13,25 +17,29 @@ Before the build:
   ./config-opt # or ./config-debug
 
 Use ./config-* instead of configure as the ./config-* will add the
-necessary options so that things build right with this very limited
-version of the New Aspell.  Any parameters specified will be passed to
-configure.
+necessary options so that things build right with this limited version
+of the New Aspell.  Any parameters specified will be passed to
+configure.  It will by default be installed in <build dir>/inst.  You
+can change that by using the --prefix option.  Becuase some of the
+files in New Aspell are incompatible with the released version of
+aspell and pspell I do not recommend you install it in /usr/local.  Use
+something like /opt/aspell.
 
-Than to build:
+Than to build and install:
 
   make
-  ./mk-dict # to build the dictionary
- 
-You can then optionally due a "make install" to install the programs in
-the inst/ directory.
+  make-install
 
-To test things out use either aspell0 or speller-util. If you did a
-make install both of these programs are in inst/bin/ otherwise they
-are in example/ and modules/speller/default/ respectfully.  aspell0 is
-a slightly modified version of the example program distributed with
-the released version of Pspell.  Speller-util is a skimmed down
-version of Aspell which can be used for creating or dumping
-dictionaries.
+You will then need to install a dictionary package for the new aspell.
+You can find them at http://aspell.net.  If aspell is installed
+somewhere other than /usr/local you will probaly need to add
+<prefix>/bin to your PATH or make symbolic links to the executable in
+order for the dictionary to build correctly.
+
+To test things out use either aspell0 or speller-util. aspell0 is a
+slightly modified version of the example program distributed with the
+released version of Pspell.  Speller-util is a skimmed down version of
+Aspell which can be used for creating or dumping dictionaries.
 
 To run the debugger on these programs if there are not installed use
   libtool gdb <debugger parms>
@@ -43,6 +51,21 @@ For example to debug speller-util with ddd use
 Using libtool is necessary to make sure the shared libraries get loaded
 right. If you debug them after they are installed this will not be
 necessary.
+
+The name of everthing has changed due to the renaming of Pspell to
+Aspell however you should also be able to build applications that
+require pspell with the new aspell as a backwards compatibility header
+file is provided.  No documentation currently exists for the new
+interface so for now refer to the Pspell docs keeping in mind the
+following changes in the name of things:
+
+  pspell -> aspell
+  manager -> speller
+  emulation -> enumeration
+  master_word_list -> main_word_list
+
+You can also see aspell0.c in the example directory for example of
+using the new interface.
 
 Using static libraries will NOT work due to the mixing of C and C++.
 
