@@ -13,7 +13,7 @@
 #ifndef autil__copy_ptr
 #define autil__copy_ptr
 
-#include "generic_copy_ptr.hpp"
+#include "generic_copy_ptr-t.hpp"
 
 namespace acommon {
 
@@ -21,9 +21,13 @@ namespace acommon {
   class CopyPtr 
   {
     struct Parms {
-      T * clone(const T * ptr) const;
-      void assign(T * & rhs, const T * lhs) const;
-      void del(T * ptr);
+      T * clone(const T * ptr) const
+		{ return new T(*ptr);}
+      void assign(T * & rhs, const T * lhs) const
+		{ *rhs = *lhs; }
+      void del(T * ptr)
+		{ delete ptr; }
+
     };
     GenericCopyPtr<T, Parms> impl;
 

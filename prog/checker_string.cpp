@@ -9,7 +9,6 @@
 #include "checker_string.hpp"
 #include "speller.hpp"
 #include "document_checker.hpp"
-#include "copy_ptr-t.hpp"
 #include "asc_ctype.hpp"
 #include "convert.hpp"
 

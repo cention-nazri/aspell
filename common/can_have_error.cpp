@@ -6,12 +6,8 @@
 
 #include "error.hpp"
 #include "can_have_error.hpp"
-#include "copy_ptr-t.hpp"
 
 namespace acommon {
-
-  template void GenericCopyPtr<Error, CopyPtr<Error>::Parms>
-  ::reset(Error*, CopyPtr<Error>::Parms const&);
 
   CanHaveError::CanHaveError(Error * e)
     : err_(e)

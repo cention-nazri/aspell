@@ -9,7 +9,6 @@
 #include "convert.hpp"
 #include "speller.hpp"
 #include "config.hpp"
-#include "copy_ptr-t.hpp"
 
 namespace acommon {
 

@@ -3,8 +3,6 @@
 
 #include "settings.h"
 
-#include "copy_ptr-t.hpp"
-
 #include <sys/stat.h>
 
 namespace aspeller {

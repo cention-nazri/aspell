@@ -25,7 +25,6 @@
 #include "indiv_filter.hpp"
 #include "string_map.hpp"
 #include "mutable_container.hpp"
-#include "copy_ptr-t.hpp"
 #include "clone_ptr-t.hpp"
 #include "filter_char_vector.hpp"
 

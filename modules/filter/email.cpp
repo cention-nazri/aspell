@@ -11,7 +11,6 @@
 #include "config.hpp"
 #include "indiv_filter.hpp"
 #include "mutable_container.hpp"
-#include "copy_ptr-t.hpp"
 
 namespace {
 

@@ -10,7 +10,6 @@
 #include "filter.hpp"
 #include "speller.hpp"
 #include "indiv_filter.hpp"
-#include "copy_ptr-t.hpp"
 #include "strtonum.hpp"
 #include "errors.hpp"
 #include "asc_ctype.hpp"
