@@ -494,7 +494,7 @@ namespace aspeller {
       add_dict(new SpellerDict(temp, lang_, *config_, personal_repl_id));
     }
 
-    const char * sys_enc = lang_->charset();
+    const char * sys_enc = lang_->charmap();
     String user_enc = config_->retrieve("encoding");
     if (user_enc == "none") {
       config_->replace("encoding", sys_enc);

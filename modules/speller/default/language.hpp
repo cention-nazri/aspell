@@ -81,6 +81,7 @@ namespace aspeller {
     String   dir_;
     String   name_;
     String   charset_;
+    String   charmap_;
     String   data_encoding_;
 
     ConvObj  mesg_conv_;
@@ -135,7 +136,7 @@ namespace aspeller {
 
     const char * data_dir() const {return dir_.c_str();}
     const char * name() const {return name_.c_str();}
-    const char * charset() const {return charset_.c_str();}
+    const char * charmap() const {return charmap_.c_str();}
     const char * data_encoding() const {return data_encoding_.c_str();}
 
     const Convert * mesg_conv() const {return mesg_conv_.ptr;}

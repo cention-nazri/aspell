@@ -727,9 +727,9 @@ namespace {
     if (!config.have("norm-strict"))
       config.replace("norm-strict", "true");
     if (config.have("encoding"))
-      RET_ON_ERR(iconv.setup(config, config.retrieve("encoding"), lang.charset(),NormFrom));
+      RET_ON_ERR(iconv.setup(config, config.retrieve("encoding"), lang.charmap(),NormFrom));
     else
-      RET_ON_ERR(iconv.setup(config, lang.data_encoding(), lang.charset(),NormFrom));
+      RET_ON_ERR(iconv.setup(config, lang.data_encoding(), lang.charmap(), NormFrom));
 
     String base = config.retrieve("master-path");
 

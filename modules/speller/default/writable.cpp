@@ -200,9 +200,9 @@ PosibErr<void> WritableBase::save(bool do_update) {
 PosibErr<void> WritableBase::set_file_encoding(ParmString enc, Config & c)
 {
   if (enc == file_encoding) return no_err;
-  if (enc == "") enc = lang()->charset();
-  RET_ON_ERR(iconv.setup(c, enc, lang()->charset(), NormFrom));
-  RET_ON_ERR(oconv.setup(c, lang()->charset(), enc, NormTo));
+  if (enc == "") enc = lang()->charmap();
+  RET_ON_ERR(iconv.setup(c, enc, lang()->charmap(), NormFrom));
+  RET_ON_ERR(oconv.setup(c, lang()->charmap(), enc, NormTo));
   if (iconv || oconv) 
     file_encoding = enc;
   else

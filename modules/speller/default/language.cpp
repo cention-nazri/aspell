@@ -110,42 +110,13 @@ namespace aspeller {
     String buf;
     name_          = data.retrieve("name");
     charset_       = fix_encoding_str(data.retrieve("charset"), buf);
+    charmap_       = charset_;
     data_encoding_ = fix_encoding_str(data.retrieve("data-encoding"), buf);
-
-    {
-#ifdef ENABLE_NLS
-      const char * tmp = 0;
-      tmp = bind_textdomain_codeset("aspell", 0);
-#ifdef HAVE_LANGINFO_CODESET
-      if (!tmp) tmp = nl_langinfo(CODESET);
-#endif
-      if (is_ascii_enc(tmp)) tmp = 0;
-      if (tmp)
-        RET_ON_ERR(mesg_conv_.setup(*config, charset_, fix_encoding_str(tmp, buf), NormTo));
-      else 
-#endif
-        RET_ON_ERR(mesg_conv_.setup(*config, charset_, data_encoding_, NormTo));
-      // no need to check for errors here since we know charset_ is a
-      // supported encoding
-      to_utf8_.setup(*config, charset_, "utf-8", NormTo);
-      from_utf8_.setup(*config, "utf-8", charset_, NormFrom);
-    }
-    
-    Conv iconv;
-    RET_ON_ERR(iconv.setup(*config, data_encoding_, charset_, NormFrom));
 
     DataPair d;
 
-    init(data.retrieve("special"), d, buf);
-    while (split(d)) {
-      char c = iconv(d.key)[0];
-      split(d);
-      special_[to_uchar(c)] = 
-        SpecialChar (d.key[0] == '*',d.key[1] == '*', d.key[2] == '*');
-    }
-  
     //
-    // fill_in_tables
+    // read header of cset data file
     //
   
     FStream char_data;
@@ -157,8 +128,17 @@ namespace aspeller {
     char * p;
     do {
       p = get_nb_line(char_data, temp);
+      if (*p == '=') {
+        ++p;
+        while (asc_isspace(*p)) ++p;
+        charmap_ = p;
+      }
     } while (*p != '/');
-    
+
+    //
+    // fill in tables
+    //
+
     for (unsigned int i = 0; i != 256; ++i) {
       p = get_nb_line(char_data, temp);
       if (!p || strtoul(p, &p, 16) != i) 
@@ -194,9 +174,7 @@ namespace aspeller {
       to_stripped_[i] = to_plain_[(unsigned char)to_lower_[i]];
     }
     
-    //
-    //
-    //
+    char_data.close();
 
     if (data.have("store-as"))
       buf = data.retrieve("store-as");
@@ -222,7 +200,58 @@ namespace aspeller {
     to_clean_[0x10] = 0x10;
 
     clean_chars_   = get_clean_chars(*this);
+
+    //
+    // determine which mapping to use
+    //
+
+    if (charmap_ != charset_) {
+      if (file_exists(dir1 + charset_ + ".cmap") || 
+          file_exists(dir2 + charset_ + ".cmap"))
+      {
+        charmap_ = charset_;
+      } else if (data_encoding_ == charset_) {
+        data_encoding_ = charmap_;
+      }
+    }
+      
+    //
+    // set up conversions
+    //
+    {
+#ifdef ENABLE_NLS
+      const char * tmp = 0;
+      tmp = bind_textdomain_codeset("aspell", 0);
+#ifdef HAVE_LANGINFO_CODESET
+      if (!tmp) tmp = nl_langinfo(CODESET);
+#endif
+      if (is_ascii_enc(tmp)) tmp = 0;
+      if (tmp)
+        RET_ON_ERR(mesg_conv_.setup(*config, charmap_, fix_encoding_str(tmp, buf), NormTo));
+      else 
+#endif
+        RET_ON_ERR(mesg_conv_.setup(*config, charmap_, data_encoding_, NormTo));
+      // no need to check for errors here since we know charmap_ is a
+      // supported encoding
+      to_utf8_.setup(*config, charmap_, "utf-8", NormTo);
+      from_utf8_.setup(*config, "utf-8", charmap_, NormFrom);
+    }
     
+    Conv iconv;
+    RET_ON_ERR(iconv.setup(*config, data_encoding_, charmap_, NormFrom));
+
+    //
+    // set up special
+    //
+
+    init(data.retrieve("special"), d, buf);
+    while (split(d)) {
+      char c = iconv(d.key)[0];
+      split(d);
+      special_[to_uchar(c)] = 
+        SpecialChar (d.key[0] == '*',d.key[1] == '*', d.key[2] == '*');
+    }
+
     //
     //
     //

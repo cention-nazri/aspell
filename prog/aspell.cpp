@@ -442,7 +442,7 @@ static Convert * setup_conv(const aspeller::Language * lang,
 {
   if (config->retrieve("encoding") != "none") {
     PosibErr<Convert *> pe = new_convert_if_needed(*config,
-                                                   lang->charset(),
+                                                   lang->charmap(),
                                                    config->retrieve("encoding"),
                                                    NormTo);
     if (pe.has_err()) {print_error(pe.get_err()->mesg); exit(1);}
@@ -458,7 +458,7 @@ static Convert * setup_conv(Config * config,
   if (config->retrieve("encoding") != "none") {
     PosibErr<Convert *> pe = new_convert_if_needed(*config,
                                                    config->retrieve("encoding"),
-                                                   lang->charset(),
+                                                   lang->charmap(),
                                                    NormFrom);
     if (pe.has_err()) {print_error(pe.get_err()->mesg); exit(1);}
     return pe.data;
