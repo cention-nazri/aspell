@@ -1040,7 +1040,7 @@ check @TeX{} comments
 
 @end table
 
-@subsection texinfo
+@subsubsection texinfo
 This filter hides all Texinfo command from Aspell.  It can also hide
 Texinfo paramaters and envirments not corresponding to readable text.
 
@@ -3820,7 +3820,13 @@ coding.
 @item
 Create a generic filter to handle multi-character letters such as
 @samp{"a} or @samp{\"a} for @"a.  This filter should make use of the
-already exiting normalization code.
+already exiting normalization code if possible.
+@item
+Add the functionally of the @command{munch} command (in the
+@file{myspell/} directory) to the @command{aspell} utility under the
+command @samp{aspell munchlist}.  This command should be able to work
+with UTF-8 word lists and should make use of the exiting affix code
+rather than reading the affix file directly.
 @item
 Make Aspell @strong{Thread safe}. Even though Aspell itself is not
 multi-threaded I would like it to be thread safe so that it can be
@@ -3848,16 +3854,15 @@ implemented. However, I could still use help with them.
 Better support for @strong{compound words}. The support for
 @emph{conditional} compound words found in Aspell versions 0.50
 and earlier is no longer available since no one seems to be using
-it. Support for @emph{unconditional} compound words will still be
+it. Support for @emph{unconditional} compound words is still 
 available. @xref{Compound Words}.
 @item
 Be able to accept @strong{words with spaces in them} as many languages
 have words, such as a word in a foreign phrase, which only makes sense
 when followed by other words. @xref{Words With Symbols in Them}.
 @item
-Create a @strong{Texinfo filter}.  Since Texinfo is very similar to
-@TeX{} this should be done by modifying the exiting @TeX{} filter code
-to also support Texinfo.
+Reorganize manual to make it easier to understand and to make it
+possible to break out useful man pages.
 @item
 Support @strong{soundslike lookup with affix compression}.  I think it
 is possible, although I don't know how effective it will be.  The basic
@@ -3891,6 +3896,11 @@ suggestions?
 Write a @strong{GUI} for the Aspell utility. Ideally it should be able to do
 everything the Aspell utility can do and not just be able spell check
 a document.
+@item
+Develop a @strong{more powerfull C API} for Aspell.  Ideally this API should
+allow one to perform all the tasks the Aspell utility can do.  This
+included the ability to check whole documents, and create
+dictionaries, among other things.  
 @item
 Create a @strong{C++ interface} for Aspell, possibly on top of the C one.
 
@@ -4086,7 +4096,7 @@ a C++ program.
 @node ChangeLog
 @appendix ChangeLog
 
-@heading Changes from 0.60 to 0.60.1
+@heading Changes from 0.60 to 0.60.1 (November 7, 2004)
 
 @itemize @bullet
 @item
@@ -4104,6 +4114,9 @@ Added Texinfo filter.
 Added a section detailing the differences between Ispell and Aspell.
 @item
 Updated the section on thread safety.
+@item
+Other miscellaneous manual changes such as updating the To Do and Authors
+section.
 @end itemize
 
 @heading Changes from 0.50.5 to 0.60 (August 27, 2004)
@@ -5335,6 +5348,9 @@ code to Aspell and thus own the Copyright to part of Aspell.
 
 @table @asis
 
+@item Jose Da Silva
+Bug fixes and enhancements to @command{word-list-compress}.
+
 @item Sergey Poznyakoff
 Wrote the Nroff filter.
 
@@ -5348,6 +5364,11 @@ affix compression.  Aspell affix compression code is based on his code.
 
 @item Christoph Hinterm@"uller
 Added support for for loadable filters.
+
+@item Melvin Hadasht
+Wrote a locale independent version of strtol and strtod.  
+Wrote the original loadable filter support however his code has been 
+completely rewritten by Christoph Hinterm@"uller and Kevin Atkinson.
 
 @item Bj@"orn Jacke
 Wrote the generic soundslike algorithm which gets all of its data from a

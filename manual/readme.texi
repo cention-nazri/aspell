@@ -31,7 +31,7 @@ The latest version can always be found at GNU Aspell's home page at
 ./configure && make
 @end example
 
-For additional @file{configure} options type @code{./configure
+For additional @command{configure} options type @samp{./configure
 --help}.  You can control what C++ compiler is used by setting the
 environment variable @env{CXX} before running configure and you can
 control what flags are passed to the C++ compile via the environment
@@ -40,11 +40,11 @@ since static libraries will not work right due to the mixing of C and
 C++.  When a C program links with the static libraries in Aspell it is
 likely to crash because Aspell's C++ objects are not getting
 initialized correctly.  However, if for some reason you want them, you
-can enable them via @code{--enable-static}.
+can enable them via @option{--enable-static}.
 
 Aspell should then compile without any additional user intervention.
- If you run into problems please first check the sections below as that
- might solve your problem.
+If you run into problems please first check the sections below as that
+might solve your problem.
 
 To install the program simply type
 
@@ -54,12 +54,12 @@ make install
 
 After Aspell is installed at least one dictionary needs to be
 installed.  You can find them at @uref{http://aspell.net/}.  The
-@file{aspell} program must be in your path in order for the
+@command{aspell} program must be in your path in order for the
 dictionaries to install correctly.
 
-If you do not have Ispell or the traditional Unix @code{spell} utility
+If you do not have Ispell or the traditional Unix @command{spell} utility
 installed on your system then you should also copy the compatibility
-scripts @code{ispell} and @code{spell} located in the @file{scripts/}
+scripts @command{ispell} and @command{spell} located in the @file{scripts/}
 directory into your binary directory which is usually
 @file{/usr/local/bin} so that programs that expect the
 @command{ispell} or @command{spell} command will work correctly.
@@ -81,15 +81,12 @@ can specify the library and include directory with
 
 @option{@var{lib}} can either be the complete path of the library---for
 example
-
 @example
 /usr/local/curses/libcurses.a
 @end example
-
 or the name of the library (for example
 @file{ncurses}) or a combined location and library in the form
-@option{-L@var{libdir} -l@var{lib}}
- (for example
+@option{-L@var{libdir} -l@var{lib}} (for example
 @option{-L/usr/local/@/ncurses/lib -lncurses}).
 
 @var{dir} is the location of the curses header files (for example
@@ -135,10 +132,11 @@ The format of the character data files has changed.  The new character
 data files are installed with Aspell so you should not have to worry
 about it unless you made a custom one.
 
-The dictionary option @option{strip-accents} has been removed.  For this
-reason the old English dictionary (up to 0.51) will no longer work.  A
-new English dictionary is now available which avoids using this option.
-In addition the @option{ignore-accents} is currently unimplemented.
+The dictionary option @option{strip-accents} has been removed.  For
+this reason the old English dictionary (up to 0.51) will no longer
+work.  A new English dictionary is now available which avoids using
+this option.  In addition the @option{ignore-accents} option is
+currently unimplemented.
 
 @anchor{Binary Compatibility}
 @appendixsubsec Binary Compatibility
@@ -178,14 +176,14 @@ worry about.
 
 Because of the massive changes between Aspell/Pspell and Aspell 0.50
 you may want to clean out the old files before installing the the new
-Aspell.  To do so do a @code{make uninstall} in the original Aspell
+Aspell.  To do so do a @samp{make uninstall} in the original Aspell
 and Pspell source directories.
 
 The way dictionaries are handled has also changed.  This includes a
 change in the naming conventions of both language names and
 dictionaries.  Due to the language name change, your old personal
 dictionaries will not be recognized.  However, you can import the old
-dictionaries by running the @code{aspell-import} script.  This also
+dictionaries by running the @command{aspell-import} script.  This also
 means that dictionaries designed to work with older versions of Aspell
 are not likely to function correctly.  Fortunately new dictionary
 packages are available for most languages.  You can find them off of
@@ -235,9 +233,10 @@ with the official release.
 
 @appendixsubsec Getting the WIN32 version
 
-The latest version of the native Aspell/WIN32 port
-can be found at
-@uref{http://aspell.net/win32}.
+The latest version of the native Aspell/WIN32 port, including
+binaries, can be found at @uref{http://aspell.net/win32}.  This page
+has, unfortunately, not been updated for Aspell 0.60.  If you are
+interested in updated the native port please let me know.
 
 @appendixsubsec Building the WIN32 version
 
@@ -245,24 +244,60 @@ There are two basically different ways of building Aspell using GCC
 for WIN32: You can either use the Cygwin compiler, which will produce
 binaries that depend on the POSIX layer in @file{cygwin1.dll}.  The
 other way is using MinGW GCC, those binaries use the native C runtime
-from Microsoft (MSVCRT.DLL).  If you intend to use or link against the
-Aspell libraries using a native WIN32 compiler (e.g.  MS Visual C++),
-you will need the MinGW built ones to avoid problems caused by the
-different runtime libraries.
+from Microsoft (MSVCRT.DLL).  
 
-Building Aspell using Cygwin: This works exactly like on other POSIX
-compatible systems using the @kbd{configure && make && make install}
+@c FIXME: Is the following true?
+@c If you intend to use or link against the
+@c Aspell libraries using a native WIN32 compiler (e.g.  MS Visual C++),
+@c you will need the MinGW built ones to avoid problems caused by the
+@c different runtime libraries.
+
+@appendixsubsubsec Building Aspell using Cygwin
+
+This works exactly like on other POSIX
+compatible systems using the @samp{./configure && make && make install}
 cycle.  Some versions of Cygwin GCC will fail to link, this is caused
-by an incorrect @file{libstdc++.la} in the @code{/lib} directory.
+by an incorrect @file{libstdc++.la} in the @file{/lib} directory.
 After removing or renaming this file, the build progress should work
 (GCC-2.95 and GCC-3.x should work).
 
-Building Aspell using MinGW: To compile Aspell with the MinGW
+@appendixsubsubsec Building Aspell using MinGW:
+
+There are several different ways to build Aspell using MinGW.  The
+easiest way is to use a Cygwin compiler but instruct it to build a
+native binary rather than a Cygwin one.  To do this configure with:
+
+@example
+./configure CFLAGS='-O2 -mno-cygswin' CXXFLAGS='-O2 -mno-cygswin'
+@end example
+
+You may also want to add the option
+@option{--enable-win32-relocatable} to use more windows friendly
+directories.  @xref{Win32-Directories}.  In this case configure with:
+
+@smallexample
+./configure CFLAGS='-O2 -mno-cygswin' CXXFLAGS='-O2 -mno-cygswin' --enable-win32-relocatable
+@end smallexample
+
+It should also be possible to build Aspell using the MSYS environment.
+But this has not been very well tested.  If building with MSYS
+@emph{do not} add @samp{CFLAGS @dots{}} to configure.
+
+@appendixsubsubsec Building Aspell without using Cygwin or MSYS 
+
+It is also possible to build Aspell without Cygwin of MinGW by using
+the files in the @file{win32/} subdirectory.  However, these files
+have not been updated to work with Aspell 0.60.  Thus the following
+instructions will not work without some effort.  If you do get Aspell
+to compile this way please send me the updated files so that I can
+include them with the next release.
+
+To compile Aspell with the MinGW
 compiler, you will need at least GCC-3.2 (as shipped with MinGW-2.0.3)
 and some GNU tools like @command{rm} and @command{cp}.  The origin of
 those tools doesn't matter, it has shown to work with any tools from
 MinGW/MSys, Cygwin or Linux.  To build Aspell, move into the
-@file{win32} subdirectory and type @kbd{make}.  You can enable some
+@file{win32} subdirectory and type @samp{make}.  You can enable some
 additional build options by either commenting out the definitions at
 the head of the Makefile or passing those values as environment
 variables or at the @command{make} command line.  Following options
@@ -289,7 +324,6 @@ DLL resides (see below for further details).
 Sets a prefix to be used for cross compilation (e.g.
 @file{/usr/local/bin/@/i586-mingw32msvc-} to cross compile from Linux).
 @end table
-
 
 There are also a MinGW compilers available for Cygwin and Linux, both
 versions are able to compile Aspell using the prebuilt
@@ -329,15 +363,17 @@ The curses enabled version can cause trouble in some shells (MSys
 for those purposes.
 @end itemize
 
+@anchor{Win32-Directories}
 @appendixsubsec Directories
 
-If Aspell is compiled with @option{WIN32_RELOCATABLE=1}, it can be run
-from any directory: it will set @option{@var{prefix}} according to its
-install location (assuming it resides in @file{@var{prefix}\\bin}).  Your
-personal wordlists will be saved in the @file{@var{prefix}} directory with
-their names changed from @file{.aspell.@var{lang}.*} to @file{@var{lang}.*}
-(you can override the path by setting the @env{HOME} environment
-variable).
+If Aspell is configured with @option{--enable-win32-relocatable} or
+compiled with @option{WIN32_RELOCATABLE=1} when using a Makefile, it
+can be run from any directory: it will set @option{@var{prefix}}
+according to its install location (assuming it resides in
+@file{@var{prefix}\\bin}).  Your personal wordlists will be saved in
+the @file{@var{prefix}} directory with their names changed from
+@file{.aspell.@var{lang}.*} to @file{@var{lang}.*} (you can override
+the path by setting the @env{HOME} environment variable).
 
 @appendixsubsec Installer
 
@@ -362,9 +398,8 @@ The console uses a different encoding than GUI applications, changing
 this to to a Windows encoding (e.g.  1252) is not supported on
 Win9x/Me.  On WinNT (and later) those codepages can be set by first
 changing the console font to @samp{lucida console}, then changing the
-codepage using @kbd{chcp 1252}.
+codepage using @samp{chcp 1252}.
 
 Some alternative shells (e.g. MSys' @command{rxvt} or Cygwin's
 @command{bash}) do a codepage conversion (if correctly set up), so
 running Aspell inside those shells might be a workaround for Win9x.
-
