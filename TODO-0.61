@@ -24,6 +24,7 @@ ALMOST DONE: Still a few rough spots, especally with Ispell compatibly.
     conversion layer, in Ispell it ONLY changaged the filter
   - The multi-character conversion lawer is not selected based on the file
     name extension as in Ispell
+Also need to update the manual to reflect the changes.
 
 3)
 Rewrite the document checker interface to correctly handle the case
