@@ -99,6 +99,26 @@ namespace acommon {
 
   /////////////////////////////////////////////////////////////////
   //
+  // Info Default List
+  //
+
+  struct MDInfoDefItem {
+    const char * dir;
+    const char * name;
+    const char * data;
+  };
+
+
+  /////////////////////////////////////////////////////////////////
+  //
+  // Utility functions declaration
+  //
+
+  static const char * strnchr(const char * i, char c, unsigned int size);
+  static const char * strnrchr(const char * stop, char c, unsigned int size);
+
+  /////////////////////////////////////////////////////////////////
+  //
   // Node impl
   //
 
@@ -139,7 +159,12 @@ namespace acommon {
 				  const StringListImpl & dirs,
 				  const char * suffix)
   {
-    unsigned int suffix_size = strlen(suffix);
+    MDInfoDefList def_list = default_list();
+    for (const MDInfoDefItem * i = def_list.begin; i != def_list.end; ++i)
+    {
+      StringIStream in(i->data);
+      proc_file(list_all, config, i->dir, i->name, strlen(i->name), in);
+    }
 
     StringListEnumeration els = dirs.elements_obj();
     const char * dir;
@@ -150,10 +175,11 @@ namespace acommon {
       struct dirent * entry;
       while ( (entry = readdir(d)) != 0) {
 	const char * name = entry->d_name;
-	unsigned int name_size = strlen(name);
+	const char * dot_loc = strrchr(name, '.');
+	unsigned int name_size = dot_loc == 0 ? strlen(name) :  dot_loc - name;
       
 	// check if it ends in suffix
-	if (strcmp(name + name_size - suffix_size, suffix) != 0)
+	if (strcmp(name + name_size, suffix) != 0)
 	  continue;
       
 	String path;
@@ -162,10 +188,15 @@ namespace acommon {
 	path += name;
 	FStream in;
 	RET_ON_ERR(in.open(path, "r"));
-	return proc_file(list_all, config, dir, name, name_size, in);
+	RET_ON_ERR(proc_file(list_all, config, dir, name, name_size, in));
       }
     }
     return no_err;
+  }
+
+  MDInfoDefList MDInfoList::default_list() const 
+  {
+    return MDInfoDefList();
   }
 
   /////////////////////////////////////////////////////////////////
@@ -187,7 +218,7 @@ namespace acommon {
     to_add->c_struct.lib_dir = 0;
     to_add->c_struct.pwli_dirs = 0;
 
-    to_add->name.assign(name, name_size - 4);
+    to_add->name.assign(name, name_size);
     to_add->c_struct.name = to_add->name.c_str();
     
     PosibErr<void> err;
@@ -240,13 +271,20 @@ namespace acommon {
     return 0;
   }
 
+  static const MDInfoDefItem module_info_list_def_list[] = {
+    {"", "default", "order-num 0.50"}
+  };
+  
+  MDInfoDefList ModuleInfoList::default_list() const {
+    return MDInfoDefList(module_info_list_def_list,
+			 module_info_list_def_list 
+			 + sizeof(module_info_list_def_list)/sizeof(MDInfoDefItem));
+  }
+
   /////////////////////////////////////////////////////////////////
   //
   // DictInfoList Impl
   //
-
-  static const char * strnchr(const char * i, char c, unsigned int size);
-  static const char * strnrchr(const char * stop, char c, unsigned int size);
 
   PosibErr<void> DictInfoList::proc_file(MDInfoListAll & list_all,
 					 Config * config,
@@ -271,7 +309,7 @@ namespace acommon {
     to_add->c_struct.code = to_add->code.c_str();
 
     ModuleInfoNode * mod 
-      = list_all.module_info_list.find(p2+1, name_size - (p2+1-name) - 5);
+      = list_all.module_info_list.find(p2+1, name_size - (p2+1-name));
     //FIXME: Check for null and return and possibly return an error
     //       on an unknown module
     to_add->c_struct.module = &(mod->c_struct);
@@ -301,29 +339,6 @@ namespace acommon {
   }
 
 
-  static const char * strnchr(const char * i, char c, unsigned int size)
-  {
-    const char * stop = i + size;
-    while (i != stop) {
-      if (*i == c)
-	return i;
-      ++i;
-    }
-    return 0;
-  }
-
-  static const char * strnrchr(const char * stop, char c, unsigned int size)
-  {
-    const char * i = stop + size - 1;
-    --stop;
-    while (i != stop) {
-      if (*i == c)
-	return i;
-      --i;
-    }
-    return 0;
-  }
-
   /////////////////////////////////////////////////////////////////
   //
   // Lists of Info Lists Impl
@@ -349,7 +364,7 @@ namespace acommon {
   {
     for_dirs = dirs;
     PosibErr<void> err;
-    err = module_info_list.fill(*this, c, for_dirs, ".pmi");
+    err = module_info_list.fill(*this, c, for_dirs, ".asmi");
     if (err.has_err()) goto ERROR;
     err = fill_pwli_dir_list();
     if (err.has_err()) goto ERROR;
@@ -431,6 +446,34 @@ namespace acommon {
     RET_ON_ERR(list_all.fill(config, dirs));
 
     return &list_all;
+  }
+
+  /////////////////////////////////////////////////////////////////
+  //
+  // utility functions
+  //
+
+  static const char * strnchr(const char * i, char c, unsigned int size)
+  {
+    const char * stop = i + size;
+    while (i != stop) {
+      if (*i == c)
+	return i;
+      ++i;
+    }
+    return 0;
+  }
+
+  static const char * strnrchr(const char * stop, char c, unsigned int size)
+  {
+    const char * i = stop + size - 1;
+    --stop;
+    while (i != stop) {
+      if (*i == c)
+	return i;
+      --i;
+    }
+    return 0;
   }
 
   /////////////////////////////////////////////////////////////////

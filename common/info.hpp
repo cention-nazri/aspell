@@ -39,6 +39,15 @@ namespace acommon {
     const char * size_str;
   };
 
+  struct MDInfoDefItem;
+  struct MDInfoDefList {
+    const MDInfoDefItem * begin;
+    const MDInfoDefItem * end;
+    MDInfoDefList()
+      : begin(0), end(0) {}
+    MDInfoDefList(const MDInfoDefItem * b, const MDInfoDefItem * e)
+      : begin(b), end(e) {}
+  };
   struct MDInfoListAll;
   struct MDInfoNode;
 
@@ -59,6 +68,7 @@ namespace acommon {
 				     const char * name,
 				     unsigned int name_size,
 				     IStream &) = 0;
+    virtual MDInfoDefList default_list() const;
   };
 
   struct ModuleInfoNode;
@@ -75,6 +85,7 @@ namespace acommon {
 			     const char * name,
 			     unsigned int name_size,
 			     IStream &);
+    MDInfoDefList default_list() const;
     ModuleInfoNode * find(const char * to_find, 
 			  unsigned int to_find_len);
   };
