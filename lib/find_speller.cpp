@@ -51,7 +51,7 @@ namespace acommon { // FIXME: Should this be a diffrent namespace?
   PosibErr<Speller *> get_speller_class(Config * config)
   {
     String name = config->retrieve("module");
-    assert(name == "aspell");
+    assert(name == "default");
     return libaspell_speller_default_LTX_new_speller_class(0);
 #if 0
     unsigned int i; 
@@ -291,8 +291,14 @@ namespace acommon { // FIXME: Should this be a diffrent namespace?
     //
     if (config->have("module"))
       b_module.list->add(config->retrieve("module"));
-    else
+    else if (config->have("module-search-order"))
       config->retrieve_list("module-search-order", b_module.list);
+    {
+      ModuleInfoEnumeration * els = get_module_info_list(config)->elements();
+      const ModuleInfo * entry;
+      while ( (entry = els->next()) != 0)
+	b_module.list->add(entry->name);
+    }
     b_module.init();
 
     //

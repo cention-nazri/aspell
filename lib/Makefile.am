@@ -12,4 +12,5 @@ libaspell_la_SOURCES =\
 libaspell_la_LIBADD = ../common/libaspell-common.la \
                       ../modules/speller/default/libaspell-speller-default.la
 
-libaspell_la_LDFLAGS = -version-info 12:0:0
+libaspell_la_LDFLAGS = -version-info 15:0:0
+

@@ -7,7 +7,7 @@ speller_util_SOURCES = aspell-util.cpp
 
 speller_util_LDADD = ${top_builddir}/common/libaspell-common.la libaspell-speller-default.la
 
-lib_LTLIBRARIES = libaspell-speller-default.la
+noinst_LTLIBRARIES = libaspell-speller-default.la
 
 libaspell_speller_default_la_SOURCES = \
  data.cpp            leditdist.cpp     primes.cpp         writable_base.cpp\
@@ -17,5 +17,6 @@ libaspell_speller_default_la_SOURCES = \
  language.cpp        phonetic.cpp      typo_editdist.cpp
 
 
-libaspell_speller_default_la_LDFLAGS = -release 0.15.0
+libaspell_speller_default_la_LDFLAGS = -release 0.50
+
 

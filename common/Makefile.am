@@ -32,5 +32,6 @@ libaspell_common_la_SOURCES = \
   can_have_error.cpp
 #  convert.cpp
 
-libaspell_common_la_LDFLAGS = -release 0.15.0
+libaspell_common_la_LDFLAGS = -release 0.50
+
 
