@@ -432,7 +432,6 @@ namespace {
     WordLookup::ConstFindIterator i = word_lookup.multi_find(word);
     for (; !i.at_end(); i.adv()) {
       const char * w = word_block + i.deref();
-      CERR.printl(w);
       if (c(word, w)) {
         convert(w,o);
         return true;
@@ -942,8 +941,6 @@ namespace {
 
     Vector<Jump> jump1;
     Vector<Jump> jump2;
-
-    CERR.printf("%u %u\n", data_size, num_entries);
 
     const int head_size = invisible_soundslike ? 3 : 2;
 

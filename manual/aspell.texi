@@ -1,5 +1,5 @@
 \input texinfo   @c -*-texinfo-*-
-@comment $Id: aspell.texi,v 1.28 2004/04/28 20:47:47 kevina Exp $
+@comment $Id: aspell.texi,v 1.29 2004/05/08 19:37:45 kevina Exp $
 @comment %**start of header
 @setfilename aspell.info
 @settitle GNU Aspell 0.60
@@ -707,9 +707,6 @@ replacements list file name
 
 @item extra-dicts (@i{list})
 extra dictionaries to use.
-
-@item strip-accents (@i{boolean})
-strip accents from all words in the dictionary
 @end table
 
 @subsection Checker Options
@@ -837,7 +834,10 @@ This filter converts an SGML source file into a format which eases
 
 @table @option
 @item sgml-check (@i{list})
-SGML attributes to always check.
+SGML attributes to always check, such as alt= (alternate text).
+
+@item sgml-skip (@i{list})
+SGML tags to always skip the contents of, such as <script>.
 
 @item sgml-extension (@i{list})
 SGML file extensions.
@@ -1067,6 +1067,8 @@ considered quote characters, the defaults are @samp{>} and @samp{|}.
 
 @subsubsection @option{sgml} Filter Mode
 @anchor{SGML Filter Mode}
+
+FIXME: This needs updating for the new SGML filter.
 
 The @option{sgml} filter mode will skip over SGML commands.  It
 currently does not handle nested @samp{< >} unless they are in quotes.
@@ -1482,41 +1484,13 @@ Specify more than word list to use with the
 @option{extra-dicts} option.
 
 @item
-Optionally have all accents stripped from the word lists using the
-@option{strip-accents} option.  This is @emph{not} the same thing as
-the @option{ignore-accents} option as enabling the
-@option{ignore-accents} would accept both @samp{cafe} and @samp{caf@'e}
-(notice the accent on the e), but only enabling @option{strip-accents}
-would only accent @samp{cafe}, even if @samp{caf@'e} is in the original
-dictionary.  Specifying @option{strip-accents} is just like using a
-word list without the accents.
-
-@item
 Specify special @emph{multi} dictionaries.
 @end enumerate
 
 A @emph{multi} dictionary is a special file which is basically a list
 of dictionary files to use.  A @emph{multi} dictionary must end in
-@file{.multi} and has roughly the same format as a configuration file
-where the two valid keys are @option{add} and @option{strip-accents}.
-The @option{add} key is used for adding individual word lists, or
-other @emph{multi} files.  The @option{strip-accents} key is used to
-control if accents are stripped from the dictionaries.  Unlike the
-global @option{strip-accent} option this option only effects word
-lists that came after the option.  For example:
-
-@example
-strip-accents yes
-add english 
-strip-accents no 
-add must-accent
-@end example
-
-@noindent
-will strip accents from the English word list but not the
-@file{must-accent} word list.  If the global @option{strip-accents}
-option is specified the local @option{strip-accents} options are
-ignored.
+@file{.multi} and has roughly the same format as a configuration file 
+with the only accepted key being @option{add}.
 
 @node Dictionary Naming
 @section Dictionary Naming
