@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60-b20040624\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-08-12 23:39-0400\n"
+"POT-Creation-Date: 2004-08-13 12:52-0400\n"
 "PO-Revision-Date: 2004-07-25 12:51+0200\n"
 "Last-Translator: Jacob Sparre Andersen <sparre@nbi.dk>\n"
 "Language-Team: Danish <dansk@klid.dk>\n"
@@ -129,15 +129,16 @@ msgstr "placering af personlige filer"
 msgid "ignore words <= n chars"
 msgstr "kun versalfølsom for ord på flere end n tegn"
 
-#: common/config.cpp:1376
-#, fuzzy
-msgid "ignore accents when checking words"
-msgstr "ignorér accenter ved stavekontrol -- IGNORERES FOR TIDEN"
-
 #. TRANSLATORS: It is OK if this is longer than 50 chars
-#: common/config.cpp:1379
-msgid "ignore case when checking words -- CURRENTLY IGNORED"
+#: common/config.cpp:1377
+#, fuzzy
+msgid "ignore accents when checking words -- CURRENTLY IGNORED"
 msgstr "ikke versalfølsom ved stavekontrol -- IGNORERES FOR TIDEN"
+
+#: common/config.cpp:1379
+#, fuzzy
+msgid "ignore case when checking words"
+msgstr "ignorér accenter ved stavekontrol -- IGNORERES FOR TIDEN"
 
 #: common/config.cpp:1381
 msgid "ignore commands to store replacement pairs"

@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60-pre1\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-08-12 23:39-0400\n"
-"PO-Revision-Date: 2004-07-24 18:24+0200\n"
+"POT-Creation-Date: 2004-08-13 12:52-0400\n"
+"PO-Revision-Date: 2004-08-22 20:00-0400\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -130,16 +130,14 @@ msgstr "umístění osobních souborů"
 msgid "ignore words <= n chars"
 msgstr "ignorovat slova s <= n znaky"
 
-#: common/config.cpp:1376
-#, fuzzy
-msgid "ignore accents when checking words"
+#. TRANSLATORS: It is OK if this is longer than 50 chars
+#: common/config.cpp:1377
+msgid "ignore accents when checking words -- CURRENTLY IGNORED"
 msgstr "při kontrole slov ignorovat diakritiku -- MOMENTÁLNĚ IGNOROVÁNO"
 
-#. TRANSLATORS: It is OK if this is longer than 50 chars
 #: common/config.cpp:1379
-msgid "ignore case when checking words -- CURRENTLY IGNORED"
-msgstr ""
-"při kontrole slov nerozlišovat velikost písmen -- MOMENTÁLNĚ IGNOROVÁNO"
+msgid "ignore case when checking words"
+msgstr "při kontrole slov nerozlišovat velikost písmen"
 
 #: common/config.cpp:1381
 msgid "ignore commands to store replacement pairs"
@@ -774,7 +772,6 @@ msgstr "Přerušit"
 msgid "Exit"
 msgstr "Ukončit"
 
-# FIXME: "to abort"
 #: prog/aspell.cpp:1074
 msgid "Are you sure you want to abort (y/n)? "
 msgstr "Jste si jisti, že chcete přerušit (y/n)? "
@@ -1283,7 +1280,6 @@ msgid "mode to disable all filters"
 msgstr "režim pro zakázání všech filtrů"
 
 #: modules/filter/modes/perl.amf:60
-#, fuzzy
 msgid "mode for checking Perl comments and string literals"
 msgstr "režim pro kontrolu komentářů a řetězcových literálů v perlu"
 
@@ -1298,42 +1294,3 @@ msgstr "režim pro kontrolu dokumentů v TeXu/LaTeXu"
 #: modules/filter/modes/url.amf:61
 msgid "mode to skip URL like constructs (default mode)"
 msgstr "režim pro přeskakování konstrukcí podobných URL (implicitní režim)"
-
-#~ msgid "Empty value; only bool type option and \"rem-all\" list prefix."
-#~ msgstr ""
-#~ "Prázdná hodnota; jen přepínač typu bool a předpona seznamu \"rem-all\"."
-
-#~ msgid "Filter \"%filter:1\" could not be found in filter paths."
-#~ msgstr "Filtr \"%filter:1\" nelze najít v cestě filtrů."
-
-#~ msgid "Can't find the option file \"%option:2\"."
-#~ msgstr "Nemohu najít soubor přepínačů \"%option:2\"."
-
-#~ msgid "Filter for eliminating email quote characters"
-#~ msgstr "Filtr pro eliminaci znaků citací z e-mailu"
-
-#~ msgid "Filters for encoding, filtering and decoding sgml characters"
-#~ msgstr "Filtry pro kódování, filtrování a dekódování znaků sgml"
-
-#~ msgid "multi character coded letters (<char>:<rep>[:<rep>[...]])"
-#~ msgstr "písmena kódovaná více znaky (<znak>:<náhr>[:<náhr>[...]])"
-
-#~ msgid "characters used to encode hyphenation locations"
-#~ msgstr "znaky používané pro kódování umístění dělení slov"
-
-#~ msgid "Filter for hiding urls/paths and similar from Aspell"
-#~ msgstr "Filtr pro skrývání url/cest a podobně před Aspellem"
-
-#~ msgid "indicator for additional flags in word lists"
-#~ msgstr "indikátor dalších příznaků v seznamech slov"
-
-#~ msgid "strip accents from word lists"
-#~ msgstr "odstranit ze seznamu slov diakritiku"
-
-#~ msgid "use jump tables when creating dictionaries"
-#~ msgstr "při tvorbě slovníků používat tabulky skoků"
-
-#~ msgid "Affix compression is currently incompatible with soundslike lookup."
-#~ msgstr ""
-#~ "Komprese přípon momentálně není kompatibilní s vyhledáváním podle "
-#~ "podobnosti zvuku."

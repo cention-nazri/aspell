@@ -6,10 +6,10 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: aspell 0.60-pre1\n"
+"Project-Id-Version: aspell 0.60-pre3\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-08-12 23:39-0400\n"
-"PO-Revision-Date: 2004-08-05 15:24+0200\n"
+"POT-Creation-Date: 2004-08-13 12:52-0400\n"
+"PO-Revision-Date: 2004-08-22 19:50-0400\n"
 "Last-Translator: Elros Cyriatan <cyriatan@fastmail.fm>\n"
 "Language-Team: Dutch <vertaling@nl.linux.org>\n"
 "MIME-Version: 1.0\n"
@@ -130,17 +130,14 @@ msgstr "lokatie van persoonlijke bestanden"
 msgid "ignore words <= n chars"
 msgstr "woorden <= n tekens negeren"
 
-#: common/config.cpp:1376
-#, fuzzy
-msgid "ignore accents when checking words"
+#. TRANSLATORS: It is OK if this is longer than 50 chars
+#: common/config.cpp:1377
+msgid "ignore accents when checking words -- CURRENTLY IGNORED"
 msgstr "accenten negeren bij controleren woorden -- WORDT NU GENEGEERD"
 
-#. TRANSLATORS: It is OK if this is longer than 50 chars
 #: common/config.cpp:1379
-msgid "ignore case when checking words -- CURRENTLY IGNORED"
-msgstr ""
-"hoofdletter/kleine letter verschil negeren bij controleren woorden -- WORDT "
-"NU GENEGEERD"
+msgid "ignore case when checking words"
+msgstr "hoofdletter/kleine letter verschil negeren bij controleren woorden"
 
 #: common/config.cpp:1381
 msgid "ignore commands to store replacement pairs"
@@ -803,7 +800,7 @@ msgstr "Wilt u echt afbreken? (j/n)? "
 #. MUST ONLY CONSIST OF ASCII CHARACTERS.
 #: prog/aspell.cpp:1078
 msgid "Yy"
-msgstr ""
+msgstr "Jj"
 
 #: prog/aspell.cpp:1099
 msgid "With: "
@@ -1325,9 +1322,8 @@ msgid "mode to disable all filters"
 msgstr "modus om alle filters uit te schakelen"
 
 #: modules/filter/modes/perl.amf:60
-#, fuzzy
 msgid "mode for checking Perl comments and string literals"
-msgstr "modus voor controleren Perl-opmerkingen en tekenreeksen"
+msgstr "modus voor controleren Perl-opm. en tekenreeksen"
 
 #: modules/filter/modes/sgml.amf:60
 msgid "mode for checking generic SGML/XML documents"

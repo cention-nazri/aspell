@@ -5,10 +5,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: aspell 0.60-pre1\n"
+"Project-Id-Version: aspell 0.60-pre3\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-08-12 23:39-0400\n"
-"PO-Revision-Date: 2004-08-06 22:07+0100\n"
+"POT-Creation-Date: 2004-08-13 12:52-0400\n"
+"PO-Revision-Date: 2004-08-13 18:27+0100\n"
 "Last-Translator: Roland Illig <roland.illig@gmx.de>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -129,16 +129,14 @@ msgstr "Name für persönliche Dateien"
 msgid "ignore words <= n chars"
 msgstr "ignoriere Wörter mit <= n Zeichen"
 
-#: common/config.cpp:1376
-#, fuzzy
-msgid "ignore accents when checking words"
-msgstr "ignoriere Akzente beim Überprüfen -- MOMENTAN WIRKUNGSLOS"
-
 #. TRANSLATORS: It is OK if this is longer than 50 chars
+#: common/config.cpp:1377
+msgid "ignore accents when checking words -- CURRENTLY IGNORED"
+msgstr "ignoriere Akzente beim Überprüfen  -- MOMENTAN WIRKUNGSLOS"
+
 #: common/config.cpp:1379
-msgid "ignore case when checking words -- CURRENTLY IGNORED"
-msgstr ""
-"ignoriere Groß- und Kleinschreibung beim Überprüfen -- MOMENTAN WIRKUNGSLOS"
+msgid "ignore case when checking words"
+msgstr "ignoriere Groß- und Kleinschreibung beim Überprüfen"
 
 #: common/config.cpp:1381
 msgid "ignore commands to store replacement pairs"
@@ -789,13 +787,13 @@ msgstr "Beenden"
 
 #: prog/aspell.cpp:1074
 msgid "Are you sure you want to abort (y/n)? "
-msgstr "Sind Sie sicher, dass Sie abbrechen wollen (y/n)?"
+msgstr "Sind Sie sicher, dass Sie abbrechen wollen (j/n)?"
 
 #. TRANSLATORS: The user may input any of these characters to say "yes".
 #. MUST ONLY CONSIST OF ASCII CHARACTERS.
 #: prog/aspell.cpp:1078
 msgid "Yy"
-msgstr ""
+msgstr "Jj"
 
 #: prog/aspell.cpp:1099
 msgid "With: "
@@ -1304,7 +1302,6 @@ msgid "mode to disable all filters"
 msgstr "Modus, um alle Filter zu deaktivieren"
 
 #: modules/filter/modes/perl.amf:60
-#, fuzzy
 msgid "mode for checking Perl comments and string literals"
 msgstr "Modus, um Perl-Kommentare und Zeichenkettenliterale zu überprüfen"
 

@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60-pre1\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-08-12 23:39-0400\n"
-"PO-Revision-Date: 2004-08-02 19:03+0200\n"
+"POT-Creation-Date: 2004-08-13 12:52-0400\n"
+"PO-Revision-Date: 2004-08-22 18:12-0400\n"
 "Last-Translator: Maxim V. Dziumanenko <mvd@mylinux.com.ua>\n"
 "Language-Team: Ukrainian <translation-team-uk@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -130,15 +130,14 @@ msgstr "розташування особистих файлів"
 msgid "ignore words <= n chars"
 msgstr "ігнорування слів <= n символів"
 
-#: common/config.cpp:1376
-#, fuzzy
-msgid "ignore accents when checking words"
-msgstr "ігнорування наголосів при перевірці слів -- НАРАЗІ ІГНОРУЄТЬСЯ"
-
 #. TRANSLATORS: It is OK if this is longer than 50 chars
-#: common/config.cpp:1379
-msgid "ignore case when checking words -- CURRENTLY IGNORED"
+#: common/config.cpp:1377
+msgid "ignore accents when checking words -- CURRENTLY IGNORED"
 msgstr "ігнорування регістру при перевірці слів -- НАРАЗІ ІГНОРУЄТЬСЯ"
+
+#: common/config.cpp:1379
+msgid "ignore case when checking words"
+msgstr "ігнорування наголосів при перевірці слів"
 
 #: common/config.cpp:1381
 msgid "ignore commands to store replacement pairs"
@@ -1290,9 +1289,8 @@ msgid "mode to disable all filters"
 msgstr "режим для відключення усіх фільтрів"
 
 #: modules/filter/modes/perl.amf:60
-#, fuzzy
 msgid "mode for checking Perl comments and string literals"
-msgstr "режим для перевірки коментарів perl та символьних літералів"
+msgstr "режим для перевірки коментарів Perl та символьних літералів"
 
 #: modules/filter/modes/sgml.amf:60
 msgid "mode for checking generic SGML/XML documents"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60-b20040608\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-08-12 23:39-0400\n"
+"POT-Creation-Date: 2004-08-13 12:52-0400\n"
 "PO-Revision-Date: 2004-06-17 12:00-0500\n"
 "Last-Translator: Laurentiu Buzdugan <lbuz@rolix.org>\n"
 "Language-Team: Romanian <translation-team-ro@lists.sourceforge.net>\n"
@@ -127,15 +127,16 @@ msgstr "locaþia fiºierelor personale"
 msgid "ignore words <= n chars"
 msgstr "ignorã cuvinte <= n litere"
 
-#: common/config.cpp:1376
-msgid "ignore accents when checking words"
-msgstr "ignorã accente la verificarea cuvintelor"
-
 #. TRANSLATORS: It is OK if this is longer than 50 chars
+#: common/config.cpp:1377
+#, fuzzy
+msgid "ignore accents when checking words -- CURRENTLY IGNORED"
+msgstr "ignorã litere mari/mici la verificarea cuvintelor"
+
 #: common/config.cpp:1379
 #, fuzzy
-msgid "ignore case when checking words -- CURRENTLY IGNORED"
-msgstr "ignorã litere mari/mici la verificarea cuvintelor"
+msgid "ignore case when checking words"
+msgstr "ignorã accente la verificarea cuvintelor"
 
 #: common/config.cpp:1381
 msgid "ignore commands to store replacement pairs"

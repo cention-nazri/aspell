@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.51-b20040219\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-08-12 23:39-0400\n"
+"POT-Creation-Date: 2004-08-13 12:52-0400\n"
 "PO-Revision-Date: 2004-03-01 12:59+0100\n"
 "Last-Translator: Danilo Segan <dsegan@gmx.net>\n"
 "Language-Team: Serbian <gnu@prevod.org>\n"
@@ -124,15 +124,16 @@ msgstr "путања личних датотека"
 msgid "ignore words <= n chars"
 msgstr "занемари речи са <= n знакова"
 
-#: common/config.cpp:1376
-msgid "ignore accents when checking words"
-msgstr "занемари акценте при провери речи"
-
 #. TRANSLATORS: It is OK if this is longer than 50 chars
+#: common/config.cpp:1377
+#, fuzzy
+msgid "ignore accents when checking words -- CURRENTLY IGNORED"
+msgstr "занемари величину слова при провери речи"
+
 #: common/config.cpp:1379
 #, fuzzy
-msgid "ignore case when checking words -- CURRENTLY IGNORED"
-msgstr "занемари величину слова при провери речи"
+msgid "ignore case when checking words"
+msgstr "занемари акценте при провери речи"
 
 #: common/config.cpp:1381
 msgid "ignore commands to store replacement pairs"

@@ -8,10 +8,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: aspell 0.60-pre1\n"
+"Project-Id-Version: aspell 0.60-pre3\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-08-12 23:36-0400\n"
-"PO-Revision-Date: 2004-07-16 19:11+0200\n"
+"POT-Creation-Date: 2004-08-13 12:52-0400\n"
+"PO-Revision-Date: 2004-08-22 19:52-0400\n"
 "Last-Translator: Thierry Thomas <thierry@pompo.net>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -133,16 +133,15 @@ msgstr "emplacement des fichiers personnels"
 msgid "ignore words <= n chars"
 msgstr "ignorer les mots <= n caractères"
 
-#: common/config.cpp:1376
-#, fuzzy
-msgid "ignore accents when checking words"
+#. TRANSLATORS: It is OK if this is longer than 50 chars
+#: common/config.cpp:1377
+msgid "ignore accents when checking words -- CURRENTLY IGNORED"
 msgstr ""
 "ignorer les accents lors de la vérification -- NON PRIS EN COMPTE "
 "ACTUELLEMENT"
 
-#. TRANSLATORS: It is OK if this is longer than 50 chars
 #: common/config.cpp:1379
-msgid "ignore case when checking words -- CURRENTLY IGNORED"
+msgid "ignore case when checking words"
 msgstr ""
 "ignorer la casse lors de la vérification -- NON PRIS EN COMPTE ACTUELLEMENT"
 
@@ -188,13 +187,13 @@ msgstr "autoriser la normalisation Unicode"
 
 #: common/config.cpp:1403
 msgid "Unicode normalization required for current lang"
-msgstr "Normalisation Unicode requise pour la langue courante"
+msgstr "normalisation Unicode requise pour la langue courante"
 
 #. TRANSLATORS: the values after the ':' are literal
 #. values and should not be translated.
 #: common/config.cpp:1407
 msgid "Unicode normalization form: none, nfd, nfc, comp"
-msgstr "Forme de normalisation Unicode : none (aucune), nfd, nfc, comp"
+msgstr "forme de normalisation Unicode : none (aucune), nfd, nfc, comp"
 
 #: common/config.cpp:1409
 msgid "avoid lossy conversions when normalization"
@@ -811,7 +810,7 @@ msgstr "Voulez-vous vraiment abandonner (y/n) ?"
 #. MUST ONLY CONSIST OF ASCII CHARACTERS.
 #: prog/aspell.cpp:1078
 msgid "Yy"
-msgstr ""
+msgstr "Oo"
 
 # remplacer ... par : ...
 #: prog/aspell.cpp:1099
@@ -1324,7 +1323,6 @@ msgid "mode to disable all filters"
 msgstr "mode sans aucun filtre"
 
 #: modules/filter/modes/perl.amf:60
-#, fuzzy
 msgid "mode for checking Perl comments and string literals"
 msgstr "mode de vérif. des commentaires et chaînes Perl"
 

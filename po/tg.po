@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-08-12 23:39-0400\n"
+"POT-Creation-Date: 2004-08-13 12:52-0400\n"
 "PO-Revision-Date: 2004-05-22 19:33+0000\n"
 "Last-Translator: Marina Kolucheva <youth_opportunities@tajik.net>\n"
 "Language-Team: Tajik\n"
@@ -136,16 +136,16 @@ msgstr "ҷойгиршавии файлҳои шахсӣ"
 msgid "ignore words <= n chars"
 msgstr "аҳамият надодани калимаҳо <= n ишораҳо"
 
-#: common/config.cpp:1376
-#, fuzzy
-msgid "ignore accents when checking words"
-msgstr "аҳамият надодани аломати зада ҳолати тафтиши калимаҳо"
-
 #. TRANSLATORS: It is OK if this is longer than 50 chars
+#: common/config.cpp:1377
+#, fuzzy
+msgid "ignore accents when checking words -- CURRENTLY IGNORED"
+msgstr "аҳамият надодани қайдгоҳ ҳолати тафтиши калимаҳо"
+
 #: common/config.cpp:1379
 #, fuzzy
-msgid "ignore case when checking words -- CURRENTLY IGNORED"
-msgstr "аҳамият надодани қайдгоҳ ҳолати тафтиши калимаҳо"
+msgid "ignore case when checking words"
+msgstr "аҳамият надодани аломати зада ҳолати тафтиши калимаҳо"
 
 #: common/config.cpp:1381
 msgid "ignore commands to store replacement pairs"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-08-12 23:39-0400\n"
+"POT-Creation-Date: 2004-08-13 12:52-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -122,13 +122,13 @@ msgstr ""
 msgid "ignore words <= n chars"
 msgstr ""
 
-#: common/config.cpp:1376
-msgid "ignore accents when checking words"
+#. TRANSLATORS: It is OK if this is longer than 50 chars
+#: common/config.cpp:1377
+msgid "ignore accents when checking words -- CURRENTLY IGNORED"
 msgstr ""
 
-#. TRANSLATORS: It is OK if this is longer than 50 chars
 #: common/config.cpp:1379
-msgid "ignore case when checking words -- CURRENTLY IGNORED"
+msgid "ignore case when checking words"
 msgstr ""
 
 #: common/config.cpp:1381

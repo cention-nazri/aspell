@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60-pre1\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-08-12 23:39-0400\n"
-"PO-Revision-Date: 2004-07-25 19:46-0400\n"
+"POT-Creation-Date: 2004-08-13 12:52-0400\n"
+"PO-Revision-Date: 2004-08-22 20:15-0400\n"
 "Last-Translator: Gareth Owen <gowen72@yahoo.com>\n"
 "Language-Team: English (British) <en_gb@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -128,15 +128,14 @@ msgstr "location for personal files"
 msgid "ignore words <= n chars"
 msgstr "ignore words <= n chars"
 
-#: common/config.cpp:1376
-#, fuzzy
-msgid "ignore accents when checking words"
+#. TRANSLATORS: It is OK if this is longer than 50 chars
+#: common/config.cpp:1377
+msgid "ignore accents when checking words -- CURRENTLY IGNORED"
 msgstr "ignore accents when checking words -- CURRENTLY IGNORED"
 
-#. TRANSLATORS: It is OK if this is longer than 50 chars
 #: common/config.cpp:1379
-msgid "ignore case when checking words -- CURRENTLY IGNORED"
-msgstr "ignore case when checking words -- CURRENTLY IGNORED"
+msgid "ignore case when checking words"
+msgstr "ignore case when checking words"
 
 #: common/config.cpp:1381
 msgid "ignore commands to store replacement pairs"
@@ -790,7 +789,7 @@ msgstr "Are you sure you want to abort (y/n)? "
 #. MUST ONLY CONSIST OF ASCII CHARACTERS.
 #: prog/aspell.cpp:1078
 msgid "Yy"
-msgstr ""
+msgstr "Yy"
 
 #: prog/aspell.cpp:1099
 msgid "With: "
@@ -1291,9 +1290,8 @@ msgid "mode to disable all filters"
 msgstr "mode to disable all filters"
 
 #: modules/filter/modes/perl.amf:60
-#, fuzzy
 msgid "mode for checking Perl comments and string literals"
-msgstr "mode for checking perl comments and string literals"
+msgstr "mode for checking Perl comments and string literals"
 
 #: modules/filter/modes/sgml.amf:60
 msgid "mode for checking generic SGML/XML documents"
@@ -1306,142 +1304,3 @@ msgstr "mode for checking TeX/LaTeX documents"
 #: modules/filter/modes/url.amf:61
 msgid "mode to skip URL like constructs (default mode)"
 msgstr "mode to skip URL like constructs (default mode)"
-
-#~ msgid "configured as follows"
-#~ msgstr "configured as follows"
-
-#~ msgid "path(es) aspell looks for options descriptions"
-#~ msgstr "path(s) aspell looks for options descriptions"
-
-#~ msgid "indicator for additional flags in word lists"
-#~ msgstr "indicator for additional flags in word lists"
-
-#~ msgid "%where:1: \"%filter:2\":"
-#~ msgstr "%where:1: \"%filter:2\":"
-
-#~ msgid "%where:1: Filter \"%filter:2\" could not be found in filter paths."
-#~ msgstr "%where:1: Filter \"%filter:2\" could not be found in filter paths."
-
-#~ msgid "%where:1: %filter:2: can't find option description."
-#~ msgstr "%where:1: %filter:2: can't find option description."
-
-#~ msgid "%where:1: \"%filter:2\" Line %line:3 confused by version control"
-#~ msgstr "%where:1: \"%filter:2\" Line %line:3 confused by version control"
-
-#~ msgid "%action:1: invalid regular expression."
-#~ msgstr "%action:1: invalid regular expression."
-
-#~ msgid "enter Html/Sgml mode."
-#~ msgstr "enter Html/Sgml mode."
-
-#~ msgid ""
-#~ "\n"
-#~ "Aspell %s alpha.  Copyright 2000-2004 by Kevin Atkinson.\n"
-#~ "\n"
-#~ "Usage: aspell [options] <command>\n"
-#~ "\n"
-#~ "<command> is one of:\n"
-#~ "  -?|help [<expr>] display this help message\n"
-#~ "                    and help for filters matching <expr> if installed\n"
-#~ "  -c|check <file>  to check a file\n"
-#~ "  -a|pipe          \"ispell -a\" compatibility mode\n"
-#~ "  list             produce a list of misspelled words from standard "
-#~ "input\n"
-#~ "  [dump] config [-e <expr>]  dumps the current configuration to stdout\n"
-#~ "  config [+e <expr>] <key>   prints the current value of an option\n"
-#~ "  soundslike       returns the sounds like equivalent for each word "
-#~ "entered\n"
-#~ "  munch            generate possible root words and affixes\n"
-#~ "  expand [1-4]     expands affix flags\n"
-#~ "  clean [strict]   cleans a word list so that every line is a valid word\n"
-#~ "  filter           passes standard input through filters\n"
-#~ "  -v|version       prints a version line\n"
-#~ "  conv <from> <to> [<norm-form>]\n"
-#~ "    converts from one encoding to another\n"
-#~ "  norm (<norm-map> | <from> <norm-map> <to>) [<norm-form>]\n"
-#~ "    perform unicode normlization\n"
-#~ "  dump|create|merge master|personal|repl [word list]\n"
-#~ "    dumps, creates or merges a master, personal, or replacement word "
-#~ "list.\n"
-#~ "\n"
-#~ "  <expr>           regular expression matching filtername(s) or \"all\"\n"
-#~ "  <norm-form>      normalization form to use, either none, internal, or "
-#~ "strict\n"
-#~ "\n"
-#~ "[options] is any of the following:\n"
-#~ "\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Aspell %s alpha.  Copyright 2000-2004 by Kevin Atkinson.\n"
-#~ "\n"
-#~ "Usage: aspell [options] <command>\n"
-#~ "\n"
-#~ "<command> is one of:\n"
-#~ "  -?|help [<expr>] display this help message\n"
-#~ "                    and help for filters matching <expr> if installed\n"
-#~ "  -c|check <file>  to check a file\n"
-#~ "  -a|pipe          \"ispell -a\" compatibility mode\n"
-#~ "  list             produce a list of misspelled words from standard "
-#~ "input\n"
-#~ "  [dump] config [-e <expr>]  dumps the current configuration to stdout\n"
-#~ "  config [+e <expr>] <key>   prints the current value of an option\n"
-#~ "  soundslike       returns the sounds like equivalent for each word "
-#~ "entered\n"
-#~ "  munch            generate possible root words and affixes\n"
-#~ "  expand [1-4]     expands affix flags\n"
-#~ "  clean [strict]   cleans a word list so that every line is a valid word\n"
-#~ "  filter           passes standard input through filters\n"
-#~ "  -v|version       prints a version line\n"
-#~ "  conv <from> <to> [<norm-form>]\n"
-#~ "    converts from one encoding to another\n"
-#~ "  norm (<norm-map> | <from> <norm-map> <to>) [<norm-form>]\n"
-#~ "    perform unicode normlisation\n"
-#~ "  dump|create|merge master|personal|repl [word list]\n"
-#~ "    dumps, creates or merges a master, personal, or replacement word "
-#~ "list.\n"
-#~ "\n"
-#~ "  <expr>           regular expression matching filtername(s) or \"all\"\n"
-#~ "  <norm-form>      normalisation form to use, either none, internal, or "
-#~ "strict\n"
-#~ "\n"
-#~ "[options] is any of the following:\n"
-#~ "\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "  %s filter: %s\n"
-#~ "    NOTE: in ambiguous case prefix following options by \"filter-\"\n"
-#~ msgstr ""
-#~ "\n"
-#~ "  %s filter: %s\n"
-#~ "    NOTE: in ambiguous case prefix following options by \"filter-\"\n"
-
-#~ msgid "Expected the file to be in \"%s\" not \"%s\"."
-#~ msgstr "Expected the file to be in \"%s\" not \"%s\"."
-
-#~ msgid "Filter for eliminating email quote characters"
-#~ msgstr "Filter for eliminating email quote characters"
-
-#~ msgid "Filters for encoding, filtering and decoding sgml characters"
-#~ msgstr "Filters for encoding, filtering and decoding sgml characters"
-
-#~ msgid "multi character coded letters (<char>:<rep>[:<rep>[...]])"
-#~ msgstr "multi character coded letters (<char>:<rep>[:<rep>[...]])"
-
-#~ msgid "characters used to encode hyphenation locations"
-#~ msgstr "characters used to encode hyphenation locations"
-
-#~ msgid "Filter for hiding urls/paths and similar from Aspell"
-#~ msgstr "Filter for hiding urls/paths and similar from Aspell"
-
-#~ msgid "strip accents from word lists"
-#~ msgstr "strip accents from word lists"
-
-#~ msgid "encode soundslike infomation when creating dicts"
-#~ msgstr "encode soundslike infomation when creating dicts"
-
-#~ msgid "use jump tables when creating dictionaries"
-#~ msgstr "use jump tables when creating dictionaries"
-
-#~ msgid "Affix compression is currently incompatible with soundslike lookup."
-#~ msgstr "Affix compression is currently incompatible with soundslike lookup."
