@@ -2,7 +2,7 @@
 @item @b{Code} @tab @b{Language Name} @tab @b{Script} @tab @b{Dictionary Available} @tab @b{Gettext Translation}
 @item
 @item aa @tab Afar @tab Latin @tab - @tab -
-@item af @tab Afrikaans @tab Latin @tab Yes @tab -
+@item af @tab Afrikaans @tab Latin @tab 0.50 @tab -
 @item ak @tab Akan @tab Latin @tab - @tab -
 @item am @tab Amharic @tab Ethiopic @tab Planned @tab -
 @item ar @tab Arabic @tab Arabic @tab Planned @tab -
@@ -10,78 +10,78 @@
 @item ast @tab Asturian / Bable @tab Latin @tab Maybe @tab -
 @item av @tab Avar @tab Cyrillic @tab - @tab -
 @item ay @tab Aymara @tab Latin @tab - @tab -
-@item az @tab Azerbaijani @tab Latin @tab Experimental @tab -
+@item az @tab Azerbaijani @tab Latin @tab 0.60 @tab -
 @item
 @item ba @tab Bashkir @tab Cyrillic @tab - @tab -
-@item be @tab Belarusian @tab Cyrillic @tab Yes @tab Yes
+@item be @tab Belarusian @tab Cyrillic @tab 0.50 @tab Yes
 @item bem @tab Bemba @tab Latin @tab Maybe @tab -
-@item bg @tab Bulgarian @tab Cyrillic @tab Yes @tab -
+@item bg @tab Bulgarian @tab Cyrillic @tab 0.50 @tab -
 @item bh @tab Bihari @tab Devanagari @tab - @tab -
 @item bi @tab Bislama @tab Latin @tab Maybe @tab -
 @item bm @tab Bambara @tab Latin @tab - @tab -
-@item bn @tab Bengali @tab Bengali @tab Experimental @tab -
+@item bn @tab Bengali @tab Bengali @tab 0.60 @tab -
 @item bo @tab Tibetan @tab Tibetan @tab - @tab -
-@item br @tab Breton @tab Latin @tab Yes @tab -
+@item br @tab Breton @tab Latin @tab 0.50 @tab -
 @item bs @tab Bosnian @tab Latin @tab Maybe @tab -
 @item
-@item ca @tab Catalan / Valencian @tab Latin @tab Yes @tab -
+@item ca @tab Catalan / Valencian @tab Latin @tab 0.50 @tab -
 @item ce @tab Chechen @tab Cyrillic @tab - @tab -
 @item ceb @tab Cebuano @tab Latin @tab Maybe @tab -
 @item ch @tab Chamorro @tab Latin @tab Maybe @tab -
 @item co @tab Corsican @tab Latin @tab Maybe @tab -
-@item cs @tab Czech @tab Latin @tab Yes @tab Yes
+@item cs @tab Czech @tab Latin @tab 0.50 @tab Yes
 @item cv @tab Chuvash @tab Cyrillic @tab - @tab -
-@item cy @tab Welsh @tab Latin @tab Yes @tab -
+@item cy @tab Welsh @tab Latin @tab 0.50 @tab -
 @item
-@item da @tab Danish @tab Latin @tab Yes @tab Yes
-@item de @tab German @tab Latin @tab Yes @tab Yes
+@item da @tab Danish @tab Latin @tab 0.50 @tab Yes
+@item de @tab German @tab Latin @tab 0.50 @tab Yes
 @item
 @item ee @tab Ewe @tab Latin @tab - @tab -
-@item el @tab Greek @tab Greek @tab Yes @tab -
-@item en @tab English @tab Latin @tab Yes @tab Yes
-@item eo @tab Esperanto @tab Latin @tab Yes @tab -
-@item es @tab Spanish @tab Latin @tab Yes @tab Incomplete
-@item et @tab Estonian @tab Latin @tab Experimental @tab -
+@item el @tab Greek @tab Greek @tab 0.50 @tab -
+@item en @tab English @tab Latin @tab 0.50 @tab Yes
+@item eo @tab Esperanto @tab Latin @tab 0.50 @tab -
+@item es @tab Spanish @tab Latin @tab 0.50 @tab Incomplete
+@item et @tab Estonian @tab Latin @tab 0.60 @tab -
 @item eu @tab Basque @tab Latin @tab Maybe @tab -
 @item
 @item fa @tab Persian @tab Arabic @tab Maybe @tab -
 @item ff @tab Fulah @tab Latin @tab - @tab -
-@item fi @tab Finnish @tab Latin @tab Experimental @tab -
+@item fi @tab Finnish @tab Latin @tab 0.60 @tab -
 @item fj @tab Fijian @tab Latin @tab Maybe @tab -
-@item fo @tab Faroese @tab Latin @tab Yes @tab -
-@item fr @tab French @tab Latin @tab Yes @tab Yes
+@item fo @tab Faroese @tab Latin @tab 0.50 @tab -
+@item fr @tab French @tab Latin @tab 0.50 @tab Yes
 @item fur @tab Friulian @tab Latin @tab Maybe @tab -
 @item fy @tab Frisian @tab Latin @tab Maybe @tab -
 @item
-@item ga @tab Irish @tab Latin @tab Yes @tab Yes
-@item gd @tab Scottish Gaelic @tab Latin @tab Yes @tab -
-@item gl @tab Gallegan @tab Latin @tab Yes @tab -
+@item ga @tab Irish @tab Latin @tab 0.50 @tab Yes
+@item gd @tab Scottish Gaelic @tab Latin @tab 0.50 @tab -
+@item gl @tab Gallegan @tab Latin @tab 0.50 @tab -
 @item gn @tab Guarani @tab Latin @tab Maybe @tab -
 @item gu @tab Gujarati @tab Gujarati @tab Maybe @tab -
-@item gv @tab Manx Gaelic @tab Latin @tab Yes @tab -
+@item gv @tab Manx Gaelic @tab Latin @tab 0.50 @tab -
 @item
 @item ha @tab Hausa @tab Latin @tab Maybe @tab -
 @item haw @tab Hawaiian @tab Latin @tab Maybe @tab -
-@item he @tab Hebrew @tab Hebrew @tab Experimental @tab -
+@item he @tab Hebrew @tab Hebrew @tab 0.60 @tab -
 @item hi @tab Hindi @tab Devanagari @tab Maybe @tab -
 @item hil @tab Hiligaynon @tab Latin @tab Maybe @tab -
 @item ho @tab Hiri Motu @tab Latin @tab - @tab -
-@item hr @tab Croatian @tab Latin @tab Yes @tab -
-@item hsb @tab Upper Sorbian @tab Latin @tab Experimental @tab -
+@item hr @tab Croatian @tab Latin @tab 0.50 @tab -
+@item hsb @tab Upper Sorbian @tab Latin @tab 0.60 @tab -
 @item ht @tab Haitian Creole @tab Latin @tab Maybe @tab -
-@item hu @tab Hungarian @tab Latin @tab Experimental @tab -
+@item hu @tab Hungarian @tab Latin @tab 0.60 @tab -
 @item hy @tab Armenian @tab Armenian @tab - @tab -
 @item hz @tab Herero @tab Latin @tab - @tab -
 @item
-@item ia @tab Interlingua (IALA) @tab Latin @tab Yes @tab -
+@item ia @tab Interlingua (IALA) @tab Latin @tab 0.50 @tab -
 @item iba @tab Iban @tab Latin @tab Maybe @tab -
-@item id @tab Indonesian @tab Latin @tab Yes @tab -
+@item id @tab Indonesian @tab Latin @tab 0.50 @tab -
 @item ig @tab Igbo @tab Latin @tab Maybe @tab -
 @item ii @tab Sichuan Yi @tab Yi @tab - @tab -
 @item ilo @tab Iloko @tab Latin @tab Maybe @tab -
 @item io @tab Ido @tab Latin @tab - @tab -
-@item is @tab Icelandic @tab Latin @tab Yes @tab -
-@item it @tab Italian @tab Latin @tab Yes @tab -
+@item is @tab Icelandic @tab Latin @tab 0.50 @tab -
+@item it @tab Italian @tab Latin @tab 0.50 @tab -
 @item
 @item jv @tab Javanese @tab Javanese, Latin @tab - @tab -
 @item
@@ -100,35 +100,35 @@
 @item kw @tab Cornish @tab Latin @tab Maybe @tab -
 @item ky @tab Kirghiz @tab Cyrillic @tab - @tab -
 @item
-@item la @tab Latin @tab Latin @tab Experimental @tab -
+@item la @tab Latin @tab Latin @tab 0.60 @tab -
 @item lb @tab Luxembourgish @tab Latin @tab Maybe @tab -
 @item lg @tab Ganda @tab Latin @tab Maybe @tab -
 @item li @tab Limburgian @tab Latin @tab Maybe @tab -
 @item ln @tab Lingala @tab Latin @tab Maybe @tab -
-@item lt @tab Lithuanian @tab Latin @tab Experimental @tab -
+@item lt @tab Lithuanian @tab Latin @tab 0.60 @tab -
 @item lu @tab Luba-Katanga @tab Latin @tab - @tab -
 @item luo @tab Luo (Kenya and Tanzania) @tab Latin @tab Maybe @tab -
-@item lv @tab Latvian @tab Latin @tab Experimental @tab -
+@item lv @tab Latvian @tab Latin @tab 0.60 @tab -
 @item
 @item mg @tab Malagasy @tab Latin @tab Maybe @tab -
-@item mi @tab Maori @tab Latin @tab Yes @tab -
+@item mi @tab Maori @tab Latin @tab 0.50 @tab -
 @item min @tab Minangkabau @tab Latin @tab Maybe @tab -
-@item mk @tab Macedonian @tab Cyrillic @tab Yes @tab -
+@item mk @tab Macedonian @tab Cyrillic @tab 0.50 @tab -
 @item ml @tab Malayalam @tab Malayalam @tab Maybe @tab -
-@item mn @tab Mongolian @tab Cyrillic @tab Maybe @tab -
+@item mn @tab Mongolian @tab Cyrillic @tab Planned @tab -
 @item mo @tab Moldavian @tab Cyrillic @tab - @tab -
 @item mr @tab Marathi @tab Devanagari @tab Maybe @tab -
-@item ms @tab Malay @tab Latin @tab Yes @tab -
-@item mt @tab Maltese @tab Latin @tab Yes @tab -
+@item ms @tab Malay @tab Latin @tab 0.50 @tab -
+@item mt @tab Maltese @tab Latin @tab 0.50 @tab -
 @item my @tab Burmese @tab Myanmar @tab - @tab -
 @item
-@item nb @tab Norwegian Bokmal @tab Latin @tab Yes @tab -
+@item nb @tab Norwegian Bokmal @tab Latin @tab 0.50 @tab -
 @item nd @tab North Ndebele @tab Latin @tab Maybe @tab -
 @item nds @tab Low Saxon @tab Latin @tab Maybe @tab -
 @item ne @tab Nepali @tab Devanagari @tab Maybe @tab -
 @item ng @tab Ndonga @tab Latin @tab Maybe @tab -
-@item nl @tab Dutch @tab Latin @tab Yes @tab Yes
-@item nn @tab Norwegian Nynorsk @tab Latin @tab Yes @tab -
+@item nl @tab Dutch @tab Latin @tab 0.50 @tab Yes
+@item nn @tab Norwegian Nynorsk @tab Latin @tab 0.50 @tab -
 @item nr @tab South Ndebele @tab Latin @tab - @tab -
 @item nso @tab Northern Sotho @tab Latin @tab Maybe @tab -
 @item nv @tab Navajo @tab Latin @tab - @tab -
@@ -142,24 +142,24 @@
 @item pa @tab Punjabi @tab Gurmukhi @tab - @tab -
 @item pam @tab Pampanga @tab Latin @tab Maybe @tab -
 @item pap @tab Papiamento @tab Latin @tab Maybe @tab -
-@item pl @tab Polish @tab Latin @tab Yes @tab -
+@item pl @tab Polish @tab Latin @tab 0.50 @tab -
 @item ps @tab Pushto @tab Arabic @tab - @tab -
-@item pt @tab Portuguese @tab Latin @tab Yes @tab Yes
+@item pt @tab Portuguese @tab Latin @tab 0.50 @tab Yes
 @item
 @item qu @tab Quechua @tab Latin @tab Maybe @tab -
 @item
 @item rn @tab Rundi @tab Latin @tab Maybe @tab -
-@item ro @tab Romanian @tab Latin @tab Yes @tab Yes
-@item ru @tab Russian @tab Cyrillic @tab Yes @tab Yes
-@item rw @tab Kinyarwanda @tab Latin @tab Yes @tab -
+@item ro @tab Romanian @tab Latin @tab 0.50 @tab Yes
+@item ru @tab Russian @tab Cyrillic @tab 0.50 @tab Yes
+@item rw @tab Kinyarwanda @tab Latin @tab 0.50 @tab -
 @item
-@item sc @tab Sardinian @tab Latin @tab Yes @tab -
+@item sc @tab Sardinian @tab Latin @tab 0.50 @tab -
 @item sd @tab Sindhi @tab Arabic @tab - @tab -
 @item se @tab Northern Sami @tab Latin @tab Maybe @tab -
 @item sg @tab Sango @tab Latin @tab - @tab -
 @item si @tab Sinhalese @tab Sinhala @tab - @tab -
-@item sk @tab Slovak @tab Latin @tab Yes @tab -
-@item sl @tab Slovenian @tab Latin @tab Yes @tab -
+@item sk @tab Slovak @tab Latin @tab 0.50 @tab -
+@item sl @tab Slovenian @tab Latin @tab 0.50 @tab -
 @item sm @tab Samoan @tab Latin @tab Maybe @tab -
 @item sn @tab Shona @tab Latin @tab Maybe @tab -
 @item so @tab Somali @tab Latin @tab Maybe @tab -
@@ -168,42 +168,42 @@
 @item ss @tab Swati @tab Latin @tab Maybe @tab -
 @item st @tab Southern Sotho @tab Latin @tab Maybe @tab -
 @item su @tab Sundanese @tab Latin @tab Maybe @tab -
-@item sv @tab Swedish @tab Latin @tab Yes @tab -
-@item sw @tab Swahili @tab Latin @tab Yes @tab -
+@item sv @tab Swedish @tab Latin @tab 0.50 @tab -
+@item sw @tab Swahili @tab Latin @tab 0.50 @tab -
 @item
-@item ta @tab Tamil @tab Tamil @tab Experimental @tab -
+@item ta @tab Tamil @tab Tamil @tab 0.60 @tab -
 @item te @tab Telugu @tab Telugu @tab Maybe @tab -
-@item tet @tab Tetum @tab Latin @tab Yes @tab -
+@item tet @tab Tetum @tab Latin @tab 0.50 @tab -
 @item tg @tab Tajik @tab Cyrillic @tab Planned @tab Yes
 @item ti @tab Tigrinya @tab Ethiopic @tab Maybe @tab -
 @item tk @tab Turkmen @tab Latin @tab - @tab -
 @item tl @tab Tagalog @tab Latin @tab Planned @tab -
-@item tn @tab Tswana @tab Latin @tab Yes @tab -
+@item tn @tab Tswana @tab Latin @tab 0.50 @tab -
 @item to @tab Tonga @tab Latin @tab Maybe @tab -
 @item tpi @tab Tok Pisin @tab Latin @tab Maybe @tab -
-@item tr @tab Turkish @tab Latin @tab Yes @tab -
+@item tr @tab Turkish @tab Latin @tab 0.50 @tab -
 @item ts @tab Tsonga @tab Latin @tab Maybe @tab -
 @item tt @tab Tatar @tab Cyrillic @tab - @tab -
 @item tw @tab Twi @tab Latin @tab - @tab -
 @item ty @tab Tahitian @tab Latin @tab Maybe @tab -
 @item
 @item ug @tab Uighur @tab Arabic @tab - @tab -
-@item uk @tab Ukrainian @tab Cyrillic @tab Yes @tab Yes
+@item uk @tab Ukrainian @tab Cyrillic @tab 0.50 @tab Yes
 @item ur @tab Urdu @tab Arabic @tab Maybe @tab -
-@item uz @tab Uzbek @tab Cyrillic @tab Experimental @tab -
+@item uz @tab Uzbek @tab Cyrillic @tab 0.60 @tab -
 @item
 @item ve @tab Venda @tab Latin @tab Maybe @tab -
-@item vi @tab Vietnamese @tab Latin @tab Experimental @tab -
+@item vi @tab Vietnamese @tab Latin @tab 0.60 @tab -
 @item
-@item wa @tab Walloon @tab Latin @tab Yes @tab Incomplete
+@item wa @tab Walloon @tab Latin @tab 0.50 @tab Incomplete
 @item wo @tab Wolof @tab Latin @tab - @tab -
 @item
 @item xh @tab Xhosa @tab Latin @tab Maybe @tab -
 @item
-@item yi @tab Yiddish @tab Hebrew @tab Experimental @tab -
+@item yi @tab Yiddish @tab Hebrew @tab 0.60 @tab -
 @item yo @tab Yoruba @tab Latin @tab - @tab -
 @item
 @item za @tab Zhuang @tab Latin @tab - @tab -
-@item zu @tab Zulu @tab Latin @tab Yes @tab -
+@item zu @tab Zulu @tab Latin @tab 0.50 @tab -
 
 @end multitable

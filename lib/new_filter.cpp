@@ -40,6 +40,28 @@ namespace acommon
 {
 #include "static_filters.src.cpp"
 
+  //////////////////////////////////////////////////////////////////////////
+  //
+  // setup static filters
+  //
+
+  PosibErr<const ConfigModule *> get_dynamic_filter(Config * config, ParmStr value);
+  extern void activate_filter_modes(Config *config);
+
+  void setup_static_filters(Config * config)
+  {
+    config->set_filter_modules(filter_modules_begin, filter_modules_end);
+    activate_filter_modes(config);
+#ifdef HAVE_LIBDL
+    config->load_filter_hook = get_dynamic_filter;
+#endif
+  }
+
+  //////////////////////////////////////////////////////////////////////////
+  //
+  // 
+  //
+
 #ifdef HAVE_LIBDL
 
   struct ConfigFilterModule : public Cacheable {
@@ -86,7 +108,6 @@ namespace acommon
   //
 
   FilterEntry * get_standard_filter(ParmStr);
-  PosibErr<const ConfigModule *> get_dynamic_filter(Config * config, ParmStr value);
 
   //////////////////////////////////////////////////////////////////////////
   //

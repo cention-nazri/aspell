@@ -160,7 +160,7 @@ namespace acommon {
 
     String temp_str;
 
-    PosibErr<ConfigModule *> (* load_filter_hook)(Config * config, ParmStr value);
+    PosibErr<const ConfigModule *> (* load_filter_hook)(Config * config, ParmStr value);
     Notifier * filter_mode_notifier;
 
     Vector<ConfigModule>      filter_modules;

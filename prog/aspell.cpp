@@ -131,7 +131,7 @@ typedef Config         Options;
 enum Action {do_create, do_merge, do_dump, do_test, do_other};
 
 Args              args;
-StackPtr<Options> options(new_config());
+StackPtr<Options> options;
 Action            action  = do_other;
 
 struct PossibleOption {
@@ -237,6 +237,8 @@ Conv uiconv;
 
 int main (int argc, const char *argv[]) 
 {
+  options = new_config(); // this needs to be here becuase of a bug
+                          // with static initlizers on Darwin.
 #ifdef USE_LOCALE
   setlocale (LC_ALL, "");
 #endif

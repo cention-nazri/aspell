@@ -6,27 +6,18 @@
 
 #include <string.h>
 
-#include "settings.h"
-
 #include "config.hpp"
 #include "errors.hpp"
 #include "filter.hpp"
 
 namespace acommon {
   
-  extern void activate_filter_modes(Config *config);
-  extern PosibErr<ConfigModule *> get_dynamic_filter(Config * config, ParmStr value);
-  extern const ConfigModule * filter_modules_begin;
-  extern const ConfigModule * filter_modules_end;
+  extern void setup_static_filters(Config * config);
 
   Config * new_config() 
   {
     Config * config = new_basic_config();
-    config->set_filter_modules(filter_modules_begin, filter_modules_end);
-    activate_filter_modes(config);
-#ifdef HAVE_LIBDL
-    config->load_filter_hook = get_dynamic_filter;
-#endif
+    setup_static_filters(config);
     return config;
   }
 

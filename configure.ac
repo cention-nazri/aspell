@@ -76,7 +76,7 @@ dnl [  --enable-aspell5-compatibility  install aspell 0.50 compatibility librari
 dnl
 
 AC_PROG_CXX
-if test "$GXX" == "yes" && expr "$CXXFLAGS" : '.*-O' > /dev/null
+if test "$GXX" = "yes" && expr "$CXXFLAGS" : '.*-O' > /dev/null
 then
   CXXFLAGS="$CXXFLAGS -fno-exceptions"
 fi
@@ -101,26 +101,26 @@ AC_PATH_PROG(PERLPROG,perl)
 
 dnl
 
-if test "$enable_static" == "yes"
+if test "$enable_static" = "yes"
 then
   enable_compile_in_filters=yes
 fi
 
-if test "$enable_compile_in_filters" == "yes"
+if test "$enable_compile_in_filters" = "yes"
 then
   AC_DEFINE(COMPILE_IN_FILTER, 1, [Defined if filters should be compiled in])
 fi
 
 AM_CONDITIONAL(COMPILE_IN_FILTERS, 
-  [test "$enable_compile_in_filters" == "yes"])
+  [test "$enable_compile_in_filters" = "yes"])
 
 AM_CONDITIONAL(PSPELL_COMPATIBILITY,  
   [test "$enable_pspell_compatibility" != "no"])
 AM_CONDITIONAL(INCREMENTED_SONAME,    
-  [test "$enable_incremented_soname" == "yes"])
+  [test "$enable_incremented_soname" = "yes"])
 dnl AM_CONDITIONAL(ASPELL5_COMPATIBILITY,
 dnl   [test "$enable_incremented_soname" != "no" -a \
-dnl         "$enable_aspell5_compatibility" == "yes"])
+dnl         "$enable_aspell5_compatibility" = "yes"])
 
 dnl GETTEXT
 
@@ -191,7 +191,7 @@ AC_TRY_RUN(
    AC_DEFINE(USE_FILE_INO, 1, [Defined if file ino is supported])
   ],
   [AC_MSG_RESULT(no)],
-  [if test "$MINGW32" = yes
+  [if test "$MINGW32" = "yes"
    then
      AC_MSG_RESULT(cant run test!, assuming no)
    else
@@ -209,7 +209,7 @@ AC_TRY_COMPILE(
    AC_DEFINE(USE_LOCALE, 1, [Defined if Posix locales are supported])],
   [AC_MSG_RESULT(no)] )
 
-if test "$enable_regex" == "yes"
+if test "$enable_regex" = "yes"
 then
   AC_MSG_CHECKING(if posix regex are supported)
   AC_TRY_LINK(
@@ -381,7 +381,7 @@ then
          [AC_MSG_RESULT(no)
           AC_MSG_WARN([Aspell will not be able to Display UTF-8 characters correctly.])])
      else
-       AC_MSG_RESULT([no, because "mblen" is not support])
+       AC_MSG_RESULT([no, because "mblen" is not supported])
        AC_MSG_WARN([Aspell will not be able to Display UTF-8 characters correctly.])
      fi
  
@@ -503,7 +503,7 @@ AC_TRY_COMPILE(
   [AC_MSG_RESULT(no)],
   [AC_MSG_RESULT(yes)
    AC_DEFINE(REL_OPS_POLLUTION, 1, 
-             [Defined if STL rel_ops polute the global namespace])
+             [Defined if STL rel_ops pollute the global namespace])
   ]
 )
 

@@ -2735,7 +2735,7 @@ When no soundslike infomation, or the simpile soundslike, is used it
 may be beneficial to specify the option @option{partially-expand}
 which will partially expand a word with affix infomation so that the
 affix flags do not effect the first 3 letters of the word.  This will
-allow Aspell to get more accurate results when scanning the list near
+allow Aspell to get more accurate results when scanning the list for near
 misses since the full word can be used and not just the root.
 Specifing this option, however, will also effectively expand any
 prefixes.  Thus this option should not be used for prefix heavy
@@ -3085,11 +3085,11 @@ used.
 
 @include lang-supported.texi
 
-Dictionaries marked as @dfn{Yes} are available for Aspell 0.50.  Ones
-marked as @dfn{Experimental} are available for Aspell 0.60 only.  Ones
-marked as @dfn{Planned} should eventually be available (@pxref{Planned
-Dictionaries}).  Ones marked as @dfn{Maybe} might be available in the
-future.
+Dictionaries marked as @dfn{0.50} are available for Aspell 0.50.  Ones
+marked as @dfn{0.60} are available for Aspell 0.60 only.  Ones marked as
+@dfn{Planned} should eventually be available.  Ones marked as
+@dfn{Maybe} might be available in the future.
+@xref{Planned Dictionaries}, for more info.
 
 @appendixsubsec Notes on Latin Languages
 
@@ -3302,6 +3302,13 @@ them:
 
 @noindent
 If you are interested please contact him at scannell at slu edu.
+
+A free spell checker for the Arabic (ar) languages called Duali can be
+found at @uref{http://@/www.arabeyes.org/@/project.php?@/proj=duali}.
+It uses its own form of affix compression.  This needs to be converted
+to Aspell format.  The author, Mohammed Elzubeir, expressed an interest
+in converting it but I have not herd from him in a while.  If you are
+interested in helping with this conversion please let me know.
 
 An Ispell hash table has been discovered for Albanian (sq) at
 @uref{http://@/www.7kosova.com/kde-shqip/@/ispell/ispell.html}.
@@ -3655,7 +3662,7 @@ email @email{aspell-devel@@gnu.org}, and I will explain it in more
 detail.
 @item 
 Use Lawrence Philips' new @strong{Double Metaphone algorithm}. See
-@uref{http://aspell.sf.net/@/metaphone/}. The main task involved
+@uref{http://aspell.net/@/metaphone/}. The main task involved
 here is converting the algorithm into table form. This will take some
 time but their is no real programming experience is required. If you
 want to help with Aspell but don't have any real programming
@@ -3881,12 +3888,13 @@ a C++ program.
 Added support for Affix Compression.  Affix compression stores the root
 word and then a list of prefixes and suffixes that the word can take,
 and thus saves a lot of space.  The codebase comes from MySpell found in
-OpenOffice.  It uses the same affix file OpenOffice (and Mozilla) use.
+OpenOffice.  It uses the same affix file that OpenOffice (and Mozilla)
+use.
 @item
 Added support for accepting all input and printing all output in UTF-8
 or some other encoding different from the one Aspell uses.  This
 includes support for Unicode normalization.  Aspell can now support any
-language that no more than 210 distinct characters, including different
+language with no more than 210 distinct characters, including different
 capitalizations and accents, @emph{even if} there is not an existing
 8-bit encoding that supports the language.
 @item
@@ -3899,13 +3907,14 @@ blocks thanks to Tom Snyder.
 Added gettext support thanks to Sergey Poznyakoff
 @item
 Reworked the compiled dictionary format.  Compiled dictionaries now take
-up less space less space (less than 80% for the English language) and
+up less space (less than 80% for the English language) and
 creating them is significantly faster (over 4 times for the
 English language).
 @item
 Reworked suggestion code.  It is significantly faster when dealing with
-short words (up to 10 times), added support for MySpell Replacement
-Tables, n-gram lookup.  Also added basic support for compound words.
+short words (up to 10 times).  Also added support for MySpell
+Replacement Tables and n-gram lookup.  In addition, added basic support
+for compound words.
 @item
 Manual has has been converted to texinfo format thanks to the work of
 Chris Martin.
