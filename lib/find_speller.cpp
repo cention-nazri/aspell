@@ -258,7 +258,6 @@ namespace acommon {
     String code;
     PosibErr<String> str = config->retrieve("lang");
     p = str.data.c_str();
-    CERR.printf(">>%s\n", p);
     code += asc_tolower(*p++); code += asc_tolower(*p++);
     String lang = code;
     bool have_country = false;

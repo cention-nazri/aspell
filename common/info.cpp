@@ -130,7 +130,7 @@ namespace acommon {
   static const ModuleInfoDefItem module_info_list_def_list[] = {
     {"default", 
      "order-num 0.50;" 
-     "dict-exts .multi"}
+     "dict-exts .multi,.alias"}
   };
   
   /////////////////////////////////////////////////////////////////

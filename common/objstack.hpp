@@ -142,6 +142,7 @@ public:
     if (temp_end == 0)
       return alloc_temp(s);
     unsigned old_size = temp_end - bottom;
+    unsigned size = old_size + s;
     if (bottom + size <= top) {
       temp_end = bottom + size;
     } else {
