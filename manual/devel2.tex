@@ -77,7 +77,7 @@
 
 \author{Copyright (c) 2002\\
 Kevin Atkinson\\
-kevin at atkinson dhs org}
+kevina@gnu.org}
 
 \maketitle
 \tableofcontents{}
@@ -85,7 +85,7 @@ kevin at atkinson dhs org}
 
 \section*{Notes}
 
-This manual is designed for those who which to develope Aspell. It
+This manual is designed for those who which to developer Aspell. It
 is currently very sketchy. However, it should improve over time. The
 latest version of this document can be found at \url{http://savannah.gnu.org/download/aspell/manual/devel/devel.html}.
 
@@ -98,7 +98,7 @@ version.
 
 \section*{Copyright}
 
-Copyright (c) 2002 Kevin Atkisnon. Permission is granted to copy,
+Copyright (c) 2002 Kevin Atkinson. Permission is granted to copy,
 distribute and/or modify this document under the terms of the GNU
 Free Documentation License, Version 1.1 or any later version published
 by the Free Software Foundation; with no Invariant Sections, no Front-Cover
@@ -185,7 +185,7 @@ when they wish to use Aspell.
 utility is included here.
 \item [scripts/]Misc. scripts used by Aspell
 \item [manual/]~
-\item [examples/]Example programs deminstating the use of the Aspell library
+\item [examples/]Example programs demonstrating the use of the Aspell library
 \end{description}
 
 \section{Strings}
@@ -274,7 +274,7 @@ it is defined and implemented in this header file.
 
 \subsection{GenericCopyPtr}
 
-A generalised version of CopyPtr and ClonePtr which the two are based
+A generalized version of CopyPtr and ClonePtr which the two are based
 on. It is defined in {}``generic\_copy\_ptr.hpp'' and implemented
 in {}``generic\_copy\_ptr-t.hpp''.
 
@@ -350,7 +350,7 @@ speller module
 \end{itemize}
 \end{enumerate}
 \begin{itemize}
-\item When checking a document
+\item When \textbf{checking a document}
 
 \begin{itemize}
 \item The \textbf{decoder} to convert from a standard format
@@ -371,14 +371,41 @@ speller module
 \item The \textbf{encoder} to convert into a standard format
 \end{itemize}
 \end{enumerate}
-A FilterChar is a struct which contains the characters value in Unicode
-and the {}``width'' of the character. ...
+A FilterChar is a struct defined in {}``common/filter\_char.hpp''
+which contains two members, a character, and a width. Its purpose
+is to keep track of the width of the character in the original format.
+This is important because when a misspelled word is found the exact
+location of the word needs to be returned to the application so that
+it can highlight it for the user. For example if the filters translated
+this:
 
+\begin{lyxcode}
+Mr.~foo~said~\&quot;I~hate~my~namme\&quot;.
+\end{lyxcode}
+to this
+
+\begin{lyxcode}
+Mr.~foo~said~\char`\"{}I~hate~my~namme\char`\"{}.
+\end{lyxcode}
+without keeping track of the original width of the characters the
+application will likely highlight {}``e my '' as the misspelling
+because the spell checker will return 25 as the offset instead of
+30. However with keeping track of the width using FilterChar the spell
+checker will now that the real position it 30 since the quote is really
+6 characters wide. In particular the text fill be annotated something
+like the following:
+
+\begin{lyxcode}
+1111111111111611111111111111161
+
+Mr.~foo~said~\char`\"{}I~hate~my~namme\char`\"{}.
+\end{lyxcode}
 The standard \textbf{encoder} and \textbf{decoder} filters are defined
-in common/convert.cpp. There should generally not be any need to deal
-with them so they will not be discussed here.
-
-{[}FIXME: Write more{]}
+in {}``common/convert.cpp''. There should generally not be any need
+to deal with them so they will not be discussed here. The other three
+filters, the \textbf{encoding filter}, the \textbf{true filter}, and
+the \textbf{decoding filter}, are all defined the exact same way;
+they are inherited from the IndividualFilter class.
 
 
 \subsection{Adding a New Filter}
@@ -387,17 +414,17 @@ To add a new filter create a new file in the modules/filter directory,
 the file should be a C++ file and end in {}``.cpp''. The file should
 contain a new filter class inherited from IndividualFilter, a function
 to return a new filter, and an optional KeyInfo array for adding options
-to control the behaviour of the filter. The file then needs to be
-added to Makefile.am so that the build system knows about the filter
-and lib/new\_filter.cpp must be modified so that Aspell knows about
-the filter.
+to control the behavior of the filter. The file then needs to be added
+to Makefile.am so that the build system knows about the filter and
+lib/new\_filter.cpp must be modified so that Aspell knows about the
+filter.
 
 
 \subsection{IndividualFilter class}
 
 All filters are required to inherit from the IndividualFilter class
 found in {}``indiv\_filter.hpp''. See that file for more details
-and the other filter modules for example of how it is used.
+and the other filter modules for examples of how it is used.
 
 
 \subsection{Constructor Function}
@@ -409,12 +436,17 @@ following prototype:
 \begin{lyxcode}
 IndividualFilter~{*}~new\_<\,{}<filter\_name>\,{}>
 \end{lyxcode}
+Filters are defined in groups where each group contains an \textbf{encoding
+filter}, a \textbf{true filter}, and a \textbf{decoding filter}. Only
+one of them is required to be defined, however they all need a separate
+constructor function.
+
 
 \subsection{Config Options}
 
-A filter may have any number of options associated with it as long
-as they all start with the filter name. See the \TeX{} and SGML filter
-for examples of what to do and {}``config.hpp'' for the definition
+A filter group may have any number of options associated with it as
+long as they all start with the filter name. See the \TeX{} and SGML
+filter for examples of what to do and {}``config.hpp'' for the definition
 of the KeyInfo struct.
 
 

@@ -75,7 +75,7 @@ Copyright (c) 2002
 \newline 
 Kevin Atkinson
 \newline 
-kevin at atkinson dhs org
+kevina@gnu.org
 \layout Standard
 
 
@@ -89,7 +89,7 @@ kevin at atkinson dhs org
 Notes
 \layout Standard
 
-This manual is designed for those who which to develope Aspell.
+This manual is designed for those who which to developer Aspell.
  It is currently very sketchy.
  However, it should improve over time.
  The latest version of this document can be found at 
@@ -110,7 +110,7 @@ The eventual goal is to convert this manual into Texinfo.
 Copyright
 \layout Standard
 
-Copyright (c) 2002 Kevin Atkisnon.
+Copyright (c) 2002 Kevin Atkinson.
  Permission is granted to copy, distribute and/or modify this document under
  the terms of the GNU Free Documentation License, Version 1.1 or any later
  version published by the Free Software Foundation; with no Invariant Sections,
@@ -257,7 +257,7 @@ scripts/ Misc.
 manual/
 \layout Description
 
-examples/ Example programs deminstating the use of the Aspell library
+examples/ Example programs demonstrating the use of the Aspell library
 \layout Section
 
 Strings
@@ -481,7 +481,7 @@ stack_ptr.hpp
 GenericCopyPtr
 \layout Standard
 
-A generalised version of CopyPtr and ClonePtr which the two are based on.
+A generalized version of CopyPtr and ClonePtr which the two are based on.
  It is defined in 
 \begin_inset Quotes eld
 \end_inset 
@@ -667,7 +667,9 @@ encoder
 \end_deeper 
 \layout Itemize
 
-When checking a document
+When 
+\series bold 
+checking a document
 \begin_deeper 
 \layout Itemize
 
@@ -730,17 +732,56 @@ encoder
 \end_deeper 
 \layout Standard
 
-A FilterChar is a struct which contains the characters value in Unicode
- and the 
+A FilterChar is a struct defined in 
 \begin_inset Quotes eld
 \end_inset 
 
-width
+common/filter_char.hpp
 \begin_inset Quotes erd
 \end_inset 
 
- of the character.
- ...
+ which contains two members, a character, and a width.
+ Its purpose is to keep track of the width of the character in the original
+ format.
+ This is important because when a misspelled word is found the exact location
+ of the word needs to be returned to the application so that it can highlight
+ it for the user.
+ For example if the filters translated this:
+\layout LyX-Code
+
+Mr.
+ foo said &quot;I hate my namme&quot;.
+\layout Standard
+
+to this
+\layout LyX-Code
+
+Mr.
+ foo said "I hate my namme".
+\layout Standard
+
+without keeping track of the original width of the characters the application
+ will likely highlight 
+\begin_inset Quotes eld
+\end_inset 
+
+e my 
+\begin_inset Quotes erd
+\end_inset 
+
+ as the misspelling because the spell checker will return 25 as the offset
+ instead of 30.
+ However with keeping track of the width using FilterChar the spell checker
+ will now that the real position it 30 since the quote is really 6 characters
+ wide.
+ In particular the text fill be annotated something like the following:
+\layout LyX-Code
+
+1111111111111611111111111111161
+\layout LyX-Code
+
+Mr.
+ foo said "I hate my namme".
 \layout Standard
 
 The standard 
@@ -751,12 +792,31 @@ encoder
 \series bold 
 decoder
 \series default 
- filters are defined in common/convert.cpp.
+ filters are defined in 
+\begin_inset Quotes eld
+\end_inset 
+
+common/convert.cpp
+\begin_inset Quotes erd
+\end_inset 
+
+.
  There should generally not be any need to deal with them so they will not
  be discussed here.
-\layout Standard
-
-[FIXME: Write more]
+ The other three filters, the 
+\series bold 
+encoding filter
+\series default 
+, the 
+\series bold 
+true filter
+\series default 
+, and the 
+\series bold 
+decoding filter
+\series default 
+, are all defined the exact same way; they are inherited from the IndividualFilt
+er class.
 \layout Subsection
 
 Adding a New Filter
@@ -774,7 +834,7 @@ To add a new filter create a new file in the modules/filter directory, the
 .
  The file should contain a new filter class inherited from IndividualFilter,
  a function to return a new filter, and an optional KeyInfo array for adding
- options to control the behaviour of the filter.
+ options to control the behavior of the filter.
  The file then needs to be added to Makefile.am so that the build system
  knows about the filter and lib/new_filter.cpp must be modified so that Aspell
  knows about the filter.
@@ -793,7 +853,7 @@ indiv_filter.hpp
 \end_inset 
 
 .
- See that file for more details and the other filter modules for example
+ See that file for more details and the other filter modules for examples
  of how it is used.
 \layout Subsection
 
@@ -810,13 +870,30 @@ new
 \layout LyX-Code
 
 IndividualFilter * new_<<filter_name>>
+\layout Standard
+
+Filters are defined in groups where each group contains an 
+\series bold 
+encoding filter
+\series default 
+, a 
+\series bold 
+true filter
+\series default 
+, and a 
+\series bold 
+decoding filter
+\series default 
+.
+ Only one of them is required to be defined, however they all need a separate
+ constructor function.
 \layout Subsection
 
 Config Options
 \layout Standard
 
-A filter may have any number of options associated with it as long as they
- all start with the filter name.
+A filter group may have any number of options associated with it as long
+ as they all start with the filter name.
  See the TeX and SGML filter for examples of what to do and 
 \begin_inset Quotes eld
 \end_inset 

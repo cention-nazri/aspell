@@ -80,7 +80,7 @@
 
 \author{Copyright (c) 2000-2002\\
 Kevin Atkinson\\
-kevin@atkinson.dhs.org}
+kevina@gnu.org}
 
 \maketitle
 \tableofcontents{}
@@ -278,6 +278,12 @@ Aspell does not use a released version of GNU Libtool. If you have
 a need to modify configure.ac or any of the Makefile.am's you should
 install the CVS version of libtool.
 
+There seams to be a bug in gcc when compiling with {}``-O3'' which
+will cause undefined references involving the CopyPtr class. If you
+get undefined references when compiling with {}``-O3'' simply change
+that to {}``-O2'' and you should be okay. If you can find a work
+around for this problem please let me know.
+
 
 \subsection{Curses Notes}
 
@@ -331,12 +337,17 @@ and the name is changed from {}``\texttt{.aspell.<lang>.{*}}'' to''
 \texttt{<lang>.{*}}''.
 
 
-\section{Upgrading from Aspell .33/Pspell .12}
+\subsection{Upgrading from Aspell .33/Pspell .12}
 
 Aspell has undergone an extremely large number of changes since the
 previous Aspell/Pspell release. For one thing Pspell has been merged
 with Aspell so there in no longer two separate libraries you have
 to worry about.
+
+Because of the massive changes between Aspell/Pspell and Aspell 0.50
+you may want to clean out the old files before installing the the
+new Aspell. To do so do a {}``make uninstall'' in the original Aspell
+and Pspell source directories.
 
 The way dictionaries are handled has also changed. This includes a
 change in the naming conventions of both language names and dictionaries.
@@ -374,6 +385,15 @@ via the C API. See the file {}``list-dicts.c'' in the examples/
 directory for an example of how to due this. Unfortunately there is
 isn't any simply way to find out which dictionaries are installed
 which will work with both the old Aspell/Pspell and the new GNU Aspell.
+
+
+\subsection{Upgrading from a pre-release snapshot}
+
+At the last minute I decided to merge the {}``speller-util'' program
+into the main {}``aspell'' program. You may right to remove that
+speller-util program to avoid confusion. This also means that dictionaries
+designed to work with the snapshot will no longer work with the official
+release. 
 
 
 \section{Using aspell-import}
@@ -2216,6 +2236,9 @@ into Aspell.
 \item Added the ability to list the available dictionaries
 \item Improved the spell checking interface a bit.
 \item Added support for using the Ispell keymapping when checking files.
+\item Complete rewrite of the filter interface. It should now be fairly
+easy to add new filters to Aspell.
+\item Added some preliminary developer documentation.
 \item Lots of other changes due to the massive overhaul of the source code. 
 \end{itemize}
 

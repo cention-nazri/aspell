@@ -79,7 +79,7 @@ Copyright (c) 2000-2002
 \newline 
 Kevin Atkinson
 \newline 
-kevin@atkinson.dhs.org
+kevina@gnu.org
 \layout Standard
 
 
@@ -613,6 +613,35 @@ General Problems
 Aspell does not use a released version of GNU Libtool.
  If you have a need to modify configure.ac or any of the Makefile.am's you
  should install the CVS version of libtool.
+\layout Standard
+
+There seams to be a bug in gcc when compiling with 
+\begin_inset Quotes eld
+\end_inset 
+
+-O3
+\begin_inset Quotes erd
+\end_inset 
+
+ which will cause undefined references involving the CopyPtr class.
+ If you get undefined references when compiling with 
+\begin_inset Quotes eld
+\end_inset 
+
+-O3
+\begin_inset Quotes erd
+\end_inset 
+
+ simply change that to 
+\begin_inset Quotes eld
+\end_inset 
+
+-O2
+\begin_inset Quotes erd
+\end_inset 
+
+ and you should be okay.
+ If you can find a work around for this problem please let me know.
 \layout Subsection
 
 Curses Notes
@@ -755,7 +784,7 @@ prefix
 \end_inset 
 
 .
-\layout Section
+\layout Subsection
 
 Upgrading from Aspell .33/Pspell .12
 \layout Standard
@@ -764,6 +793,19 @@ Aspell has undergone an extremely large number of changes since the previous
  Aspell/Pspell release.
  For one thing Pspell has been merged with Aspell so there in no longer
  two separate libraries you have to worry about.
+\layout Standard
+
+Because of the massive changes between Aspell/Pspell and Aspell 0.50 you
+ may want to clean out the old files before installing the the new Aspell.
+ To do so do a 
+\begin_inset Quotes eld
+\end_inset 
+
+make uninstall
+\begin_inset Quotes erd
+\end_inset 
+
+ in the original Aspell and Pspell source directories.
 \layout Standard
 
 The way dictionaries are handled has also changed.
@@ -840,6 +882,32 @@ list-dicts.c
  Unfortunately there is isn't any simply way to find out which dictionaries
  are installed which will work with both the old Aspell/Pspell and the new
  GNU Aspell.
+\layout Subsection
+
+Upgrading from a pre-release snapshot
+\layout Standard
+
+At the last minute I decided to merge the 
+\begin_inset Quotes eld
+\end_inset 
+
+speller-util
+\begin_inset Quotes erd
+\end_inset 
+
+ program into the main 
+\begin_inset Quotes eld
+\end_inset 
+
+aspell
+\begin_inset Quotes erd
+\end_inset 
+
+ program.
+ You may right to remove that speller-util program to avoid confusion.
+ This also means that dictionaries designed to work with the snapshot will
+ no longer work with the official release.
+ 
 \layout Section
 
 Using aspell-import
@@ -5502,6 +5570,13 @@ Improved the spell checking interface a bit.
 \layout Itemize
 
 Added support for using the Ispell keymapping when checking files.
+\layout Itemize
+
+Complete rewrite of the filter interface.
+ It should now be fairly easy to add new filters to Aspell.
+\layout Itemize
+
+Added some preliminary developer documentation.
 \layout Itemize
 
 Lots of other changes due to the massive overhaul of the source code.
