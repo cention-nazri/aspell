@@ -611,8 +611,9 @@ namespace acommon {
       }
       return no_err;
     }
-    bool encode(FilterChar * & in, FilterChar * & stop,
+    bool encode(FilterChar * & in0, FilterChar * & stop,
                 FilterCharVector & out) const {
+      FilterChar * in = in0;
       for (; in != stop; ++in)
         *in = lookup(*in);
       return true;
