@@ -690,6 +690,12 @@ Dir
  
 \layout Subsection
 
+Upgrading from Aspell 0.50
+\layout Standard
+
+The dictionary format has changed so dictionaries will need to be recompiled.
+\layout Subsection
+
 Upgrading from Aspell .33/Pspell .12
 \layout Standard
 
@@ -6273,13 +6279,26 @@ appendix
 Changelog
 \layout Section*
 
-Changes from ?? to 0.51 (??)
+Changes from 0.50.? to 0.51
 \layout Itemize
 
 Added support for loadable filters thanks to Christoph Hintermüller
 \layout Itemize
 
-Added gettext support thanks to ...
+Enhanced TeX filter to support recognize accent commands such as the german
+ umlaute and to treat words with hyphenation characters in them as one word,
+ also thanks to Christoph Hintermüller
+\layout Itemize
+
+Added gettext support thanks to Sergey Poznyakoff
+\layout Itemize
+
+Reworked how the dictionary is stored to take up less space (around 80%
+ for the English language) and be faster in some cases.
+\layout Itemize
+
+Reworked the build system so that a single Makefile is used for most of
+ the code.
 \layout Section*
 
 Changes from 0.50.4 to 0.50.4.1 (Oct 11, 2003)
@@ -7701,13 +7720,7 @@ These items need to be done before I consider Aspell finished.
  Good C++ skills are needed for most of these tasks involving coding.
 \layout Itemize
 
-Convert manual from LyX/LaTeX to Texinfo.
-\layout Itemize
-
 Clean up copyright notices and bring the Aspell package up to GNU Standards.
-\layout Itemize
-
-Add gettext support to Aspell.
 \layout Itemize
 
 Allow Aspell to check documents which are in UTF-8.
@@ -7723,10 +7736,6 @@ Make Aspell Thread safe.
  (such as accessing a global pool) and several several classes which have
  the potential of being used by more than one thread (such as the personal
  dictionary).
-\layout Itemize
-
-Allow filters to be loaded at run-time.
- At the moment all filters must be complied in.
 \layout Itemize
 
 Integrate Kevin Hendricks affix compression code into Aspell.

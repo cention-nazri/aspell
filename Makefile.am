@@ -169,16 +169,20 @@ filter_LTLIBRARIES = libemail-filter.la libtex-filter.la\
 	             libsgml-filter.la libcontext-filter.la
 
 libemail_filter_la_SOURCES = modules/filter/email.cpp
-libemail_filter_la_LIBADD = libaspell.la
+libemail_filter_la_LIBADD = libaspell.la 
+libemail_filter_la_LDFLAGS  = -avoid-version
 
 libtex_filter_la_SOURCES = modules/filter/tex.cpp
 libtex_filter_la_LIBADD = libaspell.la
+libtex_filter_la_LDFLAGS  = -avoid-version
 
 libsgml_filter_la_SOURCES  = modules/filter/sgml.cpp
 libsgml_filter_la_LIBADD = libaspell.la
+libsgml_filter_la_LDFLAGS  = -avoid-version
 
 libcontext_filter_la_SOURCES  = modules/filter/context.hpp modules/filter/context.cpp
 libcontext_filter_la_LIBADD = libaspell.la
+libcontext_filter_la_LDFLAGS  = -avoid-version
 
 ### Before this line add the corresponding <yourfilterlibrary>_SOURCES and
 ### <yourfilterlibrary>_LIBADD lines.  The later at least has to look

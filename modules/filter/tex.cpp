@@ -86,7 +86,7 @@ namespace acommon {
   {
     name_ = "tex-filter";
     order_num_ = 0.35;
-    fprintf(stderr,"name %s \n",name_);
+    //fprintf(stderr,"name %s \n",name_);
 
     commands.clear();
     opts->retrieve_list("filter-tex-command", &commands);

@@ -156,7 +156,7 @@ namespace acommon
     while ((filter_name = els.next()) != 0) {
       filterhandle[0]=filterhandle[1]=filterhandle[2]=(void*)NULL;
       addcount=0;
-      fprintf(stderr, "Loading %s ... \n", filter_name);
+      //fprintf(stderr, "Loading %s ... \n", filter_name);
       FilterEntry * f = find_individual_filter(filter_name);
   //Changed for reflecting new filter loadability dependent uppon existance of libdl
   //if there is not libdl than the following behaves like as ever
@@ -392,7 +392,7 @@ namespace acommon
 
     if ((namelength == 6) &&
         !strncmp(key->name,"filter",6)){
-      fprintf(stderr,"Expanding for %s ... \n",value.str());
+      //fprintf(stderr,"Expanding for %s ... \n",value.str());
       while (current < filter_modules_end) {
         if (!strncmp(value.str(), current->name,
                      value.size() <= strlen(current->name)?
@@ -622,8 +622,8 @@ bool emptyfile=true;
             continue;
           }
           if (optionkey.no_case() == "static") {
-            fprintf(stderr,"Filter %s consists of `%s'\n",value.str(),
-                    optionkeyvalue.c_str());
+            //fprintf(stderr,"Filter %s consists of `%s'\n",value.str(),
+            //        optionkeyvalue.c_str());
             activeoption=0;
             continue;
           }
