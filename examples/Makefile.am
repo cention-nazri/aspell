@@ -1,8 +1,8 @@
 
-bin_PROGRAMS = aspell0
+noinst_PROGRAMS = example-c
 
 INCLUDES = -I../interfaces/cc/
 
-aspell0_SOURCES = aspell0.c
+example_c_SOURCES = example-c.c
 
-aspell0_LDADD = ../lib/libaspell.la
+example_c_LDADD = ../lib/libaspell.la
