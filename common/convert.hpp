@@ -262,8 +262,15 @@ namespace acommon {
     }
     const char * operator() (char c)
     {
-      char buf2[2] = {c, 0};
-      return operator()(ParmString(buf2,1));
+      buf.clear();
+      if (conv) {
+        char str[2] = {c, 0};
+        conv->convert(str, 1, buf, buf0);
+      } else {
+        buf.append(c);
+        buf.append('\0');
+      }
+      return buf.data();
     }
   };
 
