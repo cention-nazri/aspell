@@ -19,6 +19,7 @@
 #include "suggest.hpp"
 #include "tokenizer.hpp"
 #include "convert.hpp"
+#include "stack_ptr.hpp"
 
 namespace aspeller {
   //
@@ -177,7 +178,8 @@ namespace aspeller {
     return 0;
   };
 
-  PosibErr<bool> SpellerImpl::check(char * word, char * word_end, /* it WILL modify word */
+  PosibErr<bool> SpellerImpl::check(char * word, char * word_end, 
+                                    /* it WILL modify word */
 				    unsigned int run_together_limit,
 				    CompoundInfo::Position pos,
 				    SingleWordInfo * words)
@@ -462,7 +464,7 @@ namespace aspeller {
       callback(speller_, ki, value, UpdateMember::Bool);
       return no_err;
     }
-    PosibErr<void> item_updated(const KeyInfo * ki, const char * value) {
+    PosibErr<void> item_updated(const KeyInfo * ki, ParmString value) {
       callback(speller_, ki, value, UpdateMember::String);
       return no_err;
     }
@@ -569,7 +571,7 @@ namespace aspeller {
     
     change_id(ltemp, main_id);
 
-    ClonePtr<StringList> extra_dicts(new_string_list()); // fixme Make ClonePtr StackPtr
+    StackPtr<StringList> extra_dicts(new_string_list());
     config_->retrieve_list("extra-dicts", extra_dicts);
     Enumeration<StringEnumeration> els = extra_dicts->elements();
     const char * dict_name;
