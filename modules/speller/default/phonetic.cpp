@@ -34,19 +34,18 @@ namespace aspeller {
       return chars_list;
     }
 
-    String to_soundslike(ParmString str) const 
+    char * to_soundslike(char * res, const char * str, int size) const 
     {
-      String new_word;
       char prev = '\0';
       char cur;
       
-      for (const char * i = str; *i != '\0'; ++i) {
+      for (const char * i = str; *i; ++i) {
 	cur = lang->to_sl(*i);
-	if (cur != '\0' && cur != prev) new_word += lang->to_sl(*i);
+	if (cur != '\0' && cur != prev) *res++ = cur;
 	prev = cur;
       }
-      
-      return new_word;
+      *res = '\0';
+      return res;
     }
 
     const char * name () const {
@@ -69,12 +68,9 @@ namespace aspeller {
       return get_stripped_chars(*lang);
     }
 
-    String to_soundslike(ParmString str) const 
+    char * to_soundslike(char * res, const char * str, int size) const 
     {
-      String new_word;
-      new_word.reserve(str.size());
-      to_stripped(*lang, str, new_word);
-      return new_word;
+      return lang->LangImpl::to_stripped(res, str);
     }
 
     const char * name() const {
@@ -128,12 +124,10 @@ namespace aspeller {
       return chars_list;
     }
     
-    String to_soundslike(ParmString str) const 
+    char * to_soundslike(char * res, const char * str, int size) const 
     {
-      std::vector<char> new_word;
-      new_word.resize(str.size()+1);
-      phonet(str, &new_word.front(), *phonet_parms);
-      return &new_word.front();
+      int new_size = phonet(str, res, size, *phonet_parms);
+      return res + new_size;
     }
     
     const char * name() const

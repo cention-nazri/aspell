@@ -37,6 +37,7 @@
 #include "getdata.hpp"
 #include "language.hpp"
 #include "objstack.hpp"
+#include "vararray.hpp"
 
 using namespace acommon;
 
@@ -157,7 +158,7 @@ namespace aspeller {
 
 
 #ifdef PHONET_TRACE
-  void trace_info(char * text, int n, char * error, 
+  void trace_info(char * text, int n, char * error,
 		  const PhonetParms & parms) 
   {
     /**  dump tracing info  **/
@@ -167,7 +168,8 @@ namespace aspeller {
   }
 #endif
 
-  int phonet (const char * inword, char * target, 
+  int phonet (const char * inword, char * target,
+              int len,
 	      const PhonetParms & parms)
   {
     assert (target != NULL && inword != NULL);
@@ -179,17 +181,15 @@ namespace aspeller {
 
     int  i,j,k=0,n,p,z;
     int  k0,n0,p0=-333,z0;
-    int len = strlen(inword)+1;
-    std::vector<char> word(len);
+    if (len == -1) len = strlen(inword);
+    VARARRAY(char, word, len + 1);
     char c, c0;
     const char * s;
 
     typedef unsigned char uchar;
     
     /**  to_upperize string  **/
-    for (i = 0; inword[i] != '\0'; i++)
-      word[i] = parms.lang->to_upper(inword[i]);
-    word[i] = '\0';
+    parms.lang->LangImpl::to_upper(word, inword);
 
     /**  check word  **/
     i = j = z = 0;
@@ -373,7 +373,7 @@ namespace aspeller {
               i += k - 1;
               z = 0;
               while (*s != '\0'
-                     &&  *(s+1) != '\0'  &&  j < len-1) {
+                     &&  *(s+1) != '\0'  &&  j < len) {
                 if (j == 0  ||  target[j-1] != *s) {
                   target[j] = *s;
                   j++;
@@ -400,7 +400,7 @@ namespace aspeller {
         } /**  end of while (parms.rules[n][0] == c)  **/
       } /**  end of if (n >= 0)  **/
       if (z0 == 0) {
-        if (k && (assert(p0!=-333),!p0) &&  j < len-1  &&  c != '\0'
+        if (k && (assert(p0!=-333),!p0) &&  j < len &&  c != '\0'
            && (!parms.collapse_result  ||  j == 0  ||  target[j-1] != c)){
            /**  condense only double letters  **/
           target[j] = c;

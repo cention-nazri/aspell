@@ -90,11 +90,6 @@ namespace {
     String   soundslike;
     CasePattern  case_pattern;
     OriginalWord() {}
-    OriginalWord (const String &w, const String &sl)
-      : word(w), soundslike(sl) {}
-    OriginalWord (const String &w, const String &sl,
-		 const String &l, CasePattern cp)
-      : word(w), stripped(l), soundslike(sl), case_pattern(cp) {}
   };
 
   //
@@ -103,8 +98,8 @@ namespace {
   //
 
   struct ScoreWordSound {
-    const char *  word;
-    const char *  word_stripped;
+    char *  word;
+    char *  word_stripped;
     int           score;
     int           soundslike_score;
     bool          count;
@@ -146,13 +141,18 @@ namespace {
 
   public:
     Score(const Language *l, const String &w, const SuggestParms & p)
-      : lang(l), original_word(w, l->to_soundslike(w.c_str()), 
-			       to_stripped(*l, w),
-			       case_pattern(*l, w)),
-      parms(p)
-    {}
-    String fix_case(const String & word) {
-      return aspeller::fix_case(*lang,original_word.case_pattern,word);
+      : lang(l), original_word(), parms(p)
+    {
+      original_word.word = w;
+      l->to_stripped(original_word.stripped, w.str());
+      l->to_soundslike(original_word.soundslike, w.str());
+      original_word.case_pattern = l->case_pattern(w);
+    }
+    void fix_case(char * str) {
+      lang->LangImpl::fix_case(original_word.case_pattern, str, str);
+    }
+    const char * fix_case(const char * str, String & buf) {
+      return lang->LangImpl::fix_case(original_word.case_pattern, str, buf);
     }
   };
 
@@ -182,20 +182,20 @@ namespace {
     }
 
     void try_sound(ParmString, int score);
-    void add_nearmiss(ParmString word, int score, bool count, WordEntry * rl = 0)
+    void add_nearmiss(MutableString word, int score, bool count, WordEntry * rl = 0)
     {
       near_misses.push_front(ScoreWordSound());
       ScoreWordSound & d = near_misses.front();
       d.word = word;
 
       if (parms.use_typo_analysis) {
-	unsigned int l = word.size();
+	unsigned int l = word.size;
 	if (l > max_word_length) max_word_length = l;
       }
 
-      if (!is_stripped(*lang,word)) { // FIXME: avoid the need for this test
-        d.word_stripped = (char *)buffer.alloc(word.size() + 1);
-        to_stripped(*lang, word, (char *)d.word_stripped);
+      if (!lang->is_stripped(word)) { // FIXME: avoid the need for this test
+        d.word_stripped = (char *)buffer.alloc(word.size + 1);
+        lang->LangImpl::to_stripped((char *)d.word_stripped, word);
       } else {
 	d.word_stripped = d.word;
       }
@@ -282,7 +282,7 @@ namespace {
             = static_cast<const ReplacementDict *>(i->dict);
           repl_dict->repl_lookup(sw, *repl);
         }
-        add_nearmiss(ParmString(w, sw_word.size()), score, do_count, repl);
+        add_nearmiss(MutableString(w, sw_word.size()), score, do_count, repl);
       }
     }
     if (affix_compress_soundslike) {
@@ -442,14 +442,14 @@ namespace {
     WordEntry * sw;
     WordEntry w;
     const char * sl = 0;
-    String sl_buf;
+    String sl_buf; // FIXME: Make constant for max word len
     EditDist score;
     unsigned int stopped_at = LARGE_NUM;
     ObjStack exp_buf;
     WordAff * exp_list;
     WordAff single;
     single.next = 0;
-    
+
     for (SpellerImpl::WS::const_iterator i = speller->suggest_ws.begin();
          i != speller->suggest_ws.end();
          ++i) 
@@ -462,8 +462,7 @@ namespace {
           sl = sw->word;
         } else if (!*sw->aff) {
           sl_buf.clear();
-          to_stripped(*lang, sw->word, sl_buf);
-          sl = sl_buf.c_str();
+          sl = lang->LangImpl::to_stripped(sl_buf, sw->word);
         } else {
           goto affix_case;
         }
@@ -486,7 +485,7 @@ namespace {
               = static_cast<const ReplacementDict *>(i->dict);
             repl_dict->repl_lookup(w, *repl);
           }
-          add_nearmiss(ParmString(wf, w_word.size()), score, do_count, repl);
+          add_nearmiss(MutableString(wf, w_word.size()), score, do_count, repl);
         }
         continue;
 
@@ -515,14 +514,14 @@ namespace {
         {
           // try the root word
           sl_buf.clear();
-          to_stripped(*lang, p->word, sl_buf);
+          lang->LangImpl::to_stripped(sl_buf, p->word);
           score = edit_dist_fun(sl_buf.c_str(), original_soundslike, parms.edit_distance_weights);
           stopped_at = score.stopped_at - sl_buf.c_str();
 
           if (score < LARGE_NUM) {
             char * wf = (char *)buffer.alloc(p->word.size + 1);
             i->convert.convert(p->word, wf);
-            add_nearmiss(ParmString(wf, p->word.size), score, do_count);
+            add_nearmiss(MutableString(wf, p->word.size), score, do_count);
           }
 
           // expand any suffixes, using stopped_at as a hint to avoid
@@ -542,12 +541,12 @@ namespace {
           // iterate through fully expanded words, if any
           for (WordAff * q = exp_list; q; q = q->next) {
             sl_buf.clear();
-            to_stripped(*lang, q->word, sl_buf);
+            lang->to_stripped(sl_buf, q->word);
             score = edit_dist_fun(sl_buf.c_str(), original_soundslike, parms.edit_distance_weights);
             if (score >= LARGE_NUM) continue;
             char * wf = (char *)buffer.alloc(q->word.size + 1);
             i->convert.convert(q->word, wf);
-            add_nearmiss(ParmString(wf, q->word.size), score, do_count);
+            add_nearmiss(MutableString(wf, q->word.size), score, do_count);
           }
         }
       }
@@ -750,6 +749,7 @@ namespace {
 #  endif
     int c = 1;
     hash_set<String,HashString<String> > duplicates_check;
+    String buf;
     String final_word;
     pair<hash_set<String,HashString<String> >::iterator, bool> dup_pair;
     for (NearMisses::const_iterator i = scored_near_misses.begin();
@@ -763,7 +763,7 @@ namespace {
       if (i->repl_list != 0) {
  	String::size_type pos;
 	do {
- 	  dup_pair = duplicates_check.insert(fix_case(i->repl_list->word));
+ 	  dup_pair = duplicates_check.insert(fix_case(i->repl_list->word, buf));
  	  if (dup_pair.second && 
  	      ((pos = dup_pair.first->find(' '), pos == String::npos)
  	       ? (bool)speller->check(*dup_pair.first)
@@ -772,7 +772,8 @@ namespace {
  	    near_misses_final->push_back(*dup_pair.first);
  	} while (i->repl_list->adv());
       } else {
-	dup_pair = duplicates_check.insert(fix_case(i->word));
+        fix_case(i->word);
+	dup_pair = duplicates_check.insert(i->word);
 	if (dup_pair.second )
 	  near_misses_final->push_back(*dup_pair.first);
       }

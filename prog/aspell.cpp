@@ -738,7 +738,7 @@ void pipe()
         String guesses, guess;
         const CheckInfo * ci = real_speller->check_info();
         aspeller::CasePattern casep 
-          = aspeller::case_pattern(real_speller->lang(), cword);
+          = real_speller->lang().case_pattern(cword);
         while (ci) {
           guess.clear();
           if (ci->pre_add && ci->pre_add[0])      guess << ci->pre_add << '+';
@@ -746,8 +746,8 @@ void pipe()
           if (ci->pre_strip && ci->pre_strip[0]) guess << '-' << ci->pre_strip;
           if (ci->suf_strip && ci->suf_strip[0]) guess << '-' << ci->suf_strip;
           if (ci->suf_add   && ci->suf_add[0])   guess << '+' << ci->suf_add;
-          guesses << ", " 
-                  << oconv(aspeller::fix_case(real_speller->lang(),casep, guess));
+          real_speller->lang().fix_case(casep, guess.data(), guess.data());
+          guesses << ", " << oconv(guess.str());
           ci = ci->next;
         }
 	start = clock();
@@ -1417,8 +1417,11 @@ void soundslike() {
   Conv oconv(setup_conv(lang, options));
   String word;
   while (CIN.getline(word)) {
-    COUT << word << '\t' << oconv(lang->to_soundslike(iconv(word))) << "\n";
-  } 
+    COUT << word << '\t';
+    char * sl = iconv(word.data(), word.size());
+    lang->LangImpl::to_soundslike(sl, sl);
+    printf("%s\t%s\n", word.str(), sl);
+  }
 }
 
 //////////////////////////
@@ -1576,7 +1579,7 @@ void combine()
     }
 
     if (lower_equal(lang, base, w)) {
-      if (is_lower(*lang, base)) {
+      if (lang->is_lower(base.str())) {
         combine_aff(affs, af);
       } else {
         base = w;

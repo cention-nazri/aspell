@@ -770,7 +770,7 @@ bool AffixMgr::affix_check(const LookupInfo & linf, ParmString word,
                            CheckInfo & ci, GuessInfo * gi) const
 {
   // Deal With Case in a semi-intelligent manner
-  CasePattern cp = case_pattern(*lang,word);
+  CasePattern cp = lang->LangImpl::case_pattern(word);
   ParmString pword = word;
   ParmString sword = word;
   CharVector lower;
@@ -797,7 +797,7 @@ bool AffixMgr::affix_check(const LookupInfo & linf, ParmString word,
 
 void AffixMgr::get_word(String & word, const CheckInfo & ci) const
 {
-  CasePattern cp = case_pattern(*lang,word);
+  CasePattern cp = lang->LangImpl::case_pattern(word);
   if (ci.pre_add) {
     if (cp == FirstUpper) word[0] = lang->to_lower(word[0]);
     size_t s = strlen(ci.pre_add);
@@ -823,7 +823,7 @@ void AffixMgr::munch(ParmString word, CheckList * cl) const
   LookupInfo li(0, LookupInfo::AlwaysTrue);
   CheckInfo ci;
   cl->reset();
-  CasePattern cp = case_pattern(*lang,word);
+  CasePattern cp = lang->LangImpl::case_pattern(word);
   if (cp == AllUpper) return;
   if (cp != FirstUpper)
     prefix_check(li, word, ci, &cl->gi);

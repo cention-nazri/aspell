@@ -80,6 +80,7 @@ namespace aspeller {
     const char * first_word = sugels->next();
     CheckInfo w1, w2;
     String cor1, cor2;
+    String buf;
     bool correct = false;
     if (pos = cor.find(' '), pos == String::npos) {
       cor1 = cor;
@@ -96,7 +97,7 @@ namespace aspeller {
  	cor_orignal_casing += cor2;
       }
       if (first_word == 0 || cor != first_word) {
- 	repl_->add_repl(aspeller::to_lower(lang(), mis), cor_orignal_casing);
+ 	repl_->add_repl(lang().to_lower(buf, mis.str()), cor_orignal_casing);
       }
       
       if (memory && prev_cor_repl_ == mis) 

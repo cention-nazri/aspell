@@ -14,6 +14,7 @@
 #include "language.hpp"
 #include "speller_impl.hpp"
 #include "cache-t.hpp"
+#include "vararray.hpp"
 
 #include "iostream.hpp"
 
@@ -175,12 +176,24 @@ namespace aspeller {
 
   PosibErr<void> Dictionary::add_repl(ParmString mis, ParmString cor) 
   {
-    return add_repl(mis, cor, have_soundslike ? lang()->to_soundslike(mis) : "");
+    if (have_soundslike) {
+      VARARRAY(char, sl, mis.size() + 1);
+      lang()->LangImpl::to_soundslike(sl, mis.str(), mis.size());
+      return add_repl(mis, cor, sl);
+    } else {
+      return add_repl(mis, cor, "");
+    }
   }
 
   PosibErr<void> Dictionary::add(ParmString w) 
   {
-    return add(w, have_soundslike ? lang()->to_soundslike(w) : "");
+    if (have_soundslike) {
+      VARARRAY(char, sl, w.size() + 1);
+      lang()->LangImpl::to_soundslike(sl, w.str(), w.size());
+      return add(w, sl);
+    } else {
+      return add(w, "");
+    }
   }
 
   //

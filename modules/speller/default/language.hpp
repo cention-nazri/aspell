@@ -40,6 +40,8 @@ namespace aspeller {
     }
   };
 
+  enum CasePattern {Other, FirstUpper, AllUpper};
+
   class Language : public Cacheable {
   public:
     typedef const Config CacheConfig;
@@ -135,8 +137,11 @@ namespace aspeller {
     CharType char_type(char c) const {return char_type_[to_uchar(c)];}
     bool is_alpha(char c) const {return char_type(c) == letter;}
   
-    String to_soundslike(ParmString word) const {
-      return soundslike_->to_soundslike(word);
+    const char * to_soundslike(String & res, ParmString word) const {
+      res.resize(word.size());
+      char * e = soundslike_->to_soundslike(res.data(), word.str(), word.size());
+      res.resize(e - res.data());
+      return res.str();
     }
 
     const char * soundslike_name() const {
@@ -157,6 +162,90 @@ namespace aspeller {
     SuggestReplEnumeration * repl() const {
       return new SuggestReplEnumeration(repls_.pbegin(), repls_.pend());}
 
+    char * to_soundslike(char * res, const char * str, int len = -1) const 
+    { return soundslike_->to_soundslike(res,str,len);}
+    
+    char * to_lower(char * res, const char * str) const {
+      while (*str) *res++ = to_lower(*str++); *res = '\0'; return res;}
+    char * to_upper(char * res, const char * str) const {
+      while (*str) *res++ = to_upper(*str++); *res = '\0'; return res;}
+    char * to_stripped(char * res, const char * str) const {
+      for (; *str; ++str) {
+        if (special(*str).any()) ++str;
+        *res++ = to_stripped(*str);
+      }
+      *res = '\0';
+      return res;
+    }
+
+    const char * to_lower(String & res, const char * str) const {
+      res.clear(); while (*str) res += to_lower(*str++); return res.str();}
+    const char * to_upper(String & res, const char * str) const {
+      res.clear(); while (*str) res += to_upper(*str++); return res.str();}
+    const char * to_stripped(String & res, const char * str) const {
+      res.clear();
+      for (; *str; ++str) {
+        if (special(*str).any()) ++str;
+        res += to_stripped(*str);
+      }
+      return res.str();
+    }
+
+    bool is_lower(const char * str) const {
+      while (*str) {if (!is_lower(*str++)) return false;} return true;}
+    bool is_upper(const char * str) const {
+      while (*str) {if (!is_upper(*str++)) return false;} return true;}
+    bool is_stripped(const char * str) const {
+      while (*str) {if (!is_stripped(*str++)) return false;} return true;}
+
+    CasePattern case_pattern(ParmString word) const  
+    {
+      if (is_upper(word))
+        return AllUpper;
+      else if (!is_lower(word[0]))
+        return FirstUpper;
+      else
+        return Other;
+    }
+    
+    void fix_case(CasePattern case_pattern,
+                  char * res, const char * str) const 
+    {
+      if (!str[0]) return;
+      if (case_pattern == AllUpper) {
+        to_upper(res,str);
+      } if (case_pattern == FirstUpper && is_lower(str[0])) {
+        *res = to_title(str[0]);
+        if (res == str) return;
+        res++;
+        str++;
+        while (*str) *res++ = *str++;
+        *res = '\0';
+      } else {
+        if (res == str) return;
+        while (*str) *res++ = *str++;
+        *res = '\0';
+      }
+    }
+
+    const char * fix_case(CasePattern case_pattern, const char * str,
+                          String buf) const 
+    {
+      if (!str[0]) return str;
+      if (case_pattern == AllUpper) {
+        to_upper(buf,str);
+        return buf.str();
+      } if (case_pattern == FirstUpper && is_lower(str[0])) {
+        buf.clear();
+        buf += to_title(str[0]);
+        str++;
+        while (*str) buf += *str++;
+        return buf.str();
+      } else {
+        return str;
+      }
+    }
+
     static inline PosibErr<Language *> get_new(const String & lang, const Config * config) {
       StackPtr<Language> l(new Language());
       RET_ON_ERR(l->setup(lang, config));
@@ -165,6 +254,8 @@ namespace aspeller {
 
     bool cache_key_eq(const String & l) const  {return name_ == l;}
   };
+
+  typedef Language LangImpl;
 
   struct MsgConv : public ConvP
   {
@@ -278,108 +369,6 @@ namespace aspeller {
       }
     }
   };
-
-  inline String to_lower(const Language & l, ParmString word) 
-  {
-    String new_word; 
-    for (const char * i = word; *i; ++i) 
-      new_word += l.to_lower(*i); 
-    return new_word;
-  }
-  
-  inline bool is_lower(const Language & l, ParmString word)
-  {
-    for (const char * i = word; *i; ++i) 
-      if (!l.is_lower(*i))
-	return false;
-    return true;
-  }
-
-  template <class Str>
-  inline void to_stripped(const Language & l, ParmString word, Str & new_word)
-  {
-    for (const char * i = word; *i; ++i) {
-      if (l.special(*i).any()) ++i;
-      new_word.push_back(l.to_stripped(*i));
-    }
-  }
-  
-  inline void to_stripped(const Language & l, ParmString word, char * o)
-  {
-    for (const char * i = word; *i; ++i) {
-      if (l.special(*i).any()) ++i;
-      *o++ = l.to_stripped(*i);
-    }
-    *o = '\0';
-  }
-
-  inline String to_stripped(const Language & l, ParmString word) 
-  {
-    String new_word;
-    to_stripped(l, word, new_word);
-    return new_word;
-  }
-
-  inline bool is_stripped(const Language & l, ParmString word)
-  {
-    for (const char * i = word; *i; ++i) 
-      if (!l.is_stripped(*i))
-	return false;
-    return true;
-  }
-  
-  inline String to_upper(const Language & l, ParmString word) 
-  {
-    String new_word; 
-    for (const char * i = word; *i; ++i) 
-      new_word += l.to_upper(*i); 
-    return new_word;
-  }
-  
-  inline bool is_upper(const Language & l, ParmString word)
-  {
-    for (const char * i = word; *i; ++i) 
-      if (!l.is_upper(*i))
-	return false;
-    return true;
-  }
-  
-  enum CasePattern {Other, FirstUpper, AllUpper};
-
-  inline CasePattern case_pattern(const Language & l, ParmString word) 
-  {
-    if (is_upper(l,word))
-      return AllUpper;
-    else if (!l.is_lower(word[0]))
-      return FirstUpper;
-    else
-      return Other;
-  }
-
-  inline String fix_case(const Language & l, 
-			 CasePattern case_pattern,
-			 ParmString word)
-  {
-    if (word.empty()) return word;
-    if (case_pattern == AllUpper) {
-      return to_upper(l,word);
-    } else if (case_pattern == FirstUpper) {
-      String new_word;
-      if (l.is_lower(word[0]))
-	new_word += l.to_title(word[0]);
-      else
-	new_word += word[0];
-      new_word.append(word + 1);
-      return new_word;
-    } else {
-      return word;
-    }
-  }
-
-  /////////////////////////////////////////////////////////
-  //
-  // Conversion to/from internal encoding utilities
-  //
 
   String get_stripped_chars(const Language & l);
   

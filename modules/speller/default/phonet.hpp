@@ -49,6 +49,7 @@ namespace aspeller {
   };
 
   int phonet (const char * inword, char * target, 
+              int len,
 	      const PhonetParms & parms);
 
 #if 0

@@ -863,8 +863,8 @@ namespace {
         
         if (word_hash->parms().is_nonexistent(value)) continue;
         
-        temp = lang.to_soundslike(value->data);
-        SoundMap::iterator j = sound_map.find(temp.c_str());
+        lang.LangImpl::to_soundslike(temp, value->data);
+        SoundMap::iterator j = sound_map.find(temp.str());
         if (j == sound_map.end()) {
           
           SoundMap::value_type to_insert(buf.dup(temp), SoundslikeList());
@@ -892,8 +892,8 @@ namespace {
 	if (word_hash->parms().is_nonexistent(value)) continue;
 
         SoundMap::iterator j;
-        temp = lang.to_soundslike(value->data);
-        j = sound_map.find(temp.c_str());
+        lang.LangImpl::to_soundslike(temp.data(), value->data);
+        j = sound_map.find(temp.data());
         assert(j != sound_map.end());
 	if (j->second.num_inserted == 0 && j->second.size != 1) {
 	  j->second.d.list = &*sl_list_buf.begin() + p;
@@ -966,8 +966,7 @@ namespace {
 
 	} else {
 
-	  sl.clear();
-	  to_stripped(lang, i->first, sl);
+	  lang.LangImpl::to_stripped(sl, i->first);
           data.write('\0');
           data.write('\0');
 
