@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60-pre1\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-11-25 21:04-0700\n"
+"POT-Creation-Date: 2004-12-03 23:52-0700\n"
 "PO-Revision-Date: 2004-11-06 18:26-0700\n"
 "Last-Translator: Sanlig Badral <badral@users.sourceforge.net>\n"
 "Language-Team: Mongolian <openmn-translation@lists.sourceforge.net>\n"
@@ -677,273 +677,288 @@ msgstr "\"%expression:1\" хүчингүй энгийн илэрхийлэл."
 msgid "Unhandled Error: "
 msgstr "Авч үзээгүй алдаа: "
 
-#: prog/aspell.cpp:93
+#: prog/aspell.cpp:97
 #, c-format
 msgid "Error: %s\n"
 msgstr "Алдаа: %s\n"
 
-#: prog/aspell.cpp:98
+#: prog/aspell.cpp:102
 msgid "Error: "
 msgstr "Алдаа: "
 
-#: prog/aspell.cpp:198
+#: prog/aspell.cpp:203
 msgid "enter Email mode."
 msgstr "Э-шуудан оруулах горим."
 
-#: prog/aspell.cpp:199
+#: prog/aspell.cpp:204
 msgid "enter HTML mode."
 msgstr "TML горим оруулах."
 
-#: prog/aspell.cpp:200
+#: prog/aspell.cpp:205
 msgid "enter TeX mode."
 msgstr "TeX горим оруулах."
 
-#: prog/aspell.cpp:201
+#: prog/aspell.cpp:206
 msgid "enter Nroff mode."
 msgstr "Nroff горим оруулах."
 
-#: prog/aspell.cpp:299
+#: prog/aspell.cpp:304
 #, c-format
 msgid "Invalid Option: %s"
 msgstr "Хүчингий сонголт: %s"
 
-#: prog/aspell.cpp:306
+#: prog/aspell.cpp:311
 msgid " does not take any parameters."
 msgstr " ясарч параметр авахгүй."
 
-#: prog/aspell.cpp:319 prog/aspell.cpp:379
+#: prog/aspell.cpp:324 prog/aspell.cpp:384
 #, c-format
 msgid "You must specify a parameter for \"%s\"."
 msgstr "Та \"%s\" -н хувьд параметр тодорхойлох ёстой."
 
-#: prog/aspell.cpp:368
+#: prog/aspell.cpp:373
 msgid "You must specify an action"
 msgstr "Та ямар нэг үйлдэл тодорхойлох ёстой"
 
-#: prog/aspell.cpp:376 prog/aspell.cpp:437 prog/aspell.cpp:459
+#: prog/aspell.cpp:381 prog/aspell.cpp:444 prog/aspell.cpp:466
 #, c-format
 msgid "Unknown Action: %s"
 msgstr "Мэдэгдэхгүй үйлдэл: %s"
 
-#: prog/aspell.cpp:382
+#: prog/aspell.cpp:387
 #, fuzzy, c-format
 msgid "Error: You must specify at least %d parameters for \"%s\".\n"
 msgstr "Та %s -н хувьд параметр тодорхойлох ёстой"
 
-#: prog/aspell.cpp:622
+#: prog/aspell.cpp:629
 msgid "Invalid Input"
 msgstr "Хүчингүй оролт"
 
-#: prog/aspell.cpp:697
+#: prog/aspell.cpp:704
 #, fuzzy, c-format
 msgid "WARNING: Unable to enter Nroff mode: %s\n"
 msgstr "TeX горим оруулах."
 
-#: prog/aspell.cpp:718
+#: prog/aspell.cpp:725
 msgid "Time to load word list: "
 msgstr "Үгийн жагсаалт ачаалах хугацаа: "
 
-#: prog/aspell.cpp:915
+#: prog/aspell.cpp:922
 #, c-format
 msgid "Suggestion Time: %f\n"
 msgstr "Санал болгох хугацаа: %f\n"
 
-#: prog/aspell.cpp:958
+#: prog/aspell.cpp:965
 msgid "You must specify a file name."
 msgstr "Та файлын нэрийг оруулах ёстой."
 
-#: prog/aspell.cpp:968
+#: prog/aspell.cpp:975
 #, c-format
 msgid "Could not open the file \"%s\" for reading"
 msgstr "\"%s\" файлыг уншихаар нээж чадсангүй"
 
-#: prog/aspell.cpp:983
+#: prog/aspell.cpp:990
 #, c-format
 msgid "Could not open the file \"%s\" for writing. File not saved."
 msgstr "\"%s\" файлыг бичихээр нээж чадсангүй. Файл хадгалагдсангүй."
 
-#: prog/aspell.cpp:996
+#: prog/aspell.cpp:1003
 #, c-format
 msgid "Invalid keymapping: %s"
 msgstr "Хүчингүй түлхүүр сонголт: %s"
 
-#: prog/aspell.cpp:1016
+#: prog/aspell.cpp:1023
 msgid "Ignore"
 msgstr "Үл хэрэгс"
 
-#: prog/aspell.cpp:1017
+#: prog/aspell.cpp:1024
 msgid "Ignore all"
 msgstr "Бүгдийг үл хэрэгс"
 
-#: prog/aspell.cpp:1018
+#: prog/aspell.cpp:1025
 msgid "Replace"
 msgstr "Орлуул"
 
-#: prog/aspell.cpp:1019
+#: prog/aspell.cpp:1026
 msgid "Replace all"
 msgstr "Бүгдийг орлуул"
 
-#: prog/aspell.cpp:1020
+#: prog/aspell.cpp:1027
 msgid "Add"
 msgstr "Нэм"
 
-#: prog/aspell.cpp:1021
+#: prog/aspell.cpp:1028
 msgid "Add Lower"
 msgstr "Жижиг үсгээр нэмэх"
 
-#: prog/aspell.cpp:1022
+#: prog/aspell.cpp:1029
 msgid "Abort"
 msgstr "Тасал"
 
-#: prog/aspell.cpp:1023
+#: prog/aspell.cpp:1030
 msgid "Exit"
 msgstr "Гарах"
 
-#: prog/aspell.cpp:1099
+#: prog/aspell.cpp:1106
 msgid "Are you sure you want to abort (y/n)? "
 msgstr "Та таслахыг үнэхээр хүсэж байна уу (y/n)? "
 
 #. TRANSLATORS: The user may input any of these characters to say "yes".
 #. MUST ONLY CONSIST OF ASCII CHARACTERS.
-#: prog/aspell.cpp:1103
+#: prog/aspell.cpp:1110
 msgid "Yy"
 msgstr ""
 
-#: prog/aspell.cpp:1124
+#: prog/aspell.cpp:1131
 msgid "With: "
 msgstr "Хамт:"
 
-#: prog/aspell.cpp:1141
+#: prog/aspell.cpp:1148
 msgid "Sorry that is an invalid choice!"
 msgstr "Уучилаарай энэ хүчингүй сонголт!"
 
-#: prog/aspell.cpp:1362
+#: prog/aspell.cpp:1369
 msgid "Sorry \"filter\" is currently unimplemented.\n"
 msgstr "Уучилаарай \"filter\" одоогоор хийгдээгүй байна.\n"
 
-#: prog/aspell.cpp:1496
+#: prog/aspell.cpp:1503
 msgid "Can't merge a master word list yet. Sorry."
 msgstr "Мастер үгийн жагсаалтыг хараахан нэгтгэх боломжгүй. Уучил."
 
-#: prog/aspell.cpp:1520
+#: prog/aspell.cpp:1527
 msgid "Sorry \"create/merge personal\" is currently unimplemented.\n"
 msgstr "Уучилаарай \"create/merge personal\" одоогоор хийгдээгүй байна.\n"
 
-#: prog/aspell.cpp:1529 prog/aspell.cpp:1585
+#: prog/aspell.cpp:1536 prog/aspell.cpp:1592
 #, c-format
 msgid "Sorry I won't overwrite \"%s\""
 msgstr "Уучилаарай би \"%s\" -г дарж бичмээргүй байна"
 
-#: prog/aspell.cpp:1576
+#: prog/aspell.cpp:1583
 msgid "Sorry \"create/merge repl\" is currently unimplemented.\n"
 msgstr "Уучилаарай \"create/merge repl\" одоогоор хийгдээгүй.\n"
 
+#: prog/aspell.cpp:1851
+#, c-format
+msgid "\"%s\" is not a valid flag for the \"munch-list\" command."
+msgstr ""
+
 #. TRANSLATORS: These should all be formated to fit in 80 column or
 #. less
-#: prog/aspell.cpp:1882
+#: prog/aspell.cpp:2770
 msgid "Usage: aspell [options] <command>"
 msgstr "Хэрэглээ: aspell [сонголт] <тушаал>"
 
-#: prog/aspell.cpp:1883
+#: prog/aspell.cpp:2771
 msgid "<command> is one of:"
 msgstr "<тушаал> дараахын аль нэг нь байна:"
 
-#: prog/aspell.cpp:1884
+#: prog/aspell.cpp:2772
 msgid "  -?|usage         display a brief usage message"
 msgstr "  -?|usage         товч хэрэглээний зурвас харуулна"
 
-#: prog/aspell.cpp:1885
+#: prog/aspell.cpp:2773
 msgid "  help             display a detailed help message"
 msgstr "  help             нарийвчилсан тусламж мэдээ үзүүлнэ"
 
-#: prog/aspell.cpp:1886
+#: prog/aspell.cpp:2774
 msgid "  -c|check <file>  to check a file"
 msgstr "  -c|check <файл>  шалгах файл"
 
-#: prog/aspell.cpp:1887
+#: prog/aspell.cpp:2775
 msgid "  -a|pipe          \"ispell -a\" compatibility mode"
 msgstr "  -a|pipe          \"ispell -a\" тохиромжтой горим"
 
-#: prog/aspell.cpp:1888
+#: prog/aspell.cpp:2776
 msgid "  [dump] config    dumps the current configuration to stdout"
 msgstr "  [dump] config    идэвхитэй тохиргоог стандарт гаралт руу буулгах"
 
-#: prog/aspell.cpp:1889
+#: prog/aspell.cpp:2777
 msgid "  config <key>     prints the current value of an option"
 msgstr "  config <key>     сонголтын идэвхитэй утгыг хэвлэх"
 
-#: prog/aspell.cpp:1890
+#: prog/aspell.cpp:2778
 msgid "  [dump] dicts | filters | modes"
 msgstr "  [dump] dicts | filters | modes"
 
-#: prog/aspell.cpp:1891
+#: prog/aspell.cpp:2779
 msgid "    lists available dictionaries / filters / filter modes"
 msgstr "    боломжит тольнууд / шүүлтүүр / шүүлтүүрийн горимууд жагсаах "
 
-#: prog/aspell.cpp:1892
+#: prog/aspell.cpp:2780
 msgid "[options] is any of the following:"
 msgstr "[сонголт] дараахаас авна:"
 
-#: prog/aspell.cpp:1905
+#: prog/aspell.cpp:2793
 msgid ""
 "  list             produce a list of misspelled words from standard input"
 msgstr ""
 "  list             стандарт оролтоос буруу бичигдсэн үгсийг жагсаах процедур"
 
-#: prog/aspell.cpp:1908
+#: prog/aspell.cpp:2796
 msgid ""
 "  soundslike       returns the sounds like equivalent for each word entered"
 msgstr ""
 "  soundslike       оруулсан үг бүрийн хувьд зохих дуудлага авиаг буцаах"
 
-#: prog/aspell.cpp:1909
+#: prog/aspell.cpp:2797
 msgid "  munch            generate possible root words and affixes"
 msgstr ""
 "  munch            боломжит язгуур үгс ба аффикс (дагавар/угтвар) үүсгэх"
 
-#: prog/aspell.cpp:1910
+#: prog/aspell.cpp:2798
 msgid "  expand [1-4]     expands affix flags"
 msgstr "  expand [1-4]     аффикс флаг задлах"
 
-#: prog/aspell.cpp:1911
+#: prog/aspell.cpp:2799
 msgid ""
 "  clean [strict]   cleans a word list so that every line is a valid word"
 msgstr ""
 "  clean [strict]   мөр бүр хүчинтэй үг байхаар үгийн жагсаалтыг цэвэрлэх"
 
-#: prog/aspell.cpp:1913
+#: prog/aspell.cpp:2801
 msgid "  -v|version       prints a version line"
 msgstr "  -v|version       хувилбарыг хэвлэн үзүүлнэ"
 
-#: prog/aspell.cpp:1914
+#: prog/aspell.cpp:2802
+msgid "  munch-list [simple] [single|multi] [keep]\n"
+msgstr ""
+
+#: prog/aspell.cpp:2803
+msgid "    reduce the size of a word list via affix compression"
+msgstr ""
+
+#: prog/aspell.cpp:2804
 msgid "  conv <from> <to> [<norm-form>]"
 msgstr "  conv <from> <to> [<norm-form>]"
 
-#: prog/aspell.cpp:1915
+#: prog/aspell.cpp:2805
 msgid "    converts from one encoding to another"
 msgstr "    from кодчилолоос өөр кодчилол руу хөрвүүлнэ"
 
-#: prog/aspell.cpp:1916
+#: prog/aspell.cpp:2806
 msgid "  norm (<norm-map> | <from> <norm-map> <to>) [<norm-form>]"
 msgstr "  norm (<norm-map> | <from> <norm-map> <to>) [<norm-form>]"
 
-#: prog/aspell.cpp:1917
+#: prog/aspell.cpp:2807
 msgid "    perform Unicode normalization"
 msgstr "    ЮНИКОД нормалчилал гүйцэтгэх"
 
-#: prog/aspell.cpp:1920
-msgid "  dump|create|merge master|personal|repl [word list]"
+#: prog/aspell.cpp:2810
+#, fuzzy
+msgid "  dump|create|merge master|personal|repl [<name>]"
 msgstr "  dump|create|merge master|personal|repl [үгийн жагсаалт]"
 
-#: prog/aspell.cpp:1921
+#: prog/aspell.cpp:2811
+#, fuzzy
 msgid ""
-"    dumps, creates or merges a master, personal, or replacement word list."
+"    dumps, creates or merges a master, personal, or replacement dictionary."
 msgstr ""
 "    үгийн жагсаалт гаргах, мастер үүсгэх эсвэл нэгтгэх, итгэх эсвэл орлуулах."
 
 #. TRANSLATORS: "none", "internal" and "strict" are literal values
 #. and should not be translated.
-#: prog/aspell.cpp:1925
+#: prog/aspell.cpp:2815
 msgid ""
 "  <norm-form>      normalization form to use, either none, internal, or "
 "strict"
@@ -951,7 +966,7 @@ msgstr ""
 "  <norm-form>      хэрэглэх нормалчилах хэлбэр, эсвэл none, internal, эсвэл "
 "strict байж болно"
 
-#: prog/aspell.cpp:1935
+#: prog/aspell.cpp:2825
 #, c-format
 msgid ""
 "\n"
@@ -963,7 +978,7 @@ msgstr ""
 "Atkinson).\n"
 "\n"
 
-#: prog/aspell.cpp:1969
+#: prog/aspell.cpp:2859
 msgid ""
 "Available Dictionaries:\n"
 "    Dictionaries can be selected directly via the \"-d\" or \"master\"\n"
@@ -975,7 +990,7 @@ msgstr ""
 "    сонгогдох боломжтой.  Тэд мөн шууд бусаар \"lang\",\n"
 "    \"variety\", ба \"size\" сонголтоор сонгогдох ч боломжтой.\n"
 
-#: prog/aspell.cpp:1990
+#: prog/aspell.cpp:2880
 msgid ""
 "Available Filters (and associated options):\n"
 "    Filters can be added or removed via the \"filter\" option.\n"
@@ -983,7 +998,7 @@ msgstr ""
 "Байгаа шүүлтүүрүүд (ба холбоотой сонголтууд):\n"
 "    Шүүлтүүрүүд \"filter\" сонголтоор нэмэгдэж, устгагдаж болно.\n"
 
-#: prog/aspell.cpp:1997
+#: prog/aspell.cpp:2887
 #, c-format
 msgid ""
 "\n"
@@ -993,7 +1008,7 @@ msgstr ""
 "  %s шүүлтүүр: %s\n"
 
 #. TRANSLATORS: This should be formated to fit in 80 column or less
-#: prog/aspell.cpp:2014
+#: prog/aspell.cpp:2904
 msgid ""
 "Available Filter Modes:\n"
 "    Filter Modes are reconfigured combinations of filters optimized for\n"
