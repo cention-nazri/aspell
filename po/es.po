@@ -9,7 +9,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Aspell 0.50.1\n"
-"POT-Creation-Date: 2002-09-09 01:38-0400\n"
+"POT-Creation-Date: 2002-09-19 16:41-0400\n"
 "PO-Revision-Date: 2002-09-08 14:18+0300\n"
 "Last-Translator: Sergey Poznyakoff <gray@gnu.org>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -319,83 +319,83 @@ msgstr "Acción desconocida: "
 msgid "Invalid Input"
 msgstr "Entrada inválida"
 
-#: prog/aspell.cpp:698
+#: prog/aspell.cpp:699
 #, fuzzy
 msgid "You must specify a file name."
 msgstr "Vd. tiene que especificar nombre del archivo.\n"
 
-#: prog/aspell.cpp:708
+#: prog/aspell.cpp:709
 #, c-format
 msgid "Could not open the file \"%s\" for reading"
 msgstr "No se puede abrir «%s» para leer"
 
-#: prog/aspell.cpp:714
+#: prog/aspell.cpp:715
 #, c-format
 msgid "Could not open the file \"%s\"  for writing. File not saved."
 msgstr "No se puede abrir «%s» para escribir. El archivo no está guardado."
 
-#: prog/aspell.cpp:727
+#: prog/aspell.cpp:728
 #, fuzzy, c-format
 msgid "Invalid keymapping: %s"
 msgstr "Mapa de teclado inválida: "
 
-#: prog/aspell.cpp:748
+#: prog/aspell.cpp:749
 msgid "Ignore"
 msgstr "Omitir"
 
-#: prog/aspell.cpp:749
+#: prog/aspell.cpp:750
 msgid "Ignore all"
 msgstr "Omitir todos"
 
-#: prog/aspell.cpp:750
+#: prog/aspell.cpp:751
 msgid "Replace"
 msgstr "Sustituir"
 
-#: prog/aspell.cpp:751
+#: prog/aspell.cpp:752
 msgid "Replace all"
 msgstr "Sustituir todos"
 
-#: prog/aspell.cpp:752
+#: prog/aspell.cpp:753
 msgid "Add"
 msgstr "Agregar"
 
-#: prog/aspell.cpp:753
+#: prog/aspell.cpp:754
 msgid "Add Lower"
 msgstr "Agregar minúsculas"
 
-#: prog/aspell.cpp:754
+#: prog/aspell.cpp:755
 msgid "Abort"
 msgstr "Abortar"
 
-#: prog/aspell.cpp:755
+#: prog/aspell.cpp:756
 msgid "Exit"
 msgstr "Salir"
 
 # FUZZY
-#: prog/aspell.cpp:836
+#: prog/aspell.cpp:837
 msgid "Are you sure you want to abort? "
 msgstr "Está Vd. seguro que quiere abortar? "
 
 # sustituir ... a: ...
-#: prog/aspell.cpp:856
+#: prog/aspell.cpp:857
 msgid "With: "
 msgstr "a: "
 
-#: prog/aspell.cpp:870
+#: prog/aspell.cpp:871
 msgid "Sorry that is an invalid choice!"
 msgstr "Disculpe, la selección no es válida!"
 
-#: prog/aspell.cpp:1079
+#: prog/aspell.cpp:1080
 #, fuzzy
 msgid "Can't merge a master word list yet. Sorry."
 msgstr "No se puede juntar el vocabulario principal todavía. Disculpe\n"
 
-#: prog/aspell.cpp:1114 prog/aspell.cpp:1166
+#: prog/aspell.cpp:1115 prog/aspell.cpp:1167
 #, c-format
 msgid "Sorry I won't overwrite \"%s\""
 msgstr "Disculpe, no voy a sobreescribir «%s»"
 
-#: prog/aspell.cpp:1257
+#: prog/aspell.cpp:1258
 #, c-format
 msgid ""
 "\n"
