@@ -743,6 +743,11 @@ struct: word
 	string: str
 	int: len
 		default => -1
+struct: warning
+	/
+	string: str
+	int: len
+		default => -1
 callback: get word callback
 	/
 	bool
@@ -753,6 +758,11 @@ callback: put word callback
 	bool
 	void pointer: data
 	const word: word
+callback: warning callback
+	/
+	bool
+	void pointer: data
+	const warning: warning
 struct: munch list parms
 	/
 	constructor
@@ -762,6 +772,16 @@ struct: munch list parms
 		default => false
 	bool: simplify
 		default => true
+struct: combine list parms
+	/
+	constructor
+		c impl => return new CombineListParms;
+	destructible methods
+struct: clean list parms
+	/
+	constructor
+		c impl => return new CleanListParms;
+	destructible methods
 }
 group: language
 {
@@ -808,15 +828,48 @@ class: language
 		put word callback: out cb
 		void pointer: out cb data
 		int: limit
-	method: munch list
-		no c impl
-		/
-		int
-		get word callback: in cb
-		void pointer: in cb data
-		put word callback: out cb
-		void pointer: out cb data
-		munch list parms: parms
+
+func: munch list
+	no c impl
+	/
+	int
+	language: lang
+	get word callback: in cb
+	void pointer: in cb data
+	put word callback: out cb
+	void pointer: out cb data
+	munch list parms: parms
+func: combine list
+	no c impl
+	/
+	int
+	language: lang
+	get word callback: in cb
+	void pointer: in cb data
+	put word callback: out cb
+	void pointer: out cb data
+	combine list parms: parms
+func: clean list
+	no c impl
+	/
+	int
+	language: lang
+	get word callback: in cb
+	void pointer: in cb data
+	put word callback: out cb
+	void pointer: out cb data
+	warning callback: warnings cb # may be null
+	void pointer: warnings cb data
+	clean list parms: parms
+func: create default readonly dict
+	no c impl
+	/
+	int
+	language: lang
+	get word callback: in cb
+	void pointer: in cb data
+	warning callback: warnings cb # may NOT be null
+	void pointer: warnings cb data
 }
 
 group: word list

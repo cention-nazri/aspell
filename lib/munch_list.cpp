@@ -701,6 +701,7 @@ void munch_list_complete(Language * lang,
     for (unsigned i = 0; i != to_keep_exp.size(); ++i) {
       if (!to_keep_exp[i]) {
         assert(!entries[i]->aff);
+        buf.clear();
         lang->from_internal_->convert(to_keep[i]->word, -1, buf);
         word.str = buf.str();
         word.len = buf.size();
@@ -723,12 +724,12 @@ quit:
 
 namespace acommon {
 
-extern "C" int aspell_language_munch_list(Language * ths, 
-                                          GetWordCallback * in_cb, 
-                                          void * in_cb_data, 
-                                          PutWordCallback * out_cb, 
-                                          void * out_cb_data, 
-                                          MunchListParms * parms)
+extern "C" int aspell_munch_list(Language * ths, 
+                                 GetWordCallback * in_cb, 
+                                 void * in_cb_data, 
+                                 PutWordCallback * out_cb, 
+                                 void * out_cb_data, 
+                                 MunchListParms * parms)
 {
   munch_list_complete(ths, in_cb, in_cb_data, out_cb, out_cb_data, 
                       parms->multi, parms->simplify);

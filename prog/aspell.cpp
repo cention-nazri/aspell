@@ -1812,7 +1812,7 @@ void munch_list()
   }
 
   AspellLanguage * lang = new_language();
-  aspell_language_munch_list(lang, get_word_ml, &word, put_word_ml, 0, parms);
+  aspell_munch_list(lang, get_word_ml, &word, put_word_ml, 0, parms);
   delete_aspell_munch_list_parms(parms);
   delete_aspell_language(lang);
 

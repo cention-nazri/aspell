@@ -97,7 +97,7 @@ The %info structure is initialized as follows:
     groups => undef,
     creates_type => 'union'},
   func => {
-    options => ['desc'],
+    options => ['desc', 'no c impl'],
     groups => undef},
   callback => {
     options => ['desc'],
