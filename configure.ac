@@ -200,6 +200,8 @@ AC_TRY_COMPILE(
   [AC_MSG_RESULT(no)
    AC_MSG_WARN([Unable to find locking mechanism, Aspell will not be thread safe.])] )
 
+AM_LANGINFO_CODESET
+
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                                                                 #
 #                     Terminal function tests                     #
@@ -372,6 +374,8 @@ if test "$posix_termios"
 then
   AC_DEFINE(POSIX_TERMIOS, 1, [Defined if Posix Termios is Supported])
 fi
+
+
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                                                                 #

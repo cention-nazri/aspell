@@ -391,6 +391,17 @@ namespace acommon {
       get_lang_env(final_str);
   }
 
+#else
+
+  static inline void get_lang(String & str) 
+  {
+    get_lang_env(str);
+  }
+
+#endif
+
+#if defined USE_LOCALE && defined HAVE_LANGINFO_CODESET
+
   static inline void get_encoding(String & final_str)
   {
     const char * codeset = nl_langinfo(CODESET);
@@ -399,11 +410,6 @@ namespace acommon {
   }
 
 #else
-
-  static inline void get_lang(String & str) 
-  {
-    get_lang_env(str);
-  }
 
   static inline void get_encoding(String & final_str)
   {

@@ -117,7 +117,7 @@ namespace aspeller {
     
     typedef WordEntryEnumeration        Enum;
     typedef const char *                Value;
-    typedef size_t                      Size;
+    typedef unsigned int                Size;
 
     StringEnumeration * elements() const;
 

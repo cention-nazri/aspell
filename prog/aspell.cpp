@@ -329,8 +329,9 @@ int main (int argc, const char *argv[])
     return 1;
   }
 
-#ifdef USE_LOCALE
-  const char * codeset = nl_langinfo(CODESET);
+  const char * codeset = 0;
+#ifdef HAVE_LANGINFO_CODESET
+  codeset = nl_langinfo(CODESET);
   if (is_ascii_enc(codeset)) codeset = 0;
 #endif
   if (!utf8_opts.empty()) {
