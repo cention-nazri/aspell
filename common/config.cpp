@@ -10,6 +10,7 @@
 #include <locale.h>
 
 #include "dirs.h"
+#include "settings.h"
 
 #include "asc_ctype.hpp"
 #include "config.hpp"
@@ -305,6 +306,55 @@ namespace acommon {
     return ret.prim_err(unknown_key, key);
   }
 
+  static bool proc_locale_str(ParmString lang, String & final_str)
+  {
+    if (lang == 0) return false;
+    const char * i = lang;
+    if (! (asc_islower(i[0]) && asc_islower(i[1])) ) return false;
+    final_str.assign(i, 2);
+    i += 2;
+    if (! (i[0] == '_' || i[0] == '-')) return true;
+    i += 1;
+    if (! (asc_isupper(i[0]) && asc_isupper(i[1])) ) return true;
+    final_str += '_';
+    final_str.append(i, 2);
+    return true;
+  }
+
+  static void get_lang_env(String & str) 
+  {
+    // NOTE: THIS IS NOT THREAD SAFE
+    if (proc_locale_str(getenv("LC_MESSAGES"), str)) return;
+    if (proc_locale_str(getenv("LANG"), str)) return;
+    if (proc_locale_str(getenv("LANGUAGE"), str)) return;
+    str = DEFAULT_LANG;
+  }
+
+#ifdef USE_LOCALE
+
+  static void get_lang(String & final_str) 
+  {
+    // NOTE: THIS IS NOT THREAD SAFE
+    String locale = setlocale (LC_ALL, NULL);
+    if (locale == "C")
+      setlocale (LC_ALL, "");
+    const char * lang = setlocale (LC_MESSAGES, NULL);
+    bool res = proc_locale_str(lang, final_str);
+    if (locale == "C")
+      setlocale(LC_MESSAGES, locale.c_str());
+    if (!res)
+      get_lang_env(final_str);
+  }
+
+#else
+
+  static inline void get_lang(String & str) 
+  {
+    get_lang_env(str);
+  }
+
+#endif
+
   PosibErr<String> Config::get_default(ParmString key) const
   {
     RET_ON_ERR_SET(keyinfo(key), const KeyInfo *, ki);
@@ -316,31 +366,15 @@ namespace acommon {
     if (*i == '!') { // special cases
       ++i;
     
-      if (strcmp(i, "lang") == 0) do {
+      if (strcmp(i, "lang") == 0) {
 
 	if (have("master")) {
 	  final_str = "<unknown>";
-	  break;
+	} else {
+	  get_lang(final_str);
 	}
-	// NOTE: THIS IS NOT THREAD SAFE
-	final_str = DEFAULT_LANG;
-        String locale = setlocale (LC_ALL, NULL);
-	if (locale == "C")
-	  setlocale (LC_ALL, "");
-	const char * lang = setlocale (LC_MESSAGES, NULL);
-	i = lang;
-	if (! (asc_islower(i[0]) && asc_islower(i[1])) ) break;
-	final_str.assign(i, 2);
-	i += 2;
-	if (! (i[0] == '_' || i[0] == '-')) break;
-	i += 1;
-	if (! (asc_isupper(i[0]) && asc_isupper(i[1])) ) break;
-	final_str += '_';
-	final_str.append(i, 2);
-	if (locale == "C")
-	  setlocale(LC_MESSAGES, locale.c_str());
 	
-      } while (false); else if (strcmp(i, "actual-lang") == 0) {
+      } else if (strcmp(i, "actual-lang") == 0) {
 	
 	unsigned int len = 0;
 	final_str = retrieve("lang");

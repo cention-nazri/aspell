@@ -1,7 +1,7 @@
 
 AC_INIT
 AM_CONFIG_HEADER(common/settings.h)
-AM_INIT_AUTOMAKE(aspell, 0.50-20020815)
+AM_INIT_AUTOMAKE(aspell, 0.50.1)
 
 AM_MAINTAINER_MODE
 
@@ -80,8 +80,16 @@ AC_TRY_RUN(
      AC_MSG_RESULT(cant run test!, assuming yes)
      AC_DEFINE(USE_FILE_INO, 1, [Defined if file ino is supported])
    fi
-  ]
-)
+  ] )
+
+AC_MSG_CHECKING(if posix locals are supported)
+AC_TRY_COMPILE(
+  [#include <locale.h>],
+  [setlocale (LC_ALL, NULL);
+   setlocale (LC_MESSAGES, NULL);],
+  [AC_MSG_RESULT(yes)
+   AC_DEFINE(USE_LOCALE, 1, [Defined if Posix locales are supported])],
+  [AC_MSG_RESULT(no)] )
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                                                                 #
