@@ -50,8 +50,8 @@ following changes in the name of things:
   emulation -> enumeration
   master_word_list -> main_word_list
 
-You can also see aspell0.c in the example directory for example of
-using the new interface.
+You can also see example-c.c and list-dicts.c in the example directory
+for example of using the new interface.
 
 The only header file which needs to be included for using the new
 Aspell through the C interface is "aspell.h".  This header file also
