@@ -13,6 +13,7 @@
 #include "writable_base.hpp"
 
 using namespace aspell;
+using std::vector;
 
 namespace aspell_default_writable_repl {
 

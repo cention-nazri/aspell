@@ -64,10 +64,11 @@
 
 using namespace aspell;
 using namespace pcommon;
-  
+using namespace std;
+
 namespace aspell_default_suggest {
 
-  typedef std::vector<String> NearMissesFinal;
+  typedef vector<String> NearMissesFinal;
 
   template <class Iterator>
   inline Iterator preview_next (Iterator i) {
@@ -460,11 +461,11 @@ namespace aspell_default_suggest {
       int word_score;
       
       unsigned int j;
-      std::vector<unsigned char> original(original_word.word.size() + 1);
+      vector<unsigned char> original(original_word.word.size() + 1);
       for (j = 0; j != original_word.word.size(); ++j)
 	original[j] = lang->to_normalized(original_word.word[j]);
       original[j] = 0;
-      std::vector<unsigned char> word(max_word_length + 1);
+      vector<unsigned char> word(max_word_length + 1);
       
       for (i = near_misses.begin(); i != near_misses.end(); ++i) {
 	for (j = 0; (i->word)[j] != 0; ++j)

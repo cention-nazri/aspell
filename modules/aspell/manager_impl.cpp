@@ -649,7 +649,7 @@ namespace aspell {
   }
 }
 
-namespace autil {
+namespace pcommon {
   template class CopyPtr<aspell::Language>;
 }
 

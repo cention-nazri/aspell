@@ -87,8 +87,8 @@ struct ModeAbrv {
   const char * mode;
   const char * desc;
 };
-static const ModeAbrv mode_abrvs[] = {};
-static const ModeAbrv *  mode_abrvs_end = mode_abrvs + 0;
+static const ModeAbrv * mode_abrvs      = 0;
+static const ModeAbrv * mode_abrvs_end = mode_abrvs + 0;
 
 const PossibleOption * find_option(char c) {
   const PossibleOption * i = possible_options;

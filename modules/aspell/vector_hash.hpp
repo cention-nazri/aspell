@@ -241,7 +241,7 @@ namespace aspell {
     class FindIterator
     {
       friend class HashTable;
-    protected: // but don't use
+    public: // but don't use
       const vector_type * vector;
       const Parms       * parms;
       key_type key;

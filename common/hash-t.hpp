@@ -72,12 +72,12 @@ namespace pcommon {
   }
 
   template <class P>
-  pair<HashTable<P>::iterator,bool> HashTable<P>::insert(const Value & to_insert)
+  std::pair<HashTable<P>::iterator,bool> HashTable<P>::insert(const Value & to_insert)
   {
     bool have;
     iterator put_me_here = find_i(parms_.key(to_insert), have);
     if (have && !parms_.is_multi) 
-      return pair<iterator,bool>(put_me_here,false);
+      return std::pair<iterator,bool>(put_me_here,false);
     Node * new_node = node_pool_.new_node();
     if (new_node == 0) {
       resize_i(prime_index_+1);
@@ -89,7 +89,7 @@ namespace pcommon {
     new_node->next = *put_me_here.n;
     *put_me_here.n = new_node;
     ++size_;
-    return pair<iterator,bool>(put_me_here,true);
+    return std::pair<iterator,bool>(put_me_here,true);
   }
   
   template <class P>
@@ -140,14 +140,14 @@ namespace pcommon {
   }
 
   template <class P>
-  pair<HashTable<P>::iterator, HashTable<P>::iterator>
+  std::pair<HashTable<P>::iterator, HashTable<P>::iterator>
   HashTable<P>::equal_range_i(const Key & to_find, int & c)
   {
     c = 0;
     bool have;
     iterator first = find_i(to_find,have);
     if (!have)
-      return pair<iterator,iterator>(end(),end());
+      return std::pair<iterator,iterator>(end(),end());
     iterator last = first;
     c = 1;
     ++last;
@@ -156,7 +156,7 @@ namespace pcommon {
       ++c;
       ++last;
     }
-    return pair<iterator,iterator>(first,last);
+    return std::pair<iterator,iterator>(first,last);
   }
 
   template <class P>

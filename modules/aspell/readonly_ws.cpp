@@ -751,7 +751,7 @@ namespace aspell_default_readonly_ws {
       //
       
       advance_file(OUT, data_head.head_size);
-      streampos start = data_head.head_size;
+      std::streampos start = data_head.head_size;
 
       if (use_soundslike)
 	sound_prehash.resize(word_hash.bucket_count());
@@ -847,7 +847,7 @@ namespace aspell_default_readonly_ws {
     
       vector<u32int> final_hash(sound_prehash.bucket_count(), u32int_max);
 
-      streampos start = OUT.tell();
+      std::streampos start = OUT.tell();
       
       //
       // Writting soundslike words, creating soundslike Final Hash

@@ -22,7 +22,7 @@ namespace aspell {
     unsigned int      size()     const;
     
   public: //but don't use
-    typedef vector<Value> Wss;
+    typedef std::vector<Value> Wss;
     struct ElementsParms;
   private:
     Wss wss;
