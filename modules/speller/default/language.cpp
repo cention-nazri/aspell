@@ -183,7 +183,11 @@ namespace aspeller {
       char_info_[i] = inf;
     }
 
-    to_plain_[0] = 1; // to make things slightly easier
+    for (unsigned int i = 0; i != 256; ++i) {
+      de_accent_[i] = to_plain_[i] == 0 ? to_uchar(i) : to_plain_[i];
+    }
+
+    to_plain_[0] = 1; // to make things slightly easier // FIXME: Should this be 0x10
     to_plain_[1] = 1;
 
     for (unsigned int i = 0; i != 256; ++i) {

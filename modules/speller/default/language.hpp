@@ -115,6 +115,7 @@ namespace aspeller {
     int           to_uni_[256];
     CharType      char_type_[256];
     char          to_clean_[256];
+    char          de_accent_[256];
 
     StoreAs       store_as_;
 
@@ -170,6 +171,8 @@ namespace aspeller {
     
     char to_plain(char c) const {return to_plain_[to_uchar(c)];}
 
+    char de_accent(char c) const {return de_accent_[to_uchar(c)];}
+    
     char to_clean(char c) const {return to_clean_[to_uchar(c)];}
     bool is_clean(char c) const {return to_clean(c) == c;}
   
@@ -384,7 +387,7 @@ namespace aspeller {
 	out += in;
       } else {
 	for (unsigned int i = 0; i != in.size(); ++i)
-	  out += lang->to_plain(in[i]);
+	  out += lang->de_accent(in[i]);
       }
     }
     void convert(ParmString in, char * out) const
@@ -394,7 +397,7 @@ namespace aspeller {
       } else {
         unsigned int i = 0;
 	for (; i != in.size(); ++i)
-	  out[i] = lang->to_plain(in[i]);
+	  out[i] = lang->de_accent(in[i]);
         out[i] = '\0';
       }
     }
