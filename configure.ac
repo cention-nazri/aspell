@@ -1,7 +1,11 @@
+AC_PREREQ(2.53)
 
-AC_INIT
+AC_INIT(GNU Aspell, 0.50.2)
+AC_CONFIG_SRCDIR(prog/aspell.cpp)
+AC_CANONICAL_SYSTEM
+AM_INIT_AUTOMAKE
 AM_CONFIG_HEADER(common/settings.h)
-AM_INIT_AUTOMAKE(aspell, 0.50.1)
+
 
 AM_MAINTAINER_MODE
 
@@ -57,12 +61,24 @@ AC_ARG_ENABLE(curses,
 AC_ARG_ENABLE(curses-include,           
 [  --enable-curses-include=DIR])
 
+dnl
+
 AC_PROG_CXX
 AC_LANG([C++])
 
 AC_DISABLE_STATIC
 AC_PROG_LIBTOOL
 
+dnl DL stuff
+
+AC_CHECK_HEADERS(dlfcn.h)
+AC_CHECK_LIB(dl, dlopen)
+
+dnl GETTEXT
+
+AM_GNU_GETTEXT([external])
+AM_GNU_GETTEXT_VERSION(0.11.5)
+AH_BOTTOM([#include <gettext.h>])
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                                                                 #
@@ -82,6 +98,10 @@ if test "$enable_win32_relocatable" = "yes"
 then
   AC_DEFINE(ENABLE_WIN32_RELOCATABLE, 1, [Defined if win32 relocation should be used])
 fi
+
+# DL stuff
+AC_CHECK_HEADERS(dlfcn.h)
+AC_CHECK_LIB(dl, dlopen)
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                                                                 #
@@ -320,7 +340,7 @@ AC_TRY_COMPILE(
 #                                                                 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-AC_CONFIG_FILES([Makefile common/Makefile lib/Makefile data/Makefile
+AC_CONFIG_FILES([Makefile common/Makefile lib/Makefile data/Makefile m4/Makefile 
                  auto/Makefile modules/Makefile 
                  modules/filter/Makefile modules/tokenizer/Makefile
                  modules/speller/Makefile modules/speller/default/Makefile
@@ -328,5 +348,6 @@ AC_CONFIG_FILES([Makefile common/Makefile lib/Makefile data/Makefile
                  examples/Makefile prog/Makefile manual/Makefile
 		 manual/man-html/Makefile manual/man-text/Makefile
 		 manual/dev-html/Makefile manual/dev-text/Makefile
+		 po/Makefile.in
 		 ])
 AC_OUTPUT

@@ -8,8 +8,9 @@ perl mk-doc.pl
 touch auto
 cd ..
 
+autopoint -f || exit 1
 libtoolize --automake || exit 1
-aclocal $ACLOCAL_FLAGS || exit 1
+aclocal -I m4 $ACLOCAL_FLAGS || exit 1
 autoheader || exit 1
 automake --add-missing --foreign || exit 1
 autoconf || exit 1

@@ -909,57 +909,95 @@ namespace acommon {
   static const KeyInfo config_keys[] = {
     {"actual-dict-dir", KeyInfoString, "<dict-dir^master>", 0}
     , {"actual-lang",     KeyInfoString, "!actual-lang", 0}
-    , {"conf",     KeyInfoString, "aspell.conf",  "main configuration file"             , {0, CANT_CHANGE}}
-    , {"conf-dir", KeyInfoString, CONF_DIR,      "location of main configuration file" ,{0, CANT_CHANGE}}
+    , {"conf",     KeyInfoString, "aspell.conf",
+       N_("main configuration file")             , {0, CANT_CHANGE}}
+    , {"conf-dir", KeyInfoString, CONF_DIR,
+       N_("location of main configuration file") ,{0, CANT_CHANGE}}
     , {"conf-path",     KeyInfoString, "<conf-dir/conf>",     0}
-    , {"data-dir", KeyInfoString, DATA_DIR,        "location of language data files", "r"}
-    , {"dict-dir", KeyInfoString, DICT_DIR,        "location of the main word list"      }
-    , {"encoding",   KeyInfoString, "iso8859-1", "encoding to expect data to be in"}
-    , {"filter",   KeyInfoList  , "url",             "add or removes a filter"}
+    , {"data-dir", KeyInfoString, DATA_DIR,
+       N_("location of language data files"), "r"}
+    , {"dict-dir", KeyInfoString, DICT_DIR,
+       N_("location of the main word list")      }
+    , {"encoding",   KeyInfoString, "iso8859-1",
+       N_("encoding to expect data to be in")}
+    , {"filter",   KeyInfoList  , "url",
+       N_("add or removes a filter")}
     , {"mode",     KeyInfoString, "url",             mode_string }
-    , {"extra-dicts", KeyInfoList, "", "extra dictionaries to use"}
-    , {"home-dir", KeyInfoString, HOME_DIR,   "location for personal files" }
-    , {"ignore",   KeyInfoInt   , "1",            "ignore words <= n chars"             }
-    , {"ignore-accents" , KeyInfoBool, "false", "ignore accents when checking words"}
-    , {"ignore-case", KeyInfoBool  , "false",     "ignore case when checking words"}
-    , {"ignore-repl", KeyInfoBool  , "false",     "ignore commands to store replacement pairs"}
-    , {"jargon",     KeyInfoString, "", "extra information for the word list"}
-    , {"keyboard", KeyInfoString, "standard", "keyboard definition to use for typo analysis"}
-    , {"lang", KeyInfoString, "<language-tag>", "language code"}
-    , {"language-tag", KeyInfoString, "!lang", "deprecated, use lang instead"}
-    , {"local-data-dir", KeyInfoString, "<actual-dict-dir>",        "location of local language data files"     }
-    , {"master",        KeyInfoString, "", "base name of the main dictionary to use"}
+    , {"extra-dicts", KeyInfoList, "",
+       N_("extra dictionaries to use")}
+    , {"home-dir", KeyInfoString, HOME_DIR,
+       N_("location for personal files") }
+    , {"ignore",   KeyInfoInt   , "1",
+       N_("ignore words <= n chars")             }
+    , {"ignore-accents" , KeyInfoBool, "false",
+       N_("ignore accents when checking words")}
+    , {"ignore-case", KeyInfoBool  , "false",
+       N_("ignore case when checking words")}
+    , {"ignore-repl", KeyInfoBool  , "false",
+       N_("ignore commands to store replacement pairs")}
+    , {"jargon",     KeyInfoString, "",
+       N_("extra information for the word list")}
+    , {"keyboard", KeyInfoString, "standard",
+       N_("keyboard definition to use for typo analysis")}
+    , {"lang", KeyInfoString, "<language-tag>",
+       N_("language code")}
+    , {"language-tag", KeyInfoString, "!lang",
+       N_("deprecated, use lang instead")}
+    , {"local-data-dir", KeyInfoString, "<actual-dict-dir>",
+       N_("location of local language data files")     }
+    , {"master",        KeyInfoString, "",
+       N_("base name of the main dictionary to use")}
     , {"master-flags",  KeyInfoString, "", 0}
     , {"master-path",   KeyInfoString, "<dict-dir/master>",   0}
-    , {"module",        KeyInfoString, "default", ""}
-    , {"module-search-order", KeyInfoList, "", ""}
-    , {"per-conf", KeyInfoString, ".aspell.conf", "personal configuration file",{0, CANT_CHANGE}}
+    , {"module",        KeyInfoString, "default",
+       N_("Set module name")}
+    , {"module-search-order", KeyInfoList, "",
+       N_("Search order for modules")}
+    , {"per-conf", KeyInfoString, ".aspell.conf",
+       N_("personal configuration file"),{0, CANT_CHANGE}}
     , {"per-conf-path", KeyInfoString, "<home-dir/per-conf>", 0}
-    , {"personal", KeyInfoString, PERSONAL,   "personal word list file name"}
+    , {"personal", KeyInfoString, PERSONAL,
+       N_("personal word list file name")}
     , {"personal-path", KeyInfoString, "<home-dir/personal>", 0}
-    , {"prefix",   KeyInfoString, PREFIX, "prefix directory", {0, CANT_CHANGE}}
-    , {"repl",     KeyInfoString, REPL, "replacements list file name" }
+    , {"prefix",   KeyInfoString, PREFIX,
+       N_("prefix directory"), {0, CANT_CHANGE}}
+    , {"repl",     KeyInfoString, REPL,
+       N_("replacements list file name") }
     , {"repl-path",     KeyInfoString, "<home-dir/repl>",     0}
-    , {"run-together",        KeyInfoBool,  "false", "consider run-together words legal"}
-    , {"run-together-limit",  KeyInfoInt,   "8", "maxium numbers that can be strung together"}
-    , {"run-together-min",    KeyInfoInt,   "3", "minimal length of interior words"}
+    , {"run-together",        KeyInfoBool,  "false",
+       N_("consider run-together words legal")}
+    , {"run-together-limit",  KeyInfoInt,   "8",
+       N_("maxium numbers that can be strung together")}
+    , {"run-together-min",    KeyInfoInt,   "3",
+       N_("minimal length of interior words")}
     , {"run-together-specified", KeyInfoBool, "false", 0}
-    , {"save-repl", KeyInfoBool  , "true", "save replacement pairs on save all"}
-    , {"set-prefix", KeyInfoBool, "true", "set the prefix based on executable location", {0, CANT_CHANGE}} 
-    , {"size",          KeyInfoString, "+60", "size of the word list"}
-    , {"spelling",   KeyInfoString, "", "no longer used"}
-    , {"strip-accents" , KeyInfoBool, "false", "strip accents from word lists"}
-    , {"sug-mode",   KeyInfoString, "normal", "suggestion mode"}
-    , {"word-list-path", KeyInfoList, DATA_DIR, "Search path for word list information files"}
+    , {"save-repl", KeyInfoBool  , "true",
+       N_("save replacement pairs on save all")}
+    , {"set-prefix", KeyInfoBool, "true",
+       N_("set the prefix based on executable location"), {0, CANT_CHANGE}} 
+    , {"size",          KeyInfoString, "+60",
+       N_("size of the word list")}
+    , {"spelling",   KeyInfoString, "",
+       N_("no longer used")}
+    , {"strip-accents" , KeyInfoBool, "false",
+       N_("strip accents from word lists")}
+    , {"sug-mode",   KeyInfoString, "normal",
+       N_("suggestion mode")}
+    , {"word-list-path", KeyInfoList, DATA_DIR,
+       N_("Search path for word list information files")}
     
     //
     // These options are specific to the "aspell" utility.  They are
     // here so that they can be specified in configuration files.
     //
-    , {"backup",  KeyInfoBool, "true", "create a backup file by appending \".bak\""}
-    , {"reverse", KeyInfoBool, "false", "reverse the order of the suggest list"}
-    , {"time"   , KeyInfoBool, "false", "time load time and suggest time in pipe mode"}
-    , {"keymapping", KeyInfoString, "aspell", "keymapping for check mode, one of aspell ispell"}
+    , {"backup",  KeyInfoBool, "true",
+       N_("create a backup file by appending \".bak\"")}
+    , {"reverse", KeyInfoBool, "false",
+       N_("reverse the order of the suggest list")}
+    , {"time"   , KeyInfoBool, "false",
+       N_("time load time and suggest time in pipe mode")}
+    , {"keymapping", KeyInfoString, "aspell",
+       N_("keymapping for check mode, one of aspell ispell")}
     
   };
 

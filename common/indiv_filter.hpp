@@ -45,7 +45,7 @@ namespace acommon {
     // strings or passing them in more than once may lead to undefined
     // results.
     //
-    // The following properties are garanteed to be true and must
+    // The following properties are guaranteed to be true and must
     // stay true:
     //   *stop  == '\0';
     //   strlen == stop - start;

@@ -97,8 +97,10 @@ namespace acommon {
   }
 
   static const KeyInfo email_options[] = {
-    {"email-quote", KeyInfoList, ">,|", "email quote characters"},
-    {"email-margin", KeyInfoInt, "10",  "num chars that can appear before the quote char"}
+    {"email-quote", KeyInfoList, ">,|",
+     N_("email quote characters")},
+    {"email-margin", KeyInfoInt, "10",
+     N_("num chars that can appear before the quote char")}
   };
 
   const KeyInfo * email_options_begin = email_options;

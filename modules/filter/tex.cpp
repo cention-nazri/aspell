@@ -340,9 +340,12 @@ namespace acommon {
        "bibitem op,"
        // Geometry Package
        "geometry p,"
-       ,"TeX commands"},
-    {"tex-check-comments", KeyInfoBool, "false", "check TeX comments"},
-    {"tex-extension", KeyInfoList, "tex", "TeX file extensions"}
+       ,
+     N_("TeX commands")},
+    {"tex-check-comments", KeyInfoBool, "false",
+     N_("check TeX comments")},
+    {"tex-extension", KeyInfoList, "tex",
+     N_("TeX file extensions")}
   };
   const KeyInfo * tex_options_begin = tex_options;
   const KeyInfo * tex_options_end = tex_options + 3;

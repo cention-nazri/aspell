@@ -17,6 +17,9 @@
 #include <deque>
 
 #include <ctype.h>
+#ifdef HAVE_LOCALE_H
+# include <locale.h>
+#endif
 
 #include "settings.h"
 
@@ -60,24 +63,38 @@ void personal();
 void repl();
 void soundslike();
 
+void print_error(ParmString msg)
+{
+  fputs(_("Error: "), stderr);
+  fputs(msg, stderr);
+  fputs("\n", stderr);
+}
+
+void print_error(ParmString msg, ParmString str)
+{
+  fputs(_("Error: "), stderr);
+  fprintf(stderr, msg.str(), str.str());
+  fputs("\n", stderr);
+}
+
 #define EXIT_ON_ERR(command) \
   do{PosibErrBase pe(command);\
-  if(pe.has_err()){CERR<<"Error: "<< pe.get_err()->mesg << "\n"; exit(1);}\
+  if(pe.has_err()){print_error(pe.get_err()->mesg); exit(1);}\
   } while(false)
 #define EXIT_ON_ERR_SET(command, type, var)\
   type var;\
   do{PosibErr<type> pe(command);\
-  if(pe.has_err()){CERR<<"Error: "<< pe.get_err()->mesg << "\n"; exit(1);}\
+  if(pe.has_err()){print_error(pe.get_err()->mesg); exit(1);}\
   else {var=pe.data;}\
   } while(false)
 #define BREAK_ON_ERR(command) \
   do{PosibErrBase pe(command);\
-  if(pe.has_err()){CERR<<"Error: "<< pe.get_err()->mesg << "\n"; break;}\
+  if(pe.has_err()){print_error(pe.get_err()->mesg); break;}\
   } while(false)
 #define BREAK_ON_ERR_SET(command, type, var)\
   type var;\
   do{PosibErr<type> pe(command);\
-  if(pe.has_err()){CERR<<"Error: "<< pe.get_err()->mesg << "\n"; break;}\
+  if(pe.has_err()){print_error(pe.get_err()->mesg); break;}\
   else {var=pe.data;}\
   } while(false)
 
@@ -144,9 +161,9 @@ struct ModeAbrv {
   const char * desc;
 };
 static const ModeAbrv mode_abrvs[] = {
-  {'e', "mode=email","enter Email mode."},
-  {'H', "mode=sgml", "enter Html/Sgml mode."},
-  {'t', "mode=tex",  "enter TeX mode."},
+  {'e', "mode=email", N_("enter Email mode.")},
+  {'H', "mode=sgml",  N_("enter Html/Sgml mode.")},
+  {'t', "mode=tex",   N_("enter TeX mode.")},
 };
 
 static const ModeAbrv *  mode_abrvs_end = mode_abrvs + 3;
@@ -184,6 +201,14 @@ static const PossibleOption * find_option(const char * str) {
 
 int main (int argc, const char *argv[]) 
 {
+#ifdef USE_LOCALE
+  setlocale (LC_ALL, "");
+#endif
+#ifdef ENABLE_NLS
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
+#endif
+  
   EXIT_ON_ERR(options->read_in_settings());
 
   if (argc == 1) {print_help(); return 0;}
@@ -236,21 +261,20 @@ int main (int argc, const char *argv[])
 	}
       }
       if (o == possible_options_end) {
-	CERR << "Error: Invalid Option: " << argv[i] << "\n";
+	print_error(_("Invalid Option: %s"), argv[i]);
 	return 1;
       }
       if (o->num_arg == 0) {
 	if (parm[0] != '\0') {
-	  CERR << "Error: " << String(argv[i], parm - argv[i])
-	       << " does not take any parameters." << "\n";
+	  print_error(_(" does not take any parameters."), 
+		      String(argv[i], parm - argv[i]));
 	  return 1;
 	}
 	i += 1;
       } else { // o->num_arg == 1
 	if (parm[0] == '\0') {
 	  if (i + 1 == argc) {
-	    CERR << "Error: You must specify a parameter for " 
-		 << argv[i] << "\n";
+	    print_error(_("You must specify a parameter for %s"), argv[i]);
 	    return 1;
 	  }
 	  parm = argv[i + 1];
@@ -275,7 +299,7 @@ int main (int argc, const char *argv[])
   }
 
   if (args.empty()) {
-    CERR << "Error: You must specify an action" << "\n";
+    print_error(_("You must specify an action"));
     return 1;
   }
 
@@ -309,13 +333,13 @@ int main (int argc, const char *argv[])
   else if (action_str == "merge")
     action = do_merge;
   else {
-    CERR << "Error: Unknown Action: " << action_str << "\n";
+    print_error(_("Unknown Action: %s"),  action_str);
     return 1;
   }
 
   if (action != do_other) {
     if (args.empty()) {
-      CERR << "Error: Unknown Action: " << action_str << "\n";
+      print_error(_("Unknown Action: %s"),  action_str);
       return 1;
     }
     String what_str = args.front();
@@ -331,8 +355,8 @@ int main (int argc, const char *argv[])
     else if (what_str == "repl")
       repl();
     else {
-      CERR << "Error: Unknown Action: " << action_str 
-	   << " " << what_str << "\n";
+      print_error(_("Unknown Action: %s"),
+		  String(action_str + " " + what_str));
       return 1;
     }
   }
@@ -408,7 +432,7 @@ bool get_word_pair(char * line, char * & w1, char * & w2)
 {
   w2 = strchr(line, ',');
   if (!w2) {
-    CERR << "ERROR: Invalid Input\n";
+    print_error(_("Invalid Input"));
     return false;
   }
   *w2 = '\0';
@@ -449,7 +473,7 @@ DocumentChecker * new_checker(AspellSpeller * speller,
 
 #define BREAK_ON_SPELLER_ERR\
   do {if (aspell_speller_error(speller)) {\
-    CERR<<"Error: "<< aspell_speller_error_message(speller) << "\n"; break;\
+    print_error(aspell_speller_error_message(speller)); break;\
   } } while (false)
 
 void pipe() 
@@ -466,7 +490,7 @@ void pipe()
   AspellCanHaveError * ret 
     = new_aspell_speller(reinterpret_cast<AspellConfig *>(options.get()));
   if (aspell_error(ret)) {
-    CERR << "Error: " << aspell_error_message(ret) << "\n";
+    print_error(aspell_error_message(ret));
     exit(1);
   }
   AspellSpeller * speller = to_aspell_speller(ret);
@@ -671,7 +695,7 @@ void check(bool interactive)
 
   if (interactive) {
     if (args.size() == 0) {
-      CERR << "Error: You must specify a file name.\n";
+      print_error(_("You must specify a file name."));
       exit(-1);
     }
     
@@ -681,15 +705,13 @@ void check(bool interactive)
 
     in = fopen(file_name.c_str(), "r");
     if (!in) {
-      CERR << "Error: Could not open the file \"" << file_name
-	   << "\" for reading.\n";
+      print_error(_("Could not open the file \"%s\" for reading"), file_name);
       exit(-1);
     }
     
     out = fopen(new_name.c_str(), "w");
     if (!out) {
-      CERR << "Error: Could not open the file \"" << file_name
-           << "\" for writing.  File not saved.\n";
+      print_error(_("Could not open the file \"%s\"  for writing. File not saved."), file_name);
       exit(-1);
     }
 
@@ -702,7 +724,7 @@ void check(bool interactive)
     else if (m == "ispell")
       mapping.to_ispell();
     else {
-      CERR << "Error: Invalid keymapping: " << m << "\n";
+      print_error(_("Invalid keymapping: %s"), m);
       exit(-1);
     }
 
@@ -713,7 +735,7 @@ void check(bool interactive)
   AspellCanHaveError * ret 
     = new_aspell_speller(reinterpret_cast<AspellConfig *>(options.get()));
   if (aspell_error(ret)) {
-    CERR << "Error: " << aspell_error_message(ret) << "\n";
+    print_error(aspell_error_message(ret));
     exit(1);
   }
   AspellSpeller * speller = to_aspell_speller(ret);
@@ -723,14 +745,14 @@ void check(bool interactive)
   word_choices = new Choices;
 
   menu_choices = new Choices;
-  menu_choices->push_back(Choice(mapping[Ignore],     "Ignore"));
-  menu_choices->push_back(Choice(mapping[IgnoreAll],  "Ignore all"));
-  menu_choices->push_back(Choice(mapping[Replace],    "Replace"));
-  menu_choices->push_back(Choice(mapping[ReplaceAll], "Replace all"));
-  menu_choices->push_back(Choice(mapping[Add],        "Add"));
-  menu_choices->push_back(Choice(mapping[AddLower],   "Add Lower"));
-  menu_choices->push_back(Choice(mapping[Abort],      "Abort"));
-  menu_choices->push_back(Choice(mapping[Exit],       "Exit"));
+  menu_choices->push_back(Choice(mapping[Ignore],     _("Ignore")));
+  menu_choices->push_back(Choice(mapping[IgnoreAll],  _("Ignore all")));
+  menu_choices->push_back(Choice(mapping[Replace],    _("Replace")));
+  menu_choices->push_back(Choice(mapping[ReplaceAll], _("Replace all")));
+  menu_choices->push_back(Choice(mapping[Add],        _("Add")));
+  menu_choices->push_back(Choice(mapping[AddLower],   _("Add Lower")));
+  menu_choices->push_back(Choice(mapping[Abort],      _("Abort")));
+  menu_choices->push_back(Choice(mapping[Exit],       _("Exit")));
 
   String new_word;
   Vector<String> sug_con;
@@ -811,7 +833,7 @@ void check(bool interactive)
       case Exit:
 	goto exit_loop;
       case Abort:
-	prompt("Are you sure you want to abort? ");
+	prompt(_("Are you sure you want to abort? "));
 	get_choice(choice);
 	if (choice == 'y' || choice == 'Y')
 	  goto abort_loop;
@@ -831,7 +853,7 @@ void check(bool interactive)
 	break;
       case Replace:
       case ReplaceAll:
-	prompt("With: ");
+	prompt(_("With: "));
 	get_line(new_word);
 	if (new_word.size() == 0)
 	  goto choice_prompt;
@@ -845,7 +867,7 @@ void check(bool interactive)
 	if (choice >= '1' && choice < (char)suggestions_size + '1') { 
 	  state->replace(sug_con[choice-'1']);
 	} else {
-	  error("Sorry that is an invalid choice!");
+	  error(_("Sorry that is an invalid choice!"));
 	  goto choice_loop;
 	}
       }
@@ -1054,9 +1076,9 @@ void master () {
 
   } else if (action == do_merge) {
     
-    CERR << "Can't merge a master word list yet.  Sorry\n";
+    print_error(_("Can't merge a master word list yet. Sorry."));
     exit (1);
-  
+    
   } else if (action == do_dump) {
 
     EXIT_ON_ERR_SET(add_data_set(config->retrieve("master-path"), 
@@ -1089,8 +1111,8 @@ void personal () {
 
     if (action == do_create) {
       if (file_exists(speller->config()->retrieve("personal-path"))) {
-        CERR << "Sorry I won't overwrite \"" 
-             << speller->config()->retrieve("personal-path") << "\"" << "\n";
+        print_error(_("Sorry I won't overwrite \"%s\""), 
+		    speller->config()->retrieve("personal-path"));
         exit (1);
       }
       speller->personal_word_list().data->clear();
@@ -1141,8 +1163,8 @@ void repl() {
 
     if (action == do_create) {
       if (file_exists(speller->config()->retrieve("repl-path"))) {
-        CERR << "Sorry I won't overwrite \"" 
-             << speller->config()->retrieve("repl-path") << "\"" << "\n";
+        print_error(_("Sorry I won't overwrite \"%s\""),
+		    speller->config()->retrieve("repl-path"));
         exit (1);
       }
       speller->personal_repl().clear();
@@ -1227,13 +1249,13 @@ void print_help_line(char abrv, char dont_abrv, const char * name,
     command += "=<str>";
   if (type == KeyInfoInt)
     command += "=<int>";
-  printf("  %-27s %s\n", command.c_str(), desc);
+  printf("  %-27s %s\n", command.c_str(), gettext (desc));
 }
 
 void print_help () {
-  printf(
+  printf(_(
     "\n"
-    "Aspell " VERSION " alpha.  Copyright 2000 by Kevin Atkinson.\n"
+    "Aspell %s alpha.  Copyright 2000 by Kevin Atkinson.\n"
     "\n"
     "Usage: aspell [options] <command>\n"
     "\n"
@@ -1251,7 +1273,7 @@ void print_help () {
     "    dumps, creates or merges a master, personal, or replacement word list.\n"
     "\n"
     "[options] is any of the following:\n"
-    "\n");
+    "\n"), VERSION);
   Enumeration<KeyInfoEnumeration> els = options->possible_elements();
   const KeyInfo * k;
   while (k = els.next(), k) {

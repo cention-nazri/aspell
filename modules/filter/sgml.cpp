@@ -263,8 +263,10 @@ namespace acommon {
   }
   
   static const KeyInfo sgml_options[] = {
-    {"sgml-check", KeyInfoList, "alt", "sgml attributes to always check."},
-    {"sgml-extension", KeyInfoList, "html,htm,php,sgml", "sgml file extensions"}
+    {"sgml-check", KeyInfoList, "alt",
+     N_("sgml attributes to always check.")},
+    {"sgml-extension", KeyInfoList, "html,htm,php,sgml",
+     N_("sgml file extensions")}
   };
   const KeyInfo * sgml_options_begin = sgml_options;
   const KeyInfo * sgml_options_end = sgml_options + 2;

@@ -1,0 +1,8 @@
+common/config.cpp
+common/errors.cpp
+common/posib_err.cpp 
+prog/aspell.cpp
+modules/filter/email.cpp
+modules/filter/sgml.cpp
+modules/filter/tex.cpp
+modules/filter/loadable.cpp

@@ -24,7 +24,7 @@ no locale;
 The info array contains information on how to process the info in 
 mk-src.pl.  It has the following layout
 
-   <catagory> => options => [] 
+   <category> => options => [] 
                  groups => [] # if undef than anything is accepted
                  creates_type => "" # the object will create a new type
                                     # as specified
@@ -35,8 +35,8 @@ where <impl type> is one of:
   cc: for "aspell.h" header file
   cxx: for C++ interface implemented on top of cc interface
   native: for creation of header files used internally by aspell
-  impl: for defination of functions declared in cc interface.
-        the definations use the native hedaer files
+  impl: for definition of functions declared in cc interface.
+        the definitions use the native header files
   native_impl: for implementations of stuff declared in the native
                 header files
 

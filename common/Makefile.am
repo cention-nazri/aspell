@@ -39,4 +39,4 @@ libaspell_common_la_SOURCES = \
 
 libaspell_common_la_LDFLAGS = ${extra_ldflags} -release 0.50.1
 
-EXTRA_DIST = *.hpp
+EXTRA_DIST = *.hpp gettext.h

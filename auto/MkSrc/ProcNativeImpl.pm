@@ -68,7 +68,7 @@ $info{errors}{proc}{native_impl} = sub {
       if (length $mesg == 0) {
 	$mesg = 0;
       } else {
-	$mesg = "\"$mesg\"";
+	$mesg = "N_(\"$mesg\")";
       }
       return $mesg;
     };

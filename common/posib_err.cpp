@@ -4,6 +4,7 @@
 // license along with this library if you did not you can find
 // it at http://www.gnu.org/.
 
+#include <settings.h> // needed for NLS support
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
@@ -29,7 +30,7 @@ namespace acommon {
 				   ParmString p1, ParmString p2, 
 				   ParmString p3, ParmString p4)
   {
-    const char * s0 = inf->mesg ? inf->mesg : "";
+    const char * s0 = inf->mesg ? gettext(inf->mesg) : "";
     const char * s;
     ParmString p[4] = {p1,p2,p3,p4};
     StrSize m[10];
@@ -75,7 +76,8 @@ namespace acommon {
     assert(err_ != 0);
     assert(err_->refcount == 1);
     char * & m = const_cast<char *>(err_->err->mesg);
-    unsigned int orig_len = strlen(m);
+    char * mesg = gettext (m);
+    unsigned int orig_len = strlen(mesg);
     unsigned int new_len = fn.size() + 2 + orig_len + 1;
     char * s = new char[new_len];
     char * p = s;
@@ -83,7 +85,7 @@ namespace acommon {
     p += fn.size();
     memcpy(p, ": ", 2);
     p += 2;
-    memcpy(p, m, orig_len + 1);
+    memcpy(p, mesg, orig_len + 1);
     delete[] m;
     m = s;
     return *this;
@@ -92,8 +94,8 @@ namespace acommon {
   void PosibErrBase::handle_err() const {
     assert (err_);
     assert (!err_->handled);
-    fputs("Unhandled Error: ", stderr);
-    fputs(err_->err->mesg, stderr);
+    fputs(_("Unhandled Error: "), stderr);
+    fputs(gettext (err_->err->mesg), stderr);
     fputs("\n", stderr);
     abort();
   }

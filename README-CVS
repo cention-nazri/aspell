@@ -5,6 +5,7 @@ The following packages need to be installed to build this package
 from CVS.
   perl (I use v5.6.0 but other versions may work)
   libtool (CVS version)
+  gettext 0.11.5
   autoconf 2.50 or better
   automake 1.5 (earlier versions *might* work)
 And to build the manual
