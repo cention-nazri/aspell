@@ -30,7 +30,8 @@ libaspell_common_la_SOURCES = \
   posib_err.cpp errors.cpp error.cpp\
   fstream.cpp iostream.cpp info.cpp \
   can_have_error.cpp \
-  convert.cpp
+  convert.cpp \
+  speller.cpp document_checker.cpp
 
 libaspell_common_la_LDFLAGS = -release 0.50
 

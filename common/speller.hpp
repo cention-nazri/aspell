@@ -23,15 +23,16 @@
 #include "parm_string.hpp"
 #include "char_vector.hpp"
 
-#include "convert.hpp" //FIXME: Should't be necessary
-
 namespace acommon {
 
   typedef void * SpellerLtHandle;
 
   class Config;
   class WordList;
-  //class Convert;
+  class Convert;
+  class Tokenizer;
+  class Filter;
+  class DocumentChecker;
 
   class Speller : public CanHaveError
   {
@@ -46,7 +47,7 @@ namespace acommon {
     ClonePtr<Convert> to_encoded_;
   protected:
     CopyPtr<Config> config_;
-    Speller(SpellerLtHandle h) : lt_handle_(h) {}
+    Speller(SpellerLtHandle h);
   public:
     SpellerLtHandle lt_handle() const {return lt_handle_;}
 
@@ -56,6 +57,10 @@ namespace acommon {
 
     // the setup class will take over for config
     virtual PosibErr<void> setup(Config *) = 0;
+
+    // sets up the tokenizer class
+    // should be called only after this class is setup
+    virtual void setup_tokenizer(Tokenizer *) = 0;
 
     ////////////////////////////////////////////////////////////////
     // 
@@ -87,8 +92,8 @@ namespace acommon {
   
     virtual PosibErr<void> store_replacement(MutableString, 
 					     MutableString) = 0;
-  
-    virtual ~Speller() {}
+
+    virtual ~Speller();
 
   };
 

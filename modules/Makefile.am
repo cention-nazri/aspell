@@ -1,2 +1,3 @@
 
-SUBDIRS = speller
+SUBDIRS = speller tokenizer
+

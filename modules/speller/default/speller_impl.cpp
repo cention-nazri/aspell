@@ -17,6 +17,8 @@
 #include "speller_impl.hpp"
 #include "string_list.hpp"
 #include "suggest.hpp"
+#include "tokenizer.hpp"
+#include "convert.hpp"
 
 namespace aspeller {
   //
@@ -644,6 +646,24 @@ namespace aspeller {
 	delete i->data_set;
     }
   }
+
+  //////////////////////////////////////////////////////////////////////
+  //
+  // SpellerImple setup tokenizer method
+  //
+
+  void SpellerImpl::setup_tokenizer(Tokenizer * tok)
+  {
+    for (int i = 0; i != 256; ++i) 
+    {
+      tok->char_type_[i].word   = lang_->is_alpha(i);
+      tok->char_type_[i].begin  = lang_->special(i).begin;
+      tok->char_type_[i].middle = lang_->special(i).middle;
+      tok->char_type_[i].end    = lang_->special(i).end;
+    }
+    tok->to_encoded_ = to_encoded_;
+  }
+
 
   //////////////////////////////////////////////////////////////////////
   //

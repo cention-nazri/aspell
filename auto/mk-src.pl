@@ -93,7 +93,7 @@ INIT {
      method => {options => ['desc', 'posib err', 'c func', 'const',
 			    'c only', 'c impl', 'cxx impl'],
 		groups => undef},
-     constructor => {options => ['returns alt type', 'c impl'],
+     constructor => {options => ['returns alt type', 'c impl', 'desc'],
 		     groups => 'types'},
      destructor => {options => [],
 		    groups => undef},
