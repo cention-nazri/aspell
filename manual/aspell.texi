@@ -88,6 +88,7 @@ Working With Dictionaries
 * Listing Available Dictionaries::  
 * Dumping the Contents of the Word List::  
 * Creating an Individual Word List::  
+* Working With Affix Info in Word Lists::  
 * Using Multi Dictionaries::    
 * Dictionary Naming::           
 * AWLI files::                  
@@ -294,7 +295,7 @@ the more useful ones include:
 @item --mode=@var{mode}
 the mode to use when checking files.  The available modes are
 @code{none}, @code{url}, @code{email}, @code{sgml}, @code{tex},
-@code{texinfo}, @code{nroff}, amoung others.  For more information on the
+@code{texinfo}, @code{nroff}, among others.  For more information on the
 various modes see @ref{Notes on Various Filters and Filter Modes}.
 
 @item --dont-backup
@@ -502,7 +503,7 @@ to find the source word list.
 The naming and format of the personal dictionary is also different.
 However, ispell personal dictionaries can be imported using the
 @command{aspell-import} script.  @xref{Using aspell-import}.  The
-Ispell personal dictionary is simpily a list of words while the Aspell
+Ispell personal dictionary is simply a list of words while the Aspell
 one is a list of words with a header line.  Thus it is also fairly
 easy to convert between the two.  @xref{Format of the Personal Dictionary}.
 
@@ -1046,7 +1047,7 @@ check @TeX{} comments
 
 @subsubsection texinfo
 This filter hides all Texinfo command from Aspell.  It can also hide
-Texinfo paramaters and envirments not corresponding to readable text.
+Texinfo parameters and environments not corresponding to readable text.
 
 @table @b
 @item texinfo-ignore
@@ -1631,6 +1632,7 @@ to the @option{normal} if jump tables were used.
 * Listing Available Dictionaries::  
 * Dumping the Contents of the Word List::  
 * Creating an Individual Word List::  
+* Working With Affix Info in Word Lists::  
 * Format of the Personal and Replacement Dictionaries::  
 * Using Multi Dictionaries::    
 * Dictionary Naming::           
@@ -1793,8 +1795,6 @@ A personal and replacement word list can be created in a similar fashion.
 @c FIXME: add notes about how affix compression works when creating
 @c dictionaries.
 
-@subsection ``Munching'' a word list
-
 FIXME: Writeme
 
 @subsection Format of the Replacement Word List
@@ -1806,13 +1806,106 @@ the following format
 @i{misspelled_word} @i{correction}
 @end example
 
+@node Working With Affix Info in Word Lists
+@section Working With Affix Info in Word Lists
+
+@subsection The Munch Command
+
+The @command{munch} command takes a list of words from standard input
+and outputs a list of possible root words and affixes.  The root may,
+however, be invalid as it does not check them against the exiting
+dictionary.  For example the command:
+@example
+echo brother | aspell -l en munch
+@exdent produces
+brother broth/R brothe/R
+@end example
+
+@subsection The Expand Command
+
+The @command{expand} command is the reverse of @command{munch}, it
+expands affix flags to produce a list of words.  For example:
+@example
+echo both/R | aspell -l en expand
+@exdent produces
+both bother
+@end example
+
+It formal usage is:
+@example
+aspell expand [@var{level}] [@var{limit}]
+@end example
+@noindent
+Where @var{level} is the expansion level.  Valid values are between 1
+and 3.  Level 1 is the default if not otherwise specified.  Level 2
+causes the original root/affix to be included, for example:
+@example
+both/R both bother
+@end example
+@noindent
+Level 3 causes multiple lines to be printed, one for each generated
+word, with the original root/affix combination followed by the word it
+creates:
+@example
+both/R both
+both/R bother
+@end example
+@noindent
+Levels larger than 3 may also be supported, but should not used as
+they may eventually be removed.
+
+@var{limit} ...
+
+@subsection The Munch-list Command
+
+The @command{munch-list} command will reduce the size of word list via
+affix compression.  It will attempt to reduce the a list of words to a
+minimal set of roots and affixes that will match the same list of
+words.  The list of words is read from standard input and writes the
+``munched'' list to standard out.  It's usage is:
+
+@example
+aspell munch-list [keep] [single|multi] [simple] < @var{infile} > @var{outfile}
+@end example
+
+@noindent
+where @option{simple}, @option{single}, @option{multi}, and
+@option{keep} are literal values.
+
+The default algorithm used should give near optimum results.  In some
+cases the set of words returned is, provably, the minimum number
+possible.  In the typical case the number of words returned is within
+1% of the optimum number.
+
+By default Aspell will remove redundant affix flags.  The @option{keep}
+flag will avoid removing them, which can be useful if you want to
+include all possible expansions for each base.
+
+When cross products are involved it may be beneficial to list a base
+word more than once.  Unfortunately, the current version of Aspell can
+not correctly handle multiple base words in a dictionary.  Therefore,
+the current default behavior is to only include the one with the most
+expansions.  All of them can be included via the @option{multi} flag.
+Once aspell is able to handle multiple base words the default will be
+to include them all.  The @option{single} flag can be used to only
+include one of them.
+
+The @option{simple} flag will select an alternate faster algorithm.
+This algorithm is very similar to the @command{munch} command
+distributed with Myspell (the Open Office spell checker), however, it
+doesn't give nearly as good results.  It does okay for the English
+word list but not for some other languages such as German; the normal
+algorithm reduced a list of 312,002 German words to 79,420 base words
+while the simple algorithm only reduced it to 115,927 words.  This
+algorithm may disappear in a future version of Aspell.
+
 @node Format of the Personal and Replacement Dictionaries
 @section Format of the Personal and Replacement Dictionaries
 
 @anchor{Format of the Personal Dictionary}
 @subsection Format of the Personal Dictionary
                                    
-The personal dictionarie generally has a name of the form:
+The personal dictionary generally has a name of the form:
 @example
 .aspell.@var{lang}.pws
 @end example
@@ -1832,7 +1925,7 @@ The rest of the file is simply a word list with one line per word.
 
 @subsection Format of the Personal Replacement Dictionary
 
-The personal replasment dictionary generally has a name of the form:
+The personal replacement dictionary generally has a name of the form:
 @example
 .aspell.@var{lang}.prepl
 @end example
