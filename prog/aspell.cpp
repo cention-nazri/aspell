@@ -1819,42 +1819,51 @@ void expand_expression(Config * config) {
   }
 }
 
+static const char * help_text[] = 
+{
+  /* TRANSLATORS: This should be formated to fit on an 80 column
+     terminal.*/
+  N_("<command> is one of:"),
+  N_("  -?|help [<expr>] display this help message"),
+  N_("                    and help for filters matching <expr> if installed"),
+  N_("  -c|check <file>  to check a file"),
+  N_("  -a|pipe          \"ispell -a\" compatibility mode"),
+  N_("  list             produce a list of misspelled words from standard input"),
+  N_("  [dump] config [+e <expr>]  dumps the current configuration to stdout"),
+  N_("  config [+e <expr>] <key>   prints the current value of an option"),
+  N_("  [dump] dicts     lists available dictionaries"),
+  N_("  soundslike       returns the sounds like equivalent for each word entered"),
+  N_("  munch            generate possible root words and affixes"),
+  N_("  expand [1-4]     expands affix flags"),
+  N_("  clean [strict]   cleans a word list so that every line is a valid word"),
+  N_("  filter           passes standard input through filters"),
+  N_("  -v|version       prints a version line"),
+  N_("  conv <from> <to> [<norm-form>]"),
+  N_("    converts from one encoding to another"),
+  N_("  norm (<norm-map> | <from> <norm-map> <to>) [<norm-form>]"),
+  N_("    perform unicode normlization"),
+  N_("  dump|create|merge master|personal|repl [word list]"),
+  N_("    dumps, creates or merges a master, personal, or replacement word list."),
+  "",
+  N_("  <expr>           regular expression matching filtername(s) or \"all\""),
+  N_("  <norm-form>      normalization form to use, either none, internal, or strict"),
+  "",
+  N_("[options] is any of the following:"),
+  ""
+};
+static const unsigned help_text_size = 
+            sizeof(help_text)/sizeof(const char *);
+
 void print_help () {
   expand_expression(options);
-  printf(
-    /* TRANSLATORS: This should be formated to fit on an 80 column
-     * terminal.*/
-    _("\n"
-      "Aspell %s alpha.  Copyright 2000-2004 by Kevin Atkinson.\n"
-      "\n"
-      "Usage: aspell [options] <command>\n"
-      "\n"
-      "<command> is one of:\n"
-      "  -?|help [<expr>] display this help message\n"
-      "                    and help for filters matching <expr> if installed\n"
-      "  -c|check <file>  to check a file\n"
-      "  -a|pipe          \"ispell -a\" compatibility mode\n"
-      "  list             produce a list of misspelled words from standard input\n"
-      "  [dump] config [+e <expr>]  dumps the current configuration to stdout\n"
-      "  config [+e <expr>] <key>   prints the current value of an option\n"
-      "  soundslike       returns the sounds like equivalent for each word entered\n"
-      "  munch            generate possible root words and affixes\n"
-      "  expand [1-4]     expands affix flags\n"
-      "  clean [strict]   cleans a word list so that every line is a valid word\n"
-      "  filter           passes standard input through filters\n"
-      "  -v|version       prints a version line\n"
-      "  conv <from> <to> [<norm-form>]\n"
-      "    converts from one encoding to another\n"
-      "  norm (<norm-map> | <from> <norm-map> <to>) [<norm-form>]\n"
-      "    perform unicode normlization\n"
-      "  dump|create|merge master|personal|repl [word list]\n"
-      "    dumps, creates or merges a master, personal, or replacement word list.\n"
-      "\n"
-      "  <expr>           regular expression matching filtername(s) or \"all\"\n"
-      "  <norm-form>      normalization form to use, either none, internal, or strict\n"
-      "\n"
-      "[options] is any of the following:\n"
-      "\n"), VERSION);
+  printf(_("\n"
+           "Aspell %s alpha.  Copyright 2000-2004 by Kevin Atkinson.\n"
+           "\n"), VERSION);
+  for (unsigned i = 0; i < help_text_size; ++i)
+  {
+    if (help_text[i][0] == '\0') putchar('\n');
+    else puts(_(help_text[i]));
+  }
   StackPtr<KeyInfoEnumeration> els(options->possible_elements());
   const KeyInfo * k;
   while (k = els->next(), k) {
@@ -1880,6 +1889,6 @@ void print_help () {
       }
     }
   }
-  EXIT_ON_ERR(print_mode_help(options,stdout));//wouldnt stderr be better ??
+  EXIT_ON_ERR(print_mode_help(options,stdout));
 }
 

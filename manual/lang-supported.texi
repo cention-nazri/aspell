@@ -103,12 +103,13 @@
 @item lb @tab Luxembourgish @tab Latin @tab Maybe @tab -
 @item lg @tab Ganda @tab Latin @tab Maybe @tab -
 @item li @tab Limburgian @tab Latin @tab Maybe @tab -
-@item ln @tab Lingala @tab Latin @tab - @tab -
+@item ln @tab Lingala @tab Latin @tab Maybe @tab -
 @item lt @tab Lithuanian @tab Latin @tab Experimental @tab -
 @item lu @tab Luba-Katanga @tab Latin @tab - @tab -
+@item luo @tab Luo (Kenya and Tanzania) @tab Latin @tab Maybe @tab -
 @item lv @tab Latvian @tab Latin @tab Experimental @tab -
 @item
-@item mg @tab Malagasy @tab Latin @tab - @tab -
+@item mg @tab Malagasy @tab Latin @tab Maybe @tab -
 @item mi @tab Maori @tab Latin @tab Yes @tab -
 @item mk @tab Macedonian @tab Cyrillic @tab Yes @tab -
 @item ml @tab Malayalam @tab Malayalam @tab Maybe @tab -
@@ -143,15 +144,16 @@
 @item ps @tab Pushto @tab Arabic @tab - @tab -
 @item pt @tab Portuguese @tab Latin @tab Yes @tab Yes
 @item
-@item qu @tab Quechua @tab Latin @tab - @tab -
+@item qu @tab Quechua @tab Latin @tab Maybe @tab -
 @item
-@item rn @tab Rundi @tab Latin @tab - @tab -
+@item rn @tab Rundi @tab Latin @tab Maybe @tab -
 @item ro @tab Romanian @tab Latin @tab Yes @tab Yes
 @item ru @tab Russian @tab Cyrillic @tab Yes @tab Yes
 @item rw @tab Kinyarwanda @tab Latin @tab Yes @tab -
 @item
 @item sc @tab Sardinian @tab Latin @tab Yes @tab -
 @item sd @tab Sindhi @tab Arabic @tab - @tab -
+@item se @tab Northern Sami @tab Latin @tab Maybe @tab -
 @item sg @tab Sango @tab Latin @tab - @tab -
 @item si @tab Sinhalese @tab Sinhala @tab - @tab -
 @item sk @tab Slovak @tab Latin @tab Yes @tab -
@@ -163,7 +165,7 @@
 @item sr @tab Serbian @tab Cyrillic, Latin @tab Planned @tab Yes
 @item ss @tab Swati @tab Latin @tab Maybe @tab -
 @item st @tab Southern Sotho @tab Latin @tab Maybe @tab -
-@item su @tab Sundanese @tab Latin @tab - @tab -
+@item su @tab Sundanese @tab Latin @tab Maybe @tab -
 @item sv @tab Swedish @tab Latin @tab Yes @tab -
 @item sw @tab Swahili @tab Latin @tab Yes @tab -
 @item

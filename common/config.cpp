@@ -1383,8 +1383,8 @@ namespace acommon {
     , {"sug-mode",   KeyInfoString, "normal",
        N_("suggestion mode"), KEYINFO_MAY_CHANGE}
     , {"sug-edit-dist", KeyInfoInt, "1",
-       /* TRANSLATORS: "sug-mode" is a literal value and should not
-        * be translated.*/
+       /* TRANSLATORS: "sug-mode" is a literal value and should not be
+          translated. */
        N_("edit distance to use, override sug-mode default")}
     , {"sug-typo-analysis", KeyInfoBool, "true",
        N_("use typo analysis, override sug-mode default")}
@@ -1406,7 +1406,7 @@ namespace acommon {
        N_("Unicode normalization required for the current lang")}
     , {"norm-form", KeyInfoString, "nfc",
        /* TRANSLATORS: the values after the ':' are literal
-        * values and should not be translated.*/
+          values and should not be translated. */
        N_("Unicode normalization form: none, nfd, nfc, comp")}
     , {"norm-strict", KeyInfoBool, "false",
        N_("avoid lossy conversions when normalization")}
