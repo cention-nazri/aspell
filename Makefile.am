@@ -18,7 +18,7 @@ AM_CPPFLAGS = -I${srcdir}/gen -I${srcdir}/common \
 SUFFIXES = .info
 
 noinst_DATA = 
-EXTRA_DIST = 
+EXTRA_DIST = win32/Makefile win32/settings.h
 
 ########################################################################
 #
