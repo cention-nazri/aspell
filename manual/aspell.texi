@@ -1,5 +1,5 @@
 \input texinfo   @c -*-texinfo-*-
-@comment $Id: aspell.texi,v 1.9 2004/02/15 09:42:05 kevina Exp $
+@comment $Id: aspell.texi,v 1.10 2004/02/17 04:14:09 kevina Exp $
 @comment %**start of header
 @setfilename aspell.info
 @settitle GNU Aspell 0.51
@@ -18,16 +18,6 @@ any later version published by the Free Software Foundation; with no
 Invariant Sections, no Front-Cover Texts and no Back-Cover Texts.  A
 copy of the license is included in the section entitled "GNU Free
 Documentation License".
-
-The library and utility program is copyright @copyright{} 2000-2002 by
-Kevin Atkinson.  You can redistribute it and/or modify it under the
-terms of the GNU Lesser General Public License as (LGPL) published by
-the Free Software Foundation; either version 2.1 of the License, or
-(at your option) any later version.
-
-Certain parts of the library, as indicated at the top of the source
-file, are under a weaker license.  However, all parts of the library
-are LGPL Compatible.
 @end quotation
 @end copying
 
@@ -116,6 +106,7 @@ Adding Support For Other Languages
 * Replacement Tables::          
 * Affix Compression::           
 * Controlling the Behavior of Run-together Words::  
+* Creating A New Character Set::  
 
 Implementation Notes
 
@@ -131,6 +122,7 @@ To Do
 Notes on Various Items
 
 * Unicode Support::             
+* Unicode Decomposition::       
 * Words With Spaces in Them::   
 * Word skipping by context::    
 * Hidden Markov Model::         
@@ -512,13 +504,17 @@ All options specified at the command line have the following basic format:
 --@var{option}[=@var{value}]
 @end example
 
-where the @kbd{=} can be replaced by whitespace.
+where the @samp{=} can be replaced by whitespace.
 
 However some options also have single letter abbreviations of the form:
 
 @example
 -<letter>[<optional whitespace><value>]
 @end example
+
+Any non-@acronym{ASCII} characters are expected to be in the encoding
+specified by the @option{encoding} option, which if not specified,
+defaults to the current locale encoding.
 
 @subsubsection Boolean options
 
@@ -573,12 +569,14 @@ Each line of the configuration file has the format:
 @end example
 
 There may any number of spaces between the option and the value
-however it can only be spaces, i.e. there is no @kbd{=} between the
+however it can only be spaces, i.e. there is no @samp{=} between the
 option name and the value.
 
 Comments may also be included by preceding them with a @samp{#} as
 anything from a @samp{#} to a newline is ignored.  Blank lines are also
 allowed.
+
+Any non-@acronym{ASCII} characters are expected to be in @acronym{UTF-8}.
 
 Values set in the personal configuration file override those in the
 global file.  Options specified at either the command line or via an
@@ -722,8 +720,8 @@ the base name of the keyboard definition file to use (@pxref{Notes on
 Typo-Analysis})
 
 @item sug-mode (@i{mode})
-suggestion mode = @kbd{ultra} | @kbd{fast} | @kbd{normal} |
-@kbd{bad-spellers} (@pxref{Notes on the Different Suggestion Modes})
+suggestion mode = @samp{ultra} | @samp{fast} | @samp{normal} | @samp{slow} |
+@samp{bad-spellers} (@pxref{Notes on the Different Suggestion Modes})
 @end table
 
 @subsection Filter Options
@@ -751,20 +749,20 @@ cannot be found or is corrupt Aspell will refuse to load the entire
 filter.
 
 @item mode (@i{string})
-sets the filter mode.  Mode is one of @kbd{none}, @kbd{url},
-@kbd{email}, @kbd{sgml}, or @kbd{tex}.  (The shortcut options
+sets the filter mode.  Mode is one of @samp{none}, @samp{url},
+@samp{email}, @samp{sgml}, or @samp{tex}.  (The shortcut options
 @option{-e} may be used for email, @option{-H} for HTML/SGML, or
 @option{-t} for @TeX{})
 
 @item encoding (@i{string})
-The encoding the input text is in.  Valid values are @kbd{utf-8},
-@kbd{iso-8859-*}, @kbd{koi8-r}, @kbd{viscii}, @kbd{cp1252},
-@kbd{utf-16}, @kbd{utf-32}.  However, the
-Aspell utility will currently only function correctly with 8-bit
-encodings.  I hope to provide utf-8 support in the future.  The 
-@kbd{utf-16} and @kbd{utf-32} encodings are intended to be used by other
-programs using the Aspell library and it is unlikly the Aspell utility
-will ever support these encodings.
+The encoding the input text is in.  Valid values are @samp{utf-8},
+@samp{iso-8859-*}, @samp{koi8-r}, @samp{viscii}, @samp{cp1252},
+@samp{utf-16}, @samp{utf-32}.  When using the aspell utility the
+default encoding is based on the current locale.  Thus if your locale
+currently uses the @samp{utf-8} encoding than everything will be in
+@acronym{UTF-8}.  The @samp{utf-16} and @samp{utf-32} encodings are
+intended to be used by other programs using the Aspell library and is
+not suppotted by the Aspell utility.
 @end table
 
 These options belong to filters packaged along with Aspell standard
@@ -832,14 +830,14 @@ while the delimited ones are hidden.
 @item add|rem-context-delimiters 
 (@i{list}) Add or remove pairs of delimiters.  This allows to specify
 the character, or sequences of characters, which should be used to
-switch contexts and and therefore have to be escaped by `@kbd{\}' if
+switch contexts and and therefore have to be escaped by @samp{\} if
 they should appear literally.  The two delimiting chars belonging to
 one pair have to be separated by a space character.  If multiple pairs
 are specified by one @option{add|rem-context-delimiters} call the
 different pairs have to be separated by a literal comma.  Per default
 the delimiters are set to C/C++ comment and string constant
 delimiters.  If the end of line delimits a context than this has to be
-indicated by the literal `@kbd{\0}' string.
+indicated by the literal @samp{\0} string.
 @end table
 
 @end table
@@ -913,6 +911,15 @@ reverse the order of the suggestions list.
 the keymapping to use.  Either @option{aspell} for the default mapping
 or @option{ispell} to use the same mapping that the Ispell utility
 uses.
+
+@item guess (@i{boolean})
+make possible root/affix combinations not in the dictionary in
+@command{pipe} mode.
+
+@item suggest (@i{boolean})
+suggest possible replacements in @command{pipe} mode.  If false Aspell
+will simply report the misspelling and make no attempt at suggestions
+possible corrections.
 @end table
 
 
@@ -926,18 +933,18 @@ is such that it can be used as either the global or personal
 configuration file.
 
 To find out the current value of a particular option use
-@command{aspell config @i{option}}.  This will print out the value of
-@kbd{option} to @code{stdout} and nothing else.
+@command{aspell config @var{option}}.  This will print out the value of
+@var{option} to @code{stdout} and nothing else.
 
 The default configuration of a particular filter may be requested by
 passing the name of the filter or a corresponding regular expression
-to the @command{config} command.  This is done by passing @code{+e
-@i{expr}} to @command{dump config} command of Aspell.  If @code{+e} is
-the only argument to @command{dump config} Aspell assumes @code{+e
+to the @command{config} command.  This is done by passing @option{+e
+@var{expr}} to @command{dump config} command of Aspell.  If @option{+e} is
+the only argument to @command{dump config} Aspell assumes @option{+e
 all} which lists the configuration of all installed and reachable
 filters.  In any other case or in case of requesting the configuration
 of a specific option @code{+e} always has to be followed by
-@code{@i{filtername}}, @code{@i{regex}} or a literal @code{all}.  The
+@var{filtername}, @var{regex} or a literal @samp{all}.  The
 parameter @code{+e} and its argument always must be specified
 immediately after @command{config} command and before specifying name
 of option in order to be recognized by Aspell.
@@ -946,7 +953,7 @@ of option in order to be recognized by Aspell.
 @section Printing Help screen
 
 To print the help screen of Aspell simply invoke @command{aspell} with
-@option{help} command or by `@kbd{-?}' parameter.  This will list all
+@option{help} command or by @samp{-?} parameter.  This will list all
 basic options and commands of Aspell but not the available filters and
 their options.
 
@@ -979,13 +986,13 @@ Aspell now has rudimentary filter support.  You can either select from
 individual filters or chose a filter mode.  To select a filter mode
 use the @option{mode} option (please note this may be removed in
 future as right now it is possible to define meta filters).  You may
-chose from @kbd{none}, @kbd{url}, @kbd{email}, @kbd{sgml}, and
-@kbd{tex}.  The default mode is @kbd{url}.  Individual filters can be
-added with the option @option{add-filter} and removed with the
+chose from @samp{none}, @samp{url}, @samp{email}, @samp{sgml}, and
+@samp{tex}.  The default mode is @samp{url}.  Individual filters can
+be added with the option @option{add-filter} and removed with the
 @option{rem-filter} option.  The currently available filters are
-@option{url}, @option{email}, @option{sgml} and @option{tex},
-@option{latex}(alias for @option{tex}), @option{context} as well as a
-bunch of filters which translate the text from one format to another.
+@samp{url}, @samp{email}, @samp{sgml} and @samp{tex}, @samp{context}
+as well as a bunch of filters which translate the text from one format
+to another.
  
 @subsubsection @option{none} Filter Mode
 
@@ -1008,7 +1015,7 @@ can be found at @uref{http://home.worldonline.dk/~byrial/newsbody/}.
 The option @option{email-skip} controls the number of characters that
 can appear before the email quote character, the default is 10.  The
 option @option{add|rem-email-quote} controls the characters that are
-considered quote characters, the defaults are @kbd{>} and @kbd{|}.
+considered quote characters, the defaults are @samp{>} and @samp{|}.
 
 @subsubsection @option{sgml} Filter Mode
 @anchor{SGML Filter Mode}
@@ -1192,9 +1199,9 @@ the layout of the keyboard.  The keyboard definition file simply
 identifies keys that are right next to each other.  The file has an
 extension of @file{.kbd} and each line consists of two letters
 corresponding to two keys that are right next to each other.  For
-example the line `@kbd{as}' will indicate that `@kbd{a}' and `@kbd{s}'
-are right next to each other.  If `@kbd{as}' is listed as a entry it
-is not necessary to list `@kbd{sa}' as an entry as that will be done
+example the line @samp{as} will indicate that @samp{a} and @samp{s}
+are right next to each other.  If @samp{as} is listed as a entry it
+is not necessary to list @samp{sa} as an entry as that will be done
 automatically.  Also by @emph{right next to each other} I mean to keys
 that are close enough together that it is easy to type one instead of
 the other.  On most keyboards this means keys that are to the left or
@@ -1208,7 +1215,7 @@ keyboard layouts.  It may need minor adjusting for foreign keyboards.
 The @option{dvorak} option can be used for a Dvorak layout.  When
 creating a keyboard definition file for a foreign language please keep
 in mind that Aspell completely ignores accents when scoring words so
-that the key '@kbd{o}' and '@kbd{@"o}' will appear to be the same key
+that the key @samp{o} and @samp{@"o} will appear to be the same key
 to aspell even if they are in fact separate keys on your keyboard.
 
 @node Notes on the Different Suggestion Modes
@@ -1288,7 +1295,7 @@ The @command{aspell-import} Perl script will look for old personal
 dictionaries and will import them into GNU Aspell.  It will look for
 both Ispell and Aspell ones.  To use it just run it from the command
 prompt.  If you get an error about @file{/usr/bin/perl} not being
-found than instead try @kbd{perl @var{bindir}/aspell-import}.  When
+found than instead try @command{perl @var{bindir}/aspell-import}.  When
 running the script if you get a message like:
 
 @verbatim
@@ -1426,9 +1433,9 @@ Specify more than word list to use with the
 Optionally have all accents stripped from the word lists using the
 @option{strip-accents} option.  This is @emph{not} the same thing as
 the @option{ignore-accents} option as enabling the
-@option{ignore-accents} would accept both @kbd{cafe} and @kbd{caf@'e}
+@option{ignore-accents} would accept both @samp{cafe} and @samp{caf@'e}
 (notice the accent on the e), but only enabling @option{strip-accents}
-would only accent @kbd{cafe}, even if @kbd{caf@'e} is in the original
+would only accent @samp{cafe}, even if @samp{caf@'e} is in the original
 dictionary.  Specifying @option{strip-accents} is just like using a
 word list without the accents.
 
@@ -1561,9 +1568,9 @@ should also work.
 When your application first starts you should get a new configuration
 class with the command:
 
-@verbatim
+@example
 AspellConfig * spell_config = new_aspell_config();
-@end verbatim
+@end example
 
 which will create a new @code{AspellConfig} class.  It is allocated
 with @command{new} and it is your responsibility to delete it with
@@ -1571,9 +1578,9 @@ with @command{new} and it is your responsibility to delete it with
 should set some variables.  The most important one is the language
 variable.  To do so use the command:
 
-@verbatim
+@example
 aspell_config_replace(spell_config, "lang", "en_US");
-@end verbatim
+@end example
 
 which will set the default language to use to American English.  The
 language is expected to be the standard two letter ISO 639 language
@@ -1591,13 +1598,13 @@ document.  To create a new speller class use the
 @code{new_aspell_speller} and then cast it up using
 @code{to_aspell_speller} like so:
 
-@verbatim
+@example
 AspellCanHaveError * possible_err = new_aspell_speller(spell_config);
 AspellSpeller * spell_checker = 0; if
 (aspell_error_number(possible_err) != 0)
 puts(aspell_error_message(possible_err)); else spell_checker =
 to_aspell_speller(possible_err);
-@end verbatim
+@end example
 
 which will create a new @code{AspellSpeller} class using the defaults
 found in @code{spell_config}.  To find out which dictionary is
@@ -1612,49 +1619,48 @@ since there is only one this option will always be the same.
 If for some reason you want to use different defaults simply clone
 @code{spell_config} and change the setting like so:
 
-@verbatim
+@example
 AspellConfig * spell_config2 = aspell_config_clone(spell_config);
 aspell_config_replace(spell_config2, "lang","nl");
 possible_err = new_aspell_speller(spell_config2);
 delete_aspell_config(spell_config2);
-@end verbatim
+@end example
 
 Once the speller class is created you can use the @code{check} method
 to see if a word in the document is correct like so:
 
-@example 
-int correct = aspell_speller_check(spell_checker, @i{word}, @i{size});
+@example
+int correct = aspell_speller_check(spell_checker, @var{word}, @var{size});
 @end example
 
-@code{@i{word}} is expected to be a @code{const char *} character
+@var{word} is expected to be a @code{const char *} character
 string.  If the encoding is set to be @code{utf-16} or
-@code{utf-32}.  @code{@i{word}} is expected to be a cast
+@code{utf-32}.  @var{word} is expected to be a cast
 from either @code{const u16int *} or @code{const u32int *}
 respectively.  @code{U16int} and @code{u32int} are generally
 @code{unsigned short} and @code{unsigned int} respectively.
-@code{@i{size}} is the length of the string or @code{-1} if the string
+@var{size} is the length of the string or @code{-1} if the string
 is null terminated.  If the string is a cast from @code{const u16int
 *} or @code{const u32int *} then @code{@i{size}} is the amount of
 space in bytes the string takes up after being cast to @code{const
 char *} and not the true size of the string.
-@code{Aspell_speller_check} will return @code{0} is it is not found
+@code{sspell_speller_check} will return @code{0} is it is not found
 and non-zero otherwise.
 
 If the word is not correct than the @code{suggest} method can be used
 to come up with likely replacements.
 
-@verbatim
+@example
 AspellWordList * suggestions = aspell_speller_suggest(spell_checker,
-             @i{word}, @i{size});
-AspellStringEnumeration * elements =
-             aspell_word_list_elements(suggestions);
+                                                      @var{word}, @var{size});
+AspellStringEnumeration * elements = aspell_word_list_elements(suggestions);
 const char * word;
-while ( (word = aspell_string_enumeration_next(aspell_elements) !=
-        NULL ) { 
+while ( (word = aspell_string_enumeration_next(aspell_elements)) != NULL )
+@{ 
   // add to suggestion list
-}
-delete_aspell_string_manag(elements);
-@end verbatim
+@}
+delete_aspell_string_enumeration(elements);
+@end example
 
 Notice how @code{elements} is deleted but @code{suggestions} is not.
 The value returned by @code{suggestions} is only valid to the next
@@ -1665,8 +1671,8 @@ Storing Replacement Pairs}).  Its usage is as follows:
 
 @example
 aspell_speller_store_repl(spell_checker, 
-                          @i{misspelled_word}, @i{size},
-                          @i{correctly_spelled_word}, @i{size});
+                          @var{misspelled_word}, @var{size},
+                          @var{correctly_spelled_word}, @var{size});
 @end example
 
 If the user decided to add the word to the session or personal
@@ -1713,23 +1719,19 @@ dictionaries.
 @subsection Notes About Thread Safety
 
 Read-only Aspell methods and functions should be thread safe as long
-as exceptions, @code{new}, @code{delete}, @code{delete[]}, and STL
-allocators are thread safe.  To the best of my knowledge gcc and egcs
-meet these requirements.  It is up to the programmer to make sure
-multiple threads do not do things such as change the dictionaries and
-add or delete items from the personal or session dictionaries.
+as @code{new}, @code{delete}, @code{delete[]}, and STL allocators are
+thread safe.  To the best of my knowledge gcc meets these
+requirements.  It is up to the programmer to make sure multiple
+threads do not do things such as change the dictionaries and add or
+delete items from the personal or session dictionaries.
 
 @node Through A Pipe
 @section Through A Pipe
 @anchor{pipe}
 
-When given the
-@command{pipe} or 
-@command{-a} command Aspell
- goes into a pipe mode that is compatible with 
-@command{ispell -a}.
- Aspell also defines its own set of extensions to
- Ispell pipe mode. 
+When given the @command{pipe} or @command{-a} command Aspell goes into
+a pipe mode that is compatible with @command{ispell -a}.  Aspell also
+defines its own set of extensions to Ispell pipe mode.
 
 @subsection Format of the Data Stream
 @anchor{data_stream}
@@ -1738,17 +1740,17 @@ In this mode, Aspell prints a one-line version identification message,
 and then begins reading lines of input.  For each input line, a single
 line is written to the standard output for each word checked for
 spelling on the line.  If the word was found in the main dictionary,
-or your personal dictionary, then the line contains only a `@kbd{*}'.
+or your personal dictionary, then the line contains only a @samp{*}.
 
 If the word is not in the dictionary, but there are suggestions, then
-the line contains an `@kbd{&}', a space, the misspelled word, a space,
+the line contains an @samp{&}, a space, the misspelled word, a space,
 the number of near misses, the number of characters between the
 beginning of the line and the beginning of the misspelled word, a
 colon, another space, and a list of the suggestions separated by
 commas and spaces.
 
 Finally, if the word does not appear in the dictionary, and there are
-no suggestions, then the line contains a `@kbd{#}', a space, the
+no suggestions, then the line contains a @samp{#}, a space, the
 misspelled word, a space, and the character offset from the beginning
 of the line.  Each sentence of text input is terminated with an
 additional blank line, indicating that Aspell has completed processing
@@ -1763,26 +1765,26 @@ These output lines can be summarized as follows:
 @end example
 
 When in the @option{-a} mode, Aspell will also accept lines of single
-words prefixed with any of `@kbd{*}', `@kbd{&}', `@kbd{@@}',
-`@kbd{+}', `@kbd{-}', `@kbd{~}', `@kbd{#}', `@kbd{!}', `@kbd{%}', or
-`@kbd{^}'.  A line starting with `@kbd{*}' tells Aspell to insert the
-word into the user's dictionary.  A line starting with `@kbd{&}' tells
+words prefixed with any of @samp{*}, @samp{&}, @samp{@@},
+@samp{+}, @samp{-}, @samp{~}, @samp{#}, @samp{!}, @samp{%}, or
+@samp{^}.  A line starting with @samp{*} tells Aspell to insert the
+word into the user's dictionary.  A line starting with @samp{&} tells
 Aspell to insert an all-lowercase version of the word into the user's
-dictionary.  A line starting with `@kbd{@@}' causes Aspell to accept
-this word in the future.  A line starting with `@kbd{+}', followed
+dictionary.  A line starting with @samp{@@} causes Aspell to accept
+this word in the future.  A line starting with @samp{+}, followed
 immediately by a valid mode will cause Aspell to parse future input
 according the syntax of that formatter.  A line consisting solely of a
-`@kbd{+}' will place Aspell in @TeX{}/LaTeX mode (similar to the
-@option{-t} option) and `@kbd{-}' returns Aspell to its default mode
-(but these commands are obsolete).  A line `@kbd{~}', is ignored for
-Ispell compatibility.  A line prefixed with `@kbd{#}' will cause the
-personal dictionaries to be saved.  A line prefixed with `@kbd{!}'
+@samp{+} will place Aspell in @TeX{}/LaTeX mode (similar to the
+@option{-t} option) and @samp{-} returns Aspell to its default mode
+(but these commands are obsolete).  A line @samp{~}, is ignored for
+Ispell compatibility.  A line prefixed with @samp{#} will cause the
+personal dictionaries to be saved.  A line prefixed with @samp{!}
 will turn on terse mode (see below), and a line prefixed with
-`@kbd{%}' will return Aspell to normal (non-terse) mode.  Any input
-following the prefix characters `@kbd{+}', `@kbd{-}', `@kbd{#}',
-`@kbd{!}', `@kbd{~}', or `@kbd{%}' is ignored, as is any input
+@samp{%} will return Aspell to normal (non-terse) mode.  Any input
+following the prefix characters @samp{+}, @samp{-}, @samp{#},
+@samp{!}, @samp{~}, or @samp{%} is ignored, as is any input
 following.  To allow spell-checking of lines beginning with these
-characters, a line starting with `@kbd{^}' has that character removed
+characters, a line starting with @samp{^} has that character removed
 before it is passed to the spell-checking code.  It is recommended
 that programmatic interfaces prefix every data line with an uparrow to
 protect themselves against future changes in Aspell.
@@ -1807,7 +1809,7 @@ To summarize these:
 @item @kbd{^} @tab Spell-check the rest of the line 
 @end multitable
 
-In terse mode, Aspell will not print lines beginning with `@kbd{*}',
+In terse mode, Aspell will not print lines beginning with @samp{*},
 which indicate correct words.  This significantly improves running
 speed when the driving program is going to ignore correct words
 anyway.
@@ -1929,16 +1931,17 @@ create the language data file, and compile a new word list.
 * Replacement Tables::          
 * Affix Compression::           
 * Controlling the Behavior of Run-together Words::  
+* Creating A New Character Set::  
 @end menu
 
 @node The Language Data File
 @section The Language Data File
 
 The basic format of the language data file is the same as it is for
-the Aspell configuration file.  It is named @file{@i{lang}.dat} and is
+the Aspell configuration file.  It is named @file{@var{lang}.dat} and is
 located in the architecture independent data dir for Aspell (option
-@option{data-dir}) which is usually @file{@i{prefix}/share/aspell}.
-Use @code{aspell config} to find out where it is in your installation.
+@option{data-dir}) which is usually @file{@var{prefix}/share/aspell}.
+Use @command{aspell config} to find out where it is in your installation.
 By convention the language name should be the two letter @acronym{ISO
 639} language code.
 
@@ -1946,73 +1949,75 @@ The language data file has several mandatory fields, and several
 optional ones.  All fields are case sensitive and should be in all
 lower case.
 
-The two mandatory fields are @code{name} and @code{charset}.
+The two mandatory fields are @option{name} and @option{charset}.
  
-@code{name} is the name of the language and should be the same as the
+@option{name} is the name of the language and should be the same as the
 file name (without the @file{.dat}).
  
-@code{charset} is the charset aspell will expect the word lists to be
-formatted in.  You may chose from any of the @code{iso-8859-}*
-character sets as well as, @code{koi8-f}, @code{koi8-r}, and
-@code{viscii}.  If your language can fit in the plain old ASCII
-character set use @code{iso-8859-1}.  If you use some other character
-set for your language other than the ones listed here drop me a note
-and I will look into adding support for it.
+@option{charset} is the 8-bit character set aspell will expect the
+word lists to be formatted in.  If possible chose from one of the
+standard ones provided with Aspell.  These are @samp{iso-8859-*},
+@samp{koi8-*}, or @samp{viscii}.  If your language does not require
+any non-ascii characters chose @samp{iso-8859-1}.  If one of these
+standard character sets is not suitable for your language than you can
+create a new one.  @xref{Creating A New Character Set}.
 
-The optional fields are @code{special}, @code{soundslike},
-@code{keyboard} and a bunch of options to specify how run-together
-words are handled.
+The optional fields are as follows:
 
-FIXME: Add note about use-soundslike, use-jump-tables, and affix
-compression options.
- 
-@code{special} is for non letter characters that can appear in your
-language such as the @kbd{'} and @kbd{-}. The format for the value is
-a list separated by spaces.  Each item of the list has the following
-format.
+@table @option
 
-FIXME: Add not about affix-char and flag-char.
+@item data-encoding
+
+The encoding the language data files are expected to be in as well as
+the default encoding to use when saving the personal dictionaries.  It
+can be either @samp{utf-8} or any of the 8-bit encoding that Aspell
+supports.  If not set that it defaults to @option{charset}.
+
+@item special
+
+Non-letter characters that can appear in your language such as the
+@samp{'} and @samp{-}. The format for the value is a list separated by
+spaces.  Each item of the list has the following format.
 
 @example
-@i{char}  @i{begin}@i{middle}@i{end}
+@var{char}  @var{begin} @var{middle} @var{end}
 @end example
 
-@code{@i{char}} is the non letter character in question.
-@code{@i{begin}}, @code{@i{middle}}, @code{@i{end}} are either a
-`@kbd{-}' or a `@kbd{*}'.  A star for @code{@i{begin}} means that the
-character can begin a word, a `@kbd{-}' means it can't.  The same is
-true for @code{@i{middle}} and @code{@i{end}}.  For example the entry
-for the `@code{'}' in English is:
+@var{char} is the non letter character in question.
+@var{begin}, @var{middle}, @var{end} are either a
+@samp{-} or a @samp{*}.  A star for @var{begin} means that the
+character can begin a word, a @samp{-} means it can't.  The same is
+true for @var{middle} and @var{end}. For example the entry
+for the @samp{'} in English is:
 
-@verbatim
+@example
 ' -*-
-@end verbatim
+@end example
 
 To include more than one middle character just list them one after
-another on the same line.  for example to make both the `@kbd{'}' and
-the `@kbd{-}' a middle character use the following line in the
+another on the same line.  for example to make both the @samp{'} and
+the @samp{-} a middle character use the following line in the
 language data file:
 
-@verbatim
+@example
 special ' -*- - -*-
-@end verbatim
+@end example
 
-The 
-@code{soundslike} option,
-if present, should be the name of the soundslike data for the language.
- The data is expected to be in the file @file{@i{name}_phonetic.dat}.
+@item soundslike
+
+The name of the soundslike data for the language.  The data is
+expected to be in the file @file{@var{name}_phonetic.dat}.
  
-
-If @code{@i{name}} is @code{generic} a really generic soundslike
-algorithm will be used which consists of stripping all the vowels and
-removing all accents.  I recommend first using the generic algorithm
-and then, after Aspell is working with the new language, work on the
+If @var{name} is @samp{generic} a really generic soundslike algorithm
+will be used which consists of stripping all the vowels and removing
+all accents.  I recommend first using the generic algorithm and then,
+after Aspell is working with the new language, work on the
 transformation array.
 
-If the soundslike name is @code{none} then no soundslike lookup table
+If the soundslike name is @samp{none} then no soundslike lookup table
 will be used.  This will reduce the size of the compiled word list by
 around 50% but at the sacrifice of suggestion quality.  If the
-soundslike is @code{none} than the soundslike for the word will simply
+soundslike is @samp{none} than the soundslike for the word will simply
 be the word itself in lowercase, will all accents stripped.  For
 languages with phonetic spelling the difference will not be very
 noticeable.  However, for languages with non-phonetic spelling there
@@ -2022,16 +2027,42 @@ notice much of a difference for a language with non-phonetic spelling
 that is a good indication that the soundslike data is not rough
 enough---or the words you are trying are not that badly misspelled.
 
-The @option{keyboard} option specifies the base name of the keyboard
-definition file to use.  For more information see @ref{Notes on
-Typo-Analysis}.
+@item use-soundslike
 
-The @option{sug-split-chars} is a string of characters which specifies
-characters to insert between two words when a word is split.  FIXME
+@item repl-table
 
-The options to control how run-together words are handled the same way
-as they are in the normal configuration files.  for more information,
-please @ref{Controlling the Behavior of Run-together Words}.
+@item keyboard
+
+The base name of the keyboard definition file to use.  For more
+information see @ref{Notes on Typo-Analysis}.
+
+@item sug-split-chars
+
+A string of characters which specifies characters to insert between
+two words when a word is split.  FIXME
+
+@item affix
+
+@item affix-compress
+
+@item use-jump-tables
+
+@item ignore-accents
+
+@item affix-char
+
+Unimplemented
+
+@item flag-char
+
+Unimplemented
+
+@end table
+
+Additional options includes options to control how run-together words
+are handled the same way as they are in the normal configuration
+files.  for more information, please @ref{Controlling the Behavior of
+Run-together Words}.
 
 @node Compiling the Word List
 @section Compiling the Word List
@@ -2043,7 +2074,6 @@ includes instructions for creating the AWLI file.
 
 @node Phonetic Code
 @section Phonetic Code
-
 
 @emph{(The following section was written by Bj@"orn Jacke,
 bjoern.jacke at gmx de)}
@@ -2073,7 +2103,7 @@ one is the search string (or switch name) and the second one is the
 replacement string (or switch parameter).  The line
 
 @example
-version   @i{version}
+version   @var{version}
 @end example
 
 is also required to appear somewhere in the translation array.  The
@@ -2098,10 +2128,10 @@ order inside this group does not depend on alphabetical issues but it
 gives priorities; the higher the rule the higher the priority.  That's
 why the first rule that matches is applied.  In the following example:
 
-@verbatim
+@example
 GH   _
 G    K
-@end verbatim
+@end example
 
 @samp{GH -> _} has higher priority than @samp{G -> K}
  
@@ -2119,7 +2149,7 @@ example would match any @samp{DGE}, @samp{DGI} and
 @samp{DGY} and replace them with @samp{J}.  This way you can
 reduce several rules to one.
 
-Before the search string one or more dashes `@kbd{-}' may be placed.
+Before the search string one or more dashes @samp{-} may be placed.
 Those search strings will be matched totally but only the beginning of
 the string will be replaced.  Furthermore for these rules no follow-up
 rule will be searched (what this is will be explained later).  The
@@ -2130,7 +2160,7 @@ determines how many characters from the end will not be replaced.
 After the replacement the search for transformation rules continues
 with the not replaced @samp{CH}!
 
-If a `@kbd{<}' is appended to the search string, the search for
+If a @samp{<} is appended to the search string, the search for
 replacement rules will continue with the replacement string and not
 with the next character of the word.  The rule @samp{PH< -> F} for example would replace @samp{PH} with @samp{F}
 and then again start to search for a replacement rule for
@@ -2186,30 +2216,30 @@ followup      0
 @end example
 
 at the beginning of the phonetic table file.  As mentioned, for rules
-containing a `@kbd{-}' no follow-up rules are searched but giving such
+containing a @samp{-} no follow-up rules are searched but giving such
 rules a priority is not totally senseless because they can be
 follow-up rules and in that case the priority makes sense again.
 Follow-up rules of follow-up rules are not searched because this is in
 fact not needed very often.
 
-The control character `@kbd{^}' says that the search string only
+The control character @samp{^} says that the search string only
 matches at the beginning of words so that the rule @samp{RH -> R} will
 only apply to words like @samp{RHESUS} but not @samp{PERHAPS}.  You
-can append another `@kbd{^}' to the search string.  In that case the
+can append another @samp{^} to the search string.  In that case the
 algorithm treats the rest of the word totally separately from the
 first matched string at the beginning.  This is useful for prefixes
 whose pronunciation does not depend on the rest of the word and vice
 versa like @samp{OVER^^} in English for example.
 
-The same way as `@kbd{^}' works does `@kbd{$}' only apply to words
+The same way as @samp{^} works does @samp{$} only apply to words
 that end with the search string.  @samp{GN$ -> N} only
 matches on words like @samp{SIGN} but not @samp{SIGNUM}.  If
-you use `@kbd{^}' and `@kbd{$}' together, both of them must fit
+you use @samp{^} and @samp{$} together, both of them must fit
 @samp{ENOUGH^$ -> NF} will only match the word
 @samp{ENOUGH} and nothing else.
 
 Of course you can combine all of the mentioned control characters but
-they must occur in this order: `@samp{< - priority ^ $}'.  All
+they must occur in this order: @samp{< - priority ^ $}.  All
 characters must be written in CAPITAL letters.
 
 If absolutely no rule can be found --- might happen if you use strange
@@ -2218,7 +2248,7 @@ character will simply be skipped and the search for replacement rules
 will continue with the rest of the word.
 
 If you want double letters to be reduced to one you must set up a rule
-like `@samp{LL- -> L}'.  If double letters in the resulting phonetic
+like @samp{LL- -> L}.  If double letters in the resulting phonetic
 word should be allowed, you must place the line
 
 @example
@@ -2247,9 +2277,9 @@ you will probably find an Ispell dictionary at
 will help you.  You can then make affix expansion via @command{ispell
 -e} and then pipe it through @command{tr " " "\n"} to put one word on
 each line.  After that you eventually have to convert special
-characters like `@kbd{@'e}' from Ispell's internal representation to
+characters like @samp{@'e} from Ispell's internal representation to
 latin1 encoding.  @command{sed s/e'/@'e/g} for example would replace
-all `@kbd{e'}' with `@kbd{@'e}'.
+all @samp{e'} with @samp{@'e}.
 
 The second is that you know how to use regular expressions and know
 how to use @command{grep}.  You should for example know that
@@ -2258,9 +2288,9 @@ how to use @command{grep}.  You should for example know that
 grep ^[^aeiou]qu[io] wordlist | less
 @end example
 
-will show you all words that begin with any character but `@kbd{a}',
-`@kbd{e}', `@kbd{i}', `@kbd{o}' or `@kbd{u}' and then continue with
-`@kbd{qui}' or `@kbd{quo}'.  This stuff is important for example to
+will show you all words that begin with any character but @samp{a},
+@samp{e}, @samp{i}, @samp{o} or @samp{u} and then continue with
+@samp{qui} or @samp{quo}.  This stuff is important for example to
 find out if a phonetic replacement rule you want to set up is valid
 for all words which match the expression you want to replace.  Taking
 a look at the regex(7) man page is a good idea.
@@ -2320,7 +2350,7 @@ from the desired rule is not too big.
 Don't forget about follow-up rules which can help in many cases but
 which also can lead to confusion and unwanted side effects.  It's also
 important to write exceptions in front of the more general rules
-(`@kbd{GH}' before `@kbd{G}' etc.).
+(@samp{GH} before @samp{G} etc.).
 
 If you think you have set up a number of rules that may produce some
 good results try them out! If you run Aspell as @command{aspell
@@ -2466,6 +2496,22 @@ This means that the suggestions will be virtually meaningless when the
 actual word is a run-together.  I plan on more intelligently
 supporting run-together words when coming up with suggestions in a
 future version of Aspell.
+
+@node Creating A New Character Set
+@section Creating A New Character Set
+
+If there is not a standard character set for your language than you
+can invent one.  The new charset will only be used by Aspell
+internally.  If the option @option{data-encoding} is set to
+@samp{utf-8}, and your current locale character type is always set to
+@samp{utf-8}, than you can use @acronym{UTF-8} for everything and not
+worry your self that an 8-bit character set is being used internally.
+If your language has no more than 220 distinct symbols, including
+different capitalizations and accents, than Aspell can support it.
+
+In order to create a new character set you will need to download
+@uref{ftp://ftp.gnu.org/gnu/aspell/mkchardata-0.1.tar.gz} and follow
+the instructions in the @file{README} file.
 
 @node Implementation Notes
 @appendix Implementation Notes
@@ -2651,6 +2697,18 @@ more than one thread (such as the personal dictionary). @emph{[In Progress]}
 @item
 Enhance @strong{ispell.el} so that it will work better with the new Aspell. 
 @emph{[In Progress]}
+@item
+Allow Aspell to @strong{check documents which are in UTF-8}. I don't know the
+proper way to use Unicode characters with the curses library, and I
+can't seam to find any concrete documentation on how to do it. If you
+have experience in this area I would really appreciate it if you could
+enlighten me. @emph{[DONE]}
+@item
+Make the fact that Aspell is 8-bit internally (@pxref{Notes on 8-bit
+Characters}) transparent to the end-user. That is @strong{support
+unicode} for everything read in and printed out by Aspell.
+@xref{Unicode Support}. @emph{[In Progress]}
+
 @end itemize
 
 @appendixsubsec Things that need to be done
@@ -2664,17 +2722,6 @@ coding. I hope to have these all done by Aspell 0.51.
 @item
 Clean up copyright notices and bring the Aspell package up to
 @strong{GNU Standards}.
-@item
-Allow Aspell to @strong{check documents which are in UTF-8}. I don't know the
-proper way to use Unicode characters with the curses library, and I
-can't seam to find any concrete documentation on how to do it. If you
-have experience in this area I would really appreciate it if you could
-enlighten me.
-@item
-Make the fact that Aspell is 8-bit internally (@pxref{Notes on 8-bit
-Characters}) transparent to the end-user. That is @strong{support
-unicode} for everything read in and printed out by Aspell.
-@xref{Unicode Support}.
 @item
 Come up with a @strong{nroff mode} for spell checking. I know nothing about
 nroff. I would gladly write the filter if someone would be willing to
@@ -2724,6 +2771,10 @@ require that the whole document be made available to the spell checker.
 Also use frequency information to flag words which are found in the
 dictionary but not in common usage, and thus might not be what was
 intended.
+@item
+Perform @strong{decomposition} according to decomposition form D (see
+@uref{http://www.unicode.org/reports/tr15/}) on Unicode input.
+@xref{Unicode Decomposition}.
 @item
 Write a @strong{GUI} for the aspell utility. Ideally it should be able to do
 everything the Aspell utility can do and not just be able spell check
@@ -2800,6 +2851,7 @@ the first few lines.
 
 @menu
 * Unicode Support::             
+* Unicode Decomposition::       
 * Words With Spaces in Them::   
 * Word skipping by context::    
 * Hidden Markov Model::         
@@ -2847,6 +2899,31 @@ encoded will lead to nothing but trouble.
 So, I @emph{hope} to get all this done by Aspell 0.51 but I don't know
 if I will.  If someone would like to assist me in this task I would
 really appreciate it.
+
+@node Unicode Decomposition
+@appendixsubsec Unicode Decomposition
+
+Elias Martenson suggested:
+
+@quotation
+Shouldn't aspell perform decomposition according to decomposition form
+D? Otherwise aspell will fail to spell check certain words. Consider,
+for example the swdish word ``m@ringaccent{a}l''. The ``@ringaccent{a}''
+can be represented by either:
+
+@example
+U+00E5 LATIN SMALL LETTER A WITH RING ABOVE
+@end example
+
+or
+
+@example
+U+0061 LATIN SMALL LETTER A + U+030A COMBINING RING ABOVE
+@end example
+
+By performing decomposition first, aspell will be guaranteed to always
+receive the second form, and there won't be any problem.
+@end quotation
 
 @node Words With Spaces in Them
 @appendixsubsec Words With Spaces in Them
@@ -2901,7 +2978,7 @@ Given the following HTML code.
 
 @code{table}, @code{width} @code{cellspacing}, @code{cellpadding},
 @code{tr}, @code{td} will all be skipped because they are always
-enclosed in ``@samp{<>}''.  Now of course @code{table} and
+enclosed in @samp{<>}.  Now of course @code{table} and
 @code{width} would be marked as correct anyway however there is no
 harm in skipping them.
 
@@ -3754,7 +3831,7 @@ Minor changed in the code so that it could compile with the new gcc
 
 @item
 Changed the output of @code{dump config} so that default values are
-given the value ``@code{<default>}''.  This means that the output can
+given the value @code{<default>}.  This means that the output can
 be used to created a configuration file.
 
 @item
@@ -3991,8 +4068,8 @@ words like the vs.  teh.  And other simpler misspellings where two
 letters are swapped.
 
 @item
-Fixed the very unpredictable behavior of the `@kbd{*}', `@kbd{&}',
-`@kbd{@@}' commands in the pipe mode.
+Fixed the very unpredictable behavior of the @samp{*}, @samp{&},
+@samp{@@} commands in the pipe mode.
 
 @item
 Added documentations for Aspell pipe mode (also known as
