@@ -73,7 +73,7 @@ namespace {
       return false;
     }
     
-    bool inline NroffFilter::process_char (FilterChar::Chr c);
+    bool NroffFilter::process_char (FilterChar::Chr c);
       
   public:
 

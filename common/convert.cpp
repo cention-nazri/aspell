@@ -613,7 +613,8 @@ namespace acommon {
           out.append(0);
           ++in;
         } else {
-          NormLookupRet<E,char> ret = norm_lookup<E>(data, in, stop, 0, in);
+          NormLookupRet<E,char> ret =
+            norm_lookup<E,char>(data, in, stop, 0, in);
           for (unsigned i = 0; ret.to[i] && i < E::max_to; ++i)
             out.append(ret.to[i]);
           in = ret.last + 1;
@@ -672,7 +673,8 @@ namespace acommon {
           out.append('\0');
           ++in;
         } else {
-          NormLookupRet<E,FilterChar> ret = norm_lookup<E>(data, in, stop, (const byte *)"?", in);
+          NormLookupRet<E,FilterChar> ret = norm_lookup<E,FilterChar>
+            (data, in, stop, (const byte *)"?", in);
           for (unsigned i = 0; i < E::max_to && ret.to[i]; ++i)
             out.append(ret.to[i]);
           in = ret.last + 1;
@@ -686,7 +688,8 @@ namespace acommon {
           out.append('\0');
           ++in;
         } else {
-          NormLookupRet<E,FilterChar> ret = norm_lookup<E>(data, in, stop, 0, in);
+          NormLookupRet<E,FilterChar> ret = 
+            norm_lookup<E,FilterChar>(data, in, stop, 0, in);
           if (ret.to == 0) {
             char m[70];
             snprintf(m, 70, _("The Unicode code point U+%04X is unsupported."), in->chr);

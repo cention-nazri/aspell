@@ -19,6 +19,11 @@
 
 #ifdef USE_POSIX_MUTEX
 #  include <pthread.h>
+#elif defined (WIN32PORT)
+# ifdef _DEBUG
+#  include <stdio.h> //printf
+# endif
+# include "minwin.h" //minimum windows declarations.
 #endif
 
 namespace acommon {
@@ -37,6 +42,38 @@ namespace acommon {
     void lock() {pthread_mutex_lock(&l_);}
     void unlock() {pthread_mutex_unlock(&l_);}
   };
+#elif defined(WIN32PORT)
+  class Mutex {
+  private:
+    Mutex(const Mutex &);
+    void operator=(const Mutex &);
+    HANDLE hMutex;
+    SECURITY_ATTRIBUTES sec;
+  public:
+    Mutex() { 
+      sec.nLength= sizeof(sec);
+      sec.lpSecurityDescriptor = 0;
+      sec.bInheritHandle = false;
+      hMutex = 0;
+    }
+    ~Mutex() {
+      if (hMutex) unlock();
+    }
+    void lock() {
+      hMutex =  CreateMutex(&sec,0,0);
+#ifdef _DEBUG
+      if (!hMutex) {
+        DWORD err = GetLastError();
+        char buff[131];
+        FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM,0,err,0,buff,sizeof(buff),0);
+        printf(buff);
+      }
+#endif
+    }
+    void unlock() {
+      ReleaseMutex(hMutex); hMutex = 0;}
+  };
+
 #else
   class Mutex {
   private:
@@ -62,3 +99,4 @@ namespace acommon {
 };
 
 #endif
+

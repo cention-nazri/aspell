@@ -1370,7 +1370,7 @@ class IstreamEnumeration : public StringEnumeration {
   String data;
 public:
   IstreamEnumeration(FStream & i) : in(&i) {}
-  IstreamEnumeration * clone() const {
+  StringEnumeration * clone() const {
     return new IstreamEnumeration(*this);
   }
   void assign (const StringEnumeration * other) {

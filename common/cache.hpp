@@ -51,7 +51,7 @@ public:
 
 template <class Data>
 PosibErr<Data *> get_cache_data(GlobalCache<Data> * cache, 
-                                typename Data::CacheConfig * config, 
+                                const typename Data::CacheConfig * config, 
                                 const typename Data::CacheKey & key)
 {
   LOCK(&cache->lock);
@@ -74,8 +74,8 @@ PosibErr<Data *> get_cache_data(GlobalCache<Data> * cache,
 
 template <class Data>
 PosibErr<Data *> get_cache_data(GlobalCache<Data> * cache, 
-                                typename Data::CacheConfig * config, 
-                                typename Data::CacheConfig2 * config2,
+                                const typename Data::CacheConfig * config, 
+                                const typename Data::CacheConfig2 * config2,
                                 const typename Data::CacheKey & key)
 {
   LOCK(&cache->lock);
@@ -143,7 +143,7 @@ public:
 template <class Data>
 PosibErr<void> setup(CachePtr<Data> & res,
                      GlobalCache<Data> * cache, 
-                     typename Data::CacheConfig * config, 
+                     const typename Data::CacheConfig * config, 
                      const typename Data::CacheKey & key) {
   PosibErr<Data *> pe = get_cache_data(cache, config, key);
   if (pe.has_err()) return pe;

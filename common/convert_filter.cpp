@@ -306,7 +306,7 @@ namespace {
     buf.clear();
     const FilterChar * cur = start;
     while (cur != stop) {
-      NormLookupRet<E, FilterChar> res = norm_lookup<E>(data, cur, stop, 0, cur);
+      NormLookupRet<E, FilterChar> res = norm_lookup<E,FilterChar>(data, cur, stop, 0, cur);
       int w = res.last - cur + 1;
       if (res.to == 0) {
         assert(w == 1);
