@@ -36,9 +36,15 @@ namespace acommon {
   private:
     struct ErrPtr {
       const Error * err;
+#ifndef NDEBUG
       bool handled;
+#endif
       int refcount;
-      ErrPtr(const Error * e) : err(e), handled(false), refcount(1) {}
+      ErrPtr(const Error * e) : err(e), 
+#ifndef NDEBUG
+                                handled(false), 
+#endif
+                                refcount(1) {}
     };
     ErrPtr * err_;
   public:
@@ -64,14 +70,18 @@ namespace acommon {
 	return release();
     }
     void ignore_err() {
+#ifndef NDEBUG
       if (err_ != 0)
 	err_->handled = true;
+#endif
     }
     const Error * get_err() const {
       if (err_ == 0) {
 	return 0;
       } else {
+#ifndef NDEBUG
 	err_->handled = true;
+#endif
 	return err_->err;
       }
     }
@@ -89,7 +99,9 @@ namespace acommon {
 	return false;
       } else {
 	if (err_->err->is_a(e)) {
+#ifndef NDEBUG
 	  err_->handled = true;
+#endif
 	  return true;
 	} else {
 	  return false;
@@ -113,8 +125,10 @@ namespace acommon {
   protected:
 
     void posib_handle_err() const {
+#ifndef NDEBUG
       if (err_ && !err_->handled)
 	handle_err();
+#endif
     }
 
     void copy(const PosibErrBase & other) {
@@ -127,15 +141,19 @@ namespace acommon {
       if (err_ == 0) return;
       -- err_->refcount;
       if (err_->refcount == 0) {
+#ifndef NDEBUG
 	if (!err_->handled)
 	  handle_err();
+#endif
 	del();
       }
     }
 
   private:
 
+#ifndef NDEBUG
     void handle_err() const;
+#endif
     Error * release();
     void del();
   };

@@ -91,6 +91,7 @@ namespace acommon {
     return *this;
   }
   
+#ifndef NDEBUG
   void PosibErrBase::handle_err() const {
     assert (err_);
     assert (!err_->handled);
@@ -99,6 +100,7 @@ namespace acommon {
     fputs("\n", stderr);
     abort();
   }
+#endif
 
   Error * PosibErrBase::release() {
     assert (err_);

@@ -1,8 +1,6 @@
 #ifndef __ACOMMON_CACHE_T__
 #define __ACOMMON_CACHE_T__
 
-#define NDEBUG
-
 #include <assert.h>
 #include <vector>
 
