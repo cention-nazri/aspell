@@ -61,10 +61,10 @@ namespace acommon {
     bool read(void *, unsigned int i);
     void write(ParmString);
     void write(char c);
-    void write(const void *, unsigned int i);
+    void write(const char *, unsigned int i);
 
     long int tell() {return ftell(file_);}
-    bool seek(long int offset, int whence = SEEK_SET) {
+    bool seek(long int offset, int whence) {
       return fseek(file_, offset, whence) == 0;
     }
     

@@ -197,13 +197,6 @@ namespace aspeller {
     void set(const Language * l, const Config * c, bool strip = false);
   };
 
-  class SoundslikeEnumeration 
-  {
-  public:
-    virtual SoundslikeWord next(int) = 0;
-    virtual ~SoundslikeEnumeration() {}
-  };
-
   class BasicWordSet : public LoadableDataSet, public WordList
   {
   public:
@@ -216,7 +209,9 @@ namespace aspeller {
     typedef const char *                  Value;
     typedef unsigned int                  Size;
     typedef SoundslikeWord                SoundslikeValue;
-    typedef SoundslikeEnumeration         VirSoundslikeEmul;
+    typedef VirEnumeration<SoundslikeWord>  VirSoundslikeEmul;
+    typedef Enumeration<VirSoundslikeEmul>  SoundslikeEmul;
+
     StringEnumeration * elements() const;
     virtual VirEmul * detailed_elements() const = 0;
     virtual Size   size()     const = 0;
@@ -274,7 +269,8 @@ namespace aspeller {
     typedef const char *                  Value;
     typedef unsigned int                  Size;
     typedef SoundslikeWord                SoundslikeValue;
-    typedef SoundslikeEnumeration  VirSoundslikeEmul;
+    typedef VirEnumeration<SoundslikeWord>  VirSoundslikeEmul;
+    typedef Enumeration<VirSoundslikeEmul>  SoundslikeEmul;
 
     virtual VirEmul * elements() const = 0;
     virtual Size   size()     const = 0;

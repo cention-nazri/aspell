@@ -46,7 +46,6 @@ namespace acommon {
   class VirEnumeration {
   public:
     typedef Val Value;
-    typedef VirEnumeration Base;
     virtual VirEnumeration * clone() const = 0;
     virtual void assign(const VirEnumeration *) = 0;
     virtual Value next() = 0;

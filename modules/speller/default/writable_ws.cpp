@@ -76,7 +76,7 @@ namespace aspeller_default_writable_wl {
     VirEmul * words_w_soundslike(const char * soundslike) const;
     VirEmul * words_w_soundslike(SoundslikeWord soundslike) const;
   
-    struct SoundslikeElements;
+    struct SoundslikeElementsParms;
     VirSoundslikeEmul * soundslike_elements() const;
   };
 
@@ -217,28 +217,23 @@ namespace aspeller_default_writable_wl {
     }
   }
 
-  struct WritableWS::SoundslikeElements : public SoundslikeEnumeration {
-
-    typedef SoundslikeLookup::const_iterator Itr;
-
-    Itr i;
-    Itr end;
-
-    SoundslikeElements(Itr i0, Itr end0) : i(i0), end(end0) {}
-
-    SoundslikeWord next(int) {
-      if (i == end)
-	return SoundslikeWord(0,0);
-      SoundslikeWord tmp(i->first.c_str(),
-			 reinterpret_cast<const void *>(&i->second));
-      ++i;
-      return tmp;
+  struct WritableWS::SoundslikeElementsParms {
+    typedef SoundslikeWord                   Value;
+    typedef SoundslikeLookup::const_iterator Iterator;
+    Iterator end_;
+    SoundslikeElementsParms(Iterator e) : end_(e) {}
+    bool endf(Iterator i) const {return i==end_;}
+    static Value deref(Iterator i) {
+      return Value(i->first.c_str(),
+		   reinterpret_cast<const void *>(&i->second));
     }
+    static Value end_state() {return Value(0,0);}
   };
     
+    
   WritableWS::VirSoundslikeEmul * WritableWS::soundslike_elements() const {
-    return new SoundslikeElements(soundslike_lookup.begin(), 
-				  soundslike_lookup.end());
+    return new MakeVirEnumeration<SoundslikeElementsParms>
+      (soundslike_lookup.begin(), soundslike_lookup.end());
   }
 
   WritableWS::VirEmul *
