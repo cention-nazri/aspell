@@ -203,12 +203,12 @@ namespace aspeller {
       clean_is = to_lower_;
     }
 
-    to_clean_[0] = 1; // to make things slightly easier
-    to_clean_[1] = 1;
-
-    for (int i = 2; i != 256; ++i) {
+    for (int i = 0; i != 256; ++i) {
       to_clean_[i] = char_type_[i] >= Letter ? clean_is[i] : 0;
     }
+
+    to_clean_[0x00] = 0x10; // to make things slightly easier
+    to_clean_[0x10] = 0x10;
 
     clean_chars_   = get_clean_chars(*this);
     
@@ -373,7 +373,7 @@ namespace aspeller {
   bool SensitiveCompare::operator() (const char * word, 
 				     const char * inlist) const
   {
-    // this will fail if word or inlist is empty
+   // this will fail if word or inlist is empty
     assert (*word != '\0' && *inlist != '\0');
     
     // if begin inlist is a begin char then it must match begin word
@@ -431,27 +431,28 @@ namespace aspeller {
       bool all_upper = lang->is_upper(*word);
       ++word, ++inlist;
       while (*word != '\0' && *inlist != '\0') {
-	if (lang->is_alpha(*word)) {
-	  if (!lang->is_upper(*word))
-	    all_upper = false;
-	  if (ignore_accents) {
-	    if (lang->to_plain(*word) != lang->to_plain(*inlist))
-	      case_compatible = false;
-	  } else if (strip_accents) {
-	    if (*word != lang->to_plain(*inlist))
-	      if (lang->to_lower(*word) != lang->to_plain(lang->to_lower(*inlist)))
-		return false;
-	      else // accents match case does not
-		case_compatible = false;
-	  } else {
-	    if (*word != *inlist)
-	      if (lang->to_lower(*word) != lang->to_lower(*inlist))
-		return false;
-	      else // accents match case does not
-		case_compatible = false;
-	  }
-	}
-	++word, ++inlist;
+        if (!lang->is_upper(*word))
+          all_upper = false;
+        if (ignore_accents) {
+          if (lang->to_plain(*word) != lang->to_plain(*inlist))
+            if (lang->to_stripped(*word) != lang->to_stripped(*inlist))
+              return false;
+            else
+              case_compatible = false;
+        } else if (strip_accents) {
+          if (*word != lang->to_plain(*inlist))
+            if (lang->to_lower(*word) != lang->to_plain(lang->to_lower(*inlist)))
+              return false;
+            else // accents match case does not
+              case_compatible = false;
+        } else {
+          if (*word != *inlist)
+            if (lang->to_lower(*word) != lang->to_lower(*inlist))
+              return false;
+            else // accents match case does not
+              case_compatible = false;
+        }
+        ++word, ++inlist;
       }
       //   if word is all upper than the casing of inlist can be anything
       //   otherwise the casing of tail begin and tail inlist must match
@@ -460,15 +461,10 @@ namespace aspeller {
       if (!case_compatible) 
 	return false;
     }
-    if (*inlist != '\0') ++inlist;
-    assert(*inlist == '\0');
-  
-    //   if end   inlist is a end   char then it must match end word
-    if (lang->special(*(inlist-1)).end) {
-      if (*(inlist-1) != *(word-1))
-	return false;
-    }
-    return *word == '\0' || lang->special(*word).end;
+
+    if (lang->special(*word).end) ++word;
+
+    return (*word == '\0' && *inlist == '\0');
   }
 
   PosibErr<void> check_if_valid(const Language & l, ParmString word) {

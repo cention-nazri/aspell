@@ -876,7 +876,7 @@ WordAff * AffixMgr::expand_suffix(ParmString word, const byte * aff,
         expanded = true;
       }
     }
-    if (!expanded || not_expanded) *new_aff++ = *aff;
+    if (new_aff && (!expanded || not_expanded)) *new_aff++ = *aff;
     ++aff;
   }
   *cur = 0;

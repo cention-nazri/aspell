@@ -1,4 +1,4 @@
-@multitable {Code} {Kalaallisut/Greenlandic} {Lontara/Makasar} {Dictionary} {Translation}
+@multitable {Code} {Kalaallisut/Greenlandic} {Lontara/Makasar} {Experimental} {Translation}
 @item @b{Code} @tab @b{Language Name} @tab @b{Script} @tab @b{Dictionary Available} @tab @b{Gettext Translation}
 @item
 @item aa @tab Afar @tab Latin @tab - @tab -
@@ -20,7 +20,7 @@
 @item bh @tab Bihari @tab Devanagari @tab - @tab -
 @item bi @tab Bislama @tab Latin @tab - @tab -
 @item bm @tab Bambara @tab Latin @tab - @tab -
-@item bn @tab Bengali @tab Bengali @tab Planned @tab -
+@item bn @tab Bengali @tab Bengali @tab Experimental @tab -
 @item bo @tab Tibetan @tab Tibetan @tab - @tab -
 @item br @tab Breton @tab Latin @tab Yes @tab -
 @item bs @tab Bosnian @tab Latin @tab - @tab -
@@ -69,7 +69,7 @@
 @item ho @tab Hiri Motu @tab Latin @tab - @tab -
 @item hr @tab Croatian @tab Latin @tab Yes @tab -
 @item ht @tab Haitian Creole @tab Latin @tab - @tab -
-@item hu @tab Hungarian @tab Latin @tab Planned @tab -
+@item hu @tab Hungarian @tab Latin @tab Experimental @tab -
 @item hy @tab Armenian @tab Armenian @tab - @tab -
 @item hz @tab Herero @tab Latin @tab - @tab -
 @item
@@ -111,7 +111,7 @@
 @item li @tab Limburgan @tab Latin @tab - @tab -
 @item ln @tab Lingala @tab Latin @tab - @tab -
 @item lo @tab Lao @tab Lao @tab - @tab -
-@item lt @tab Lithuanian @tab Latin @tab Planned @tab -
+@item lt @tab Lithuanian @tab Latin @tab Experimental @tab -
 @item lu @tab Luba-Katanga @tab Latin @tab - @tab -
 @item lv @tab Latvian @tab Latin @tab - @tab -
 @item
@@ -179,7 +179,7 @@
 @item sv @tab Swedish @tab Latin @tab Yes @tab -
 @item sw @tab Swahili @tab Latin @tab Yes @tab -
 @item
-@item ta @tab Tamil @tab Tamil @tab Planned @tab -
+@item ta @tab Tamil @tab Tamil @tab Experimental @tab -
 @item te @tab Telugu @tab Telugu @tab - @tab -
 @item tg @tab Tajik @tab Latin @tab - @tab -
 @item tk @tab Turkmen @tab Latin @tab - @tab -
@@ -202,7 +202,7 @@
 @item uz @tab @tab Latin @tab - @tab -
 @item
 @item ve @tab Venda @tab Latin @tab - @tab -
-@item vi @tab Vietnamese @tab Latin @tab - @tab -
+@item vi @tab Vietnamese @tab Latin @tab Planned @tab -
 @item vo @tab Volapuk @tab Latin @tab - @tab -
 @item
 @item wa @tab Walloon @tab Latin @tab Yes @tab Incomplete

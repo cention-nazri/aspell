@@ -417,6 +417,10 @@ namespace {
     String new_word;
     size_t i;
 
+    // Try word as is (in case of case difference etc)
+
+    try_word(original, 0);
+
     // Change one letter
     
     new_word = original;
@@ -544,6 +548,16 @@ namespace {
     }
   }
 
+  // TODO: Consider adding support for converting the word to the "simple"
+  //   soundslike on the fly when "real" soundslike data is not available.
+  // This will even work with affix compressed words and the optimization
+  //   to avoid expanding unless needed.  Care needs to be taken to account
+  //   for the fact that the simpile sl could be smaller than the word.
+  //   Using "(strlen(word) - strlen(sl)) + stopped_at + 1" as the limit
+  //   should do the trick.
+  // When using jump-tables the words will need to grouped based on
+  //   the simple soundslike and not the actual word.
+
   void Working::try_scan() 
   {
     const char * original_soundslike = active_soundslike().str();
@@ -585,7 +599,7 @@ namespace {
           goto affix_case;
         }
 
-        score = edit_dist_fun(sl, original_soundslike, parms->edit_distance_weights );
+        score = edit_dist_fun(sl, original_soundslike, parms->edit_distance_weights);
         stopped_at = score.stopped_at - sl;
         if (score >= LARGE_NUM) continue;
         stopped_at = LARGE_NUM;

@@ -312,7 +312,7 @@ namespace aspeller {
       {
         while (x = lang->to_clean(*a++), !x);
         while (y = lang->to_clean(*b++), !y);
-        if (x == 1 || y == 1 || x == y) break;
+        if (x == 0x10 || y == 0x10 || x != y) break;
       }
       return static_cast<unsigned char>(x) - static_cast<unsigned char>(y);
     }

@@ -1219,8 +1219,7 @@ public:
     *this = *static_cast<const IstreamVirEnumeration *>(other);
   }
   Value next() {
-    *in >> data;
-    if (!*in) return 0;
+    if (!in->getline(data)) return 0;
     else return data.c_str();
   }
   bool at_end() const {return *in;}

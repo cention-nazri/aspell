@@ -1,5 +1,5 @@
 \input texinfo   @c -*-texinfo-*-
-@comment $Id: aspell.texi,v 1.18 2004/03/23 21:37:05 kevina Exp $
+@comment $Id: aspell.texi,v 1.19 2004/03/31 01:44:14 kevina Exp $
 @comment %**start of header
 @setfilename aspell.info
 @settitle GNU Aspell 0.60
@@ -1951,14 +1951,8 @@ off the Aspell home page at @uref{http://aspell.net}.  If your
 language is not listed above please send me a note and I will work
 with you on adding support.
 
-This chapter describes the old manual way of adding support for a new
-language in Aspell.  The recommended way to add support is through the
-aspell-dicts package.  The scripts used, as well as some documentation
-on what to do, is available in the aspell-gen package which is
-available in the same location the dictionary packages are at.
-
-Adding a language to aspell is fairly straightforward.  You need to
-create the language data file, and compile a new word list.
+Adding a language to aspell is fairly straightforward.  You basically
+need to create the language data file, and compile a new word list.
  
 @menu
 * The Language Data File::      
@@ -1968,18 +1962,20 @@ create the language data file, and compile a new word list.
 * Affix Compression::           
 * Controlling the Behavior of Run-together Words::  
 * Creating A New Character Set::  
+* Format of the Character Set Data File::  
+* Creating An Offical Dictionary Package::  
 @end menu
 
 @node The Language Data File
 @section The Language Data File
 
-The basic format of the language data file is the same as it is for
-the Aspell configuration file.  It is named @file{@var{lang}.dat} and is
+The basic format of the language data file is the same as it is for the
+Aspell configuration file.  It is named @file{@var{lang}.dat} and is
 located in the architecture independent data dir for Aspell (option
 @option{data-dir}) which is usually @file{@var{prefix}/share/aspell}.
-Use @command{aspell config} to find out where it is in your installation.
-By convention the language name should be the two letter @acronym{ISO
-639} language code.
+Use @command{aspell config} to find out where it is in your
+installation.  By convention the language name should be the two letter
+ISO 639 language code if it exists, if not use the three letter code.
 
 The language data file has several mandatory fields, and several
 optional ones.  All fields are case sensitive and should be in all
@@ -2662,16 +2658,35 @@ If there is not a standard character set for your language than you
 can invent one.  The new charset will only be used by Aspell
 internally.  If the option @option{data-encoding} is set to
 @samp{utf-8}, and your current locale character type is always set to
-@samp{utf-8}, than you can use @acronym{UTF-8} for everything and not
+@samp{utf-8}, than you can use UTF-8 for everything and not
 worry your self that an 8-bit character set is being used internally.
 If your language has no more than 220 distinct symbols, including
 different capitalizations and accents, than Aspell can support it.
 
 In order to create a new character set you will need to download
-@uref{ftp://alpha.gnu.org/gnu/aspell/mkchardata-0.2.tar.gz} and follow
-the instructions in the @file{README} file.  Version 0.1 of mkchardata
-@emph{will not} work as the format of the character data file has
-changed.
+@url{ftp://alpha.gnu.org/@/gnu/aspell/@/aspell-lang-@var{version}.tar.bz2} and follow
+the instructions in the @file{README} file.  Version 0.1, and 0.2 of
+mkchardata @emph{will not} work as the format of the character data file
+has changed.
+
+@node Format of the Character Set Data File
+@section Format of the Character Set Data File
+
+The character set data files that Aspell uses can be fine tuned.  If
+this is done that character set file should be renamed to
+@file{@var{lang}.cset}.
+
+The line(s) starting with @samp{=} do not specify the exact name of the
+file, but rather the name of the unicode mapping that is used.  Unless
+you change the unicode mapping, this line should not be changed.
+
+@node Creating An Offical Dictionary Package
+@section Creating An Offical Dictionary Package
+
+Once you have a basic dictionary working, you should consider creating
+an offical package so that it can be distributed with Aspell.  To do so
+download
+@url{ftp://alpha.gnu.org/@/gnu/aspell/@/aspell-lang-@var{version}.tar.bz2}.
 
 @node Implementation Notes
 @appendix Implementation Notes
@@ -2885,20 +2900,21 @@ U+0328 COMBINING OGONEK
 
 Which is a total of 37 additional Unicode code points.
 
-All ISO-8859 character leaves the characters 0x00 - 0x19 and 0x80 - 0x99
-unmapped as they are generally used as control characters.  Of those,
-0x02 - 0x19 and 0x80 - 0x99 may be mapped to anything in Aspell.  This
-is a total of 62 characters which can be remapped in any ISO-8859
-character set.  Thus, by remapping 37 of the 62 characters to the
-previously specifed Unicode code-points, any modified ISO-8859 character
-set can be used for any Latin languages covered by ISO-8859.  Of course
-decomposing every single accented character wastes a lot of space, so
-only characters that can be not be represented in the precomposed form
-should be broken up.  By using this trick it is possible to store
-foreign words in the correctly accented form in the dictionary even if
-the precomposed character is not in the current character set.
+All ISO-8859 character leaves the characters 0x00 - 0x1F, and 0x80 -
+0x9F unmapped as they are generally used as control characters.  Of
+those, 0x01 - 0x0F, 0x11 - 0x1F and 0x80 - 0x9F may be mapped to
+anything in Aspell.  This is a total of 62 characters which can be
+remapped in any ISO-8859 character set.  Thus, by remapping 37 of the 62
+characters to the previously specifed Unicode code-points, any modified
+ISO-8859 character set can be used for any Latin languages covered by
+ISO-8859.  Of course decomposing every single accented character wastes
+a lot of space, so only characters that can be not be represented in the
+precomposed form should be broken up.  By using this trick it is
+possible to store foreign words in the correctly accented form in the
+dictionary even if the precomposed character is not in the current
+character set.
 
-Any letter in the Unicode range U+0000 - U+0249, U+1E00..U+1EFF (Basic
+Any letter in the Unicode range U+0000 - U+0249, U+1E00 - U+1EFF (Basic
 Latin, Latin-1 Supplement, Latin Extended-A, Latin Extended-B, and Latin
 Extended Additional) can be represented using around 175 basic letters,
 and 25 modifiers which is less than 220 and can thus fit in an Aspell
@@ -2909,11 +2925,13 @@ written using the Latin script if so desired.
 @appendixsubsec Hangul
 
 Koren in generally written in hangul or a mixture of han and hangul.
-Aspell should be able to spell check the hangul part of the writing.
-In Hangul letters individual letters, known as jamo, are grouped
-together in syllable blocks.  Unicode provided code points for both jamo
-and the combined syllable block.  The syllable blocks will need to be
-decomposed into jamo in order for Aspell to spell check it.
+Aspell should be able to spell check the hangul part of the writing.  In
+Hangul letters individual letters, known as jamo, are grouped together
+in syllable blocks.  Unicode allows Hangul to be stored in one of three
+ways, individual jamo letters (Hangul Compatibility Jamo, U+3130 -
+U+318F), decomposed jamo (Hangul Jamo, U+1100 - U+11FF), and precoposed
+sylable blocks (Hangul Syllables, U+AC00 - U+D7AF).  Aspell will only
+work with the first form.
 
 @node Syllabic
 @appendixsec Syllabic 
@@ -3035,15 +3053,10 @@ support.
 @node Planned Dictionaries
 @appendixsec Notes on Planned Dictionaries
 
-
 @multitable @columnfractions .05 .20 .75
 
 @item be @tab Belarusian
 @tab Ispell Dictionary available
-
-@item bn @tab Bengali
-@tab Unoffical Aspell Dictionary available
-@uref{http://www.bengalinux.org/@/downloads/}
 
 @item et @tab Estonian
 @tab Ispell Dictionary available
@@ -3055,31 +3068,22 @@ support.
 @tab Ispell Dictionary available.
 @uref{http://packages.debian.org/@/unstable/text/igaelic}
 
-@item gv @tab Manx 
+@item gv @tab Manx Gaelic
 @tab Ispell Dictionary available. 
 @uref{http://packages.debian.org/@/unstable/text/imanx}
 
 @item he @tab Hebrew
-@tab Ispell Dictionary available
-
-@item hu @tab Hungarian 
-@tab MySpell dictionary expanded to over 500 MB.
-Will add once affix support is worked into the dictionary package system.
-
-@item lt @tab Lithuanian
-@tab MySpell dictionary expanded to over 500 MB.
-Will add once affix support is worked into the dictionary package system.
+@tab Working with authors of Hspell.
+@uref{http://www.ivrix.org.il/@/projects/spell-checker}
 
 @item sq @tab Albanian
 @tab Ispell Dictionary available
 
-@item ta @tab Tamil
-@tab Word list available at
-@uref{http://www.developer.thamizha.com/@/spellchecker/index.html}.
-Working with them to create an Aspell dictionary.
-
+@item vi @tab Vietnamese
+@tab Word list available at 
+@uref{http://@/www.informatik.uni-leipzig.de/@/~duc/software/misc/@/wordlist.html}.
+Working with them to create an Aspell dictionary. 
 @end multitable
-
 
 @node References
 @appendixsec References

@@ -287,7 +287,7 @@ namespace {
     return word_lookup.empty();
   }
 
-  static const char * const cur_check_word = "aspell default speller rowl 1.8";
+  static const char * const cur_check_word = "aspell default speller rowl 1.8b";
 
   struct DataHead {
     // all sizes except the last four must to divisible by:
@@ -871,7 +871,7 @@ namespace {
           // the words 
           for (WordAff * p = exp_list; p; p = p->next)
           {
-            //CERR.printf("%s/%s\n", p->word.str, p->aff);
+            //CERR.printf("%s|%s\n", p->word.str, p->aff);
             s = p->word.size;
             const char * w = p->word.str;
             bool dup = false;
