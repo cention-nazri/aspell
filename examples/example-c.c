@@ -24,6 +24,7 @@ static void print_word_list(AspellSpeller * speller,
       fputs(word, stdout);
       putc(delem, stdout);
     }
+    delete_aspell_string_enumeration(els);
   }
 }
 

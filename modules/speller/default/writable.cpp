@@ -397,6 +397,7 @@ public:
 
   Size   size()     const;
   bool   empty()    const;
+  PosibErr<void> clear();
   
   PosibErr<void> add(ParmString w) {return Dictionary::add(w);}
   PosibErr<void> add(ParmString w, ParmString s);
@@ -431,6 +432,14 @@ WritableDict::Size WritableDict::size() const
 bool WritableDict::empty() const 
 {
   return word_lookup->empty();
+}
+
+PosibErr<void> WritableDict::clear() 
+{
+  word_lookup->clear();
+  soundslike_lookup_.clear();
+  buffer.reset();
+  return no_err;
 }
 
 bool WritableDict::lookup(ParmString word, const SensitiveCompare * c,
@@ -639,6 +648,7 @@ public:
 
   Size   size()     const;
   bool   empty()    const;
+  PosibErr<void> clear();
 
   bool lookup(ParmString word, const SensitiveCompare * c,
                               WordEntry & o, WordVec *&vec) const;
@@ -678,6 +688,14 @@ WritableReplDict::Size WritableReplDict::size() const
 bool WritableReplDict::empty() const 
 {
   return word_lookup->empty();
+}
+
+PosibErr<void> WritableReplDict::clear() 
+{
+  word_lookup->clear();
+  soundslike_lookup_.clear();
+  buffer.reset();
+  return no_err;
 }
     
 //
