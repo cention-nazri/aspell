@@ -153,35 +153,53 @@ namespace aspeller {
     return false;
   }
 
+  inline bool SpellerImpl::check2(char * word, /* it WILL modify word */
+                                  bool try_uppercase,
+                                  CheckInfo & ci, GuessInfo * gi)
+  {
+    bool res = check_affix(word, ci, gi);
+    if (res) return true;
+    if (!try_uppercase) return false;
+    char t = *word;
+    *word = lang_->to_title(t);
+    res = check_affix(word, ci, gi);
+    *word = t;
+    if (res) return true;
+    return false;
+  }
+
   PosibErr<bool> SpellerImpl::check(char * word, char * word_end, 
                                     /* it WILL modify word */
-				    unsigned int run_together_limit,
+                                    bool try_uppercase,
+				    unsigned run_together_limit,
 				    CheckInfo * ci, GuessInfo * gi)
   {
     assert(run_together_limit <= 8); // otherwise it will go above the 
                                      // bounds of the word array
     clear_check_info(*ci);
-    bool res = check_affix(word, *ci, gi);
+    bool res = check2(word, try_uppercase, *ci, gi);
     if (res) return true;
     if (run_together_limit <= 1) return false;
-    for (char * i = word + run_together_start_len_; 
-	 i <= word_end - run_together_start_len_;
+    enum {Yes, No, Unknown} is_title = Unknown;
+    for (char * i = word + run_together_min_; 
+	 i <= word_end - run_together_min_;
 	 ++i) 
-      {
-	char t = *i;
-	*i = '\0';
-        //FIXME: clear ci, gi?
-	res = check_affix(word, *ci, gi);
-	*i = t;
-	if (!res) continue;
-	if (check(i, word_end, run_together_limit - 1, ci + 1, 0)) {
-          ci->next = ci + 1;
-	  return true;
-        }
+    {
+      char t = *i;
+      *i = '\0';
+      //FIXME: clear ci, gi?
+      res = check2(word, try_uppercase, *ci, gi);
+      if (!res) {*i = t; continue;}
+      if (is_title == Unknown)
+        is_title = lang_->case_pattern(word) == FirstUpper ? Yes : No;
+      *i = t;
+      if (check(i, word_end, is_title == Yes, run_together_limit - 1, ci + 1, 0)) {
+        ci->next = ci + 1;
+        return true;
       }
+    }
     return false;
   }
-  
 
   //////////////////////////////////////////////////////////////////////
   //
@@ -355,9 +373,6 @@ namespace aspeller {
     }
     static PosibErr<void> run_together_min(SpellerImpl * m, int value) {
       m->run_together_min_ = value;
-      if (m->unconditional_run_together_ 
-	  && m->run_together_min_ < m->run_together_start_len_)
-	m->run_together_start_len_ = m->run_together_min_;
       return no_err;
     }
     
@@ -512,10 +527,6 @@ namespace aspeller {
     }
     run_together_min_    = config_->retrieve_int("run-together-min");
 
-    if (unconditional_run_together_ 
-	&& run_together_min_ < run_together_start_len_)
-      run_together_start_len_ = run_together_min_;
-      
     config_->add_notifier(new ConfigNotifier(this));
 
     config_->set_attached(true);

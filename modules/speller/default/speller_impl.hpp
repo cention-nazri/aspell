@@ -92,13 +92,13 @@ namespace aspeller {
     //
   
     PosibErr<bool> check(char * word, char * word_end, /* it WILL modify word */
-			 unsigned int run_together_limit,
+                         bool try_uppercase,
+			 unsigned run_together_limit,
 			 CheckInfo *, GuessInfo *);
 
     PosibErr<bool> check(MutableString word) {
       guess_info.reset(guesses);
-      return check(word.begin(), 
-		   word.end(), 
+      return check(word.begin(), word.end(), false,
 		   unconditional_run_together_ ? run_together_limit_ : 0,
 		   check_inf, &guess_info);
     }
@@ -110,6 +110,10 @@ namespace aspeller {
     }
 
     PosibErr<bool> check(const char * word) {return check(ParmString(word));}
+
+    bool check2(char * word, /* it WILL modify word */
+                bool try_uppercase,
+                CheckInfo & ci, GuessInfo * gi);
 
     bool check_affix(ParmString word, CheckInfo & ci, GuessInfo * gi);
 
@@ -166,7 +170,6 @@ namespace aspeller {
     unsigned int            run_together_limit_;
     const char *            run_together_middle_;
     unsigned int            run_together_min_;
-    unsigned int            run_together_start_len_;
     String                  prev_mis_repl_;
     String                  prev_cor_repl_;
 
