@@ -8,7 +8,6 @@
 #include "file_util.hpp"
 #include "fstream.hpp"
 #include "language.hpp"
-#include "speller_impl.hpp"
 
 namespace aspell_writable {
 
@@ -50,7 +49,7 @@ protected:
   PosibErr<void> merge(ParmString);
   PosibErr<void> save_as(ParmString);
 };
-  
+
 template <typename Base>
 class WritableBase : public Base, public WritableBaseCode 
 {
@@ -484,8 +483,7 @@ PosibErr<void> WritableWS::merge(FStream & in,
 
 PosibErr<void> WritableWS::save(FStream & out, ParmString file_name) 
 {
-  out << "personal_ws-1.1" << ' ' << lang_name() << ' ' 
-      << word_lookup->size() << '\n';
+  out.print("personal_ws-1.1 %s %i\n", lang_name(), word_lookup->size());
 
   SoundslikeLookup::const_iterator i = soundslike_lookup_.begin();
   SoundslikeLookup::const_iterator e = soundslike_lookup_.end();
@@ -494,7 +492,7 @@ PosibErr<void> WritableWS::save(FStream & out, ParmString file_name)
   
   for (;i != e; ++i) {
     for (j = i->second.begin(); j != i->second.end(); ++j) {
-      out << *j << '\n';
+      out.print("%s\n", *j);
     }
   }
   return no_err;
@@ -736,7 +734,7 @@ PosibErr<void> WritableReplS::add(ParmString mis, ParmString cor, ParmString sl)
 
 PosibErr<void> WritableReplS::save (FStream & out, ParmString file_name) 
 {
-  out << "personal_repl-1.1" << ' ' << lang_name() <<  " 0 \n";
+  out.print("personal_repl-1.1 %s 0\n", lang_name());
   
   WordLookup::iterator i = word_lookup->begin();
   WordLookup::iterator e = word_lookup->end();
@@ -746,7 +744,7 @@ PosibErr<void> WritableReplS::save (FStream & out, ParmString file_name)
     StrVector * v = get_vector(*i);
     for (StrVector::iterator j = v->begin(); j != v->end(); ++j)
     {
-      out << *i << ' ' << *j << '\n';
+      out.print("%s %s\n", *i, *j);
     }
   }
   return no_err;
@@ -838,6 +836,3 @@ namespace aspeller {
   }
 
 }
-
-
-

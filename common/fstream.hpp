@@ -8,6 +8,8 @@
 #define ASPELL_FSTREAM__HPP
 
 #include <stdio.h>
+#include <stdarg.h>
+
 #include "string.hpp"
 #include "istream.hpp"
 #include "ostream.hpp"
@@ -41,11 +43,18 @@ namespace acommon {
     void ignore() {getc(file_);}
     int peek() {int c = getc(file_); ungetc(c, file_); return c;}
 
-    // NOTE: Use c_stream only as a last resort as it may
-    //       disappear if the underlining impl changes
     FILE * c_stream();
-    // However, file_no will always be available.
     int file_no();
+
+    __attribute__ ((format (printf,2,3)))
+    int print(const char * format, ...)
+    {
+      va_list ap;
+      va_start(ap, format);
+      int res = vprintf(format, ap);
+      va_end(ap);
+      return res;
+    }
 
     void flush() {fflush(file_);}
 

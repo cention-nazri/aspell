@@ -248,10 +248,10 @@ namespace aspeller {
   // implemented in multi_ws.cc
   BasicMultiSet * new_default_multi_word_set();
 
-  // implemented in writable_ws.cc
+  // implemented in writable.cpp
   WritableWordSet * new_default_writable_word_set();
 
-  // implemented in writable_repl.cc
+  // implemented in writable.cpp
   WritableReplacementSet * new_default_writable_replacement_set();
 
   
