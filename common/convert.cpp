@@ -14,6 +14,7 @@
 #include "errors.hpp"
 #include "stack_ptr.hpp"
 #include "cache-t.hpp"
+#include "file_data_util.hpp"
 
 #include "iostream.hpp"
 
@@ -184,15 +185,16 @@ namespace acommon {
   {
     to.reset();
     from.reset();
-    String file_name = config.retrieve("data-dir");
-    file_name += '/';
-    file_name += encoding;
-    file_name += ".cset";
+    
+    String dir1,dir2,file_name;
+    fill_data_dir(&config, dir1, dir2);
+    find_file(file_name,dir1,dir2,encoding,".cset");
+
     FStream data;
     PosibErrBase err = data.open(file_name, "r");
     if (err.get_err()) { 
-      char mesg[128];
-      snprintf(mesg, 128, _("This could also mean that the file \"%s\" could not be opened for reading or does not exist."),
+      char mesg[300];
+      snprintf(mesg, 300, _("This could also mean that the file \"%s\" could not be opened for reading or does not exist."),
                file_name.c_str());
       return make_err(unknown_encoding, encoding, mesg);
     }

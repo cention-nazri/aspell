@@ -81,7 +81,7 @@ namespace aspeller {
     String dir1,dir2,path;
 
     fill_data_dir(config, dir1, dir2);
-    dir_ = find_file(path,dir1,dir2, lang,".dat");
+    dir_ = find_file(path,dir1,dir2,lang,".dat");
 
     lang_config_ = 
       new Config("speller-lang",
@@ -115,16 +115,18 @@ namespace aspeller {
       if (!tmp) tmp = nl_langinfo(CODESET);
       if (is_ascii_enc(tmp)) tmp = 0;
       if (tmp)
-        mesg_conv_.setup(*config, charset_, fix_encoding_str(tmp, buf));
+        RET_ON_ERR(mesg_conv_.setup(*config, charset_, fix_encoding_str(tmp, buf)));
       else 
 #endif
-        mesg_conv_.setup(*config, charset_, data_encoding_);
+        RET_ON_ERR(mesg_conv_.setup(*config, charset_, data_encoding_));
+      // no need to check for errors here since we know charset_ is a
+      // supported encoding
       to_utf8_.setup(*config, charset_, "utf-8");
       from_utf8_.setup(*config, "utf-8", charset_);
     }
-
+    
     Conv iconv;
-    iconv.setup(*config, data_encoding_, charset_);
+    RET_ON_ERR(iconv.setup(*config, data_encoding_, charset_));
 
     DataPair d;
 
