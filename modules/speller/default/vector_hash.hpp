@@ -53,7 +53,7 @@ namespace aspeller {
     typedef typename Parms::TableIter       TableIter;
     typedef typename Parms::HashTable       HashTable;
     TableIter   pos;
-    HashTable * hash_table; 
+    const HashTable * hash_table;
   public:
     //typedef std::bidirectional_iterator_tag             iterator_category;
     typedef typename Parms::Value                       value_type;
@@ -64,8 +64,8 @@ namespace aspeller {
 
     //VHTIterator vector_iterator() const {return pos;}
   public:
-    VHTIterator(TableIter p, HashTable *ht) : pos(p), hash_table(ht) {}
-    VHTIterator(TableIter p, HashTable *ht, bool) 
+    VHTIterator(TableIter p, const HashTable *ht) : pos(p), hash_table(ht) {}
+    VHTIterator(TableIter p, const HashTable *ht, bool) 
       : pos(p), hash_table(ht) 
     {
       while (pos != hash_table->vector().end()
@@ -73,7 +73,7 @@ namespace aspeller {
 	++pos;
     }
     
-    value_type & operator * () const  {return *pos;}
+    const value_type & operator * () const  {return *pos;}
     value_type * operator -> () const {return &*pos;}
     
     bool at_end() const {return pos == hash_table->vector().end();}
@@ -154,7 +154,8 @@ namespace aspeller {
     typedef typename Vector::size_type       size_type;
     typedef typename Vector::difference_type difference_type;
 
-    typedef typename Vector::pointer         pointer;
+    // This typedef causes problems with VC6
+    //typedef typename Vector::pointer         pointer;
     typedef typename Vector::reference       reference;
     typedef typename Vector::const_reference const_reference;
 

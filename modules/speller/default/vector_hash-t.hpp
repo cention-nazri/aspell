@@ -15,6 +15,7 @@
 
 #include <math.h>
 
+#include "settings.h"
 #include "vector_hash.hpp"
 #include "primes.hpp"
 
@@ -51,7 +52,7 @@ namespace aspeller {
   }
   
   template<class Parms>
-  std::pair<typename VectorHashTable<Parms>::iterator, bool> 
+  std::pair<TYPENAME VectorHashTable<Parms>::iterator, bool> 
   VectorHashTable<Parms>::insert(const value_type & d) 
   {
     MutableFindIterator j(this, parms_.key(d));
@@ -172,8 +173,8 @@ namespace aspeller {
   }
 
   template<class Parms>
-  void VectorHashTable<Parms>::resize(size_type i) {
-    VectorHashTable temp(i,parms_);
+  void VectorHashTable<Parms>::resize(size_type size_) {
+    VectorHashTable temp(size_,parms_);
     iterator e = end();
     for (iterator i = begin(); i != e; ++i)
       temp.insert(*i);

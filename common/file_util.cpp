@@ -23,7 +23,7 @@
 #include <stdio.h>
 #include <sys/stat.h>
 
-#ifdef WIN32
+#if defined(WIN32) || defined(_WIN32)
 #  include <io.h>
 #  include "minwin.h" //minimum windows declarations.
 #  include "asc_ctype.hpp"
@@ -45,7 +45,7 @@ namespace acommon {
   // a directory prepended.
   bool need_dir(ParmString file) {
     if (file[0] == '/' || (file[0] == '.' && file[1] == '/')
-#ifdef WIN32
+#if defined(WIN32) || defined(_WIN32)
         || (asc_isalpha(file[0]) && file[1] == ':')
         || file[0] == '\\' || (file[0] == '.' && file[1] == '\\')
 #endif

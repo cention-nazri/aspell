@@ -693,7 +693,7 @@ void print_elements(const AspellWordList * wl) {
 
 void pipe() 
 {
-#ifndef WIN32
+#if ! defined(WIN32) && ! defined(_WIN32)
   // set up stdin and stdout to be line buffered
   assert(setvbuf(stdin, 0, _IOLBF, 0) == 0); 
   assert(setvbuf(stdout, 0, _IOLBF, 0) == 0);
@@ -1665,7 +1665,7 @@ int put_word_expand_1(void * d, const AspellWord * w)
 
 int put_word_expand_2(void * d, const AspellWord * w)
 {
-  const char * str = static_cast<const char *>(d);
+  const char * str = (const char *)(d);
   COUT << str << ' ' << w->str << '\n';
   return true;
 }

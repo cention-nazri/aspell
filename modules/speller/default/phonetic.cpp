@@ -26,10 +26,10 @@ namespace aspeller {
       memcpy(rest,  lang->sl_rest_, 256);
       return no_err;
     }
-    
     String soundslike_chars() const {
+      int i;
       bool chars_set[256] = {0};
-      for (int i = 0; i != 256; ++i) 
+      for ( i = 0; i != 256; ++i) 
       {
         char c = first[i];
         if (c) chars_set[static_cast<unsigned char>(c)] = true;
@@ -37,7 +37,7 @@ namespace aspeller {
         if (c) chars_set[static_cast<unsigned char>(c)] = true;
       }
       String     chars_list;
-      for (int i = 0; i != 256; ++i) 
+      for ( i = 0; i != 256; ++i) 
       {
         if (chars_set[i]) 
           chars_list += static_cast<char>(i);

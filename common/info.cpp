@@ -8,7 +8,7 @@
 #include <assert.h>
 #include <string.h>
 #include <ctype.h>
-#ifndef WIN32
+#if ! defined(WIN32) && ! defined(_WIN32)
 #include <dirent.h>
 #endif
 
@@ -17,7 +17,7 @@
  /* BSDi defines u_intXX_t types in machine/types.h */
 #include <machine/types.h>
 #endif
-#ifdef WIN32
+#if defined(WIN32) || defined(_WIN32)
 #include "minwin.h" //minimum windows declarations.
 #endif
 
@@ -42,7 +42,7 @@
 
 namespace acommon {
 
-#ifndef WIN32
+#if ! defined(WIN32) && ! defined(_WIN32)
   class Dir {
     DIR * d_;
     Dir(const Dir &);
@@ -189,7 +189,7 @@ namespace acommon {
 
     StringListEnumeration els = list_all.for_dirs.elements_obj();
     const char * dir;
-#ifndef WIN32
+#if ! defined(WIN32) && ! defined(_WIN32)
 
     //unix version
     while ( (dir = els.next()) != 0) {
@@ -387,7 +387,7 @@ namespace acommon {
 
     els = list_all.dict_dirs.elements_obj();
     const char * dir;
-#ifndef WIN32
+#if ! defined(WIN32) && ! defined(_WIN32)
     //unix version
     while ( (dir = els.next()) != 0) {
       Dir d(opendir(dir));
