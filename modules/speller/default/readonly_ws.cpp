@@ -301,7 +301,7 @@ namespace {
 
   struct DataHead {
     // all sizes except the last four must to divisible by:
-    static const uint align = 16;
+    static const unsigned int align = 16;
     char check_word[64];
     u32int endian_check; // = 12345678
     char lang_hash[16];

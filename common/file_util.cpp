@@ -21,6 +21,7 @@
 // This needs to be <stdio.h> and not <cstdio>
 #include <stdio.h>
 #include <sys/stat.h>
+#include <dirent.h>
 
 #ifdef WIN32
 
@@ -33,7 +34,6 @@
 
 #  include <unistd.h>
 #  define ACCESS access
-#  include <dirent.h>
 
 #endif
 

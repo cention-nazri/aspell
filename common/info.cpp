@@ -8,6 +8,7 @@
 #include <assert.h>
 #include <string.h>
 #include <ctype.h>
+#include <dirent.h>
 
 // POSIX includes
 #ifdef __bsdi__
@@ -18,8 +19,6 @@
 #  include <windows.h>
 #  include <winbase.h>
 #else
-#  include <dirent.h>
-#endif
 
 #include "iostream.hpp"
 

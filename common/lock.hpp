@@ -16,7 +16,10 @@
 #define DISTRIBNET_LOCK__HPP
 
 #include "settings.h"
-#include <pthread.h>
+
+#ifdef USE_POSIX_MUTEX
+#  include <pthread.h>
+#endif
 
 namespace acommon {
 
