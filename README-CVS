@@ -14,7 +14,7 @@ Before the build:
 
 Use ./config-* instead of configure as the ./config-* will add the
 necessary options so that things build right with this very limited
-version of Pspell.  Any parameters specified will be passed to
+version of the New Aspell.  Any parameters specified will be passed to
 configure.
 
 Than to build:
@@ -25,19 +25,20 @@ Than to build:
 You can then optionally due a "make install" to install the programs in
 the inst/ directory.
 
-To test things out use either pspell or aspell-util. If you did a make
-install both of these programs are in inst/bin/ otherwise they are in
-example/ and modules/aspell/ respectfully.  pspell is a slightly modified
-version of the example program distributed with the released version of
-Aspell.  Aspell-util is a skimmed down version of Aspell which can be
-used for creating or dumping dictionaries.
+To test things out use either aspell0 or speller-util. If you did a
+make install both of these programs are in inst/bin/ otherwise they
+are in example/ and modules/speller/default/ respectfully.  aspell0 is
+a slightly modified version of the example program distributed with
+the released version of Pspell.  Speller-util is a skimmed down
+version of Aspell which can be used for creating or dumping
+dictionaries.
 
 To run the debugger on these programs if there are not installed use
   libtool gdb <debugger parms>
 or
   libtool --mode execute <your debugger> <debugger parms>
-For example to debug aspell-util with ddd use
-  libtool --mode execute ddd modules/aspell/aspell-util
+For example to debug speller-util with ddd use
+  libtool --mode execute ddd modules/speller/default/speller-util
 
 Using libtool is necessary to make sure the shared libraries get loaded
 right. If you debug them after they are installed this will not be
