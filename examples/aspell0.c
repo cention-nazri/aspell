@@ -205,10 +205,10 @@ int main(int argc, const char *argv[])
       if (strlen(word) < 3) {
 	printf("Usage: %c <option>\n", word[0]);
       } else {
-	p = aspell_config_retrieve(config, word + 2);
+	const char * val = aspell_config_retrieve(config, word + 2);
 	check_for_config_error(config);
-	if (p)
-	  printf("%s = \"%s\"\n", word + 2, p);
+	if (val)
+	  printf("%s = \"%s\"\n", word + 2, val);
       }
       break;
     case 'd':

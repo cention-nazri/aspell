@@ -50,7 +50,6 @@ namespace acommon {
   Token DocumentChecker::next_misspelling()
   {
     bool correct;
-    printf("%p\n", tokenizer_);
     do {
       if (!tokenizer_->advance()) break;
       //COUT << ":: \"";
