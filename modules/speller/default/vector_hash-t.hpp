@@ -51,7 +51,7 @@ namespace aspeller {
   }
   
   template<class Parms>
-  std::pair<VectorHashTable<Parms>::iterator, bool> 
+  std::pair<typename VectorHashTable<Parms>::iterator, bool> 
   VectorHashTable<Parms>::insert(const value_type & d) 
   {
     MutableFindIterator j(this, parms_.key(d));
@@ -76,7 +76,7 @@ namespace aspeller {
   }
 
   template<class Parms>
-  VectorHashTable<Parms>::iterator 
+  typename VectorHashTable<Parms>::iterator 
   VectorHashTable<Parms>::find(const key_type & key) 
   {
     MutableFindIterator i(this, key);
@@ -87,7 +87,7 @@ namespace aspeller {
   }
 
   template<class Parms>
-  VectorHashTable<Parms>::const_iterator 
+  typename VectorHashTable<Parms>::const_iterator 
   VectorHashTable<Parms>::find(const key_type & key) const {
     ConstFindIterator i(this, key);
     if (!i.at_end()) 

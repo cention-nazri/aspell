@@ -80,7 +80,7 @@ $info{errors}{proc}{native_impl} = sub {
     $ret .= "  ".scalar @parms.", // num_parms\n";
     $ret .= "  {".(join ', ', map {"\"$_\""} @parms)."} // parms\n";
     $ret .= "};\n";
-    $ret .= "const ErrorInfo * const $name = &$name\_obj;\n";
+    $ret .= "extern \"C\" const ErrorInfo * const $name = &$name\_obj;\n";
     $ret .= "\n";
     foreach my $d (@{$data->{data}}) {
       $ret .= $p->($name, \@parms, $d);

@@ -174,7 +174,7 @@ namespace aspeller {
     int i;
     /**  create "to_upper" and "is_alpha" arrays  **/
     for (i = 0; i < 256; i++) {
-      parms.to_upper[i] = asc_islower(i) ?  (unsigned char) toupper(i) 
+      parms.to_upper[i] = asc_islower(i) ?  (unsigned char) asc_toupper(i) 
 	                                 : (unsigned char) i;
       parms.is_alpha[i] = asc_isalpha(i);
     }
@@ -267,7 +267,7 @@ namespace aspeller {
           s++;     /**  important for (see below)  "*(s-1)"  **/
           
           while (*s != '\0'  &&  word[i+k] == *s
-                 &&  !isdigit (*s)  &&  strchr ("(-<^$", *s) == NULL) {
+                 &&  !asc_isdigit (*s)  &&  strchr ("(-<^$", *s) == NULL) {
             k++;
             s++;
           }
@@ -289,7 +289,7 @@ namespace aspeller {
           }
           if (*s == '<')
             s++;
-          if (isdigit (*s)) {
+          if (asc_isdigit (*s)) {
             /**  determine priority  **/
             p = *s - '0';
             s++;
@@ -324,7 +324,7 @@ namespace aspeller {
                 s = parms.rules[n0];
                 s++;
                 while (*s != '\0'  &&  word[i+k0] == *s
-                       && ! isdigit(*s)  &&  strchr("(-<^$",*s) == NULL) {
+                       && ! asc_isdigit(*s)  &&  strchr("(-<^$",*s) == NULL) {
                   k0++;
                   s++;
                 }
@@ -346,7 +346,7 @@ namespace aspeller {
                 }
                 if (*s == '<')
                   s++;
-                if (isdigit (*s)) {
+                if (asc_isdigit (*s)) {
                   p0 = *s - '0';
                   s++;
                 }

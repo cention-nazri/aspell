@@ -96,10 +96,10 @@ namespace acommon {
     const char * s0 = str;
     const char * s1;
     while (true) {
-      while (*s0 != '\0' && isspace(*s0)) ++s0;
+      while (*s0 != '\0' && asc_isspace(*s0)) ++s0;
       if (*s0 == '\0') break;
       s1 = s0;
-      while (!isspace(*s1)) ++s1;
+      while (!asc_isspace(*s1)) ++s1;
       String temp(s0,s1-s0);
       list->add(temp);
       if (*s1 != '\0')
@@ -317,7 +317,7 @@ namespace acommon {
     } else {
       b_size.req_type = '+';
     }
-    if (!isdigit(p[0]) || !isdigit(p[1]) || p[2] != '\0')
+    if (!asc_isdigit(p[0]) || !asc_isdigit(p[1]) || p[2] != '\0')
       abort(); //FIXME: create an error condition here
     b_size.requested = atoi(p);
     b_size.init();

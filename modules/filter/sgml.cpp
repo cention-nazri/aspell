@@ -104,7 +104,7 @@ namespace acommon {
       else if (in_quote == c)
 	in_quote = 0;
 	
-    } else if (!in_quote && isspace(c)) {
+    } else if (!in_quote && asc_isspace(c)) {
 	
       if (!new_token) {
 	in_what = InKey;
@@ -131,7 +131,7 @@ namespace acommon {
 	parm_name = "";
 	new_token = false;
       }
-      parm_name += tolower(c);
+      parm_name += asc_tolower(c);
 	
     } else if (in_what == InValue || in_what == InValueNoSkip) {
 	

@@ -89,7 +89,7 @@ kevin at atkinson dhs org
 Notes
 \layout Standard
 
-This manual is designed for those who which to developer Aspell.
+This manual is designed for those who which to develope Aspell.
  It is currently very sketchy.
  However, it should improve over time.
  The latest version of this document can be found at 
@@ -585,14 +585,60 @@ common/config.hpp
 \layout Section
 
 Filter Interface
+\layout Subsection
+
+Overview
 \layout Standard
 
-The current filter interface in Aspell is very simple and somewhat limited.
- Basically a filter is given a block of text and its job is to blank out
- parts that should not be spell checked.
- Filers are not allowed to do anything else but blank text out.
- Currently all filters must be compiled in but my eventual goals are to
- allow filters to be loaded at run time.
+In Aspell there are 5 types of filters:
+\layout Enumerate
+
+
+\series bold 
+Decoders
+\series default 
+ which take input in some standard format such as iso8859-1 or UTF-8 and
+ convert it into a string of FilterChars.
+\layout Enumerate
+
+
+\series bold 
+Decoding filters
+\series default 
+ which manipulates a string of FilterChars by decoding the text is some
+ way such as converting SGML character into its unicode value.
+ 
+\layout Enumerate
+
+
+\series bold 
+True filters
+\series default 
+ which manipulates a string of FilterChars to make it more sutable for spell
+ checking.
+ These filers generally blank out text which should not be spell checked
+\layout Enumerate
+
+
+\series bold 
+Encoding filters
+\series default 
+ which manipulates a string of FilterChars by encoding the text is some
+ way such as converting certain unicode characters to SGML characters.
+\layout Enumerate
+
+
+\series bold 
+Encoders
+\series default 
+ which take a string of FilerChars and convert inro a standard format such
+ as iso8859-1 or UTF-8
+\layout Standard
+
+[FIXME: Write more]
+\layout Subsection
+
+Adding a New Filter
 \layout Standard
 
 To add a new filter create a new file in the modules/filter directory, the

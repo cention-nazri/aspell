@@ -59,7 +59,7 @@ namespace acommon {
   };
 
   template <class P>
-  HashTable<P>::PrimeIndex HashTable<P>::next_largest(Size s) 
+  typename HashTable<P>::PrimeIndex HashTable<P>::next_largest(Size s) 
   {
     PrimeIndex i = prime_index_;
     while (assert(primes[i] != static_cast<PrimeIndex>(-1)), primes[i] < s) ++i;
@@ -84,7 +84,7 @@ namespace acommon {
   }
 
   template <class P>
-  std::pair<HashTable<P>::iterator,bool> HashTable<P>::insert(const Value & to_insert)
+  std::pair<typename HashTable<P>::iterator,bool> HashTable<P>::insert(const Value & to_insert)
   {
     bool have;
     iterator put_me_here = find_i(parms_.key(to_insert), have);
@@ -115,7 +115,7 @@ namespace acommon {
   }
 
   template <class P>
-  HashTable<P>::Size HashTable<P>::erase(const Key & k)
+  typename HashTable<P>::Size HashTable<P>::erase(const Key & k)
   {
     Size num_erased = 0;
     bool irrelevant;
@@ -134,7 +134,7 @@ namespace acommon {
   }
   
   template <class P>
-  HashTable<P>::iterator HashTable<P>::find_i(const Key & to_find, bool & have)
+  typename HashTable<P>::iterator HashTable<P>::find_i(const Key & to_find, bool & have)
   {
     Size pos = parms_.hash(to_find) % table_size_;
     Node * * n = table_ + pos;
@@ -152,7 +152,7 @@ namespace acommon {
   }
 
   template <class P>
-  std::pair<HashTable<P>::iterator, HashTable<P>::iterator>
+  std::pair<typename HashTable<P>::iterator, typename HashTable<P>::iterator>
   HashTable<P>::equal_range_i(const Key & to_find, int & c)
   {
     c = 0;

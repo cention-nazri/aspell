@@ -10,23 +10,27 @@
 #include <assert.h>
 
 namespace acommon {
-
-  template<class T>
-  struct StackPtrRef {
-    T * ptr;
-    StackPtrRef (T * rhs) : ptr(rhs) {}
-  };
   
   template <typename T>
   class StackPtr {
     T * ptr;
 
+    // to avoid operator* being used unexpectedly.  for example 
+    // without this the following will compile
+    //   PosibErr<T> fun(); 
+    //   PosibErr<StackPtr<T > > pe = fun();
+    // and operator* and StackPtr(T *) will be used.  The explicit
+    // doesn't protect us here due to PosibErr
+    StackPtr(const StackPtr & other);
+    // becuase I am paranoid
+    StackPtr & operator=(const StackPtr & other);
 
   public:
 
     explicit StackPtr(T * p = 0) : ptr(p) {}
 
     StackPtr(StackPtr & other) : ptr (other.release()) {}
+
     ~StackPtr() {del();}
 
     StackPtr & operator=(StackPtr & other) 
@@ -42,16 +46,6 @@ namespace acommon {
     void del() {delete ptr; ptr = 0;}
     void reset(T * p) {assert(ptr==0); ptr = p;}
     StackPtr & operator=(T * p) {reset(p); return *this;}
-    
-    StackPtr(StackPtrRef<T> rhs) : ptr(rhs.ptr) {}
-
-    StackPtr& operator= (StackPtrRef<T> rhs) {reset(rhs.ptr); return *this;}
-
-    template<class Y>
-    operator StackPtrRef<Y>() {return StackPtrRef<Y>(release());}
-
-    template<class Y>
-    operator StackPtr<Y>()  {return StackPtr<Y>(release());}
     
   };
 }

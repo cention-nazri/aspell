@@ -14,7 +14,7 @@ namespace acommon {
     unsigned int width;
     typedef unsigned int Chr;
     typedef unsigned int Width;
-    FilterChar(Chr c = 0, Width w = 1) 
+    explicit FilterChar(Chr c = 0, Width w = 1) 
       : chr(c), width(w) {}
     FilterChar(Chr c, FilterChar o)
       : chr(c), width(o.width) {}
@@ -35,21 +35,11 @@ namespace acommon {
     FilterChar & operator= (Chr c) {chr = c; return *this;}
   };
   
-  static inline bool operator==(FilterChar lhs, FilterChar::Chr rhs)
-  {
-    return lhs.chr == rhs;
-  }
-
   static inline bool operator==(FilterChar lhs, FilterChar rhs)
   {
     return lhs.chr == rhs.chr;
   }
   
-  static inline bool operator!=(FilterChar lhs, FilterChar::Chr rhs)
-  {
-    return lhs.chr != rhs;
-  }
-
   static inline bool operator!=(FilterChar lhs, FilterChar rhs)
   {
     return lhs.chr != rhs.chr;

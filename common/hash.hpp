@@ -47,7 +47,7 @@ namespace acommon {
   template <class Value>
   class HT_Iterator {
   public: // but don't use
-    typedef BlockSList<Value>::Node Node;
+    typedef typename BlockSList<Value>::Node Node;
     Node * * t;
     Node * * n;
     void adv() {while (*t == 0) ++t; n = t;}
@@ -67,7 +67,7 @@ namespace acommon {
   class HT_ConstIterator
   {
   public: // but don't use
-    typedef BlockSList<Value>::Node Node;
+    typedef typename BlockSList<Value>::Node Node;
     Node * * t;
     Node * n;
     void adv() {while (*t == 0) ++t; n = *t;}

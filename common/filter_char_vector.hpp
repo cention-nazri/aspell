@@ -27,6 +27,9 @@ namespace acommon {
     void append(FilterChar t) {
       Base::append(t);
     }
+    void append(FilterChar::Chr t) {
+      Base::append(FilterChar(t));
+    }
     void append(const FilterChar * begin, unsigned int size) {
       Base::append(begin, size);
     }

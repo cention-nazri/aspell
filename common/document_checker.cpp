@@ -17,7 +17,11 @@ namespace acommon {
 
   DocumentChecker::DocumentChecker() 
     : status_fun_(0), speller_(0) {}
-  DocumentChecker::~DocumentChecker() {}
+  DocumentChecker::~DocumentChecker() 
+  {
+    //abort();
+    CERR << "Bye\n";
+  }
 
   PosibErr<void> DocumentChecker
   ::setup(Tokenizer * tokenizer, Speller * speller, Filter * filter)

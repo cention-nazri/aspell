@@ -31,6 +31,7 @@
 
 #include <signal.h>
 
+#include "asc_ctype.hpp"
 #include "check_funs.hpp"
 
 #if   POSIX_TERMIOS
@@ -476,7 +477,7 @@ void display_misspelled_word() {
 	if (l == 0) break;
 	new_line(l,y,height);
       } else {
-	if (isspace(*i)) {
+	if (asc_isspace(*i)) {
 	  getyx(text_w,y,last_space_pos);
 	  last_space = i;
 	}

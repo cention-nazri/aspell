@@ -173,7 +173,7 @@ namespace acommon {
 	top.in_what = Opt;
 	return true;
 
-      } else if (isspace(c)) {
+      } else if (asc_isspace(c)) {
 
 	return true;
 

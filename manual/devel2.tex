@@ -85,7 +85,7 @@ kevin at atkinson dhs org}
 
 \section*{Notes}
 
-This manual is designed for those who which to developer Aspell. It
+This manual is designed for those who which to develope Aspell. It
 is currently very sketchy. However, it should improve over time. The
 latest version of this document can be found at \url{http://savannah.gnu.org/download/aspell/manual/devel/devel.html}.
 
@@ -318,12 +318,30 @@ in {}``common/config.hpp''
 
 \section{Filter Interface}
 
-The current filter interface in Aspell is very simple and somewhat
-limited. Basically a filter is given a block of text and its job is
-to blank out parts that should not be spell checked. Filers are not
-allowed to do anything else but blank text out. Currently all filters
-must be compiled in but my eventual goals are to allow filters to
-be loaded at run time.
+
+\subsection{Overview}
+
+In Aspell there are 5 types of filters:
+
+\begin{enumerate}
+\item \textbf{Decoders} which take input in some standard format such as
+iso8859-1 or UTF-8 and convert it into a string of FilterChars.
+\item \textbf{Decoding filters} which manipulates a string of FilterChars
+by decoding the text is some way such as converting SGML character
+into its unicode value. 
+\item \textbf{True filters} which manipulates a string of FilterChars to
+make it more sutable for spell checking. These filers generally blank
+out text which should not be spell checked
+\item \textbf{Encoding filters} which manipulates a string of FilterChars
+by encoding the text is some way such as converting certain unicode
+characters to SGML characters.
+\item \textbf{Encoders} which take a string of FilerChars and convert inro
+a standard format such as iso8859-1 or UTF-8
+\end{enumerate}
+{[}FIXME: Write more{]}
+
+
+\subsection{Adding a New Filter}
 
 To add a new filter create a new file in the modules/filter directory,
 the file should be a C++ file and end in {}``.cpp''. The file should

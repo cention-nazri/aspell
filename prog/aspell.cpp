@@ -59,22 +59,22 @@ void dicts();
 
 
 #define EXIT_ON_ERR(command) \
-  do{PosibErrBase pe = command;\
+  do{PosibErrBase pe(command);\
   if(pe.has_err()){CERR<<"Error: "<< pe.get_err()->mesg << "\n"; exit(1);}\
   } while(false)
 #define EXIT_ON_ERR_SET(command, type, var)\
   type var;\
-  do{PosibErr<type> pe = command;\
+  do{PosibErr<type> pe(command);\
   if(pe.has_err()){CERR<<"Error: "<< pe.get_err()->mesg << "\n"; exit(1);}\
   else {var=pe.data;}\
   } while(false)
 #define BREAK_ON_ERR(command) \
-  do{PosibErrBase pe = command;\
+  do{PosibErrBase pe(command);\
   if(pe.has_err()){CERR<<"Error: "<< pe.get_err()->mesg << "\n"; return;}\
   } while(false)
 #define BREAK_ON_ERR_SET(command, type, var)\
   type var;\
-  do{PosibErr<type> pe = command;\
+  do{PosibErr<type> pe(command);\
   if(pe.has_err()){CERR<<"Error: "<< pe.get_err()->mesg << "\n"; break;}\
   else {var=pe.data;}\
   } while(false)
@@ -605,8 +605,8 @@ void pipe()
 	       << "\n";
 	}
 	if (do_time)
-	  cout << "Suggestion Time: " 
-	       << (finish-start)/(double)CLOCKS_PER_SEC << endl;
+	  COUT << "Suggestion Time: " 
+	       << (finish-start)/(double)CLOCKS_PER_SEC << "\n";
       }
       COUT << "\n";
     }
@@ -829,7 +829,7 @@ void check(bool interactive)
 
     } else { // !interactive
       
-      cout << word << "\n";
+      COUT << word << "\n";
       
     }
   }
