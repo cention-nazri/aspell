@@ -38,8 +38,8 @@ namespace acommon {
     void ignore() {getc(file_);}
     int peek() {int c = getc(file_); ungetc(c, file_); return c;}
 
-    // NOTE: Use c_stream only as a last resort as iy may
-    //       disappear if the underlining impl disappears
+    // NOTE: Use c_stream only as a last resort as it may
+    //       disappear if the underlining impl changes
     std::FILE * c_stream();
     // However, file_no will always be available.
     int file_no();

@@ -172,13 +172,13 @@ namespace acommon {
   //
   // ModuleInfoList Impl
   //
-
+  
   PosibErr<void> ModuleInfoList::proc_file(MDInfoListAll &,
 					   Config * config,
 					   const char * dir,
 					   const char * name,
 					   unsigned int name_size,
-					   FStream & in)
+					   IStream & in)
   {
     MDInfoNode * * prev = &head_;
     ModuleInfoNode * to_add = new ModuleInfoNode();
@@ -253,7 +253,7 @@ namespace acommon {
 					 const char * dir,
 					 const char * name,
 					 unsigned int name_size,
-					 FStream & in)
+					 IStream & in)
   {
     MDInfoNode * * prev = &head_;
     DictInfoNode * to_add = new DictInfoNode();

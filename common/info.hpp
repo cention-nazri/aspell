@@ -7,8 +7,6 @@
 #ifndef ASPELL_INFO__HPP
 #define ASPELL_INFO__HPP
 
-#include <stdio.h> //FIXME: Convert to use FStream
-
 #include "posib_err.hpp"
 #include "type_id.hpp"
 
@@ -60,7 +58,7 @@ namespace acommon {
 				     const char * dir,
 				     const char * name,
 				     unsigned int name_size,
-				     FStream &) = 0;
+				     IStream &) = 0;
   };
 
   struct ModuleInfoNode;
@@ -76,7 +74,7 @@ namespace acommon {
 			     const char * dir,
 			     const char * name,
 			     unsigned int name_size,
-			     FStream &);
+			     IStream &);
     ModuleInfoNode * find(const char * to_find, 
 			  unsigned int to_find_len);
   };
@@ -94,7 +92,7 @@ namespace acommon {
 			     const char * dir,
 			     const char * name,
 			     unsigned int name_size,
-			     FStream &);
+			     IStream &);
   };
 
   DictInfoList * get_dict_info_list(Config *);
