@@ -12,6 +12,11 @@
 #include "dirs.h"
 #include "settings.h"
 
+#ifdef USE_LOCALE
+# include <locale.h>
+# include <langinfo.h>
+#endif
+
 #include "asc_ctype.hpp"
 #include "config.hpp"
 #include "errors.hpp"
@@ -24,6 +29,7 @@
 #include "string_map.hpp"
 #include "stack_ptr.hpp"
 #include "char_vector.hpp"
+#include "convert.hpp"
 
 //#include "iostream.hpp"
 
@@ -385,11 +391,23 @@ namespace acommon {
       get_lang_env(final_str);
   }
 
+  static inline void get_encoding(String & final_str)
+  {
+    const char * codeset = nl_langinfo(CODESET);
+    if (is_ascii_enc(codeset)) codeset = "iso-8859-1";
+    final_str = codeset;
+  }
+
 #else
 
   static inline void get_lang(String & str) 
   {
     get_lang_env(str);
+  }
+
+  static inline void get_encoding(String & final_str)
+  {
+    final_str = "iso-8859-1";
   }
 
 #endif
@@ -420,6 +438,10 @@ namespace acommon {
 	while (len < final_str.size() && final_str[len] != '_')
 	  ++len;
 	final_str.resize(len);
+
+      } else if (strcmp(i, "encoding") == 0) {
+
+        get_encoding(final_str);
 
       } else if (strcmp(i, "special") == 0) {
 
@@ -990,13 +1012,13 @@ namespace acommon {
        N_("location of language data files")}
     , {"dict-dir", KeyInfoString, DICT_DIR,
        N_("location of the main word list")}
-    , {"encoding",   KeyInfoString, "iso-8859-1",
+    , {"encoding",   KeyInfoString, "!encoding",
        N_("encoding to expect data to be in")}
     , {"filter",   KeyInfoList  , "url",
        N_("add or removes a filter"), KEYINFO_MAY_CHANGE}
-    , {"filter-path", KeyInfoList, FILTER_DIR,
+    , {"filter-path", KeyInfoList, DICT_DIR,
        N_("path(es) aspell looks for filters")}
-    , {"option-path", KeyInfoList, FILTER_OPT_DIR,
+    , {"option-path", KeyInfoList, DATA_DIR,
        N_("path(es) aspell looks for options descriptions")}
     , {"mode",     KeyInfoString, "url",
        mode_string}
