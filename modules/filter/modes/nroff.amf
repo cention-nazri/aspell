@@ -49,7 +49,7 @@ ASPELL >=0.51
 # Thus file extentions may be preceeded by `+' or `-' to indicate that
 # the entire extention has to be added ore removed from this <magic key>
 # if none of both is given `+' is assumed implicitly.
-#MAGIC //
+MAGIC /0:3:\.\/"/0/1/2/3/4/5/6/7/8/9/n/man/tmac
 
 # This line will be printed when typing `aspell help' 
 # NOTE: this line is requied as it indicates the end of the mode file header.

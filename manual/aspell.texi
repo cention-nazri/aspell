@@ -250,7 +250,7 @@ Ability to deal with arbitrary multi-character letters such as old
 ASCII encodings of accented letters.
 
 @item
-Perhaps better support for spell checking (La)TeX and Nroff files.
+Perhaps better support for spell checking (La)TeX files.
 
 @end itemize
 
@@ -1200,15 +1200,15 @@ To find out the current value of a particular option use
 @node Notes on Various Filters and Filter Modes
 @subsection Notes on Various Filters and Filter Modes
 
-Aspell now has filter support.  You can either select from
-individual filters or choose a filter mode.  To select a filter mode
-use the @option{mode} option.  You may choose from @samp{none}, @samp{url},
-@samp{email}, @samp{sgml}, @samp{ccpp}, @samp{tex} and any other available on
-your system.  The default mode is @samp{url}.  Individual filters can be
-added with the option @option{add-filter} and removed with the
-@option{rem-filter} option.  The currently available filters are
-@samp{url}, @samp{email}, @samp{sgml} and @samp{tex},
-@samp{latex} (alias for @samp{tex}), @samp{context} as well as a
+Aspell now has filter support.  You can either select from individual
+filters or choose a filter mode.  To select a filter mode use the
+@option{mode} option.  You may choose from @samp{none}, @samp{url},
+@samp{email}, @samp{sgml}, @samp{ccpp}, @samp{tex} and any other
+available on your system.  The default mode is @samp{url}.  Individual
+filters can be added with the option @option{add-filter} and removed
+with the @option{rem-filter} option.  The currently available filters
+are @samp{url}, @samp{email}, @samp{sgml} and @samp{tex}, @samp{latex}
+(alias for @samp{tex}), @samp{nroff}, @samp{context}, as well as a
 bunch of filters which translate the text from one format to another.
 
 To check which filters are available use @command{aspell dump filters}.
@@ -1404,6 +1404,38 @@ The TeX filter mode is also available via @option{latex} alias name.
 @c each character may be specified as many representations as available
 @c for it.
 @c @end quotation
+
+@subsubsection Nroff Filter
+
+The @option{nroff} filter mode allows you to check the spelling of
+@command{nroff} documents. The mode is enabled by giving
+@option{--add-filter=nroff} or @option{-n} command line option to
+@command{aspell}. It is also automatically enabled if the first three
+characters of the file being checked are @code{.\"} (a @command{nroff} comment
+marker) or the file name ends in a one of the following suffixes:
+
+@itemize
+@item single decimal digit from @samp{0} to @samp{9}
+@item letter @samp{n}
+@item @samp{tmac}
+@end itemize
+
+@noindent
+This filter mode skips following @command{nroff} language
+elements:
+
+@itemize
+@item Comments
+@item Requests
+@item Names of @command{nroff} registers (both traditional two-letter
+names and GNU nroff long names)
+@item Arguments to the following requests: @code{ds}, @code{de}, @code{nr},
+@code{do}, @code{so}.
+@item Arguments to font switch (@code{\f}) and size switch (@code{\s})
+escapes
+@item Arguments to extended charset escape in both traditional
+(@code{\(}) and extended (@code{\[comp1 comp2 @dots{}]}) form.
+@end itemize
 
 @subsubsection Context Filter
 
@@ -3566,10 +3598,8 @@ with the word
 
 @end enumerate
 
-I don't think I will be able to implement this in time for Aspell 0.60.
-However, if you would like to try to implementing this let me know.  If
-you can get it done by the end of June or so it will probably make it
-into Aspell 0.60.
+I don't know when I will be able to actually implement this.  If you
+would like to try please let me know.
 
 @node Words With Symbols in Them
 @appendixsec Words With Spaces or Other Symbols in Them
