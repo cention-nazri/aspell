@@ -395,14 +395,14 @@ namespace aspeller {
 	actual_type = DT_Writable;
       else
 	return make_err(bad_file_format, true_file_name);
-
     }
     
     if (actual_type & ~allowed)
       return make_err(bad_file_format, true_file_name
 		      , _("is not one of the allowed types"));
 
-    Dict::Id id(0,Dict::FileName(true_file_name));
+    Dict::FileName id_fn(true_file_name);
+    Dict::Id id(0,id_fn);
 
     if (speller != 0) {
       const SpellerDict * d = speller->locate(id);
