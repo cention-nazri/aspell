@@ -125,7 +125,7 @@ namespace {
 
   /////////////////////////////////////////////////////////////////////
   // 
-  //  ReadOnlyWS
+  //  ReadOnlyDict
   //
     
   struct SoundslikeJump
@@ -135,7 +135,7 @@ namespace {
     SoundslikeJump() {memset(this, 0, sizeof(SoundslikeJump));}
   };
   
-  class ReadOnlyWS : public BasicDict
+  class ReadOnlyDict : public Dictionary
   {
       
   public: //but don't use
@@ -168,8 +168,8 @@ namespace {
     WordLookup       word_lookup;
     const char *     word_block;
     
-    ReadOnlyWS(const ReadOnlyWS&);
-    ReadOnlyWS& operator= (const ReadOnlyWS&);
+    ReadOnlyDict(const ReadOnlyDict&);
+    ReadOnlyDict& operator= (const ReadOnlyDict&);
 
     struct ElementsParms;
     struct SoundslikeElements;
@@ -188,11 +188,13 @@ namespace {
       o.aff  = !have_soundslike ? get_affix(w) : w - 1; // w - 1 is NULL
     }
     
-    ReadOnlyWS() {
+    ReadOnlyDict() 
+      : Dictionary(basic_dict, "ReadOnlyDict")
+    {
       block = 0;
     }
 
-    ~ReadOnlyWS() {
+    ~ReadOnlyDict() {
       if (block != 0) {
 	if (block_mmaped)
 	  mmap_free(block, block_size);
@@ -206,10 +208,10 @@ namespace {
 
     bool lookup(ParmString word, WordEntry &, const SensitiveCompare &) const;
 
-    bool striped_lookup(const char * sondslike, WordEntry &) const;
+    bool striped_lookup(ParmString, WordEntry &) const;
 
     bool soundslike_lookup(const WordEntry &, WordEntry &) const;
-    bool soundslike_lookup(const char * sondslike, WordEntry &) const;
+    bool soundslike_lookup(ParmString, WordEntry &) const;
     
     SoundslikeEnumeration * soundslike_elements() const;
   };
@@ -218,12 +220,12 @@ namespace {
   //  
   //
 
-  struct ReadOnlyWS::ElementsParms {
+  struct ReadOnlyDict::ElementsParms {
     typedef WordEntry *                Value;
     typedef WordLookup::const_iterator Iterator; 
-    const ReadOnlyWS * ws;
+    const ReadOnlyDict * ws;
     WordEntry data;
-    ElementsParms(const ReadOnlyWS * w) : ws(w) {}
+    ElementsParms(const ReadOnlyDict * w) : ws(w) {}
     bool endf(const Iterator & i) const {return i.at_end();}
     Value end_state() const {return 0;}
     WordEntry * deref(const Iterator & i) {
@@ -232,15 +234,15 @@ namespace {
     }
   };
 
-  WordEntryEnumeration * ReadOnlyWS::detailed_elements() const {
+  WordEntryEnumeration * ReadOnlyDict::detailed_elements() const {
     return new MakeEnumeration<ElementsParms>(word_lookup.begin(), ElementsParms(this));
   }
 
-  ReadOnlyWS::Size ReadOnlyWS::size() const {
+  ReadOnlyDict::Size ReadOnlyDict::size() const {
     return word_lookup.size();
   }
   
-  bool ReadOnlyWS::empty() const {
+  bool ReadOnlyDict::empty() const {
     return word_lookup.empty();
   }
 
@@ -271,7 +273,7 @@ namespace {
     u32int affix_info; // none zero if affix information is encoded in table
   };
 
-  PosibErr<void> ReadOnlyWS::load(ParmString f0, const Config & config, 
+  PosibErr<void> ReadOnlyDict::load(ParmString f0, const Config & config, 
                                   LocalDictList *, 
                                   SpellerImpl *, const LocalDictInfo *)
   {
@@ -364,7 +366,7 @@ namespace {
     return no_err;
   }
 
-  bool ReadOnlyWS::lookup(ParmString word, WordEntry & o,
+  bool ReadOnlyDict::lookup(ParmString word, WordEntry & o,
                           const SensitiveCompare & c) const 
   {
     o.clear();
@@ -380,10 +382,10 @@ namespace {
     return false;
   }
 
-  struct ReadOnlyWS::SoundslikeElements : public SoundslikeEnumeration
+  struct ReadOnlyDict::SoundslikeElements : public SoundslikeEnumeration
   {
     WordEntry data;
-    const ReadOnlyWS * obj;
+    const ReadOnlyDict * obj;
     const SoundslikeJump * jump1;
     const SoundslikeJump * jump2;
     const char * cur;
@@ -397,13 +399,13 @@ namespace {
 
     WordEntry * next(int stopped_at);
 
-    SoundslikeElements(const ReadOnlyWS * o)
+    SoundslikeElements(const ReadOnlyDict * o)
       : obj(o), jump1(obj->jump1), jump2(obj->jump2), cur(0), 
         level(1), sl(o->have_soundslike) {
       data.what = o->have_soundslike ? WordEntry::Soundslike : WordEntry::Word;}
   };
-  
-  WordEntry * ReadOnlyWS::SoundslikeElements::next(int stopped_at) {
+
+  WordEntry * ReadOnlyDict::SoundslikeElements::next(int stopped_at) {
 
     //CERR << level << ":" << stopped_at << "  :";
     //CERR << jump1->sl << ":" << jump2->sl << "\n";
@@ -479,7 +481,7 @@ namespace {
     return &data;
   }
 
-  struct ReadOnlyWS::StrippedElements : public SoundslikeEnumeration
+  struct ReadOnlyDict::StrippedElements : public SoundslikeEnumeration
   {
     WordEntry data;
     const char * cur;
@@ -490,23 +492,23 @@ namespace {
 
     WordEntry * next(int stopped_at);
 
-    StrippedElements(const ReadOnlyWS * o)
+    StrippedElements(const ReadOnlyDict * o)
       : cur(o->word_block + 2) {data.what = WordEntry::Word;}
   };
 
-  WordEntry * ReadOnlyWS::StrippedElements::next(int) {
+  WordEntry * ReadOnlyDict::StrippedElements::next(int) {
 
     const char * tmp = cur;
     cur += next_pos();
     if (cur == tmp) return 0;
     data.intr[0] = (void *)tmp;
     data.word = tmp;
-    data.aff  = ReadOnlyWS::get_affix(tmp);
+    data.aff  = ReadOnlyDict::get_affix(tmp);
     return &data;
 
   }
 
-  SoundslikeEnumeration * ReadOnlyWS::soundslike_elements() const {
+  SoundslikeEnumeration * ReadOnlyDict::soundslike_elements() const {
 
     if (jump1)
       return new SoundslikeElements(this);
@@ -526,9 +528,9 @@ namespace {
   }
 
   //static 
-  //void ReadOnlyWS::stripped_next(WordEntry * w) {}
+  //void ReadOnlyDict::stripped_next(WordEntry * w) {}
 
-  bool ReadOnlyWS::striped_lookup(const char * sl, WordEntry & w) const
+  bool ReadOnlyDict::striped_lookup(ParmString sl, WordEntry & w) const
   {
     w.clear();
     WordLookup::ConstFindIterator i = word_lookup.multi_find(sl);
@@ -539,25 +541,15 @@ namespace {
     //   the lookup should point to the first one of the kind ....
   }
     
-  bool ReadOnlyWS::soundslike_lookup(const char * sl, WordEntry & w) const 
+  bool ReadOnlyDict::soundslike_lookup(const WordEntry & s, WordEntry & w) const 
   {
-    if (!have_soundslike) {
-      return ReadOnlyWS::striped_lookup(sl,w);
-    } else {
-      return false;
-    }
-  }
-
-  bool ReadOnlyWS::soundslike_lookup(const WordEntry & s, WordEntry & w) const 
-  {
-    w.clear();
-
     if (s.intr[0] == 0) {
 
       return false;
 
     } else if (have_soundslike) {
       
+      w.clear();
       w.what = WordEntry::Word;
       u16int sl_size = *reinterpret_cast<const u16int *>(s.word-4);
       w.intr[0] = (void *)(s.word + sl_size + 1);
@@ -567,20 +559,29 @@ namespace {
       
     } else {
 
+      w.clear();
       w.what = WordEntry::Word;
       convert(s.word, w);
       return true;
 
     }
+  }
 
+  bool ReadOnlyDict::soundslike_lookup(ParmString s, WordEntry & w) const 
+  {
+    if (!have_soundslike) {
+      return ReadOnlyDict::striped_lookup(s,w);
+    } else {
+      return false;
+    }
   }
 
 }  
 
 namespace aspeller {
 
-  BasicDict * new_default_readonly_basic_dict() {
-    return new ReadOnlyWS();
+  Dictionary * new_default_readonly_dict() {
+    return new ReadOnlyDict();
   }
   
 }
@@ -1115,8 +1116,8 @@ namespace {
 }
 
 namespace aspeller {
-  PosibErr<void> create_default_readonly_basic_dict(StringEnumeration * els,
-                                                    Config & config)
+  PosibErr<void> create_default_readonly_dict(StringEnumeration * els,
+                                              Config & config)
   {
     CachePtr<Language> lang;
     PosibErr<Language *> res = new_language(config);

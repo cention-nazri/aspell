@@ -36,7 +36,7 @@ namespace aspeller {
     operator bool () const {return word != 0;}
     OStream & write(OStream & o, const Language & l,
 		    const ConvertWord &, Convert * c = 0) const;
-    WordEntry() : word(0), aff(0), adv_(0), free_(0){}
+    WordEntry() : word(0), aff(0), adv_(0), free_(0), intr() {}
     void clear() {if (free_) free_(this); word = 0; aff = 0; adv_ = 0; free_ = 0;}
     ~WordEntry() {if (free_) free_(this);}
   };

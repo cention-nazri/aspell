@@ -1228,7 +1228,7 @@ void dump (aspeller::LocalDict lws, Convert * conv)
   switch (lws.dict->basic_type) {
   case Dict::basic_dict:
     {
-      BasicDict * ws = static_cast<BasicDict *>(lws.dict);
+      Dictionary * ws = static_cast<Dictionary *>(lws.dict);
       StackPtr<WordEntryEnumeration> els(ws->detailed_elements());
       WordEntry * wi;
       while (wi = els->next(), wi) {
@@ -1239,11 +1239,10 @@ void dump (aspeller::LocalDict lws, Convert * conv)
     break;
   case Dict::multi_dict:
     {
-      StackPtr<MultiDict::Enum> els 
-	(static_cast<MultiDict *>(lws.dict)->detailed_elements());
-      LocalDict ws;
+      StackPtr<DictsEnumeration> els(lws.dict->dictionaries());
+      const LocalDict * ws;
       while (ws = els->next(), ws) 
-	dump (ws, conv);
+	dump (*ws, conv);
     }
     break;
   default:
@@ -1263,7 +1262,7 @@ void master () {
 
   if (action == do_create) {
     
-    EXIT_ON_ERR(create_default_readonly_basic_dict
+    EXIT_ON_ERR(create_default_readonly_dict
                 (new IstreamVirEnumeration(CIN),
                  *config));
 
@@ -1321,7 +1320,7 @@ void personal () {
 
     StackPtr<Config> config(new_basic_config());
     EXIT_ON_ERR(config->read_in_settings(options));
-    WritableBasicDict * per = new_default_writable_basic_dict();
+    Dictionary * per = new_default_writable_dict();
     per->load(config->retrieve("personal-path"), *config);
     StackPtr<WordEntryEnumeration> els(per->detailed_elements());
     LocalDictInfo wsi;
@@ -1386,7 +1385,7 @@ void repl() {
     StackPtr<Config> config(new_basic_config());
     EXIT_ON_ERR(config->read_in_settings());
 
-     WritableReplacementDict * repl = new_default_writable_replacement_dict();
+     ReplacementDict * repl = new_default_replacement_dict();
      repl->load(config->retrieve("repl-path"), *config);
      StackPtr<WordEntryEnumeration> els(repl->detailed_elements());
  

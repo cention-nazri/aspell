@@ -26,13 +26,27 @@ namespace acommon {
 
 namespace aspeller {
 
+  struct LocalDict;
+  struct LocalDictInfo;
+  class LocalDictList;
   typedef Enumeration<WordEntry *> WordEntryEnumeration;
+  typedef Enumeration<const LocalDict *> DictsEnumeration;
 
-  class Dict : public Cacheable {
+  class SoundslikeEnumeration 
+  {
+  public:
+    virtual WordEntry * next(int) = 0;
+    virtual ~SoundslikeEnumeration() {}
+    SoundslikeEnumeration() {}
+  private:
+    SoundslikeEnumeration(const SoundslikeEnumeration &);
+    void operator=(const SoundslikeEnumeration &);
+  };
+
+  class Dictionary : public Cacheable, public WordList {
     friend class SpellerImpl;
   private:
     CachePtr<const Language> lang_;
-  private:
     PosibErr<void> attach(const Language &);
   public:
     class FileName {
@@ -59,20 +73,90 @@ namespace aspeller {
     bool cache_key_eq(const Id &);
 
     enum BasicType {no_type, basic_dict, replacement_dict, multi_dict};
-    BasicType basic_type;
+    const BasicType basic_type;
+    const char * const class_name;
 
-    Dict();
-    virtual ~Dict();
+  protected:
+    Dictionary(BasicType,const char *);
+  public:
+    virtual ~Dictionary();
+
     const Id & id() {return *id_;}
     PosibErr<void> check_lang(ParmString lang);
     PosibErr<void> set_check_lang(ParmString lang, const Config *);
     const Language * lang() const {return lang_;};
     const char * lang_name() const;
+
+  private:
+    FileName file_name_;
+  protected:
+    PosibErr<void> set_file_name(ParmString name);
+    PosibErr<void> update_file_info(FStream & f);
+  public:
+    bool compare(const Dictionary &);
+    const char * file_name() const {return file_name_.path.c_str();}
+    // returns any additional dictionaries that are also used
+    virtual PosibErr<void> load(ParmString, const Config &, LocalDictList * = 0, 
+                                SpellerImpl * = 0, const LocalDictInfo * = 0);
+
+    virtual PosibErr<void> merge(ParmString);
+    virtual PosibErr<void> synchronize();
+    virtual PosibErr<void> save_noupdate();
+    virtual PosibErr<void> save_as(ParmString);
+    virtual PosibErr<void> clear();
+
+  public:
+    bool affix_compressed;
+    bool have_soundslike; // only true when there is true phonet data
+    bool fast_scan;  // can effectly scan for all soundslikes (or
+                     // stripped words if have_soundslike is false)
+                     // with an edit distance of 1 or 2
+    bool fast_lookup; // can effectly find all words with a given soundslike
+                      // when the SoundslikeWord is not given
+    
+    typedef WordEntryEnumeration        Enum;
+    typedef const char *                Value;
+    typedef unsigned int                Size;
+
+    StringEnumeration * elements() const;
+
+    virtual Enum * detailed_elements() const;
+    virtual Size   size()     const;
+    virtual bool   empty()    const;
+  
+    virtual bool lookup (ParmString word, WordEntry &,
+                         const SensitiveCompare &) const;
+    
+    virtual bool stripped_lookup(ParmString, WordEntry &) const;
+
+    virtual bool soundslike_lookup(const WordEntry &, WordEntry &) const;
+    virtual bool soundslike_lookup(ParmString, WordEntry & o) const;
+
+    // the elements returned are only guaranteed to remain valid
+    // guaranteed to return all soundslike and all words 
+    // however an individual soundslike may appear multiple
+    // times in the list....
+    virtual SoundslikeEnumeration * soundslike_elements() const;
+
+    virtual PosibErr<void> add(ParmString w, ParmString s);
+    PosibErr<void> add(ParmString w);
+
+    virtual bool repl_lookup(const WordEntry &, WordEntry &) const;
+    virtual bool repl_lookup(ParmString, WordEntry &) const;
+
+    virtual PosibErr<void> add_repl(ParmString mis, ParmString cor, ParmString s);
+    PosibErr<void> add_repl(ParmString mis, ParmString cor);
+
+    virtual DictsEnumeration * dictionaries() const;
   };
 
-  bool operator==(const Dict::Id & rhs, const Dict::Id & lhs);
+  typedef Dictionary Dict;
+  typedef Dictionary ReplacementDict;
+  typedef Dictionary MultiDict;
 
-  inline bool operator!=(const Dict::Id & rhs, const Dict::Id & lhs)
+  bool operator==(const Dictionary::Id & rhs, const Dictionary::Id & lhs);
+
+  inline bool operator!=(const  Dictionary::Id & rhs, const Dictionary::Id & lhs)
   {
     return !(rhs == lhs);
   }
@@ -110,133 +194,6 @@ namespace aspeller {
     bool empty() {return data.empty();}
     ~LocalDictList() {for (; !empty(); pop()) last().dict->release();}
   };
-    
-  class LoadableDict : public Dict {
-  private:
-    FileName file_name_;
-  protected:
-    PosibErr<void> set_file_name(ParmString name);
-    PosibErr<void> update_file_info(FStream & f);
-  public:
-    bool compare(const LoadableDict &);
-    const char * file_name() const {return file_name_.path.c_str();}
-    // returns any additional dictionaries that are also used
-    virtual PosibErr<void> load(ParmString, const Config &, LocalDictList * = 0, 
-                                SpellerImpl * = 0, const LocalDictInfo * = 0) = 0;
-  };
-
-  class WritableDict {
-  public:
-    WritableDict() {}
-    virtual PosibErr<void> merge(ParmString) = 0;
-    virtual PosibErr<void> synchronize() = 0;
-    virtual PosibErr<void> save_noupdate() = 0;
-    virtual PosibErr<void> save_as(ParmString) = 0;
-    virtual PosibErr<void> clear() = 0;
-  };
-
-  class SoundslikeEnumeration 
-  {
-  public:
-    virtual WordEntry * next(int) = 0;
-    virtual ~SoundslikeEnumeration() {}
-    SoundslikeEnumeration() {}
-  private:
-    SoundslikeEnumeration(const SoundslikeEnumeration &);
-    void operator=(const SoundslikeEnumeration &);
-  };
-
-  class BasicDict : public LoadableDict, public WordList
-  {
-  public:
-    bool affix_compressed;
-    bool have_soundslike; // only true when there is true phonet data
-    bool fast_scan;  // can effectly scan for all soundslikes (or
-                     // stripped words if have_soundslike is false)
-                     // with an edit distance of 1 or 2
-    bool fast_lookup; // can effectly find all words with a given soundslike
-                      // when the SoundslikeWord is not given
-    
-    BasicDict() : affix_compressed(false), have_soundslike(false), 
-                     fast_scan(false), fast_lookup(false) {
-      basic_type =  basic_dict;
-    }
-    
-    typedef WordEntryEnumeration        Enum;
-    typedef const char *                Value;
-    typedef unsigned int                Size;
-
-    StringEnumeration * elements() const;
-
-    virtual Enum * detailed_elements() const = 0;
-    virtual Size   size()     const = 0;
-    virtual bool   empty()    const {return !size();}
-  
-    virtual bool lookup (ParmString word, WordEntry &,
-                         const SensitiveCompare &) const = 0;
-    
-    virtual bool stripped_lookup(const char * sondslike, WordEntry &) const {return false;}
-
-    // garanteed to be constant time
-    // FIXME: are both functions needed since a WordEntry can easily be created from
-    //   just a word?
-    virtual bool soundslike_lookup(const WordEntry &, WordEntry &) const = 0;
-    virtual bool soundslike_lookup(const char * sondslike, WordEntry &) const = 0;
-
-    // the elements returned are only guaranteed to remain valid
-    // guaranteed to return all soundslike and all words 
-    // however an individual soundslike may appear multiple
-    // times in the list....
-    virtual SoundslikeEnumeration * soundslike_elements() const = 0;
-  };
-
-  class WritableBasicDict : public BasicDict,
-                            public WritableDict
-  {
-  public:
-    virtual PosibErr<void> add(ParmString w) = 0;
-    virtual PosibErr<void> add(ParmString w, ParmString s) = 0;
-  };
-
-  class ReplacementDict : public BasicDict
-  {
-  public:
-    ReplacementDict() {
-      basic_type = replacement_dict;
-    }
-
-    // FIXME: are both functions needed since a WordEntry can easily be created from
-    //   just a word?
-    virtual bool repl_lookup(const WordEntry &, WordEntry &) const = 0;
-    virtual bool repl_lookup(const char * word, WordEntry &) const = 0;
-  };
-
-
-  class WritableReplacementDict : public ReplacementDict,
-                                  public WritableDict
-  {
-  public:
-    virtual PosibErr<void> add(ParmString mis, ParmString cor) = 0;
-    virtual PosibErr<void> add(ParmString mis, ParmString cor, ParmString s) = 0;
-  };
-
-  class MultiDict : public LoadableDict, public WordList
-  {
-  public:
-    MultiDict() {
-      basic_type = multi_dict;
-    }
-    
-    typedef LocalDict            Value;
-    typedef Enumeration<Value>   Enum;
-    typedef unsigned int         Size;
-
-    virtual bool   empty()    const {return !size();}
-    virtual Size   size()     const = 0;
-    virtual StringEnumeration * elements() const {abort(); return 0; } //FIXME
-
-    virtual Enum * detailed_elements() const = 0;
-  };
 
   typedef unsigned int DataType;
   static const DataType DT_ReadOnly     = 1<<0;
@@ -257,21 +214,19 @@ namespace aspeller {
                               DataType allowed = DT_Any);
   
   // implemented in readonly_ws.cc
-  BasicDict * new_default_readonly_basic_dict();
+  Dictionary * new_default_readonly_dict();
   
-  PosibErr<void> create_default_readonly_basic_dict(StringEnumeration * els,
-                                                    Config & config);
+  PosibErr<void> create_default_readonly_dict(StringEnumeration * els,
+                                              Config & config);
   
   // implemented in multi_ws.cc
   MultiDict * new_default_multi_dict();
 
   // implemented in writable.cpp
-  WritableBasicDict * new_default_writable_basic_dict();
+  Dictionary * new_default_writable_dict();
 
   // implemented in writable.cpp
-  WritableReplacementDict * new_default_writable_replacement_dict();
-
-  
+  ReplacementDict * new_default_replacement_dict();
 }
 
 #endif

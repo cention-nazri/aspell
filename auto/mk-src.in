@@ -385,8 +385,13 @@ errors:
 	/
 	other
 	operation not supported
+		mesg => Operation Not Supported: %what
+		parms => what
 		/
 		cant copy
+		unimplemented method
+			mesg => The method "%what" is unimplemented in "%where".
+			parms => where
 	file
 		mesg => %file:
 		parms => file

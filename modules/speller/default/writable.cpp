@@ -21,7 +21,7 @@ using namespace std;
 using namespace aspeller;
 using namespace acommon;
 
-class WritableBaseCode {
+class WritableBase : public Dictionary {
 protected:
   String suffix;
   String compatibility_suffix;
@@ -30,78 +30,41 @@ protected:
     
   String compatibility_file_name;
     
-  WritableBaseCode(const char * s, const char * cs)
-    : suffix(s), compatibility_suffix(cs) {}
-  virtual ~WritableBaseCode() {}
+  WritableBase(BasicType t, const char * n, const char * s, const char * cs)
+    : Dictionary(t,n),
+      suffix(s), compatibility_suffix(cs) {}
+  virtual ~WritableBase() {}
     
   virtual PosibErr<void> save(FStream &, ParmString) = 0;
   virtual PosibErr<void> merge(FStream &, ParmString, const Config * = 0) = 0;
-    
-  virtual const char * file_name() = 0;
-  virtual PosibErr<void> set_file_name(ParmString name) = 0;
-  virtual PosibErr<void> update_file_info(FStream & f) = 0;
     
   PosibErr<void> save2(FStream &, ParmString);
   PosibErr<void> update(FStream &, ParmString);
   PosibErr<void> save(bool do_update);
   PosibErr<void> update_file_date_info(FStream &);
-  PosibErr<void> load(ParmString, const Config &);
+  PosibErr<void> load(ParmString, const Config &, LocalDictList *,
+                      SpellerImpl *, const LocalDictInfo *);
   PosibErr<void> merge(ParmString);
   PosibErr<void> save_as(ParmString);
 
   String file_encoding;
   ConvObj iconv;
   ConvObj oconv;
-  PosibErr<void> set_file_encoding(ParmString, const Config * c, const Language *);
+  PosibErr<void> set_file_encoding(ParmString, const Config * c);
+
+  PosibErr<void> synchronize() {return save(true);}
+  PosibErr<void> save_noupdate() {return save(false);}
 };
 
-template <typename Base>
-class WritableBase : public Base, public WritableBaseCode 
-{
-protected:
-  PosibErr<void> set_file_name(ParmString name) {
-    return Base::set_file_name(name);
-  }
-  PosibErr<void> update_file_info(FStream & f) {
-    return Base::update_file_info(f);
-  }
-  PosibErr<void> set_file_encoding(ParmString enc, const Config * c) {
-    return WritableBaseCode::set_file_encoding(enc, c, Base::lang());
-  }
-
-public:
-  WritableBase(const char * s, const char * cs) 
-    : WritableBaseCode(s,cs) {}
-    
-  const char * file_name() {
-    return Base::file_name();
-  }
-    
-  PosibErr<void> load(ParmString f, const Config & c, LocalDictList *,
-                      SpellerImpl *, const LocalDictInfo *) { 
-    return WritableBaseCode::load(f,c);
-  };
-  PosibErr<void> merge(ParmString f) {
-    return WritableBaseCode::merge(f);
-  };
-  PosibErr<void> save_as(ParmString f) {
-    return WritableBaseCode::save_as(f);
-  }
-  PosibErr<void> synchronize() {
-    return WritableBaseCode::save(true);
-  }
-  PosibErr<void> save_noupdate() {
-    return WritableBaseCode::save(false);
-  }
-};
-
-PosibErr<void> WritableBaseCode::update_file_date_info(FStream & f) {
+PosibErr<void> WritableBase::update_file_date_info(FStream & f) {
   RET_ON_ERR(update_file_info(f));
   cur_file_date = get_modification_time(f);
   return no_err;
 }
   
-PosibErr<void> WritableBaseCode::load(ParmString f0, const Config & config)
+PosibErr<void> WritableBase::load(ParmString f0, const Config & config,
+                                  LocalDictList *,
+                                  SpellerImpl *, const LocalDictInfo *)
 {
   set_file_name(f0);
   const String f = file_name();
@@ -137,7 +100,7 @@ PosibErr<void> WritableBaseCode::load(ParmString f0, const Config & config)
   return update_file_date_info(in);
 }
 
-PosibErr<void> WritableBaseCode::merge(ParmString f0) {
+PosibErr<void> WritableBase::merge(ParmString f0) {
   FStream in;
   Dict::FileName fn(f0);
   RET_ON_ERR(open_file_readlock(in, fn.path));
@@ -145,7 +108,7 @@ PosibErr<void> WritableBaseCode::merge(ParmString f0) {
   return no_err;
 }
 
-PosibErr<void> WritableBaseCode::update(FStream & in, ParmString fn) {
+PosibErr<void> WritableBase::update(FStream & in, ParmString fn) {
   typedef PosibErr<void> Ret;
   {
     Ret pe = merge(in, fn);
@@ -157,7 +120,7 @@ PosibErr<void> WritableBaseCode::update(FStream & in, ParmString fn) {
   return no_err;
 }
     
-PosibErr<void> WritableBaseCode::save2(FStream & out, ParmString fn) {
+PosibErr<void> WritableBase::save2(FStream & out, ParmString fn) {
   truncate_file(out, fn);
       
   RET_ON_ERR(save(out,fn));
@@ -167,7 +130,7 @@ PosibErr<void> WritableBaseCode::save2(FStream & out, ParmString fn) {
   return no_err;
 }
 
-PosibErr<void> WritableBaseCode::save_as(ParmString fn) {
+PosibErr<void> WritableBase::save_as(ParmString fn) {
   compatibility_file_name = "";
   set_file_name(fn);
   FStream inout;
@@ -177,7 +140,7 @@ PosibErr<void> WritableBaseCode::save_as(ParmString fn) {
   return no_err;
 }
 
-PosibErr<void> WritableBaseCode::save(bool do_update) {
+PosibErr<void> WritableBase::save(bool do_update) {
   FStream inout;
   RET_ON_ERR_SET(open_file_writelock(inout, file_name()),
                  bool, prev_existed);
@@ -198,13 +161,12 @@ PosibErr<void> WritableBaseCode::save(bool do_update) {
   return no_err;
 }
 
-PosibErr<void> WritableBaseCode::set_file_encoding(ParmString enc, const Config * c,
-                                                   const Language * lang)
+PosibErr<void> WritableBase::set_file_encoding(ParmString enc, const Config * c)
 {
   if (enc == file_encoding) return no_err;
-  if (enc == "") enc = lang->charset();
-  RET_ON_ERR(iconv.setup(*c, enc, lang->charset()));
-  RET_ON_ERR(oconv.setup(*c, lang->charset(), enc));
+  if (enc == "") enc = lang()->charset();
+  RET_ON_ERR(iconv.setup(*c, enc, lang()->charset()));
+  RET_ON_ERR(oconv.setup(*c, lang()->charset(), enc));
   if (iconv || oconv) 
     file_encoding = enc;
   else
@@ -324,10 +286,10 @@ struct ElementsParms {
 
 /////////////////////////////////////////////////////////////////////
 // 
-//  WritableWS
+//  WritableDict
 //
 
-class WritableWS : public WritableBase<WritableBasicDict>
+class WritableDict : public WritableBase
 {
 public: //but don't use
   StackPtr<WordLookup> word_lookup;
@@ -345,40 +307,39 @@ protected:
     
 public:
 
-  WritableWS() : WritableBase<WritableBasicDict>(".pws", ".per") {
+  WritableDict() : WritableBase(basic_dict, "WritableDict", ".pws", ".per") {
     have_soundslike = true; fast_lookup = true;
   }
 
   Size   size()     const;
   bool   empty()    const;
   
-  PosibErr<void> add(ParmString w);
+  using Dictionary::add;
   PosibErr<void> add(ParmString w, ParmString s);
-  PosibErr<void> clear() {abort();} // FIXME
 
   bool lookup (ParmString word, WordEntry &, const SensitiveCompare &) const;
 
   bool stripped_lookup(const char * sondslike, WordEntry &) const;
 
-  bool soundslike_lookup(const char * soundslike, WordEntry &) const;
   bool soundslike_lookup(const WordEntry & soundslike, WordEntry &) const;
+  bool soundslike_lookup(ParmString soundslike, WordEntry &) const;
 
   WordEntryEnumeration * detailed_elements() const;
 
   SoundslikeEnumeration * soundslike_elements() const;
 };
 
-WritableWS::Size WritableWS::size() const 
+WritableDict::Size WritableDict::size() const 
 {
   return word_lookup->size();
 }
 
-bool WritableWS::empty() const 
+bool WritableDict::empty() const 
 {
   return word_lookup->empty();
 }
 
-bool WritableWS::lookup(ParmString word, WordEntry & o,
+bool WritableDict::lookup(ParmString word, WordEntry & o,
                         const SensitiveCompare & c) const
 {
   o.clear();
@@ -395,7 +356,7 @@ bool WritableWS::lookup(ParmString word, WordEntry & o,
   return false;
 }
 
-bool WritableWS::stripped_lookup(const char * sl, WordEntry & o) const
+bool WritableDict::stripped_lookup(const char * sl, WordEntry & o) const
 {
   o.clear();
   pair<WordLookup::iterator, WordLookup::iterator> p(word_lookup->equal_range(sl));
@@ -407,26 +368,33 @@ bool WritableWS::stripped_lookup(const char * sl, WordEntry & o) const
   // FIXME: Deal with multiple entries
 }  
 
-bool WritableWS::soundslike_lookup(const WordEntry & word, WordEntry & o) const 
+bool WritableDict::soundslike_lookup(const WordEntry & word, WordEntry & o) const 
 {
   if (have_soundslike) {
+
     const StrVector * tmp 
       = (const StrVector *)(word.intr[0]);
     o.clear();
+
     o.what = WordEntry::Word;
     sl_init(tmp, o);
+
   } else {
+      
     o.what = WordEntry::Word;
     o.word = word.word;
     o.aff  = "";
+    
   }
   return true;
 }
 
-bool WritableWS::soundslike_lookup(const char * soundslike, WordEntry & o) const {
+bool WritableDict::soundslike_lookup(ParmString word, WordEntry & o) const 
+{
   if (have_soundslike) {
+
     o.clear();
-    SoundslikeLookup::const_iterator i = soundslike_lookup_.find(soundslike);
+    SoundslikeLookup::const_iterator i = soundslike_lookup_.find(word);
     if (i == soundslike_lookup_.end()) {
       return false;
     } else {
@@ -434,12 +402,15 @@ bool WritableWS::soundslike_lookup(const char * soundslike, WordEntry & o) const
       sl_init(&i->second, o);
       return true;
     }
+  
   } else {
-    return WritableWS::stripped_lookup(soundslike, o);
+
+    return WritableDict::stripped_lookup(word, o);
+
   }
 }
 
-SoundslikeEnumeration * WritableWS::soundslike_elements() const {
+SoundslikeEnumeration * WritableDict::soundslike_elements() const {
   if (have_soundslike)
     return new SoundslikeElements(soundslike_lookup_.begin(), 
                                   soundslike_lookup_.end());
@@ -448,20 +419,16 @@ SoundslikeEnumeration * WritableWS::soundslike_elements() const {
                                 word_lookup->end());
 }
 
-WritableWS::Enum * WritableWS::detailed_elements() const {
+WritableDict::Enum * WritableDict::detailed_elements() const {
   return new MakeEnumeration<ElementsParms>
     (word_lookup->begin(),ElementsParms(word_lookup->end()));
 }
-  
-PosibErr<void> WritableWS::add(ParmString w) {
-  return WritableWS::add(w, have_soundslike ? lang()->to_soundslike(w) : "");
-}
 
-PosibErr<void> WritableWS::add(ParmString w, ParmString s) {
+PosibErr<void> WritableDict::add(ParmString w, ParmString s) {
   RET_ON_ERR(check_if_valid(*lang(),w));
   SensitiveCompare c(lang());
   WordEntry we;
-  if (WritableWS::lookup(w,we,c)) return no_err;
+  if (WritableDict::lookup(w,we,c)) return no_err;
   const char * w2 = buffer.dup(w);
   word_lookup->insert(w2);
   if (have_soundslike)
@@ -469,7 +436,7 @@ PosibErr<void> WritableWS::add(ParmString w, ParmString s) {
   return no_err;
 }
 
-PosibErr<void> WritableWS::merge(FStream & in, 
+PosibErr<void> WritableDict::merge(FStream & in, 
                                  ParmString file_name, 
                                  const Config * config)
 {
@@ -520,7 +487,7 @@ PosibErr<void> WritableWS::merge(FStream & in,
   return no_err;
 }
 
-PosibErr<void> WritableWS::save(FStream & out, ParmString file_name) 
+PosibErr<void> WritableDict::save(FStream & out, ParmString file_name) 
 {
   out.printf("personal_ws-1.1 %s %i %s\n", 
              lang_name(), word_lookup->size(), file_encoding.c_str());
@@ -549,15 +516,15 @@ static inline StrVector * get_vector(Str s)
   return (StrVector *)(s - sizeof(StrVector));
 }
 
-class WritableReplS : public WritableBase<WritableReplacementDict>
+class WritableReplDict : public WritableBase
 {
 private:
   StackPtr<WordLookup> word_lookup;
   SoundslikeLookup         soundslike_lookup_;
   StringBuffer             buffer;
 
-  WritableReplS(const WritableReplS&);
-  WritableReplS& operator=(const WritableReplS&);
+  WritableReplDict(const WritableReplDict&);
+  WritableReplDict& operator=(const WritableReplDict&);
 
 protected:
   void set_lang_hook(const Config * c) {
@@ -566,49 +533,48 @@ protected:
   }
 
 public:
-  WritableReplS() : WritableBase<WritableReplacementDict>(".prepl",".rpl") 
+  WritableReplDict() : WritableBase(replacement_dict, "WritableReplDict", ".prepl",".rpl") 
   {
     have_soundslike = true;
     fast_lookup = true;
   }
-  ~WritableReplS();
+  ~WritableReplDict();
 
   Size   size()     const;
   bool   empty()    const;
 
   bool lookup(ParmString, WordEntry &, const SensitiveCompare &) const;
 
-  bool stripped_lookup(const char * sondslike, WordEntry &) const;
+  bool stripped_lookup(ParmString sondslike, WordEntry &) const;
 
   bool soundslike_lookup(const WordEntry &, WordEntry &) const;
-  bool soundslike_lookup(const char * soundslike, WordEntry &) const;
+  bool soundslike_lookup(ParmString, WordEntry &) const;
 
   bool repl_lookup(const WordEntry &, WordEntry &) const;
-  bool repl_lookup(const char * word, WordEntry &) const;
+  bool repl_lookup(ParmString, WordEntry &) const;
       
   WordEntryEnumeration * detailed_elements() const;
   SoundslikeEnumeration * soundslike_elements() const;
       
-  PosibErr<void> add(ParmString mis, ParmString cor);
-  PosibErr<void> add(ParmString mis, ParmString cor, ParmString s);
-  PosibErr<void> clear() {abort();} // FIXME
+  using Dictionary::add_repl;
+  PosibErr<void> add_repl(ParmString mis, ParmString cor, ParmString s);
 
 private:
   PosibErr<void> save(FStream &, ParmString );
   PosibErr<void> merge(FStream &, ParmString , const Config * config);
 };
 
-WritableReplS::Size WritableReplS::size() const 
+WritableReplDict::Size WritableReplDict::size() const 
 {
   return word_lookup->size();
 }
 
-bool WritableReplS::empty() const 
+bool WritableReplDict::empty() const 
 {
   return word_lookup->empty();
 }
     
-bool WritableReplS::lookup(ParmString word, WordEntry & o,
+bool WritableReplDict::lookup(ParmString word, WordEntry & o,
                            const SensitiveCompare & c) const
 {
   o.clear();
@@ -625,7 +591,7 @@ bool WritableReplS::lookup(ParmString word, WordEntry & o,
   return false;
 }
 
-bool WritableReplS::stripped_lookup(const char * sl, WordEntry & o) const
+bool WritableReplDict::stripped_lookup(ParmString sl, WordEntry & o) const
 {
   o.clear();
   pair<WordLookup::iterator, WordLookup::iterator> p(word_lookup->equal_range(sl));
@@ -637,7 +603,7 @@ bool WritableReplS::stripped_lookup(const char * sl, WordEntry & o) const
   // FIXME: Deal with multiple entries
 }  
 
-bool WritableReplS::soundslike_lookup(const WordEntry & word, WordEntry & o) const 
+bool WritableReplDict::soundslike_lookup(const WordEntry & word, WordEntry & o) const 
 {
   if (have_soundslike) {
     const StrVector * tmp = (const StrVector *)(word.intr[0]);
@@ -651,7 +617,8 @@ bool WritableReplS::soundslike_lookup(const WordEntry & word, WordEntry & o) con
   return true;
 }
 
-bool WritableReplS::soundslike_lookup(const char * soundslike, WordEntry & o) const {
+bool WritableReplDict::soundslike_lookup(ParmString soundslike, WordEntry & o) const
+{
   if (have_soundslike) {
     o.clear();
     SoundslikeLookup::const_iterator i = soundslike_lookup_.find(soundslike);
@@ -663,11 +630,11 @@ bool WritableReplS::soundslike_lookup(const char * soundslike, WordEntry & o) co
       return true;
     }
   } else {
-    return WritableReplS::stripped_lookup(soundslike, o);
+    return WritableReplDict::stripped_lookup(soundslike, o);
   }
 }
 
-SoundslikeEnumeration * WritableReplS::soundslike_elements() const {
+SoundslikeEnumeration * WritableReplDict::soundslike_elements() const {
   if (have_soundslike)
     return new SoundslikeElements(soundslike_lookup_.begin(), 
                                   soundslike_lookup_.end());
@@ -676,7 +643,7 @@ SoundslikeEnumeration * WritableReplS::soundslike_elements() const {
                                 word_lookup->end());
 }
 
-WritableReplS::Enum * WritableReplS::detailed_elements() const {
+WritableReplDict::Enum * WritableReplDict::detailed_elements() const {
   return new MakeEnumeration<ElementsParms>
     (word_lookup->begin(),ElementsParms(word_lookup->end()));
 }
@@ -707,7 +674,7 @@ static void repl_init(const StrVector * tmp, WordEntry & o)
   }
 }
   
-bool WritableReplS::repl_lookup(const WordEntry & w, WordEntry & o) const 
+bool WritableReplDict::repl_lookup(const WordEntry & w, WordEntry & o) const 
 {
   const StrVector * repls;
   if (w.intr[0] && !w.intr[1]) { // the intr are not for the sl iter
@@ -715,7 +682,7 @@ bool WritableReplS::repl_lookup(const WordEntry & w, WordEntry & o) const
   } else {
     SensitiveCompare c(lang()); // FIXME: This is not exactly right
     WordEntry tmp;
-    WritableReplS::lookup(w.word, tmp, c);
+    WritableReplDict::lookup(w.word, tmp, c);
     repls = get_vector(tmp.word);
     if (!repls) return false;
   }
@@ -724,19 +691,14 @@ bool WritableReplS::repl_lookup(const WordEntry & w, WordEntry & o) const
   return true;
 }
 
-bool WritableReplS::repl_lookup(const char * word, WordEntry & o) const
+bool WritableReplDict::repl_lookup(ParmString word, WordEntry & o) const 
 {
   WordEntry w;
   w.word = word;
-  return WritableReplS::repl_lookup(w, o);
+  return WritableReplDict::repl_lookup(w, o);
 }
 
-PosibErr<void> WritableReplS::add(ParmString mis, ParmString cor) 
-{
-  return WritableReplS::add(mis, cor, have_soundslike ? lang()->to_soundslike(mis) : "");
-}
-
-PosibErr<void> WritableReplS::add(ParmString mis, ParmString cor, ParmString sl) 
+PosibErr<void> WritableReplDict::add_repl(ParmString mis, ParmString cor, ParmString sl) 
 {
   Str m, c, s;
   SensitiveCompare cmp(lang()); // FIXME: I don't think this is completely correct
@@ -774,7 +736,7 @@ PosibErr<void> WritableReplS::add(ParmString mis, ParmString cor, ParmString sl)
   return no_err;
 }
 
-PosibErr<void> WritableReplS::save (FStream & out, ParmString file_name) 
+PosibErr<void> WritableReplDict::save (FStream & out, ParmString file_name) 
 {
   out.printf("personal_repl-1.1 %s 0 %s\n", lang_name(), file_encoding.c_str());
   
@@ -795,7 +757,7 @@ PosibErr<void> WritableReplS::save (FStream & out, ParmString file_name)
   return no_err;
 }
 
-PosibErr<void> WritableReplS::merge(FStream & in,
+PosibErr<void> WritableReplDict::merge(FStream & in,
                                     ParmString file_name, 
                                     const Config * config)
 {
@@ -848,7 +810,7 @@ PosibErr<void> WritableReplS::merge(FStream & in,
       if (!in) break;
       in.getline(repl, '\n');
       if (!in) make_err(bad_file_format, file_name);
-      WritableReplS::add(conv1(mis), conv2(repl));
+      WritableReplDict::add_repl(conv1(mis), conv2(repl));
     } while (true);
 
   } else {
@@ -861,7 +823,7 @@ PosibErr<void> WritableReplS::merge(FStream & in,
         in.ignore(); // ignore space
         for (j = 0; j != num_repls; ++j) {
           in.getline(repl, ',');
-          WritableReplS::add(mis, repl);
+          WritableReplDict::add_repl(mis, repl);
         }
       }
     }
@@ -870,7 +832,7 @@ PosibErr<void> WritableReplS::merge(FStream & in,
   return no_err;
 }
 
-WritableReplS::~WritableReplS()
+WritableReplDict::~WritableReplDict()
 {
   WordLookup::iterator i = word_lookup->begin();
   WordLookup::iterator e = word_lookup->end();
@@ -883,12 +845,12 @@ WritableReplS::~WritableReplS()
 
 namespace aspeller {
 
-  WritableBasicDict * new_default_writable_basic_dict() {
-    return new WritableWS();
+  Dictionary * new_default_writable_dict() {
+    return new WritableDict();
   }
 
-  WritableReplacementDict * new_default_writable_replacement_dict() {
-    return new WritableReplS();
+  Dictionary * new_default_replacement_dict() {
+    return new WritableReplDict();
   }
 
 }

@@ -96,7 +96,7 @@ namespace aspeller {
  	cor_orignal_casing += cor2;
       }
       if (first_word == 0 || cor != first_word) {
- 	repl_->add(aspeller::to_lower(lang(), mis), cor_orignal_casing);
+ 	repl_->add_repl(aspeller::to_lower(lang(), mis), cor_orignal_casing);
       }
       
       if (memory && prev_cor_repl_ == mis) 
@@ -189,11 +189,9 @@ namespace aspeller {
   
   PosibErr<void> SpellerImpl::save_all_word_lists() {
     SpellerDict * i = dicts_;
-    WritableDict * wl;
     for (; i; i = i->next) {
-      if  (i->save_on_saveall && 
-	   (wl = dynamic_cast<WritableDict *>(i->dict)))
-	RET_ON_ERR(wl->synchronize());
+      if  (i->save_on_saveall)
+	RET_ON_ERR(i->dict->synchronize());
     }
     return no_err;
   }
@@ -249,19 +247,16 @@ namespace aspeller {
       main_ = w;
       break;
     case personal_id:
-      assert(dynamic_cast<WritableBasicDict *>(w));
       assert(personal_ == 0);
-      personal_ = static_cast<WritableBasicDict *>(w);
+      personal_ = w;
       break;
     case session_id:
-      assert(dynamic_cast<WritableBasicDict *>(w));
       assert(session_ == 0);
-      session_ = static_cast<WritableBasicDict *>(w);
+      session_ = w;
       break;
     case personal_repl_id:
-      assert(dynamic_cast<WritableReplacementDict *>(w));
       assert(repl_ == 0);
-      repl_ = static_cast<WritableReplacementDict *>(w);
+      repl_ = w;
       break;
     case none_id:
       break;
@@ -442,8 +437,9 @@ namespace aspeller {
     use_soundslike = true;
 
     for (SpellerDict * i = dicts_; i; i = i->next) {
-      if (const BasicDict * ws = dynamic_cast<const BasicDict *>(i->dict)) 
-        use_soundslike = use_soundslike && ws->have_soundslike;
+      
+      if (i->dict->basic_type == Dict::basic_dict)
+        use_soundslike = use_soundslike && i->dict->have_soundslike;
     }
 
     StringList extra_dicts;
@@ -459,8 +455,8 @@ namespace aspeller {
 
     if (use_other_dicts && !personal_)
     {
-      BasicDict * temp;
-      temp = new_default_writable_basic_dict();
+      Dictionary * temp;
+      temp = new_default_writable_dict();
       temp->have_soundslike = use_soundslike;
       PosibErrBase pe = temp->load(config_->retrieve("personal-path"),*config_);
       if (pe.has_err(cant_read_file))
@@ -472,8 +468,8 @@ namespace aspeller {
     
     if (use_other_dicts && !session_)
     {
-      BasicDict * temp;
-      temp = new_default_writable_basic_dict();
+      Dictionary * temp;
+      temp = new_default_writable_dict();
       temp->have_soundslike = use_soundslike;
       temp->set_check_lang(lang_name(), config_);
       add_dict(new SpellerDict(temp, lang_, *config_, session_id));
@@ -481,7 +477,7 @@ namespace aspeller {
      
     if (use_other_dicts && !repl_)
     {
-      ReplacementDict * temp = new_default_writable_replacement_dict();
+      ReplacementDict * temp = new_default_replacement_dict();
       temp->have_soundslike = use_soundslike;
       PosibErrBase pe = temp->load(config_->retrieve("repl-path"),*config_);
       if (pe.has_err(cant_read_file))
@@ -529,7 +525,7 @@ namespace aspeller {
 
     typedef Vector<SpellerDict *> AllWS; AllWS all_ws;
     for (SpellerDict * i = dicts_; i; i = i->next) {
-      if (dynamic_cast<const BasicDict *>(i->dict)) {
+      if (i->dict->basic_type == Dict::basic_dict) {
         all_ws.push_back(i);
       }
     }
@@ -542,7 +538,7 @@ namespace aspeller {
       AllWS::iterator i = all_ws.begin();
       for (; i != all_ws.end(); ++i)
       {
-        const BasicDict * ws = static_cast<const BasicDict *>((*i)->dict);
+        const Dictionary * ws = (*i)->dict;
         if (ti && *ti != typeid(*ws)) continue;
         if ((int)ws->size() > max) {max = ws->size(); i0 = i;}
       }
@@ -556,7 +552,7 @@ namespace aspeller {
       ti = &typeid(*cur->dict);
 
       WSInfo inf;
-      inf.dict = static_cast<const BasicDict *>(cur->dict);
+      inf.dict = cur->dict;
       inf.set(*cur);
 
       if (cur->use_to_check) {

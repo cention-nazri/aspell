@@ -19,13 +19,13 @@
 
 namespace aspeller {
 
-  GlobalCache<Dict> dict_cache("dictionary");
+  GlobalCache<Dictionary> dict_cache("dictionary");
 
   //
   // Dict impl
   //
 
-  Dict::Id::Id(Dict * p, const FileName & fn)
+  Dictionary::Id::Id(Dict * p, const FileName & fn)
     : ptr(p)
   {
     file_name = fn.name;
@@ -42,7 +42,7 @@ namespace aspeller {
 #endif
   }
 
-  bool operator==(const Dict::Id & rhs, const Dict::Id & lhs)
+  bool operator==(const Dictionary::Id & rhs, const Dictionary::Id & lhs)
   {
     if (rhs.ptr == 0 || lhs.ptr == 0) {
       if (rhs.file_name == 0 || lhs.file_name == 0)
@@ -57,7 +57,7 @@ namespace aspeller {
     }
   }
 
-  PosibErr<void> Dict::attach(const Language &l) {
+  PosibErr<void> Dictionary::attach(const Language &l) {
     if (lang_ && strcmp(l.name(),lang_->name()) != 0)
       return make_err(mismatched_language, lang_->name(), l.name());
     if (!lang_) lang_.copy(&l);
@@ -65,26 +65,30 @@ namespace aspeller {
     return no_err;
   }
 
-  Dict::Dict()
-    : Cacheable(&dict_cache), lang_(), id_(), basic_type(no_type) 
+  Dictionary::Dictionary(BasicType t, const char * n)
+    : Cacheable(&dict_cache), lang_(), id_(), 
+      basic_type(t), class_name(n),
+      affix_compressed(false), have_soundslike(false), 
+      fast_scan(false), fast_lookup(false)
   {
     id_.reset(new Id(this));
   }
 
-  Dict::~Dict() {
+  Dictionary::~Dictionary() 
+  {
   }
 
-  const char * Dict::lang_name() const {
+  const char *  Dictionary::lang_name() const {
     return lang_->name();
   }
 
-  PosibErr<void> Dict::check_lang(ParmString l) {
+  PosibErr<void>  Dictionary::check_lang(ParmString l) {
     if (l != lang_->name())
       return make_err(mismatched_language, lang_->name(), l);
     return no_err;
   }
-
-  PosibErr<void> Dict::set_check_lang (ParmString l, const Config * config)
+ 
+  PosibErr<void> Dictionary::set_check_lang (ParmString l, const Config * config)
   {
     if (lang_ == 0) {
       PosibErr<Language *> res = new_language(*config, l);
@@ -98,19 +102,19 @@ namespace aspeller {
     return no_err;
   }
 
-  void Dict::FileName::copy(const FileName & other) 
+  void Dictionary::FileName::copy(const FileName & other) 
   {
     const_cast<String &      >(path) = other.path;
     const_cast<const char * &>(name) = path.c_str() + (other.name - other.path.c_str());
   }
 
-  void Dict::FileName::clear()
+  void Dictionary::FileName::clear()
   {
     path  = "";
     name = path.c_str();
   }
 
-  void Dict::FileName::set(ParmString str) 
+  void Dictionary::FileName::set(ParmString str) 
   {
     path = str;
     int i = path.size() - 1;
@@ -124,18 +128,14 @@ namespace aspeller {
     name = path.c_str() + i;
   }
 
-  //
-  // LoadableDict impl
-  //
-
-  PosibErr<void> LoadableDict::set_file_name(ParmString fn) 
+  PosibErr<void> Dictionary::set_file_name(ParmString fn) 
   {
     file_name_.set(fn);
     *id_ = Id(this, file_name_);
     return no_err;
   }
 
-  PosibErr<void> LoadableDict::update_file_info(FStream & f) 
+  PosibErr<void> Dictionary::update_file_info(FStream & f) 
   {
 #ifdef USE_FILE_INO
     struct stat s;
@@ -171,10 +171,123 @@ namespace aspeller {
 //     }
 //   };
 
-  StringEnumeration * BasicDict::elements() const 
+
+
+  PosibErr<void> Dictionary::add_repl(ParmString mis, ParmString cor) 
   {
-    abort(); // FIXME
-    //return new BasicDictEnumeration(detailed_elements());
+    return add_repl(mis, cor, have_soundslike ? lang()->to_soundslike(mis) : "");
+  }
+
+  PosibErr<void> Dictionary::add(ParmString w) 
+  {
+    return add(w, have_soundslike ? lang()->to_soundslike(w) : "");
+  }
+
+  //
+  // Default implementation;
+  //
+
+  PosibErr<void> Dictionary::load(ParmString, const Config &, 
+                                  LocalDictList *, 
+                                  SpellerImpl *, const LocalDictInfo *) 
+  {
+    return make_err(unimplemented_method, "load", class_name);
+  }
+  
+  PosibErr<void> Dictionary::merge(ParmString)
+  {
+    return make_err(unimplemented_method, "load", class_name);
+  }
+  
+  PosibErr<void> Dictionary::synchronize() 
+  {
+    return make_err(unimplemented_method, "synchronize", class_name);
+  }
+  
+  PosibErr<void> Dictionary::save_noupdate()
+  {
+    return make_err(unimplemented_method, "save_noupdate", class_name);
+  }
+  
+  PosibErr<void> Dictionary::save_as(ParmString)
+  {
+    return make_err(unimplemented_method, "save_as", class_name);
+  }
+  
+  PosibErr<void> Dictionary::clear() 
+  {
+    return make_err(unimplemented_method, "clear", class_name);
+  }
+
+  StringEnumeration * Dictionary::elements() const
+  {
+    return 0;
+  }
+  
+  Dict::Enum * Dictionary::detailed_elements() const
+  {
+    return 0;
+  }
+  
+  Dict::Size   Dictionary::size()     const
+  {
+    return 1;
+  }
+  
+  bool Dictionary::empty()    const 
+  {
+    return !size();
+  }
+  
+  bool Dictionary::lookup (ParmString word, WordEntry &,
+                           const SensitiveCompare &) const
+  {
+    return false;
+  }
+  
+  bool Dictionary::stripped_lookup(ParmString, WordEntry &) const 
+  {
+    return false;
+  }
+  
+  bool Dictionary::soundslike_lookup(const WordEntry &, WordEntry &) const
+  {
+    return false;
+  }
+  
+  bool Dictionary::soundslike_lookup(ParmString, WordEntry &) const
+  {
+    return false;
+  }
+  
+  SoundslikeEnumeration * Dictionary::soundslike_elements() const
+  {
+    return 0;
+  }
+  
+  PosibErr<void> Dictionary::add(ParmString w, ParmString s) 
+  {
+    return make_err(unimplemented_method, "add", class_name);
+  }
+  
+  bool Dictionary::repl_lookup(const WordEntry &, WordEntry &) const 
+  {
+    return false;
+  }
+
+  bool Dictionary::repl_lookup(ParmString, WordEntry &) const 
+  {
+    return false;
+  }
+
+  PosibErr<void> Dictionary::add_repl(ParmString mis, ParmString cor, ParmString s) 
+  {
+    return make_err(unimplemented_method, "add_repl", class_name);
+  }
+  
+  Enumeration<const LocalDict *> * Dictionary::dictionaries() const 
+  {
+    return 0;
   }
 
 #define write_conv(s) do { \
@@ -285,19 +398,19 @@ namespace aspeller {
 
     if (!res.dict) {
 
-      StackPtr<LoadableDict> w;
+      StackPtr<Dict> w;
       switch (actual_type) {
       case DT_ReadOnly: 
-        w = new_default_readonly_basic_dict();
+        w = new_default_readonly_dict();
         break;
       case DT_Multi:
         w = new_default_multi_dict();
         break;
       case DT_Writable: 
-        w = new_default_writable_basic_dict();
+        w = new_default_writable_dict();
         break;
       case DT_WritableRepl:
-        w = new_default_writable_replacement_dict();
+        w = new_default_replacement_dict();
         break;
       default:
         abort();

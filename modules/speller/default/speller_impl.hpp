@@ -175,10 +175,10 @@ namespace aspeller {
 
     SpellerDict * dicts_;
     
-    WritableBasicDict        * personal_;
-    WritableBasicDict        * session_;
-    WritableReplacementDict  * repl_;
-    Dict                     * main_;
+    Dictionary       * personal_;
+    Dictionary       * session_;
+    ReplacementDict  * repl_;
+    Dictionary       * main_;
 
   public:
     // these are public so that other classes and functions can use them, 
@@ -199,7 +199,7 @@ namespace aspeller {
 
     struct WSInfo : public LocalDictInfo
     {
-      const BasicDict * dict;
+      const Dictionary * dict;
     };
 
     typedef Vector<WSInfo> WS;

@@ -1,6 +1,4 @@
 
-#include <vector>
-
 #include "config.hpp"
 #include "data.hpp"
 #include "file_util.hpp"
@@ -10,30 +8,31 @@
 #include "string.hpp"
 #include "parm_string.hpp"
 #include "errors.hpp"
+#include "vector.hpp"
 
-namespace aspeller {
+namespace {
 
-  class MultiWS : public MultiDict
+  using namespace acommon;
+  using namespace aspeller;
+
+  typedef Vector<LocalDict> Wss;
+
+  class MultiDictImpl : public Dictionary
   {
   public:
+    MultiDictImpl() : Dictionary(multi_dict, "MultiDictImpl") {}
     PosibErr<void> load(ParmString, const Config &, LocalDictList *, 
                         SpellerImpl *, const LocalDictInfo *);
-
-    Enum * detailed_elements() const;
-    unsigned int      size()     const;
-    
-  public: //but don't use
-    typedef std::vector<Value> Wss;
-    struct ElementsParms;
+    DictsEnumeration * dictionaries() const;
   private:
     Wss wss;
   };
 
-  PosibErr<void> MultiWS::load(ParmString fn, 
-                               const Config & config, 
-                               LocalDictList * new_dicts,
-                               SpellerImpl * speller,
-                               const LocalDictInfo * li)
+  PosibErr<void> MultiDictImpl::load(ParmString fn, 
+                                     const Config & config, 
+                                     LocalDictList * new_dicts,
+                                     SpellerImpl * speller,
+                                     const LocalDictInfo * li)
   {
     String dir = figure_out_dir("",fn);
     FStream in;
@@ -77,30 +76,28 @@ namespace aspeller {
     return no_err;
   }
 
-  struct MultiWS::ElementsParms
+  struct Parms
   {
-    typedef Wss::value_type     Value;
+    typedef const LocalDict * Value;
     typedef Wss::const_iterator Iterator;
     Iterator end;
-    ElementsParms(Iterator e) : end(e) {}
+    Parms(Iterator e) : end(e) {}
     bool endf(Iterator i)   const {return i == end;}
-    Value end_state()       const {return Value();}
-    Value deref(Iterator i) const {return *i;}
+    Value end_state()       const {return 0;}
+    Value deref(Iterator i) const {return &*i;}
   };
 
-  MultiWS::Enum * MultiWS::detailed_elements() const
+  DictsEnumeration * MultiDictImpl::dictionaries() const
   {
-    return new MakeEnumeration<ElementsParms>(wss.begin(), wss.end());
+    return new MakeEnumeration<Parms>(wss.begin(), wss.end());
   }
-  
-  unsigned int MultiWS::size() const 
-  {
-    return wss.size();
-  }
+}
+
+namespace aspeller {
 
   MultiDict * new_default_multi_dict() 
   {
-    return new MultiWS();
+    return new MultiDictImpl();
   }
 
 }
