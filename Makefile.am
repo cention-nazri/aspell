@@ -335,8 +335,34 @@ endif
 # Misc Top level
 #
 
-pkgdata_DATA = ${top_srcdir}/data/*.cset ${top_srcdir}/data/*.cmap \
-               ${top_srcdir}/data/*.kbd
+pkgdata_DATA = \
+  data/cp1250.cmap data/cp1250.cset \
+  data/cp1251.cmap data/cp1251.cset \
+  data/cp1252.cmap data/cp1252.cset \
+  data/cp1253.cmap data/cp1253.cset \
+  data/cp1254.cmap data/cp1254.cset \
+  data/cp1255.cmap data/cp1255.cset \
+  data/cp1256.cmap data/cp1256.cset \
+  data/cp1257.cmap data/cp1257.cset \
+  data/cp1258.cmap data/cp1258.cset \
+  data/iso-8859-1.cmap data/iso-8859-1.cset   \
+  data/iso-8859-2.cmap data/iso-8859-2.cset   \
+  data/iso-8859-3.cmap data/iso-8859-3.cset   \
+  data/iso-8859-4.cmap data/iso-8859-4.cset   \
+  data/iso-8859-5.cmap data/iso-8859-5.cset   \
+  data/iso-8859-6.cmap data/iso-8859-6.cset   \
+  data/iso-8859-7.cmap data/iso-8859-7.cset   \
+  data/iso-8859-8.cmap data/iso-8859-8.cset   \
+  data/iso-8859-9.cmap data/iso-8859-9.cset   \
+  data/iso-8859-10.cmap data/iso-8859-10.cset \
+  data/iso-8859-11.cmap data/iso-8859-11.cset \
+  data/iso-8859-13.cmap data/iso-8859-13.cset \
+  data/iso-8859-14.cmap data/iso-8859-14.cset \
+  data/iso-8859-15.cmap data/iso-8859-15.cset \
+  data/iso-8859-16.cmap data/iso-8859-16.cset \
+  data/koi8-r.cmap data/koi8-r.cset \
+  data/koi8-u.cmap data/koi8-u.cset \
+  data/dvorak.kbd data/split.kbd data/standard.kbd
 
 EXTRA_DIST += config.rpath  README ${pkgdata_DATA} m4/*.m4 \
               misc/po-filter.c

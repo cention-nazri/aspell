@@ -388,6 +388,16 @@ namespace aspeller {
       return str;
     }
   }
+
+  WordAff * Language::fake_expand(ParmStr word, ParmStr aff, 
+                                  ObjStack & buf) const 
+  {
+    WordAff * cur = (WordAff *)buf.alloc_bottom(sizeof(WordAff));
+    cur->word = buf.dup(word);
+    cur->aff = (unsigned char *)buf.dup("");
+    cur->next = 0;
+    return cur;
+  }
   
   bool SensitiveCompare::operator() (const char * word0, 
 				     const char * inlist0) const
@@ -439,7 +449,9 @@ namespace aspeller {
   {
     char m[200];
     if (chr) {
-      snprintf(m, 200, msg, MsgConv(l)(chr), l.to_uni(chr));
+      // the "char *" cast is needed due to an incorrect "snprintf"
+      //   declaration on some platforms.
+      snprintf(m, 200, (char *)msg, MsgConv(l)(chr), l.to_uni(chr));
       msg = m;
     }
     return make_err(invalid_word, MsgConv(l)(word), msg);
@@ -575,9 +587,9 @@ namespace aspeller {
 
   bool find_language(Config & c)
   {
-    String lang = c.retrieve("lang");
-    lang.ensure_null_end();
-    char * l = lang.data();
+    String l_data = c.retrieve("lang");
+    l_data.ensure_null_end();
+    char * l = l_data.data();
 
     String dir1,dir2,path;
     fill_data_dir(&c, dir1, dir2);
@@ -587,7 +599,7 @@ namespace aspeller {
     while (s > l) {
       find_file(path,dir1,dir2,l,".dat");
       if (file_exists(path)) {
-        c.replace_internal("actual-lang", lang);
+        c.replace_internal("actual-lang", l);
         return true;
       }
       while (s > l && !(*s == '-' || *s == '_')) --s;

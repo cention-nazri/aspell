@@ -71,6 +71,7 @@ namespace acommon {
     e->err = inf;
     e->mesg = s0;
     err_ = new ErrPtr(e);
+    
     return *this;
   }
 

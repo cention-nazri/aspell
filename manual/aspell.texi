@@ -3738,12 +3738,17 @@ coding.
 
 @itemize @bullet
 @item
+Create a generic filter to handle multi-character letters such as
+@samp{"a} or @samp{\"a} for @"a.  This filter should make use of the
+already exiting normalization code.
+@item
 Make Aspell @strong{Thread safe}. Even though Aspell itself is not
 multi-threaded I would like it to be thread safe so that it can be
 used by multi-threaded programs. There are several areas of Aspell
 that that are potently thread unsafe (such as accessing a global pool)
 and several classes which have the potential of being used by more
-than one thread (such as the personal dictionary). @emph{[In Progress]}.
+than one thread (such as the personal dictionary). @emph{[In
+Progress]}.
 @item
 Enhance @strong{ispell.el} so that it will work better with GNU
 Aspell.  @emph{[In Progress]}.
@@ -3769,6 +3774,10 @@ available. @xref{Compound Words}.
 Be able to accept @strong{words with spaces in them} as many languages
 have words, such as a word in a foreign phrase, which only makes sense
 when followed by other words. @xref{Words With Symbols in Them}.
+@item
+Create a @strong{Texinfo filter}.  Since Texinfo is very similar to
+@TeX{} this should be done by modifying the exiting @TeX{} filter code
+to also support Texinfo.
 @item
 Support @strong{soundslike lookup with affix compression}.  I think it
 is possible, although I don't know how effective it will be.  The basic
@@ -4002,6 +4011,8 @@ a C++ program.
 @itemize @bullet
 @item
 Lots of compile fixes for various platforms.
+@item
+Minor bug fixes.
 @item
 Nroff filter thanks to Sergey Poznyakoff.
 @item

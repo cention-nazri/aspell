@@ -288,12 +288,19 @@ namespace aspeller {
 
     bool have_affix() const {return affix_;}
 
-    void munch(ParmStr word, GuessInfo * cl) const {affix_->munch(word, cl);}
-
+    void munch(ParmStr word, GuessInfo * cl) const {
+      if (affix_)
+        affix_->munch(word, cl);
+    }
+      
     WordAff * expand(ParmStr word, ParmStr aff, 
                      ObjStack & buf, int limit = INT_MAX) const {
-      return affix_->expand(word, aff, buf, limit);
+      if (affix_)
+        return affix_->expand(word, aff, buf, limit);
+      else
+        return fake_expand(word, aff, buf);
     }
+    WordAff * fake_expand(ParmStr word, ParmStr aff, ObjStack & buf) const;
 
     //
     // Repl

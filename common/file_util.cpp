@@ -16,9 +16,13 @@
 
 #ifdef USE_FILE_LOCKS
 #  include <fcntl.h>
+#  include <unistd.h>
+#  include <sys/types.h>
+// Uncomment the next line (remove the leading "//") if you are
+// getting errors with ftruncate being undefined:
+//   int ftruncate(int fd, off_t length);
 #endif
- 
-// This needs to be <stdio.h> and not <cstdio>
+
 #include <stdio.h>
 #include <sys/stat.h>
 #include <dirent.h>
