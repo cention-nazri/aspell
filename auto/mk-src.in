@@ -1,0 +1,702 @@
+group: type id
+{
+/
+union: type id
+	treat as object
+	/
+	unsigned int: num
+		default => 0
+	array 4 char: str
+	cxx constructor:
+		/
+		string: str
+}
+methods: destructible
+	/
+	destructor
+	
+#	int: ref count
+#		default => 0
+#
+#	method: ref count
+#		desc => returns a pointer to an int which may be used
+#			for refrence counting.  It will default to 0.
+#			This integer is not used by the actual library
+#			but may be used my some of the front ends.
+#		c only
+#		c impl => return &ths->ref_count;
+#		/
+#		int pointer
+
+methods: copyable
+	/
+	destructible methods
+
+#	type id: type id
+#
+#	method: type id
+#		desc => To objects of the same pointer type may be
+#			assigned to each other only if there type ids 
+#			are the same.
+#		cxx impl => return type_id_.num
+#		/
+#		unsigned int
+#
+#	int: copyable
+#		default => 2
+#
+#	method: copyable
+#		desc => Returns 0 if this object can not be copied,
+#			1 if it may be copies, 2 if it should be
+#			copyied.  Used by some of the front end to
+#			detrime if a deep or shallow copy should be 
+#			made.
+#		cxx impl => return copyable_
+#		/
+#		int
+
+	method: clone
+		const
+		/
+		$
+	
+	method: assign
+		/
+		void
+		const $: other
+
+methods: can have error
+	/
+	error: err
+		default => 0
+
+	method: error number
+		const
+		c only
+		c impl => return ths->err_ == 0 ? 0 : 1;
+		/
+		unsigned int
+
+	method: error message
+		const
+		c only
+		c impl => return ths->err_ ? ths->err_->mesg : "";
+		/
+		string
+
+	method: error
+		const
+		c only
+		c impl => return ths->err_;
+		/
+		const error
+
+methods: mutable container
+	/
+	public: mutable container
+	method: add
+		/
+		bool
+		string: to_add
+
+	method: remove
+		/
+		bool
+		string: to_rem
+
+	method: clear
+		/
+		void
+
+	method: to mutable container
+		c only
+		c impl => return ths;
+		/
+		mutable container
+
+group: mutable container
+{
+/
+class: mutable container
+	/
+	mutable container methods
+}
+methods: list
+	
+	strip => 1
+	/
+	method: empty
+		const
+		/
+		bool
+
+	method: size
+		const
+		/
+		unsigned int
+
+	method: elements
+		const
+		/
+		$ emulation
+
+methods: emulation
+
+	strip => 1
+	
+	/
+	method: at end
+		const
+		/
+		bool
+
+	method: next
+		/
+		const $
+
+group: key info
+{
+/
+enum: key info type
+	prefix => key info
+	/
+	string
+	int
+	bool
+	list
+
+struct: key info
+	desc => The Key Info object is used for holding information
+		about a valid key
+	/
+	string: name
+		desc => the name of the key
+	key info type: type
+		desc => the key type
+	string: def
+		desc => the default value of the key
+	string: desc
+		desc => a brief description of the key or null if internal value
+	array 16 char: otherdata
+		desc => other data used by config implementations
+			should be set to 0 if not used
+
+}
+group: config
+{
+no native
+/
+class: key info emulation
+	/
+	emulation methods
+	copyable methods
+
+class: config
+	c impl headers => error
+	/
+	constructor
+
+	copyable methods
+
+	can have error methods
+
+	method: set extra
+		desc => sets extra keys which this config class should accept
+			begin and end are expected to point to the begging 
+			and end of an array of Pspell Key Info
+		/
+		void
+		const key info: begin
+		const key info: end
+
+	method: keyinfo
+		posib err
+		desc => returns the KeyInfo object for the
+			corresponding key or returns null and sets
+			error_num to PERROR_UNKNOWN_KEY if the key is
+			not valid. The pointer returned is valid for
+			the lifetime of the object.
+		/
+		const key info
+		string: key
+
+	method: possible elements
+		desc => returns a newly allocated emulation of all the 
+			possible objects this config class uses
+		/
+		key info emulation
+		int: include extra
+
+	method: get default
+		posib err
+		desc => returns the default value for given key which
+			way involve substating variables, thus it is
+			not the same as keyinfo(key)->def returns null
+			and sets error_num to PERROR_UNKNOWN_KEY if
+			the key is not valid. Uses the temporary
+			string.
+		/
+		string obj
+		string: key
+
+	method: elements
+		desc => returns a newly alloacted emulation of all the
+			key/value pairs. This DOES not include ones
+			which are set to their default values
+		/
+		string pair emulation
+
+	method: replace
+		posib err
+		desc => inserts an item, if the item already exists it
+			will be replaced. returns true if it succesed
+			or false on error. If the key in not valid it
+			sets error_num to PERROR_UNKNOWN_KEY, if the
+			value is not valid it will sets error_num to
+			PERROR_BAD_VALUE, if the value can not be
+			changed it sets error_num to
+			PERROR_CANT_CHANGE_VALUE, and if the value is
+			a list and you are trying to set it directory
+			it sets error_num to PERROR_LIST_SET
+		/
+		void
+		string: key
+		string: value
+
+	method: remove
+		posib err
+		desc => remove a key and returns true if it exists 
+			otherise return false. This effictly sets the
+			key to its default value. Calling replace with
+			a value of "<default>" will also call
+			remove. If the key does not exists sets
+			error_num to 0 or PERROR_NOT, if the key in
+			not valid sets error_num to
+			PERROR_UNKNOWN_KEY, if the value can not be
+			changed sets error_num to
+			PERROR_CANT_CHANGE_VALUE
+		/
+		void
+		string: key
+
+	method: have
+		const
+		/
+		bool
+		string: key
+
+	method: retrieve
+		posib err
+		desc => returns null on error
+		/
+		string obj
+		string: key
+
+	method: retrieve list
+		posib err
+		/
+		void
+		string: key
+		mutable container: lst
+
+	method: retrieve bool
+		posib err
+		desc => return -1 on error, 0 if false, 1 if true
+		/
+		bool
+		string: key
+
+	method: retrieve int
+		posib err
+		desc => return -1 on error
+		/
+		unsigned int
+		string: key
+}
+group: error
+{
+/
+struct: error
+	/
+	string: mesg
+	const error info: err
+	method: is a
+		const
+		/
+		bool
+		const error info: e
+
+struct: error info
+	/
+	const error info: isa
+	string: mesg
+	unsigned int: num parms
+	array 3 string: parms
+}
+group: can have error
+{
+/
+class: can have error
+	c impl headers => error
+	/
+	can have error methods
+		prefix => 
+	destructible methods
+}
+group: errors
+{
+/
+errors:
+	/
+	other
+	operation not supported
+		/
+		cant copy
+	file
+		mesg => %file:
+		parms => file
+		/
+		cant open file
+			mesg => The file "%file" can not be opened
+			/
+			cant read file
+				mesg => The file "%file" can not be opened for reading.
+			cant write file
+				mesg => The file "%file" can not be opened for writing.
+		invalid name
+			mesg => The file name "%file" is invalid.
+		bad file format
+			mesg => The file "%file" is not in the proper format.
+	dir
+		parms => dir
+		/
+		cant read dir
+			mesg => The directory "%dir" can not be opened for reading.
+			
+	config
+		parms => key
+		/
+		unknown key
+			mesg => The key "%key" is unknown.
+		cant change value
+			mesg => The value for option "%key" can not be changed.
+		bad value
+			mesg => The value "%value" is not %accepted and is thus invalid for the key "%key".
+			parms => value, accepted
+		duplicate
+
+	language related
+		parms => lang
+		/
+		unknown language
+			mesg => The language "%lang" is not known.
+		unknown soundslike
+			mesg => The soundslike "%sl" is not known.
+			parms => sl
+		language not supported
+			mesg => The language "%lang" is not supported.
+		no wordlist for lang
+			mesg => No word lists can be found for the language "%lang".
+		mismatched language
+			mesg => ...
+			parms => prev
+	encoding
+		parms => encod
+		/
+		unknown encoding
+			mesg => The encoding "%encod" is not known.
+		encoding not supported
+			mesg => The encoding "%encod" is not supported.
+		conversion not supported
+			mesg => The conversion from "%encod" to "%encod2" is not supported.
+			parms => encod2
+	pipe
+		/
+		cant create pipe
+		process died
+	bad input
+		/
+		invalid word
+			mesg => The word "%word" is invalid.
+			parms => word
+		word list flags
+			/
+			invalid flag
+			conflicting flags
+
+}
+group: manager
+# FIXME: Somehow get compatibility macro back in
+{
+no native
+/
+class: manager
+	c impl headers => error
+	/
+	constructor: new pspell manager
+		returns alt type
+		c impl =>
+			PosibErr<Manager *> ret = new_manager(config);
+			if (ret.has_err()) \{
+			  return new CanHaveError(ret.release_err());
+			\} else \{
+			  return ret;
+			\}
+		/
+		can have error
+		config: config
+
+	constructor: to pspell manager
+		c impl => return static_cast<Manager *>(obj);
+		/
+		can have error: obj
+
+	destructible methods
+
+	can have error methods
+
+	method: config
+		/
+		config
+
+	method: check
+
+		posib err
+		desc => returns  0 if it is not in the dictionary, 
+			1 if it is, or -1 on error.
+		/
+		bool
+		encoded string: word
+	
+	method: add to personal
+		
+		posib err
+		/
+		void
+		encoded string: word
+
+	method: add to session
+
+		posib err
+		/
+		void
+		encoded string: word
+
+	method: personal word list
+
+		posib err
+		/
+		const word list
+		
+	method: session word list
+
+		posib err
+		/
+		const word list
+
+	method: save all word lists
+	
+		posib err
+		/
+		void
+
+	method: clear session
+
+		posib err
+		/
+		void
+
+	method: suggest
+
+		posib err
+		desc => Return null on error. 
+			the word list returned by suggest is only valid until the next
+			call to suggest
+		/
+		const word list
+		encoded string: word
+		
+	method: store replacement
+
+		posib err
+		/
+		bool
+		encoded string: mis
+		encoded string: cor
+}
+
+group: word list
+{
+/
+class: word list
+	c impl headers => string emulation
+	/
+	method: empty
+		const
+		/
+		bool
+
+	method: size
+		const
+		/
+		unsigned int
+
+	method: elements
+		const
+		c impl =>
+			StringEmulation * els = ths->elements();
+			els->to_encoded_ = ths->to_encoded_;
+			return els;
+		/
+		string emulation
+}
+group: string emulation
+{
+/
+class: string emulation
+	/
+	copyable methods
+	method: at end
+		const
+		/
+		bool
+
+	method: next
+		c impl =>
+			const char * s = ths->next();
+			if (s == 0 || ths->to_encoded_ == 0) \{
+			  return s;
+			\} else \{
+			  ths->temp_str.clear();
+			  (*ths->to_encoded_)(ths->next(),ths->temp_str);
+			  return ths->temp_str.data();
+			\}
+		/
+		const string
+
+}
+group: doc checker
+{
+/
+}
+group: info
+{
+/
+struct: module info
+	/
+	string: name
+	double: order num
+	string: lib dir
+	string list: pwli dirs
+
+struct: dict info
+	/
+	string: file
+	string: code
+	string: jargon
+	module info: module
+	int: size
+	string: size str
+
+class: module info list
+	/
+	constructor: get pspell module info list
+		/
+		config: config
+
+	list methods
+
+class: dict info list
+	/
+	constructor: get pspell dict info list
+		/
+		config: config
+
+	list methods
+
+class: module info emulation
+	/
+	emulation methods
+	copyable methods
+
+class: dict info emulation
+	/
+	emulation methods
+	copyable methods
+}
+
+group: string list
+{
+/
+class: string list
+	/
+	constructor
+
+	list methods
+
+	mutable container methods
+
+	copyable methods
+}
+
+group: string map
+{
+/
+class: string map
+	/
+	constructor
+
+	mutable container methods
+
+	copyable methods
+
+	list methods: string pair
+	
+	method: insert
+		desc => Insert a new element. 
+			Will NOT overright an existing entry.
+			Returns false if the element already exists.
+		/
+		bool
+		string: key
+		string: value
+
+	method: replace
+		desc => Insert a new element. 
+			Will overright an existing entry.
+			Always returns true.
+		/
+		bool
+		string: key
+		string: value
+
+	method: lookup
+		const
+		desc => Looks up an element.
+			Returns null if the element did not exist.
+			Returns an empty string if the element exists but has a null value.
+			Otherwises returns the value
+		/
+		string
+		string: key
+}
+
+group: string pair
+{
+/
+struct: string pair
+	treat as object
+	/
+	string: first
+		default => ""
+	string: second
+		default => ""
+}
+group: string pair emulation
+{
+/
+class: string pair emulation
+	/
+	emulation methods
+	copyable methods
+}
