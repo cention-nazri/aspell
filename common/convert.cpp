@@ -555,8 +555,8 @@ namespace acommon {
 
   PosibErr<void> Convert::init(const Config & c, ParmString in, ParmString out)
   {
-    RET_ON_ERR(decode_.setup(&decode_cache, &c, in));
-    RET_ON_ERR(encode_.setup(&encode_cache, &c, out));
+    RET_ON_ERR(setup(decode_, &decode_cache, &c, in));
+    RET_ON_ERR(setup(encode_, &encode_cache, &c, out));
 
     if (in == out) {
       if (in == "utf-16")

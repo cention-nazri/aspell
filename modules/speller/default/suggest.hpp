@@ -37,7 +37,7 @@ namespace aspeller {
     virtual ~Suggest() {}
   };
   
-  Suggest * new_default_suggest(SpellerImpl *);
+  PosibErr<Suggest *> new_default_suggest(SpellerImpl *);
 }
 
 

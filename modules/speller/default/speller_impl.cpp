@@ -573,8 +573,13 @@ namespace aspeller {
     // Setup suggest
     //
 
-    suggest_.reset(new_default_suggest(this));
-    intr_suggest_.reset(new_default_suggest(this));
+    PosibErr<Suggest *> pe;
+    pe = new_default_suggest(this);
+    if (pe.has_err()) return pe;
+    suggest_.reset(pe.data);
+    pe = new_default_suggest(this);
+    if (pe.has_err()) return pe;
+    intr_suggest_.reset(pe.data);
 
     return no_err;
   }

@@ -12,6 +12,11 @@ template <class Data>
 PosibErr<Data *> get_cache_data(GlobalCache<Data> *, 
                                 typename Data::CacheConfig *, 
                                 const typename Data::CacheKey &);
+template <class Data>
+PosibErr<Data *> get_cache_data(GlobalCache<Data> *, 
+                                typename Data::CacheConfig *, 
+                                typename Data::CacheConfig2 *, 
+                                const typename Data::CacheKey &);
 
 class Cacheable;
 void release_cache_data(GlobalCacheBase *, const Cacheable *);
@@ -56,18 +61,20 @@ public:
   CachePtr(const CachePtr & other) {ptr = other.ptr; ptr->copy();}
   void operator=(const CachePtr & other) {copy(other.ptr);}
   ~CachePtr() {reset(0);}
-
-  PosibErr<void> setup(GlobalCache<Data> * cache, 
-                       typename Data::CacheConfig * config, 
-                       const typename Data::CacheKey & key) {
-    PosibErr<Data *> pe = get_cache_data(cache, config, key);
-    if (pe.has_err()) return pe;
-    reset(pe.data);
-    return no_err;
-  }
-
-  void reset_cache(const char * = 0);
 };
+
+template <class Data>
+PosibErr<void> setup(CachePtr<Data> & res,
+                     GlobalCache<Data> * cache, 
+                     typename Data::CacheConfig * config, 
+                     const typename Data::CacheKey & key) {
+  PosibErr<Data *> pe = get_cache_data(cache, config, key);
+  if (pe.has_err()) return pe;
+  res.reset(pe.data);
+  return no_err;
+}
+
+bool reset_cache(const char * = 0);
 
 }
 

@@ -1,13 +1,23 @@
 #ifndef __aspeller_typo_edit_distance_hh__
 #define __aspeller_typo_edit_distance_hh__
 
+#include "cache.hpp"
 #include "matrix.hpp"
+
+namespace acommon {
+  class Config;
+}
 
 namespace aspeller {
 
-  struct TypoEditDistanceWeights {
+  class Language;
+
+  using namespace acommon;
+
+  struct TypoEditDistanceWeights : public Cacheable {
     int missing; // the cost of having to insert a character
     int swap;    // the cost of swapping two adjecent letters
+    short * data; // memory for repl and extra
     ShortMatrix repl; // the cost of replacing one letter with another
     ShortMatrix extra; // the cost of removing an extra letter
 
@@ -18,14 +28,30 @@ namespace aspeller {
 
     // IMPORTANT: It is still necessary to initialize and fill in
     //            repl and extra
+  private:
     TypoEditDistanceWeights(int m = 85,  int s = 60, 
 			    int r1 = 70, int r = 110, 
 			    int e1 = 70, int e = 100)
-      : missing(m), swap(s)
+      : missing(m), swap(s), data(0) 
       , repl_dis1(r1), repl_dis2(r)
       , extra_dis1(e1), extra_dis2(e)
     {}
+  public:
+    ~TypoEditDistanceWeights() {if (data) free(data);}
+
+    String keyboard;
+    typedef const Config CacheConfig;
+    typedef const Language CacheConfig2;
+    typedef const char * CacheKey;
+    bool cache_key_eq(const char * kb) const {return keyboard == kb;}
+    static PosibErr<TypoEditDistanceWeights *> get_new(const char *, const Config *, const Language *);
+  private:
+    TypoEditDistanceWeights(const TypoEditDistanceWeights &);
+    void operator=(const TypoEditDistanceWeights &);
   };
+
+  PosibErr<void> setup(CachePtr<const TypoEditDistanceWeights> & res,
+                       const Config * c, const Language * l, ParmString kb);
 
   // edit_distance finds the shortest edit distance. 
   // Preconditions:

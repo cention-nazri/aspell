@@ -137,10 +137,10 @@ namespace {
   protected:
     const Language * lang;
     OriginalWord     original_word;
-    SuggestParms     parms;
+    const SuggestParms * parms;
 
   public:
-    Score(const Language *l, const String &w, const SuggestParms & p)
+    Score(const Language *l, const String &w, const SuggestParms * p)
       : lang(l), original_word(), parms(p)
     {
       original_word.word = w;
@@ -188,7 +188,7 @@ namespace {
       ScoreWordSound & d = near_misses.front();
       d.word = word;
 
-      if (parms.use_typo_analysis) {
+      if (parms->use_typo_analysis) {
 	unsigned int l = word.size;
 	if (l > max_word_length) max_word_length = l;
       }
@@ -205,13 +205,13 @@ namespace {
       d.repl_list = rl;
     }
     int needed_level(int want, int soundslike_score) {
-      int n = (100*want - parms.soundslike_weight*soundslike_score)
-	/(parms.word_weight*parms.edit_distance_weights.min);
+      int n = (100*want - parms->soundslike_weight*soundslike_score)
+	/(parms->word_weight*parms->edit_distance_weights.min);
       return n > 0 ? n : 0;
     }
     int weighted_average(int soundslike_score, int word_score) {
-      return (parms.word_weight*word_score 
-	      + parms.soundslike_weight*soundslike_score)/100;
+      return (parms->word_weight*word_score 
+	      + parms->soundslike_weight*soundslike_score)/100;
     }
     int skip_first_couple(NearMisses::iterator & i) {
       int k = 0;
@@ -221,7 +221,7 @@ namespace {
       {
 	if (!i->count) {
 	  ++i;
-	} else if (k == parms.skip) {
+	} else if (k == parms->skip) {
 	  break;
 	} else {
 	  ++k;
@@ -241,7 +241,7 @@ namespace {
     void transfer();
   public:
     Working(SpellerImpl * m, const Language *l,
-	    const String & w, const SuggestParms & p)
+	    const String & w, const SuggestParms *  p)
       : Score(l,w,p), threshold(1), max_word_length(0), speller(m) ,
         use_soundslike(m->use_soundslike),
         fast_scan(m->fast_scan), fast_lookup(m->fast_lookup),
@@ -315,12 +315,12 @@ namespace {
 
     try_split();
 
-    if (parms.soundslike_level == 1 && (!fast_scan || !use_soundslike))
+    if (parms->soundslike_level == 1 && (!fast_scan || !use_soundslike))
       try_one_edit();
     else
       try_scan();
     
-    if (!use_soundslike && parms.use_repl_table)
+    if (!use_soundslike && parms->use_repl_table)
       try_repl();
 
     //try_ngram();
@@ -330,7 +330,7 @@ namespace {
   void Working::try_split() {
     const String & word       = original_word.word;
     
-    if (word.size() < 4 || parms.split_chars.empty()) return;
+    if (word.size() < 4 || parms->split_chars.empty()) return;
     size_t i = 0;
     
     char * new_word = new char[word.size() + 2];
@@ -343,11 +343,11 @@ namespace {
       new_word[i] = '\0';
       
       if (speller->check(new_word) && speller->check(new_word + i + 1)) {
-        for (size_t j = 0; j != parms.split_chars.size(); ++j)
+        for (size_t j = 0; j != parms->split_chars.size(); ++j)
         {
-          new_word[i] = parms.split_chars[j];
+          new_word[i] = parms->split_chars[j];
           add_nearmiss(buffer.dup(new_word), 
-                       parms.edit_distance_weights.del2*3/2,
+                       parms->edit_distance_weights.del2*3/2,
                        dont_count);
         }
       }
@@ -377,7 +377,7 @@ namespace {
       for (c = replace_list; *c; ++c) {
         if (*c == soundslike[i]) continue;
         new_soundslike[i] = *c;
-        try_sound(new_soundslike, parms.edit_distance_weights.sub);
+        try_sound(new_soundslike, parms->edit_distance_weights.sub);
       }
       new_soundslike[i] = soundslike[i];
     }
@@ -389,7 +389,7 @@ namespace {
       b = new_soundslike[i+1];
       new_soundslike[i] = b;
       new_soundslike[i+1] = a;
-      try_sound(new_soundslike,parms.edit_distance_weights.swap);
+      try_sound(new_soundslike,parms->edit_distance_weights.swap);
       new_soundslike[i] = a;
       new_soundslike[i+1] = b;
     }
@@ -401,7 +401,7 @@ namespace {
     while(true) {
       for (c=replace_list; *c; ++c) {
         new_soundslike[i] = *c;
-        try_sound(new_soundslike,parms.edit_distance_weights.del1);
+        try_sound(new_soundslike,parms->edit_distance_weights.del1);
       }
       if (i == 0) break;
       new_soundslike[i] = new_soundslike[i-1];
@@ -416,7 +416,7 @@ namespace {
       new_soundslike.resize(new_soundslike.size() - 1);
       i = new_soundslike.size();
       while (true) {
-        try_sound(new_soundslike,parms.edit_distance_weights.del2);
+        try_sound(new_soundslike,parms->edit_distance_weights.del2);
         if (i == 0) break;
         b = a;
         a = new_soundslike[i-1];
@@ -434,7 +434,7 @@ namespace {
     EditDist (* edit_dist_fun)(const char *, const char *, 
                                const EditDistanceWeights &);
     
-    if (parms.soundslike_level == 1)
+    if (parms->soundslike_level == 1)
       edit_dist_fun = limit1_edit_distance;
     else
       edit_dist_fun = limit2_edit_distance;
@@ -467,7 +467,7 @@ namespace {
           goto affix_case;
         }
 
-        score = edit_dist_fun(sl, original_soundslike, parms.edit_distance_weights);
+        score = edit_dist_fun(sl, original_soundslike, parms->edit_distance_weights);
         stopped_at = score.stopped_at - sl;
         if (score >= LARGE_NUM) continue;
         stopped_at = LARGE_NUM;
@@ -515,7 +515,7 @@ namespace {
           // try the root word
           sl_buf.clear();
           lang->LangImpl::to_stripped(sl_buf, p->word);
-          score = edit_dist_fun(sl_buf.c_str(), original_soundslike, parms.edit_distance_weights);
+          score = edit_dist_fun(sl_buf.c_str(), original_soundslike, parms->edit_distance_weights);
           stopped_at = score.stopped_at - sl_buf.c_str();
 
           if (score < LARGE_NUM) {
@@ -542,7 +542,7 @@ namespace {
           for (WordAff * q = exp_list; q; q = q->next) {
             sl_buf.clear();
             lang->to_stripped(sl_buf, q->word);
-            score = edit_dist_fun(sl_buf.c_str(), original_soundslike, parms.edit_distance_weights);
+            score = edit_dist_fun(sl_buf.c_str(), original_soundslike, parms->edit_distance_weights);
             if (score >= LARGE_NUM) continue;
             char * wf = (char *)buffer.alloc(q->word.size + 1);
             i->convert.convert(q->word, wf);
@@ -581,7 +581,7 @@ namespace {
         buf.append(r->repl, strlen(r->repl));
         p += strlen(r->substr);
         buf.append(p, wend + 1);
-        try_sound(buf.data(), parms.edit_distance_weights.sub*3/2);
+        try_sound(buf.data(), parms->edit_distance_weights.sub*3/2);
       }
     }
   }
@@ -590,8 +590,6 @@ namespace {
   void Working::score_list() {
     if (near_misses.empty()) return;
 
-    parms.set_original_word_size(original_word.word.size());
-      
     NearMisses::iterator i;
     NearMisses::iterator prev;
     int word_score;
@@ -603,9 +601,9 @@ namespace {
     // this item will only be looked at when sorting so 
     // make it a small value to keep it at the front.
 
-    int try_for = (parms.word_weight*parms.edit_distance_weights.max)/100;
+    int try_for = (parms->word_weight*parms->edit_distance_weights.max)/100;
     while (true) {
-      try_for += (parms.word_weight*parms.edit_distance_weights.max)/100;
+      try_for += (parms->word_weight*parms->edit_distance_weights.max)/100;
 	
       // put all pairs whose score <= initial_limit*max_weight
       // into the scored list
@@ -619,11 +617,11 @@ namespace {
 	
 	if (!use_soundslike)
 	  word_score = i->soundslike_score;
-	else if (level >= int(i->soundslike_score/parms.edit_distance_weights.min))
+	else if (level >= int(i->soundslike_score/parms->edit_distance_weights.min))
 	  word_score = edit_distance(original_word.stripped.c_str(),
 				     i->word_stripped,
 				     level, level,
-				     parms.edit_distance_weights);
+				     parms->edit_distance_weights);
 	else
 	  word_score = LARGE_NUM;
 	  
@@ -652,14 +650,14 @@ namespace {
 	
       int k = skip_first_couple(i);
 	
-      if ((k == parms.skip && i->score <= try_for) 
+      if ((k == parms->skip && i->score <= try_for) 
 	  || prev == near_misses.begin() ) // or no more left in near_misses
 	break;
     }
       
-    threshold = i->score + parms.span;
-    if (threshold < parms.edit_distance_weights.max)
-      threshold = parms.edit_distance_weights.max;
+    threshold = i->score + parms->span;
+    if (threshold < parms->edit_distance_weights.max)
+      threshold = parms->edit_distance_weights.max;
 
 #  ifdef DEBUG_SUGGEST
     COUT << "Threshold is: " << threshold << "\n";
@@ -668,7 +666,7 @@ namespace {
     COUT << "Size of ! scored: " << near_misses.size() << "\n";
 #  endif
       
-    //if (threshold - try_for <=  parms.edit_distance_weights.max/2) return;
+    //if (threshold - try_for <=  parms->edit_distance_weights.max/2) return;
       
     prev = near_misses.begin();
     i = prev;
@@ -684,7 +682,7 @@ namespace {
 	word_score = edit_distance(original_word.stripped.c_str(),
 				   i->word_stripped,
 				   initial_level+1,max_level,
-				   parms.edit_distance_weights);
+				   parms->edit_distance_weights);
       else
 	word_score = LARGE_NUM;
 	
@@ -707,7 +705,7 @@ namespace {
     scored_near_misses.sort();
     scored_near_misses.pop_front();
     
-    if (parms.use_typo_analysis) {
+    if (parms->use_typo_analysis) {
       int max = 0;
       unsigned int j;
 
@@ -727,7 +725,7 @@ namespace {
 	word[j] = 0;
 	int word_score 
 	  = typo_edit_distance(word.data(), original.data(),
-			       parms.typo_edit_distance_weights);
+			       *parms->typo_edit_distance_weights);
 	i->score = weighted_average(i->soundslike_score, word_score);
 	if (max < i->score) max = i->score;
       }
@@ -753,7 +751,7 @@ namespace {
     String final_word;
     pair<hash_set<String,HashString<String> >::iterator, bool> dup_pair;
     for (NearMisses::const_iterator i = scored_near_misses.begin();
-	 i != scored_near_misses.end() && c <= parms.limit
+	 i != scored_near_misses.end() && c <= parms->limit
 	   && ( i->score <= threshold || c <= 3 );
 	 ++i, ++c) {
 #    ifdef DEBUG_SUGGEST
@@ -811,7 +809,7 @@ namespace {
     SuggestionListImpl  suggestion_list;
     SuggestParms parms_;
   public:
-    SuggestImpl(SpellerImpl * m);
+    PosibErr<void> setup(SpellerImpl * m);
     //SuggestImpl(SpellerImpl * m, const SuggestParms & p)
     //  : speller_(m), parms_(p) 
     //{parms_.fill_distance_lookup(m->config(), m->lang());}
@@ -830,9 +828,10 @@ namespace {
     SuggestionList & suggest(const char * word);
   };
   
-  SuggestImpl::SuggestImpl(SpellerImpl * m)
-    : speller_(m), parms_(m->config()->retrieve("sug-mode")) 
+  PosibErr<void> SuggestImpl::setup(SpellerImpl * m)
   {
+    speller_ = m;
+    parms_.set(m->config()->retrieve("sug-mode"));
     if (m->config()->retrieve("sug-mode") == "normal" 
         && !m->fast_scan) parms_.soundslike_level = 1;
 
@@ -845,7 +844,13 @@ namespace {
     
     parms_.split_chars = m->config()->retrieve("sug-split-chars");
 
-    parms_.fill_distance_lookup(m->config(), m->lang());
+    String keyboard = m->config()->retrieve("keyboard");
+    if (keyboard == "none")
+      parms_.use_typo_analysis = false;
+    else
+      RET_ON_ERR(aspeller::setup(parms_.typo_edit_distance_weights, m->config(), &m->lang(), keyboard));
+
+    return no_err;
   }
 
   SuggestionList & SuggestImpl::suggest(const char * word) { 
@@ -854,7 +859,7 @@ namespace {
 #   endif
     parms_.set_original_word_size(strlen(word));
     suggestion_list.suggestions.resize(0);
-    Working sug(speller_, &speller_->lang(),word,parms_);
+    Working sug(speller_, &speller_->lang(),word,&parms_);
     sug.get_suggestions(suggestion_list.suggestions);
 #   ifdef DEBUG_SUGGEST
     COUT << "^^^^^^^^^^^  end suggest " << word << "  ^^^^^^^^^^^\n";
@@ -865,8 +870,10 @@ namespace {
 }
 
 namespace aspeller {
-  Suggest * new_default_suggest(SpellerImpl * m) {
-    return new SuggestImpl(m);
+  PosibErr<Suggest *> new_default_suggest(SpellerImpl * m) {
+    StackPtr<SuggestImpl> s(new SuggestImpl);
+    RET_ON_ERR(s->setup(m));
+    return s.release();
   }
 
   //Suggest * new_default_suggest(SpellerImpl * m, const SuggestParms & p) {
@@ -929,62 +936,6 @@ namespace aspeller {
     return no_err;
   }
 
-  PosibErr<void> SuggestParms::fill_distance_lookup(const Config * c, const Language & l) {
-
-    // FIXME: avoid having to recreate the tables each time
-    //        instead, cache the table and use the cached copy
-    
-    TypoEditDistanceWeights & w = typo_edit_distance_weights;
-
-    String keyboard = c->retrieve("keyboard");
-
-    if (keyboard == "none") {
-      
-      use_typo_analysis = false;
-      
-    } else {
-
-      FStream in;
-      String file, dir1, dir2;
-      fill_data_dir(c, dir1, dir2);
-      find_file(file, dir1, dir2, keyboard, ".kbd");
-      RET_ON_ERR(in.open(file.c_str(), "r"));
-
-      int c = l.max_normalized() + 1;
-      w.repl .init(c);
-      w.extra.init(c);
-
-      for (int i = 0; i != c; ++i) {
-	for (int j = 0; j != c; ++j) {
-	  w.repl (i,j) = w.repl_dis2;
-	  w.extra(i,j) = w.extra_dis2;
-	}
-      }
-
-      String buf;
-      DataPair d;
-      while (getdata_pair(in, d, buf)) {
-	if (d.key.size != 2)
-	  return make_err(bad_file_format, file);
-	w.repl (l.to_normalized(d.key[0]),
-		l.to_normalized(d.key[1])) = w.repl_dis1;
-	w.repl (l.to_normalized(d.key[1]),
-		l.to_normalized(d.key[0])) = w.repl_dis1;
-	w.extra(l.to_normalized(d.key[0]),
-		l.to_normalized(d.key[1])) = w.extra_dis1;
-	w.extra(l.to_normalized(d.key[1]),
-		l.to_normalized(d.key[0])) = w.extra_dis1;
-      }
-
-      for (int i = 0; i != c; ++i) {
-	w.repl(i,i) = 0;
-	w.extra(i,i) = w.extra_dis1;
-      }
-      
-    }
-    return no_err;
-  }
-  
     
   SuggestParms * SuggestParms::clone() const {
     return new SuggestParms(*this);

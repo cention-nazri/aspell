@@ -6,6 +6,7 @@
 #include "suggest.hpp"
 #include "editdist.hpp"
 #include "typo_editdist.hpp"
+#include "cache.hpp"
 
 namespace aspeller {
   class Speller;
@@ -15,7 +16,7 @@ namespace aspeller {
     // implementation at the end of suggest.cc
 
     EditDistanceWeights     edit_distance_weights;
-    TypoEditDistanceWeights typo_edit_distance_weights;
+    CachePtr<const TypoEditDistanceWeights> typo_edit_distance_weights;
 
     bool use_typo_analysis;
     bool use_repl_table;
@@ -36,9 +37,7 @@ namespace aspeller {
 
     String split_chars;
 
-    SuggestParms(ParmString mode = "normal") {
-      set(mode);
-    }
+    SuggestParms() {}
     
     PosibErr<void> set(ParmString mode = "normal");
     PosibErr<void> fill_distance_lookup(const Config * c, const Language & l);

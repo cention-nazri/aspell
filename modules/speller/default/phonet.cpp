@@ -172,7 +172,6 @@ namespace aspeller {
               int len,
 	      const PhonetParms & parms)
   {
-    assert (target != NULL && inword != NULL);
     /**       Do phonetic transformation.       **/
     /**  "len" = length of "inword" incl. '\0'. **/
 

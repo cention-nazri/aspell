@@ -3,6 +3,7 @@
 
 #include "editdist.hpp"
 #include "matrix.hpp"
+#include "vararray.hpp"
 
 // edit_distance is implemented using a straight forward dynamic
 // programming algorithm with out any special tricks.  Its space
@@ -16,8 +17,8 @@ namespace aspeller {
   {
     int a_size = strlen(a) + 1;
     int b_size = strlen(b) + 1;
-    ShortMatrix e;
-    e.init(a_size,b_size);
+    VARARRAY(short, e_d, a_size * b_size);
+    ShortMatrix e(a_size,b_size,e_d);
     e(0, 0) = 0;
     for (int j = 1; j != b_size; ++j)
       e(0, j) = e(0, j-1) + w.del1;

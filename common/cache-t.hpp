@@ -72,6 +72,30 @@ PosibErr<Data *> get_cache_data(GlobalCache<Data> * cache,
   return n;
 }
 
+template <class Data>
+PosibErr<Data *> get_cache_data(GlobalCache<Data> * cache, 
+                                typename Data::CacheConfig * config, 
+                                typename Data::CacheConfig2 * config2,
+                                const typename Data::CacheKey & key)
+{
+  LOCK(&cache->lock);
+  Data * n = cache->find(key);
+  //CERR << "Getting " << key << "\n";
+  if (n) {
+    n->copy();
+    return n;
+  }
+  PosibErr<Data *> res = Data::get_new(key, config, config2);
+  if (res.has_err()) {
+    //CERR << "ERROR\n"; 
+    return res;
+  }
+  n = res.data;
+  cache->add(n);
+  //CERR << "LOADED FROM DISK\n";
+  return n;
+}
+
 }
 
 #endif
