@@ -84,6 +84,7 @@ int main (int argc, const char *argv[]) {
     int c,l;
 
     w1.str = (char *)malloc(256);
+    w1.str[0] = '\0';
     w1.alloc = 256;
     w2.str = (char *)malloc(256);
     w2.alloc = 256;
@@ -114,7 +115,7 @@ int main (int argc, const char *argv[]) {
 
       /* get the length of the prefix */
       l = 0;
-      while (p[l] != '\0' && w[l] != '\0' && p[l] == w[l]) ++l;
+      while (p[l] != '\0' && p[l] == w[l]) ++l;
 
       /* prefix compress, and write word */
       if (l < 30) {
