@@ -12,7 +12,7 @@
 #include "data.hpp"
 #include "data_id.hpp"
 #include "errors.hpp"
-#include "language.hpp"
+#include "lang_impl.hpp"
 #include "speller_impl.hpp"
 #include "string_list.hpp"
 #include "suggest.hpp"
@@ -81,7 +81,7 @@ namespace aspeller {
     String::size_type pos;
     StackPtr<StringEnumeration> sugels(intr_suggest_->suggest(mis.c_str()).elements());
     const char * first_word = sugels->next();
-    CheckInfo w1, w2;
+    IntrCheckInfo w1, w2;
     String cor1, cor2;
     String buf;
     bool correct = false;
@@ -142,7 +142,7 @@ namespace aspeller {
     return false;
   };
 
-  bool SpellerImpl::check_affix(ParmString word, CheckInfo & ci, GuessInfo * gi)
+  bool SpellerImpl::check_affix(ParmString word, IntrCheckInfo & ci, GuessInfo * gi)
   {
     WordEntry w;
     bool res = check_simple(word, w);
@@ -159,7 +159,7 @@ namespace aspeller {
 
   inline bool SpellerImpl::check2(char * word, /* it WILL modify word */
                                   bool try_uppercase,
-                                  CheckInfo & ci, GuessInfo * gi)
+                                  IntrCheckInfo & ci, GuessInfo * gi)
   {
     bool res = check_affix(word, ci, gi);
     if (res) return true;
@@ -176,7 +176,7 @@ namespace aspeller {
                                     /* it WILL modify word */
                                     bool try_uppercase,
                                     unsigned run_together_limit,
-                                    CheckInfo * ci, GuessInfo * gi)
+                                    IntrCheckInfo * ci, GuessInfo * gi)
   {
     assert(run_together_limit <= 8); // otherwise it will go above the 
                                      // bounds of the word array

@@ -5,7 +5,7 @@
 #include "clone_ptr.hpp"
 #include "posib_err.hpp"
 
-#include "language.hpp"
+#include "lang_impl.hpp"
 #include "phonetic.hpp"
 #include "phonet.hpp"
 
@@ -15,11 +15,11 @@ namespace aspeller {
   
   class SimpileSoundslike : public Soundslike {
   private:
-    const Language * lang;
+    const LangImpl * lang;
     char first[256];
     char rest[256];
   public:
-    SimpileSoundslike(const Language * l) : lang(l) {}
+    SimpileSoundslike(const LangImpl * l) : lang(l) {}
 
     PosibErr<void> setup(Conv &) {
       memcpy(first, lang->sl_first_, 256);
@@ -75,9 +75,9 @@ namespace aspeller {
 
   class NoSoundslike : public Soundslike {
   private:
-    const Language * lang;
+    const LangImpl * lang;
   public:
-    NoSoundslike(const Language * l) : lang(l) {}
+    NoSoundslike(const LangImpl * l) : lang(l) {}
 
     PosibErr<void> setup(Conv &) {return no_err;}
     
@@ -100,9 +100,9 @@ namespace aspeller {
 
   class StrippedSoundslike : public Soundslike {
   private:
-    const Language * lang;
+    const LangImpl * lang;
   public:
-    StrippedSoundslike(const Language * l) : lang(l) {}
+    StrippedSoundslike(const LangImpl * l) : lang(l) {}
 
     PosibErr<void> setup(Conv &) {return no_err;}
     
@@ -125,12 +125,12 @@ namespace aspeller {
 
   class PhonetSoundslike : public Soundslike {
 
-    const Language * lang;
+    const LangImpl * lang;
     StackPtr<PhonetParms> phonet_parms;
     
   public:
 
-    PhonetSoundslike(const Language * l) : lang(l) {}
+    PhonetSoundslike(const LangImpl * l) : lang(l) {}
 
     PosibErr<void> setup(Conv & iconv) {
       String file;
@@ -185,7 +185,7 @@ namespace aspeller {
   
   PosibErr<Soundslike *> new_soundslike(ParmString name, 
                                         Conv & iconv,
-                                        const Language * lang)
+                                        const LangImpl * lang)
   {
     Soundslike * sl;
     if (name == "simple" || name == "generic") {

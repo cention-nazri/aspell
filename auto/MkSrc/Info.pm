@@ -105,23 +105,23 @@ The %info structure is initialized as follows:
     creates_type => 'callback'},
   class => {
     # C++ class
-    options => ['c impl headers'],
+    options => ['c impl headers', 'indirect', 'base'],
     groups => undef,
     creates_type => 'class'},
   errors => {}, # possible errors
   method => {
     # A class method
     options => ['desc', 'posib err', 'c func', 'const',
-		'c only', 'c impl', 'cxx impl'],
+		'c only', 'c impl', 'no c impl', 'cxx impl'],
     groups => undef},
   constructor => {
     # A class constructor
     options => ['desc', 'returns alt type', 
-                'c impl', 'posib err', 'conversion'],
+                'no c impl', 'c impl', 'posib err', 'conversion'],
     groups => 'types'},
   'posib err constructor' => {
     # A class constructor
-    options => ['desc'],
+    options => ['desc', 'no c impl'],
     groups => 'types'},
   destructor => {
     # A class destructor

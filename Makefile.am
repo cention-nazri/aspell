@@ -71,7 +71,7 @@ libaspell_la_SOURCES =\
   modules/speller/default/typo_editdist.cpp\
   modules/speller/default/editdist.cpp\
   modules/speller/default/primes.cpp\
-  modules/speller/default/language.cpp\
+  modules/speller/default/lang_impl.cpp\
   modules/speller/default/leditdist.cpp\
   modules/speller/default/affix.cpp\
   lib/word_list-c.cpp\
@@ -89,11 +89,16 @@ libaspell_la_SOURCES =\
   lib/string_list-c.cpp\
   lib/find_speller.cpp\
   lib/speller-c.cpp\
+  lib/speller-cm.cpp\
   lib/string_pair_enumeration-c.cpp\
   lib/new_checker.cpp\
   lib/checker-c.cpp\
   lib/document_checker-c.cpp\
-  lib/convert-c.cpp
+  lib/convert-c.cpp\
+  lib/language-c.cpp\
+  lib/language_types-c.cpp\
+  lib/language-cm.cpp\
+  lib/munch_list.cpp
 
 libaspell_la_LIBADD =  $(LIBINTL) $(PTHREAD_LIB)
 

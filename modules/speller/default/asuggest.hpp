@@ -45,7 +45,7 @@ namespace aspeller {
     SuggestParms() {}
     
     acommon::PosibErr<void> set(ParmString mode, SpellerImpl * sp);
-    acommon::PosibErr<void> fill_distance_lookup(const acommon::Config * c, const Language & l);
+    acommon::PosibErr<void> fill_distance_lookup(const acommon::Config * c, const LangImpl & l);
     
     virtual ~SuggestParms() {}
     virtual SuggestParms * clone() const;

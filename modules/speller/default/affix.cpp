@@ -105,7 +105,7 @@ struct PfxEntry : public AffEntry
   PfxEntry() {}
 
   bool check(const LookupInfo &, const AffixMgr * pmyMgr,
-             ParmString, CheckInfo &, GuessInfo *, bool cross = true) const;
+             ParmString, IntrCheckInfo &, GuessInfo *, bool cross = true) const;
 
   inline bool          allow_cross() const { return ((xpflg & XPRODUCT) != 0); }
   inline byte flag() const { return achar;  }
@@ -127,7 +127,7 @@ struct SfxEntry : public AffEntry
 
   SfxEntry() {}
 
-  bool check(const LookupInfo &, ParmString, CheckInfo &, GuessInfo *,
+  bool check(const LookupInfo &, ParmString, IntrCheckInfo &, GuessInfo *,
              int optflags, AffEntry * ppfx);
 
   inline bool          allow_cross() const { return ((xpflg & XPRODUCT) != 0); }
@@ -260,7 +260,7 @@ PosibErr<void> AffixMgr::setup(ParmString affpath, Conv & iconv)
   return parse_file(affpath, iconv);
 }
 
-AffixMgr::AffixMgr(const Language * l) 
+AffixMgr::AffixMgr(const LangImpl * l) 
   : lang(l), data_buf(1024*16) {}
 
 AffixMgr::~AffixMgr() {}
@@ -759,7 +759,7 @@ static void encodeit(CondsLookup & l, ObjStack & buf,
 
 // check word for prefixes
 bool AffixMgr::prefix_check (const LookupInfo & linf, ParmString word, 
-                             CheckInfo & ci, GuessInfo * gi, bool cross) const
+                             IntrCheckInfo & ci, GuessInfo * gi, bool cross) const
 {
  
   // first handle the special case of 0 length prefixes
@@ -788,7 +788,7 @@ bool AffixMgr::prefix_check (const LookupInfo & linf, ParmString word,
 
 // check word for suffixes
 bool AffixMgr::suffix_check (const LookupInfo & linf, ParmString word, 
-                             CheckInfo & ci, GuessInfo * gi,
+                             IntrCheckInfo & ci, GuessInfo * gi,
                              int sfxopts, AffEntry * ppfx) const
 {
 
@@ -817,7 +817,7 @@ bool AffixMgr::suffix_check (const LookupInfo & linf, ParmString word,
 
 // check if word with affixes is correctly spelled
 bool AffixMgr::affix_check(const LookupInfo & linf, ParmString word, 
-                           CheckInfo & ci, GuessInfo * gi) const
+                           IntrCheckInfo & ci, GuessInfo * gi) const
 {
   // Deal With Case in a semi-intelligent manner
   CasePattern cp = lang->LangImpl::case_pattern(word);
@@ -848,7 +848,7 @@ bool AffixMgr::affix_check(const LookupInfo & linf, ParmString word,
 void AffixMgr::munch(ParmString word, GuessInfo * gi, bool cross) const
 {
   LookupInfo li(0, LookupInfo::AlwaysTrue);
-  CheckInfo ci;
+  IntrCheckInfo ci;
   gi->reset();
   CasePattern cp = lang->LangImpl::case_pattern(word);
   if (cp == AllUpper) return;
@@ -1000,7 +1000,7 @@ int LookupInfo::lookup (ParmString word, const SensitiveCompare * c,
     g = gi->dup(word);
   }
   if (gi && g) {
-    CheckInfo * ci = gi->add();
+    IntrCheckInfo * ci = gi->add();
     ci->word = g;
     return -1;
   }
@@ -1053,7 +1053,7 @@ SimpleString PfxEntry::add(SimpleString word, ObjStack & buf) const
 // check if this prefix entry matches 
 bool PfxEntry::check(const LookupInfo & linf, const AffixMgr * pmyMgr,
                      ParmString word,
-                     CheckInfo & ci, GuessInfo * gi, bool cross) const
+                     IntrCheckInfo & ci, GuessInfo * gi, bool cross) const
 {
   unsigned int		cond;	// condition number being examined
   unsigned              tmpl;   // length of tmpword
@@ -1090,8 +1090,8 @@ bool PfxEntry::check(const LookupInfo & linf, const AffixMgr * pmyMgr,
     // root word in the dictionary
 
     if (cond >= conds->num) {
-      CheckInfo * lci = 0;
-      CheckInfo * guess = 0;
+      IntrCheckInfo * lci = 0;
+      IntrCheckInfo * guess = 0;
       tmpl += stripl;
 
       int res = linf.lookup(tmpword, &linf.sp->s_cmp_end, achar, wordinfo, gi);
@@ -1123,10 +1123,10 @@ bool PfxEntry::check(const LookupInfo & linf, const AffixMgr * pmyMgr,
           
         } else if (gi) {
           
-          CheckInfo * stop = lci;
+          IntrCheckInfo * stop = lci;
           for (lci = gi->head; 
                lci != stop; 
-               lci = const_cast<CheckInfo *>(lci->next)) 
+               lci = const_cast<IntrCheckInfo *>(lci->next)) 
           {
             lci->pre_flag = achar;
             lci->pre_strip_len = stripl;
@@ -1199,7 +1199,7 @@ SimpleString SfxEntry::add(SimpleString word, ObjStack & buf,
 
 // see if this suffix is present in the word 
 bool SfxEntry::check(const LookupInfo & linf, ParmString word,
-                     CheckInfo & ci, GuessInfo * gi,
+                     IntrCheckInfo & ci, GuessInfo * gi,
                      int optflags, AffEntry* ppfx)
 {
   unsigned              tmpl;		 // length of tmpword 
@@ -1249,7 +1249,7 @@ bool SfxEntry::check(const LookupInfo & linf, ParmString word,
     // root word in the dictionary
 
     if (cond < 0) {
-      CheckInfo * lci = 0;
+      IntrCheckInfo * lci = 0;
       tmpl += stripl;
       const SensitiveCompare * cmp = 
         optflags & XPRODUCT ? &linf.sp->s_cmp_middle : &linf.sp->s_cmp_begin;
@@ -1287,7 +1287,7 @@ bool SfxEntry::check(const LookupInfo & linf, ParmString word,
 
 PosibErr<AffixMgr *> new_affix_mgr(ParmString name, 
                                    Conv & iconv,
-                                   const Language * lang)
+                                   const LangImpl * lang)
 {
   if (name == "none")
     return 0;

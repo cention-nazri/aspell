@@ -30,36 +30,30 @@
 
 namespace acommon {
   class Config;
-  struct CheckInfo;
+  struct IntrCheckInfo;
   struct Conv;
+  struct GuessInfo;
+  struct WordAff;
 }
 
 namespace aspeller {
 
   using namespace acommon;
 
-  class Language;
+  class LangImpl;
 
   class SpellerImpl;
-  struct GuessInfo;
 
   struct LookupInfo;
   struct AffEntry;
   struct PfxEntry;
   struct SfxEntry;
 
-  struct WordAff
-  {
-    SimpleString word;
-    const unsigned char * aff;
-    WordAff * next;
-  };
-
   enum CheckAffixRes {InvalidAffix, InapplicableAffix, ValidAffix};
 
   class AffixMgr
   {
-    const Language * lang;
+    const LangImpl * lang;
 
     PfxEntry *          pStart[SETSIZE];
     SfxEntry *          sStart[SETSIZE];
@@ -79,17 +73,17 @@ namespace aspeller {
 
   public:
  
-    AffixMgr(const Language * l);
+    AffixMgr(const LangImpl * l);
     ~AffixMgr();
 
     unsigned int max_strip() const {return max_strip_;}
 
     PosibErr<void> setup(ParmString affpath, Conv &);
 
-    bool affix_check(const LookupInfo &, ParmString, CheckInfo &, GuessInfo *) const;
-    bool prefix_check(const LookupInfo &, ParmString, CheckInfo &, GuessInfo *,
+    bool affix_check(const LookupInfo &, ParmString, IntrCheckInfo &, GuessInfo *) const;
+    bool prefix_check(const LookupInfo &, ParmString, IntrCheckInfo &, GuessInfo *,
                       bool cross = true) const;
-    bool suffix_check(const LookupInfo &, ParmString, CheckInfo &, GuessInfo *,
+    bool suffix_check(const LookupInfo &, ParmString, IntrCheckInfo &, GuessInfo *,
                       int sfxopts, AffEntry* ppfx) const;
 
     void munch(ParmString word, GuessInfo *, bool cross = true) const;
@@ -122,7 +116,7 @@ namespace aspeller {
 
   PosibErr<AffixMgr *> new_affix_mgr(ParmString name, 
                                      Conv &,
-                                     const Language * lang);
+                                     const LangImpl * lang);
 }
 
 #endif

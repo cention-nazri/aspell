@@ -11,7 +11,7 @@
 #include "data.hpp"
 #include "data_id.hpp"
 #include "errors.hpp"
-#include "language.hpp"
+#include "lang_impl.hpp"
 #include "speller_impl.hpp"
 #include "cache.hpp"
 #include "vararray.hpp"
@@ -60,7 +60,7 @@ namespace aspeller {
     }
   }
 
-  PosibErr<void> Dictionary::attach(const Language &l) {
+  PosibErr<void> Dictionary::attach(const LangImpl &l) {
     if (lang_ && strcmp(l.name(),lang_->name()) != 0)
       return make_err(mismatched_language, lang_->name(), l.name());
     if (!lang_) lang_.copy(&l);
@@ -95,7 +95,7 @@ namespace aspeller {
   PosibErr<void> Dictionary::set_check_lang (ParmString l, Config & config)
   {
     if (lang_ == 0) {
-      PosibErr<Language *> res = new_language(config, l);
+      PosibErr<LangImpl *> res = new_lang_impl(config, l);
       if (res.has_err()) return res;
       lang_.reset(res.data);
       lang_->set_lang_defaults(config);
@@ -159,10 +159,10 @@ namespace aspeller {
   class DictStringEnumeration : public StringEnumeration 
   {
     ClonePtr<Dict::Enum> real_;
-    const Language  * lang_;
+    const LangImpl  * lang_;
     String temp_str;
   public:
-    DictStringEnumeration(Dict::Enum * r, const Language  * l) 
+    DictStringEnumeration(Dict::Enum * r, const LangImpl  * l) 
       : real_(r), lang_(l) {}
     
     bool at_end() const {
@@ -330,7 +330,7 @@ namespace aspeller {
   } while (false)
 
   OStream & WordEntry::write (OStream & o,
-                              const Language & l,
+                              const LangImpl & l,
                               Convert * c) const
   {
     String w;

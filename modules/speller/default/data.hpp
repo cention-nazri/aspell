@@ -7,7 +7,7 @@
 
 #include "copy_ptr.hpp"
 #include "enumeration.hpp"
-#include "language.hpp"
+#include "lang_impl.hpp"
 #include "parm_string.hpp"
 #include "posib_err.hpp"
 #include "string.hpp"
@@ -45,8 +45,8 @@ namespace aspeller {
   class Dictionary : public Cacheable, public WordList {
     friend class SpellerImpl;
   private:
-    CachePtr<const Language> lang_;
-    PosibErr<void> attach(const Language &);
+    CachePtr<const LangImpl> lang_;
+    PosibErr<void> attach(const LangImpl &);
   public:
     class FileName {
       void copy(const FileName & other);
@@ -84,7 +84,7 @@ namespace aspeller {
     PosibErr<void> check_lang(ParmString lang);
     PosibErr<void> set_check_lang(ParmString lang, Config &);
     const LangImpl * lang() const {return lang_;};
-    const Language * language() const {return lang_;};
+    //const Language * language() const {return lang_;};
     const char * lang_name() const;
 
   private:

@@ -11,7 +11,6 @@
 #include "speller.hpp"
 #include "check_list.hpp"
 
-
 namespace acommon {
   class StringMap;
   class Config;
@@ -25,7 +24,7 @@ namespace aspeller {
 
   using namespace acommon;
 
-  class Language;
+  class LangImpl;
   struct SensitiveCompare;
   class Suggest;
 
@@ -81,14 +80,14 @@ namespace aspeller {
     PosibErr<const WordList *> main_word_list      () const;
 
     //
-    // Language methods
+    // LangImpl methods
     //
     
     char * to_lower(char *);
 
     const char * lang_name() const;
 
-    const Language & lang() const {return *lang_;}
+    const LangImpl & lang() const {return *lang_;}
 
     //
     // Spelling methods
@@ -97,7 +96,7 @@ namespace aspeller {
     PosibErr<bool> check(char * word, char * word_end, /* it WILL modify word */
                          bool try_uppercase,
 			 unsigned run_together_limit,
-			 CheckInfo *, GuessInfo *);
+			 IntrCheckInfo *, GuessInfo *);
 
     PosibErr<bool> check(MutableString word) {
       guess_info.reset();
@@ -116,13 +115,13 @@ namespace aspeller {
 
     bool check2(char * word, /* it WILL modify word */
                 bool try_uppercase,
-                CheckInfo & ci, GuessInfo * gi);
+                IntrCheckInfo & ci, GuessInfo * gi);
 
-    bool check_affix(ParmString word, CheckInfo & ci, GuessInfo * gi);
+    bool check_affix(ParmString word, IntrCheckInfo & ci, GuessInfo * gi);
 
     bool check_simple(ParmString, WordEntry &);
 
-    const CheckInfo * check_info() {
+    const IntrCheckInfo * intr_check_info() {
       if (check_inf[0].word)
         return check_inf;
       else if (guess_info.head)
@@ -162,7 +161,7 @@ namespace aspeller {
   private:
     friend class ConfigNotifier;
 
-    CachePtr<const Language>   lang_;
+    CachePtr<const LangImpl>   lang_;
     CopyPtr<SensitiveCompare>  sensitive_compare_;
     //CopyPtr<DictCollection> wls_;
     ClonePtr<Suggest>       suggest_;
@@ -195,9 +194,9 @@ namespace aspeller {
     double distance (const char *, const char *, 
 		     const char *, const char *) const;
 
-    CheckInfo check_inf[8];
+    IntrCheckInfo check_inf[8];
     GuessInfo guess_info;
-
+    
     SensitiveCompare s_cmp;
     SensitiveCompare s_cmp_begin;
     SensitiveCompare s_cmp_middle;

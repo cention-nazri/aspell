@@ -22,6 +22,7 @@
 #include "posib_err.hpp"
 #include "parm_string.hpp"
 #include "char_vector.hpp"
+#include "check_info.hpp"
 
 namespace acommon {
 
@@ -34,8 +35,10 @@ namespace acommon {
   class DocumentChecker;
   class Checker;
 
-  struct CheckInfo {
-    const CheckInfo * next;
+  struct IntrCheckInfo {
+    mutable CheckInfo ext; // Stuff that is used by the C interface
+    mutable String str;    // buffer for use by the above
+    const IntrCheckInfo * next;
     ParmString word; // generally the root
     short pre_strip_len;
     short pre_add_len;
@@ -87,8 +90,10 @@ namespace acommon {
     virtual PosibErr<bool> check(MutableString) = 0;
 
     // this function return information about the last word checked
-    virtual const CheckInfo * check_info() = 0;
-  
+    // The "ext" part of the struct is not filled in.  For that
+    // use check_info()
+    virtual const IntrCheckInfo * intr_check_info() = 0;
+
     virtual PosibErr<void> add_to_personal(MutableString) = 0;
     virtual PosibErr<void> add_to_session (MutableString) = 0;
 

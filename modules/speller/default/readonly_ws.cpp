@@ -44,7 +44,7 @@ using std::pair;
 #include "data.hpp"
 #include "data_util.hpp"
 #include "errors.hpp"
-#include "language.hpp"
+#include "lang_impl.hpp"
 #include "stack_ptr.hpp"
 #include "objstack.hpp"
 #include "vector.hpp"
@@ -681,7 +681,7 @@ namespace {
 
   struct SoundslikeLess {
     InsensitiveCompare icomp;
-    SoundslikeLess(const Language * l) : icomp(l) {}
+    SoundslikeLess(const LangImpl * l) : icomp(l) {}
     bool operator() (WordData * x, WordData * y) const {
       int res = strcmp(x->sl, y->sl);
       if (res != 0) return res < 0;
@@ -718,7 +718,7 @@ namespace {
   }
 
   PosibErr<void> create (StringEnumeration * els,
-			 const Language & lang,
+			 const LangImpl & lang,
                          Config & config) 
   {
     assert(sizeof(u16int) == 2);
@@ -1143,8 +1143,8 @@ namespace aspeller {
   PosibErr<void> create_default_readonly_dict(StringEnumeration * els,
                                               Config & config)
   {
-    CachePtr<Language> lang;
-    PosibErr<Language *> res = new_language(config);
+    CachePtr<LangImpl> lang;
+    PosibErr<LangImpl *> res = new_lang_impl(config);
     if (res.has_err()) return res;
     lang.reset(res.data);
     lang->set_lang_defaults(config);

@@ -10,7 +10,7 @@ namespace acommon {
 
 namespace aspeller {
 
-  class Language;
+  class LangImpl;
 
   using namespace acommon;
 
@@ -47,17 +47,17 @@ namespace aspeller {
 
     String keyboard;
     typedef const Config CacheConfig;
-    typedef const Language CacheConfig2;
+    typedef const LangImpl CacheConfig2;
     typedef const char * CacheKey;
     bool cache_key_eq(const char * kb) const {return keyboard == kb;}
-    static PosibErr<TypoEditDistanceInfo *> get_new(const char *, const Config *, const Language *);
+    static PosibErr<TypoEditDistanceInfo *> get_new(const char *, const Config *, const LangImpl *);
   private:
     TypoEditDistanceInfo(const TypoEditDistanceInfo &);
     void operator=(const TypoEditDistanceInfo &);
   };
 
   PosibErr<void> setup(CachePtr<const TypoEditDistanceInfo> & res,
-                       const Config * c, const Language * l, ParmString kb);
+                       const Config * c, const LangImpl * l, ParmString kb);
 
   // edit_distance finds the shortest edit distance. 
   // Preconditions:

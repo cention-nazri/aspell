@@ -4,7 +4,7 @@
 #include "vararray.hpp"
 #include "typo_editdist.hpp"
 #include "config.hpp"
-#include "language.hpp"
+#include "lang_impl.hpp"
 #include "file_data_util.hpp"
 #include "getdata.hpp"
 #include "cache.hpp"
@@ -80,7 +80,7 @@ namespace aspeller {
   static GlobalCache<TypoEditDistanceInfo> typo_edit_dist_info_cache("keyboard");
 
   PosibErr<void> setup(CachePtr<const TypoEditDistanceInfo> & res,
-                       const Config * c, const Language * l, ParmString kb)
+                       const Config * c, const LangImpl * l, ParmString kb)
   {
     PosibErr<TypoEditDistanceInfo *> pe = get_cache_data(&typo_edit_dist_info_cache, c, l, kb);
     if (pe.has_err()) return pe;
@@ -94,7 +94,7 @@ namespace aspeller {
   };
 
   PosibErr<TypoEditDistanceInfo *> 
-  TypoEditDistanceInfo::get_new(const char * kb, const Config * cfg, const Language * l)
+  TypoEditDistanceInfo::get_new(const char * kb, const Config * cfg, const LangImpl * l)
   {
     FStream in;
     String file, dir1, dir2;

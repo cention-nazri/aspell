@@ -1,5 +1,5 @@
 #include "speller_impl.hpp"
-#include "language.hpp"
+#include "lang_impl.hpp"
 #include "checker.hpp"
 
 namespace aspeller {
@@ -17,7 +17,7 @@ namespace aspeller {
     SegmentIterator cur_;
     SegmentIterator next_;
     SpellerImpl * speller;
-    const Language * lang;
+    const LangImpl * lang;
     
     inline bool is_word(FilterChar::Chr c) {return lang->is_alpha(c);}
     inline bool is_begin(FilterChar::Chr c) {return lang->special(c).begin;}

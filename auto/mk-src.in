@@ -605,6 +605,17 @@ errors:
 			mesg => Each row in the table must have at least %cols columns.
 			parms => cols
 }
+group: check info
+{
+/
+struct: check info
+	/
+	const check info pointer: next
+	string: str
+	unsigned int: str len
+	int: guess
+}
+
 group: speller
 {
 no native
@@ -631,6 +642,14 @@ class: speller
 		/
 		bool
 		encoded string: word
+
+	method: check info
+	
+		no c impl
+
+		/
+
+		const check info
 	
 	method: add to personal
 		
@@ -708,6 +727,86 @@ class: speller
 		encoded string: mis
 		encoded string: cor
 
+}
+
+group: language types
+{
+/
+enum: case pattern
+	/
+	other
+	first upper
+	all lower
+	all upper
+callback: get string callback
+	/
+	string
+	void pointer: data
+callback: put string callback
+	/
+	bool
+	void pointer: data
+	string: str
+struct: munch list parms
+	/
+	constructor
+		c impl => return new MunchListParms;
+	destructible methods
+	bool: multi
+		default => false
+	bool: simplify
+		default => true
+}
+group: language
+{
+no native
+/
+class: language
+	indirect
+	base => const LangBase
+	/
+	posib err constructor
+		no c impl
+		/
+		config: config
+
+	destructible methods
+
+	can have error methods
+
+	method: case pattern
+		/
+		case pattern
+		encoded string: str
+	method: fix case
+		/
+		encoded string
+		case pattern: cs
+		encoded string: str
+	method: to soundslike
+		/
+		encoded string
+		encoded string: str
+	method: munch
+		no c impl
+		/
+		const word list
+		encoded string: str
+	method: expand
+		no c impl
+		/
+		const word list
+		encoded string: str
+		int: limit
+	method: munch list
+		no c impl
+		/
+		int
+		get string callback: in cb
+		void pointer: in cb data
+		put string callback: out cb
+		void pointer: out cb data
+		munch list parms: parms
 }
 
 group: word list
@@ -982,7 +1081,7 @@ class: checker
 		/
 		const checker token
 	
-	method: next_misspelling
+	method: next misspelling
 		/
 		const checker token
 	
@@ -1101,7 +1200,7 @@ class: convert
 	method:
 		desc => converts a null terminated string.
 			If no conversion is needed returns the orignal string,
-			otherwise returns the converted string.  The string
+			otherwise returns the converted string.	 The string
 			returned is only valid until the next call to convert.
 		/
 		string

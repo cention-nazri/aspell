@@ -55,7 +55,7 @@
 #include "errors.hpp"
 #include "file_data_util.hpp"
 #include "hash-t.hpp"
-#include "language.hpp"
+#include "lang_impl.hpp"
 #include "leditdist.hpp"
 #include "speller_impl.hpp"
 #include "stack_ptr.hpp"
@@ -140,12 +140,12 @@ namespace {
  
   class Score {
   protected:
-    const Language * lang;
+    const LangImpl * lang;
     OriginalWord     original;
     const SuggestParms * parms;
 
   public:
-    Score(const Language *l, const String &w, const SuggestParms * p)
+    Score(const LangImpl *l, const String &w, const SuggestParms * p)
       : lang(l), original(), parms(p)
     {
       original.word = w;
@@ -186,7 +186,7 @@ namespace {
     static const bool do_count = true;
     static const bool dont_count = false;
 
-    CheckInfo check_info[8];
+    IntrCheckInfo check_info[8];
 
     void commit_temp(const char * b) {
       if (temp_end) {
@@ -212,10 +212,10 @@ namespace {
       commit_temp(sl);
       return sl;}
 
-    MutableString form_word(CheckInfo & ci);
+    MutableString form_word(IntrCheckInfo & ci);
     void try_word_n(ParmString str, int score);
-    bool check_word_s(ParmString word, CheckInfo * ci);
-    unsigned check_word(char * word, char * word_end, CheckInfo * ci,
+    bool check_word_s(ParmString word, IntrCheckInfo * ci);
+    unsigned check_word(char * word, char * word_end, IntrCheckInfo * ci,
                         /* it WILL modify word */
                         unsigned pos = 1);
     void try_word_c(char * word, char * word_end, int score);
@@ -281,7 +281,7 @@ namespace {
     void fine_tune_score();
     void transfer();
   public:
-    Working(SpellerImpl * m, const Language *l,
+    Working(SpellerImpl * m, const LangImpl *l,
 	    const String & w, const SuggestParms *  p)
       : Score(l,w,p), threshold(1), max_word_length(0), sp(m) {
       memset(check_info, 0, sizeof(check_info));
@@ -378,9 +378,9 @@ namespace {
     transfer();
   }
 
-  // Forms a word by combining CheckInfo fields.
+  // Forms a word by combining IntrCheckInfo fields.
   // It returns a MutableString of what was appended to buffer.
-  MutableString Working::form_word(CheckInfo & ci) 
+  MutableString Working::form_word(IntrCheckInfo & ci) 
   {
     size_t slen = ci.word.size() - ci.pre_strip_len - ci.suf_strip_len;
     size_t wlen = slen + ci.pre_add_len + ci.suf_add_len;
@@ -407,7 +407,7 @@ namespace {
         add_nearmiss(i, sw, 0, score, -1, do_count);
     }
     if (sp->affix_compress) {
-      CheckInfo ci; memset(&ci, 0, sizeof(ci));
+      IntrCheckInfo ci; memset(&ci, 0, sizeof(ci));
       bool res = lang->affix()->affix_check(LookupInfo(sp, LookupInfo::Clean), str, ci, 0);
       if (!res) return;
       form_word(ci);
@@ -418,7 +418,7 @@ namespace {
     }
   }
 
-  bool Working::check_word_s(ParmString word, CheckInfo * ci)
+  bool Working::check_word_s(ParmString word, IntrCheckInfo * ci)
   {
     WordEntry sw;
     for (SpellerImpl::WS::const_iterator i = sp->suggest_ws.begin();
@@ -437,7 +437,7 @@ namespace {
     return false;
   }
 
-  unsigned Working::check_word(char * word, char * word_end,  CheckInfo * ci,
+  unsigned Working::check_word(char * word, char * word_end,  IntrCheckInfo * ci,
                           /* it WILL modify word */
                           unsigned pos)
   {
@@ -456,7 +456,7 @@ namespace {
       res = check_word(i, word_end, ci + 1, pos + 1);
       if (res) return res;
     }
-    memset(ci, 0, sizeof(CheckInfo));
+    memset(ci, 0, sizeof(IntrCheckInfo));
     return 0;
   }
 
@@ -480,7 +480,7 @@ namespace {
     buffer.commit_temp();
     add_nearmiss(beg, end - beg, 0, 0, score, -1, do_count);
     //CERR.printl(tmp);
-    memset(check_info, 0, sizeof(CheckInfo)*res);
+    memset(check_info, 0, sizeof(IntrCheckInfo)*res);
   }
 
   void Working::add_nearmiss(char * word, unsigned word_size,
@@ -796,7 +796,7 @@ namespace {
 #ifdef DEBUG_SUGGEST
     COUT.printf("will try soundslike: %s\n", sls.back());
 #endif
-    for (const aspeller::CheckInfo * ci = gi.head;
+    for (const aspeller::IntrCheckInfo * ci = gi.head;
          ci; 
          ci = ci->next) 
     {

@@ -35,7 +35,7 @@
 #include "errors.hpp"
 #include "fstream.hpp"
 #include "getdata.hpp"
-#include "language.hpp"
+#include "lang_impl.hpp"
 #include "objstack.hpp"
 #include "vararray.hpp"
 
@@ -84,7 +84,7 @@ namespace aspeller {
   
   PosibErr<PhonetParms *> new_phonet(const String & file, 
                                      Conv & iconv,
-                                     const Language * lang) 
+                                     const LangImpl * lang) 
   {
     String buf; DataPair dp;
 
@@ -146,7 +146,7 @@ namespace aspeller {
 
 
     for (unsigned i = 0; i != 256; ++i) {
-      parms->to_clean[i] = (lang->char_type(i) > Language::NonLetter 
+      parms->to_clean[i] = (lang->char_type(i) > LangImpl::NonLetter 
                             ? (parms->remove_accents 
                                ? lang->to_upper(lang->de_accent(i)) 
                                : lang->to_upper(i))

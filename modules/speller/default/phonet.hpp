@@ -30,7 +30,7 @@ namespace aspeller {
 
   using namespace acommon;
 
-  class Language;
+  class LangImpl;
 
   struct PhonetParms {
     String version;
@@ -43,7 +43,7 @@ namespace aspeller {
     static const char * const rules_end;
     const char * * rules;
 
-    const Language * lang;
+    const LangImpl * lang;
 
     char to_clean[256];
 
@@ -64,7 +64,7 @@ namespace aspeller {
 
   PosibErr<PhonetParms *> new_phonet(const String & file, 
                                      Conv & iconv,
-                                     const Language * lang);
+                                     const LangImpl * lang);
 
 }
 

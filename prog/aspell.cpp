@@ -482,7 +482,7 @@ int main (int argc, const char *argv[])
 //
 
   
-static SimpleConvert * setup_conv(const aspeller::Language * lang,
+static SimpleConvert * setup_conv(const aspeller::LangImpl * lang,
                                   Config * config)
 {
   if (config->retrieve("encoding") != "none") {
@@ -499,7 +499,7 @@ static SimpleConvert * setup_conv(const aspeller::Language * lang,
 }
  
 static SimpleConvert * setup_conv(Config * config,
-                                  const aspeller::Language * lang)
+                                  const aspeller::LangImpl * lang)
 {
   if (config->retrieve("encoding") != "none") {
     PosibErr<SimpleConvert *> pe 
@@ -563,6 +563,18 @@ AspellChecker * new_checker(AspellSpeller * sp)
     exit(1);
   }
   return to_aspell_checker(ret);
+}
+
+AspellLanguage * new_language()
+{
+  AspellCanHaveError * ret 
+    = new_aspell_language(reinterpret_cast<AspellConfig *>(options.get()));
+  if (aspell_error(ret)) {
+    print_error(aspell_error_message(ret));
+    exit(1);
+  }
+  return to_aspell_language(ret);
+
 }
 
 
@@ -705,8 +717,6 @@ void pipe()
   AspellSpeller * speller = new_speller();
   aspeller::SpellerImpl * real_speller = reinterpret_cast<aspeller::SpellerImpl *>(speller);
   Config * config = real_speller->config();
-  FullConv iconv(real_speller->to_internal_);
-  FullConv oconv(real_speller->from_internal_);
   MBLen mb_len;
   if (!config->retrieve_bool("byte-offsets").data) 
     mb_len.setup(*config, config->retrieve("encoding"));
@@ -835,36 +845,18 @@ void pipe()
       while (token = aspell_checker_next(checker), token) {
         if (token->correct) {
           if (!terse_mode) {
-            const CheckInfo * ci = real_speller->check_info();
-            if (ci->compound)
-              COUT.put("-\n");
-            else if (ci->pre_flag || ci->suf_flag)
-              COUT.printf("+ %s\n", ci->word.str());
-            else
-              COUT.put("*\n");
+            const AspellCheckInfo * ci = aspell_speller_check_info(speller);
+            COUT.put(ci->str);
+            COUT.put('\n');
           }
         } else {
           word = line + token->begin.offset;
           unsigned word_len = token->end.offset - token->begin.offset;
           word[word_len] = '\0';
-          const char * cword = iconv(word);
-          String guesses, guess;
-          const CheckInfo * ci = real_speller->check_info();
-          aspeller::CasePattern casep 
-            = real_speller->lang().case_pattern(cword);
+          String guesses;
+          const AspellCheckInfo * ci = aspell_speller_check_info(speller);
           while (ci) {
-            guess.clear();
-            if (ci->pre_add && ci->pre_add[0])
-              guess.append(ci->pre_add, ci->pre_add_len).append('+');
-            guess.append(ci->word);
-            if (ci->pre_strip_len > 0) 
-              guess.append('-').append(ci->word.str(), ci->pre_strip_len);
-            if (ci->suf_strip_len > 0) 
-              guess.append('-').append(ci->word.str() - ci->suf_strip_len, ci->suf_strip_len);
-            if (ci->suf_add && ci->suf_add[0])
-              guess.append('+').append(ci->suf_add, ci->suf_add_len);
-            real_speller->lang().fix_case(casep, guess.data(), guess.data());
-            guesses << ", " << oconv(guess.str());
+            guesses << ", " << ci->str;
             ci = ci->next;
           }
           start = clock();
@@ -922,8 +914,6 @@ void pipe()
     BREAK_ON_ERR(reload_filters(real_speller));
     //checker.del(); // FIXME.  Why?
     //checker = new_checker(speller, status_fun_inf);
-    iconv.reset(real_speller->to_internal_);
-    oconv.reset(real_speller->from_internal_);
     continue;
   }
 
@@ -1406,9 +1396,9 @@ void clean()
   
   Config * config = options;
 
-  CachePtr<Language> lang;
+  CachePtr<LangImpl> lang;
   find_language(*config);
-  PosibErr<Language *> res = new_language(*config);
+  PosibErr<LangImpl *> res = new_lang_impl(*config);
   if (res.has_err()) {print_error(res.get_err()->mesg); exit(1);}
   lang.reset(res.data);
   IstreamEnumeration in(CIN);
@@ -1627,21 +1617,13 @@ void repl() {
 //
 
 void soundslike() {
-  using namespace aspeller;
-  CachePtr<Language> lang;
-  find_language(*options);
-  PosibErr<Language *> res = new_language(*options);
-  if (res.has_err()) {print_error(res.get_err()->mesg); exit(1);}
-  lang.reset(res.data);
-  Conv iconv(setup_conv(options, lang));
-  Conv oconv(setup_conv(lang, options));
+  AspellLanguage * lang = new_language();
   String word;
-  String sl;
   while (CIN.getline(word)) {
-    const char * w = iconv(word);
-    lang->LangImpl::to_soundslike(sl, w);
-    printf("%s\t%s\n", word.str(), oconv(sl));
+    const char * sl = aspell_language_to_soundslike(lang, word.str(), word.size());
+    printf("%s\t%s\n", word.str(), sl);
   }
+  delete_aspell_language(lang);
 }
 
 //////////////////////////
@@ -1651,27 +1633,19 @@ void soundslike() {
 
 void munch() 
 {
-  using namespace aspeller;
-  CachePtr<Language> lang;
-  find_language(*options);
-  PosibErr<Language *> res = new_language(*options);
-  if (res.has_err()) {print_error(res.get_err()->mesg); exit(1);}
-  lang.reset(res.data);
-  Conv iconv(setup_conv(options, lang));
-  Conv oconv(setup_conv(lang, options));
+  AspellLanguage * lang = new_language();
   String word;
-  GuessInfo gi;
+  const char * w;
   while (CIN.getline(word)) {
-    lang->munch(iconv(word), &gi);
+    const AspellWordList * wl = aspell_language_munch(lang, word.str(), word.size());
+    AspellStringEnumeration * els = aspell_word_list_elements(wl);
     COUT << word;
-    for (const aspeller::CheckInfo * ci = gi.head; ci; ci = ci->next)
-    {
-      COUT << ' ' << oconv(ci->word) << '/';
-      if (ci->pre_flag != 0) COUT << oconv(static_cast<char>(ci->pre_flag));
-      if (ci->suf_flag != 0) COUT << oconv(static_cast<char>(ci->suf_flag));
-    }
+    while (w = aspell_string_enumeration_next(els), w)
+      COUT << ' ' << w;
     COUT << '\n';
+    delete_aspell_string_enumeration(els);
   }
+  delete_aspell_language(lang);
 }
 
 //////////////////////////
@@ -1687,59 +1661,41 @@ void expand()
   int limit = INT_MAX;
   if (args.size() > 1)
     limit = atoi(args[1].c_str());
-  
-  using namespace aspeller;
-  CachePtr<Language> lang;
-  find_language(*options);
-  PosibErr<Language *> res = new_language(*options);
-  if (res.has_err()) {print_error(res.get_err()->mesg); exit(1);}
-  lang.reset(res.data);
-  Conv iconv(setup_conv(options, lang));
-  Conv oconv(setup_conv(lang, options));
-  String word, buf;
-  ObjStack exp_buf;
-  WordAff * exp_list;
+  AspellLanguage * lang = new_language();
+  String word;
+  const char * w;
   while (CIN.getline(word)) {
-    buf = word;
-    char * w = iconv(buf.mstr(), buf.size());
-    char * af = strchr(w, '/');
-    size_t s;
-    if (af != 0) {
-      s = af - w;
-      *af++ = '\0';
-    } else {
-      s = strlen(w);
-      af = w + s;
-    }
-    exp_buf.reset();
-    exp_list = lang->expand(w, af, exp_buf, limit);
+    const AspellWordList * wl = aspell_language_expand(lang, word.str(), word.size(), limit);
+    AspellStringEnumeration * els = aspell_word_list_elements(wl);
     if (level <= 2) {
       if (level == 2) 
         COUT << word << ' ';
-      WordAff * p = exp_list;
-      while (p) {
-        COUT << oconv(p->word);
-        if (limit < INT_MAX && p->aff[0]) COUT << '/' << oconv((const char *)p->aff);
-        p = p->next;
-        if (p) COUT << ' ';
+      w = aspell_string_enumeration_next(els);
+      while (w) {
+        COUT << w;
+        w = aspell_string_enumeration_next(els);
+        if (w) COUT << ' ';
       }
       COUT << '\n';
     } else if (level >= 3) {
       double ratio = 0;
-      if (level >= 4) {
-        for (WordAff * p = exp_list; p; p = p->next)
-          ratio += p->word.size;
-        ratio /= exp_list->word.size; // it is assumed the first
-                                      // expansion is just the root
-      }
-      for (WordAff * p = exp_list; p; p = p->next) {
-        COUT << word << ' ' << oconv(p->word);
-        if (limit < INT_MAX && p->aff[0]) COUT << '/' << oconv((const char *)p->aff);
+      // FIXME
+      //if (level >= 4) {
+      //  for (WordAff * p = exp_list; p; p = p->next)
+      //    ratio += p->word.size;
+      //  ratio /= exp_list->word.size; // it is assumed the first
+      //                                // expansion is just the root
+      //}
+      while (w = aspell_string_enumeration_next(els), w) {
+        COUT << word << ' ' << w;
         if (level >= 4) COUT.printf(" %f\n", ratio);
         else COUT << '\n';
       }
     }
+    delete_aspell_string_enumeration(els);
   }
+
+  delete_aspell_language(lang);
 }
 
 //////////////////////////
@@ -1765,7 +1721,7 @@ static void print_wordaff(const String & base, const String & affs, Conv & oconv
     COUT.printf("/%s\n", oconv(affs));
 }
 
-static bool lower_equal(aspeller::Language * l, ParmString a, ParmString b)
+static bool lower_equal(aspeller::LangImpl * l, ParmString a, ParmString b)
 {
   if (a.size() != b.size()) return false;
   if (l->to_lower(a[0]) != l->to_lower(b[0])) return false;
@@ -1775,9 +1731,9 @@ static bool lower_equal(aspeller::Language * l, ParmString a, ParmString b)
 void combine()
 {
   using namespace aspeller;
-  CachePtr<Language> lang;
+  CachePtr<LangImpl> lang;
   find_language(*options);
-  PosibErr<Language *> res = new_language(*options);
+  PosibErr<LangImpl *> res = new_lang_impl(*options);
   if (res.has_err()) {print_error(res.get_err()->mesg); exit(1);}
   lang.reset(res.data);
   Conv iconv(setup_conv(options, lang));
@@ -1822,20 +1778,29 @@ void combine()
 // munch list
 //
 
-void munch_list_simple();
-void munch_list_complete(bool, bool);
+const char * get_word_ml(void * d) 
+{
+  String * str = static_cast<String *>(d);
+  CIN.getline(*str);
+  return str->str();
+}
+
+int put_word_ml(void *, const char * str)
+{
+  COUT << str << '\n';
+  return true;
+}
 
 void munch_list()
 {
-  bool simple = false;
-  bool multi = false;
-  bool simplify = true;
+  String word;
+  AspellMunchListParms * parms = new_aspell_munch_list_parms();
 
   for (unsigned i = 0; i < args.size(); ++i) {
-    if (args[i] == "simple")      simple = true;
-    else if (args[i] == "single") multi = false;
-    else if (args[i] == "multi")  multi = true;
-    else if (args[i] == "keep")   simplify = false;
+    if (args[i] == "simple")      ; // FIXME: Warning
+    else if (args[i] == "single") parms->multi = false;
+    else if (args[i] == "multi")  parms->multi = true;
+    else if (args[i] == "keep")   parms->simplify = false;
     else 
     {
       print_error(_("\"%s\" is not a valid flag for the \"munch-list\" command."),
@@ -1843,860 +1808,13 @@ void munch_list()
       exit(1);
     }
   }
-  if (simple)
-    munch_list_simple();
-  else
-    munch_list_complete(multi, simplify);
+
+  AspellLanguage * lang = new_language();
+  aspell_language_munch_list(lang, get_word_ml, &word, put_word_ml, 0, parms);
+  delete_aspell_munch_list_parms(parms);
+  delete_aspell_language(lang);
+
 }
-
-//
-// munch list (simple version)
-//
-
-// This version works the same way as the myspell "munch" program.
-// However, because the results depends on the hash table used and the
-// order of the word list it won't produce identical results.
-
-struct SML_WordEntry {
-  const char * word;
-  char * aff;
-  bool keep; // boolean
-  SML_WordEntry(const char * w = 0) : word(w), aff(0), keep(false) {}
-};
-
-struct SML_Parms {
-  typedef SML_WordEntry Value;
-  typedef const char * Key;
-  static const bool is_multi = false;
-  hash<const char *> hash;
-  bool equal(Key x, Key y) {return strcmp(x,y) == 0;}
-  Key key(const Value & v) {return v.word;}
-};
-
-typedef HashTable<SML_Parms> SML_Table;
-
-static inline void add_affix(SML_Table::iterator b, char aff)
-{
-  char * p = b->aff;
-  if (p) {while (*p) {if (*p == aff) return; ++p;}}
-  int s = p - b->aff;
-  b->aff = (char *)realloc(b->aff, s + 2);
-  b->aff[s + 0] = aff;
-  b->aff[s + 1] = '\0';
-}
-
-void munch_list_simple()
-{
-  using namespace aspeller;
-  CachePtr<Language> lang;
-  find_language(*options);
-  PosibErr<Language *> res = new_language(*options);
-  if (res.has_err()) {print_error(res.get_err()->mesg); exit(1);}
-  lang.reset(res.data);
-  Conv iconv(setup_conv(options, lang));
-  Conv oconv(setup_conv(lang, options));
-  String word, buf;
-  ObjStack exp_buf;
-  WordAff * exp_list;
-  GuessInfo gi;
-  SML_Table table;
-  ObjStack table_buf;
-
-  // add words to dictionary
-  while (CIN.getline(word)) {
-    buf = word;
-    char * w = iconv(buf.mstr(), buf.size());
-    char * af = strchr(w, '/');
-    size_t s;
-    if (af != 0) {
-      s = af - w;
-      *af++ = '\0';
-    } else {
-      s = strlen(w);
-      af = w + s;
-    }
-    exp_buf.reset();
-    exp_list = lang->expand(w, af, exp_buf);
-    for (WordAff * q = exp_list; q; q = q->next) {
-      table.insert(SML_WordEntry(table_buf.dup(q->word)));
-    }
-  }
-
-  // now try to munch each word in the dictionary
-  SML_Table::iterator p = table.begin();
-  SML_Table::iterator end = table.end();
-  String flags;
-  for (; p != end; ++p) 
-  {
-    const aspeller::CheckInfo * best = 0;
-    unsigned min_base_size = INT_MAX;
-    lang->munch(p->word, &gi);
-    const aspeller::CheckInfo * ci = gi.head;
-    while (ci)
-    { {
-      // check if the base word is in the dictionary
-      SML_Table::iterator b = table.find(ci->word);
-      if (b == table.end()) goto cont;
-
-      // check if all the words once expanded are in the dictionary
-      // this included the exiting flags due to pre-suf cross products
-      if (b->aff) flags = b->aff;
-      else        flags.clear();
-      if (ci->pre_flag != 0) flags += ci->pre_flag;
-      if (ci->suf_flag != 0) flags += ci->suf_flag;
-      exp_buf.reset();
-      exp_list = lang->expand(ci->word, flags, exp_buf);
-      for (WordAff * q = exp_list; q; q = q->next) {
-        if (!table.have(q->word)) goto cont;
-      }
-
-      // the base word and flags are valid, now keep the one with the
-      // smallest base word
-      if (ci->word.size() < min_base_size) {
-        min_base_size = ci->word.size();
-        best = ci;
-      }
-
-    } cont:
-      ci = ci->next;
-    }
-    // now add the base to the keep list if one exists
-    // otherwise just keep the orignal word
-    if (best) {
-      SML_Table::iterator b = table.find(best->word);
-      assert(b != table.end());
-      if (best->pre_flag) add_affix(b, best->pre_flag);
-      if (best->suf_flag) add_affix(b, best->suf_flag);
-      b->keep = true;
-    } else {
-      p->keep = true;
-    }
-  }
-
-  // Print the entries in the table marked as "to keep"
-  p = table.begin();
-  for (; p != end; ++p) 
-  {
-    if (p->keep) {
-      COUT << oconv(p->word);
-      if (p->aff) {
-        COUT << '/' << oconv(p->aff);
-      }
-      COUT << '\n';
-    }
-  }
-
-  p = table.begin();
-  for (; p != end; ++p) 
-  {
-    if (p->aff) free(p->aff);
-    p->aff = 0;
-  }
-}
-
-//
-// munch list (complete version)
-//
-//
-// This version will produce a smaller list than the simple version.
-// It is very close to the optimum result. 
-//
-
-//
-// Hash table to store the words
-//
-
-struct CML_Entry {
-  const char * word;
-  char * aff;
-  CML_Entry * parent;
-  CML_Entry * next;
-  int rank;
-  CML_Entry(const char * w = 0) : word(w), aff(0), parent(0), next(0), rank(0) {}
-};
-
-struct CML_Parms {
-  typedef CML_Entry Value;
-  typedef const char * Key;
-  static const bool is_multi = true;
-  hash<const char *> hash;
-  bool equal(Key x, Key y) {return strcmp(x,y) == 0;}
-  Key key(const Value & v) {return v.word;}
-};
-
-typedef HashTable<CML_Parms> CML_Table;
-
-//
-// add an affix to a word but keep the prefixes and suffixes separate
-//
-
-static void add_affix(CML_Table::iterator b, char aff, bool prefix)
-{
-  char * p = b->aff;
-  int s = 3;
-  if (p) {
-    while (*p) {
-      if (*p == aff) return; 
-      ++p;
-    }
-    s = (p - b->aff) + 2;
-  }
-  char * tmp = (char *)malloc(s);
-  p = b->aff;
-  char * q = tmp;
-  if (p) {while (*p != '/') *q++ = *p++;}
-  if (prefix) *q++ = aff;
-  *q++ = '/';
-  if (p) {p++; while (*p != '\0') *q++ = *p++;}
-  if (!prefix) *q++ = aff;
-  *q++ = '\0';
-  assert(q - tmp == s);
-  if (b->aff) free(b->aff);
-  b->aff = tmp;
-}
-
-//
-// Standard disjoint set algo with union by rank and path compression
-//
-
-static void link(CML_Entry * x, CML_Entry * y)
-{
-  if (x == y) return;
-  if (x->rank > y->rank) {
-    y->parent = x;
-  } else {
-    x->parent = y;
-    if (x->rank == y->rank) y->rank++;
-  }
-}
-
-static CML_Entry * find_set (CML_Entry * x) 
-{
-  if (x->parent)
-    return x->parent = find_set(x->parent);
-  else
-    return x;
-}
-
-//
-// Stuff to manage prefix-suffix combinations
-//
-
-struct PreSuf {
-  String pre;
-  String suf;
-  String & get(int i) {return i == 0 ? pre : suf;}
-  const String & get(int i) const {return i == 0 ? pre : suf;}
-  PreSuf() : next(0) {}
-  PreSuf * next;
-};
-
-class PreSufList {
-public:
-  PreSuf * head;
-  PreSufList() : head(0) {}
-  void add(PreSuf * to_add) {
-    to_add->next = head;
-    head = to_add;
-  }
-  void clear() {
-    while (head) {
-      PreSuf * tmp = head;
-      head = head->next;
-      delete tmp;
-    }
-  }
-  void transfer(PreSufList & other) {
-    clear();
-    head = other.head;
-    other.head = 0;
-  }
-  ~PreSufList() {
-    clear();
-  }
-};
-
-
-// Example of usage:
-//   combine(in, res, 0)
-//   Pre:  in =  [(ab, c) (ab, d) (c, de) (c, ef)]
-//   Post: res = [(ab, cd), (c, def)]
-static void combine(const PreSufList & in, PreSufList & res, int which)
-{
-  const PreSuf * i = in.head;
-  while (i) { {
-    const String & s = i->get(which);
-    for (const PreSuf * j = in.head; j != i; j = j->next) {
-      if (j->get(which) == s) goto cont;
-    }
-    PreSuf * tmp = new PreSuf;
-    tmp->pre = i->pre;
-    tmp->suf = i->suf;
-    String & b = tmp->get(!which);
-    for (const PreSuf * j = i->next; j; j = j->next) {
-      if (j->get(which) != s) continue;
-      const String & a = j->get(!which);
-      for (String::const_iterator x = a.begin(); x != a.end(); ++x) {
-        if (memchr(b.data(), *x, b.size())) continue;
-        b += *x;
-      }
-    }
-    res.add(tmp);
-  } cont:
-    i = i->next;
-  }
-}
-
-//
-// Stuff used when pruning the list of base words
-//
-
-struct Expansion {
-  const char * word;
-  char * aff; // modifying this will modify the affix entry in the hash table
-  std::vector<bool> exp;
-  std::vector<bool> orig_exp;
-};
-
-// static void dump(const Vector<Expansion *> & working, 
-//                  const Vector<CML_Table::iterator> & entries)
-// {
-//   for (unsigned i = 0; i != working.size(); ++i) {
-//     if (!working[i]) continue;
-//     CERR.printf("%s/%s ", working[i]->word, working[i]->aff);
-//     for (unsigned j = 0; j != working[i]->exp.size(); ++j) {
-//       if (working[i]->exp[j])
-//         CERR.printf("%s ", entries[j]->word);
-//     }
-//     CERR.put('\n');
-//   }
-//   CERR.put('\n');
-// }
-
-// standard set algorithms on a bit vector
-
-static bool subset(const std::vector<bool> & smaller, 
-                   const std::vector<bool> & larger)
-{
-  assert(smaller.size() == larger.size());
-  unsigned s = larger.size();
-  for (unsigned i = 0; i != s; ++i) {
-    if (smaller[i] && !larger[i]) return false;
-  }
-  return true;
-}
-
-static void merge(std::vector<bool> & x, const std::vector<bool> & y)
-{
-  assert(x.size() == y.size());
-  unsigned s = x.size();
-  for (unsigned i = 0; i != s; ++i) {
-    if (y[i]) x[i] = true;
-  }
-}
-
-static void purge(std::vector<bool> & x, const std::vector<bool> & y)
-{
-  assert(x.size() == y.size());
-  unsigned s = x.size();
-  for (unsigned i = 0; i != s; ++i) {
-    if (y[i]) x[i] = false;
-  }
-}
-
-static inline unsigned count(const std::vector<bool> & x) {
-  unsigned c = 0;
-  for (unsigned i = 0; i != x.size(); ++i) {
-    if (x[i]) ++c;
-  }
-  return c;
-}
-
-// 
-
-struct WorkingLt {
-  bool operator() (Expansion * x, Expansion * y) {
-
-    // LARGEST number of expansions
-    unsigned x_s = count(x->exp);
-    unsigned y_s = count(y->exp);
-    if (x_s != y_s) return x_s > y_s;
-
-    // SMALLEST base word
-    x_s = strlen(x->word);
-    y_s = strlen(y->word);
-    if (x_s != y_s) return x_s < y_s;
-
-    // LARGEST affix string
-    x_s = strlen(x->aff);
-    y_s = strlen(y->aff);
-    if (x_s != y_s) return x_s > y_s; 
-
-    // 
-    int cmp = strcmp(x->word, y->word);
-    if (cmp != 0) return cmp < 0;
-
-    //
-    cmp = strcmp(x->aff, y->aff);
-    return cmp < 0;
-  }
-};
-
-//
-// Finally the function that does the real work
-//
-
-void munch_list_complete(bool multi, bool simplify)
-{
-  using namespace aspeller;
-  CachePtr<Language> lang;
-  find_language(*options);
-  PosibErr<Language *> res = new_language(*options);
-  if (res.has_err()) {print_error(res.get_err()->mesg); exit(1);}
-  lang.reset(res.data);
-  Conv iconv(setup_conv(options, lang));
-  Conv oconv(setup_conv(lang, options));
-  String word, buf;
-  ObjStack exp_buf;
-  WordAff * exp_list;
-  GuessInfo gi;
-  CML_Table table;
-  ObjStack table_buf;
-
-  // add words to dictionary
-  while (CIN.getline(word)) {
-    buf = word;
-    char * w = iconv(buf.mstr(), buf.size());
-    char * af = strchr(w, '/');
-    size_t s;
-    if (af != 0) {
-      s = af - w;
-      *af++ = '\0';
-    } else {
-      s = strlen(w);
-      af = w + s;
-    }
-    exp_buf.reset();
-    exp_list = lang->expand(w, af, exp_buf);
-    for (WordAff * q = exp_list; q; q = q->next) {
-      if (!table.have(q->word)) // since it is a multi hash table
-        table.insert(CML_Entry(table_buf.dup(q->word))).first;
-    }
-  }
-
-  // Now try to munch each word in the dictionary.  This will also
-  // group the base words into disjoint sets based on there expansion.
-  CML_Table::iterator p = table.begin();
-  CML_Table::iterator end = table.end();
-  String flags;
-  for (; p != end; ++p) 
-  {
-    lang->munch(p->word, &gi, false);
-    const aspeller::CheckInfo * ci = gi.head;
-    while (ci)
-    { {
-      // check if the base word is in the dictionary
-      CML_Table::iterator b = table.find(ci->word);
-      if (b == table.end()) goto cont;
-
-      // check if all the words once expanded are in the dictionary
-      char flags[2];
-      assert(!(ci->pre_flag && ci->suf_flag));
-      if      (ci->pre_flag != 0) flags[0] = ci->pre_flag;
-      else if (ci->suf_flag != 0) flags[0] = ci->suf_flag;
-      flags[1] = '\0';
-      exp_buf.reset();
-      exp_list = lang->expand(ci->word, flags, exp_buf);
-      for (WordAff * q = exp_list; q; q = q->next) {
-        if (!table.have(q->word)) goto cont;
-      }
-
-      // all the expansions are in the dictionary now add the affix to
-      // the base word and figure out which disjoint set it belongs to
-      add_affix(b, flags[0], ci->pre_flag != 0);
-      CML_Entry * bs = find_set(&*b);
-      for (WordAff * q = exp_list; q; q = q->next) {
-        CML_Table::iterator w = table.find(q->word);
-        assert(b != table.end());
-        CML_Entry * ws = find_set(&*w);
-        link(bs,ws);
-      }
-
-    } cont:
-      ci = ci->next;
-    }
-  }
-
-  // If a base word has both prefixes and suffixes try to combine them.
-  // This can lead to multiple entries for the same base word.  If "multi"
-  // is true than include all the entries.  Otherwise, only include the
-  // one with the largest number of expansions.  This is a greedy choice
-  // that may not be optimal, but is close to it.
-  p = table.begin();
-  String pre,suf;
-  CML_Entry * extras = 0;
-  for (; p != end; ++p) 
-  {
-    pre.clear(); suf.clear();
-    if (!p->aff) continue;
-    char * s = p->aff;
-    while (*s != '/') pre += *s++;
-    ++s;
-    while (*s != '\0') suf += *s++;
-    if (pre.empty()) {
-
-      strcpy(p->aff, suf.str());
-
-    } else if (suf.empty()) {
-
-      strcpy(p->aff, pre.str());
-
-    } else {
-
-      // Try all possible combinations and keep the ones which expand
-      // to legal words.
-
-      PreSufList cross,tmp1,tmp2;
-      PreSuf * ps = 0;
-
-      for (String::iterator pi = pre.begin(); pi != pre.end(); ++pi) {
-        String::iterator si = suf.begin();
-        while (si != suf.end()) { {
-          char flags[3] = {*pi, *si, '\0'};
-          exp_buf.reset();
-          exp_list = lang->expand(p->word, flags, exp_buf);
-          for (WordAff * q = exp_list; q; q = q->next) {
-            if (!table.have(q->word)) goto cont2;
-          }
-          ps = new PreSuf;
-          ps->pre += *pi;
-          ps->suf += *si;
-          cross.add(ps);
-        } cont2:
-          ++si;
-        }
-      }
-
-      // Now combine the legal cross pairs with other ones when
-      // possible.
-
-      // final res = [ (pre, []) ([],suf),
-      //               (cross | combine first | combine second)
-      //               (cross | combine second | combine first)
-      //             | combine first
-      //             | combine second
-      //
-      // combine first [(ab, c) (ab, d) (c, de) (c, ef)]
-      //   =  [(ab, cd), (c, def)]
-      
-      combine(cross, tmp1, 0); 
-      combine(tmp1,  tmp2, 1);
-      tmp1.clear();
-      
-      combine(cross, tmp1, 1);
-      combine(tmp1,  tmp2, 0);
-      tmp1.clear();
-
-      cross.clear();
-
-      ps = new PreSuf;
-      ps->pre = pre;
-      tmp2.add(ps);
-      ps = new PreSuf;
-      ps->suf = suf;
-      tmp2.add(ps);
-
-      combine(tmp2, tmp1, 0);
-      combine(tmp1, cross, 1);
-
-      if (multi) {
-
-        // It is OK to have multiple entries with the same base word
-        // so use them all.
-
-        ps = cross.head;
-        assert(ps);
-        memcpy(p->aff, ps->pre.data(), ps->pre.size());
-        memcpy(p->aff + ps->pre.size(), ps->suf.str(), ps->suf.size() + 1);
-        
-        ps = ps->next;
-        CML_Entry * bs = find_set(&*p);
-        for (; ps; ps = ps->next) {
-          
-          CML_Entry * tmp = new CML_Entry;
-          tmp->word = p->word;
-          tmp->aff = (char *)malloc(ps->pre.size() + ps->suf.size() + 1);
-          memcpy(tmp->aff, ps->pre.data(), ps->pre.size());
-          memcpy(tmp->aff + ps->pre.size(), ps->suf.str(), ps->suf.size() + 1);
-          
-          tmp->parent = bs;
-          
-          tmp->next = extras;
-          extras = tmp;
-        }
-
-      } else {
-
-        // chose the one which has the largest number of expansions
-
-        int max_exp = 0;
-        PreSuf * best = 0;
-        String flags;
-
-        for (ps = cross.head; ps; ps = ps->next) {
-          flags  = ps->pre;
-          flags += ps->suf;
-          exp_buf.reset();
-          exp_list = lang->expand(p->word, flags, exp_buf);
-          int c = 0;
-          for (WordAff * q = exp_list; q; q = q->next) ++c;
-          if (c > max_exp) {max_exp = c; best = ps;}
-        }
-
-        memcpy(p->aff, best->pre.data(), best->pre.size());
-        memcpy(p->aff + best->pre.size(), best->suf.str(), best->suf.size() + 1);
-      }
-    }
-  }
-
-  while (extras) {
-    CML_Entry * tmp = extras;
-    extras = extras->next;
-    tmp->next = 0;
-    table.insert(*tmp);
-    delete tmp;
-  }
-
-  // Create a linked list for each disjoint set
-  p = table.begin();
-  for (; p != end; ++p) 
-  {
-    p->rank = -1;
-    CML_Entry * bs = find_set(&*p);
-    if (bs != &*p) {
-      p->next = bs->next;
-      bs->next = &*p;
-    } 
-  }
-
-  // Now process each disjoint set independently
-  p = table.begin();
-  for (; p != end; ++p) 
-  {
-    if (p->parent) continue;
-
-    Vector<CML_Table::iterator> entries;
-    Vector<Expansion> expansions;
-    Vector<Expansion *> to_keep;
-    std::vector<bool> to_keep_exp;
-    Vector<Expansion *> working;
-    Vector<unsigned> to_remove;
-
-    // First assign numbers to each unique word.  The rank field is
-    // no longer used so use it to store the number.
-    for (CML_Entry * q = &*p; q; q = q->next) {
-      CML_Table::iterator e = table.find(q->word);
-      if (e->rank == -1) {
-        e->rank = entries.size();
-        q->rank = entries.size();
-        entries.push_back(e);
-      } else {
-        q->rank = e->rank;
-      }
-      if (q->aff) {
-        Expansion tmp;
-        tmp.word = q->word;
-        tmp.aff  = q->aff;
-        expansions.push_back(tmp);
-      }
-    }
-
-    to_keep_exp.resize(entries.size());
-
-    // Store the expansion of each base word in a bit vector and
-    // add it to the working set
-    for (Vector<Expansion>::iterator q = expansions.begin(); 
-         q != expansions.end(); 
-         ++q)
-    {
-      q->exp.resize(entries.size());
-      exp_buf.reset();
-      exp_list = lang->expand(q->word, q->aff, exp_buf);
-      for (WordAff * i = exp_list; i; i = i->next) {
-        CML_Table::iterator e = table.find(i->word);
-        assert(0 <= e->rank && e->rank < (int)entries.size());
-        q->exp[e->rank] = true;
-      }
-      q->orig_exp = q->exp;
-      working.push_back(&*q);
-    }
-    
-    unsigned prev_working_size = INT_MAX;
-
-    // This loop will repeat until the working set is empty.  This
-    // will produce optimum results in most cases.  Non optimum
-    // results may be possible if step (4) is necessary, but in
-    // practice this step is rarly necessary.
-    do {
-      prev_working_size = working.size();
-
-      // Sort the list based on WorkingLt.  This is necessary every
-      // time since the expansion list can change.
-      std::sort(working.begin(), working.end(), WorkingLt());
-
-      // (1) Eliminate any elements which are a subset of others
-      for (unsigned i = 0; i != working.size(); ++i) {
-        if (!working[i]) continue;
-        for (unsigned j = i + 1; j != working.size(); ++j) {
-          if (!working[j]) continue;
-          if (subset(working[j]->exp, working[i]->exp)) {
-            working[j] = 0;
-          }
-        }
-      }
-
-      // (2) Move any elements which expand to unique entree 
-      // into the to_keep list
-      to_remove.clear();
-      for (unsigned i = 0; i != entries.size(); ++i) {
-        int n = -1;
-        for (unsigned j = 0; j != working.size(); ++j) {
-          if (working[j] && working[j]->exp[i]) {
-            if (n == -1) n = j;
-            else         n = -2;
-          }
-        }
-        if (n >= 0) to_remove.push_back(n);
-      }
-      for (unsigned i = 0; i != to_remove.size(); ++i) {
-        unsigned n = to_remove[i];
-        if (!working[n]) continue;
-        to_keep.push_back(working[n]);
-        merge(to_keep_exp, working[n]->exp);
-        working[n] = 0;
-      }
-
-      // (3) Eliminate any elements which are a subset of all the
-      // elements in the to_keep list
-      for (unsigned i = 0; i != working.size(); ++i) {
-        if (working[i] && subset(working[i]->exp, to_keep_exp)) {
-          working[i] = 0;
-        }
-      }
-
-      // Compact the working list
-      {
-        int i = 0, j = 0;
-        while (j != (int)working.size()) {
-          if (working[j]) {
-            working[i] = working[j];
-            ++i;
-          }
-          ++j;
-        }
-        working.resize(i);
-      }
-
-      // (4) If none of the entries in working have been removed via
-      // the above methods then make a greedy choice and move the
-      // first element into the to_keep list.
-      if (working.size() > 0 && working.size() == prev_working_size)
-      {
-        to_keep.push_back(working[0]);
-        //CERR.printf("Making greedy choice! Chosing %s/%s.\n",
-        //            working[0]->word, working[0]->aff);
-        merge(to_keep_exp, working[0]->exp);
-        working.erase(working.begin(), working.begin() + 1);
-      }
-
-      // (5) Trim the expansion list for any elements left in the
-      // working set by removing the expansions that already exist in
-      // the to_keep list
-      for (unsigned i = 0; i != working.size(); ++i) {
-        purge(working[i]->exp, to_keep_exp);
-      }
-
-    } while (working.size() > 0);
-
-    if (simplify) {
-
-      // Remove unnecessary flags.  A flag is unnecessary if it does
-      // does not expand to any new words, that is words that are not
-      // already covered by an earlier entries in the list.
-
-      for (unsigned i = 0; i != to_keep.size(); ++i) {
-        to_keep[i]->exp = to_keep[i]->orig_exp;
-      }
-     
-      std::sort(to_keep.begin(), to_keep.end(), WorkingLt());
-
-      std::vector<bool> tally(entries.size());
-      std::vector<bool> backup(entries.size());
-      std::vector<bool> working(entries.size());
-      String flags;
-      
-      for (unsigned i = 0; i != to_keep.size(); ++i) {
-
-        backup = tally;
-
-        merge(tally, to_keep[i]->exp);
-
-        String flags_to_keep = to_keep[i]->aff;
-        bool something_changed;
-        do {
-          something_changed = false;
-          for (unsigned j = 0; j != flags_to_keep.size(); ++j) {
-            flags.assign(flags_to_keep.data(), j);
-            flags.append(flags_to_keep.data(j+1), 
-                         flags_to_keep.size() - (j+1));
-            working = backup;
-            exp_buf.reset();
-            exp_list = lang->expand(to_keep[i]->word, flags, exp_buf);
-            for (WordAff * q = exp_list; q; q = q->next) {
-              CML_Table::iterator e = table.find(q->word);
-              working[e->rank] = true;
-            }
-            if (working == tally) {
-              flags_to_keep = flags;
-              something_changed = true;
-              break;
-            }
-          }
-        } while (something_changed);
-
-        if (flags_to_keep != to_keep[i]->aff) {
-          memcpy(to_keep[i]->aff, flags_to_keep.str(), flags_to_keep.size() + 1);
-        }
-      }
-      
-    }
-
-    // Finally print the resulting list
-
-    for (unsigned i = 0; i != to_keep.size(); ++i) {
-      COUT << oconv(to_keep[i]->word);
-      if (to_keep[i]->aff[0]) {
-        COUT << '/';
-        COUT << oconv(to_keep[i]->aff);
-      }
-      COUT << '\n';
-    }
-    for (unsigned i = 0; i != to_keep_exp.size(); ++i) {
-      if (!to_keep_exp[i]) {
-        assert(!entries[i]->aff);
-        COUT.printf("%s\n", oconv(entries[i]->word));
-      }
-    }
-  }
-
-  p = table.begin();
-  for (; p != end; ++p) 
-  {
-    if (p->aff) free(p->aff);
-    p->aff = 0;
-  }
-}
-
 
 //////////////////////////
 //

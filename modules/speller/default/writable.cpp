@@ -7,7 +7,7 @@
 #include "enumeration.hpp"
 #include "errors.hpp"
 #include "fstream.hpp"
-#include "language.hpp"
+#include "lang_impl.hpp"
 #include "getdata.hpp"
 
 namespace {
@@ -26,7 +26,7 @@ typedef unsigned char byte;
 
 struct Hash {
   InsensitiveHash f;
-  Hash(const Language * l) : f(l) {}
+  Hash(const LangImpl * l) : f(l) {}
   size_t operator() (Str s) const {
     return f(s);
   }
@@ -34,7 +34,7 @@ struct Hash {
 
 struct Equal {
   InsensitiveEqual f;
-  Equal(const Language * l) : f(l) {}
+  Equal(const LangImpl * l) : f(l) {}
   bool operator() (Str a, Str b) const {
     return f(a, b);
   }
