@@ -591,12 +591,18 @@ INIT {
 	    : ";\n";
       } elsif ($d->{type} eq 'cxx constructor') {
 	$ret .= make_cxx_constructor $data->{name}, $d->{data}, %$accum;
-	$ret .= ";\n";
+	$ret .= exists $d->{'cxx impl'} ? " $d->{'cxx impl'}\n"
+	  : ";\n";
       } else { # is a type
 	if (exists $d->{default}) {
 	  push @defaults, $d;
 	}
-	if ($t eq 'class') {
+	if ($d->{type} eq 'cxx member') {
+	  foreach (split /\s*,\s*/, $d->{'headers'}) {
+	    $accum->{headers}{$_} = true;
+	  }
+	  $ret .= $d->{what};
+	} elsif ($t eq 'class') {
 	  $ret .= to_type_name $d, {mode=>'native'}, %$accum;
 	  $ret .= "_";
 	} else {
@@ -605,9 +611,12 @@ INIT {
 	$ret .= ";\n";
       }
     }
-    if (@defaults) {
-      $ret .= "  $obj() : ";
-      $ret .= join ', ', map {to_lower($_->{name}).($t eq 'class'?'_':'')."($_->{default})"} @defaults;
+    if (@defaults || $t eq 'class') {
+      $ret .= "  $obj()";
+      if (@defaults) {
+	$ret .= " : ";
+	$ret .= join ', ', map {to_lower($_->{name}).($t eq 'class'?'_':'')."($_->{default})"} @defaults;
+      }
       $ret .= " {}\n";
     }
     $ret .= "  virtual ~${obj}() {}\n" if $t eq 'class';

@@ -67,8 +67,9 @@ methods: copyable
 
 methods: can have error
 	/
-	error: err
-		default => 0
+	cxx member: err
+		headers => copy ptr, error
+		what => CopyPtr<Error> err_
 
 	method: error number
 		const
@@ -339,6 +340,10 @@ group: can have error
 class: can have error
 	c impl headers => error
 	/
+	cxx constructor:
+		cxx impl => : err_(e) {}
+		/
+		error: e
 	can have error methods
 		prefix => 
 	destructible methods
@@ -531,6 +536,11 @@ group: word list
 class: word list
 	c impl headers => string emulation
 	/
+	cxx member: to encoded
+		headers => parm string, vector
+		what => void (* to_encoded_)(ParmString, Vector<char> &)
+		default => 0
+
 	method: empty
 		const
 		/
