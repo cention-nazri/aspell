@@ -154,164 +154,43 @@ namespace aspeller {
   // BasicWordSet
   //
 
-  class BasicWordSetEnumeration : public StringEnumeration 
-  {
-    BasicWordSet::Emul real_;
-  public:
-    BasicWordSetEnumeration(BasicWordSet::VirEmul * r) : real_(r) {}
+//   class BasicWordSetEnumeration : public StringEnumeration 
+//   {
+//     BasicWordSet::Emul real_;
+//   public:
+//     BasicWordSetEnumeration(BasicWordSet::VirEmul * r) : real_(r) {}
 
-    bool at_end() const {
-      return real_.at_end();
-    }
-    const char * next() {
-      return real_.next().word; // FIXME: It's not this simple
-    }
-    StringEnumeration * clone() const {
-      return new BasicWordSetEnumeration(*this);
-    }
-    void assign(const StringEnumeration * other) {
-      *this = *static_cast<const BasicWordSetEnumeration *>(other);
-    }
-  };
+//     bool at_end() const {
+//       return real_.at_end();
+//     }
+//     const char * next() {
+//       return real_.next().word; // FIXME: It's not this simple
+//     }
+//     StringEnumeration * clone() const {
+//       return new BasicWordSetEnumeration(*this);
+//     }
+//     void assign(const StringEnumeration * other) {
+//       *this = *static_cast<const BasicWordSetEnumeration *>(other);
+//     }
+//   };
 
   StringEnumeration * BasicWordSet::elements() const 
   {
-    return new BasicWordSetEnumeration(detailed_elements());
+    abort(); // FIXME
+    //return new BasicWordSetEnumeration(detailed_elements());
   }
 
-  //
-  // CompoundInfo impl
-  //
-
-  const char * CompoundInfo::read(const char * i, 
-				  const Language & lang)
-  {
-    if (*i == '\0') return i;
-    // FIXME: properally handle ignoring parm 
-    // if not a compound parameter
-    d = 0;
-    const char * i0 = i;
-    if (*i == ':') ++i;
-    bool use_compound = false;
-    if (*i == 'C' || *i == 'c') {++i; use_compound = true;}
-    if (*i == '1') {++i; beg(true);}
-    if (*i == '2') {++i; mid(true);}
-    if (*i == '3') {++i; end(true);}
-    if (!any())  
-    {
-      if (!use_compound)
-	return i0;
-      beg(true); mid(true); end(true);
-    }
-    int m = 0;
-    const char * nm = lang.mid_chars();
-    while (nm[m] != '\0' && nm[m] != lang.to_lower(*i))
-      ++m;
-    mid_char(m);
-    if (nm[m] != '\0') {
-      mid_required(lang.is_upper(*i));
-      ++i;
-    }
-    return i;
-  }
-
-  OStream & CompoundInfo::write (OStream & o, const Language & l) const
-  {
-    if (!any()) return o;
-    o.write(":c");
-    if (!beg() || !mid() || !end()) {
-      if (beg()) o << '1';
-      if (mid()) o << '2';
-      if (end()) o << '3';
-    }
-    if (l.mid_chars()[mid_char()]) {
-      if (mid_required())
-	o << l.to_upper(l.mid_chars()[mid_char()]);
-      else
-	o << l.to_upper(l.mid_chars()[mid_char()]);
-    }
-    return o;
-  }
-
-  CompoundInfo::Position new_position (CompoundInfo::Position unsplit_word, 
-				       CompoundInfo::Position pos) 
-  {
-    switch (unsplit_word) {
-    case CompoundInfo::Orig:
-      return pos;
-    case CompoundInfo::Beg:
-      if (pos == CompoundInfo::End) 
-	return CompoundInfo::Mid;
-      else
-	return pos;
-    case CompoundInfo::Mid:
-      return CompoundInfo::Mid;
-    case CompoundInfo::End:
-      if (pos == CompoundInfo::Beg)
-	return CompoundInfo::Mid;
-      else
-	return pos;
-    }
-    abort();
-  }
-
-  bool CompoundInfo::compatible(Position pos) {
-    switch (pos) {
-    case Beg:
-      return beg();
-    case Mid:
-      return mid();
-    case End:
-      return end();
-    case Orig:
-      abort();
-    }
-    abort();
-  }
-
-/*
-  //
-  // [Basic]WordInfo impl
-  //
-
-  void WordInfo::get_word(String & word, const Language & l, 
-			  const ConvertWord & c) const
-  {
-    word = "";
-    for (const SingleWordInfo * i = words; *i; ++i) {
-      i->append_word(word,l,c);
-    }
-  }
-*/
-
-  OStream & BasicWordInfo::write (OStream & o,
-				  const Language & l,
-				  const ConvertWord & c) const
+  OStream & WordEntry::write (OStream & o,
+                              const Language & l,
+                              const ConvertWord & c) const
   {
     String w;
     c.convert(word, w);
     o << w;
-    if (*affixes)
-      o << '/' << affixes;
-    compound.write(o,l);
+    if (aff && *aff)
+      o << '/' << aff;
     return o;
   }
-
-/*
-  OStream & WordInfo::write(OStream & o, 
-			    const Language & l, 
-			    const ConvertWord & c) const
-  {
-    String word;
-    get_word(word, l, c);
-    o << word;
-    return o;
-  }
-
-  //
-  // add_data_set
-  //
-*/
 
   PosibErr<LoadableDataSet *> add_data_set(ParmString fn,
 					   Config & config,

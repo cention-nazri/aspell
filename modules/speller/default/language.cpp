@@ -29,7 +29,7 @@ namespace aspeller {
     , {"run-together-limit",  KeyInfoInt,    "", "", "c"}
     , {"run-together-middle", KeyInfoString, "", ""}
     , {"run-together-min",    KeyInfoInt,    "", "", "c"}
-    , {"soundslike",          KeyInfoString, "generic", ""}
+    , {"soundslike",          KeyInfoString, "none", ""}
     , {"special",             KeyInfoString, "", ""}
     , {"ignore-accents" ,     KeyInfoBool, "", "", "c"}
     //, {"use-soundslike" ,     KeyInfoBool, "",  ""}

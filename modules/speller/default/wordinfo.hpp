@@ -17,97 +17,39 @@ namespace aspeller {
   class Language;
   struct ConvertWord;
 
-  struct CompoundInfo {
-    unsigned char d;
-    
-    CompoundInfo(unsigned char d0 = 0) : d(d0) {}
-    
-    unsigned int mid_char()       const {return d & (1<<0|1<<1);}
-    
-    void mid_char(unsigned int c) {
-      assert(c < 4);
-      d |= c;
-    }
-    
-    bool mid_required ()       const {return d & 1<<2; }
-    void mid_required (bool c)       { d |= c<<2;}
-    
-    bool beg () const {return d & 1<<3;}
-    void beg (bool c) {d |= c<<3;}
-
-    bool mid () const {return d & 1<<4;}
-    void mid (bool c) {d |= c<<4;}
-
-    bool end () const {return d & 1<<5;}
-    void end (bool c) {d |= c<<5;}
-
-    bool any() const {return d & (1<<3|1<<4|1<<5);}
-
-    const char * read(const char * str, const Language & l);
-    OStream & write(OStream &, const Language & l) const;
-
-    enum Position {Orig, Beg, Mid, End};
-
-    bool compatible(Position pos);
-  };
-
-  CompoundInfo::Position 
-  new_position(CompoundInfo::Position unsplit_word, 
-	       CompoundInfo::Position pos);
-  
-  struct SoundslikeWord {
-    const char * soundslike;
-    const void * word_list_pointer;
-    
-    operator bool () const {return soundslike;}
-  
-    SoundslikeWord() : soundslike(0) {}
-    SoundslikeWord(const char * w, const void * p = 0) 
-      : soundslike(w == 0 || w[0] == 0 ? 0 : w), word_list_pointer(p) {}
-  };
-
-  static const unsigned int MaxCompoundLength = 8;
-
-  struct BasicWordInfo {
+  // WordEntry is an entry in the dictionary.  Both word and aff
+  // should point to a string that will stay in memory as long as the
+  // dictionary does unless under very special circumstances.  Thus
+  // free_ should generally be null.
+  struct WordEntry
+  {
     const char * word;
-    const char * affixes;
-    void * buffer;
-    CompoundInfo compound; 
-    BasicWordInfo(const char * w = 0, CompoundInfo c = 0)
-      : word(w), affixes(""), buffer(0), compound(c) {}
-    BasicWordInfo(const char * w, const char * a, CompoundInfo c = 0)
-      : word(w), affixes(a), buffer(0), compound(c) {}
-    ~BasicWordInfo() {if (buffer) free(buffer);}
-    //operator const char * () const {return word;}
+    const char * aff;
+    void (* adv_)(WordEntry *);
+    void (* free_)(WordEntry *);
+    void * intr[2];
+    enum What {Other, Word, Soundslike, Stripped, Misspelled, Repl} what;
+    // if type is Word than aff will be defined, otherwise it won't
+    bool at_end() {return !word;}
+    bool adv() {if (adv_) {adv_(this); return true;} word = 0; return false;}
     operator bool () const {return word != 0;}
-    inline void get_word(String &, const ConvertWord &);
     OStream & write(OStream & o, const Language & l,
 		    const ConvertWord &) const;
+    WordEntry() : word(0), aff(0), adv_(0), free_(0){}
+    void clear() {if (free_) free_(this); word = 0; aff = 0; adv_ = 0; free_ = 0;}
+    ~WordEntry() {if (free_) free_(this);}
   };
 
-/*
-  struct SingleWordInfo {
-    const char * word;
-    char middle_char;
-    SingleWordInfo(const char * w = 0, char mc = '\0')
-      : word(w), middle_char(mc) {}
-    void clear() {word = 0;}
-    void set(const char * w, char mc = '\0') {word = w; middle_char = mc;}
-    //void append_word(String & word, const Language & l, 
-    //	     const ConvertWord &) const;
-    operator bool() const {return word != 0;}
-  };
+  /*
+    flags:
+      1 bit:  case/accent info known
+      1 bit:  all lower
+      1 bit:  all upper
+      1 bit:  title
+      1 bit:  with accents
 
-  struct WordInfo {
-    SingleWordInfo words[MaxCompoundLength + 1];
-    void get_word(String & word, const Language & l, 
-		  const ConvertWord &) const;
-    operator bool () const {return words[0].word != 0;}
-    OStream & write(OStream & o, const Language & l, 
-		    const ConvertWord &) const;
-  };
-*/
-  
+  */
+
 }
 
 #endif

@@ -226,7 +226,7 @@ namespace aspeller {
     bool strip_accents;
     ConvertWord(const Language * l = 0)
       : lang(l), strip_accents(false) {}
-    void convert(const String & in, String & out) const
+    void convert(ParmString in, String & out) const
     {
       if (!strip_accents) {
 	out += in;

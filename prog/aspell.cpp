@@ -1101,11 +1101,11 @@ void dump (aspeller::LocalWordSet lws)
   switch (lws.word_set->basic_type) {
   case DataSet::basic_word_set:
     {
-      BasicWordSet  * ws = static_cast<BasicWordSet *>(lws.word_set);
-      BasicWordSet::Emul els = ws->detailed_elements();
-      BasicWordInfo wi;
+      BasicWordSet * ws = static_cast<BasicWordSet *>(lws.word_set);
+      BasicWordSet::Enum els = ws->detailed_elements();
+      WordEntry * wi;
       while (wi = els.next(), wi)
-	wi.write(COUT,*(ws->lang()), lws.local_info.convert) << "\n";
+	wi->write(COUT,*(ws->lang()), lws.local_info.convert) << "\n";
     }
     break;
   case DataSet::basic_multi_set:
@@ -1199,12 +1199,12 @@ void personal () {
 
     WritableWordSet * per = new_default_writable_word_set();
     per->load(config->retrieve("personal-path"), config);
-    WritableWordSet::Emul els = per->detailed_elements();
+    WritableWordSet::Enum els = per->detailed_elements();
     LocalWordSetInfo wsi;
     wsi.set(per->lang(), config);
-    BasicWordInfo wi;
+    WordEntry * wi;
     while (wi = els.next(), wi) {
-      wi.write(COUT,*(per->lang()), wsi.convert);
+      wi->write(COUT,*(per->lang()), wsi.convert);
       COUT << "\n";
     }
     delete per;
@@ -1252,26 +1252,28 @@ void repl() {
     } catch (bad_cin) {}
 
     EXIT_ON_ERR(speller->personal_repl().synchronize());
+
 #endif
+
   } else if (action == do_dump) {
 
     StackPtr<Config> config(new_basic_config());
     EXIT_ON_ERR(config->read_in_settings());
 
-    WritableReplacementSet * repl = new_default_writable_replacement_set();
-    repl->load(config->retrieve("repl-path"), config);
-    WritableReplacementSet::Emul els = repl->elements();
+     WritableReplacementSet * repl = new_default_writable_replacement_set();
+     repl->load(config->retrieve("repl-path"), config);
+     WritableReplacementSet::Enum els = repl->detailed_elements();
  
-    ReplacementList rl;
-    while ( !(rl = els.next()).empty() ) {
-      while (!rl.elements->at_end()) {
-	COUT << rl.misspelled_word << ": " << rl.elements->next() << "\n";
-      }
-      delete rl.elements;
-    }
-    delete repl;
+     WordEntry * rl = 0;
+     WordEntry words;
+     while ((rl = els.next())) {
+       repl->repl_lookup(*rl, words);
+       do {
+         COUT << rl->word << ": " << words.word << "\n";
+       } while (words.adv());
+     }
+     delete repl;
   }
-
 }
 
 //////////////////////////

@@ -25,13 +25,74 @@ namespace aspeller {
 char * mystrdup(const char * s);                   // duplicate string
 char * myrevstrdup(const char * s);
 
-inline BasicWordInfo LookupInfo::lookup (ParmString word) {
-  if (sp)
-    return sp->check_simple(word);
-  else
-    return mystrdup(word); //FIXME, make sure this is freed
+static void free_word(WordEntry * w)
+{
+  free((void *)w->word);
 }
 
+static void free_aff(WordEntry * w)
+{
+  free((void *)w->aff);
+}
+
+struct LookupBookkepping
+{
+  const char * aff;
+  bool alloc;
+  LookupBookkepping() : aff(0), alloc(false) {}
+};
+
+static void append_aff(LookupBookkepping & s, WordEntry & o)
+{
+  size_t s0 = strlen(s.aff);
+  size_t s1 = strlen(o.aff);
+  if (s0 == s1 && memcmp(s.aff, o.aff, s0) == 0) return;
+  char * tmp = (char *)malloc(s0 + s1 + 1);
+  // FIXME: avoid adding duplicate flags
+  memcpy(tmp, o.aff, s1);
+  memcpy(tmp + s1, s.aff, s0);
+  tmp[s0 + s1] = '\0';
+  if (s.alloc) free((void *)s.aff);
+  s.aff = tmp;
+  s.alloc = true;
+}
+
+inline bool LookupInfo::lookup (ParmString word, WordEntry & o) const
+{
+  SpellerImpl::WS::const_iterator i = begin;
+  const char * w = 0;
+  LookupBookkepping s;
+  if (mode == Word) {
+    do {
+      if (i->ws->lookup(word, o, i->cmp)) {
+        w = o.word;
+        if (s.aff == 0) s.aff = o.aff;
+        else append_aff(s, o); // this should not be a very common case
+      }
+      ++i;
+    } while (i != end);
+  } else if (mode == Soundslike) {
+    do {
+      if (i->ws->soundslike_lookup(word, o)) {
+        w = o.word;
+        if (s.aff == 0) s.aff = o.aff;
+        else append_aff(s, o); // this should not be a very common case
+        while (o.adv()) append_aff(s, o); // neither should this
+      }
+      ++i;
+    } while (i != end);
+  } else {
+    o.word = mystrdup(word);
+    o.aff  = word + strlen(word);
+    //o.free_ = free_word; //FiXME this isn't right....
+    return true;
+  }
+  if (!w) return false;
+  o.word = w;
+  o.aff = s.aff;
+  if (s.alloc) o.free_ = free_aff;
+  return true;
+}
 
 PfxEntry::~PfxEntry()
 {
@@ -72,12 +133,12 @@ char * PfxEntry::add(ParmString word) const
 }
 
 // check if this prefix entry matches 
-BasicWordInfo PfxEntry::check(LookupInfo linf, ParmString word,
-                              CheckInfo & ci, GuessInfo * gi) const
+bool PfxEntry::check(const LookupInfo & linf, ParmString word,
+                     CheckInfo & ci, GuessInfo * gi) const
 {
   int			cond;	// condition number being examined
   int	                tmpl;   // length of tmpword
-  BasicWordInfo       wordinfo;     // hash entry of root word or NULL
+  WordEntry             wordinfo;     // hash entry of root word or NULL
   unsigned char *	cp;		
   char	        tmpword[MAXWORDLEN+1];
 
@@ -113,9 +174,9 @@ BasicWordInfo PfxEntry::check(LookupInfo linf, ParmString word,
     if (cond >= numconds) {
       CheckInfo * lci = 0;
       tmpl += stripl;
-      if ((wordinfo = linf.lookup(tmpword))) {
+      if (linf.lookup(tmpword, wordinfo)) {
 
-        if (TESTAFF(wordinfo.affixes, achar))
+        if (TESTAFF(wordinfo.aff, achar))
           lci = &ci;
         else if (gi)
           lci = gi->add();
@@ -124,16 +185,15 @@ BasicWordInfo PfxEntry::check(LookupInfo linf, ParmString word,
               
         // prefix matched but no root word was found 
         // if XPRODUCT is allowed, try again but now 
-        // ross checked combined with a suffix
+        // cross checked combined with a suffix
                 
         if (gi)
           lci = gi->last;
                 
-        if (!wordinfo && (xpflg & XPRODUCT)) {
-          wordinfo = pmyMgr->suffix_check(linf, ParmString(tmpword, tmpl), 
-                                          ci, gi,
-                                          XPRODUCT, (AffEntry *)this);
-          if (wordinfo)
+        if (xpflg & XPRODUCT) {
+          if (pmyMgr->suffix_check(linf, ParmString(tmpword, tmpl), 
+                                   ci, gi,
+                                   XPRODUCT, (AffEntry *)this))
             lci = &ci;
           else if (gi->last != lci) {
             while (lci = const_cast<CheckInfo *>(lci->next), lci) {
@@ -151,10 +211,10 @@ BasicWordInfo PfxEntry::check(LookupInfo linf, ParmString word,
         lci->pre_add = appnd;
         lci->pre_strip = strip;
       }
-      if (lci ==&ci) return wordinfo;
+      if (lci ==&ci) return true;
     }
   }
-  return BasicWordInfo();
+  return false;
 }
 
 SfxEntry::~SfxEntry()
@@ -202,13 +262,13 @@ char * SfxEntry::add(ParmString word) const
 }
 
 // see if this suffix is present in the word 
-BasicWordInfo SfxEntry::check(LookupInfo linf, ParmString word,
-                              CheckInfo & ci, GuessInfo * gi,
-                              int optflags, AffEntry* ppfx)
+bool SfxEntry::check(const LookupInfo & linf, ParmString word,
+                     CheckInfo & ci, GuessInfo * gi,
+                     int optflags, AffEntry* ppfx)
 {
   int	                tmpl;		 // length of tmpword 
   int			cond;		 // condition beng examined
-  BasicWordInfo       wordinfo;         // hash entry pointer
+  WordEntry             wordinfo;         // hash entry pointer
   unsigned char *	cp;
   char	        tmpword[MAXWORDLEN+1];
   PfxEntry* ep = (PfxEntry *) ppfx;
@@ -218,7 +278,7 @@ BasicWordInfo SfxEntry::check(LookupInfo linf, ParmString word,
   // but it does not support cross products skip it
 
   if ((optflags & XPRODUCT) != 0 &&  (xpflg & XPRODUCT) == 0)
-    return NULL;
+    return false;
 
   // upon entry suffix is 0 length or already matches the end of the word.
   // So if the remaining root word has positive length
@@ -256,10 +316,10 @@ BasicWordInfo SfxEntry::check(LookupInfo linf, ParmString word,
     if (cond < 0) {
       CheckInfo * lci = 0;
       tmpl += stripl;
-      if ((wordinfo = linf.lookup(tmpword))) {
-        if (TESTAFF(wordinfo.affixes, achar) && 
+      if (linf.lookup(tmpword, wordinfo)) {
+        if (TESTAFF(wordinfo.aff, achar) && 
             ((optflags & XPRODUCT) == 0 || 
-             TESTAFF(wordinfo.affixes, ep->achar)))
+             TESTAFF(wordinfo.aff, ep->achar)))
           lci = &ci;
         else if (gi)
           lci = gi->add();
@@ -271,11 +331,11 @@ BasicWordInfo SfxEntry::check(LookupInfo linf, ParmString word,
           lci->suf_strip = strip;
         }
         
-        if (lci == &ci) return wordinfo;
+        if (lci == &ci) return true;
       }
     }
   }
-  return BasicWordInfo();
+  return false;
 }
 
 

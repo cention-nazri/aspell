@@ -32,17 +32,15 @@ namespace acommon
       this->resize(pos + s);
       return pos;
     }
-    T * data() {
-      return &*this->begin();
-    }
-    T * data(int pos) {
-      return &*this->begin() + pos;
-    }
-    T * data_end() {
-      return &*this->end();
-    }
-    T * pbegin() {return data();}
-    T * pend() {return data_end();}
+    T * data() {return &*this->begin();}
+    T * data(int pos) {return &*this->begin() + pos;}
+    T * data_end() {return &*this->end();}
+
+    T * pbegin() {return &*this->begin();}
+    T * pend()   {return &*this->end();}
+
+    const T * pbegin() const {return &*this->begin();}
+    const T * pend()   const {return &*this->end();}
 
     template <typename U>
     U * datap() { 

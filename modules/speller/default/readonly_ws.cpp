@@ -160,32 +160,24 @@ namespace aspeller_default_readonly_ws {
     WordLookup       word_lookup;
     const char *     word_block;
     u32int           max_word_length;
-    bool             use_soundslike;
-    bool             affix_info;
     
     ReadOnlyWS(const ReadOnlyWS&);
     ReadOnlyWS& operator= (const ReadOnlyWS&);
 
     struct ElementsParms;
-    struct SoundslikeElementsBase;
-    struct SoundslikeElementsWSL;
-    struct SoundslikeElementsNoSL;
-    struct SoundslikeElementsAffix;
-    struct SoundslikeWords;
-    struct SingleSoundslikeWord;
+    struct SoundslikeElements;
 
   public:
-    VirEmul * detailed_elements() const;
+    VirEnum * detailed_elements() const;
     Size      size()     const;
     bool      empty()    const;
 
-    BasicWordInfo convert(const char * w) const {
-      if (affix_info)
-        return BasicWordInfo(w,w+*(w-1),0);
-      else
-        return BasicWordInfo(w,"", 0);
+    void convert(const char * w, WordEntry & o) const {
+      o.what = WordEntry::Word;
+      o.word = w;
+      o.aff  = affix_compressed ? w+*(w-1) : w - 1; // w - 1 is NULL
     }
-      
+    
     ReadOnlyWS() {
       block = 0;
     }
@@ -200,11 +192,14 @@ namespace aspeller_default_readonly_ws {
     }
       
     PosibErr<void> load(ParmString, Config *, SpellerImpl *, const LocalWordSetInfo *);
-    BasicWordInfo lookup (ParmString word, const SensitiveCompare &) const;
-    VirEmul * words_w_soundslike(const char * soundslike) const;
-    VirEmul * words_w_soundslike(SoundslikeWord soundslike) const;
+    bool lookup(ParmString word, WordEntry &, const SensitiveCompare &) const;
 
-    VirSoundslikeEmul * soundslike_elements() const;
+    bool soundslike_lookup(const WordEntry &, WordEntry &) const;
+    bool soundslike_lookup(const char * sondslike, WordEntry &) const;
+    
+    static void soundslike_next(WordEntry *);
+    
+    SoundslikeEnumeration * soundslike_elements() const;
   };
     
   //
@@ -212,18 +207,20 @@ namespace aspeller_default_readonly_ws {
   //
 
   struct ReadOnlyWS::ElementsParms {
-    typedef BasicWordInfo                   Value;
+    typedef WordEntry *                Value;
     typedef WordLookup::const_iterator Iterator; 
     const ReadOnlyWS * ws;
+    WordEntry data;
     ElementsParms(const ReadOnlyWS * w) : ws(w) {}
     bool endf(const Iterator & i) const {return i.at_end();}
     Value end_state() const {return 0;}
-    Value deref(const Iterator & i) const {
-      return ws->convert(ws->word_block + *i);
+    WordEntry * deref(const Iterator & i) {
+      ws->convert(ws->word_block + *i, data);
+      return & data;
     }
   };
 
-  ReadOnlyWS::VirEmul * ReadOnlyWS::detailed_elements() const {
+  ReadOnlyWS::VirEnum * ReadOnlyWS::detailed_elements() const {
     return new MakeVirEnumeration<ElementsParms>
       (word_lookup.begin(), ElementsParms(this));
   }
@@ -300,9 +297,9 @@ namespace aspeller_default_readonly_ws {
     if (strcmp(word, lang()->soundslike_name()) != 0)
       return make_err(bad_file_format, fn, "Wrong Soundslike");
     if (strcmp(word, "none") == 0)
-      use_soundslike=false;
+      have_soundslike=false;
     else
-      use_soundslike=true;
+      have_soundslike=true;
 
     delete[] word;
 
@@ -314,7 +311,7 @@ namespace aspeller_default_readonly_ws {
 
     delete[] word;
 
-    affix_info = data_head.affix_info;
+    affix_compressed = data_head.affix_info;
 
     if (data_head.minimal_specified != u32int_max) {
       word = new char[data_head.middle_chars_size];
@@ -346,6 +343,8 @@ namespace aspeller_default_readonly_ws {
       f.read(block, block_size);
     }
 
+    if (data_head.jump1_offset) fast_scan = true;
+
     jump1 = reinterpret_cast<const SoundslikeJump *>(block 
 						     + data_head.jump1_offset);
 
@@ -367,153 +366,57 @@ namespace aspeller_default_readonly_ws {
     return no_err;
   }
 
-  BasicWordInfo ReadOnlyWS::lookup(ParmString word, 
-				   const SensitiveCompare & c) const 
+  bool ReadOnlyWS::lookup(ParmString word, WordEntry & o,
+                          const SensitiveCompare & c) const 
   {
+    o.clear();
+    o.what = WordEntry::Word;
     WordLookup::ConstFindIterator i = word_lookup.multi_find(word);
     for (; !i.at_end(); i.adv()) {
       const char * w = word_block + i.deref();
-      if (c(word, w)) 
-        return convert(w);
+      if (c(word, w)) {
+        convert(w,o);
+        return true;
+      }
     }
-    return 0;
+    return false;
   }
 
-  struct ReadOnlyWS::SoundslikeWords : public VirEnumeration<BasicWordInfo> {
-    const char * cur;
-    SoundslikeWords(const char * c) : cur(c) {}
-    Value next() {
-      if (*cur == 0)
-	return 0;
-      Value tmp(cur, *(cur - 1)); 
-      unsigned int len = strlen(cur);
-      cur += len + 1;
-      return tmp;
-    }
-    bool at_end() const {return *cur == 0;}
-    Base * clone() const {return new SoundslikeWords(*this);}
-    void assign(const Base * other) 
-      {*this = *static_cast<const SoundslikeWords *>(other);}
-  };
-
-  struct ReadOnlyWS::SingleSoundslikeWord : public VirEnumeration<BasicWordInfo> {
-    String cur;
-    bool done;
-    SingleSoundslikeWord(const char * c) : cur(c), done(false) {}
-    Value next() {
-      if (done) return 0;
-      done = true;
-      //CERR << "$$" << cur << '\n';
-      return cur.c_str();
-    }
-    bool at_end() const {return done;}
-    Base * clone() const {return new SingleSoundslikeWord(*this);}
-    void assign(const Base * other) 
-      {*this = *static_cast<const SingleSoundslikeWord *>(other);}
-  };
-
-  struct ReadOnlyWS::SoundslikeElementsBase : public VirSoundslikeEmul
+  struct ReadOnlyWS::SoundslikeElements : public SoundslikeEnumeration
   {
-    int level;
+    WordEntry data;
     const ReadOnlyWS * obj;
     const SoundslikeJump * jump1;
     const SoundslikeJump * jump2;
     const char * cur;
-    const char * tmp;
+    int level;
+    bool sl;
 
-    virtual u16int next_pos() const = 0;
-
-    const char * adv(int stopped_at);
-
-    SoundslikeElementsBase(const ReadOnlyWS * o)
-      : level(1), obj(o), jump1(obj->jump1), jump2(obj->jump2), cur(0) {}
-  };
-
-  struct ReadOnlyWS::SoundslikeElementsWSL : public SoundslikeElementsBase
-  {
-    SoundslikeElementsWSL(const ReadOnlyWS * o)
-      : SoundslikeElementsBase(o) {}
-
-    u16int next_pos() const
-      {return *reinterpret_cast<const u16int *>(cur - 2);}
-
-    SoundslikeWord next(int stopped_at) {
-      const char * r = adv(stopped_at);
-      if (r) return SoundslikeWord(r,0);
-      return SoundslikeWord(tmp,tmp);
+    u16int next_pos() const {
+      if (sl) return *reinterpret_cast<const u16int *>(cur - 2);
+      else return *reinterpret_cast<const unsigned char *>(cur - 2);
     }
+
+    WordEntry * next(int stopped_at);
+
+    SoundslikeElements(const ReadOnlyWS * o)
+      : obj(o), jump1(obj->jump1), jump2(obj->jump2), cur(0), 
+        level(1), sl(o->have_soundslike) {
+      data.what = o->have_soundslike ? WordEntry::Soundslike : WordEntry::Word;}
   };
+  
+  WordEntry * ReadOnlyWS::SoundslikeElements::next(int stopped_at) {
 
-  struct ReadOnlyWS::SoundslikeElementsNoSL : public SoundslikeElementsBase
-  {
-    CharVector buf;
-    const Language * lang;
+    //CERR << level << ":" << stopped_at << "  :";
+    //CERR << jump1->sl << ":" << jump2->sl << "\n";
 
-    SoundslikeElementsNoSL(const ReadOnlyWS * o, const Language * l)
-      : SoundslikeElementsBase(o), lang(l) {}
-
-    u16int next_pos() const
-      {return *reinterpret_cast<const unsigned char *>(cur - 2);}
-
-    SoundslikeWord next(int stopped_at) {
-      const char * r = adv(stopped_at);
-      if (r) return SoundslikeWord(r,0);
-      buf.clear();
-      to_stripped(*lang, tmp, buf);
-      buf.append('\0');
-      return SoundslikeWord(buf.data(), tmp);
-    }
-  };
-
-  struct ReadOnlyWS::SoundslikeElementsAffix : public SoundslikeElementsBase
-  {
-    CharVector buf;
-    const Language * lang;
-    CheckList cl;
-    const CheckInfo * ci_cur;
-
-    SoundslikeElementsAffix(const ReadOnlyWS * o, const Language * l)
-      : SoundslikeElementsBase(o), lang(l), ci_cur(0) {}
-
-    u16int next_pos() const
-      {return *reinterpret_cast<const unsigned char *>(cur - 2);}
-
-    SoundslikeWord next(int stopped_at) {
-      if (!ci_cur) {
-        const char * r = adv(stopped_at);
-        //if (r) CERR << ",," << r << '\n';
-        if (r) return SoundslikeWord(r,0);
-        BasicWordInfo w = obj->convert(tmp);
-        //CERR << ".." << w.word << '/' << w.affixes << '\n';
-        cl.reset();
-        lang->affix()->expand(w.word, w.affixes, &cl);
-        ci_cur = cl.data + 1;
-      }
-
-      const CheckInfo * ci_tmp = ci_cur;
-      ci_cur = ci_cur->next;
-
-      buf.clear();
-      to_stripped(*lang, ci_tmp->word, buf);
-      buf.append('\0');
-      buf.append(ci_tmp->word, strlen(ci_tmp->word));
-      buf.append('\0');
-      //CERR << "::" << ci_tmp->word << ' ' << buf.data() << '\n';
-      return SoundslikeWord(buf.data(), tmp);
-    }
-  };
-
-  const char * ReadOnlyWS::SoundslikeElementsBase::adv(int stopped_at) {
-
-    //COUT << level << ":" << stopped_at << "  ";
-    //COUT << jump1->sl << " " << jump2->sl << "\n";
-
-    tmp = cur;
+    const char * tmp = cur;
 
     if (level == 1 && stopped_at < 2) {
 
       ++jump1;
-      return jump1->sl;
+      tmp = jump1->sl;
+      goto jquit;
 	  
     } else if (level == 2 && stopped_at < 3) {
 
@@ -521,16 +424,18 @@ namespace aspeller_default_readonly_ws {
       if (jump2[-1].sl[1] != jump2[0].sl[1]) {
         ++jump1;
         level = 1;
-        return jump1->sl;
+        tmp = jump1->sl;
       } else {
-        return jump2->sl;
+        tmp = jump2->sl;
       }
+      goto jquit;
       
     } else if (level == 1) {
 
       level = 2;
       jump2 = obj->jump2 + jump1->loc;
-      return jump2->sl;
+      tmp = jump2->sl;
+      goto jquit;
 
     } else if (level == 2) {
 
@@ -540,17 +445,16 @@ namespace aspeller_default_readonly_ws {
 
     } else if (next_pos() == 0) {
 
-      //cur += 2;
-      cur = 0; // REMOVE ME When sure that cur it not used...
       level = 2;
       ++jump2;
       if (jump2[-1].sl[1] != jump2[0].sl[1]) {
         level = 1;
         ++jump1;
-        return jump1->sl;
+        tmp = jump1->sl;
       } else {
-        return jump2->sl;
+        tmp = jump2->sl;
       }
+      goto jquit;
 
     } else {
 
@@ -558,55 +462,72 @@ namespace aspeller_default_readonly_ws {
       
     }
 
-    return 0;
-  }
-
-    
-  ReadOnlyWS::VirSoundslikeEmul * ReadOnlyWS::soundslike_elements() const {
-
-    if (use_soundslike) {
-      
-      return new SoundslikeElementsWSL(this);
-
-    } else if (affix_info) {
-
-      return new SoundslikeElementsAffix(this, lang());
-
+    if (sl) {
+      data.word = tmp;
+      data.intr[0] = (void *)tmp;
     } else {
-
-      return new SoundslikeElementsNoSL(this, lang());
-      
+      obj->convert(tmp, data);
     }
+    return &data;
+
+  jquit:
+    if (!*tmp) return 0;
+    data.word = tmp;
+    data.intr[0] = 0;
+    if (!sl) {
+      data.what = WordEntry::Stripped;
+      data.aff  = 0;
+    }
+    return &data;
   }
     
-  ReadOnlyWS::VirEmul * 
-  ReadOnlyWS::words_w_soundslike(const char * soundslike) const {
+  SoundslikeEnumeration * ReadOnlyWS::soundslike_elements() const {
 
-    abort();
+    return new SoundslikeElements(this);
 
+  }
+    
+  bool ReadOnlyWS::soundslike_lookup(const char * soundslike, WordEntry &) const 
+  {
+
+    abort(); // FIXME
+
+  }
+
+  // static
+  void ReadOnlyWS::soundslike_next(WordEntry * w)
+  {
+    const char * cur = static_cast<const char *>(w->intr[0]);
+    w->word = cur;
+    unsigned int len = strlen(cur);
+    cur += len + 1;
+    w->intr[0] = (void *)cur;
+    if (*cur == 0) w->adv_ = 0;
   }
   
-  ReadOnlyWS::VirEmul *
-  ReadOnlyWS::words_w_soundslike(SoundslikeWord w) const {
+  bool ReadOnlyWS::soundslike_lookup(const WordEntry & s, WordEntry & w) const 
+  {
+    w.clear();
 
-    if (w.word_list_pointer == 0) {
+    if (s.intr[0] == 0) {
 
-      return new SoundslikeWords("");
+      return false;
 
-    } else if (use_soundslike) {
+    } else if (have_soundslike) {
       
-      u16int sl_size = *reinterpret_cast<const u16int *>(w.soundslike-4);
-      
-      return new SoundslikeWords(w.soundslike + sl_size + 1);
-
-    } else if (affix_info) {
-
-      return new SingleSoundslikeWord(w.soundslike + strlen(w.soundslike) + 1);
+      w.what = WordEntry::Word;
+      u16int sl_size = *reinterpret_cast<const u16int *>(s.word-4);
+      w.intr[0] = (void *)(s.word + sl_size + 1);
+      w.adv_ = soundslike_next;
+      soundslike_next(&w);
+      return true;
       
     } else {
-      
-      return new SingleSoundslikeWord(static_cast<const char *>
-                                      (w.word_list_pointer));
+
+      w.what = WordEntry::Word;
+      convert(s.word, w);
+      return true;
+
     }
 
   }
@@ -627,7 +548,6 @@ namespace aspeller_default_readonly_ws {
 
   struct WordData {
     static const int size = 3;
-    char compound_info;
     char offset;
     char affix_offset;
     char data[];
@@ -788,12 +708,6 @@ namespace aspeller_default_readonly_ws {
         if (affixes && !lang.affix())
           abort(); // FIXME return error
 
-	// Read in compound info
-	
-	CompoundInfo c;
-        if (p1 && *c.read(p1, lang) != '\0')
-	  return make_err(invalid_flag, w, p1);
-	
         if (!affixes || (affixes && !affix_compress)) {
 
           // Now expand any affix compression
@@ -823,10 +737,7 @@ namespace aspeller_default_readonly_ws {
           
             if(s > data_head.max_word_length)
               data_head.max_word_length = s;
-            if (c.any() && s < data_head.minimal_specified)
-              data_head.minimal_specified = s;
             WordData * b = (WordData *)buf.alloc(s + WordData::size + 2);
-            b->compound_info = static_cast<char>(c.d);
             b->offset = s + 2; // this only used when no sl data
             b->affix_offset = s + 1;
             memcpy(b->data, w, s+1);
@@ -867,15 +778,12 @@ namespace aspeller_default_readonly_ws {
 
             if(s > data_head.max_word_length)
               data_head.max_word_length = s;
-            if (c.any() && s < data_head.minimal_specified)
-              data_head.minimal_specified = s;
             
             WordData * b;
             b = (WordData *)buf.alloc(s + WordData::size + p->af.size() + 2);
             b->offset = s + 1 + p->af.size() + 1;
             b->affix_offset = s + 1;
 
-            b->compound_info = static_cast<char>(c.d);
             memcpy(b->data, w, s + 1);
             memcpy(b->data + s + 1, p->af.c_str(), p->af.size() + 1);
 
@@ -999,8 +907,7 @@ namespace aspeller_default_readonly_ws {
 	if (use_soundslike) {
 
 	  sl = i->first;
-          while (data.size() % 2 != 0)
-            data.write('\0');
+          if (data.size() % 2 != 0) data.write('\0');
 	  data.write16(sl.size());
           data.write16(0); // place holder for offset to next item
 
@@ -1078,6 +985,7 @@ namespace aspeller_default_readonly_ws {
       }
 
       // add special end case
+      if (data.size() % 2 != 0) data.write('\0');
       data.write16(0);
       data.write16(0);
       if (use_soundslike)

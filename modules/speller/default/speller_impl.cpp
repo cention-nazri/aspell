@@ -5,6 +5,7 @@
 // at http://www.gnu.org/.
 
 #include <stdlib.h>
+#include <typeinfo>
 
 #include "aspeller.hpp"
 #include "clone_ptr-t.hpp"
@@ -78,41 +79,42 @@ namespace aspeller {
 						bool memory) 
   {
     if (ignore_repl) return no_err;
-    DataSetCollection::Iterator i = wls_->locate(personal_repl_id);
-    if (i == wls_->end()) return no_err;
-    String::size_type pos;
-    Enumeration<StringEnumeration> sugels 
-      = intr_suggest_->suggest(mis.c_str()).elements();
-    const char * first_word = sugels.next();
-    const char * w1;
-    const char * w2 = 0;
-    if (pos = cor.find(' '), pos == String::npos 
-	? (w1 =check_simple(cor).word) != 0
-	: ((w1 = check_simple((String)cor.substr(0,pos)).word) != 0
-	   && (w2 = check_simple((String)cor.substr(pos+1)).word) != 0) ) { 
-      // cor is a correct spelling
-      String cor_orignal_casing(w1);
-      if (w2 != 0) {
-	cor_orignal_casing += cor[pos];
-	cor_orignal_casing += w2;
-      }
-      if (first_word == 0 || cor != first_word) {
-	static_cast<WritableReplacementSet *>(i->data_set)
-	  ->add(aspeller::to_lower(lang(), mis), 
-		cor_orignal_casing);
-      }
+// FIXME
+//     DataSetCollection::Iterator i = wls_->locate(personal_repl_id);
+//     if (i == wls_->end()) return no_err;
+//     String::size_type pos;
+//     Enumeration<StringEnumeration> sugels 
+//       = intr_suggest_->suggest(mis.c_str()).elements();
+//     const char * first_word = sugels.next();
+//     const char * w1;
+//     const char * w2 = 0;
+//     if (pos = cor.find(' '), pos == String::npos 
+// 	? (w1 =check_simple(cor).word) != 0
+// 	: ((w1 = check_simple((String)cor.substr(0,pos)).word) != 0
+// 	   && (w2 = check_simple((String)cor.substr(pos+1)).word) != 0) ) { 
+//       // cor is a correct spelling
+//       String cor_orignal_casing(w1);
+//       if (w2 != 0) {
+// 	cor_orignal_casing += cor[pos];
+// 	cor_orignal_casing += w2;
+//       }
+//       if (first_word == 0 || cor != first_word) {
+// 	static_cast<WritableReplacementSet *>(i->data_set)
+// 	  ->add(aspeller::to_lower(lang(), mis), 
+// 		cor_orignal_casing);
+//       }
       
-      if (memory && prev_cor_repl_ == mis) 
-	store_replacement(prev_mis_repl_, cor, false);
+//       if (memory && prev_cor_repl_ == mis) 
+// 	store_replacement(prev_mis_repl_, cor, false);
       
-    } else { // cor is not a correct spelling
+//     } else { // cor is not a correct spelling
       
-      if (memory) {
-	if (prev_cor_repl_ != mis)
-	  prev_mis_repl_ = mis;
-	prev_cor_repl_ = cor;
-      }
-    }
+//       if (memory) {
+// 	if (prev_cor_repl_ != mis)
+// 	  prev_mis_repl_ = mis;
+// 	prev_cor_repl_ = cor;
+//       }
+//     }
     return no_err;
   }
 
@@ -162,64 +164,47 @@ namespace aspeller {
     wls_->locate(wl)->own = v;
   }
 
-  BasicWordInfo SpellerImpl::check_simple (ParmString w) {
+  bool SpellerImpl::check_simple (ParmString w, WordEntry & w0) 
+  {
+    w0.clear(); // FIXME: is this necessary?
     const char * x = w;
-    BasicWordInfo w1;
-    BasicWordInfo w0;
     while (*x != '\0' && (x-w) < static_cast<int>(ignore_count)) ++x;
-    if (*x == '\0') return w.str();
-    DataSetCollection::ConstIterator i   = wls_->begin();
-    DataSetCollection::ConstIterator end = wls_->end();
-    for (; i != end; ++i) {
-      // FIXME: Create special list of word lists which should be used to
-      //        check for performance reasons
-      if  (i->use_to_check && 
-	   i->data_set->basic_type == DataSet::basic_word_set &&
-	   (w0 = static_cast<const BasicWordSet *>(i->data_set)
-	    ->lookup(w,i->local_info.compare)) )
-      {
-        if (w1 && w0.affixes && w1.affixes) {
-          // FIXME: THIS WILL LEAK MEMORY
-          //        affixes is not normally dynamically allocated 
-          //        except in this case
-          size_t s0 = strlen(w0.affixes);
-          size_t s1 = strlen(w1.affixes);
-          char * str = (char *)malloc(s0 + s1 + 1);
-          memcpy(str, w0.affixes, s0);
-          memcpy(str + s0, w1.affixes, s1 + 1);
-          w1.affixes = str;
-        } else {
-          w1 = w0;
-        }
-      }
-    }
-    return w1;
+    if (*x == '\0') {w0.word = w; return true;}
+    WS::const_iterator i   = check_ws.begin();
+    WS::const_iterator end = check_ws.end();
+    do {
+      if (i->ws->lookup(w, w0, i->cmp)) return true;
+      ++i;
+    } while (i != end);
+    return false;
   };
+
+  bool SpellerImpl::check_affix(ParmString word, CheckInfo & ci, GuessInfo * gi)
+  {
+    WordEntry w;
+    bool res = check_simple(word, w);
+    if (res) {ci.word = w.word; return true;}
+    if (affix_compress) {
+      res = lang_->affix()->affix_check(LookupInfo(this, LookupInfo::Word), word, ci, gi);
+      if (res) return true;
+    }
+    if (affix_info && gi) {
+      lang_->affix()->affix_check(LookupInfo(this, LookupInfo::Guess), word, ci, gi);
+    }
+    return false;
+  }
 
   PosibErr<bool> SpellerImpl::check(char * word, char * word_end, 
                                     /* it WILL modify word */
 				    unsigned int run_together_limit,
-				    CompoundInfo::Position pos,
 				    CheckInfo * ci, GuessInfo * gi)
   {
     assert(run_together_limit <= 8); // otherwise it will go above the 
                                      // bounds of the word array
     clear_check_info(*ci);
-    BasicWordInfo w = check_affix(word, *ci, gi);
-    if (w) {
-      if (pos == CompoundInfo::Orig)
-	return true;
-      bool check_if_valid = !(unconditional_run_together_ 
-			      && strlen(word) >= run_together_min_);
-      if (!check_if_valid || w.compound.compatible(pos))
-	return true;
-      else
-	return false;
-    }
-    
-    if (run_together_limit <= 1 
-	|| (!unconditional_run_together_ && !run_together_specified_))
-      return false;
+    bool res = check_affix(word, *ci, gi);
+    if (res) return true;
+    if (run_together_limit <= 1) return false;
     for (char * i = word + run_together_start_len_; 
 	 i <= word_end - run_together_start_len_;
 	 ++i) 
@@ -227,41 +212,13 @@ namespace aspeller {
 	char t = *i;
 	*i = '\0';
         //FIXME: clear ci, gi?
-	BasicWordInfo s = check_affix(word, *ci, gi);
+	res = check_affix(word, *ci, gi);
 	*i = t;
-	if (!s) continue;
-	CompoundInfo c = s.compound;
-	CompoundInfo::Position end_pos = new_position(pos, CompoundInfo::End);
-	char m = run_together_middle_[c.mid_char()];
-	//
-	// FIXME: Deal with casing of the middle character properly
-	//        if case insentate than it can be anything
-	//        otherwise it should match the case of previous
-	//        letter
-	//
-	bool check_if_valid = !(unconditional_run_together_ 
-				&& i - word >= static_cast<int>(run_together_min_));
-	if (check_if_valid) {
-	  CompoundInfo::Position beg_pos = new_position(pos, CompoundInfo::Beg);
-	  if (!c.compatible(beg_pos)) 
-	    continue;
-	  if (c.mid_required() && *i != m)
-	    continue;
-	}
-	if ((!check_if_valid || !c.mid_required()) // if check then !s.mid_required() 
-	    && check(i, word_end, run_together_limit - 1, end_pos, ci + 1, 0)) {
+	if (!res) continue;
+	if (check(i, word_end, run_together_limit - 1, ci + 1, 0)) {
           ci->next = ci + 1;
 	  return true;
         }
-	if ((check_if_valid ? *i == m : strchr(run_together_middle_, *i) != 0) 
-	    && word_end - (i + 1) >= static_cast<int>(run_together_min_)) {
-	  if (check(i+1, word_end, run_together_limit - 1, end_pos, ci + 1, 0)) {
-            ci->next = ci + 1;
-	    return true;
-          }
-          // already checked word (i+1) so no need to check it again
-          ++i;
-	}
       }
     return false;
   }
@@ -632,7 +589,6 @@ namespace aspeller {
       change_id(temp, personal_repl_id);
     }
 
-
     const char * sys_enc = lang_->charset();
     if (!config_->have("encoding"))
       config_->replace("encoding", sys_enc);
@@ -668,6 +624,60 @@ namespace aspeller {
     config_->add_notifier(new ConfigNotifier(this));
 
     config_->set_attached(true);
+
+    affix_info = lang_->affix();
+
+    //
+    // setup word set lists
+    //
+
+    typedef Vector<const DataSetCollection::Item *> AllWS; AllWS all_ws;
+    DataSetCollection::Iterator i   = wls_->begin();
+    DataSetCollection::Iterator end = wls_->end();
+    for (; i != end; ++i) {
+      if (dynamic_cast<const BasicWordSet *>(i->data_set)) {
+        all_ws.push_back(&*i);
+      }
+    }
+
+    const std::type_info * ti = 0;
+    while (!all_ws.empty())
+    {
+      AllWS::iterator i0 = all_ws.end();
+      int max = -2;
+      AllWS::iterator i = all_ws.begin();
+      for (; i != all_ws.end(); ++i)
+      {
+        const BasicWordSet * ws = (const BasicWordSet *)(*i)->data_set;
+        if (ti && *ti != typeid(*ws)) continue;
+        if ((int)ws->size() > max) {max = ws->size(); i0 = i;}
+      }
+
+      if (i0 == all_ws.end()) {ti = 0; continue;}
+
+      const DataSetCollection::Item * cur = *i0;
+
+      all_ws.erase(i0);
+
+      ti = &typeid(*cur->data_set);
+
+      WSInfo inf = {(const BasicWordSet *)cur->data_set, 
+                    cur->local_info.compare,
+                    cur->local_info.convert};
+
+      if (cur->use_to_check) {
+        check_ws.push_back(inf);
+        if (inf.ws->affix_compressed) affix_ws.push_back(inf);
+      }
+      if (cur->use_to_suggest) {
+        suggest_ws.push_back(inf);
+        use_soundslike = use_soundslike && inf.ws->have_soundslike;
+        if (inf.ws->affix_compressed) suggest_affix_ws.push_back(inf);
+      }
+    }
+    fast_scan   = suggest_ws.front().ws->fast_scan;
+    fast_lookup = suggest_ws.front().ws->fast_lookup;
+    affix_compress = !affix_ws.empty();
     return no_err;
   }
 

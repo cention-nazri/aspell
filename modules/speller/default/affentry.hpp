@@ -29,7 +29,7 @@ struct PfxEntry : public AffEntry
   PfxEntry(AffixMgr * pmgr) : pmyMgr(pmgr) {}
   ~PfxEntry();
 
-  BasicWordInfo      check(LookupInfo, ParmString, CheckInfo &, GuessInfo *) const;
+  bool check(const LookupInfo &, ParmString, CheckInfo &, GuessInfo *) const;
 
   inline bool          allow_cross() const { return ((xpflg & XPRODUCT) != 0); }
   inline unsigned char flag() const { return achar;  }
@@ -52,8 +52,8 @@ struct SfxEntry : public AffEntry
   SfxEntry(AffixMgr* pmgr) : pmyMgr(pmgr) {}
   ~SfxEntry();
 
-  BasicWordInfo      check(LookupInfo, ParmString, CheckInfo &, GuessInfo *,
-                           int optflags, AffEntry * ppfx);
+  bool check(const LookupInfo &, ParmString, CheckInfo &, GuessInfo *,
+             int optflags, AffEntry * ppfx);
 
   inline bool          allow_cross() const { return ((xpflg & XPRODUCT) != 0); }
   inline unsigned char flag() const { return achar;  }

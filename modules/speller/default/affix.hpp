@@ -41,16 +41,12 @@ namespace aspeller {
   using acommon::CheckInfo;
   struct GuessInfo;
 
-  struct LookupInfo {
-    SpellerImpl * sp;
-    inline BasicWordInfo lookup (ParmString word);
-    LookupInfo(SpellerImpl * s) : sp(s) {}
-  };
-
   struct CheckList;
   CheckList * new_check_list();
   void delete_check_list(CheckList *);
   CheckInfo * check_list_data(CheckList *);
+
+  struct LookupInfo;
 
   struct AffEntry
   {
@@ -95,11 +91,10 @@ namespace aspeller {
 
     PosibErr<void> setup(ParmString affpath);
 
-    BasicWordInfo       affix_check(LookupInfo, ParmString, CheckInfo &, GuessInfo *) const;
-    BasicWordInfo       prefix_check(LookupInfo, ParmString, CheckInfo &, GuessInfo *) const;
-    BasicWordInfo       suffix_check(LookupInfo, ParmString, CheckInfo &, GuessInfo *,
-				     int sfxopts, AffEntry* ppfx) const;
-
+    bool affix_check(const LookupInfo &, ParmString, CheckInfo &, GuessInfo *) const;
+    bool prefix_check(const LookupInfo &, ParmString, CheckInfo &, GuessInfo *) const;
+    bool suffix_check(const LookupInfo &, ParmString, CheckInfo &, GuessInfo *,
+                      int sfxopts, AffEntry* ppfx) const;
 
     void                munch(ParmString word, CheckList *) const;
     void                expand(ParmString word, ParmString affixes,

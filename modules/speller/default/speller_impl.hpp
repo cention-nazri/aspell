@@ -74,11 +74,10 @@ namespace aspeller {
     bool own(const DataSet::Id &) const;
     void own(const DataSet::Id &, bool);
 
-
     PosibErr<const WordList *> personal_word_list  () const;
     PosibErr<const WordList *> session_word_list   () const;
-    PosibErr<const WordList *> main_word_list    () const;
-    
+    PosibErr<const WordList *> main_word_list      () const;
+
     //
     // Language methods
     //
@@ -95,15 +94,13 @@ namespace aspeller {
   
     PosibErr<bool> check(char * word, char * word_end, /* it WILL modify word */
 			 unsigned int run_together_limit,
-			 CompoundInfo::Position pos,
 			 CheckInfo *, GuessInfo *);
 
     PosibErr<bool> check(MutableString word) {
       guess_info.reset(guesses);
       return check(word.begin(), 
 		   word.end(), 
-		   run_together_limit_,
-		   CompoundInfo::Orig,
+		   unconditional_run_together_ ? run_together_limit_ : 0,
 		   check_inf, &guess_info);
     }
     PosibErr<bool> check(ParmString word)
@@ -115,18 +112,9 @@ namespace aspeller {
 
     PosibErr<bool> check(const char * word) {return check(ParmString(word));}
 
-    BasicWordInfo check_affix(ParmString word, CheckInfo & ci, GuessInfo * gi)
-    {
-      BasicWordInfo w = check_simple(word);
-      if (w) ci.word = w.word;
-      if (w || !lang_->affix()) return w;
-      // FIXME: Create special list of word lists which have
-      //        affix information to avoid checking for root words
-      //        in the personal dictionary and the like
-      return lang_->affix()->affix_check(LookupInfo(this), word, ci, gi);
-    }
+    bool check_affix(ParmString word, CheckInfo & ci, GuessInfo * gi);
 
-    BasicWordInfo check_simple(ParmString);
+    bool check_simple(ParmString, WordEntry &);
 
     const CheckInfo * check_info() {
       if (check_inf[0].word)
@@ -169,7 +157,6 @@ namespace aspeller {
     class ConfigNotifier;
 
   private:
-
     friend class ConfigNotifier;
 
     CachePtr<const Language>   lang_;
@@ -195,6 +182,8 @@ namespace aspeller {
     // these are public so that other classes and functions can use them, 
     // DO NOT USE
 
+    const SensitiveCompare & sensitive_compare() const {return *sensitive_compare_;}
+
     const DataSetCollection & data_set_collection() const {return *wls_;}
 
     PosibErr<void> set_check_lang(ParmString lang, ParmString lang_dir);
@@ -204,9 +193,52 @@ namespace aspeller {
 
     CheckInfo check_inf[8];
     CheckInfo guesses[8];
-    GuessInfo guess_info;;
+    GuessInfo guess_info;
+
+    struct WSInfo {
+      const BasicWordSet * ws;
+      SensitiveCompare cmp;
+      ConvertWord convert;
+    };
+
+    typedef Vector<WSInfo> WS;
+    WS check_ws, affix_ws, suggest_ws, suggest_affix_ws;
+
+    bool affix_info, affix_compress;
+
+    bool use_soundslike, fast_scan, fast_lookup;
+
   };
 
+  struct LookupInfo {
+    SpellerImpl * sp;
+    enum Mode {Word, Guess, Soundslike, AlwaysTrue} mode;
+    SpellerImpl::WS::const_iterator begin;
+    SpellerImpl::WS::const_iterator end;
+    inline LookupInfo(SpellerImpl * s, Mode m);
+    inline bool lookup (ParmString word, WordEntry & o) const;
+  };
+
+  inline LookupInfo::LookupInfo(SpellerImpl * s, Mode m) : sp(s), mode(m) {
+    switch (m) { 
+    case Word: 
+      begin = sp->affix_ws.begin(); 
+      end = sp->affix_ws.end();
+      return;
+    case Guess: 
+      begin = sp->check_ws.begin(); 
+      end = sp->check_ws.end(); 
+      mode = Word; 
+      return;
+    case Soundslike: 
+      begin = sp->suggest_affix_ws.begin(); 
+      end = sp->suggest_affix_ws.end(); 
+      return;
+    case AlwaysTrue: 
+      return; 
+    }
+  }
+  
 }
 
 #endif

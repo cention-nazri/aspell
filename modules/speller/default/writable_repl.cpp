@@ -32,38 +32,37 @@ namespace aspeller_default_writable_repl {
   //                     size()  |
 
 
-  class WritableReplS : public WritableBase<WritableReplacementSet>
-  {
-  public: // but don't use
-      
-    class RealReplacementList {
+  class RealReplacementList {
       vector<String> info;
-    public:
-      typedef vector<String>::const_iterator const_iterator;
-      typedef const_iterator                 iterator;
-      typedef vector<String>::size_type      size_type;
-      RealReplacementList() : info(1) {}
-      RealReplacementList(ParmString mis, size_type num) {
-	info.reserve(num+1); info.push_back(mis);
-      }
-	
-      RealReplacementList(ParmString mis, ParmString cor) 
-	: info(2) 
+  public:
+    typedef vector<String>::const_iterator const_iterator;
+    typedef const_iterator                 iterator;
+    typedef vector<String>::size_type      size_type;
+    RealReplacementList() : info(1) {}
+    RealReplacementList(ParmString mis, size_type num) {
+      info.reserve(num+1); info.push_back(mis);
+    }
+    
+    RealReplacementList(ParmString mis, ParmString cor) 
+      : info(2) 
       {
 	info[0] = mis; info[1] = cor;
       }
-	
-      const String & misspelled_word() const {return info[0];}
-      const_iterator begin() const {return info.begin()+1;}
-      const_iterator end()   const {return info.end();}
-      size_type      size()  const {return info.size()-1;}
-      bool add(ParmString );
-      void add_nocheck(ParmString r) {info.push_back(r);}
-      bool erase(ParmString);
-      bool exists(ParmString);
-    };
+    
+    const String & misspelled_word() const {return info[0];}
+    const_iterator begin() const {return info.begin()+1;}
+    const_iterator end()   const {return info.end();}
+    size_type      size()  const {return info.size()-1;}
+    bool add(ParmString );
+    void add_nocheck(ParmString r) {info.push_back(r);}
+    bool erase(ParmString);
+    bool exists(ParmString);
+  };
       
-    class RealReplList : public vector<RealReplacementList> {};
+  class WritableReplS : public WritableBase<WritableReplacementSet>
+  {
+  public: // but don't use
+    class RealReplList : public Vector<RealReplacementList> {};
     // ^ needed to reduce symbol length for some non-gnu assemblers
     typedef hash_map<SimpleString, RealReplList>  LookupTable;
       
@@ -83,12 +82,15 @@ namespace aspeller_default_writable_repl {
     WritableReplS& operator=(const WritableReplS&);
   public:
     WritableReplS() 
-      : WritableBase<WritableReplacementSet>(".prepl",".rpl")
-    {lookup_table = new LookupTable();}
+      : WritableBase<WritableReplacementSet>(".prepl",".rpl") {
+      lookup_table = new LookupTable();
+      have_soundslike = true;
+      fast_lookup = true;
+    }
     ~WritableReplS() {delete lookup_table;}
 
     struct ElementsVirEmulImpl;
-    VirEmul * elements() const;
+    VirEnum * detailed_elements() const {return 0;}
     Size      size()     const;
     bool      empty()    const;
       
@@ -96,13 +98,18 @@ namespace aspeller_default_writable_repl {
       
     PosibErr<void> add(ParmString mis, ParmString cor);
     PosibErr<void> add(ParmString mis, ParmString cor, ParmString s);
-      
+
+    bool lookup(ParmString, WordEntry &, const SensitiveCompare &) const {return false;}
+ 
     struct ReplsWSoundslikeParms;
-    VirEmul * repls_w_soundslike(const char * soundslike) const;
-    VirEmul * repls_w_soundslike(SoundslikeWord soundslike) const;
+    bool soundslike_lookup(const WordEntry &, WordEntry &) const;
+    bool soundslike_lookup(const char * soundslike, WordEntry &) const;
+
+    bool repl_lookup(const WordEntry &, WordEntry &) const {return false;}
+    bool repl_lookup(const char * word, WordEntry &) const {return false;}
       
     struct SoundslikeElements;
-    VirSoundslikeEmul * soundslike_elements() const;
+    SoundslikeEnumeration * soundslike_elements() const;
   };
     
   //
@@ -112,7 +119,7 @@ namespace aspeller_default_writable_repl {
   // and same with cur_file_date
   //
     
-  bool WritableReplS::RealReplacementList::exists(ParmString word) {
+  bool RealReplacementList::exists(ParmString word) {
     iterator i = begin();
     iterator e = end();
     while (i != e) {
@@ -122,13 +129,13 @@ namespace aspeller_default_writable_repl {
     return false;
   }
     
-  bool WritableReplS::RealReplacementList::add(ParmString word) {
+  bool RealReplacementList::add(ParmString word) {
     if (exists(word)) return false;
     info.push_back(word);
     return true;
   }
     
-  bool WritableReplS::RealReplacementList::erase(ParmString word) {
+  bool RealReplacementList::erase(ParmString word) {
     vector<String>::iterator i = info.begin() + 1;
     vector<String>::iterator e = info.end();
     while (i != e) {
@@ -141,49 +148,50 @@ namespace aspeller_default_writable_repl {
     return false;
   }
     
-  class WritableReplS::ElementsVirEmulImpl : public VirEnumeration<ReplacementList> {
-  private:
-    typedef LookupTable::const_iterator  OuterItr;
-    typedef RealReplList::const_iterator InnerItr;
-    OuterItr outer_;
-    OuterItr end_;
-    InnerItr inner_;
-  public:
-    // this assums LookupTable is non empty
-    ElementsVirEmulImpl (const LookupTable & c)
-      : outer_(c.begin()), end_(c.end()) 
-    {if (outer_ != end_) inner_ = outer_->second.begin();}
+//   class WritableReplS::ElementsVirEmulImpl : public VirEnumeration<ReplacementList> {
+//   private:
+//     typedef LookupTable::const_iterator  OuterItr;
+//     typedef RealReplList::const_iterator InnerItr;
+//     OuterItr outer_;
+//     OuterItr end_;
+//     InnerItr inner_;
+//   public:
+//     // this assums LookupTable is non empty
+//     ElementsVirEmulImpl (const LookupTable & c)
+//       : outer_(c.begin()), end_(c.end()) 
+//     {if (outer_ != end_) inner_ = outer_->second.begin();}
 	
-    ElementsVirEmulImpl * clone() const {
-      return new ElementsVirEmulImpl(*this);
-    }
+//     ElementsVirEmulImpl * clone() const {
+//       return new ElementsVirEmulImpl(*this);
+//     }
       
-    void assign(const VirEnumeration<Value> * other) {
-      *this = *static_cast<const ElementsVirEmulImpl *>(other);
-    }
+//     void assign(const VirEnumeration<Value> * other) {
+//       *this = *static_cast<const ElementsVirEmulImpl *>(other);
+//     }
       
-    Value next() {
-      if (outer_ == end_) return ReplacementList();
-      if (inner_ == outer_->second.end()) {
-	++outer_;
-	if (outer_ == end_) return ReplacementList();
-	inner_ = outer_->second.begin();
-      }
-      ReplacementList temp
-	(inner_->misspelled_word().c_str(), 
-	 new MakeVirEnumeration<StrParms<RealReplacementList::const_iterator> >
-	 (inner_->begin(), inner_->end()));
-      ++inner_;
-      return temp;
-    }
+//     Value next() {
+//       if (outer_ == end_) return ReplacementList();
+//       if (inner_ == outer_->second.end()) {
+// 	++outer_;
+// 	if (outer_ == end_) return ReplacementList();
+// 	inner_ = outer_->second.begin();
+//       }
+//       ReplacementList temp
+// 	(inner_->misspelled_word().c_str(), 
+// 	 new MakeVirEnumeration<StrParms<RealReplacementList::const_iterator> >
+// 	 (inner_->begin(), inner_->end()));
+//       ++inner_;
+//       return temp;
+//     }
     
-    bool at_end() const {return outer_ == end_;}
+//     bool at_end() const {return outer_ == end_;}
       
-  };
+//   };
     
-  WritableReplS::VirEmul * WritableReplS::elements() const {
-    return new ElementsVirEmulImpl(*lookup_table);
-  }
+  //WritableReplS::VirEnum * WritableReplS::elements() const {
+    // FIXME
+    //return new ElementsVirEmulImpl(*lookup_table);
+  //}
     
   //FIXME: Don't always return a size of 0!!!!
   WritableReplS::Size WritableReplS::size() const {return 0;}
@@ -215,44 +223,47 @@ namespace aspeller_default_writable_repl {
     return no_err;
   }
 
-  struct WritableReplS::ReplsWSoundslikeParms {
-    typedef ReplacementList                             Value;
-    typedef vector<RealReplacementList>::const_iterator Iterator;
-    Iterator end_;
-    ReplsWSoundslikeParms(Iterator e) : end_(e) {}
-    bool endf(Iterator i) const {return i == end_;}
-    Value end_state() const {return ReplacementList();}
-    Value deref(Iterator i) const {
-      return ReplacementList
-	(i->misspelled_word().c_str(), 
-	 new MakeVirEnumeration<StrParms<RealReplacementList::const_iterator> >
-	 (i->begin(), i->end()));
-    }
-  };
-    
-  WritableReplS::VirEmul *
-  WritableReplS::repls_w_soundslike(const char * soundslike) const {
-      
-    LookupTable::const_iterator i = 
-      lookup_table->find(SimpleString(soundslike,1));
-      
-    if (i == lookup_table->end()) {
-      return new MakeAlwaysEndEnumeration<ReplacementList>();
-    } else {
-      return new MakeVirEnumeration<ReplsWSoundslikeParms>
-	(i->second.begin(), ReplsWSoundslikeParms(i->second.end()));
+  static void soundslike_next(WordEntry * w)
+  {
+    const RealReplacementList * i   = (const RealReplacementList *)w->intr[0];
+    const RealReplacementList * end = (const RealReplacementList *)w->intr[1];
+    w->word = i->misspelled_word().c_str();
+    ++i;
+    if (i == end) w->adv_ = 0;
+  }
+
+  static inline void sl_init(const WritableReplS::RealReplList * tmp, WordEntry & o)
+  {
+    o.what = WordEntry::Misspelled;
+    const RealReplacementList * i   = tmp->pbegin();
+    const RealReplacementList * end = tmp->pend();
+    o.word = i->misspelled_word().c_str();
+    ++i;
+    o.intr[0] = (void *)i;
+    if (i != end) {
+      o.intr[1] = (void *)end;
+      o.adv_ = soundslike_next;
     }
   }
-  
 
-  WritableReplS::VirEmul *
-  WritableReplS::repls_w_soundslike(SoundslikeWord soundslike) const {
+  bool WritableReplS::soundslike_lookup(const WordEntry & word, WordEntry & o) const {
+    const RealReplList * p = (const RealReplList *)(word.intr[0]);
+    o.clear();
+    sl_init(p, o);
+    return true;
+  }
     
-    const RealReplList * p = 
-      reinterpret_cast<const RealReplList *>(soundslike.word_list_pointer);
+  bool WritableReplS::soundslike_lookup(const char * soundslike, WordEntry & o) const {
+    LookupTable::const_iterator i = 
+      lookup_table->find(SimpleString(soundslike,1));
 
-    return new MakeVirEnumeration<ReplsWSoundslikeParms>(p->begin(), p->end());
-
+    o.clear();
+    if (i == lookup_table->end()) {
+      return false;
+    } else {
+      sl_init(&(i->second), o);
+      return true;
+    }
   }
 
   struct WritableReplS::SoundslikeElements : public SoundslikeEnumeration {
@@ -262,20 +273,21 @@ namespace aspeller_default_writable_repl {
     Itr i;
     Itr end;
 
-    SoundslikeElements(Itr i0, Itr end0) : i(i0), end(end0) {}
+    WordEntry d;
 
-    SoundslikeWord next(int) {
-      if (i == end)
-	return SoundslikeWord(0,0);
-      SoundslikeWord tmp(i->first.c_str(),
-			 reinterpret_cast<const void *>(&i->second));
+    SoundslikeElements(Itr i0, Itr end0) : i(i0), end(end0) 
+      {d.what = WordEntry::Soundslike;}
+
+    WordEntry * next(int) {
+      if (i == end) return 0;
+      d.word = i->first.c_str();
+      d.intr[0] = (void *)(&i->second);
       ++i;
-      return tmp;
+      return &d;
     }
   };
 
-  WritableReplS::VirSoundslikeEmul * 
-  WritableReplS::soundslike_elements() const {
+  SoundslikeEnumeration *WritableReplS::soundslike_elements() const {
     return new SoundslikeElements(lookup_table->begin(),
 				  lookup_table->end());
   }

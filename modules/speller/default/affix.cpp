@@ -20,6 +20,7 @@
 #include "getdata.hpp"
 #include "parm_string.hpp"
 #include "check_list.hpp"
+#include "speller_impl.hpp"
 
 using namespace std;
 
@@ -514,16 +515,14 @@ void AffixMgr::encodeit(AffEntry * ptr, char * cs)
 
 
 // check word for prefixes
-BasicWordInfo AffixMgr::prefix_check (LookupInfo linf, ParmString word, 
-                                      CheckInfo & ci, GuessInfo * gi) const
+bool AffixMgr::prefix_check (const LookupInfo & linf, ParmString word, 
+                             CheckInfo & ci, GuessInfo * gi) const
 {
-  BasicWordInfo wordinfo;
  
   // first handle the special case of 0 length prefixes
   PfxEntry * pe = (PfxEntry *) pStart[0];
   while (pe) {
-    wordinfo = pe->check(linf,word,ci,gi);
-    if (wordinfo) return wordinfo;
+    if (pe->check(linf,word,ci,gi)) return true;
     pe = pe->next;
   }
   
@@ -533,44 +532,41 @@ BasicWordInfo AffixMgr::prefix_check (LookupInfo linf, ParmString word,
 
   while (pptr) {
     if (isSubset(pptr->key(),word)) {
-      wordinfo = pptr->check(linf,word,ci,gi);
-      if (wordinfo) return wordinfo;
+      if (pptr->check(linf,word,ci,gi)) return true;
       pptr = pptr->next_eq;
     } else {
       pptr = pptr->next_ne;
     }
   }
     
-  return BasicWordInfo();
+  return false;
 }
 
 
 // check word for suffixes
-BasicWordInfo AffixMgr::suffix_check (LookupInfo linf, ParmString word, 
-                                      CheckInfo & ci, GuessInfo * gi,
-                                      int sfxopts, AffEntry * ppfx) const
+bool AffixMgr::suffix_check (const LookupInfo & linf, ParmString word, 
+                             CheckInfo & ci, GuessInfo * gi,
+                             int sfxopts, AffEntry * ppfx) const
 {
-  BasicWordInfo wordinfo;
 
   // first handle the special case of 0 length suffixes
   SfxEntry * se = (SfxEntry *) sStart[0];
   while (se) {
-    wordinfo = se->check(linf, word, ci, gi, sfxopts, ppfx);
-    if (wordinfo) return wordinfo;
+    if (se->check(linf, word, ci, gi, sfxopts, ppfx)) return true;
     se = se->next;
   }
   
   // now handle the general case
-  char * tmpword = myrevstrdup(word);
+  char * tmpword = myrevstrdup(word); //FIXME avoid malloc
   unsigned char sp = *((const unsigned char *)tmpword);
   SfxEntry * sptr = (SfxEntry *) sStart[sp];
 
   while (sptr) {
     if (isSubset(sptr->key(),tmpword)) {
-      wordinfo = sptr->check(linf, word, ci, gi, sfxopts, ppfx);
-      if (wordinfo) {
+      bool res = sptr->check(linf, word, ci, gi, sfxopts, ppfx);
+      if (res) {
         free(tmpword);
-        return wordinfo;
+        return true;
       }
       sptr = sptr->next_eq;
     } else {
@@ -579,15 +575,13 @@ BasicWordInfo AffixMgr::suffix_check (LookupInfo linf, ParmString word,
   }
     
   free(tmpword);
-  return NULL;
+  return false;
 }
 
 // check if word with affixes is correctly spelled
-BasicWordInfo AffixMgr::affix_check(LookupInfo linf, ParmString word, 
-                                    CheckInfo & ci, GuessInfo * gi) const
+bool AffixMgr::affix_check(const LookupInfo & linf, ParmString word, 
+                           CheckInfo & ci, GuessInfo * gi) const
 {
-  BasicWordInfo wordinfo;
-
   // Deal With Case in a semi-intelligent manner
   CasePattern cp = case_pattern(*lang,word);
   ParmString pword = word;
@@ -608,17 +602,15 @@ BasicWordInfo AffixMgr::affix_check(LookupInfo linf, ParmString word,
   }
 
   // check all prefixes (also crossed with suffixes if allowed) 
-  wordinfo = prefix_check(linf, pword, ci, gi);
-  if (wordinfo) return wordinfo;
+  if (prefix_check(linf, pword, ci, gi)) return true;
 
   // if still not found check all suffixes
-  wordinfo = suffix_check(linf, sword, ci, gi, 0, NULL);
-  return wordinfo;
+  return suffix_check(linf, sword, ci, gi, 0, NULL);
 }
 
 void AffixMgr::munch(ParmString word, CheckList * cl) const
 {
-  LookupInfo li(0);
+  LookupInfo li(0, LookupInfo::AlwaysTrue);
   CheckInfo ci;
   cl->reset();
   CasePattern cp = case_pattern(*lang,word);

@@ -25,13 +25,6 @@ namespace acommon {
 
 namespace aspeller {
 
-  class SpellerImpl;
-  inline void BasicWordInfo::get_word(String & w, const ConvertWord &c)
-  {
-    w = "";
-    c.convert(word, w);
-  }
-  
   class DataSet {
     friend class SpellerImpl;
   private:
@@ -61,7 +54,6 @@ namespace aspeller {
     virtual void set_lang_hook(Config *) {}
     
   public:
-    //this is here because dynamic_cast in gcc 2.95.1 took too dam long
     enum BasicType {no_type, basic_word_set, basic_replacement_set, basic_multi_set};
     BasicType basic_type;
 
@@ -116,52 +108,53 @@ namespace aspeller {
   class SoundslikeEnumeration 
   {
   public:
-    virtual SoundslikeWord next(int) = 0;
+    virtual WordEntry * next(int) = 0;
     virtual ~SoundslikeEnumeration() {}
+    SoundslikeEnumeration() {}
+  private:
+    SoundslikeEnumeration(const SoundslikeEnumeration &);
+    void operator=(const SoundslikeEnumeration &);
   };
 
   class BasicWordSet : public LoadableDataSet, public WordList
   {
   public:
     bool affix_compressed;
-    bool have_soundsliked; // only true when there is true phonet data
+    bool have_soundslike; // only true when there is true phonet data
     bool fast_scan;  // can effectly scan for all soundslikes (or
                      // stripped words if have_soundslike is false)
                      // with an edit distance of 1 or 2
     bool fast_lookup; // can effectly find all words with a given soundslike
                       // when the SoundslikeWord is not given
     
-    BasicWordSet() : affix_compressed(false), have_soundsliked(false), 
+    BasicWordSet() : affix_compressed(false), have_soundslike(false), 
                      fast_scan(false), fast_lookup(false) {
       basic_type =  basic_word_set;
     }
     
-    typedef VirEnumeration<BasicWordInfo>   VirEmul;
-    typedef Enumeration<VirEmul>            Emul;
-    typedef const char *                  Value;
-    typedef unsigned int                  Size;
-    typedef SoundslikeWord                SoundslikeValue;
-    typedef SoundslikeEnumeration         VirSoundslikeEmul;
+    typedef VirEnumeration<WordEntry *> VirEnum;
+    typedef Enumeration<VirEnum>        Enum;
+    typedef const char *                Value;
+    typedef unsigned int                Size;
+
     StringEnumeration * elements() const;
-    virtual VirEmul * detailed_elements() const = 0;
+
+    virtual VirEnum * detailed_elements() const = 0;
     virtual Size   size()     const = 0;
     virtual bool   empty()    const {return !size();}
   
-    virtual BasicWordInfo lookup (ParmString word, 
-				  const SensitiveCompare &) const = 0;
-    
-    // guaranteed to return all words with the soundslike 
-    virtual VirEmul * words_w_soundslike(const char * sondslike) const = 0;
+    virtual bool lookup (ParmString word, WordEntry &,
+                         const SensitiveCompare &) const = 0;
+
+    // garanteed to be constant time
+    virtual bool soundslike_lookup(const WordEntry &, WordEntry &) const = 0;
+    virtual bool soundslike_lookup(const char * sondslike, WordEntry &) const = 0;
 
     // the elements returned are only guaranteed to remain valid
     // guaranteed to return all soundslike and all words 
     // however an individual soundslike may appear multiple
     // times in the list....
-    virtual VirSoundslikeEmul * soundslike_elements() const = 0;
-
-    // NOT garanteed to return all words with the soundslike
-    virtual VirEmul * words_w_soundslike(SoundslikeWord soundslike) const = 0;
-
+    virtual SoundslikeEnumeration * soundslike_elements() const = 0;
   };
 
   class WritableWordSet : public BasicWordSet,
@@ -172,43 +165,15 @@ namespace aspeller {
     virtual PosibErr<void> add(ParmString w, ParmString s) = 0;
   };
 
-  struct ReplacementList {
-    typedef VirEnumeration<const char *> VirEmul;
-    typedef Enumeration<VirEmul>         Emul;
-    typedef const char *               Value;
-
-    const char *  misspelled_word;
-    VirEmul    *  elements; // you are responable for freeing this with delete
-    bool empty() const {return elements == 0;}
-
-    ReplacementList()
-      : elements(0) {}
-    ReplacementList(const char * w, VirEmul * els)
-      : misspelled_word(w), elements(els) {}
-  };
-
-  class BasicReplacementSet : public LoadableDataSet
+  class BasicReplacementSet : public BasicWordSet
   {
   public:
     BasicReplacementSet() {
       basic_type = basic_replacement_set;
     }
-    
-    typedef VirEnumeration<ReplacementList> VirEmul;
-    typedef Enumeration<VirEmul>            Emul;
-    typedef const char *                  Value;
-    typedef unsigned int                  Size;
-    typedef SoundslikeWord                SoundslikeValue;
-    typedef SoundslikeEnumeration  VirSoundslikeEmul;
 
-    virtual VirEmul * elements() const = 0;
-    virtual Size   size()     const = 0;
-    virtual bool   empty()    const {return !size();}
-
-    virtual VirEmul * repls_w_soundslike(const char * soundslike) const = 0;
-    virtual VirEmul * repls_w_soundslike(SoundslikeWord soundslike) const = 0;
-    
-    virtual VirSoundslikeEmul * soundslike_elements() const = 0;
+    virtual bool repl_lookup(const WordEntry &, WordEntry &) const = 0;
+    virtual bool repl_lookup(const char * word, WordEntry &) const = 0;
   };
 
 
