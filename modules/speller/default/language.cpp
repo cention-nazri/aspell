@@ -81,7 +81,7 @@ namespace aspeller {
     String dir1,dir2,path;
 
     fill_data_dir(config, dir1, dir2);
-    dir_ = find_file(path,dir1,dir2,lang,".dat");
+    dir_ = find_file(path,dir1,dir2, lang,".dat");
 
     lang_config_ = 
       new Config("speller-lang",

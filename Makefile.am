@@ -52,13 +52,13 @@ libaspell_la_SOURCES =\
   common/strtonum.cpp\
   common/directory.cpp\
   common/gettext_init.cpp\
+  common/file_data_util.cpp\
   modules/speller/default/readonly_ws.cpp\
   modules/speller/default/suggest.cpp\
   modules/speller/default/data.cpp\
   modules/speller/default/multi_ws.cpp\
   modules/speller/default/phonetic.cpp\
   modules/speller/default/writable.cpp\
-  modules/speller/default/file_data_util.cpp\
   modules/speller/default/speller_impl.cpp\
   modules/speller/default/phonet.cpp\
   modules/speller/default/typo_editdist.cpp\

@@ -3,11 +3,9 @@
 
 #include "parm_string.hpp"
 
-using namespace acommon;
-
 namespace acommon {class Config;}
 
-namespace aspeller {
+namespace acommon {
 
   void fill_data_dir(const Config *, String & dir1, String & dir2);
   const String & find_file(String & path,
