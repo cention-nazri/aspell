@@ -1,5 +1,5 @@
 \input texinfo   @c -*-texinfo-*-
-@comment $Id: aspell.texi,v 1.10 2004/02/17 04:14:09 kevina Exp $
+@comment $Id: aspell.texi,v 1.11 2004/02/19 09:12:59 kevina Exp $
 @comment %**start of header
 @setfilename aspell.info
 @settitle GNU Aspell 0.51
@@ -513,8 +513,7 @@ However some options also have single letter abbreviations of the form:
 @end example
 
 Any non-@acronym{ASCII} characters are expected to be in the encoding
-specified by the @option{encoding} option, which if not specified,
-defaults to the current locale encoding.
+specified by the current locale.
 
 @subsubsection Boolean options
 
@@ -2776,6 +2775,14 @@ Perform @strong{decomposition} according to decomposition form D (see
 @uref{http://www.unicode.org/reports/tr15/}) on Unicode input.
 @xref{Unicode Decomposition}.
 @item
+Support a @strong{"dual-script" mode} where Aspell can use a separate
+dictionary depending on which script it detects the current word in, the
+two dictionaries can have nothing in common, ie an English one and a
+Russian one for example.  This will @emph{not} support two languages that
+use the same script as that is a lot more complicated.  For example if
+the word is misspelled which dictionary should it use for the
+suggestions?
+@item
 Write a @strong{GUI} for the aspell utility. Ideally it should be able to do
 everything the Aspell utility can do and not just be able spell check
 a document.
@@ -3090,6 +3097,13 @@ look up which means that the suggestion quality will suffer.
 @item
 Added support for MySpell Replacement Tables for better suggestions
 when phonet information is not available.
+@item
+Added support for accepting all input and printing all output in
+@acronym{UTF-8} or some other encoding different from the one Aspell
+uses.  Aspell can now support any language that no more than 220
+distinct characters, including different capitalizations and accents,
+@emph{even if} there is not an existing 8-bit encoding that supports
+the language.
 @item
 Manual has has been converted to texinfo format thanks to the work of
 Chris Martin.
