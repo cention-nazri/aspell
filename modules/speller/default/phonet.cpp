@@ -73,6 +73,14 @@ namespace aspeller {
   };
 
   static void init_phonet_hash(PhonetParms & parms);
+
+  // like strcpy but safe if the strings overlap
+  //   but only if dest < src
+  static inline void strmove(char * dest, char * src) {
+    while (*src) 
+      *dest++ = *src++;
+    *dest = '\0';
+  }
   
   PosibErr<PhonetParms *> new_phonet(const String & file, 
                                      Conv & iconv,
@@ -380,7 +388,7 @@ namespace aspeller {
                 s++;
               }
               if (k > k0)
-                strcpy (&word[0]+i+k0, &word[0]+i+k);
+                strmove (&word[0]+i+k0, &word[0]+i+k);
 
               /**  new "actual letter"  **/
               c = word[i];
@@ -404,8 +412,7 @@ namespace aspeller {
                   target[j] = c;
                   j++;
                 }
-                // FIXME: This may overlap
-                strcpy (&word[0], &word[0]+i+1);
+                strmove (&word[0], &word[0]+i+1);
                 i = 0;
                 z0 = 1;
               }
