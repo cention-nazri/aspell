@@ -4,7 +4,7 @@
 ASPELL >=0.51
 
 #This line will be printed when typing `aspell help nroff'
-DESCRIPTION filter for processing Nroff documents
+DESCRIPTION filter for dealing with Nroff documents
 
 STATIC filter
 
