@@ -29,8 +29,8 @@ libaspell_common_la_SOURCES = \
   config.cpp\
   posib_err.cpp errors.cpp error.cpp\
   fstream.cpp iostream.cpp info.cpp \
-  can_have_error.cpp
-#  convert.cpp
+  can_have_error.cpp \
+  convert.cpp
 
 libaspell_common_la_LDFLAGS = -release 0.50
 

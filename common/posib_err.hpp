@@ -187,10 +187,18 @@ namespace acommon {
     PosibErr() {}
   };
 
+//
+//
+//
 #define RET_ON_ERR_SET(command, type, var) \
   type var;do{PosibErr<type> pe=command;if(pe.has_err())return pe;var=pe.data;} while(false)
 #define RET_ON_ERR(command) \
   do{PosibErrBase pe = command;if(pe.has_err())return pe;}while(false)
+
+  
+  //
+  //
+  //
 
   static inline PosibErrBase make_err(const ErrorInfo * inf, 
 				      ParmString p1 = 0, ParmString p2 = 0,
@@ -200,6 +208,10 @@ namespace acommon {
   }
 
   static const PosibErrBase no_err;
+
+  //
+  //
+  //
 
   inline String & String::operator= (const PosibErr<const char *> & s)
   {

@@ -8,16 +8,18 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <stdint.h>
 
 #include "convert.hpp"
 #include "fstream.hpp"
 #include "getdata.hpp"
 #include "config.hpp"
+#include "errors.hpp"
 
 namespace acommon {
 
-  typedef unsigned int   Uni32;
-  typedef unsigned short Uni16;
+  typedef uint32_t Uni32;
+  typedef uint16_t Uni16;
 
 
   //////////////////////////////////////////////////////////////////////
@@ -177,7 +179,7 @@ namespace acommon {
   class StraightThrough : public Convert
   {
   public:
-    StraightThrough(const char * e)
+    StraightThrough(ParmString e)
       : Convert(e,e) {}
     void convert           (const char   * in, 
 			    OStream & out) const;
@@ -202,7 +204,7 @@ namespace acommon {
   }
 
   bool StraightThrough::convert_next_char (const char * & in, 
-						  OStream & out) const
+					   OStream & out) const
   {
     if (*in != '\0') {
       out.write(in,1);
@@ -218,32 +220,25 @@ namespace acommon {
   // read in char data
   //
 
-  void read_in_char_data (CanHaveError & error,
-			  Config & config,
-			  const char * encoding,
-			  ToUniLookup & to,
-			  FromUniLookup & from)
+  PosibErr<void> read_in_char_data (Config & config,
+				    ParmString encoding,
+				    ToUniLookup & to,
+				    FromUniLookup & from)
   {
-    error.reset_error();
     to.reset();
     from.reset();
-    const char * temp_str = config.retrieve("aspell-data-dir");
-    if (temp_str == 0)
-      temp_str = config.retrieve("data-dir");
-    assert(temp_str != 0);
-    String file_name = temp_str;
+    String file_name = config.retrieve("data-dir");
     file_name += '/';
     file_name += encoding;
     file_name += ".map";
-    FStream data(file_name.c_str(), "r");
-    if (!data) {
-      error.set_error(unknown_encoding, encoding);
-      // FIXME: add appending for appending messages to error class
-      //error.error_mesg_ += " This could also mean that the file \"";
-      //error.error_mesg_ += file_name;
-      //error.error_mesg_ += "\" could not be opened for reading "
-      //  "or does not exist.";
-      return;
+    FStream data;
+    PosibErrBase err = data.open(file_name, "r");
+    if (err.get_err()) { 
+      String mesg;
+      mesg  = " This could also mean that the file \"";
+      mesg += file_name;
+      mesg += "\" could not be opened for reading or does not exist.";
+      return make_err(unknown_encoding, encoding, mesg);
     }
     String chr_hex,uni_hex;
     char  chr;
@@ -255,43 +250,32 @@ namespace acommon {
       t = strtoul(p, &p, 16);
       if (p != chr_hex.c_str() + chr_hex.size() 
 	  || t != (unsigned char)t /* check for overflow */) 
-	{
-	  error.error_with_file(encoding, ".dat");
-	  error.set_error(bad_key, 
-			  chr_hex.c_str(),
-			  "two digit hex string");
-	  return;
-	}
+	return 
+	  make_err(bad_key, chr_hex, "two digit hex string")
+	  .with_file(file_name);
+      
       chr = (char)t;
      
       p = (char *)uni_hex.c_str();
       t = strtoul(p, &p, 16);
       if (p != uni_hex.c_str() + uni_hex.size() 
 	  || t != (Uni32)t /* check for overflow */) 
-	{
-	  error.error_with_file(encoding, ".dat");
-	  error.set_error(bad_value,
-			  chr_hex.c_str(), uni_hex.c_str(),
-			  "four digit hex string");
-	  return;
-	}
+	return 
+	  make_err(bad_key, chr_hex, "four digit hex string")
+	  .with_file(file_name);
+
       uni = (Uni32)t;
 
-      if (to.have(chr)) {
-	error.error_with_file(encoding, ".dat");
-	error.set_error(duplicate,
-			"Character",
-			chr_hex.c_str());
-	return;
-      }
+      if (to.have(chr)) 
+	return 
+	  make_err(duplicate, "Character", chr_hex)
+	  .with_file(file_name);
+
       to.insert(chr, uni);
-      if (!from.insert(uni, chr)) {
-	error.error_with_file(encoding, ".dat");
-	error.set_error(duplicate,
-			"Uni Character",
-			uni_hex.c_str());
-	return;
-      }
+      if (!from.insert(uni, chr)) 
+	return 
+	  make_err(duplicate, "Uni Character", uni_hex)
+	  .with_file(file_name);
     }
   
     // insert the ascii characters if they are not already there
@@ -303,7 +287,8 @@ namespace acommon {
     for (; i != 255; ++i) {
       to.insert(i, '?');
     }
-  
+
+    return no_err;
   }
 
 
@@ -316,7 +301,7 @@ namespace acommon {
   //////////////////////////////////////////////////////////////////////
 
 
-  Convert::Convert(const char * incode, const char * outcode)
+  Convert::Convert(ParmString incode, ParmString outcode)
     : in_code_(incode), out_code_(outcode) 
   {}
 
@@ -349,18 +334,18 @@ namespace acommon {
   {
   public:
     ToUniLookup lookup;
-    Char_Uni16(Config & c, const char * e);
+    Char_Uni16(ParmString e)
+      : Convert(e, "machine unsigned 16") {}
+    PosibErr<void> init(Config & c);
     bool convert_next_char (const char * & in, 
 			    OStream & out) const;
   };
 
-  Char_Uni16::Char_Uni16(Config & c, const char * e) 
-    : Convert(e, "machine unsigned 16")
+  PosibErr<void> Char_Uni16::init(Config & c)
   {
     FromUniLookup unused;
-    read_in_char_data(*this, c, e, lookup, unused);
+    return read_in_char_data(c, in_code(), lookup, unused);
   }
-
 
   bool Char_Uni16
   ::convert_next_char (const char * & in, 
@@ -385,16 +370,17 @@ namespace acommon {
   {
   public:
     ToUniLookup lookup;
-    Char_Uni32(Config & c, const char * e);
+    Char_Uni32(ParmString e)
+      : Convert(e, "machine unsigned 32") {}
+    PosibErr<void> init(Config & c);
     bool convert_next_char (const char * & in, 
 			    OStream & out) const;
   };
 
-  Char_Uni32::Char_Uni32(Config & c, const char * e) 
-    : Convert(e, "machine unsigned 32")
+  PosibErr<void> Char_Uni32::init(Config & c)
   {
     FromUniLookup unused;
-    read_in_char_data(*this, c, e, lookup, unused);
+    return read_in_char_data(c, in_code(), lookup, unused);
   }
 
 
@@ -421,16 +407,17 @@ namespace acommon {
   {
   public:
     ToUniLookup lookup;
-    Char_UTF8(Config & c, const char * e);
+    Char_UTF8(ParmString e)
+      : Convert(e, "UTF-8") {}
+    PosibErr<void> init(Config & c);
     bool convert_next_char (const char * & in, 
 			    OStream & out) const;
   };
 
-  Char_UTF8::Char_UTF8(Config & c, const char * e) 
-    : Convert(e, "UTF-8")
+  PosibErr<void> Char_UTF8::init(Config & c)
   {
     FromUniLookup unused;
-    read_in_char_data(*this, c, e, lookup, unused);
+    return read_in_char_data(c, in_code(), lookup, unused);
   }
 
 
@@ -484,16 +471,17 @@ namespace acommon {
   {
   public:
     FromUniLookup lookup;
-    Uni16_Char(Config & c, const char * e);
+    Uni16_Char(ParmString e)
+      : Convert("machine unsigned 16", e) {}
+    PosibErr<void> init(Config & c);
     bool convert_next_char (const char * & in, 
 			    OStream & out) const;
   };
 
-  Uni16_Char::Uni16_Char(Config & c, const char * e)
-    : Convert("machine unsigned 16", e) 
+  PosibErr<void> Uni16_Char::init(Config & c)
   {
     ToUniLookup unused;
-    read_in_char_data(*this, c, e, unused, lookup);
+    return read_in_char_data(c, out_code(), unused, lookup);
   }
 
 
@@ -521,16 +509,17 @@ namespace acommon {
   {
   public:
     FromUniLookup lookup;
-    Uni32_Char(Config & c, const char * e);
+    Uni32_Char(ParmString e)
+      : Convert("machine unsigned 32", e) {}
+    PosibErr<void> init(Config & c);
     bool convert_next_char (const char * & in, 
 			    OStream & out) const;
   };
 
-  Uni32_Char::Uni32_Char(Config & c, const char * e)
-    : Convert("machine unsigned 32", e) 
+  PosibErr<void> Uni32_Char::init(Config & c)
   {
     ToUniLookup unused;
-    read_in_char_data(*this, c, e, unused, lookup);
+    return read_in_char_data(c, out_code(), unused, lookup);
   }
 
 
@@ -558,16 +547,17 @@ namespace acommon {
   {
   public:
     FromUniLookup lookup;
-    UTF8_Char(Config & c, const char * e);
+    UTF8_Char(ParmString e)
+      : Convert("UTF-8", e) {}
+    PosibErr<void> init(Config & c);
     bool convert_next_char (const char * & in, 
 			    OStream & out) const;
   };
 
-  UTF8_Char::UTF8_Char(Config & c, const char * e)
-    : Convert("UTF-8", e) 
+  PosibErr<void> UTF8_Char::init(Config & c) 
   {
     ToUniLookup unused;
-    read_in_char_data(*this, c, e, unused, lookup);
+    return read_in_char_data(c, out_code(), unused, lookup);
   }
 
 #define get_check_next \
@@ -626,31 +616,30 @@ namespace acommon {
   public:
     CharLookup lookup;
   
-    Char_Char(Config & c, const char * in, const char * out);
+    Char_Char(ParmString in, ParmString out)
+      : Convert(in, out) {}
+    PosibErr<void> init(Config & c);
     bool convert_next_char (const char * & in, 
 			    OStream & out) const;
   };
 
-  Char_Char::Char_Char(Config & c, 
-				     const char * in_code, 
-				     const char * out_code)
-    : Convert(in_code, out_code) 
+  
+  PosibErr<void> Char_Char::init(Config & c)
   {
     ToUniLookup   to;
     FromUniLookup from;
     {
       FromUniLookup unused;
-      read_in_char_data(*this, c, in_code, to, unused);
-      if (error_info().primary != 0) return;
+      RET_ON_ERR(read_in_char_data(c, in_code(), to, unused));
     } {
       ToUniLookup unused;
-      read_in_char_data(*this, c, out_code, unused, from);
-      if (error_info().primary != 0) return;
+      RET_ON_ERR(read_in_char_data(c, out_code(), unused, from));
     }
     lookup.reset();
     for (unsigned int i = 0; i != 256; ++i) {
       lookup.insert(i, from[to[i]]);
     }
+    return no_err;
   }
 
 
@@ -674,13 +663,10 @@ namespace acommon {
   // new_aspell_convert
   //
 
-  CanHaveError * new_aspell_convert(Config & c,
-					  const char * in, 
-					  const char * out) 
+  PosibErr<Convert *> new_aspell_convert(Config & c,
+					 ParmString in, 
+					 ParmString out) 
   {
-    assert(sizeof(Uni16) == 2);
-    assert(sizeof(Uni32) == 4);
-
     String in_s  = in;
     String out_s = out;
 
@@ -692,34 +678,32 @@ namespace acommon {
     in  = in_s .c_str();
     out = out_s.c_str();
 
-    if (strcmp(in ,"ascii") == 0) 
+    if (in == "ascii") 
       in = "iso8859-1";
-    if (strcmp(out,"ascii") == 0) 
+    if (out == "ascii") 
       out = "iso8859-1";
 
-    if (strcmp(in, out) == 0)
-      return new StraightThrough(in);
+    Convert * conv;
 
-    else if (strcmp(in, "machine unsigned 16") == 0)
-      return new Uni16_Char(c,out);
-
-    else if (strcmp(in, "machine unsigned 32") == 0)
-      return new Uni32_Char(c,out);
-
-    else if (strcmp(in, "utf-8") == 0)
-      return new UTF8_Char(c,out);
-
-    else if (strcmp(out, "machine unsigned 16") == 0)
-      return new Char_Uni16(c,in);
-
-    else if (strcmp(out, "machine unsigned 32") == 0)
-      return new Char_Uni32(c,in);
-
-    else if (strcmp(out, "utf-8") == 0)
-      return new Char_UTF8(c,in);
-
+    if (in == out)
+      conv = new StraightThrough(in);
+    else if (in == "machine unsigned 16")
+      conv = new Uni16_Char(out);
+    else if (in == "machine unsigned 32")
+      conv = new Uni32_Char(out);
+    else if (in == "utf-8")
+      conv = new UTF8_Char(out);
+    else if (out == "machine unsigned 16")
+      conv = new Char_Uni16(in);
+    else if (out == "machine unsigned 32")
+      conv = new Char_Uni32(in);
+    else if (out == "utf-8")
+      conv = new Char_UTF8(in);
     else
-      return new Char_Char(c, in, out);
+      conv = new Char_Char(in, out);
+
+    RET_ON_ERR(conv->init(c));
+    return conv;
   }
 
 }

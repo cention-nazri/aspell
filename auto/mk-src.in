@@ -395,6 +395,9 @@ errors:
 			mesg => The key "%key" is unknown.
 		cant change value
 			mesg => The value for option "%key" can not be changed.
+		bad key
+			mesg => The key "%key" is not %accepted and is thus invalid.
+			parms => accepted
 		bad value
 			mesg => The value "%value" is not %accepted and is thus invalid for the key "%key".
 			parms => value, accepted
