@@ -80,7 +80,7 @@
 
 \author{Copyright (c) 2000-2002\\
 Kevin Atkinson\\
-kevin at atkinson dhs org}
+kevin@atkinson.dhs.org}
 
 \maketitle
 \tableofcontents{}
@@ -231,7 +231,16 @@ be found off the Aspell home page at \url{http://aspell.net}.
 
 \section{Helping Out}
 
-{[}FIXME{]}
+I have very little time to work on Aspell so I desperately need other
+people to help with the development of Aspell. There are a lot of
+things that need to be done before I consider Aspell complete. See
+section \ref{todo} for a list of them. I would really appreciate
+some help with doing them. If you are interested in helping with one
+of them please let me know.
+
+I am also looking for someone to eventually take over the maintenance
+and development of Aspell. If you are interested please contact me
+directly.
 
 
 \section{Compiling \& Installing}
@@ -370,6 +379,8 @@ is provided.
 
 The format of the complied dictionaries has almost certainly changed.
 So you will need to recompile them for the new Aspell.
+
+{[}FIXME Add now about missing .pwli files{]}
 
 
 \chapter{Basic Usage}
@@ -1704,6 +1715,7 @@ configuration file. It is named <\,{}<lang>\,{}>.dat
 and is located in the architecture independent data dir for aspell
 (option \textbf{data-dir}) which is usually <\,{}<prefix>\,{}>/share/aspell.
 Use {}``aspell config'' to find out where it is in your installation.
+{[}FIXME: Add note about nameing convenstions somewhere{]}{[}
 
 The language data file has several mandatory fields, and several optional
 ones. All fields are case sensitive and should be in all lower case.
@@ -2248,10 +2260,16 @@ algorithm please see the data file \textbf{english\_phonet.dat}.
 
 \section*{Changes from 0.33.7.1 to 0.50}
 
-{[}FIXME{]}
+\{FIXME{]}
 
-Tons :)
-
+\begin{itemize}
+\item Changed the way language are handles. Languages are now two-letter
+abbreviation
+\item Added dvorak keymap.
+\item Added ability to list the available dictionaries
+\item Improved the check interface a bit.
+\item Added support for using the Ispell keymapping when checking files.
+\end{itemize}
 
 \section*{Changes from .33.7 to .33.7.1 (Aug 20, 2001)}
 
@@ -2840,12 +2858,42 @@ Words in bold indicate how you should refer to the item when discussing
 it with me or others.
 
 
+\section{Things that need to be done\label{todo}}
+
+These items need to be done before I consider Aspell finished. Unfortunately,
+I do not have the time to do all so if you are interested in helping
+me with one of these tasks please email me. Good C++ skills are needed
+for most of these tasks involving coding.
+
+\begin{itemize}
+\item Convert manual from \LyX{}/\LaTeX{} to Texinfo.
+\item Clean up copyright notices and bring the Aspell package up to GNU
+Standards.
+\item Add gettext support to Aspell.
+\item Allow Aspell to check documents which are in UTF-8. The main thing
+to be done is to get Aspell to display UTF-8 correctly. This will
+involve being able to get the length of UTF-8 strings and display
+UTF-8 using the curses library.
+\item Make Aspell Thread safe. Even though Aspell itself is not multi-threaded
+I would like it to be thread safe so that it can be used by multi-threaded
+programs. There are several areas of Aspell that that are potently
+thread unsafe (such as accessing a global pool) and several several
+classes which have the potential of being used by more than one thread
+(such as the personal dictionary).
+\item Allow filters to be loaded at run-time. At the moment all filters
+must be complied in.
+\item Integrate Kevin Hendricks affix compression code into Aspell. His
+code is already in use in OpenOffice as part of the lingucomponent
+component. More information can be found at \url{http://whiteboard.openoffice.org/lingucomponent/dictionary.html}.
+The latest version of his code is also available there.
+\item Create a C++ interface for Aspell, possibly on top of the C one.
+\item Enhance ispell.el so that it will work better with the new Aspell.
+\end{itemize}
+
 \section{Good ideas that are worth implementing}
 
 These items all sound like good ideas however I am not sure when I
-will get to implementing then if ever. If you are looking for a way
-to contribute picking up on one of these ideas would be a great way
-to start. They are presented in no particular order.
+will get to implementing then if ever.
 
 \begin{itemize}
 \item Use Lawrence Philips' new Double Metaphone algorithm. See \url{http://aspell.sourceforge.net/metaphone/}.
@@ -3012,42 +3060,10 @@ on request. Yet again the framework for doing this is not there. Perhaps
 sometime in the near future.
 
 
-\chapter{Support for Gcc 2.7.2}
-
-(and other non-standard compliance compilers)
-
-My original plan was to program in such a way that it would Aspell
-would compile under Gcc 2.7.2 however after releasing a rather nasty
-bug in 2.7.2 with nested types I have desired to drop all support
-for Gcc 2.7.2. As of Aspell .27 all hope for being able to compile
-under Gcc 2.7.2 is lost as I am now using many modern C++ features
-which are simply not present in Gcc 2.7.2, most notably template specialization
-and template members. Egcs 1.1.1 is a very good standards compliant
-compiler and that is now the officially supported compiler. However
-as Egcs 1.1.1 is relatively new and, except for namespaces, provides
-little new functionality I will continue to support Egcs 1.0.3. Gcc
-2.8.1 should in theory work however it is so buggy I have yet to get
-it to compile with it nor has anyone else that I know of.
-
-Yes, my code could be rewritten so that is could compile under Gcc
-2.7.2 but Why? Using modern C++ has probably accelerated the development
-of this library my at least 50\%. And for that matter why stop at
-Gcc 2.7.2 why not go all out and totally rewrite my code pure C. I
-hope you see my point.
-
-However that does not mean I want to sacrifice portability unnecessarily.
-If you see any of part of my code that in not Standard C++ please
-let me know. My hope is that my code could compile on all Standard
-compliance C++ compilers with the addition of a few extra header files
-from SGI's STL.
-
-As a side note I think that Mozilla's C++ portability guide (\url{http://www.mozilla.org/docs/tplist/catBuild/portable-cpp.html})
-could be summed up in one sentence: Program in the dark ages of C++. 
-
-
 \chapter{Credits}
 
 \begin{itemize}
+\item To the FSF for adopting the project.
 \item To the many authors of Ispell (including R. E. Gorin, Pace Willisson,
 and Geoff Kuenning) for providing me with a good word list as well
 as giving me a few good ideas.
@@ -3104,7 +3120,7 @@ support all the latest features of C++. \url{http://corp.metabyte.com/~fbp/stl/}
 
 \chapter{Copyright}
 
-This manual is Copyright (c) 2002 Kevin Atknson. Permission is granted
+This manual is Copyright (c) 2002 Kevin Atkinson. Permission is granted
 to copy, distribute and/or modify this document under the terms of
 the GNU Free Documentation License, Version 1.1 or any later version
 published by the Free Software Foundation; with no Invariant Sections,
@@ -3119,7 +3135,7 @@ your option) any later version.
 
 Certain parts of the library, as indicated at the top of the source
 file, are under a weaker license. However, all parts of the library
-or LGPL Compatable.
+or LGPL Compatible.
 
 The two licenses follow:
 

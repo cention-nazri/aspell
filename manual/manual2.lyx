@@ -79,7 +79,7 @@ Copyright (c) 2000-2002
 \newline 
 Kevin Atkinson
 \newline 
-kevin at atkinson dhs org
+kevin@atkinson.dhs.org
 \layout Standard
 
 
@@ -534,7 +534,23 @@ Support for Aspell can be found on the Aspell mailing lists.
 Helping Out
 \layout Standard
 
-[FIXME]
+I have very little time to work on Aspell so I desperately need other people
+ to help with the development of Aspell.
+ There are a lot of things that need to be done before I consider Aspell
+ complete.
+ See section 
+\begin_inset LatexCommand \ref{todo}
+
+\end_inset 
+
+ for a list of them.
+ I would really appreciate some help with doing them.
+ If you are interested in helping with one of them please let me know.
+\layout Standard
+
+I am also looking for someone to eventually take over the maintenance and
+ development of Aspell.
+ If you are interested please contact me directly.
 \layout Section
 
 Compiling & Installing
@@ -838,6 +854,9 @@ However, you should also be able to build applications that require Pspell
 
 The format of the complied dictionaries has almost certainly changed.
  So you will need to recompile them for the new Aspell.
+\layout Standard
+
+[FIXME Add now about missing .pwli files]
 \layout Chapter
 
 Basic Usage
@@ -4373,6 +4392,7 @@ aspell config
 \end_inset 
 
  to find out where it is in your installation.
+ [FIXME: Add note about nameing convenstions somewhere][
 \layout Standard
 
 The language data file has several mandatory fields, and several optional
@@ -5889,10 +5909,23 @@ Changelog
 Changes from 0.33.7.1 to 0.50
 \layout Standard
 
-[FIXME]
-\layout Standard
+{FIXME]
+\layout Itemize
 
-Tons :)
+Changed the way language are handles.
+ Languages are now two-letter abbreviation
+\layout Itemize
+
+Added dvorak keymap.
+\layout Itemize
+
+Added ability to list the available dictionaries
+\layout Itemize
+
+Improved the check interface a bit.
+\layout Itemize
+
+Added support for using the Ispell keymapping when checking files.
 \layout Section*
 
 Changes from .33.7 to .33.7.1 (Aug 20, 2001)
@@ -7158,14 +7191,71 @@ Words in bold indicate how you should refer to the item when discussing
  it with me or others.
 \layout Section
 
+Things that need to be done
+\begin_inset LatexCommand \label{todo}
+
+\end_inset 
+
+
+\layout Standard
+
+These items need to be done before I consider Aspell finished.
+ Unfortunately, I do not have the time to do all so if you are interested
+ in helping me with one of these tasks please email me.
+ Good C++ skills are needed for most of these tasks involving coding.
+\layout Itemize
+
+Convert manual from LyX/LaTeX to Texinfo.
+\layout Itemize
+
+Clean up copyright notices and bring the Aspell package up to GNU Standards.
+\layout Itemize
+
+Add gettext support to Aspell.
+\layout Itemize
+
+Allow Aspell to check documents which are in UTF-8.
+ The main thing to be done is to get Aspell to display UTF-8 correctly.
+ This will involve being able to get the length of UTF-8 strings and display
+ UTF-8 using the curses library.
+\layout Itemize
+
+Make Aspell Thread safe.
+ Even though Aspell itself is not multi-threaded I would like it to be thread
+ safe so that it can be used by multi-threaded programs.
+ There are several areas of Aspell that that are potently thread unsafe
+ (such as accessing a global pool) and several several classes which have
+ the potential of being used by more than one thread (such as the personal
+ dictionary).
+\layout Itemize
+
+Allow filters to be loaded at run-time.
+ At the moment all filters must be complied in.
+\layout Itemize
+
+Integrate Kevin Hendricks affix compression code into Aspell.
+ His code is already in use in OpenOffice as part of the lingucomponent
+ component.
+ More information can be found at 
+\begin_inset LatexCommand \url{http://whiteboard.openoffice.org/lingucomponent/dictionary.html}
+
+\end_inset 
+
+.
+ The latest version of his code is also available there.
+\layout Itemize
+
+Create a C++ interface for Aspell, possibly on top of the C one.
+\layout Itemize
+
+Enhance ispell.el so that it will work better with the new Aspell.
+\layout Section
+
 Good ideas that are worth implementing
 \layout Standard
 
 These items all sound like good ideas however I am not sure when I will
  get to implementing then if ever.
- If you are looking for a way to contribute picking up on one of these ideas
- would be a great way to start.
- They are presented in no particular order.
 \layout Itemize
 
 Use Lawrence Philips' new Double Metaphone algorithm.
@@ -7511,51 +7601,10 @@ While this is something I would like to do it is not a simple task.
  Perhaps sometime in the near future.
 \layout Chapter
 
-Support for Gcc 2.7.2
-\layout Standard
-
-(and other non-standard compliance compilers)
-\layout Standard
-
-My original plan was to program in such a way that it would Aspell would
- compile under Gcc 2.7.2 however after releasing a rather nasty bug in 2.7.2
- with nested types I have desired to drop all support for Gcc 2.7.2.
- As of Aspell .27 all hope for being able to compile under Gcc 2.7.2 is lost
- as I am now using many modern C++ features which are simply not present
- in Gcc 2.7.2, most notably template specialization and template members.
- Egcs 1.1.1 is a very good standards compliant compiler and that is now the
- officially supported compiler.
- However as Egcs 1.1.1 is relatively new and, except for namespaces, provides
- little new functionality I will continue to support Egcs 1.0.3.
- Gcc 2.8.1 should in theory work however it is so buggy I have yet to get
- it to compile with it nor has anyone else that I know of.
-\layout Standard
-
-Yes, my code could be rewritten so that is could compile under Gcc 2.7.2 but
- Why? Using modern C++ has probably accelerated the development of this
- library my at least 50%.
- And for that matter why stop at Gcc 2.7.2 why not go all out and totally
- rewrite my code pure C.
- I hope you see my point.
-\layout Standard
-
-However that does not mean I want to sacrifice portability unnecessarily.
- If you see any of part of my code that in not Standard C++ please let me
- know.
- My hope is that my code could compile on all Standard compliance C++ compilers
- with the addition of a few extra header files from SGI's STL.
-\layout Standard
-
-As a side note I think that Mozilla's C++ portability guide (
-\begin_inset LatexCommand \url{http://www.mozilla.org/docs/tplist/catBuild/portable-cpp.html}
-
-\end_inset 
-
-) could be summed up in one sentence: Program in the dark ages of C++.
- 
-\layout Chapter
-
 Credits
+\layout Itemize
+
+To the FSF for adopting the project.
 \layout Itemize
 
 To the many authors of Ispell (including R.
@@ -7739,7 +7788,7 @@ STLPort A port of SGI STL designed to run on compilers that don't support
 Copyright
 \layout Standard
 
-This manual is Copyright (c) 2002 Kevin Atknson.
+This manual is Copyright (c) 2002 Kevin Atkinson.
  Permission is granted to copy, distribute and/or modify this document under
  the terms of the GNU Free Documentation License, Version 1.1 or any later
  version published by the Free Software Foundation; with no Invariant Sections,
@@ -7756,7 +7805,7 @@ The library and utility program is Copyrighted (c) 2000-2002 by Kevin Atkinson.
 
 Certain parts of the library, as indicated at the top of the source file,
  are under a weaker license.
- However, all parts of the library or LGPL Compatable.
+ However, all parts of the library or LGPL Compatible.
 \layout Standard
 
 The two licenses follow:
