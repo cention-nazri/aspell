@@ -858,7 +858,8 @@ int LookupInfo::lookup (ParmString word, char achar,
   const char * g = 0;
   if (mode == Word) {
     do {
-      if ((*i)->lookup(word, o, lang)) {
+      (*i)->lookup(word, o, lang);
+      for (;!o.at_end(); o.adv()) {
         if (TESTAFF(o.aff, achar))
           return 1;
         else
@@ -868,7 +869,8 @@ int LookupInfo::lookup (ParmString word, char achar,
     } while (i != end);
   } else if (mode == Clean) {
     do {
-      if ((*i)->clean_lookup(word, o)) {
+      (*i)->clean_lookup(word, o);
+      for (;!o.at_end(); o.adv()) {
         if (TESTAFF(o.aff, achar))
           return 1;
         else
