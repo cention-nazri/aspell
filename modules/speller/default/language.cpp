@@ -537,7 +537,7 @@ namespace aspeller {
 	if (lang.is_alpha(c) || lang.special(c).any)
 	  chars_set[static_cast<unsigned char>(lang.to_stripped(c))] = true;
     }
-    for (int i = 0; i != 256; ++i) 
+    for (int i = 1; i != 256; ++i) 
     {
       if (chars_set[i]) 
 	chars_list += static_cast<char>(i);
@@ -551,13 +551,14 @@ namespace aspeller {
     for (int i = 0; i != 256; ++i) 
     {
       char c = static_cast<char>(i);
-	if (lang.is_alpha(c) || lang.special(c).any)
-	  chars_set[static_cast<unsigned char>(lang.to_clean(c))] = true;
+      if (lang.is_alpha(c) || lang.special(c).any) 
+        chars_set[static_cast<unsigned char>(lang.to_clean(c))] = true;
     }
-    for (int i = 0; i != 256; ++i) 
+    for (int i = 1; i != 256; ++i) 
     {
-      if (chars_set[i]) 
+      if (chars_set[i]) {
 	chars_list += static_cast<char>(i);
+      }
     }
     return chars_list;
   }

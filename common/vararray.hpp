@@ -11,6 +11,7 @@
 namespace acommon {
 
 // only use this on types with a trivial constructors destructor
+
 #define VARARRAY(type, name, num) type name[num]
 #define VARARRAYM(type, name, num, max) type name[num]
 

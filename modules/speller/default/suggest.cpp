@@ -63,6 +63,7 @@
 #include "speller_impl.hpp"
 #include "stack_ptr.hpp"
 #include "suggest.hpp"
+#include "vararray.hpp"
 
 //#include "iostream.hpp"
 //#define DEBUG_SUGGEST
@@ -151,6 +152,7 @@ namespace {
       l->to_clean(original.clean, w.str());
       l->to_soundslike(original.soundslike, w.str());
       original.case_pattern = l->case_pattern(w);
+      
     }
     void fix_case(char * str) {
       lang->LangImpl::fix_case(original.case_pattern, str, str);
@@ -182,6 +184,8 @@ namespace {
 
     static const bool do_count = true;
     static const bool dont_count = false;
+
+    CheckInfo check_info[8];
 
     void commit_temp(const char * b) {
       if (temp_end) {
@@ -218,7 +222,21 @@ namespace {
       return t;
     }
 
-    void try_word(ParmString str, int score);
+    char * Working::form_word(CheckInfo & ci);
+    void try_word_n(ParmString str, int score);
+    bool check_word_s(ParmString word, CheckInfo * ci);
+    int check_word(char * word, char * word_end, CheckInfo * ci,
+                   /* it WILL modify word */
+                   unsigned pos = 1);
+    void try_word_c(char * word, char * word_end, int score);
+
+    void try_word(char * word, char * word_end, int score) {
+      if (sp->unconditional_run_together_)
+        try_word_c(word,word_end,score);
+      else
+        try_word_n(word,score);
+    }
+
     void add_sound(SpellerImpl::WS::const_iterator i,
                    WordEntry * sw, const char * sl, int score = -1);
     void add_nearmiss(char * word, unsigned word_size, WordInfo word_info,
@@ -275,7 +293,9 @@ namespace {
   public:
     Working(SpellerImpl * m, const Language *l,
 	    const String & w, const SuggestParms *  p)
-      : Score(l,w,p), threshold(1), max_word_length(0), sp(m) {}
+      : Score(l,w,p), threshold(1), max_word_length(0), sp(m) {
+      memset(check_info, 0, sizeof(check_info));
+    }
     void get_suggestions(NearMissesFinal &sug);
   };
 
@@ -363,9 +383,25 @@ namespace {
     fine_tune_score();
 
     transfer();
-  }    
+  }
 
-  void Working::try_word(ParmString str, int score)  
+  // forms a word from into the buffer by growing the temporary
+  // string in "buffer".  Returns a pointer to beginning of
+  // the string
+  char * Working::form_word(CheckInfo & ci) 
+  {
+    size_t slen = ci.word.size() - ci.pre_strip_len - ci.suf_strip_len;
+    size_t wlen = slen + ci.pre_add_len + ci.suf_add_len;
+    char * tmp = (char *)buffer.grow_temp(wlen);
+    if (ci.pre_add_len) 
+      memcpy(tmp, ci.pre_add, ci.pre_add_len);
+    memcpy(tmp + ci.pre_add_len, ci.word.str() + ci.pre_strip_len, slen);
+    if (ci.suf_add_len) 
+      memcpy(tmp + ci.pre_add_len + slen, ci.suf_add, ci.suf_add_len);
+    return tmp;
+  }
+
+  void Working::try_word_n(ParmString str, int score)  
   {
     String word;
     String buf;
@@ -379,23 +415,78 @@ namespace {
         add_nearmiss(i, sw, 0, score, -1, do_count);
     }
     if (sp->affix_compress) {
-      // FIXME: Double check, optimize
       CheckInfo ci; memset(&ci, 0, sizeof(ci));
       bool res = lang->affix()->affix_check(LookupInfo(sp, LookupInfo::Clean), str, ci, 0);
       if (!res) return;
-      size_t slen = ci.word.size() - ci.pre_strip_len - ci.suf_strip_len;
-      size_t wlen = slen + ci.pre_add_len + ci.suf_add_len;
-      char * tmp = (char *)buffer.alloc(wlen + 1);
-      if (ci.pre_add_len) 
-        memcpy(tmp, ci.pre_add, ci.pre_add_len);
-      memcpy(tmp + ci.pre_add_len, ci.word.str() + ci.pre_strip_len, slen);
-      if (ci.suf_add_len) 
-        memcpy(tmp + ci.pre_add_len + slen, ci.suf_add, ci.suf_add_len);
-      tmp[wlen] = '\0';
-      // no need to convert word as clean lookup is not supported
-      // when affixes are involved
-      add_nearmiss(tmp, wlen, 0, 0, score, -1, do_count);
+      char * tmp = form_word(ci);
+      char * end = (char *)buffer.grow_temp(1);
+      *end = '\0';
+      add_nearmiss(tmp, end - tmp, 0, 0, score, -1, do_count);
     }
+  }
+
+  bool Working::check_word_s(ParmString word, CheckInfo * ci)
+  {
+    WordEntry sw;
+    for (SpellerImpl::WS::const_iterator i = sp->suggest_ws.begin();
+         i != sp->suggest_ws.end();
+         ++i)
+    {
+      i->dict->clean_lookup(word, sw);
+      if (!sw.at_end()) {
+        ci->word = sw.word;
+        return true;
+      }
+    }
+    if (sp->affix_compress) {
+      return lang->affix()->affix_check(LookupInfo(sp, LookupInfo::Clean), word, *ci, 0);
+    }
+    return false;
+  }
+
+  int Working::check_word(char * word, char * word_end,  CheckInfo * ci,
+                          /* it WILL modify word */
+                          unsigned pos)
+  {
+    int res = check_word_s(word, ci);
+    if (res) return pos + 1;
+    if (pos + 1 >= sp->run_together_limit_) return 0;
+    for (char * i = word + sp->run_together_min_; 
+         i <= word_end - sp->run_together_min_;
+         ++i)
+    {
+      char t = *i;
+      *i = '\0';
+      res = check_word_s(word, ci);
+      *i = t;
+      if (!res) continue;
+      res = check_word(i, word_end, ci + 1, pos + 1);
+      if (res) return res;
+    }
+    memset(ci, 0, sizeof(CheckInfo));
+    return false;
+  }
+
+  void Working::try_word_c(char * word, char * word_end, int score)
+  {
+    int res = check_word(word, word_end, check_info);
+    assert(res <= sp->run_together_limit_);
+    //CERR.printf(">%s\n", word);
+    if (!res) return;
+    buffer.abort_temp();
+    char * tmp = form_word(check_info[0]);
+    CasePattern cp = lang->case_pattern(tmp);
+    for (int i = 1; i <= res; ++i) {
+      char * t = form_word(check_info[i]);
+      if (cp == FirstUpper && lang->is_lower(t[1])) 
+        t[0] = lang->to_lower(t[0]);
+    }
+    char * end = (char *)buffer.grow_temp(1);
+    *end = 0;
+    buffer.commit_temp();
+    add_nearmiss(tmp, end - tmp, 0, 0, score, -1, do_count);
+    //CERR.printl(tmp);
+    memset(check_info, 0, sizeof(CheckInfo)*res);
   }
 
   void Working::add_nearmiss(char * word, unsigned word_size,
@@ -499,22 +590,23 @@ namespace {
     const char * replace_list = lang->clean_chars();
     char a,b;
     const char * c;
-    String new_word;
+    VARARRAY(char, new_word, orig.size() + 2);
+    char * new_word_end = new_word + orig.size();
     size_t i;
+
+    memcpy(new_word, orig.str(), orig.size() + 1);
 
     // Try word as is (in case of case difference etc)
 
-    try_word(orig, 0);
+    try_word(new_word,  new_word_end, 0);
 
     // Change one letter
-    
-    new_word = orig;
     
     for (i = 0; i != orig.size(); ++i) {
       for (c = replace_list; *c; ++c) {
         if (*c == orig[i]) continue;
         new_word[i] = *c;
-        try_word(new_word, parms->edit_distance_weights.sub);
+        try_word(new_word, new_word_end, parms->edit_distance_weights.sub);
       }
       new_word[i] = orig[i];
     }
@@ -526,19 +618,21 @@ namespace {
       b = new_word[i+1];
       new_word[i] = b;
       new_word[i+1] = a;
-      try_word(new_word,parms->edit_distance_weights.swap);
+      try_word(new_word, new_word_end, parms->edit_distance_weights.swap);
       new_word[i] = a;
       new_word[i+1] = b;
     }
 
     // Add one letter
 
-    new_word += ' ';
-    i = new_word.size()-1;
+    *new_word_end = ' ';
+    new_word_end++;
+    *new_word_end = '\0';
+    i = new_word_end - new_word - 1;
     while(true) {
       for (c=replace_list; *c; ++c) {
         new_word[i] = *c;
-        try_word(new_word,parms->edit_distance_weights.del1);
+        try_word(new_word, new_word_end, parms->edit_distance_weights.del1);
       }
       if (i == 0) break;
       new_word[i] = new_word[i-1];
@@ -548,12 +642,13 @@ namespace {
     // Delete one letter
 
     if (orig.size() > 1) {
-      new_word = orig;
-      a = new_word[new_word.size() - 1];
-      new_word.resize(new_word.size() - 1);
-      i = new_word.size();
+      memcpy(new_word, orig.str(), orig.size() + 1);
+      new_word_end = new_word + orig.size() - 1;
+      a = *new_word_end;
+      *new_word_end = '\0';
+      i = orig.size() - 1;
       while (true) {
-        try_word(new_word,parms->edit_distance_weights.del2);
+        try_word(new_word, new_word_end, parms->edit_distance_weights.del2);
         if (i == 0) break;
         b = a;
         a = new_word[i-1];
@@ -778,7 +873,8 @@ namespace {
         buf.append(r->repl, strlen(r->repl));
         p += strlen(r->substr);
         buf.append(p, wend + 1);
-        try_word(buf.data(), parms->edit_distance_weights.sub*3/2);
+        buf.ensure_null_end();
+        try_word(buf.pbegin(), buf.pend(), parms->edit_distance_weights.sub*3/2);
       }
     }
   }
@@ -925,6 +1021,9 @@ namespace {
       ++i;
       while (i != near_misses.end()) {
 
+        //CERR.printf("%s %s %s %d %d\n", i->word, i->word_clean, i->soundslike,
+        //            i->word_score, i->soundslike_score);
+
         if (i->word_score >= LARGE_NUM) {
 
             int sl_score = i->soundslike_score < LARGE_NUM ? i->soundslike_score : 0;
@@ -952,6 +1051,9 @@ namespace {
         i->score = weighted_average(i->soundslike_score, i->word_score);
 
         if (i->score > try_for + parms->span) goto cont1;
+
+        //CERR.printf("2>%s %s %s %d %d\n", i->word, i->word_clean, i->soundslike,
+        //            i->word_score, i->soundslike_score);
 
         scored_near_misses.splice_into(near_misses,prev,i);
         
@@ -1263,7 +1365,7 @@ namespace aspeller {
     ngram_keep = 10;
     use_typo_analysis = true;
     use_repl_table = sp->have_repl;
-    try_one_edit_word = sp->soundslike_root_only;
+    try_one_edit_word = sp->soundslike_root_only || sp->unconditional_run_together_;
     check_after_one_edit_word = false;
     ngram_threshold = 2;
     if (mode == "ultra" || mode == "fast") {

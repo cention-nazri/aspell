@@ -105,6 +105,13 @@ public:
   // moving the object than the data will be copied in the same way
   // realloc does.  Any previously allocated objects are aborted when
   // alloc_temp is called.
+  void * temp_ptr() {
+    if (temp_end) return bottom;
+    else return 0;
+  }
+  unsigned temp_size() {
+    return temp_end - bottom;
+  }
   void * alloc_temp(size_t size) {
     temp_end = bottom + size;
     if (temp_end > top) {
@@ -114,6 +121,8 @@ public:
     return bottom;
   }
   void * resize_temp(size_t size) {
+    if (temp_end == 0)
+      return alloc_temp(size);
     if (bottom + size <= top) {
       temp_end = bottom + size;
     } else {
@@ -126,7 +135,11 @@ public:
     return bottom;
   }
   void * grow_temp(size_t s) {
-    return resize_temp(temp_end - bottom + s);}
+    if (temp_end == 0)
+      return alloc_temp(s);
+    unsigned old_size = temp_end - bottom;
+    resize_temp(old_size + s);
+    return bottom + old_size;}
   void abort_temp() {
     temp_end = 0;}
   void commit_temp() {

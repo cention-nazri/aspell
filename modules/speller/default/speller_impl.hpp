@@ -166,10 +166,6 @@ namespace aspeller {
     ClonePtr<Suggest>       intr_suggest_;
     unsigned int            ignore_count;
     bool                    ignore_repl;
-    bool                    unconditional_run_together_;
-    unsigned int            run_together_limit_;
-    const char *            run_together_middle_;
-    unsigned int            run_together_min_;
     String                  prev_mis_repl_;
     String                  prev_cor_repl_;
 
@@ -207,6 +203,10 @@ namespace aspeller {
 
     typedef Vector<WSInfo> WS;
     WS check_ws, affix_ws, suggest_ws, suggest_affix_ws;
+
+    bool                    unconditional_run_together_;
+    unsigned int            run_together_limit_;
+    unsigned int            run_together_min_;
 
     bool affix_info, affix_compress;
 

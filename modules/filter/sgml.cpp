@@ -254,3 +254,4 @@ namespace acommon {
   ACTIVATE_DECODER(acommon,SgmlDecoder,sgml);
   //ACTIVATE_ENCODER(acommon,SgmlEncoder,sgml);
 }
+
