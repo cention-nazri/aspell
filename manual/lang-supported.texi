@@ -13,7 +13,7 @@
 @item az @tab Azerbaijani @tab Latin @tab 0.60 @tab -
 @item
 @item ba @tab Bashkir @tab Cyrillic @tab - @tab -
-@item be @tab Belarusian @tab Cyrillic @tab 0.50 @tab Yes
+@item be @tab Belarusian @tab Cyrillic @tab 0.50 @tab Incomplete
 @item bem @tab Bemba @tab Latin @tab Maybe @tab -
 @item bg @tab Bulgarian @tab Cyrillic @tab 0.50 @tab -
 @item bh @tab Bihari @tab Devanagari @tab - @tab -
@@ -33,8 +33,8 @@
 @item cv @tab Chuvash @tab Cyrillic @tab - @tab -
 @item cy @tab Welsh @tab Latin @tab 0.50 @tab -
 @item
-@item da @tab Danish @tab Latin @tab 0.50 @tab Yes
-@item de @tab German @tab Latin @tab 0.50 @tab Yes
+@item da @tab Danish @tab Latin @tab 0.50 @tab Incomplete
+@item de @tab German @tab Latin @tab 0.50 @tab Incomplete
 @item
 @item ee @tab Ewe @tab Latin @tab - @tab -
 @item el @tab Greek @tab Greek @tab 0.50 @tab -
@@ -115,7 +115,7 @@
 @item min @tab Minangkabau @tab Latin @tab Maybe @tab -
 @item mk @tab Macedonian @tab Cyrillic @tab 0.50 @tab -
 @item ml @tab Malayalam @tab Malayalam @tab Maybe @tab -
-@item mn @tab Mongolian @tab Cyrillic @tab Planned @tab -
+@item mn @tab Mongolian @tab Cyrillic @tab 0.60 @tab Yes
 @item mo @tab Moldavian @tab Cyrillic @tab - @tab -
 @item mr @tab Marathi @tab Devanagari @tab Maybe @tab -
 @item ms @tab Malay @tab Latin @tab 0.50 @tab -
@@ -127,7 +127,7 @@
 @item nds @tab Low Saxon @tab Latin @tab Maybe @tab -
 @item ne @tab Nepali @tab Devanagari @tab Maybe @tab -
 @item ng @tab Ndonga @tab Latin @tab Maybe @tab -
-@item nl @tab Dutch @tab Latin @tab 0.50 @tab Yes
+@item nl @tab Dutch @tab Latin @tab 0.50 @tab Incomplete
 @item nn @tab Norwegian Nynorsk @tab Latin @tab 0.50 @tab -
 @item nr @tab South Ndebele @tab Latin @tab - @tab -
 @item nso @tab Northern Sotho @tab Latin @tab Maybe @tab -
@@ -144,12 +144,12 @@
 @item pap @tab Papiamento @tab Latin @tab Maybe @tab -
 @item pl @tab Polish @tab Latin @tab 0.50 @tab -
 @item ps @tab Pushto @tab Arabic @tab - @tab -
-@item pt @tab Portuguese @tab Latin @tab 0.50 @tab Yes
+@item pt @tab Portuguese @tab Latin @tab 0.50 @tab Incomplete
 @item
 @item qu @tab Quechua @tab Latin @tab Maybe @tab -
 @item
 @item rn @tab Rundi @tab Latin @tab Maybe @tab -
-@item ro @tab Romanian @tab Latin @tab 0.50 @tab Yes
+@item ro @tab Romanian @tab Latin @tab 0.50 @tab Incomplete
 @item ru @tab Russian @tab Cyrillic @tab 0.50 @tab Yes
 @item rw @tab Kinyarwanda @tab Latin @tab 0.50 @tab -
 @item
@@ -164,7 +164,7 @@
 @item sn @tab Shona @tab Latin @tab Maybe @tab -
 @item so @tab Somali @tab Latin @tab Maybe @tab -
 @item sq @tab Albanian @tab Latin @tab Maybe @tab -
-@item sr @tab Serbian @tab Cyrillic, Latin @tab Planned @tab Yes
+@item sr @tab Serbian @tab Cyrillic, Latin @tab Maybe @tab Incomplete
 @item ss @tab Swati @tab Latin @tab Maybe @tab -
 @item st @tab Southern Sotho @tab Latin @tab Maybe @tab -
 @item su @tab Sundanese @tab Latin @tab Maybe @tab -
@@ -174,7 +174,7 @@
 @item ta @tab Tamil @tab Tamil @tab 0.60 @tab -
 @item te @tab Telugu @tab Telugu @tab Maybe @tab -
 @item tet @tab Tetum @tab Latin @tab 0.50 @tab -
-@item tg @tab Tajik @tab Cyrillic @tab Planned @tab Yes
+@item tg @tab Tajik @tab Cyrillic @tab Planned @tab Incomplete
 @item ti @tab Tigrinya @tab Ethiopic @tab Maybe @tab -
 @item tk @tab Turkmen @tab Latin @tab - @tab -
 @item tl @tab Tagalog @tab Latin @tab Planned @tab -
@@ -188,7 +188,7 @@
 @item ty @tab Tahitian @tab Latin @tab Maybe @tab -
 @item
 @item ug @tab Uighur @tab Arabic @tab - @tab -
-@item uk @tab Ukrainian @tab Cyrillic @tab 0.50 @tab Yes
+@item uk @tab Ukrainian @tab Cyrillic @tab 0.50 @tab Incomplete
 @item ur @tab Urdu @tab Arabic @tab Maybe @tab -
 @item uz @tab Uzbek @tab Cyrillic @tab 0.60 @tab -
 @item

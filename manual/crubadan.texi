@@ -26,7 +26,6 @@
 @item Luo (luo)
 @item Malagasy (mg)
 @item Minangkabau (min)
-@item Mongolian (mn)
 @item Ndebele (nd)
 @item Low Saxon (nds)
 @item Ndonga (ng)
