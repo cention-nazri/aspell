@@ -53,8 +53,8 @@ namespace acommon
       return reinterpret_cast<U * >(&this->front() + pos);
     }
 
-    void pop_front() {erase(begin());}
-    void push_front(const T & v) {insert(begin(), v);}
+    void pop_front() {this->erase(this->begin());}
+    void push_front(const T & v) {this->insert(this->begin(), v);}
   };
 }
 

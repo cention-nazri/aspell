@@ -19,6 +19,7 @@
 // See the comment at the end of this file for examples of what we handle.
 // See the config setting docs regarding our config lists: check and skip.
 
+#include <stdio.h> // needed for sprintf
 
 #include "settings.h"
 
