@@ -87,13 +87,13 @@ libaspell_la_SOURCES =\
   lib/string_pair_enumeration-c.cpp\
   lib/new_checker.cpp
 
-libaspell_la_LDFLAGS = ${extra_ldflags} -version-info 15:2:0
+libaspell_la_LDFLAGS = ${extra_ldflags} -version-info 15:5:0
 
 libpspell_la_SOURCES = lib/dummy.cpp
 
 libpspell_la_LIBADD = libaspell.la
 
-libpspell_la_LDFLAGS = ${extra_ldflags} -version-info 15:2:0
+libpspell_la_LDFLAGS = ${extra_ldflags} -version-info 15:5:0
 
 EXTRA_DIST += common/*.hpp common/*.h\
               modules/speller/default/*.hpp\
