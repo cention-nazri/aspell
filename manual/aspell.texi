@@ -1,5 +1,5 @@
 \input texinfo   @c -*-texinfo-*-
-@comment $Id: aspell.texi,v 1.23 2004/04/17 00:36:23 kevina Exp $
+@comment $Id: aspell.texi,v 1.24 2004/04/18 10:25:21 kevina Exp $
 @comment %**start of header
 @setfilename aspell.info
 @settitle GNU Aspell 0.60
@@ -2984,10 +2984,6 @@ A very large syllabary with 819 distince symbols.  However, like
 Ethiopic, it should be possible to support this script by breaking it
 up.
 
-@appendixsubsubsec The Unified Canadian Aboriginal Syllabics
-
-Another very large syllabary.
-
 @appendixsubsubsec The Ojibwe Syllabary 
 
 With only 120 distinct symbols, Aspell can actually support this one as
@@ -3002,16 +2998,16 @@ unsupported by Aspell for one reason or another.
 
 @include lang-unsupported.texi
 
-@appendixsubsec The Thai and Khmer Scripts
+@appendixsubsec The Thai, Khmer, and Lao Scripts
 
-The Thai and Khmer scripts presents a different problem for Aspell.  The
-problem is not that there are more than 210 unique symbols, but that
-there are no spaces between words.  This means that there is no easy way
-to split a sentence into individual words.  However, it is still
-possible to spell check these scripts, it is just a lot more difficult.
-I will be happy to work within someone who is interested in adding Thai
-or Khmer support to Aspell, but it is not likely something I will do in
-the foreseeable future.
+The Thai, Khmer, and Lao scripts presents a different problem for
+Aspell.  The problem is not that there are more than 210 unique symbols,
+but that there are no spaces between words.  This means that there is no
+easy way to split a sentence into individual words.  However, it is
+still possible to spell check these scripts, it is just a lot more
+difficult.  I will be happy to work within someone who is interested in
+adding Thai, Khmer, or Lao support to Aspell, but it is not likely
+something I will do in the foreseeable future.
 
 @appendixsubsec Languages which use H@`anzi Characters
 
