@@ -1,5 +1,5 @@
 \input texinfo   @c -*-texinfo-*-
-@comment $Id: aspell.texi,v 1.7 2004/02/12 23:43:15 kevina Exp $
+@comment $Id: aspell.texi,v 1.8 2004/02/15 00:57:58 kevina Exp $
 @comment %**start of header
 @setfilename aspell.info
 @settitle GNU Aspell 0.51
@@ -47,7 +47,7 @@ are LGPL Compatible.
 @contents
 
 @ifnottex
-@node Top, Introduction, (dir), (dir)
+@node Top
 @top GNU Aspell
 GNU Aspell is a spell checker designed to eventually replace Ispell.
 It can either be used as a library or as an independent spell checker.
@@ -59,15 +59,14 @@ It can either be used as a library or as an independent spell checker.
 * Working With Dictionaries::   
 * Writing programs to use Aspell::  
 * Adding Support For Other Languages::  
-* How Aspell Works::            
+* Implementation Notes::        
 * Support::                     
 * Helping Out::                 
-* To Do::                       
-* Installing::                  
+* To Do::
+* Installing::
 * ChangeLog::                   
 * Credits::                     
-* Copying::                     
-@c * Index::                       
+* Copying::
 
 @detailmenu
  --- The Detailed Node Listing ---
@@ -118,11 +117,33 @@ Adding Support For Other Languages
 * Affix Compression::           
 * Controlling the Behavior of Run-together Words::  
 
+Implementation Notes
+
+* Aspell Suggestion Strategy::  
+* Notes on 8-bit Characters::   
+
 To Do
 
 * Important Items::             
 * Other Items::                 
 * Notes on Various Items::      
+
+Notes on Various Items
+
+* Unicode Support::             
+* Words With Spaces in Them::   
+* Word skipping by context::    
+* Hidden Markov Model::         
+* Email the Personal Dictionary::  
+
+Installing
+
+* Generic Install Instructions::  
+* Curses Notes::                
+* Upgrading from Aspell 0.50::  
+* Upgrading from Aspell .33/Pspell .12::  
+* Upgrading from a pre-release snapshot::  
+* WIN32 Notes::                 
 
 Copying
 
@@ -134,7 +155,7 @@ Copying
 
 @end ifnottex
 
-@node Introduction, Basic Usage, Top, Top
+@node Introduction
 @chapter Introduction
 
 GNU Aspell is a spell checker designed to eventually replace Ispell.
@@ -238,7 +259,7 @@ Support for spell checking Nroff files.
 @end itemize
 
 
-@node Basic Usage, Customizing Aspell, Introduction, Top
+@node Basic Usage
 @chapter Basic Usage
 
 For a quick reference on the Aspell utility use the command 
@@ -249,7 +270,7 @@ For a quick reference on the Aspell utility use the command
 * Using Aspell with other Applications::  
 @end menu
 
-@node Spellchecking Individual Files, Using Aspell with other Applications, Basic Usage, Basic Usage
+@node Spellchecking Individual Files
 @section Spellchecking Individual Files
 
 To use Aspell to spellcheck a file use:
@@ -322,7 +343,7 @@ simpler ``dumb'' terminal interface where the misspelled word is
 surrounded by two '*'.  In either case the interface should be self
 explanatory.
 
-@node Using Aspell with other Applications,  , Spellchecking Individual Files, Basic Usage
+@node Using Aspell with other Applications
 @section Using Aspell with other Applications
 
 @subsection With Applications that Expect Ispell
@@ -448,7 +469,7 @@ aspell check
 
 instead which will avoid switching Aspell into email mode.
 
-@node Customizing Aspell, Working With Dictionaries, Basic Usage, Top
+@node Customizing Aspell
 @chapter Customizing Aspell
 @anchor{customizing}
 
@@ -480,7 +501,7 @@ entries added or removed from the list.
 * Notes on Various Options::    
 @end menu
 
-@node Specifying Options, The Options, Customizing Aspell, Customizing Aspell
+@node Specifying Options
 @section Specifying Options
 
 @subsection At the Command Line
@@ -601,7 +622,7 @@ overrides any options set in the configuration file.  The format of
 the string is exactly the same as the configuration file except that
 semicolons (@kbd{;}) are used instead of newlines.
 
-@node The Options, Dumping Configuration Values, Specifying Options, Customizing Aspell
+@node The Options
 @section The Options
 
 The following is a list of available options broken down by category.
@@ -895,7 +916,7 @@ uses.
 @end table
 
 
-@node Dumping Configuration Values, Printing Help screen, The Options, Customizing Aspell
+@node Dumping Configuration Values
 @section Dumping Configuration Values
 
 To find out the current value of all the options use the command
@@ -921,7 +942,7 @@ parameter @code{+e} and its argument always must be specified
 immediately after @command{config} command and before specifying name
 of option in order to be recognized by Aspell.
  
-@node Printing Help screen, Notes on Various Options, Dumping Configuration Values, Customizing Aspell
+@node Printing Help screen
 @section Printing Help screen
 
 To print the help screen of Aspell simply invoke @command{aspell} with
@@ -1194,8 +1215,8 @@ to aspell even if they are in fact separate keys on your keyboard.
 @subsection Notes on the Different Suggestion Modes
 
 In order to understand what these suggestion modes do, a basic
-understanding of how aspell works is required.  For that @ref{How
-Aspell Works}.
+understanding of how aspell works is required.  For that see
+@ref{Aspell Suggestion Strategy}.
 
 The suggestion modes are as follows.
 
@@ -1246,7 +1267,7 @@ identical to @option{fast}.  And the @option{slow} option is identical
 to the @option{normal} if jump tables were used.
 
 
-@node Working With Dictionaries, Writing programs to use Aspell, Customizing Aspell, Top
+@node Working With Dictionaries
 @chapter Working With Dictionaries
 
 @menu
@@ -1260,7 +1281,7 @@ to the @option{normal} if jump tables were used.
 * AWLI files::                  
 @end menu
 
-@node Using aspell-import, How Aspell Selects an Appropriate Dictionary, Working With Dictionaries, Working With Dictionaries
+@node Using aspell-import
 @section Using @command{aspell-import}
 
 The @command{aspell-import} Perl script will look for old personal
@@ -1280,7 +1301,7 @@ and install a dictionary designed to work with GNU Aspell 0.50 or
 better.
 
 
-@node How Aspell Selects an Appropriate Dictionary, Listing Available Dictionaries, Using aspell-import, Working With Dictionaries
+@node How Aspell Selects an Appropriate Dictionary
 @section How Aspell Selects an Appropriate Dictionary
 
 If the @option{master} option is set in any fashion (via the command
@@ -1309,14 +1330,14 @@ library rather than the environment variables.  If Aspell cannot
 determine the language from the @env{LC_MESSAGES} locale than it will
 default to @code{en_US}.
 
-@node Listing Available Dictionaries, Dumping the Contents of the Word List, How Aspell Selects an Appropriate Dictionary, Working With Dictionaries
+@node Listing Available Dictionaries
 @section Listing Available Dictionaries
 
 For a list of available dictionaries use the command @command{aspell
 dump dicts}.  This will form a list of dictionaries that Aspell will
 search when a dictionary is not specifically given.
 
-@node Dumping the Contents of the Word List, Creating an Individual Word List, Listing Available Dictionaries, Working With Dictionaries
+@node Dumping the Contents of the Word List
 @section Dumping the Contents of the Word List
 
 The dump command in @command{aspell} will simply dump the contents of
@@ -1333,7 +1354,7 @@ aspell dump personal
 will simply dump the contents of the current personal word list to
 @file{stdout}.
 
-@node Creating an Individual Word List, Using Multi Dictionaries, Dumping the Contents of the Word List, Working With Dictionaries
+@node Creating an Individual Word List
 @section Creating an Individual Word List
 
 To create an individual main word list from a list of words use the
@@ -1389,7 +1410,7 @@ the following format
 @i{misspelled_word} @i{correction}
 @end example
 
-@node Using Multi Dictionaries, Dictionary Naming, Creating an Individual Word List, Working With Dictionaries
+@node Using Multi Dictionaries
 @section Using @emph{Multi} Dictionaries
 
 As with previous versions of Aspell you can specify the main
@@ -1434,7 +1455,7 @@ will strip accents from the English word list but not the
 option is specified the local @option{strip-accents} options are
 ignored.
 
-@node Dictionary Naming, AWLI files, Using Multi Dictionaries, Working With Dictionaries
+@node Dictionary Naming
 @section Dictionary Naming
 
 In order for Aspell to be able to correctly recognize a dictionary
@@ -1472,7 +1493,7 @@ en-85.multi
 de.multi
 @end example
 
-@node AWLI files,  , Dictionary Naming, Working With Dictionaries
+@node AWLI files
 @section AWLI files
 
 In order for Aspell to find dictionaries that are located in odd
@@ -1493,7 +1514,7 @@ to @option{default} for now since there is only one speller module.
 Each @file{awli} file for an Aspell word list should then contain
 exactly one line which contains the full path of the main word list.
 
-@node Writing programs to use Aspell, Adding Support For Other Languages, Working With Dictionaries, Top
+@node Writing programs to use Aspell
 @chapter Writing programs to use Aspell
 
 There are two main ways to use aspell from within your application.
@@ -1507,8 +1528,8 @@ actual Aspell API is constantly changing.
 * Notes on Storing Replacement Pairs::  
 @end menu
 
-@node Through the C API, Through A Pipe, Writing programs to use Aspell, Writing programs to use Aspell
-@section Through the @acronym{C API}
+@node Through the C API
+@section Through the C API
 
 The Aspell library contains two main classes and several helper
 classes.  The two main classes are @code{AspellConfig} and
@@ -1698,7 +1719,7 @@ meet these requirements.  It is up to the programmer to make sure
 multiple threads do not do things such as change the dictionaries and
 add or delete items from the personal or session dictionaries.
 
-@node Through A Pipe, Notes on Storing Replacement Pairs, Through the C API, Writing programs to use Aspell
+@node Through A Pipe
 @section Through A Pipe
 @anchor{pipe}
 
@@ -1825,7 +1846,7 @@ have the following format
 @emph{(Part of the preceding section was directly copied out of
  the Ispell manual)}
 
-@node Notes on Storing Replacement Pairs,  , Through A Pipe, Writing programs to use Aspell
+@node Notes on Storing Replacement Pairs
 @section Notes on Storing Replacement Pairs
 
 The @code{store_repl} method and the @code{$$ra} should be used
@@ -1883,7 +1904,7 @@ sicolagest -> psychologist
 
 will also get stored so that you don't have to worry about it.
 
-@node Adding Support For Other Languages, How Aspell Works, Writing programs to use Aspell, Top
+@node Adding Support For Other Languages
 @chapter Adding Support For Other Languages
 
 Before you consider adding support for Aspell first make sure that
@@ -1910,7 +1931,7 @@ create the language data file, and compile a new word list.
 * Controlling the Behavior of Run-together Words::  
 @end menu
 
-@node The Language Data File, Compiling the Word List, Adding Support For Other Languages, Adding Support For Other Languages
+@node The Language Data File
 @section The Language Data File
 
 The basic format of the language data file is the same as it is for
@@ -2012,7 +2033,7 @@ The options to control how run-together words are handled the same way
 as they are in the normal configuration files.  for more information,
 please @ref{Controlling the Behavior of Run-together Words}.
 
-@node Compiling the Word List, Phonetic Code, The Language Data File, Adding Support For Other Languages
+@node Compiling the Word List
 @section Compiling the Word List
 
 Once you have a working language data file installed in the right
@@ -2020,7 +2041,7 @@ place you are ready to compile the main word list.  To find out what
 to do, see @ref{Working With Dictionaries}.  This section also
 includes instructions for creating the AWLI file.
 
-@node Phonetic Code, Replacement Tables, Compiling the Word List, Adding Support For Other Languages
+@node Phonetic Code
 @section Phonetic Code
 
 
@@ -2343,7 +2364,7 @@ If you think that this section helped you or if you think that this is
 just a waste of time you can send any feedback to
 @email{bjoern.jacke@@gmx.de}.
 
-@node Replacement Tables, Affix Compression, Phonetic Code, Adding Support For Other Languages
+@node Replacement Tables
 @section Replacement Tables
 
 When phonetic code is not used a replacement table can be used instead.
@@ -2377,7 +2398,7 @@ REP k ch
 REP ch k
 @end example
 
-@node Affix Compression, Controlling the Behavior of Run-together Words, Replacement Tables, Adding Support For Other Languages
+@node Affix Compression
 @section Affix Compression
 
 Aspell, as of version 0.51, now has support for affix compression.
@@ -2419,7 +2440,7 @@ It is possible to have both soundslike and affix support but without
 the affix compression.  In this case all words are expanded when
 creating a dictionary from a word list with affix compression.
 
-@node Controlling the Behavior of Run-together Words,  , Affix Compression, Adding Support For Other Languages
+@node Controlling the Behavior of Run-together Words
 @section Controlling the Behavior of Run-together Words
 
 Aspell currently has support for unconditionally accepting run-together
@@ -2446,8 +2467,16 @@ actual word is a run-together.  I plan on more intelligently
 supporting run-together words when coming up with suggestions in a
 future version of Aspell.
 
-@node How Aspell Works, Support, Adding Support For Other Languages, Top
-@appendix How Aspell Works
+@node Implementation Notes
+@appendix Implementation Notes
+
+@menu
+* Aspell Suggestion Strategy::  
+* Notes on 8-bit Characters::   
+@end menu
+
+@node Aspell Suggestion Strategy
+@appendixsec Aspell Suggestion Strategy
 
 The magic behind my spell checker comes from merging Lawrence Philips
 excellent metaphone algorithm and Ispell's near miss strategy which is
@@ -2498,7 +2527,78 @@ For more details about exactly how each step is performed please see
 the file @file{suggest.cc}.  For more information on the metaphone
 algorithm please see the data file @file{english_phonet.dat}.
 
-@node Support, Helping Out, How Aspell Works, Top
+@node Notes on 8-bit Characters
+@appendixsec Notes on 8-bit Characters
+
+There is a very good reason I use 8-bit characters in Aspell. Speed
+and simplicity. While many parts of my code can fairly be easily be
+converted to some sort of wide character as my code is clean. Other
+parts can not be.
+
+One of the reasons because is many, many places I use a direct lookup
+to find out various information about characters. With 8-bit
+characters this is very feasible because there is only 256 of
+them. With 16-bit wide characters this will waste a LOT of space. With
+32-bit characters this is just plain impossible. Converting the lookup
+tables to some other form, while certainly possible, will degrade
+performance significantly.
+
+Furthermore, some of my algorithms relay on words consisting only on a
+small number of distinct characters (often around 30 when case and
+accents are not considered). When the possible character can consist
+of any Unicode character this number because several thousand, if
+that. In order for these algorithms to still be used some sort of
+limit will need to be placed on the possible characters the word can
+contain. If I impose that limit, I might as well use some sort of
+8-bit characters set which will automatically place the limit on what
+the characters can be.
+
+There is also the issue of how I should store the word lists in
+memory? As a string of 32 bit wide characters. Now that is using up 4
+times more memory than charters would and for languages that can fit
+within an 8-bit character that is, in my view, a gross waste of
+memory. So maybe I should store them is some variable width format
+such as UTF-8. Unfortunately, way, way to many of may algorithms will
+simply not work with variable width characters without significant
+modification which will very likely degrade performance. So the
+solution is to work with the characters as 32-bit wide characters and
+than convert it to a shorter representation when storing them in the
+lookup tables. Now than can lead to an inefficiency. I could also use
+16 bit wide characters however that may not be good enough to hold all
+of future versions of Unicode and it has the same problems.
+
+As a response to the space waste used by storing word lists in some
+sort of wide format some one asked:
+
+@quotation
+Since hard drive are cheaper and cheaper, you could store dictionary
+in a usable (uncompressed) form and use it directly with memory
+mapping. Then the efficiency would directly depend on the disk caching
+method, and only the used part of the dictionaries would relay be
+loaded into memory. You would no more have to load plain dictionaries
+into main memory, you'll just want to compute some indexes (or
+something like that) after mapping.
+@end quotation
+
+However, the fact of the matter is that most of the dictionary will be
+read into memory anyway if it is available. If it is not available
+than there would be a good deal of disk swaps. Making characters
+32-bit wide will increase the change that there are more disk swap. So
+the bottom line is that it will be cheaper to convert the characters
+from something like UTF-8 into some sort of wide character. I could
+also use some sort of disk space lookup table such as the Berkeley
+Database. However this will @strong{definitely} degrade performance.
+
+The bottom line is that keeping Aspell 8-bit internally is a very well
+though out decision that is not likely to change any time soon. Fell
+free to challenge me on it, but, don't expect me to change my mind
+unless you can bring up some point that I have not thought of before
+and quite possible a patch to solve cleanly convert Aspell to Unicode
+internally with out a serious performance lost OR serious memory usage
+increase.
+
+
+@node Support
 @appendix Support
 
 Support for Aspell can be found on the Aspell mailing lists.
@@ -2506,7 +2606,7 @@ Instructions for joining the various mailing lists (and an archive of
 them) can be found off the Aspell home page at
 @uref{http://aspell.net}.
 
-@node Helping Out, To Do, Support, Top
+@node Helping Out
 @appendix Helping Out
 
 I have very little time to work on Aspell so I desperately need other
@@ -2520,7 +2620,7 @@ I am also looking for someone to eventually take over the maintenance
 and development of Aspell.  If you are interested please contact me
 directly.
 
-@node To Do, Installing, Helping Out, Top
+@node To Do
 @appendix To Do
 
 @menu
@@ -2529,7 +2629,7 @@ directly.
 * Notes on Various Items::      
 @end menu
 
-@node Important Items, Other Items, To Do, To Do
+@node Important Items
 @appendixsec Important Items
 
 Words in bold indicate how you should refer to the item when
@@ -2571,6 +2671,11 @@ can't seam to find any concrete documentation on how to do it. If you
 have experience in this area I would really appreciate it if you could
 enlighten me.
 @item
+Make the fact that Aspell is 8-bit internally (@pxref{Notes on 8-bit
+Characters}) transparent to the end-user. That is @strong{support
+unicode} for everything read in and printed out by Aspell.
+@xref{Unicode Support}.
+@item
 Come up with a @strong{nroff mode} for spell checking. I know nothing about
 nroff. I would gladly write the filter if someone would be willing to
 work with me in developing one. All I really need to know is what to
@@ -2584,19 +2689,6 @@ finished with out. They will probably eventually get
 implemented. However, I could still use help with them.
 
 @itemize @bullet
-@item 
-Use Lawrence Philips' new @strong{Double Metaphone algorithm}. See
-@uref{http://aspell.sourceforge.net/metaphone/}. The main task involved
-here is converting the algorithm into table form. This will take some
-time but their is no real programming experience is required. If you
-want to help with Aspell but don't have any real programming
-experience, this would be a great place to start.
-@item
-Create a @strong{C++ interface} for Aspell, possibly on top of the C one.
-@item
-Write a @strong{GUI} for the aspell utility. Ideally it should be able to do
-everything the Aspell utility can do and not just be able spell check
-a document.
 @item
 Better @strong{support for compound words}. If you speak a language
 which has a lot of compound of run-together words I would appreciate
@@ -2608,16 +2700,9 @@ more. I attempted to provide that, but it wasn't powerful enough, and
 hence unused. Thus, I am going to start from scratch, but I need to
 know exactly what is involved in correct compound formation.
 @item
-Rank suggestions based on @strong{frequency information}.  Both global
-frequency and document specific frequency can be used.  The latter will
-require that the whole document be made available to the spell checker.
-Also use frequency information to flag words which are found in the
-dictionary but not in common usage, and thus might not be what was
-intended.
-@item
 Be able to accept @strong{words with spaces in them} as many languages
 have words, such as a word in a foreign phrase, which only make sense
-when followed by other words.
+when followed by other words. @xref{Words With Spaces in Them}.
 @item
 Support @strong{soundslike lookup with affix compression}.  I think it
 is possible, although I don't know how effective it will be.  The basic
@@ -2625,10 +2710,30 @@ idea is to affix compress the soundslike codes and then match the
 codes up with affix compressed words.  If you are interested,
 email @email{aspell-devel@@gnu.org}, and I will explain it in more
 detail.
+@item 
+Use Lawrence Philips' new @strong{Double Metaphone algorithm}. See
+@uref{http://aspell.sourceforge.net/metaphone/}. The main task involved
+here is converting the algorithm into table form. This will take some
+time but their is no real programming experience is required. If you
+want to help with Aspell but don't have any real programming
+experience, this would be a great place to start.
+@item
+Rank suggestions based on @strong{frequency information}.  Both global
+frequency and document specific frequency can be used.  The latter will
+require that the whole document be made available to the spell checker.
+Also use frequency information to flag words which are found in the
+dictionary but not in common usage, and thus might not be what was
+intended.
+@item
+Write a @strong{GUI} for the aspell utility. Ideally it should be able to do
+everything the Aspell utility can do and not just be able spell check
+a document.
+@item
+Create a @strong{C++ interface} for Aspell, possibly on top of the C one.
 
 @end itemize
 
-@node Other Items, Notes on Various Items, Important Items, To Do
+@node Other Items
 @appendixsec Other Items
 
 These items all sound like good ideas however I am not sure when I
@@ -2644,11 +2749,8 @@ Change languages (and thus dictionaries) based on the information in
 the actual document.
 
 @item
-Come up with a @command{nroff} mode for spell checking.
-
-@item
 Come up with a mode that will skip words based on the symbols that
-(almost) always surround the word.  (@strong{Word skipping by context})
+(almost) always surround the word.  @xref{Word skipping by context}.
 
 @item
 Create two @strong{server modes} for Aspell.  One that uses the DICT
@@ -2659,13 +2761,14 @@ via some arbitrary port.
 Come up with @strong{thread safe personal dictionaries}.
 
 @item
-Use the @strong{Hidden Markov Model} to base the suggestions on not only
-the word itself but on the context around the word.
+Use the @strong{Hidden Markov Model} to base the suggestions on not
+only the word itself but on the context around the word. @xref{Hidden
+Markov Model}.
 
 @item
 Having a way to @strong{email the personal dictionary} and/or
 replacement list to a particular address either periodically or when
-it grows to a certain size.
+it grows to a certain size. @xref{Email the Personal Dictionary}.
 @end itemize
 
 The following good ideas were found in the ispell @file{WISHES} file
@@ -2692,9 +2795,79 @@ choosing the dictionary that produced the fewest spelling errors on
 the first few lines.
 @end itemize
 
-@node Notes on Various Items,  , Other Items, To Do
+@node Notes on Various Items
 @appendixsec Notes on Various Items
 
+@menu
+* Unicode Support::             
+* Words With Spaces in Them::   
+* Word skipping by context::    
+* Hidden Markov Model::         
+* Email the Personal Dictionary::  
+@end menu
+
+@node  Unicode Support
+@appendixsubsec Unicode Support
+
+The Aspell @emph{library} supports Unicode fairly well.  All one has
+to do is set the encoding and everything is converted on the fly.
+
+The Aspell @emph{utility} doesn't really support Unicode at this time.
+Although if you set the encoding to UTF-8 the 'PIPE' mode will
+probably work and the 'CHECK' mode will sort of work.  The issue with
+the 'check' mode is using Unicode with the curses library correctly.
+
+The @emph{rest} of the Aspell utility does not support Unicode.  The
+encoding used is whatever the dictionary is encoded in.
+
+@emph{Internally} the core Aspell library (everything in
+modules/speller/default) is 8-bit and is very likely to stay that way.
+@xref{Notes on 8-bit Characters}.
+
+However, that @emph{doesn't} mean that the end user has to know this.
+Everything read in by Aspell and everything printed out can be in
+UTF-8 or some other encoding.  The only person that @emph{really} has
+to be aware of the 8-bit issue is the dictionary maintainers as they
+must chose an 8-bit character set for Aspell to use.  Even the word
+list can be in Unicode as Aspell can convert it when creating the
+dictionary.
+
+But, Aspell is not there yet.  There are several issues in supporting
+Unicode.  The main issue is converting everything read in and printed out
+from the internal 8-bit encoding to Unicode.  But an other issue is
+knowing what encoding the various data files are in.  There is no
+reason they can't be in Unicode but Aspell has to know to convert it.
+Thus they need to be tagged in someway.  By data files I mean any human
+readable files that Aspell uses.
+
+Ideally the Aspell utility use the @env{LC_CTYPE} for the encoding,
+however using @env{LC_CTYPE} to figure out how the data files are
+encoded will lead to nothing but trouble.
+
+So, I @emph{hope} to get all this done by Aspell 0.51 but I don't know
+if I will.  If someone would like to assist me in this task I would
+really appreciate it.
+
+@node Words With Spaces in Them
+@appendixsubsec Words With Spaces in Them
+
+While this is something I would like to do it is not a simple task.
+The basic problem is that when tokenizing a string there is no good
+way to keep phrases together.  So the solution is to somehow add
+special conditions to certain words which will dictate which words can
+come before/after it.  Then there is also a problem of how to come up
+with intelligent suggestions.  What further complicates things is that
+many applications send words to Aspell a word at a time.  So even if
+Aspell did support such a thing many applications that would use
+Aspell will not.  So, in order for this to work applications will need
+to send text to Aspell a document or at least a sentence at a time.
+Unfortunately the framework for doing this is not there yet.  It will
+be once I finish the filter interface.  Another possible is to provide
+callback functions in which Aspell will be able to request the
+previous or next word on request.  Yet again the framework for doing
+this is not there.  Perhaps sometime in the near future.
+
+@node  Word skipping by context
 @appendixsubsec Word skipping by context
 
 This was posted on the Aspell mailing list on January 1, 1999:
@@ -2745,6 +2918,7 @@ on programming languages code.
 If you are interested in helping be out with this or just have general
 comments about the idea please let me know.
 
+@node Hidden Markov Model
 @appendixsubsec Hidden Markov Model
 
 Knud Haugaard S@o{}rensen suggested this one.  From his email on the
@@ -2775,6 +2949,7 @@ I think it is a great idea.
  However unfortunately it will probably be very complicated to implement.
  Perhaps in the far future.
 
+@node Email the Personal Dictionary
 @appendixsubsec Email the Personal Dictionary
 
 Some one suggest in a personal email:
@@ -2802,30 +2977,13 @@ also be used as a library.  It also is not a real high priority,
 especially since I would first need to learn how to send email within
 a C++ program.
 
-@appendixsubsec Words With Spaces in Them
-
-While this is something I would like to do it is not a simple task.
-The basic problem is that when tokenizing a string there is no good
-way to keep phrases together.  So the solution is to somehow add
-special conditions to certain words which will dictate which words can
-come before/after it.  Then there is also a problem of how to come up
-with intelligent suggestions.  What further complicates things is that
-many applications send words to Aspell a word at a time.  So even if
-Aspell did support such a thing many applications that would use
-Aspell will not.  So, in order for this to work applications will need
-to send text to Aspell a document or at least a sentence at a time.
-Unfortunately the framework for doing this is not there yet.  It will
-be once I finish the filter interface.  Another possible is to provide
-callback functions in which Aspell will be able to request the
-previous or next word on request.  Yet again the framework for doing
-this is not there.  Perhaps sometime in the near future.
-
-@c @node Installing, ChangeLog, To Do, Top
+@c @node Installing
 @c @appendix Installing
 
 @include readme.texi
 
-@node ChangeLog, Credits, Installing, Top
+
+@node ChangeLog
 @appendix ChangeLog
 
 @heading Changes from 0.50.? to 0.51
@@ -3786,7 +3944,7 @@ in pipe mode.
 Dropped support for gcc 2.7.2 as the C++ compiler.
 
 @item
-Updated the How Aspell Works (@ref{How Aspell Works}.)
+Updated the How Aspell Works (@ref{Aspell Suggestion Strategy}.)
 
 @item
 Added support for the @env{ASPELL_DATA_DIR} environment variable.
@@ -4019,7 +4177,7 @@ Added documentation for the C++ library
 Other minor bug fixes.
 @end itemize
 
-@node Credits, Copying, ChangeLog, Top
+@node Credits
 @appendix Credits
 
 The following people have contributed a significant amount of code to
@@ -4087,7 +4245,7 @@ are LGPL Compatible.
 @include fdl.texi
 @include lgpl.texi
 
-@c @node Index,  , Copying, Top
+@c @node Index
 @c @unnumbered Index
 
 @c @printindex cp
