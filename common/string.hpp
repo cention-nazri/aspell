@@ -405,12 +405,12 @@ namespace acommon {
     }
   };
 
-  inline String operator+ (ParmStr rhs, ParmStr lhs)
+  inline String operator+ (ParmStr lhs, ParmStr rhs)
   {
     String tmp;
-    tmp.reserve(rhs.size() + lhs.size());
-    tmp += rhs;
+    tmp.reserve(lhs.size() + rhs.size());
     tmp += lhs;
+    tmp += rhs;
     return tmp;
   }
 
