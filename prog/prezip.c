@@ -206,7 +206,7 @@ int main (int argc, const char *argv[]) {
         if (c == 0)
           c = getc(stdin);
         --c;
-        if (c > last_max) {ret = 3; break;}
+        if (c < 0 || c > last_max) {ret = 3; break;}
         w = cur.str + c;
         while (c = getc(stdin), c > 32) {
           INSURE_SPACE(&cur,w,1);
