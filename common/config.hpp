@@ -19,6 +19,7 @@ namespace acommon {
   class KeyInfoEnumeration;
   class StringPairEnumeration;
   class MutableContainer;
+  class Cacheable;
   struct Conv;
 
   // The Config class is used to hold configuration information.
@@ -164,7 +165,7 @@ namespace acommon {
     Notifier * filter_mode_notifier;
 
     Vector<ConfigModule>      filter_modules;
-    Vector<class Cacheable *> filter_modules_ptrs;
+    Vector<Cacheable *> filter_modules_ptrs;
 
     Config(ParmStr name,
 	   const KeyInfo * mainbegin, 
