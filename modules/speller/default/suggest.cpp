@@ -411,8 +411,9 @@ namespace {
       CheckInfo ci; memset(&ci, 0, sizeof(ci));
       bool res = lang->affix()->affix_check(LookupInfo(sp, LookupInfo::Clean), str, ci, 0);
       if (!res) return;
-      char * tmp = form_word(ci);
+      form_word(ci);
       char * end = (char *)buffer.grow_temp(1);
+      char * tmp = (char *)buffer.temp_ptr();
       *end = '\0';
       add_nearmiss(tmp, end - tmp, 0, 0, score, -1, do_count);
     }
@@ -475,6 +476,7 @@ namespace {
         t[0] = lang->to_lower(t[0]);
     }
     char * end = (char *)buffer.grow_temp(1);
+    tmp = (char *)buffer.temp_ptr(); // since the orignal string may of moved
     *end = 0;
     buffer.commit_temp();
     add_nearmiss(tmp, end - tmp, 0, 0, score, -1, do_count);
