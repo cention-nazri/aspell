@@ -13,7 +13,7 @@
 @item az @tab Azerbaijani @tab Latin @tab Experimental @tab -
 @item
 @item ba @tab Bashkir @tab Cyrillic @tab - @tab -
-@item be @tab Belarusian @tab Cyrillic @tab Planned @tab Yes
+@item be @tab Belarusian @tab Cyrillic @tab Yes @tab Yes
 @item bem @tab Bemba @tab Latin @tab Maybe @tab -
 @item bg @tab Bulgarian @tab Cyrillic @tab Yes @tab -
 @item bh @tab Bihari @tab Devanagari @tab - @tab -
@@ -75,7 +75,7 @@
 @item
 @item ia @tab Interlingua (IALA) @tab Latin @tab Yes @tab -
 @item id @tab Indonesian @tab Latin @tab Yes @tab -
-@item ig @tab Igbo @tab Latin @tab - @tab -
+@item ig @tab Igbo @tab Latin @tab Maybe @tab -
 @item ii @tab Sichuan Yi @tab Yi @tab - @tab -
 @item ilo @tab Iloko @tab Latin @tab Maybe @tab -
 @item io @tab Ido @tab Latin @tab - @tab -

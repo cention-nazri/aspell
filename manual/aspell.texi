@@ -288,7 +288,7 @@ at the command line where @code{@var{filename}} is the file you want to
 check and @code{@var{options}} is any number of optional options.  Some of
 the more useful ones include:
 
-@table @option
+@table @b
 @item --mode=@var{mode}
 the mode to use when checking files.  The available modes are
 @code{none}, @code{url}, @code{email}, @code{sgml}, @code{ccpp} or @code{tex}.
@@ -687,18 +687,20 @@ semicolons (@samp{;}) are used instead of newlines.
 The following is a list of available options broken down by category.
 Each entry has the following format:
 
-@example
-[@var{option}[,@var{single-letter-abbreviation}]] (@var{type})
-  @var{description}
-@end example
+@quotation
+@table @b
+@item @var{option}[,@var{single-letter-abbreviation}]
+@i{(@var{type})} @var{description}
+@end table
+@end quotation
 
 Where single letter options are specified as they would appear at the
 command line, ie with the preceding dash.  Boolean single letter
 options are specified in the following format:
 
-@example
+@quotation
 -<abbreviation to enable>|-<abbreviation to disable>
-@end example
+@end quotation
 
 @var{option} is one of the following: @emph{boolean}, @emph{string},
 @emph{file}, @emph{dir}, @emph{integer}, or @emph{list}.
@@ -712,46 +714,56 @@ The following options may be used to control which dictionaries to use
 and how they behave (for more information see @ref{How Aspell Selects
 an Appropriate Dictionary}):
 
-@table @option
+@table @b
 
-@item master,-d (@i{string})
+@item master,-d 
+@i{(string)}
 Base name of the dictionary to use.  If this option is specifed than
 Aspell will either use this dictionary or die.
 
-@item dict-dir (@i{dir})
+@item dict-dir 
+@i{(dir)}
 Location of the main word list.
 
-@item lang (@i{string})
+@item lang 
+@i{(string)}
 Language to use, it follows the same format of the @env{LANG}
 environment variable on most systems.  It consists of the two letter
 @acronym{ISO 639} language code and an optional two letter
 @acronym{ISO 3166} country code after a dash or underscore.  The
 default value is based on the value of the @env{LC_MESSAGES} locale.
 
-@item size (@i{string})
+@item size
+@i{(string)}
 The preferred size of the word list.
 
-@item variety (@i{list})
+@item variety
+@i{(list)}
 Any extra information to distinguish two different words lists that
 have the same lang and size.
 
-@item word-list-path (@i{list})
+@item word-list-path 
+@i{(list)}
 Search path for word list information files.
 
 @c @item module-search-order (@i{list})
 @c list of available modules, modules that come first on this list have a
 @c higher priority. Currently there is only one speller module.
 
-@item personal,-p (@i{file})
+@item personal,-p 
+@i{(file)}
 Personal word list file name.
 
-@item repl (@i{file})
+@item repl 
+@i{(file)}
 Replacements list file name.
 
-@item extra-dicts (@i{list})
+@item extra-dicts 
+@i{(list)}
 Extra dictionaries to use.
 
-@item dict-alias (@i{list})
+@item dict-alias 
+@i{(list)}
 create dictionarie aliases.  Each entry has the form @samp{@var{from}
 @var{to}}.  Will override any system dictionaries that are present.
 
@@ -762,9 +774,10 @@ create dictionarie aliases.  Each entry has the form @samp{@var{from}
 These options control the encoding the document is expected to be in and
 how it is displayed.
 
-@table @option
+@table @b
 
-@item encoding (@i{string})
+@item encoding 
+@i{(string)}
 The encoding the input text is in.  Valid values include, but not
 limited to, @samp{iso-8859-*}, @samp{utf-8}, @samp{ucs-2},
 @samp{ucs-4}.  When using the aspell utility the default encoding is
@@ -774,18 +787,20 @@ based on the current locale.  Thus if your locale currently uses the
 programs using the Aspell library and is not suppotted by the Aspell
 utility.
 
-@item normalize (@i{boolean})
+@item normalize 
+@i{(boolean)}
 Perform Unicode normalization.  Enabled by default.
 
-@item norm-strict (@i{boolean})
-
+@item norm-strict 
+@i{(boolean)}
 Avoid lossy conversions when normalizing.  Lossy conversions includes
 compatibility mappings such as splitting the letter @samp{OE} (U+152)
 into @samp{O} and @samp{E} (when the combined letter is not available),
 and mappings which will remove accents.  Disabled by default except when
 creating dictionaries.
 
-@item norm-form (@i{string})
+@item norm-form 
+@i{(string)}
 The normalization form the output should be in.  This option primarly
 effects the normalization form of the suggestions as when spell
 checkering as the actual text is unchanged unless there is an error.
@@ -796,8 +811,8 @@ that @emph{full} composition is used rather than @emph{canonical}
 composition.  The @option{normalize} option must be enabled for this
 option to be used.
 
-@item norm-requires (@i{boolean})
-
+@item norm-required
+@i{(boolean)}
 Set to true when the current language requires Unicode normalization.
 This is generally the case when private use characters are used
 internally by Aspell or when Normalization Form C is not the same as
@@ -810,28 +825,35 @@ full composition.
 These options control the behaviour of Aspell when checking
 documents. 
 
-@table @option
-@item ignore,-W (@i{integer})
+@table @b
+@item ignore,-W 
+@i{(integer)}
 Ignore words with N characters or less
 
-@item ignore-repl (@i{boolean})
+@item ignore-repl 
+@i{(boolean)}
 Ignore commands to store replacement pairs.
 
-@item save-repl (@i{boolean})
+@item save-repl 
+@i{(boolean)}
 Save the replacement word list on save all.
 
-@item keyboard (@i{file})
+@item keyboard 
+@i{(file)}
 The base name of the keyboard definition file to use (@pxref{Notes on
 Typo-Analysis})
 
-@item sug-mode (@i{mode})
+@item sug-mode 
+@i{(mode)}
 Suggestion mode = @samp{ultra} | @samp{fast} | @samp{normal} | @samp{slow} |
 @samp{bad-spellers} (@pxref{Notes on the Different Suggestion Modes})
 
-@item ignore-case (@i{boolean})
+@item ignore-case 
+@i{(boolean)}
 Ignore case when checking words -- @emph{currently ignored}.
 
-@item ignore-accents (@i{boolean})
+@item ignore-accents 
+@i{(boolean)}
 Ignore accents when checking words -- @emph{currently ignored}.
 
 @end table
@@ -842,19 +864,22 @@ These options modify the behavior of the Aspell filter interface in
 general (for more information see @pxref{Notes on Various Filters and
 Filter Modes}).
 
-@table @option
+@table @b
 
-@item filter (@i{list})
+@item filter 
+@i{(list)}
 filters to use
 
-@item filter-path (@i{list}) 
+@item filter-path 
+@i{(list)}
 Where to look when loading filter and filter modes.
 
-@item mode (@i{string})
+@item mode 
+@i{(string)}
 Sets the filter mode.  Possible values include, but not limited to,
 @samp{none}, @samp{url}, @samp{email}, @samp{sgml}, or @samp{tex}.  (The
 shortcut options @option{-e} may be used for email, @option{-H} for
-HTML/SGML, or @option{-t} for @TeX{}).
+HTML, or @option{-t} for @TeX{}).
 
 @end table
 
@@ -863,44 +888,49 @@ distribution.  These options may be prefixed by the keyword
 @code{f-} in order to explicitly indicate that they are options
 recognized by a filter and not by Aspell itself.
  
-@table @option
-@item email
+@subsubsection email
 This filter hides quoting characters and email preamble and other
 parts of an email which need not to be spell checked.
  
-@table @option
-@item email-quote (@i{list})
+@table @b
+@item email-quote 
+@i{(list)}
 Email quote characters.
 
-@item email-margin (@i{integer})
+@item email-margin 
+@i{(integer)}
 The number of chararacters that can appear before the quote character
 @end table
 
-@item sgml
+@subsubsection html
 This filter converts an HTML source file into a format which eases
 spell checking of HTML texts by Aspell.
 
-@table @option
-@item html-check (@i{list})
-SGML attributes to always check, such as alt= (alternate text).
+@table @b
+@item html-check 
+@i{(list)}
+HTML attributes to always check, such as alt= (alternate text).
 
-@item html-skip (@i{list})
-SGML tags to always skip the contents of, such as <script>.
+@item html-skip 
+@i{(list)}
+HTML tags to always skip the contents of, such as <script>.
 @end table
 
-@item sgml
+@subsubsection sgml
 This filter is identical to the HTML filter except that it options has
 different default values which are currently the empty list.
 
-@item tex|latex
+@subsubsection tex/latex
 This filter hides all LaTeX commands and corresponding parameters not
 being readable text in LaTeX output from Aspell.
 
-@table @option
-@item tex-command (@i{list})
+@table @b
+@item tex-command 
+@i{(list)}
 @TeX{} commands
 
-@item tex-check-comments (@i{boolean})
+@item tex-check-comments 
+@i{(boolean)}
 check @TeX{} comments
 
 @c @item tex-multi-byte 
@@ -908,7 +938,7 @@ check @TeX{} comments
 
 @end table
 
-@item context 
+@subsubsection context 
 @c FIXME: Shorten
 This filter can be used to spell check source
 codes, HTML sources and other texts which consist of different
@@ -917,9 +947,9 @@ delimiters.  The different contexts may not be dependent upon each
 other except for initial context which is assumed if not any other
 context applies.
  
-@table @option
+@table @b
 @item context-visible-first 
-(@i{boolean}) Switches the context which should be visible to Aspell.
+@i{(boolean)} Switches the context which should be visible to Aspell.
 Per default the initial context is assumed to be invisible as one
 would expect when spell checking source files of programs where
 relevant parts are contained in string constants and comments but not
@@ -927,7 +957,7 @@ in the remaining code.  If set to true the initial context is visible
 while the delimited ones are hidden.
  
 @item add|rem-context-delimiters 
-(@i{list}) Add or remove pairs of delimiters.  This allows to specify
+@i{(list)} Add or remove pairs of delimiters.  This allows to specify
 the character, or sequences of characters, which should be used to
 switch contexts and and therefore have to be escaped by @samp{\} if
 they should appear literally.  The two delimiting chars belonging to
@@ -939,86 +969,102 @@ delimiters.  If the end of line delimits a context than this has to be
 indicated by the literal @samp{\0} string.
 @end table
 
-@end table
-
 @subsection Run-together Word Options
 
 These may be used to control the behavior of run-together words (for
 more information @pxref{Controlling the Behavior of Run-together
 Words}):
-@table @option
+@table @b
 
-@item run-together,-C|-B (@i{boolean})
+@item run-together,-C|-B 
+@i{(boolean)}
 consider run-together words legal
 
-@item run-together-limit (@i{integer})
+@item run-together-limit 
+@i{(integer)}
 maximum numbers that can be strung together 
 
-@item run-together-min (@i{integer})
+@item run-together-min 
+@i{(integer)}
 minimal length of interior words
 @end table
 
 @subsection Miscellaneous Options
 
 Miscellaneous other options that don't fall under any other category
-@table @option
+@table @b
 
-@item conf (@i{file})
+@item conf 
+@i{(file)}
 main configuration file
 
-@item conf-dir (@i{dir})
+@item conf-dir 
+@i{(dir)}
 location of main configuration file
 
-@item data-dir (@i{dir})
+@item data-dir 
+@i{(dir)}
 location of language data files
 
-@item local-data-dir (@i{dir})
+@item local-data-dir 
+@i{(dir)}
 alternative location of language data files.  This directory is
 searched before @option{data-dir}.  It defaults to the same directory
 the actual main word list is in (which is not necessarily
 @option{dict-dir}).
 
-@item home-dir (@i{dir})
+@item home-dir 
+@i{(dir)}
 location for personal files
 
-@item per-conf (@i{file})
+@item per-conf 
+@i{(file)}
 personal configuration file
 
-@item prefix (@i{dir})
+@item prefix 
+@i{(dir)}
 prefix directory
 
-@item set-prefix (@i{boolean})
+@item set-prefix
+@i{(boolean)}
 set the prefix based on executable location (only works on WIN32 and
 when compiled with @option{--enable-win32-relocatable})
 @end table
 
 @subsection Aspell Utility Options
 
-@table @option
+@table @b
 
-@item backup,-b|-x (@i{boolean})
+@item backup,-b|-x 
+@i{(boolean)}
 Create a backup file by appending @file{.bak} to the file name.  (Only
 applies when the command is @command{check}).
 
-@item time (@i{boolean})
+@item time 
+@i{(boolean)}
 Time load time and suggest time in @command{pipe} mode.
 
-@item byte-offsets (@i{boolean})
+@item byte-offsets 
+@i{(boolean)}
 Use byte offsets instead of character offsets in @command{pipe} mode.
 
-@item reverse (@i{boolean})
+@item reverse 
+@i{(boolean)}
 Reverse the order of the suggestions list in @command{pipe} mode.
 
-@item keymapping (@i{string})
+@item keymapping 
+@i{(string)}
 the keymapping to use.  Either @option{aspell} for the default mapping
 or @option{ispell} to use the same mapping that the Ispell utility
 uses.
 
-@item guess (@i{boolean})
+@item guess 
+@i{(boolean)}
 make possible root/affix combinations not in the dictionary in
 @command{pipe} mode.
 
-@item suggest (@i{boolean})
+@item suggest 
+@i{(boolean)}
 Suggest possible replacements in @command{pipe} mode.  If false Aspell
 will simply report the misspelling and make no attempt at suggestions
 possible corrections.
@@ -1067,11 +1113,11 @@ To check which filter modea are available use @command{aspell dump
 modes}.  The @command{aspell help} command will also list all available
 filter and filter modes.
 
-@subsubsection @option{none} Filter
+@subsubsection None Filter Mode
 
-This mode is exactly what it says.  It turns off all filters.
+The @option{none} mode is exactly what it says.  It turns off all filters.
 
-@subsubsection @option{url} Filter 
+@subsubsection URL Filter 
 
 The @option{url} filter/mode skips over URLs, host names, and email
 addresses.  Because this filter is almost always useful and rarely
@@ -1079,7 +1125,7 @@ does any harm it is enabled in all modes except @option{none}.  To
 turn it off either select the @option{none} mode or use
 @option{rem-filter} option @emph{after} the desired mode is selected.
 
-@subsubsection @option{email} Filter
+@subsubsection Email Filter
 
 The @option{email} filter mode skips over quoted text.  It currently
 does not support skipping over headers however a future version
@@ -1090,7 +1136,7 @@ can appear before the email quote character, the default is 10.  The
 option @option{add|rem-email-quote} controls the characters that are
 considered quote characters, the defaults are @samp{>} and @samp{|}.
 
-@subsubsection @option{sgml} Filter
+@subsubsection SGML Filter
 
 The SGML filter allows you to spell check SGML, HTML, XHTML, and XML
 files. In most cases everything within a tag @samp{<tag attrib=value
@@ -1103,7 +1149,7 @@ Two configuration options, @option{sgml-skip} and @option{sgml-check},
 allow you to control what is spell checked. The tag and attribute names
 specified are case insensitive.
 
-@table @option
+@table @b
 @item sgml-skip
 This is a list of tags whose contents will also be skipped by the spell
 checker.  For example, if you wish to leave a misspelling in a document
@@ -1139,11 +1185,11 @@ be skipped over so that the word @samp{amp}, for example, will not be
 spell checked.  Eventually full support for properly translating SGML
 characters will be added.
 
-@subsubsection @option{html} Filter
+@subsubsection HTML Filter
 
-Like the SGML Filter Mode but specilized for HTML.  By default, 'script'
-and 'style' are members of the skip list in HTML mode.
-
+The @option{html} filter is like the SGML Filter Mode but specilized for
+HTML.  By default, 'script' and 'style' are members of the skip list in
+HTML mode.
 
 @subsubsection @TeX{}/LaTeX Filter
 
@@ -1275,8 +1321,7 @@ than one delimiter pair is specified by one call of
 comma separated list.  To indicate that a context is always closed by
 end of line use @code{\0} sequence as closing delimiter.
 
-@subsubsection @option{ccpp} Filter Mode
-@anchor{ccpp Filter Mode}
+@subsubsection Ccpp Filter Mode
 
 The @option{ccpp} filter mode will limit spell checking to C/C++ comments
 and string literals. Any code inbetween will be left alone. 
@@ -1359,7 +1404,7 @@ understanding of how aspell works is required.  For that see
 
 The suggestion modes are as follows.
 
-@table @option
+@table @b
 
 @item ultra
 This method will use the fastest method available to come up with
@@ -1586,7 +1631,7 @@ the following format
 @end example
 
 @node Using Multi Dictionaries
-@section Using @emph{Multi} Dictionaries
+@section Using Multi Dictionaries
 
 As with previous versions of Aspell you can specify the main
 dictionary to use via the @option{-d} or @option{--master} option.
@@ -3290,7 +3335,7 @@ Languages and Scripts (Offical Unicode Site),
 Omniglot - a guide to written language, @uref{http://www.omniglot.com/}
 
 @item
-Winkipedia - The Free Encyclopedia, @uref{http://wikipedia.org/}
+Wikipedia - The Free Encyclopedia, @uref{http://wikipedia.org/}
 
 @item
 Ethnologue - Languages of the World,
