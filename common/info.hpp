@@ -39,7 +39,7 @@ namespace acommon {
   struct DictInfo {
     const char * name;
     const char * code;
-    const char * jargon;
+    const char * variety;
     int size;
     const char * size_str;
     const ModuleInfo * module;

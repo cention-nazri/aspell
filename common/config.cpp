@@ -1040,6 +1040,8 @@ namespace acommon {
        N_("ignore commands to store replacement pairs"), KEYINFO_MAY_CHANGE}
     , {"jargon",     KeyInfoString, "",
        N_("extra information for the word list")}
+    , {"variety", KeyInfoList, "",
+       N_("")}
     , {"keyboard", KeyInfoString, "standard",
        N_("keyboard definition to use for typo analysis")}
     , {"lang", KeyInfoString, "<language-tag>",
@@ -1106,7 +1108,10 @@ namespace acommon {
     , {"norm-form", KeyInfoString, "nfc",
        N_("Unicode normalization form: none, nfd, nfc, comp")}
     , {"norm-strict", KeyInfoBool, "false",
-       N_("avoid lossy conversions")}
+       N_("avoid lossy conversions when normalization")}
+    , {"dict-alias", KeyInfoList, "",
+       N_("")}
+    
     
     //
     // These options are only used when creating dictionaries

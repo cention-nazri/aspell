@@ -226,6 +226,54 @@ namespace acommon {
       cur_rank |= 0x100;
   }
 
+  struct BetterVariety : public Better
+  {
+    const char *         cur;
+    StringList           list;
+    const char *         best;
+    BetterVariety() {}
+    void init();
+    void set_best_from_cur();
+    void set_cur_rank();
+  };
+
+  void BetterVariety::init() {
+    worst_rank = 2;
+    best_rank = 2;
+  }
+
+  void BetterVariety::set_best_from_cur() 
+  {
+    best_rank = cur_rank;
+    best = cur;
+  }
+
+  void BetterVariety::set_cur_rank() 
+  {
+    if (strlen(cur) == 0) {
+      cur_rank = 1; 
+    } else {
+      StringListEnumeration es = list.elements_obj();
+      const char * m;
+      cur_rank = 2;
+      while ( (m = es.next()) != 0 ) {
+        unsigned s = strlen(m);
+        const char * c = cur;
+        unsigned p;
+        bool match = false;
+        for (; *c != '\0'; c += p) {
+          p = strcspn(c, "-");
+          if (p == s && memcmp(m, c, s) == 0) {match = true; break;}
+        }
+        if (!match) goto fail;
+        cur_rank = 0;
+      }
+    }
+    return;
+  fail:
+    cur_rank = 2;
+  }
+
   PosibErr<Config *> find_word_list(Config * c) 
   {
     Config * config = c->clone();
@@ -241,14 +289,15 @@ namespace acommon {
     // in the order they are presented, then if there is no match
     // look for one for just language.  If that fails give up.
     // Once the best matching code is found, try to find a matching
-    // jargon if one exists, other wise look for one with no jargon.
+    // variety if one exists, other wise look for one with no variety.
     //
 
     BetterList b_code;
-    BetterList b_jargon;
+    //BetterList b_jargon;
+    BetterVariety b_variety;
     BetterList b_module;
     BetterSize b_size;
-    Better * better[4] = {&b_code,&b_jargon,&b_module,&b_size};
+    Better * better[4] = {&b_code,&b_variety,&b_module,&b_size};
     const DictInfo * best = 0;
 
     //
@@ -287,12 +336,12 @@ namespace acommon {
     b_code.init();
 
     //
-    // Retrieve Jargon
+    // Retrieve Variety
     // 
-    str = config->retrieve("jargon");
-    b_jargon.list.add(str);
-    b_jargon.list.add("");
-    b_jargon.init();
+    config->retrieve_list("variety", &b_variety.list);
+    if (b_variety.list.empty() && config->have("jargon")) 
+      b_variety.list.add(config->retrieve("jargon"));
+    b_variety.init();
     str.data.clear();
 
     //
@@ -339,7 +388,7 @@ namespace acommon {
       b_code  .cur = entry->code;
       b_module.cur = entry->module->name;
 
-      b_jargon.cur = entry->jargon;
+      b_variety.cur = entry->variety;
     
       b_size.cur_str = entry->size_str;
       b_size.cur     = entry->size;
@@ -377,7 +426,7 @@ namespace acommon {
       config->replace("master", main_wl.c_str());
       config->replace("master-flags", flags.c_str());
       config->replace("module", b_module.best);
-      config->replace("jargon", b_jargon.best);
+      config->replace("jargon", b_variety.best); // FIXME
       config->replace("size", b_size.best_str);
     } else {
       delete config;

@@ -811,14 +811,14 @@ namespace {
 
         const char * affixes = wl_itr->aff.str;
 
-        if (affixes && !lang.affix())
+        if (*affixes && !lang.affix())
           return make_err(other_error, 
                           _("Affix flags found in word but no affix file given."));
 
-        if (affixes && !affix_compress) {
+        if (*affixes && !affix_compress) {
           exp_buf.reset();
           exp_list = lang.affix()->expand(w, affixes, exp_buf);
-        } else if (affixes && partially_expand) {
+        } else if (*affixes && partially_expand) {
           // expand any affixes which will effect the first
           // 3 letters of a word.  This is needed so that the
           // jump tables will function correctly
@@ -827,7 +827,7 @@ namespace {
         } else {
           single.word.str = w;
           single.word.size = strlen(w);
-          single.aff = (const byte *)(affixes ? affixes : "");
+          single.aff = (const byte *)affixes;
           exp_list = &single;
         }
 

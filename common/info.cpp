@@ -279,7 +279,7 @@ namespace acommon {
     DictInfoNode(DictInfoNode * n = 0) : next(n) {}
     String name;
     String code;
-    String jargon;
+    String variety;
     String size_str;
     String info_file;
     bool direct;
@@ -398,8 +398,8 @@ namespace acommon {
     to_add->c_struct.module = module;
   
     if (p0 + 1 < p1)
-      to_add->jargon.assign(p0+1, p1 - p0 - 1);
-    to_add->c_struct.jargon = to_add->jargon.c_str();
+      to_add->variety.assign(p0+1, p1 - p0 - 1);
+    to_add->c_struct.variety = to_add->variety.c_str();
   
     if (p1 != p2) 
       to_add->size_str.assign(p1, 2);
@@ -427,7 +427,7 @@ namespace acommon {
     int res = strcmp(rhs.code, lhs.code);
     if (res < 0) return true;
     if (res > 0) return false;
-    res = strcmp(rhs.jargon,lhs.jargon);
+    res = strcmp(rhs.variety,lhs.variety);
     if (res < 0) return true;
     if (res > 0) return false;
     if (rhs.size < lhs.size) return true;
