@@ -30,7 +30,10 @@ namespace acommon {
     String(MutableString s) : std::string(s.str(), s.size()) {}
     String(const std::string & s) : std::string(s) {}
     String(const String & other) : std::string(other) {}
+#ifndef __SUNPRO_CC
+    // This causes a conflict with the copy constructor on Suns comp
     inline String(const PosibErr<String> & other);
+#endif
     String & operator= (const char * s) {
       std::string::operator= (s);
       return *this;

@@ -598,9 +598,9 @@ void display_menu() {
       getmaxyx(menu_w,height,width);
       werase(menu_w);
       wmove(menu_w,0,0);
-      display_menu(menu_w, word_choices, width);
+      display_menu(menu_w, word_choices.get(), width);
       wmove(menu_w,5,0);
-      display_menu(menu_w, menu_choices, width);
+      display_menu(menu_w, menu_choices.get(), width);
       wnoutrefresh(menu_w);
     } else {
       //ostream str;
@@ -650,8 +650,8 @@ void display_menu() {
   } else 
 #endif
   {
-    display_menu(stdout, word_choices, 80);
-    display_menu(stdout, menu_choices, 80);
+    display_menu(stdout, word_choices.get(), 80);
+    display_menu(stdout, menu_choices.get(), 80);
   }
 }
 

@@ -57,9 +57,10 @@ namespace aspeller {
   public:
     typedef std::bidirectional_iterator_tag             iterator_category;
     typedef typename Parms::Value                       value_type;
-    typedef typename std::iterator_traits<TableIter>::difference_type difference_type;
-    typedef typename std::iterator_traits<TableIter>::pointer         pointer;
-    typedef typename std::iterator_traits<TableIter>::reference       reference;
+    // these cause problems for SUNPRO_CC
+    //typedef typename std::iterator_traits<TableIter>::difference_type difference_type;
+    //typedef typename std::iterator_traits<TableIter>::pointer         pointer;
+    //typedef typename std::iterator_traits<TableIter>::reference       reference;
 
     //VHTIterator vector_iterator() const {return pos;}
   public:

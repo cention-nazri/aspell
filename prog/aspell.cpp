@@ -91,7 +91,7 @@ void print_error(ParmString msg, ParmString str)
   } while(false)
 #define EXIT_ON_ERR_SET(command, type, var)\
   type var;\
-  do{PosibErr<type> pe(command);\
+  do{PosibErr< type > pe(command);\
   if(pe.has_err()){print_error(pe.get_err()->mesg); exit(1);}\
   else {var=pe.data;}\
   } while(false)
@@ -101,7 +101,7 @@ void print_error(ParmString msg, ParmString str)
   } while(false)
 #define BREAK_ON_ERR_SET(command, type, var)\
   type var;\
-  do{PosibErr<type> pe(command);\
+  do{PosibErr< type > pe(command);\
   if(pe.has_err()){print_error(pe.get_err()->mesg); break;}\
   else {var=pe.data;}\
   } while(false)

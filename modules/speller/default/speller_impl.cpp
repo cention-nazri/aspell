@@ -449,10 +449,10 @@ namespace aspeller {
       return no_err;
     }
     static PosibErr<void> ignore_accents(SpellerImpl * m, bool value) {
-      abort();
+      abort(); return no_err;
     }
     static PosibErr<void> ignore_case(SpellerImpl * m, bool value) {
-      abort();
+      abort(); return no_err;
     }
     static PosibErr<void> ignore_repl(SpellerImpl * m, bool value) {
       m->ignore_repl = value;
@@ -461,7 +461,7 @@ namespace aspeller {
     static PosibErr<void> save_repl(SpellerImpl * m, bool value) {
       // FIXME
       // m->save_on_saveall(DataSet::Id(&m->personal_repl()), value);
-      abort();
+      abort(); return no_err;
     }
     static PosibErr<void> sug_mode(SpellerImpl * m, const char * mode) {
       RET_ON_ERR(m->suggest_->set_mode(mode));

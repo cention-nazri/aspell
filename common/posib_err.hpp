@@ -201,10 +201,10 @@ namespace acommon {
   //
   //
   //
-
+#ifndef __SUNPRO_CC
   inline String::String(const PosibErr<String> & other)
     : std::string(other.data) {}
-
+#endif
   inline String & String::operator= (const PosibErr<const char *> & s)
   {
     std::string::operator=(s.data);

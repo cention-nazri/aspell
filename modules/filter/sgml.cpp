@@ -96,7 +96,8 @@ namespace acommon {
       return false;
   
     if (c == '"' || c == '\'') {
-	
+
+      new_token = false;
       if (!in_quote)
 	in_quote = c;
       else if (in_quote == c)

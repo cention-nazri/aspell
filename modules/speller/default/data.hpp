@@ -221,7 +221,7 @@ namespace aspeller {
 
     virtual bool   empty()    const {return !size();}
     virtual Size   size()     const = 0;
-    virtual StringEnumeration * elements() const {abort();} //FIXME
+    virtual StringEnumeration * elements() const {abort(); return 0; } //FIXME
 
     virtual Enum * detailed_elements() const = 0;
   };
