@@ -6,6 +6,8 @@
 \usepackage{babel}
 \setlength\parskip{\medskipamount}
 \setlength\parindent{0pt}
+\IfFileExists{url.sty}{\usepackage{url}}
+                      {\newcommand{\url}{\texttt}}
 
 \makeatletter
 
@@ -73,7 +75,8 @@
 \title{Aspell Devel Docs}
 
 
-\author{Kevin Atkinson\\
+\author{Copyright (c) 2002\\
+Kevin Atkinson\\
 kevin at atkinson dhs org}
 
 \maketitle
@@ -83,13 +86,24 @@ kevin at atkinson dhs org}
 \section*{Notes}
 
 This manual is designed for those who which to developer Aspell. It
-is currently very sketchy. However, it should improve over time.
+is currently very sketchy. However, it should improve over time. The
+latest version of this document can be found at \url{http://savannah.gnu.org/download/aspell/manual/devel/devel.html}.
 
 The eventual goal is to convert this manual into Texinfo. However,
 since I do not have the time to learn Texinfo right now, I decided
 to use something I am already conferable with. Once someone goes through
 the trouble of converting it into Texinfo I will maintain the Texinfo
 version.
+
+
+\section*{Copyright}
+
+Copyright (c) 2002 Kevin Atkisnon. Permission is granted to copy,
+distribute and/or modify this document under the terms of the GNU
+Free Documentation License, Version 1.1 or any later version published
+by the Free Software Foundation; with no Invariant Sections, no Front-Cover
+Texts. and no Back-Cover Texts. A copy of the license is included
+in the section entitled \char`\"{}GNU Free Documentation License\char`\"{}.
 
 
 \section{Style Guidelines}
@@ -411,4 +425,6 @@ interface for other languages a lot less tedious and will allow the
 interface to automatically take advantage of new Aspell functionality
 as it is made available. The {}``mk-src.pl'' script uses {}``mk-src.in''
 as its input.
+
+((FDL))
 \end{document}

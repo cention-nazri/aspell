@@ -40,6 +40,7 @@ manual-html: @MAINTAINER_MODE_TRUE@ manual.dvi
 	  -local_icons \
 	  -show_section_numbers \
 	  manual.tex
+	chmod -R ugo+rX man-html/
 	touch manual-html
 
 manual-text: @MAINTAINER_MODE_TRUE@ manual-html html2txt.pl
@@ -81,6 +82,7 @@ devel-html: @MAINTAINER_MODE_TRUE@ devel.dvi
 	  -local_icons \
 	  -show_section_numbers \
 	  devel.tex
+	chmod -R ugo+rX dev-html/
 	touch devel-html
 
 devel-text: @MAINTAINER_MODE_TRUE@ devel-html html2txt.pl

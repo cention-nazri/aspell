@@ -7,6 +7,19 @@ $/ = undef;
 open DOC, "${what}2.tex";
 $doc = <DOC>;
 
+open IN, "fdl.tex";
+$fdl = <IN>;
+
+open IN, "lgpl.txt";
+$lgpl = <IN>;
+$lgpl = <<"---";
+\\begin{verbatim}
+$lgpl
+\\end{verbatim}
+---
+
+close IN;
+
 #$doc =~ s/(http\:\/\/\S+?)([\.\)]\W|\s)/\\htmladdnormallink{$1}{$1}$2/g;
 
 $doc =~ s/\\IfFileExists\{url\.sty\}.+\n.+/\\usepackage{url}/;
@@ -22,6 +35,9 @@ $doc =~ s/<</\\dlt{}/g;
 $doc =~ s/>>/\\dgt{}/g;
 $doc =~ s/\\textasciitilde{}/\\\~{}/g;
 $doc =~ s/\\textasciicircum{}/\\\^{}/g;
+
+$doc =~ s/\(\(FDL\)\)/$fdl/g;
+$doc =~ s/\(\(LGPL\)\)/$lgpl/g;
 
 open DOC, ">$what.tex";
 print DOC $doc;

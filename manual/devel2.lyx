@@ -71,6 +71,8 @@
 Aspell Devel Docs
 \layout Author
 
+Copyright (c) 2002
+\newline 
 Kevin Atkinson
 \newline 
 kevin at atkinson dhs org
@@ -90,6 +92,12 @@ Notes
 This manual is designed for those who which to developer Aspell.
  It is currently very sketchy.
  However, it should improve over time.
+ The latest version of this document can be found at 
+\begin_inset LatexCommand \url{http://savannah.gnu.org/download/aspell/manual/devel/devel.html}
+
+\end_inset 
+
+.
 \layout Standard
 
 The eventual goal is to convert this manual into Texinfo.
@@ -97,6 +105,19 @@ The eventual goal is to convert this manual into Texinfo.
  to use something I am already conferable with.
  Once someone goes through the trouble of converting it into Texinfo I will
  maintain the Texinfo version.
+\layout Section*
+
+Copyright
+\layout Standard
+
+Copyright (c) 2002 Kevin Atkisnon.
+ Permission is granted to copy, distribute and/or modify this document under
+ the terms of the GNU Free Documentation License, Version 1.1 or any later
+ version published by the Free Software Foundation; with no Invariant Sections,
+ no Front-Cover Texts.
+ and no Back-Cover Texts.
+ A copy of the license is included in the section entitled "GNU Free Documentati
+on License".
 \layout Section
 
 Style Guidelines
@@ -801,4 +822,7 @@ mk-src.in
 \end_inset 
 
  as its input.
+\layout Standard
+
+((FDL))
 \the_end
