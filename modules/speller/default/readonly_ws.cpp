@@ -977,7 +977,9 @@ namespace {
     data.write32(0);
     unsigned prev_w_pos = data.size();
 
-    WordLookup lookup;
+    WordLookup lookup(affix_compress 
+                      ? uniq_entries * 3 / 2 
+                      : uniq_entries * 5 / 4);
     lookup.parms().block_begin = data.begin();
     lookup.parms().hash .lang     = &lang;
     lookup.parms().equal.cmp.lang = &lang;
@@ -1091,10 +1093,6 @@ namespace {
     
     //CERR.printf("%d == %d\n", lookup.size(), uniq_entries);
     //assert(lookup.size() == uniq_entries);
-    if (affix_compress)
-      lookup.resize(lookup.size() * 3 / 2);
-    else
-      lookup.resize(lookup.size() * 5 / 4);
 
     data_head.word_count   = num_entries;
     data_head.word_buckets = lookup.bucket_count();

@@ -58,8 +58,8 @@ namespace aspeller {
     vector_iterator i = vector_.begin() + j.i;
     if (!parms_.is_multi && !j.at_end())
       return std::pair<iterator,bool>(iterator(i,this),false);
-    if (load_factor() > .7) {
-      resize(static_cast<size_type>(bucket_count()*1.5));
+    if (load_factor() > .92) {
+      resize(bucket_count()*2);
       return insert(d);
     } 
     if (parms_.is_multi) 
@@ -150,8 +150,8 @@ namespace aspeller {
   VectorHashTable<Parms>::VectorHashTable(size_type i, const Parms & p)
     : parms_(p), size_(0) 
   {
-    if (i <= 7) {
-      i = 7;
+    if (i <= 19) {
+      i = 19;
     } else {
       size_type j =  ((i - 3)/4)*4 + 3;
       if (j == i) 

@@ -214,7 +214,7 @@ namespace aspeller {
     VectorHashTable(size_type i, const Parms & p = Parms());
 
     VectorHashTable(const Parms & p = Parms())
-      : parms_(p), vector_(7), size_(0) {nonexistent_vector();}
+      : parms_(p), vector_(19), size_(0) {nonexistent_vector();}
  
     iterator begin() {return iterator(vector_.begin(), this, 1);}
     iterator end()   {return iterator(vector_.end(), this);}
