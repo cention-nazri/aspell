@@ -10,7 +10,7 @@ STATIC filter
 
 OPTION delimiters
 TYPE list
-DESCRIPTION add/rem delimiter(s) seperated by spaces
+DESCRIPTION add/rem delimiter(s) separated by spaces
 DEFAULT " "
 DEFAULT /* */
 DEFAULT // \\0

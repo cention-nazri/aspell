@@ -10,13 +10,13 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.51\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-01-06 08:22-0500\n"
+"POT-Creation-Date: 2004-01-06 10:07-0500\n"
 "PO-Revision-Date: 2004-01-06 16:34+0200\n"
 "Last-Translator: Vital khilko <dojlid@mova.org>\n"
 "Language-Team: Belarusian <i18n@mova.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit"
+"Content-Transfer-Encoding: 8bit\n"
 
 #: common/config.cpp:848
 msgid "configured as follows"
@@ -310,7 +310,8 @@ msgid ""
 "%where:1: \"%filter:2\": Line %line:3 Aspell version does not match filter's "
 "requirement."
 msgstr ""
-"%where:1: \"%filter:2\": Радок %line:3 Вэрсыя Aspell не мае падтрымкі фільтараў."
+"%where:1: \"%filter:2\": Радок %line:3 Вэрсыя Aspell не мае падтрымкі "
+"фільтараў."
 
 #: common/errors.cpp:354
 msgid ""
@@ -352,142 +353,143 @@ msgstr "%action:1: `%expression:2' не зьяўляецца дапушчаль�
 msgid "Unhandled Error: "
 msgstr "Памылка без апрацоўкі: "
 
-#: prog/aspell.cpp:73 prog/aspell.cpp:80
+#: prog/aspell.cpp:74 prog/aspell.cpp:81
 msgid "Error: "
 msgstr "Памылка: "
 
-#: prog/aspell.cpp:169
+#: prog/aspell.cpp:170
 msgid "enter Email mode."
 msgstr "рэжым э-пошты."
 
-#: prog/aspell.cpp:170
+#: prog/aspell.cpp:171
 msgid "enter Html/Sgml mode."
 msgstr "рэжым Html/Sgml."
 
-#: prog/aspell.cpp:171
+#: prog/aspell.cpp:172
 msgid "enter TeX mode."
 msgstr "рэжым TeX."
 
-#: prog/aspell.cpp:269
+#: prog/aspell.cpp:270
 #, c-format
 msgid "Invalid Option: %s"
 msgstr "Недапушчальны выбар: %s"
 
-#: prog/aspell.cpp:274
+#: prog/aspell.cpp:275
 msgid " does not take any parameters."
 msgstr " не патрабуе ніякіх парамэтраў."
 
-#: prog/aspell.cpp:282
+#: prog/aspell.cpp:283
 #, c-format
 msgid "You must specify a parameter for %s"
 msgstr "Вы мусіце пазначыць парамэтар для %s"
 
-#: prog/aspell.cpp:307
+#: prog/aspell.cpp:308
 msgid "You must specify an action"
 msgstr "Вы мусіце пазначыць дзеяньне"
 
-#: prog/aspell.cpp:341 prog/aspell.cpp:347 prog/aspell.cpp:363
+#: prog/aspell.cpp:342 prog/aspell.cpp:348 prog/aspell.cpp:364
 #, c-format
 msgid "Unknown Action: %s"
 msgstr "Невядомае дзеяньне: %s"
 
-#: prog/aspell.cpp:450
+#: prog/aspell.cpp:451
 msgid "Invalid Input"
 msgstr "Недапушчальны ўвод"
 
-#: prog/aspell.cpp:516
+#: prog/aspell.cpp:517
 msgid "Time to load word list: "
 msgstr "Час загрузкі сьпісу словаў: "
 
-#: prog/aspell.cpp:678
+#: prog/aspell.cpp:679
 msgid "Suggestion Time: "
 msgstr "Час прапанаваньня: "
 
-#: prog/aspell.cpp:719
+#: prog/aspell.cpp:720
 msgid "You must specify a file name."
 msgstr "Вы мусіце пазначыць назву файла."
 
-#: prog/aspell.cpp:729
+#: prog/aspell.cpp:730
 #, c-format
 msgid "Could not open the file \"%s\" for reading"
 msgstr "Немагчыма адкрыць файл \"%s\" для чытаньня"
 
-#: prog/aspell.cpp:735
+#: prog/aspell.cpp:736
 #, c-format
 msgid "Could not open the file \"%s\"  for writing. File not saved."
 msgstr "Немагчыма адкрыць файл \"%s\"  для запісу. Файл не захаваны."
 
-#: prog/aspell.cpp:748
+#: prog/aspell.cpp:749
 #, c-format
 msgid "Invalid keymapping: %s"
 msgstr "Недапушчальнае мапаваньне клявішаў:·%s"
 
-#: prog/aspell.cpp:769
+#: prog/aspell.cpp:770
 msgid "Ignore"
 msgstr "Ігнараваць"
 
-#: prog/aspell.cpp:770
+#: prog/aspell.cpp:771
 msgid "Ignore all"
 msgstr "Ігнараваць усё"
 
-#: prog/aspell.cpp:771
+#: prog/aspell.cpp:772
 msgid "Replace"
 msgstr "Замяніць"
 
-#: prog/aspell.cpp:772
+#: prog/aspell.cpp:773
 msgid "Replace all"
 msgstr "Замяніць усё"
 
-#: prog/aspell.cpp:773
+#: prog/aspell.cpp:774
 msgid "Add"
 msgstr "Дадаць"
 
-#: prog/aspell.cpp:774
+#: prog/aspell.cpp:775
 msgid "Add Lower"
 msgstr "Дадаць малымі літарамі"
 
-#: prog/aspell.cpp:775
+#: prog/aspell.cpp:776
 msgid "Abort"
 msgstr "Адкінуць"
 
-#: prog/aspell.cpp:776
+#: prog/aspell.cpp:777
 msgid "Exit"
 msgstr "ВЫйсьці"
 
-#: prog/aspell.cpp:857
+#: prog/aspell.cpp:858
 msgid "Are you sure you want to abort? "
 msgstr "Вы сапраўды жадаеце адкінуць?"
 
-#: prog/aspell.cpp:877
+#: prog/aspell.cpp:878
 msgid "With: "
 msgstr "З: "
 
-#: prog/aspell.cpp:891
+#: prog/aspell.cpp:892
 msgid "Sorry that is an invalid choice!"
 msgstr "Выбачайце, але гэта памылковы выбар!"
 
-#: prog/aspell.cpp:1011
+#: prog/aspell.cpp:1012
 msgid "Sorry \"filter\" is currently unimplemented.\n"
-msgstr "Выбачайце \"фільтар\" зараз не працаздольны."
+msgstr "Выбачайце \"фільтар\" зараз не працаздольны.\n"
 
-#: prog/aspell.cpp:1102
+#: prog/aspell.cpp:1103
 msgid "Can't merge a master word list yet. Sorry."
 msgstr "Немагчыма зараз аб'яднаць асноўны сьпіс словаў. Выбачайце."
 
-#: prog/aspell.cpp:1131
+#: prog/aspell.cpp:1132
 msgid "Sorry \"create/merge personal\" is currently unimplemented.\n"
-msgstr "Выбачайце \"стварэньне/аб'яднаньне пэрсанальнага\" зараз непрацаздольнае.\n"
+msgstr ""
+"Выбачайце \"стварэньне/аб'яднаньне пэрсанальнага\" зараз непрацаздольнае.\n"
 
-#: prog/aspell.cpp:1140 prog/aspell.cpp:1196
+#: prog/aspell.cpp:1141 prog/aspell.cpp:1197
 #, c-format
 msgid "Sorry I won't overwrite \"%s\""
 msgstr "Выбачайце, трэба перазапісаць \"%s\""
 
-#: prog/aspell.cpp:1187
+#: prog/aspell.cpp:1188
 msgid "Sorry \"create/merge repl\" is currently unimplemented.\n"
-msgstr "Выбачайце пакуль гэтая апэрацыя непрацаздольная."
+msgstr "Выбачайце пакуль гэтая апэрацыя непрацаздольная.\n"
 
-#: prog/aspell.cpp:1365
+#: prog/aspell.cpp:1366
 #, c-format
 msgid ""
 "\n"
@@ -542,7 +544,7 @@ msgstr ""
 "[выбары] адзін з наступных выбараў:\n"
 "\n"
 
-#: prog/aspell.cpp:1394
+#: prog/aspell.cpp:1395
 #, c-format
 msgid ""
 "\n"
@@ -558,7 +560,8 @@ msgid "Filter for hiding delimited contexts from Aspell"
 msgstr "Фільтар для хаваньня ад Aspell абмежаванага кантэксту"
 
 #: modules/filter/context-filter.opt:13
-msgid "add/rem delimiter(s) seperated by spaces"
+#, fuzzy
+msgid "add/rem delimiter(s) separated by spaces"
 msgstr "даданьне/выдаленьне межаў пазначаных прагаламі"
 
 #: modules/filter/context-filter.opt:21
@@ -598,7 +601,8 @@ msgid "TeX commands"
 msgstr "каманды TeX"
 
 #: modules/filter/tex-filter.opt:90
-msgid "multi character codied letters (<char>:<rep>[:<rep>[...]])"
+#, fuzzy
+msgid "multi character coded letters (<char>:<rep>[:<rep>[...]])"
 msgstr "літары кадаваныя шматзначнымі сымбалямі (<char>:<rep>[:<rep>[...]])"
 
 #: modules/filter/tex-filter.opt:102
@@ -608,4 +612,3 @@ msgstr "сымбаль для пазначэньня пераносаў"
 #: modules/filter/url-filter.opt:7
 msgid "Filter for hiding urls/paths and similar from Aspell"
 msgstr "Фільтар для хаваньня ад·Aspell url, шляхоў ці падобнага"
-

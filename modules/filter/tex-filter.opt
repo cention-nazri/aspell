@@ -87,7 +87,7 @@ ENDOPTION
 
 OPTION multi-byte
 TYPE list
-DESCRIPTION multi character codied letters (<char>:<rep>[:<rep>[...]])
+DESCRIPTION multi character coded letters (<char>:<rep>[:<rep>[...]])
 DEFAULT Ä:\\"A:"A
 DEFAULT ä:\\"a:"a
 DEFAULT Ö:\\"O:"O
