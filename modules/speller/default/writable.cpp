@@ -625,6 +625,8 @@ bool WritableReplDict::soundslike_lookup(const WordEntry & word, WordEntry & o) 
   } else {
     o.what = WordEntry::Misspelled;
     o.word = word.word;
+    o.word_size = word.word_size;
+    o.aff = "";
   }
   return true;
 }
