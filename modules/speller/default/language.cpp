@@ -192,16 +192,22 @@ namespace aspeller {
       buf = "lower";
     else
       buf = "stripped";
+    char * clean_is;
     if (buf == "stripped") {
       store_as_ = Stripped;
-      memcpy(to_clean_, to_stripped_, 256);
+      clean_is = to_stripped_;
     } else {
       store_as_ = Lower;
-      memcpy(to_clean_, to_lower_, 256);
+      clean_is = to_lower_;
     }
 
     to_clean_[0] = 1; // to make things slightly easier
     to_clean_[1] = 1;
+
+    for (int i = 2; i != 256; ++i) {
+      to_clean_[i] = char_type_[i] >= Letter ? clean_is[i] : 0;
+    }
+
     clean_chars_   = get_clean_chars(*this);
     
     //
@@ -362,8 +368,6 @@ namespace aspeller {
     }
   }
     
-  // FIXME: Bug, returns true when inword is a prefix of word
-  //        ie (going, go)
   bool SensitiveCompare::operator() (const char * word, 
 				     const char * inlist) const
   {
@@ -462,7 +466,7 @@ namespace aspeller {
       if (*(inlist-1) != *(word-1))
 	return false;
     }
-    return true;
+    return *word == '\0' || lang->special(*word).end;
   }
 
   PosibErr<void> check_if_valid(const Language & l, ParmString word) {

@@ -1122,7 +1122,6 @@ bool SfxEntry::check(const LookupInfo & linf, ParmString word,
   VARARRAYM(char, tmpword, word.size()+1, MAXWORDLEN+1);
   PfxEntry* ep = (PfxEntry *) ppfx;
 
-
   // if this suffix is being cross checked with a prefix
   // but it does not support cross products skip it
 

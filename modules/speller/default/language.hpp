@@ -13,6 +13,8 @@
 #include "string.hpp"
 #include "objstack.hpp"
 
+#include "iostream.hpp"
+
 using namespace acommon;
 
 namespace acommon {
@@ -337,8 +339,8 @@ namespace aspeller {
       size_t h = 0;
       for (;;) {
 	if (*s == 0) break;
-        char c = lang->to_clean(*s++);
-	if (c) h=5*h + lang->to_clean(*s);
+        unsigned char c = lang->to_clean(*s++);
+	if (c) h=5*h + c;
       }
       return h;
     }
