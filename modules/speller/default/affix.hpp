@@ -74,14 +74,13 @@ namespace aspeller {
     //const char *        compound;
     //int                 cpdmin;
 
-    ObjStack strings;
-    void *   data_;
+    ObjStack data_buf;
 
     const char * affix_file;
 
   public:
  
-    AffixMgr(const Language * l) : lang(l), data_(0) {}
+    AffixMgr(const Language * l);
     ~AffixMgr();
 
     unsigned int max_strip() const {return max_strip_;}
@@ -115,7 +114,6 @@ namespace aspeller {
   private:
     PosibErr<void> parse_file(const char * affpath, Conv &);
 
-    void encodeit(AffEntry * ptr, const char * cs);
     PosibErr<void> build_pfxlist(PfxEntry* pfxptr);
     PosibErr<void> build_sfxlist(SfxEntry* sfxptr);
     PosibErr<void> process_pfx_order();
