@@ -1,0 +1,48 @@
+THINGS I AM WORKING ON:
+
+1) 
+Be able to store the same base word multiple times which makes sence
+when cross products are involved.
+
+2)
+Create a generic filter to handle multi-character letters such as "a
+or \"a for ä. This filter should make use of the already exiting
+normalization code if possible.  Also:
+
+  Allow language specific multi-character conversions.
+
+  Allow the encoding option to use the generic multi-character
+  conversions when it makes sense.
+
+This will effectly allow Aspell to handle multi-character letters as
+well as Ispell which is the one major area Ispell is currently better
+than Aspell.
+
+3) 
+Rewrite the document checker interface to correctly handle the case
+when the replacement is more than one word.
+
+4) 
+Create a special pipe mode that ignores special charaters at the
+beginning of a line so that a user can feed it a text file as is.
+
+
+THINKS OTHERS ARE WORKING ON:
+
+1) 
+Expand prezip-bin to also support compressing in the
+same format that "word-list-compress" so that the word-list-compress
+program can be removed and replaced with a link to prezip-bin (or if
+really necessary a shell script). [Jose Da Silva]
+
+2) 
+Possible improve writable.cpp to make it easier to understand and
+add additional features. [Gary Setter]
+
+
+OTHER POSSIBILITIES:
+
+Develop a more powerfull C API for Aspell. Ideally this API should
+allow one to perform all the tasks the Aspell utility can do. This
+included the ability to check whole documents, and create
+dictionaries, among other things.
