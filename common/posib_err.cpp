@@ -8,6 +8,8 @@
 #include <stdio.h>
 #include <assert.h>
 
+#include "iostream.hpp"
+
 #include "settings.h" // needed for NLS support
 
 #include "posib_err.hpp"
@@ -68,6 +70,11 @@ namespace acommon {
     Error * e = new Error;
     e->err = inf;
     e->mesg = s0;
+    if (inf != cant_read_file) 
+    {
+      CERR.printl(e->mesg);
+      //abort();
+    }
     err_ = new ErrPtr(e);
     return *this;
   }
@@ -77,8 +84,7 @@ namespace acommon {
     assert(err_ != 0);
     assert(err_->refcount == 1);
     char * m = const_cast<char *>(err_->err->mesg);
-    const char * mesg = _(m);
-    unsigned int orig_len = strlen(mesg);
+    unsigned int orig_len = strlen(m);
     unsigned int new_len = fn.size() + 2 + orig_len + 1;
     char * s = new char[new_len];
     char * p = s;
@@ -86,9 +92,9 @@ namespace acommon {
     p += fn.size();
     memcpy(p, ": ", 2);
     p += 2;
-    memcpy(p, mesg, orig_len + 1);
+    memcpy(p, m, orig_len + 1);
     delete[] m;
-    m = s;
+    const_cast<Error *>(err_->err)->mesg = s;
     return *this;
   }
   
