@@ -1,5 +1,5 @@
 \input texinfo   @c -*-texinfo-*-
-@comment $Id: aspell.texi,v 1.11 2004/02/19 09:12:59 kevina Exp $
+@comment $Id: aspell.texi,v 1.12 2004/02/19 11:01:46 kevina Exp $
 @comment %**start of header
 @setfilename aspell.info
 @settitle GNU Aspell 0.51
@@ -1453,7 +1453,10 @@ global @option{strip-accent} option this option only effects word
 lists that came after the option.  For example:
 
 @example
-strip-accents yes add english strip-accents no add must-accent
+strip-accents yes
+add english 
+strip-accents no 
+add must-accent
 @end example
 
 will strip accents from the English word list but not the
