@@ -56,11 +56,9 @@ libaspell_la_SOURCES =\
   modules/speller/default/data.cpp\
   modules/speller/default/multi_ws.cpp\
   modules/speller/default/phonetic.cpp\
-  modules/speller/default/writable_ws.cpp\
-  modules/speller/default/writable_base.cpp\
+  modules/speller/default/writable.cpp\
   modules/speller/default/file_data_util.cpp\
   modules/speller/default/speller_impl.cpp\
-  modules/speller/default/writable_repl.cpp\
   modules/speller/default/phonet.cpp\
   modules/speller/default/typo_editdist.cpp\
   modules/speller/default/editdist.cpp\
