@@ -18,19 +18,19 @@ for (my $i = 0; $i != @table; $i += 2)
 
 %comb = 
 (
- 0x0308 => ['\\\\"', '', 'a'],
- 0x0301 => ["\\\\'", '', 'a'],
+ 0x0308 => ['\\\\"', '',   'a'],
+ 0x0301 => ["\\\\'", '',   'a'],
  0x0327 => ['\\\\c', '{}', 'b'],
- 0x0304 => ['\\\\=','', 'a'],
- 0x0302 => ['\\\\^','', 'a'],
- 0x0300 => ['\\\\`','', 'a'],
- 0x0303 => ['\\\\~','', 'a'],
- 0x0307 => ['\\\\.','', 'a'],
- 0x030B => ['\\\\H','{}', 'a'],
- 0x0306 => ['\\\\u','{}', 'a'],
- 0x0331 => ['\\\\b','{}', 'b'],
- 0x0323 => ['\\\\d','{}', 'b'],
- 0x030C => ['\\\\v','{}', 'a'],
+ 0x0304 => ['\\\\=', '',   'a'],
+ 0x0302 => ['\\\\^', '',   'a'],
+ 0x0300 => ['\\\\`', '',   'a'],
+ 0x0303 => ['\\\\~', '',   'a'],
+ 0x0307 => ['\\\\.', '',   'a'],
+ 0x030B => ['\\\\H', '{}', 'a'],
+ 0x0306 => ['\\\\u', '{}', 'a'],
+ 0x0331 => ['\\\\b', '{}', 'b'],
+ 0x0323 => ['\\\\d', '{}', 'b'],
+ 0x030C => ['\\\\v', '{}', 'a'],
 );
 
 open F, "/home/kevina/devel/aspell-lang/decomp.txt";
@@ -38,15 +38,22 @@ while (<F>) {
   next unless /^(....) = (....) (....)$/;
   my ($a, $b, $c) = (hex($1), hex($2), hex($3));
   next unless exists $comb{$c};
-  if ($b < 0x80) {
-    push @{$table{$a}}, ($comb{$c}[0].'{'.'\\\\'.chr($b).'}') 
-        if ($b == ord('i') || $b == ord('j')) && $comb{$c}[2] eq 'a';
-    push @{$table{$a}}, ($comb{$c}[0].chr($b)) if $comb{$c}[1] eq '';
+  next unless $b < 0x80;
+  push @{$table{$a}}, ($comb{$c}[0].'{'.'\\\\'.chr($b).'}') 
+      if ($b == ord('i') || $b == ord('j')) && $comb{$c}[2] eq 'a';
+  push @{$table{$a}}, ($comb{$c}[0].chr($b)) if $comb{$c}[1] eq '';
     push @{$table{$a}}, ($comb{$c}[0].'{'.chr($b).'}');
-  } 
-  #elsif (exists $table{$b}) {
-  #  push @{$table{$a}}, ($comb{$c}[0].'{'.$table{$b}[0].'}');
-  #}
+} 
+
+open F, "/home/kevina/devel/aspell-lang/decomp.txt";
+while (<F>) {
+  next unless /^(....) = (....) (....)$/;
+  my ($a, $b, $c) = (hex($1), hex($2), hex($3));
+  next unless exists $comb{$c};
+  next unless $b >= 0x80 && exists $table{$b};
+  foreach (@{$table{$b}}) {
+    push @{$table{$a}}, ($comb{$c}[0].'{'.$_.'}');
+  }
 }
 
 open F, ">:utf8", "tex.conv";

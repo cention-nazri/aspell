@@ -24,20 +24,20 @@ foreach (split /\n/, $table) {
 
 %comb = 
 (
- 0x0308 => ['@"', ''],
- 0x0301 => ["\@\'", ''],
- 0x0327 => ['@,', '{}'],
- 0x0304 => ['@=',''],
- 0x0302 => ['@^',''],
- 0x0300 => ['@`',''],
- 0x0303 => ['@~',''],
- 0x0307 => ['@dotaccent','{}'],
- 0x030B => ['@H','{}'],
- 0x030A => ['@ringaccent','{}'],
- 0x0306 => ['@u','{}'],
- 0x0331 => ['@ubaraccent','{}'],
- 0x0323 => ['@udotaccent','{}'],
- 0x030C => ['@v','{}'],
+ 0x0308 => ['@"',         '',   'a'],
+ 0x0301 => ["\@\'",       '',   'a'],
+ 0x0327 => ['@,',         '{}', 'b'],
+ 0x0304 => ['@=',         '',   'a'],
+ 0x0302 => ['@^',         '',   'a'],
+ 0x0300 => ['@`',         '',   'a'],
+ 0x0303 => ['@~',         '',   'a'],
+ 0x0307 => ['@dotaccent', '{}', 'a'],
+ 0x030B => ['@H',         '{}', 'a'],
+ 0x030A => ['@ringaccent','{}', 'a'],
+ 0x0306 => ['@u',         '{}', 'a'],
+ 0x0331 => ['@ubaraccent','{}', 'b'],
+ 0x0323 => ['@udotaccent','{}', 'b'],
+ 0x030C => ['@v',         '{}', 'a'],
 );
 
 open F, "/home/kevina/devel/aspell-lang/decomp.txt";
@@ -45,13 +45,22 @@ while (<F>) {
   next unless /^(....) = (....) (....)$/;
   my ($a, $b, $c) = (hex($1), hex($2), hex($3));
   next unless exists $comb{$c};
-  if ($b < 0x80) {
-    push @{$table{$a}}, ($comb{$c}[0].chr($b)) if $comb{$c}[1] eq '';
-    push @{$table{$a}}, ($comb{$c}[0].'{'.chr($b).'}');
-  } 
-  #elsif (exists $table{$b}) {
-  #  push @{$table{$a}}, ($comb{$c}[0].'{'.$table{$b}[0].'}');
-  #}
+  next unless $b < 0x80;
+  push @{$table{$a}}, ($comb{$c}[0].'{'.'@dotless{'.chr($b).'}}') 
+      if ($b == ord('i') || $b == ord('j')) && $comb{$c}[2] eq 'a';
+  push @{$table{$a}}, ($comb{$c}[0].chr($b)) if $comb{$c}[1] eq '';
+  push @{$table{$a}}, ($comb{$c}[0].'{'.chr($b).'}');
+}
+
+open F, "/home/kevina/devel/aspell-lang/decomp.txt";
+while (<F>) {
+  next unless /^(....) = (....) (....)$/;
+  my ($a, $b, $c) = (hex($1), hex($2), hex($3));
+  next unless exists $comb{$c};
+  next unless $b >= 0x80 && exists $table{$b};
+  foreach (@{$table{$b}}) {
+    push @{$table{$a}}, ($comb{$c}[0].'{'.$_.'}');
+  }
 }
 
 open F, ">:utf8", "texinfo.conv";

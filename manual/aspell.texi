@@ -1,7 +1,7 @@
 \input texinfo   @c -*-texinfo-*-
 
 @setfilename aspell.info
-@settitle GNU Aspell 0.60.1.1
+@settitle GNU Aspell 0.60.2
 @syncodeindex pg cp
 @documentencoding ISO-8859-1
 
@@ -26,7 +26,7 @@ Documentation License".
 @end direntry
 
 @titlepage
-@title GNU Aspell 0.60.1.1
+@title GNU Aspell 0.60.2
 @author Kevin Atkinson (@email{kevina@@gnu.org})
 @page
 @vskip 0pt plus 1filll
@@ -246,12 +246,19 @@ errors.
 @item
 Lower memory footprint
 
+@c FIXME: Is this ALWAYS true?
+
 @item
 Ability to deal with arbitrary multi-character letters such as old
 ASCII encodings of accented letters.
 
+@c FIXME: This is no longer the case... But Ispell may handle them 
+@c differently.
+
 @item
 Perhaps better support for spell checking (La)TeX files.
+
+@c FIXME: Is this really the case.
 
 @end itemize
 
@@ -512,6 +519,8 @@ easy to convert between the two.  @xref{Format of the Personal Dictionary}.
 The only major area where Ispell is superior to Aspell is in the
 handling of multi character letters such as old ASCII encoding of
 accented characters.
+
+@c FIXME: This may no longer be the case....
 
 However, Aspell can handle UTF-8 documents far better than Ispell
 can.
@@ -1429,7 +1438,7 @@ The Texinfo filter will also skip over the @samp{\input texinfo} line.
 The Texinfo filter can also understand Texinfo commands which are used
 to encode accents or other non-ASCII characters, and is able to skip over
 the Texinfo hyphen command.  Exactly what it understands is given by
-the @file{tex.conv} file.
+the @file{texinfo.conv} file.
 
 By default, when giving suggestions for a misspelled word, the Texinfo
 commands will be used to encode non-ASCII characters, since Texinfo
@@ -1477,11 +1486,52 @@ also be used to convert text the other way around.
 
 The data file used is given by the @option{genconv-file} option.
 
-@c FIXME: Document data file format
-
 The @option{genconv-form} sets the preferred form that output should be
 in.  Currently either @samp{single} or @samp{multi} to use the multi
 character encoding.
+
+@heading Format of the Genconv data file
+
+A genconv data file should have have an extension of @file{.conv} and
+have the folling format
+
+@example
+name @var{name}
+table
+@var{data}
+@end example
+
+@noindent
+Where name is the name of the conversion and should be the same as the
+base name of the file, ie the file should be named
+@file{@var{name}.conv}.  
+
+@var{data} is the actual data for the conversion which is a white
+space delimited table.  Non-ASCII characters are expected to be in
+UTF-8.  The first column is the single character encoding of letter
+which will generally consist of a single Unicode character encoded in
+UTF-8.  The second column is the preferred multi-character encoding of
+the letter; setting the @option{genconv-form} to @samp{multi} will use
+the encoding in this column.  The remaining columns are alternate
+multi-character encodings that should be recognized.
+
+A @samp{.} in the first column has a special meaning.  It represents
+the empty string.  Strings found in the other columns of this row will
+be converted to nothing.  This is usefull for removing discretionary
+hyphens such as the @TeX{} @samp{\-}.  If you need to include a
+literal @samp{.} use @samp{\.}.
+
+As an example here is a small part of the @TeX{} conversion file,
+@file{tex.conv}:
+
+@example
+name tex
+table
+. \\-
+@ae{} \\ae
+@,{c} \\c@{c@}
+@"u \\"u \\"@{u@}
+@end example
 
 @subsubsection Context Filter
 
@@ -3928,10 +3978,6 @@ coding.
 
 @itemize @bullet
 @item
-Create a generic filter to handle multi-character letters such as
-@samp{"a} or @samp{\"a} for @"a.  This filter should make use of the
-already exiting normalization code if possible.
-@item
 Make Aspell @strong{Thread safe}. Even though Aspell itself is not
 multi-threaded I would like it to be thread safe so that it can be
 used by multi-threaded programs. There are several areas of Aspell
@@ -4209,6 +4255,13 @@ Added the @command{munch-list} command to the aspell utility.  The
 disappear in Aspell 0.61.  The @command{munchlist} script will also
 likely disappear or be replaced when Aspell 0.61 is released since it
 doesn't work correctly anyway.
+@item
+Added a generic conversion (genconv) filter for converting from old
+multi-charter ASCII encodings to single-character encoding such as
+Unicode.
+@item
+Added support for recognizing TeX and Texinfo commands used to encode
+non-ASCII letters as well as support for skipping over Tex hyphens.
 @item
 Bug fixes.
 

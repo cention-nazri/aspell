@@ -43,10 +43,10 @@ table
 é @'e @'{e}
 ê @^e @^{e}
 ë @"e @"{e}
-ì @`i @`{i}
-í @'i @'{i}
-î @^i @^{i}
-ï @"i @"{i}
+ì @`{@dotless{i}} @`i @`{i}
+í @'{@dotless{i}} @'i @'{i}
+î @^{@dotless{i}} @^i @^{i}
+ï @"{@dotless{i}} @"i @"{i}
 ñ @~n @~{n}
 ò @`o @`{o}
 ó @'o @'{o}
@@ -93,15 +93,15 @@ table
 Ĥ @^H @^{H}
 ĥ @^h @^{h}
 Ĩ @~I @~{I}
-ĩ @~i @~{i}
+ĩ @~{@dotless{i}} @~i @~{i}
 Ī @=I @={I}
-ī @=i @={i}
+ī @={@dotless{i}} @=i @={i}
 Ĭ @u{I}
-ĭ @u{i}
+ĭ @u{@dotless{i}} @u{i}
 İ @dotaccent{I}
 ı @dotless{i}
 Ĵ @^J @^{J}
-ĵ @^j @^{j}
+ĵ @^{@dotless{j}} @^j @^{j}
 Ķ @,{K}
 ķ @,{k}
 Ĺ @'L @'{L}
@@ -168,28 +168,52 @@ table
 Ǎ @v{A}
 ǎ @v{a}
 Ǐ @v{I}
-ǐ @v{i}
+ǐ @v{@dotless{i}} @v{i}
 Ǒ @v{O}
 ǒ @v{o}
 Ǔ @v{U}
 ǔ @v{u}
+Ǖ @={@"U} @={@"{U}}
+ǖ @={@"u} @={@"{u}}
+Ǘ @'{@"U} @'{@"{U}}
+ǘ @'{@"u} @'{@"{u}}
+Ǚ @v{@"U} @v{@"{U}}
+ǚ @v{@"u} @v{@"{u}}
+Ǜ @`{@"U} @`{@"{U}}
+ǜ @`{@"u} @`{@"{u}}
+Ǟ @={@"A} @={@"{A}}
+ǟ @={@"a} @={@"{a}}
+Ǡ @={@dotaccent{A}}
+ǡ @={@dotaccent{a}}
+Ǣ @={@AE{}}
 Ǧ @v{G}
 ǧ @v{g}
 Ǩ @v{K}
 ǩ @v{k}
-ǰ @v{j}
+ǰ @v{@dotless{j}} @v{j}
 Ǵ @'G @'{G}
 ǵ @'g @'{g}
 Ǹ @`N @`{N}
 ǹ @`n @`{n}
+Ǻ @'{@AA{}} @'{@ringaccent{A}}
+ǻ @'{@aa{}} @'{@ringaccent{a}}
+Ǽ @'{@AE{}}
+Ǿ @'{@O{}}
+ǿ @'{@o{}}
 Ȟ @v{H}
 ȟ @v{h}
 Ȧ @dotaccent{A}
 ȧ @dotaccent{a}
 Ȩ @,{E}
 ȩ @,{e}
+Ȫ @={@"O} @={@"{O}}
+ȫ @={@"o} @={@"{o}}
+Ȭ @={@~O} @={@~{O}}
+ȭ @={@~o} @={@~{o}}
 Ȯ @dotaccent{O}
 ȯ @dotaccent{o}
+Ȱ @={@dotaccent{O}}
+ȱ @={@dotaccent{o}}
 Ȳ @=Y @={Y}
 ȳ @=y @={y}
 Ḃ @dotaccent{B}
@@ -198,6 +222,8 @@ table
 ḅ @udotaccent{b}
 Ḇ @ubaraccent{B}
 ḇ @ubaraccent{b}
+Ḉ @'{@,{C}}
+ḉ @'{@,{c}}
 Ḋ @dotaccent{D}
 ḋ @dotaccent{d}
 Ḍ @udotaccent{D}
@@ -206,6 +232,12 @@ table
 ḏ @ubaraccent{d}
 Ḑ @,{D}
 ḑ @,{d}
+Ḕ @`{@=E} @`{@={E}}
+ḕ @`{@=e} @`{@={e}}
+Ḗ @'{@=E} @'{@={E}}
+ḗ @'{@=e} @'{@={e}}
+Ḝ @u{@,{E}}
+ḝ @u{@,{e}}
 Ḟ @dotaccent{F}
 ḟ @dotaccent{f}
 Ḡ @=G @={G}
@@ -218,6 +250,8 @@ table
 ḧ @"h @"{h}
 Ḩ @,{H}
 ḩ @,{h}
+Ḯ @'{@"I} @'{@"{I}}
+ḯ @'{@"{@dotless{i}}} @'{@"i} @'{@"{i}}
 Ḱ @'K @'{K}
 ḱ @'k @'{k}
 Ḳ @udotaccent{K}
@@ -226,6 +260,8 @@ table
 ḵ @ubaraccent{k}
 Ḷ @udotaccent{L}
 ḷ @udotaccent{l}
+Ḹ @={@udotaccent{L}}
+ḹ @={@udotaccent{l}}
 Ḻ @ubaraccent{L}
 ḻ @ubaraccent{l}
 Ḿ @'M @'{M}
@@ -240,6 +276,14 @@ table
 ṇ @udotaccent{n}
 Ṉ @ubaraccent{N}
 ṉ @ubaraccent{n}
+Ṍ @'{@~O} @'{@~{O}}
+ṍ @'{@~o} @'{@~{o}}
+Ṏ @"{@~O} @"{@~{O}}
+ṏ @"{@~o} @"{@~{o}}
+Ṑ @`{@=O} @`{@={O}}
+ṑ @`{@=o} @`{@={o}}
+Ṓ @'{@=O} @'{@={O}}
+ṓ @'{@=o} @'{@={o}}
 Ṕ @'P @'{P}
 ṕ @'p @'{p}
 Ṗ @dotaccent{P}
@@ -248,18 +292,30 @@ table
 ṙ @dotaccent{r}
 Ṛ @udotaccent{R}
 ṛ @udotaccent{r}
+Ṝ @={@udotaccent{R}}
+ṝ @={@udotaccent{r}}
 Ṟ @ubaraccent{R}
 ṟ @ubaraccent{r}
 Ṡ @dotaccent{S}
 ṡ @dotaccent{s}
 Ṣ @udotaccent{S}
 ṣ @udotaccent{s}
+Ṥ @dotaccent{@'S} @dotaccent{@'{S}}
+ṥ @dotaccent{@'s} @dotaccent{@'{s}}
+Ṧ @dotaccent{@v{S}}
+ṧ @dotaccent{@v{s}}
+Ṩ @dotaccent{@udotaccent{S}}
+ṩ @dotaccent{@udotaccent{s}}
 Ṫ @dotaccent{T}
 ṫ @dotaccent{t}
 Ṭ @udotaccent{T}
 ṭ @udotaccent{t}
 Ṯ @ubaraccent{T}
 ṯ @ubaraccent{t}
+Ṹ @'{@~U} @'{@~{U}}
+ṹ @'{@~u} @'{@~{u}}
+Ṻ @"{@=U} @"{@={U}}
+ṻ @"{@=u} @"{@={u}}
 Ṽ @~V @~{V}
 ṽ @~v @~{v}
 Ṿ @udotaccent{V}
@@ -292,14 +348,46 @@ table
 ẙ @ringaccent{y}
 Ạ @udotaccent{A}
 ạ @udotaccent{a}
+Ấ @'{@^A} @'{@^{A}}
+ấ @'{@^a} @'{@^{a}}
+Ầ @`{@^A} @`{@^{A}}
+ầ @`{@^a} @`{@^{a}}
+Ẫ @~{@^A} @~{@^{A}}
+ẫ @~{@^a} @~{@^{a}}
+Ậ @^{@udotaccent{A}}
+ậ @^{@udotaccent{a}}
+Ắ @'{@u{A}}
+ắ @'{@u{a}}
+Ằ @`{@u{A}}
+ằ @`{@u{a}}
+Ẵ @~{@u{A}}
+ẵ @~{@u{a}}
+Ặ @u{@udotaccent{A}}
+ặ @u{@udotaccent{a}}
 Ẹ @udotaccent{E}
 ẹ @udotaccent{e}
 Ẽ @~E @~{E}
 ẽ @~e @~{e}
+Ế @'{@^E} @'{@^{E}}
+ế @'{@^e} @'{@^{e}}
+Ề @`{@^E} @`{@^{E}}
+ề @`{@^e} @`{@^{e}}
+Ễ @~{@^E} @~{@^{E}}
+ễ @~{@^e} @~{@^{e}}
+Ệ @^{@udotaccent{E}}
+ệ @^{@udotaccent{e}}
 Ị @udotaccent{I}
 ị @udotaccent{i}
 Ọ @udotaccent{O}
 ọ @udotaccent{o}
+Ố @'{@^O} @'{@^{O}}
+ố @'{@^o} @'{@^{o}}
+Ồ @`{@^O} @`{@^{O}}
+ồ @`{@^o} @`{@^{o}}
+Ỗ @~{@^O} @~{@^{O}}
+ỗ @~{@^o} @~{@^{o}}
+Ộ @^{@udotaccent{O}}
+ộ @^{@udotaccent{o}}
 Ụ @udotaccent{U}
 ụ @udotaccent{u}
 Ỳ @`Y @`{Y}
