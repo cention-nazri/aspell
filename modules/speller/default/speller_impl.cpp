@@ -64,14 +64,14 @@ namespace aspeller {
   }
 
   PosibErr<void> SpellerImpl::store_replacement(MutableString mis, 
-						MutableString cor)
+                                                MutableString cor)
   {
     return SpellerImpl::store_replacement(mis,cor,true);
   }
 
   PosibErr<void> SpellerImpl::store_replacement(const String & mis, 
-						const String & cor, 
-						bool memory) 
+                                                const String & cor, 
+                                                bool memory) 
   {
     if (ignore_repl) return no_err;
     if (!repl_) return no_err;
@@ -93,22 +93,22 @@ namespace aspeller {
     if (correct) {
       String cor_orignal_casing(cor1);
       if (!cor2.empty()) {
- 	cor_orignal_casing += cor[pos];
- 	cor_orignal_casing += cor2;
+        cor_orignal_casing += cor[pos];
+        cor_orignal_casing += cor2;
       }
       if (first_word == 0 || cor != first_word) {
- 	repl_->add_repl(lang().to_lower(buf, mis.str()), cor_orignal_casing);
+        repl_->add_repl(lang().to_lower(buf, mis.str()), cor_orignal_casing);
       }
       
       if (memory && prev_cor_repl_ == mis) 
- 	store_replacement(prev_mis_repl_, cor, false);
+        store_replacement(prev_mis_repl_, cor, false);
       
     } else { //!correct
       
       if (memory) {
-	 if (prev_cor_repl_ != mis)
- 	  prev_mis_repl_ = mis;
- 	prev_cor_repl_ = cor;
+         if (prev_cor_repl_ != mis)
+          prev_mis_repl_ = mis;
+        prev_cor_repl_ = cor;
        }
     }
     return no_err;
@@ -171,8 +171,8 @@ namespace aspeller {
   PosibErr<bool> SpellerImpl::check(char * word, char * word_end, 
                                     /* it WILL modify word */
                                     bool try_uppercase,
-				    unsigned run_together_limit,
-				    CheckInfo * ci, GuessInfo * gi)
+                                    unsigned run_together_limit,
+                                    CheckInfo * ci, GuessInfo * gi)
   {
     assert(run_together_limit <= 8); // otherwise it will go above the 
                                      // bounds of the word array
@@ -180,10 +180,10 @@ namespace aspeller {
     bool res = check2(word, try_uppercase, *ci, gi);
     if (res) return true;
     if (run_together_limit <= 1) return false;
-    enum {Yes, No, Unknown} is_title = Unknown;
+    enum {Yes, No, Unknown} is_title = try_uppercase ? Yes : Unknown;
     for (char * i = word + run_together_min_; 
-	 i <= word_end - run_together_min_;
-	 ++i) 
+         i <= word_end - run_together_min_;
+         ++i) 
     {
       char t = *i;
       *i = '\0';
@@ -210,7 +210,7 @@ namespace aspeller {
     SpellerDict * i = dicts_;
     for (; i; i = i->next) {
       if  (i->save_on_saveall)
-	RET_ON_ERR(i->dict->synchronize());
+        RET_ON_ERR(i->dict->synchronize());
     }
     return no_err;
   }
@@ -303,18 +303,18 @@ namespace aspeller {
       Fun(WithInt  m) : with_int (m) {}
       Fun(WithBool m) : with_bool(m) {}
       PosibErr<void> call(SpellerImpl * m, const char * val) const 
-	{return (*with_str) (m,val);}
+        {return (*with_str) (m,val);}
       PosibErr<void> call(SpellerImpl * m, int val)          const 
-	{return (*with_int) (m,val);}
+        {return (*with_int) (m,val);}
       PosibErr<void> call(SpellerImpl * m, bool val)         const 
-	{return (*with_bool)(m,val);}
+        {return (*with_bool)(m,val);}
     } fun;
     typedef SpellerImpl::ConfigNotifier CN;
   };
 
   template <typename T>
   PosibErr<void> callback(SpellerImpl * m, const KeyInfo * ki, T value, 
-			  UpdateMember::Type t);
+                          UpdateMember::Type t);
   
   class SpellerImpl::ConfigNotifier : public Notifier {
   private:
@@ -364,10 +364,10 @@ namespace aspeller {
     }
     static PosibErr<void> run_together_limit(SpellerImpl * m, int value) {
       if (value > 8) {
-	m->config()->replace("run-together-limit", "8");
-	// will loop back
+        m->config()->replace("run-together-limit", "8");
+        // will loop back
       } else {
-	m->run_together_limit_ = value;
+        m->run_together_limit_ = value;
       }
       return no_err;
     }
@@ -387,19 +387,19 @@ namespace aspeller {
     ,{"save-repl",     UpdateMember::Bool,    UpdateMember::CN::save_repl}
     ,{"sug-mode",      UpdateMember::String,  UpdateMember::CN::sug_mode}
     ,{"run-together",  
-	UpdateMember::Bool,    
-	UpdateMember::CN::run_together}
+        UpdateMember::Bool,    
+        UpdateMember::CN::run_together}
     ,{"run-together-limit",  
-	UpdateMember::Int,    
-	UpdateMember::CN::run_together_limit}
+        UpdateMember::Int,    
+        UpdateMember::CN::run_together_limit}
     ,{"run-together-min",  
-	UpdateMember::Int,    
-	UpdateMember::CN::run_together_min}
+        UpdateMember::Int,    
+        UpdateMember::CN::run_together_min}
   };
 
   template <typename T>
   PosibErr<void> callback(SpellerImpl * m, const KeyInfo * ki, T value, 
-			  UpdateMember::Type t) 
+                          UpdateMember::Type t) 
   {
     const UpdateMember * i
       = update_members;
@@ -407,10 +407,10 @@ namespace aspeller {
       = i + sizeof(update_members)/sizeof(UpdateMember);
     while (i != end) {
       if (strcmp(ki->name, i->name) == 0) {
-	if (i->type == t) {
-	  RET_ON_ERR(i->fun.call(m, value));
-	  break;
-	}
+        if (i->type == t) {
+          RET_ON_ERR(i->fun.call(m, value));
+          break;
+        }
       }
       ++i;
     }
@@ -476,9 +476,9 @@ namespace aspeller {
       temp->have_soundslike = use_soundslike;
       PosibErrBase pe = temp->load(config_->retrieve("personal-path"),*config_);
       if (pe.has_err(cant_read_file))
-	temp->set_check_lang(lang_name(), *config_);
+        temp->set_check_lang(lang_name(), *config_);
       else if (pe.has_err())
-	return pe;
+        return pe;
       add_dict(new SpellerDict(temp, lang_, *config_, personal_id));
     }
     
@@ -497,9 +497,9 @@ namespace aspeller {
       temp->have_soundslike = use_soundslike;
       PosibErrBase pe = temp->load(config_->retrieve("repl-path"),*config_);
       if (pe.has_err(cant_read_file))
-	temp->set_check_lang(lang_name(), *config_);
+        temp->set_check_lang(lang_name(), *config_);
       else if (pe.has_err())
-	return pe;
+        return pe;
       add_dict(new SpellerDict(temp, lang_, *config_, personal_repl_id));
     }
 
@@ -662,20 +662,20 @@ namespace aspeller {
     case main_id:
       if (dict->basic_type == Dict::basic_dict) {
 
-	use_to_check    = true;
-	use_to_suggest  = true;
-	save_on_saveall = false;
+        use_to_check    = true;
+        use_to_suggest  = true;
+        save_on_saveall = false;
 
       } else if (dict->basic_type == Dict::replacement_dict) {
-	
-	use_to_check    = false;
-	use_to_suggest  = false;
-	save_on_saveall = false;
-	
+        
+        use_to_check    = false;
+        use_to_suggest  = false;
+        save_on_saveall = false;
+        
       } else {
-	
-	abort();
-	
+        
+        abort();
+        
       }
       break;
     case personal_id:
