@@ -761,7 +761,7 @@ namespace {
            << '\t' << lang->to_soundslike(i->word) << "\n";
 #    endif
       if (i->repl_list != 0) {
- 	string::size_type pos;
+ 	String::size_type pos;
 	do {
  	  dup_pair = duplicates_check.insert(fix_case(i->repl_list->word));
  	  if (dup_pair.second && 

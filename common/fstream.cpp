@@ -85,8 +85,8 @@ namespace acommon {
     while (true) {
       c  = getc(file_);
       if (c == EOF || (!prev_slash && static_cast<char>(c) == d)) break;
-      str += static_cast<char>(c);
-      prev_slash = c == '\\';
+      str.append(c);
+      prev_slash = (c == '\\');
     }
     if (c == EOF && str.size() == 0) return false;
     return true;

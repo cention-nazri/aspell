@@ -67,11 +67,10 @@ public:
   bool next_misspelling();
   void replace(ParmString repl);
 
-  char * get_word(CharVector & w) {
-    w.resize(0);
+  char * get_word(String & w) {
+    w.clear();
     w.insert(w.end(), word_begin_, word_begin_ + word_size_);
-    w.push_back('\0');
-    return w.data();
+    return w.mstr();
   }
 
 private:

@@ -395,7 +395,7 @@ namespace acommon
 
     if ((name_len == 6) &&
         !strncmp(key->name,"filter",6)){
-      //fprintf(stderr,"Expanding for %s ... \n",value.str());
+      fprintf(stderr,"Expanding for %s ... \n",value.str());
       while (current < filter_modules_end) {
         if (!strncmp(value.str(), current->name,
                      value.size() <= strlen(current->name) 
@@ -445,6 +445,8 @@ namespace acommon
           fprintf(stderr,"warning: specifying filter twice makes no sense\n");
           return no_err;
         }
+        CERR.printl(filter_name);
+        CERR.printl(option_name);
         RET_ON_ERR(options.open(option_name,"r"));
         greater = equal = less = false;
 
@@ -588,7 +590,7 @@ namespace acommon
                   release_options(begin,begin+optsize);
                   free(begin);
                 }
-                option_value.insert(0,"(filter-)");
+                option_value.insert(0, "(filter-)", 9);
                 sprintf(line_number,"%i",line_count);
                 return make_err(identical_option,"add_filter",option_name,line_number);
               }

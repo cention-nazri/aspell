@@ -524,8 +524,8 @@ PosibErr<void> WritableWS::merge(FStream & in,
 
 PosibErr<void> WritableWS::save(FStream & out, ParmString file_name) 
 {
-  out.print("personal_ws-1.1 %s %i %s\n", 
-            lang_name(), word_lookup->size(), file_encoding.c_str());
+  out.printf("personal_ws-1.1 %s %i %s\n", 
+             lang_name(), word_lookup->size(), file_encoding.c_str());
 
   SoundslikeLookup::const_iterator i = soundslike_lookup_.begin();
   SoundslikeLookup::const_iterator e = soundslike_lookup_.end();
@@ -534,7 +534,7 @@ PosibErr<void> WritableWS::save(FStream & out, ParmString file_name)
   
   for (;i != e; ++i) {
     for (j = i->second.begin(); j != i->second.end(); ++j) {
-      out.print("%s\n", oconv(*j));
+      out.printf("%s\n", oconv(*j));
     }
   }
   return no_err;
@@ -776,7 +776,7 @@ PosibErr<void> WritableReplS::add(ParmString mis, ParmString cor, ParmString sl)
 
 PosibErr<void> WritableReplS::save (FStream & out, ParmString file_name) 
 {
-  out.print("personal_repl-1.1 %s 0 %s\n", lang_name(), file_encoding.c_str());
+  out.printf("personal_repl-1.1 %s 0 %s\n", lang_name(), file_encoding.c_str());
   
   WordLookup::iterator i = word_lookup->begin();
   WordLookup::iterator e = word_lookup->end();
@@ -786,7 +786,7 @@ PosibErr<void> WritableReplS::save (FStream & out, ParmString file_name)
     StrVector * v = get_vector(*i);
     for (StrVector::iterator j = v->begin(); j != v->end(); ++j)
     {
-      out.print("%s %s\n", oconv(*i), oconv(*j));
+      out.printf("%s %s\n", oconv(*i), oconv(*j));
     }
   }
   return no_err;

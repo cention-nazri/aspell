@@ -83,16 +83,14 @@ void dump_affix();
 
 void print_error(ParmString msg)
 {
-  fputs(_("Error: "), stderr);
-  fputs(msg, stderr);
-  fputs("\n", stderr);
+  CERR.printf(_("Error: %s\n"), msg.str());
 }
 
 void print_error(ParmString msg, ParmString str)
 {
-  fputs(_("Error: "), stderr);
-  fprintf(stderr, msg.str(), str.str());
-  fputs("\n", stderr);
+  CERR.put(_("Error: "));
+  CERR.printf(msg.str(), str.str());
+  CERR.put('\n');
 }
 
 #define EXIT_ON_ERR(command) \
@@ -252,8 +250,8 @@ int main (int argc, const char *argv[])
 	while(*c != '=' && *c != '\0') ++c;
 	o = find_option(argv[i] + 2, c);
 	if (o == possible_options_end) {
-	  option_name.assign(argv[i] + 2, 0, c - argv[i] - 2);
-	  const char * base_name = Config::base_name(option_name.c_str());
+	  option_name.assign(argv[i] + 2, c - argv[i] - 2);
+	  const char * base_name = Config::base_name(option_name);
 	  PosibErr<const KeyInfo *> ki = options->keyinfo(base_name);
           if (!ki.has_err(unknown_key)) {
             other_opt.name    = option_name.c_str();
@@ -310,7 +308,7 @@ int main (int argc, const char *argv[])
 	  args.push_back(parm);
       } else {
 	if (o->name[0] != '\0') {
-          if (options->keyinfo(o->name).data->flags & KEYINFO_UTF8)
+          if (options->keyinfo(Config::base_name(o->name)).data->flags & KEYINFO_UTF8)
             utf8_opts.push_back(StringPair(strdup(o->name), strdup(parm)));
           else
             EXIT_ON_ERR(options->replace(o->name, parm));
@@ -550,13 +548,13 @@ void print_elements(const AspellWordList * wl) {
     line += ", ";
   }
   line.resize(line.size() - 2);
-  COUT << count << ": " << line << "\n";
+  COUT.printf("%u: %s\n", count, line.c_str());
 }
 
 void status_fun(void * d, Token, int correct)
 {
   if (*static_cast<bool *>(d) && correct)
-    COUT << "*\n";
+    COUT.put("*\n");
 }
 
 DocumentChecker * new_checker(AspellSpeller * speller, 
@@ -700,7 +698,7 @@ void pipe()
 	  case 'r':
 	    word = trim_wspace(line + 4);
 	    BREAK_ON_ERR_SET(config->retrieve(word), String, ret);
-            COUT << ret << "\n";
+            COUT.printl(ret);
 	    break;
 	  }
 	  break;
@@ -715,7 +713,7 @@ void pipe()
 	  }
 	  break;
 	case 'l':
-	  COUT << config->retrieve("lang") << "\n";
+	  COUT.printl(config->retrieve("lang"));
 	  break;
 	}
 	break;
@@ -737,11 +735,11 @@ void pipe()
           = aspeller::case_pattern(real_speller->lang(), cword);
         while (ci) {
           guess.clear();
-          if (ci->pre_add && ci->pre_add[0])      guess << ci->pre_add << "+";
+          if (ci->pre_add && ci->pre_add[0])      guess << ci->pre_add << '+';
           guess << ci->word;
-          if (ci->pre_strip && ci->pre_strip[0]) guess << "-" << ci->pre_strip;
-          if (ci->suf_strip && ci->suf_strip[0]) guess << "-" << ci->suf_strip;
-          if (ci->suf_add   && ci->suf_add[0])   guess << "+" << ci->suf_add;
+          if (ci->pre_strip && ci->pre_strip[0]) guess << '-' << ci->pre_strip;
+          if (ci->suf_strip && ci->suf_strip[0]) guess << '-' << ci->suf_strip;
+          if (ci->suf_add   && ci->suf_add[0])   guess << '+' << ci->suf_add;
           guesses << ", " 
                   << oconv(aspeller::fix_case(real_speller->lang(),casep, guess));
           ci = ci->next;
@@ -753,10 +751,8 @@ void pipe()
 	finish = clock();
 	if (suggestions && !aspell_word_list_empty(suggestions)) 
         {
-	  COUT << "& " << word 
-	       << " " << aspell_word_list_size(suggestions) 
-	       << " " << token.offset + ignore
-	       << ":";
+          COUT.printf("& %s %u %u:", word, aspell_word_list_size(suggestions), 
+                      token.offset + ignore);
 	  AspellStringEnumeration * els 
 	    = aspell_word_list_elements(suggestions);
 	  if (options->retrieve_bool("reverse")) {
@@ -766,37 +762,33 @@ void pipe()
 	      sugs.push_back(w);
 	    Vector<String>::reverse_iterator i = sugs.rbegin();
 	    while (true) {
-	      COUT << " " << *i;
+              COUT.printf(" %s", i->c_str());
 	      ++i;
 	      if (i == sugs.rend()) break;
-	      COUT << ",";
+              COUT.put(',');
 	    }
 	  } else {
 	    while ( ( w = aspell_string_enumeration_next(els)) != 0) {
-	      COUT << " " << w;
-	      if (!aspell_string_enumeration_at_end(els))
-		COUT << ",";
+              COUT.printf(" %s%s", w, 
+                          aspell_string_enumeration_at_end(els) ? "" : ",");
 	    }
 	  }
 	  delete_aspell_string_enumeration(els);
           if (include_guesses)
-            COUT << guesses;
-	  COUT << "\n";
+            COUT.put(guesses);
+	  COUT.put('\n');
 	} else {
           if (guesses.empty())
-            COUT << "# " << word << " " 
-                 << token.offset + ignore
-                 << "\n";
+            COUT.printf("# %s %u\n", word, token.offset + ignore);
           else
-            COUT << "? " << word << " 0 " 
-                 << token.offset + ignore
-                 << ": " << guesses.c_str() + 2;
+            COUT.printf("? %s 0 %u: %s", word, token.offset + ignore,
+                        guesses.c_str() + 2);
 	}
 	if (do_time)
-          COUT << _("Suggestion Time: ")
-               << (finish-start)/(double)CLOCKS_PER_SEC << "\n";
+          COUT.printf(_("Suggestion Time: %f\n"), 
+                      (finish-start)/(double)CLOCKS_PER_SEC);
       }
-      COUT << "\n";
+      COUT.put('\n');
     }
     if (c == EOF) break;
   }
@@ -894,7 +886,7 @@ void check()
   menu_choices->push_back(Choice(mapping[Abort],      _("Abort")));
   menu_choices->push_back(Choice(mapping[Exit],       _("Exit")));
 
-  String new_word;
+  String word0, new_word;
   Vector<String> sug_con;
   StackPtr<StringMap> replace_list(new_string_map());
   const char * w;
@@ -903,7 +895,6 @@ void check()
 
   while (state->next_misspelling()) {
 
-    CharVector word0;
     char * word = state->get_word(word0);
 
     //
@@ -925,8 +916,7 @@ void check()
     // print the suggestions and menu choices
     //
 
-    const AspellWordList * suggestions = aspell_speller_suggest(speller, 
-                                                                word, -1);
+    const AspellWordList * suggestions = aspell_speller_suggest(speller, word, -1);
     AspellStringEnumeration * els = aspell_word_list_elements(suggestions);
     sug_con.resize(0);
     while (sug_con.size() != 10 
@@ -1139,13 +1129,14 @@ void list()
   AspellSpeller * speller = to_aspell_speller(ret);
 
   state = new CheckerString(speller,stdin,0,64);
+
+  String word;
  
   while (state->next_misspelling()) {
 
-    CharVector word0;
-    char * word = state->get_word(word0);
+    state->get_word(word);
+    COUT.printl(word);
 
-    COUT << word << "\n";
   }
   
   state.del(); // to close the file handles
@@ -1172,8 +1163,8 @@ void filter()
 //
 
 void print_ver () {
-  COUT << "@(#) International Ispell Version 3.1.20 " 
-       << "(but really Aspell " << VERSION << ")" << "\n";
+  COUT.put("@(#) International Ispell Version 3.1.20 " 
+           "(but really Aspell " VERSION ")\n");
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -1279,7 +1270,7 @@ void personal () {
   using namespace aspeller;
 
   if (args.size() != 0) {
-    EXIT_ON_ERR(options->replace("personal", args[0].c_str()));
+    EXIT_ON_ERR(options->replace("personal", args[0]));
   }
   options->replace("module", "aspeller");
   if (action == do_create || action == do_merge) {
@@ -1320,7 +1311,7 @@ void personal () {
     WordEntry * wi;
     while (wi = els->next(), wi) {
       wi->write(COUT,*(per->lang()), wsi.convert, conv);
-      COUT << "\n";
+      COUT.put('\n');
     }
     delete per;
   }
@@ -1462,12 +1453,12 @@ void expand()
   lang.reset(res.data);
   Conv iconv(setup_conv(options, lang));
   Conv oconv(setup_conv(lang, options));
-  String word;
+  String word, buf;
   ObjStack exp_buf;
   WordAff * exp_list;
   while (CIN.getline(word)) {
-    CharVector buf; buf.append(word.c_str(), word.size() + 1);
-    char * w = iconv(buf);
+    buf = word;
+    char * w = iconv(buf.mstr(), buf.size());
     char * af = strchr(w, '/');
     size_t s;
     if (af != 0) {
@@ -1501,7 +1492,7 @@ void expand()
       for (WordAff * p = exp_list; p; p = p->next) {
         COUT << word << ' ' << oconv(p->word);
         if (p->aff[0]) COUT << '/' << oconv((const char *)p->aff);
-        if (level >= 4) COUT.print(" %f\n", ratio);
+        if (level >= 4) COUT.printf(" %f\n", ratio);
         else COUT << '\n';
       }
     }
@@ -1528,7 +1519,7 @@ static void print_wordaff(const String & base, const String & affs, Conv & oconv
   if (affs.empty())
     COUT << '\n';
   else
-    COUT.print("/%s\n", oconv(affs));
+    COUT.printf("/%s\n", oconv(affs));
 }
 
 static bool lower_equal(aspeller::Language * l, ParmString a, ParmString b)
@@ -1659,38 +1650,20 @@ void expand_expression(Config * config){
       return;
     }
     while (filterpath.expand_file_part(&seekfor,candidate)) {
-      if (((locate_ending=candidate.rfind("-filter.so")) !=
-           candidate.length() - 10)) {
-        if ((locate_ending=candidate.rfind(".flt")) !=
-            candidate.length() - 4) {
-          continue;
-        }
-        else {
-          candidate.erase(locate_ending,4);
-          eliminate_path=0;
-          while ((hold_eliminator=candidate.find('/',eliminate_path)) < 
-                 candidate.length()) {
-            eliminate_path=hold_eliminator+1;
-          }
-          toload=candidate.erase(0,eliminate_path);
-          if (regexec(&seekfor,toload.c_str(),0,NULL,0)) {
-            continue;
-          }
-        }
-      }
-      else {
-        candidate.erase(locate_ending,10);
+
+      if (candidate.suffix("-filter.so")) {
+        candidate.pop_back(10);
         eliminate_path=0;
         while ((hold_eliminator=candidate.find('/',eliminate_path)) < 
-               candidate.length()) {
+               candidate.size()) {
           eliminate_path=hold_eliminator+1;
         }
-        if (candidate.find("lib",eliminate_path) != eliminate_path) {
+        if (!candidate.prefix("lib",eliminate_path)) {
           continue;
         }
         candidate.erase(0,eliminate_path);
         candidate.erase(0,3);
-        locate_ending=candidate.length();
+        locate_ending=candidate.size();
         toload=candidate;
         if (regexec(&seekfor,toload.c_str(),0,NULL,0)) {
           continue;
@@ -1699,7 +1672,22 @@ void expand_expression(Config * config){
         if (!optionpath.expand_filename(candidate)) {
           continue;
         }
+      } else if (candidate.suffix(".flt")) {
+        candidate.pop_back(4);
+        eliminate_path=0;
+        while ((hold_eliminator=candidate.find('/',eliminate_path)) < 
+               candidate.size()) {
+          eliminate_path=hold_eliminator+1;
+        }
+        candidate.erase(0,eliminate_path);
+        toload = candidate;
+        if (regexec(&seekfor,toload.c_str(),0,NULL,0)) {
+          continue;
+        }
+      } else {
+        continue;
       }
+
       config->replace("add-filter",toload.c_str());
     }
     regfree(&seekfor);

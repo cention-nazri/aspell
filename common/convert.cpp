@@ -471,7 +471,7 @@ namespace acommon {
       buf.push_back(asc_tolower(enc[i]));
 
     if (strncmp(buf.c_str(), "iso8859", 7) == 0)
-      buf.insert(3, 1, '-'); // For backwards compatibility
+      buf.insert(buf.begin() + 3, '-'); // For backwards compatibility
     
     if (buf == "ascii" || buf == "ansi_x3.4-1968")
       return "iso-8859-1";

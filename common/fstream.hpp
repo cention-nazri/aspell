@@ -8,7 +8,6 @@
 #define ASPELL_FSTREAM__HPP
 
 #include <stdio.h>
-#include <stdarg.h>
 
 #include "string.hpp"
 #include "istream.hpp"
@@ -46,24 +45,9 @@ namespace acommon {
     FILE * c_stream();
     int file_no();
     
-    __attribute__ ((format (printf,2,3)))
-      int print(const char * format, ...)
+    int vprintf(const char * format, va_list ap)
     {
-      va_list ap;
-      va_start(ap, format);
-      int res = vfprintf(file_, format, ap);
-      va_end(ap);
-      return res;
-    }
-
-    __attribute__ ((format (scanf,2,3)))
-      int scan(const char * format, ...)
-    {
-      va_list ap;
-      va_start(ap, format);
-      int res = vfscanf(file_, format, ap);
-      va_end(ap);
-      return res;
+      return vfprintf(file_, format, ap);
     }
 
     void flush() {fflush(file_);}

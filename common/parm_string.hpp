@@ -57,6 +57,7 @@ namespace acommon {
       if (size_ != UINT_MAX) return size_;
       else return size_ = strlen(str_);
     }
+    bool have_size() {return size_ != UINT_MAX;}
     operator const char * () const {
       return str_;
     }

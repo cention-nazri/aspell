@@ -7,25 +7,45 @@
 #include "string.hpp"
 #include "asc_ctype.hpp"
 
-#include "iostream.hpp"
-
 namespace acommon {
+
+  void String::reserve_i(size_t s)
+  {
+    size_t old_size = end_ - begin_;
+    size_t new_size = (storage_end_ - begin_) * 3 / 2;
+    if (new_size < 64) new_size = 64;
+    if (new_size + 1 < s) new_size = s + 1;
+    if (old_size == 0) {
+      if (begin_) free(begin_);
+      begin_ = (char *)malloc(new_size);
+    } else {
+      begin_ = (char *)realloc(begin_, new_size);
+    }
+    end_ = begin_ + old_size;
+    storage_end_ = begin_ + new_size;
+  }
+
+  int String::vprintf(const char * format, va_list ap0)
+  {
+    reserve(size() + 64);
+    int res;
+    va_list ap;
+  loop: {
+      size_t avail = storage_end_ - end_;
+      if (avail > 1024) return -1;
+      va_copy(ap,ap0);
+      res = vsnprintf(end_, avail, format, ap);
+      va_end(ap);
+      if (res < 0) {
+        reserve_i(); goto loop;
+      } else if (res > avail) {
+        reserve_i(size() + res - 1); goto loop;
+      }
+    }
+    end_ += res - 1;
+    return res;
+  }
   
-  void String::write(char c)
-  {
-    *this += c;
-  }
-
-  void String::write(ParmString str)
-  {
-    append(str);
-  }
-
-  void String::write(const void * str, unsigned int size)
-  {
-    append(static_cast<const char *>(str), size);
-  }
-
   bool StringIStream::getline(String & str, char d)
   {
     if (in_str[0] == '\0') return false;

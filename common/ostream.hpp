@@ -7,6 +7,8 @@
 #ifndef ASPELL_OSTREAM__HPP
 #define ASPELL_OSTREAM__HPP
 
+#include <stdarg.h>
+
 #include "parm_string.hpp"
 
 namespace acommon {
@@ -20,6 +22,27 @@ namespace acommon {
     virtual void write (char c) = 0;
     virtual void write (ParmString) = 0;
     virtual void write (const void *, unsigned int) = 0;
+
+    virtual int vprintf(const char *format, va_list ap) = 0;
+
+    __attribute__ ((format (printf,2,3)))
+      int printf(const char * format, ...)
+    {
+      va_list ap;
+      va_start(ap, format);
+      int res = vprintf(format, ap);
+      va_end(ap);
+      return res;
+    }
+
+    void put (char c) {write(c);}
+    void put (ParmString str) {write(str);}
+
+    virtual void printl(ParmString l) 
+    {
+      write(l);
+      write('\n');
+    }
 
     void write16(unsigned short v) {write(&v, 2);}
     void write32(unsigned int v) {write(&v, 4);}

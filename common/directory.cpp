@@ -288,7 +288,7 @@ namespace acommon{
     reset();
     while (!unprocessed.empty()) {
       if ((actualpath=unprocessed.find(pathseperator)) >= 0) {
-         (path=unprocessed).erase(actualpath,unprocessed.length()-actualpath);
+        (path=unprocessed).erase(actualpath,unprocessed.length()-actualpath);
         unprocessed.erase(0,actualpath+1);
       }
       else {
@@ -328,7 +328,7 @@ namespace acommon{
       unprocessed=un_processed;
       while (!unprocessed.empty()) {
         if ((actualpath=unprocessed.find(pathseperator)) >= 0) {
-           (path=unprocessed).erase(actualpath,unprocessed.length()-actualpath);
+           (path=unprocessed).erase(actualpath,unprocessed.size()-actualpath);
           unprocessed.erase(0,actualpath+1);
         }
         else{
@@ -341,7 +341,7 @@ namespace acommon{
 #ifndef _WIN32
         if ((resolvedlength=readlink(path.c_str(),&resolvelink[0],1024)) > 0) {
           resolvelink[resolvedlength]='\0';
-          path=&resolvelink[0];
+          path = resolvelink;
         }
 #else
 //FIXME again and again Win(Dos)
@@ -378,7 +378,7 @@ namespace acommon{
       actual=&browsebase[nextbase];
       if (actual->resume()) {
         while (actual->read(type,&content)) {
-          if ((unsigned)content.rfind(filename) == content.length()-filename.length()) {
+          if (content.suffix(filename)) {
             filename=content;
             actual->close();
             return true;

@@ -14,6 +14,8 @@
 #include "language.hpp"
 #include "speller_impl.hpp"
 
+#include "iostream.hpp"
+
 namespace aspeller {
 
   //
@@ -116,8 +118,7 @@ namespace aspeller {
   void DataSet::FileName::set(ParmString str) 
   {
     path = str;
-    int s = path.size();
-    int i = s;
+    int i = path.size() - 1;
     while (i >= 0) {
       if (path[i] == '/' || path[i] == '\\') {
 	++i;

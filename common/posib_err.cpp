@@ -16,7 +16,7 @@ namespace acommon {
 
   String & String::operator= (const PosibErr<String> & s)
   {
-    std::string::operator=(s.data);
+    operator=(s.data);
     return *this;
   }
 

@@ -7,6 +7,7 @@
 // license along with this library if you did not you can find
 // it at http://www.gnu.org/.
 
+#include "vector.hpp"
 #include "filter_char.hpp"
 
 namespace acommon {

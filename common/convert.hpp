@@ -183,23 +183,29 @@ namespace acommon {
       conv = pe.data;
       return no_err;
     }
-    char * operator() (MutableString str)
+    char * operator() (char * str, size_t sz)
     {
       if (conv) {
         buf.clear();
-        conv->convert(str, str.size, buf, buf0);
+        conv->convert(str, sz, buf, buf0);
         return buf.data();
       } else {
         return str;
       }
     }
-    char * operator() (CharVector & str) 
+    char * operator() (MutableString str)
     {
-      return operator()(MutableString(str.data(),str.size()-1));
+      return operator()(str.str, str.size);
     }
     char * operator() (char * str)
     {
-      return operator()(MutableString(str,strlen(str)));
+      if (conv) {
+        buf.clear();
+        conv->convert(str, strlen(str), buf, buf0);
+        return buf.data();
+      } else {
+        return str;
+      }
     }
     const char * operator() (ParmString str)
     {

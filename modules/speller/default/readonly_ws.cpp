@@ -737,7 +737,7 @@ namespace {
 	unsigned int s = strlen(w0);
 	CharVector tstr;
 	tstr.append(w0, s+1);
-	char * w = iconv(tstr);
+	char * w = iconv(tstr.data(), tstr.size());
         s = strlen(w);
 
         char * p0 = strchr(w, '/');

@@ -10,6 +10,8 @@
 #include "string.hpp"
 #include "error.hpp"
 
+#include "errors.hpp"
+
 namespace acommon {
 
   // PosibErr<type> is a special Error handling device that will make
@@ -193,6 +195,7 @@ namespace acommon {
 				      ParmString p1 = 0, ParmString p2 = 0,
 				      ParmString p3 = 0, ParmString p4 = 0)
   {
+    if (inf == cant_extend_options) abort();
     return PosibErrBase().prim_err(inf, p1, p2, p3, p4);
   }
 
@@ -203,14 +206,15 @@ namespace acommon {
   //
 #ifndef __SUNPRO_CC
   inline String::String(const PosibErr<String> & other)
-    : std::string(other.data) {}
+  {
+    assign_only(other.data.data(), other.data.size());
+  }
 #endif
   inline String & String::operator= (const PosibErr<const char *> & s)
   {
-    std::string::operator=(s.data);
+    *this = s.data;
     return *this;
   }
-
   //inline String & String::operator= (const PosibErr<String> & s)
   //{
   //  std::string::operator=(s.data);

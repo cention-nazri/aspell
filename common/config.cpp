@@ -237,7 +237,7 @@ namespace acommon {
     const char * value = data_.lookup(key);
 
     if (value != 0) {
-      if (value[0] == '\x01')
+      if (value[0] == '\x01') //FIXME: Why?
 	++value;
       return String(value);
     } else {
@@ -460,7 +460,7 @@ namespace acommon {
 	    assert(second.size() == 1);
 	    unsigned int s = 0;
 	    while (s != s1.size() && s1[s] != second[0]) ++s;
-	    final_str.append(s1, s, String::npos);
+	    final_str.append(s1, s);
 	  } else if (sep == '^') {
 	    String s1 = retrieve(replace);
 	    String s2 = retrieve(second);
@@ -475,7 +475,7 @@ namespace acommon {
 
 	} else if (*i == '>') {
 
-	  final_str += retrieve(replace);
+	  final_str += retrieve(replace).data;
 	  replace = "";
 	  in_replace = false;
 
@@ -987,7 +987,7 @@ namespace acommon {
     , {"encoding",   KeyInfoString, "iso8859-1",
        N_("encoding to expect data to be in")}
     , {"filter",   KeyInfoList  , "url",
-       N_("add or removes a filter")}
+       N_("add or removes a filter"), KEYINFO_MAY_CHANGE}
     , {"filter-path", KeyInfoList, FILTER_DIR,
        N_("path(es) aspell looks for filters")}
     , {"option-path", KeyInfoList, FILTER_OPT_DIR,

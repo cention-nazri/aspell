@@ -138,7 +138,7 @@ namespace acommon {
           for (countdelimit=0;
                countdelimit < (signed)closing.size();countdelimit++) {
             for (matchdelim=0; 
-                 (current+closing[countdelimit].length() < localstop) &&
+                 (current+closing[countdelimit].size() < localstop) &&
                  (matchdelim < (signed)closing[countdelimit].length());
                  matchdelim++){
 //FIXME Warning about comparison of signed and unsigned in following line
