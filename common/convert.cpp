@@ -500,14 +500,8 @@ namespace acommon {
   {
     void decode(const char * in0, int size, FilterCharVector & out) const {
       const Chr * in = reinterpret_cast<const Chr *>(in0);
-      if (size == -1) {
-        for (;*in; ++in)
-          out.append(*in);
-      } else {
-        const Chr * stop = reinterpret_cast<const Chr *>(in0 +size);
-        for (;in != stop; ++in)
-          out.append(*in);
-      }
+      for (;*in; ++in)
+        out.append(*in);
     }
     PosibErr<void> decode_ec(const char * in0, int size, 
                              FilterCharVector & out, ParmString) const {
@@ -577,14 +571,8 @@ namespace acommon {
       return read_in_char_data(c, code, lookup, unused);
     }
     void decode(const char * in, int size, FilterCharVector & out) const {
-      if (size == -1) {
-        for (;*in; ++in)
-          out.append(lookup[*in]);
-      } else {
-        const char * stop = in + size;
-        for (;in != stop; ++in)
-          out.append(lookup[*in]);
-      }
+      for (;*in; ++in)
+        out.append(lookup[*in]);
     }
     PosibErr<void> decode_ec(const char * in, int size, 
                              FilterCharVector & out, ParmString) const {
@@ -600,18 +588,11 @@ namespace acommon {
     DecodeNormLookup(NormTable<E> * d) : data(d) {}
     // must be null terminated
     void decode(const char * in, int size, FilterCharVector & out) const {
-      if (size == -1) size = strlen(in);
-      const char * stop = in + size;
-      while (in < stop) {
-        if (*in == 0) {
-          out.append(0);
-          ++in;
-        } else {
-          NormLookupRet<E,const char> ret = norm_lookup<E>(data, in, 0, in);
-          for (unsigned i = 0; ret.to[i] && i < E::max_to; ++i)
-            out.append(ret.to[i]);
-          in = ret.last + 1;
-        }
+      while (*in) {
+        NormLookupRet<E,const char> ret = norm_lookup<E>(data, in, 0, in);
+        for (unsigned i = 0; ret.to[i] && i < E::max_to; ++i)
+          out.append(ret.to[i]);
+        in = ret.last + 1;
       }
     }
     PosibErr<void> decode_ec(const char * in, int size, 
@@ -726,7 +707,6 @@ namespace acommon {
   //
   
 #define get_check_next \
-  if (in == stop) goto error;          \
   c = *in;                             \
   if ((c & 0xC0) != 0x80) goto error;  \
   ++in;                                \
@@ -734,7 +714,7 @@ namespace acommon {
   u |= c & 0x3F;                       \
   ++w;
 
-  static inline FilterChar from_utf8 (const char * & in, const char * stop, 
+  static inline FilterChar from_utf8 (const char * & in,
                                       Uni32 err_char = '?')
   {
     Uni32 u = (Uni32)(-1);
@@ -744,7 +724,7 @@ namespace acommon {
     char c = *in;
     ++in;
 
-    while (in != stop && (c & 0xC0) == 0x80) {c = *in; ++in; ++w;}
+    while ((c & 0xC0) == 0x80) {c = *in; ++in; ++w;}
     if ((c & 0x80) == 0x00) { // 1-byte wide
       u = c;
     } else if ((c & 0xE0) == 0xC0) { // 2-byte wide
@@ -796,17 +776,14 @@ namespace acommon {
   {
     ToUniLookup lookup;
     void decode(const char * in, int size, FilterCharVector & out) const {
-      const char * stop = in + size; // this is OK even if size == -1
-      while (*in && in != stop) {
-        out.append(from_utf8(in, stop));
-      }
+      while (*in)
+        out.append(from_utf8(in));
     }
     PosibErr<void> decode_ec(const char * in, int size, 
                              FilterCharVector & out, ParmString orig) const {
       const char * begin = in;
-      const char * stop = in + size; // this is OK even if size == -1
-      while (*in && in != stop) {
-        FilterChar c = from_utf8(in, stop, (Uni32)-1);
+      while (*in) {
+        FilterChar c = from_utf8(in, (Uni32)-1);
         if (c == (Uni32)-1) {
           char m[70];
           snprintf(m, 70, _("Invalid UTF-8 sequence at position %d."), in - begin);

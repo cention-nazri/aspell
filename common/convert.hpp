@@ -34,6 +34,7 @@ namespace acommon {
 
   struct Decode : public ConvBase {
     virtual PosibErr<void> init(ParmString code, const Config &) {return no_err;}
+    // string MUST be null terminated, even if size is given
     virtual void decode(const char * in, int size,
 			FilterCharVector & out) const = 0;
     virtual PosibErr<void> decode_ec(const char * in, int size,
@@ -42,8 +43,6 @@ namespace acommon {
     virtual ~Decode() {}
   };
   struct Encode : public ConvBase {
-    // null characters should be tretead like any other character
-    // by the encoder.
     virtual PosibErr<void> init(ParmString, const Config &) {return no_err;}
     virtual void encode(const FilterChar * in, const FilterChar * stop, 
                         CharVector & out) const = 0;
@@ -61,9 +60,10 @@ namespace acommon {
     // of the object
     virtual PosibErr<void> init(const Decode *, const Encode *, 
 				const Config &) {return no_err;}
-    virtual void convert(const char * in, int size, 
+    // string MUST be null terminated, even if size is given
+    virtual void convert(const char * in, int size,
 			 CharVector & out) const = 0;
-    virtual PosibErr<void> convert_ec(const char * in, int size, 
+    virtual PosibErr<void> convert_ec(const char * in, int size,
                                       CharVector & out, ParmString orig) const = 0;
     virtual ~DirectConv() {}
   };
