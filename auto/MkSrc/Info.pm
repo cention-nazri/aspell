@@ -116,7 +116,12 @@ The %info structure is initialized as follows:
     groups => undef},
   constructor => {
     # A class constructor
-    options => ['returns alt type', 'c impl', 'desc'],
+    options => ['desc', 'returns alt type', 
+                'c impl', 'posib err', 'conversion'],
+    groups => 'types'},
+  'posib err constructor' => {
+    # A class constructor
+    options => ['desc'],
     groups => 'types'},
   destructor => {
     # A class destructor

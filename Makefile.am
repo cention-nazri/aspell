@@ -89,7 +89,8 @@ libaspell_la_SOURCES =\
   lib/string_pair_enumeration-c.cpp\
   lib/new_checker.cpp\
   lib/checker-c.cpp\
-  lib/document_checker-c.cpp
+  lib/document_checker-c.cpp\
+  lib/convert-c.cpp
 
 libaspell_la_LIBADD =  $(LIBINTL) $(PTHREAD_LIB)
 

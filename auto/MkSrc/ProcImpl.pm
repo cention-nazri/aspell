@@ -46,7 +46,9 @@ $info{class}{proc}{impl} = sub {
   foreach (grep {$_ ne ''} split /\s*,\s*/, $data->{'c impl headers'}) {
     $accum->{headers}{$_} = true;
   }
-  foreach my $d (@{$data->{data}}) {
+  my @d = @{$data->{data}};
+  my $d;
+  while (($d = shift @d)) {
     next unless one_of $d->{type}, qw(method constructor destructor);
     my @parms = @{$d->{data}} if exists $d->{data};
     my $m = make_c_method $data->{name}, $d, {mode=>'cc_cxx', use_name=>true}, %$accum;
@@ -107,12 +109,27 @@ $info{class}{proc}{impl} = sub {
 	$ret .= $exp;
 	$ret .= ";\n";
       } elsif ($d->{type} eq 'constructor') {
+        $accum->{headers}{error} = true;
 	my $name = $d->{name} ? $d->{name} : "new $data->{name}";
 	$name =~ s/aspell\ ?//; # FIXME: Abstract this in a function
 	$name = to_lower($name);
-	shift @parms if exists $d->{'returns alt type'}; # FIXME: Abstract this in a function
-	my $parms = '('.(join ', ', map {$_->{name}} @parms).')';
-	$ret .= "  return $name$parms;\n";
+        shift @parms if exists $d->{'returns alt type'}; # FIXME: Abstract this in a function
+        my $parms = '('.(join ', ', map {$_->{name}} @parms).')';
+        my $class = to_mixed($data->{name});
+        if (exists $d->{'posib err'}) {
+	  $accum->{headers}{'error'} = true;
+	  $accum->{headers}{'posib err'} = true;
+          $ret .= "  PosibErr<$class *> ret = $name$parms;\n";
+          $ret .= "  if (ret.has_err()) {\n";
+          $ret .= "    return new CanHaveError(ret.release_err());\n";
+          $ret .= "  } else {\n";
+          $ret .= "    return ret;\n";
+          $ret .= "  }\n";
+        } elsif (exists $d->{'conversion'}) {
+          $ret .= "  return static_cast<$class *>(obj);\n";
+        } else {
+	  $ret .= "  return $name$parms;\n";
+        }
       } elsif ($d->{type} eq 'destructor') {
 	$ret .= "  delete ths;\n";
       }

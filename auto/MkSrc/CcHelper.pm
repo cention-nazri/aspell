@@ -298,10 +298,16 @@ sub form_c_method ($ $ $ ; \% )
   if ($d->{type} eq 'constructor') {
     if (defined $name) {
       $func = $name;
-    } else {
+    } elsif (! exists $d->{'conversion'}) {
       $func = "new aspell $class";
+    } else {
+      $func = "to aspell $class";
     }
-    splice @data, 0, 0, {type => $class} unless exists $d->{'returns alt type'};
+    @data = ({name => 'obj', type => 'can have error'}) if (exists $d->{'conversion'} && !@data);
+    unless (exists $d->{'returns alt type'}) {
+      my $what = exists $d->{'posib err'} ? "can have error" : $class;
+      splice @data, 0, 0, {type => $what}
+    }
   } elsif ($d->{type} eq 'destructor') {
     $func = "delete aspell $class";
     splice @data, 0, 0, ({type => 'void'}, {type=>$class, name=>$this_name});

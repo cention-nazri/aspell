@@ -11,7 +11,6 @@
 #include "vector.hpp"
 #include "string.hpp"
 #include "simple_string.hpp"
-#include "checker.hpp"
 
 using namespace acommon;
 

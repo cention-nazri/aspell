@@ -86,7 +86,7 @@ namespace acommon {
 
     virtual PosibErr<bool> check(MutableString) = 0;
 
-    // these functions return information about the last word checked
+    // this function return information about the last word checked
     virtual const CheckInfo * check_info() = 0;
   
     virtual PosibErr<void> add_to_personal(MutableString) = 0;

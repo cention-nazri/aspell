@@ -105,6 +105,7 @@ methods: can have error
 		const
 		c only
 		c impl => return ths->err_ == 0 ? 0 : 1;
+		desc => deprecated
 		/
 		unsigned int
 
@@ -609,28 +610,10 @@ group: speller
 no native
 /
 class: speller
-	c impl headers => error
 	/
-	# FIME make a "methods" of the next two contractors
-	#      which will probaly involve modifying mk-src.pl
-
-	constructor: new aspell speller
-		returns alt type
-		c impl =>
-			PosibErr<Speller *> ret = new_speller(config);
-			if (ret.has_err()) \{
-			  return new CanHaveError(ret.release_err());
-			\} else \{
-			  return ret;
-			\}
+	posib err constructor
 		/
-		can have error
 		config: config
-
-	constructor: to aspell speller
-		c impl => return static_cast<Speller *>(obj);
-		/
-		can have error: obj
 
 	destructible methods
 
@@ -964,29 +947,14 @@ group: checker
 no native
 /
 class: checker
-	c impl headers => error
 	/
+	posib err constructor
+		/
+		speller: speller
+
 	destructible methods
 	
 	can have error methods
-
-	constructor: new aspell checker
-		returns alt type
-		c impl =>
-			PosibErr<Checker *> ret = new_checker(speller);
-			if (ret.has_err()) \{
-			  return new CanHaveError(ret.release_err());
-			\} else \{
-			  return ret;
-			\}
-		/
-		can have error
-		speller: speller
-
-	constructor: to aspell checker
-		c impl => return static_cast<Checker *>(obj);
-		/
-		can have error: obj
 
 	method: reset
 		/
@@ -1054,21 +1022,7 @@ struct: token
 class: document checker
 	c impl headers => error
 	/
-	destructible methods
-	
-	can have error methods
-
-	# FIME make a "methods" of the next two contractors
-
-	constructor: new aspell document checker
-		returns alt type
-		c impl =>
-			PosibErr<DocumentChecker *> ret = new_document_checker(speller);
-			if (ret.has_err()) \{
-			  return new CanHaveError(ret.release_err());
-			\} else \{
-			  return ret;
-			\}
+	posib err constructor: 
 		desc => Creates a new document checker.
 			The speller class is expect to last until this
 			class is destroyed.
@@ -1079,13 +1033,11 @@ class: document checker
 			the filter class and use it to do the filtering.
 			You are expected to free the checker when done.
 		/
-		can have error
 		speller: speller
 
-	constructor: to aspell document checker
-		c impl => return static_cast<DocumentChecker *>(obj);
-		/
-		can have error: obj
+	destructible methods
+	
+	can have error methods
 
 	method: reset
 
@@ -1115,4 +1067,43 @@ class: document checker
 			will be null and token.size will be 0
 		/
 		token object
+}
+group: convert
+{
+no native
+no impl
+/
+enum: normalize
+	prefix => norm
+	/
+	none
+	from
+	to
+	both
+
+class: convert
+	/
+	posib err constructor
+		/
+		config: c
+		string: from
+		string: to
+		normalize: n
+		bool: filter
+
+	destructible methods
+
+	method: needed
+		desc => returns true if a conversion if needed
+		/
+		bool
+
+	method:
+		desc => converts a null terminated string.
+			If no conversion is needed returns the orignal string,
+			otherwise returns the converted string.  The string
+			returned is only valid until the next call to convert.
+		/
+		string
+		string: str
 }

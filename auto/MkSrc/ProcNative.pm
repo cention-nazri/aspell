@@ -43,11 +43,13 @@ $info{group}{proc}{native} = sub {
 $info{enum}{proc}{native} = sub {
   my ($data) = @_;
   my $n = to_mixed($data->{name});
-  return ("enum $n {" .
+  return ("// NOTE: This enum is also used by the C API.  Do not modify with\n".
+          "//   out also modifying \"mk-src.in\".\n".
+          "enum $n {" .
 	  join (',',
 		map {to_mixed($data->{prefix}).to_mixed($_->{type})}
 		@{$data->{data}}).
-	  "};\n");
+	  "};\n\n");
 };
 
 

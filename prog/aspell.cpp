@@ -1872,7 +1872,7 @@ void munch_list()
 
 // This version works the same way as the myspell "munch" program.
 // However, because the results depends on the hash table used and the
-// order of the word list it wonn't produce identical results.
+// order of the word list it won't produce identical results.
 
 struct SML_WordEntry {
   const char * word;
