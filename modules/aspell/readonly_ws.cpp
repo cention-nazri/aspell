@@ -912,11 +912,13 @@ namespace aspell_default_readonly_ws {
 }
 
 namespace aspell {
-  void create_default_readonly_word_set(StringEmulation * els,
-					Config & config)
+  PosibErr<void> create_default_readonly_word_set(StringEmulation * els,
+                                                  Config & config)
   {
-    Language lang(config);
+    Language lang;
+    RET_ON_ERR(lang.setup("",&config));
     aspell_default_readonly_ws::create(config.retrieve("master-path"),
 				       els,lang);
+    return no_err;
   }
 }

@@ -31,6 +31,7 @@ namespace aspell {
     };
 
   private:
+    String   dir_;
     String   name_;
     String   charset_;
     String   mid_chars_;
@@ -54,14 +55,11 @@ namespace aspell {
 
     ClonePtr<Soundslike> soundslike_;
 
-    PosibErr<void> setup(String lang, Config *);
-
   public:
-    Language() {setup("",0);}
-    Language(String lang) {setup(lang,0);}
-    Language(String lang, Config & config) {setup(lang,&config);}
-    Language(Config & config) {setup("",&config);}
+    Language() {}
+    PosibErr<void> setup(ParmString lang, Config *);
 
+    const char * data_dir() const {return dir_.c_str();}
     const char * name() const {return name_.c_str();}
     const char * charset() const {return charset_.c_str();}
     const char * mid_chars() const {return mid_chars_.c_str();}

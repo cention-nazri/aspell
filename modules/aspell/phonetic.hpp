@@ -19,13 +19,12 @@ namespace aspell {
     virtual String to_soundslike(ParmString) const = 0;
     virtual const char * name() const = 0;
     virtual const char * version() const = 0;
+    virtual PosibErr<void> setup() = 0;
     virtual ~Soundslike() {}
   };
 
-  Soundslike * new_soundslike(ParmString name,
-			      ParmString dir1,
-			      ParmString dir2,
-			      const Language * lang);
+  PosibErr<Soundslike *> new_soundslike(ParmString name,
+                                        const Language * lang);
 };
 
 #endif

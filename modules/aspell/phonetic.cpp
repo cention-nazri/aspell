@@ -17,6 +17,8 @@ namespace aspell {
     const Language * lang;
   public:
     GenericSoundslike(const Language * l) : lang(l) {}
+
+    PosibErr<void> setup() {return no_err;}
     
     Soundslike * clone() const {return new GenericSoundslike(*this);}
     void assign(const Soundslike * other) {
@@ -67,6 +69,8 @@ namespace aspell {
     const Language * lang;
   public:
     NoSoundslike(const Language * l) : lang(l) {}
+
+    PosibErr<void> setup() {return no_err;}
     
     Soundslike * clone() const {return new NoSoundslike(*this);}
     void assign(const Soundslike * other) {
@@ -121,15 +125,25 @@ namespace aspell {
       *this = *static_cast<const PhonetSoundslike *>(other);
     }
 
-    PhonetSoundslike(ParmString file, const Language * l) {
-      lang = l;
-      phonet_parms.reset(load_phonet_rules(file));
+    PhonetSoundslike(const Language * l) : lang(l) {}
+
+    PosibErr<void> setup() {
+      String file;
+      file += lang->data_dir();
+      file += '/';
+      file += lang->name();
+      file += "_phonet.dat";
+      PosibErr<PhonetParms *> pe = load_phonet_rules(file);
+      if (pe.has_err()) return pe;
+      phonet_parms.reset(pe);
       for (int i = 0; i != 256; ++i) {
 	phonet_parms->to_upper[i] = lang->to_upper(i);
 	phonet_parms->is_alpha[i] = lang->is_alpha(i);
       }
       init_phonet_hash(*phonet_parms);
+      return no_err;
     }
+
 
     String soundslike_chars() const 
     {
@@ -171,19 +185,23 @@ namespace aspell {
   };
   
   
-  Soundslike * new_soundslike(ParmString name, 
-			      ParmString dir1,
-			      ParmString dir2,
-			      const Language * lang)
+  PosibErr<Soundslike *> new_soundslike(ParmString name, 
+                                        const Language * lang)
   {
+    Soundslike * sl;
     if (name == "generic") {
-      return new GenericSoundslike(lang);
+      sl = new GenericSoundslike(lang);
     } else if (name == "none") {
-      return new NoSoundslike(lang);
+      sl = new NoSoundslike(lang);
     } else {
-      String file;
-      find_file(file,dir1,dir2,name,"_phonet.dat");
-      return new PhonetSoundslike(file, lang);
+      sl = new PhonetSoundslike(lang);
+    }
+    PosibErrBase pe = sl->setup();
+    if (pe.has_err()) {
+      delete sl;
+      return pe;
+    } else {
+      return sl;
     }
   }
 

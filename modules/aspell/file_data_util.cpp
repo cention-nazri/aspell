@@ -17,13 +17,14 @@ namespace aspell {
     if (dir2[dir2.size()-1] != '/') dir2 += '/';
   }
   
-  void find_file(String & file,
-		 const String & dir1, const String & dir2, 
-		 const String & name, const char * extension)
+  const String & find_file(String & file,
+                           const String & dir1, const String & dir2, 
+                           const String & name, const char * extension)
   {
     file = dir1 + name + extension;
-    if (file_exists(file)) return;
+    if (file_exists(file)) return dir1;
     file = dir2 + name + extension;
+    return dir2;
   }
   
 }

@@ -15,6 +15,7 @@
 #include "config.hpp"
 #include "file_util.hpp"
 #include "stack_ptr.hpp"
+#include "errors.hpp"
 
 using namespace pcommon;
 using namespace aspell;
@@ -31,8 +32,15 @@ void soundslike();
 
 #define EXIT_ON_ERR(command) \
   do{PosibErrBase pe = command;\
-  if(pe.has_err()){CERR<<"Error :"<<pe.err().mesg<<"\n"; exit(1);}\
+  if(pe.has_err()){CERR<<"Error: "<< pe.get_err()->mesg << "\n"; exit(1);}\
   } while(false)
+#define EXIT_ON_ERR_SET(command, type, var)\
+  type var;\
+  do{PosibErr<type> pe = command;\
+  if(pe.has_err()){CERR<<"Error: "<< pe.get_err()->mesg << "\n"; exit(1);}\
+  else {var=pe;}\
+  } while(false)
+
 
 /////////////////////////////////////////////////////////
 //
@@ -139,10 +147,12 @@ int main (int argc, const char *argv[])
 	if (o == possible_options_end) /* try FIXME */ {
 	  option_name.assign(argv[i] + 2, 0, c - argv[i] - 2);
 	  const char * base_name = Config::base_name(option_name.c_str());
-	  const KeyInfo * ki = options->keyinfo(base_name);
-	  other_opt.name    = option_name.c_str();
-	  other_opt.num_arg = ki->type == KeyInfoBool ? 0 : 1;
-	  o = &other_opt;
+	  PosibErr<const KeyInfo *> ki = options->keyinfo(base_name);
+          if (!ki.has_err(unknown_key)) {
+            other_opt.name    = option_name.c_str();
+            other_opt.num_arg = ki.data->type == KeyInfoBool ? 0 : 1;
+            o = &other_opt;
+          }
 	} /* catch (UnknownKey) {} */
 	if (*c == '=') ++c;
 	parm = c;
@@ -270,7 +280,7 @@ int main (int argc, const char *argv[])
 
 void config () {
   StackPtr<Config> config(new_config());
-  config->read_in_settings(options);
+  EXIT_ON_ERR(config->read_in_settings(options));
   config->write_to_stream(stdout);
 }
 
@@ -330,12 +340,13 @@ void master () {
   }
 
   StackPtr<Config> config(new_config());
-  config->read_in_settings(options);
+  EXIT_ON_ERR(config->read_in_settings(options));
 
   if (action == do_create) {
     
-    create_default_readonly_word_set(new IstreamVirEmulation(CIN),
-				     *config);
+    EXIT_ON_ERR(create_default_readonly_word_set
+                (new IstreamVirEmulation(CIN),
+                 *config));
 
   } else if (action == do_merge) {
     
@@ -344,8 +355,9 @@ void master () {
   
   } else if (action == do_dump) {
 
-    LoadableDataSet * mas = add_data_set(config->retrieve("master-path"), 
-					 *config);
+    EXIT_ON_ERR_SET(add_data_set(config->retrieve("master-path"), 
+                                 *config),
+                    LoadableDataSet *, mas);
     LocalWordSetInfo wsi;
     wsi.set(mas->lang(), config);
     dump(LocalWordSet(mas,wsi));
@@ -361,7 +373,7 @@ void master () {
 
 void personal () {
   if (args.size() != 0) {
-    options->replace("personal", args[0].c_str());
+    EXIT_ON_ERR(options->replace("personal", args[0].c_str()));
   }
   options->replace("module", "aspell");
   if (action == do_create || action == do_merge) {
@@ -388,7 +400,7 @@ void personal () {
   } else { // action == do_dump
 
     StackPtr<Config> config(new_config());
-    config->read_in_settings(options);
+    EXIT_ON_ERR(config->read_in_settings(options));
 
     WritableWordSet * per = new_default_writable_word_set();
     per->load(config->retrieve("personal-path"), config);
@@ -434,17 +446,17 @@ void repl() {
 
       while (true) {
 	get_word_pair(word,repl,':');
-	manager->store_repl(word,repl,false);
+	EXIT_ON_ERR(manager->store_repl(word,repl,false));
       }
 
     } catch (bad_cin) {}
 
-    manager->personal_repl().synchronize();
+    EXIT_ON_ERR(manager->personal_repl().synchronize());
 #endif
   } else if (action == do_dump) {
 
     StackPtr<Config> config(new_config());
-    config->read_in_settings();
+    EXIT_ON_ERR(config->read_in_settings());
 
     WritableReplacementSet * repl = new_default_writable_replacement_set();
     repl->load(config->retrieve("repl-path"), config);
@@ -468,7 +480,8 @@ void repl() {
 //
 
 void soundslike() {
-  Language lang(*options);
+  Language lang;
+  EXIT_ON_ERR(lang.setup("",options));
   String word;
   while (CIN >> word) {
     COUT << word << '\t' << lang.to_soundslike(word) << "\n";

@@ -337,8 +337,8 @@ namespace aspell {
   
   // implemented in readonly_ws.cc
   BasicWordSet * new_default_readonly_word_set();
-  void create_default_readonly_word_set(StringEmulation * els,
-					Config & config);
+  PosibErr<void> create_default_readonly_word_set(StringEmulation * els,
+                                                  Config & config);
 
   // implemented in multi_ws.cc
   BasicMultiSet * new_default_multi_word_set();

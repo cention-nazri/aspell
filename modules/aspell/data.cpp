@@ -81,9 +81,8 @@ namespace aspell {
   PosibErr<void> DataSet::set_check_lang (ParmString l, Config * config)
   {
     if (lang_ == 0) {
-      lang_.reset(new Language(l,*config));
-      if (!lang_) // FIXME: Is this right?
-	return make_err(unknown_language, l);
+      lang_.reset(new Language());
+      RET_ON_ERR(lang_->setup(l,config));
       set_lang_hook(config);
     } else {
       if (l != lang_->name())

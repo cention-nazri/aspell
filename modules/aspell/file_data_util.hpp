@@ -10,9 +10,9 @@ namespace pcommon {class Config;}
 namespace aspell {
 
   void fill_data_dir(const Config *, String & dir1, String & dir2);
-  void find_file(String & path,
-		 const String & dir1, const String & dir2, 
-		 const String & name, const char * extension);
+  const String & find_file(String & path,
+                           const String & dir1, const String & dir2, 
+                           const String & name, const char * extension);
 }
 
 #endif

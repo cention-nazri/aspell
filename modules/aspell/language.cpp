@@ -34,10 +34,11 @@ namespace aspell {
     , {"keyboard",            KeyInfoString, "standard", "", "c"} 
   };
   
-  PosibErr<void> Language::setup(String lang, Config * config) 
+  PosibErr<void> Language::setup(ParmString l, Config * config) 
   {
     //if (!config)      config = new Config(); FIXME
     assert(config != 0);
+    String lang = l;
     if (lang.empty()) lang   = config->retrieve("actual-lang");
 
     String dir1, dir2;
@@ -51,8 +52,8 @@ namespace aspell {
 		lang_config_keys, 
 		lang_config_keys + sizeof(lang_config_keys)/sizeof(KeyInfo));
     String path;
-    find_file(path,dir1,dir2,lang,".dat");
-    data.read_in_file(path);
+    dir_ = find_file(path,dir1,dir2,lang,".dat");
+    RET_ON_ERR(data.read_in_file(path));
 
     if (!data.have("name"))
       return make_err(bad_file_format, path, "The required field \"name\" is missing.");
@@ -146,12 +147,13 @@ namespace aspell {
     //
     // prep phonetic code
     //
-    
-    soundslike_.reset(new_soundslike(data.retrieve("soundslike"), 
-				     dir1, dir2,
-				     this));
-    soundslike_chars_ = soundslike_->soundslike_chars();
 
+    PosibErr<Soundslike *> pe = new_soundslike(data.retrieve("soundslike"), 
+                                               this);
+    if (pe.has_err()) return pe;
+    soundslike_.reset(pe);
+    soundslike_chars_ = soundslike_->soundslike_chars();
+    
     return no_err;
   }
 
