@@ -1,4 +1,5 @@
 common/config.cpp
+common/convert.cpp
 common/errors.cpp
 common/posib_err.cpp 
 prog/aspell.cpp
