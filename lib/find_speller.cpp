@@ -26,6 +26,8 @@
 #include "string_enumeration.hpp"
 #include "string_list.hpp"
 
+#include "iostream.hpp"
+
 #if 0
 #include "preload.h"
 #define LT_NON_POSIX_NAMESPACE 1
@@ -123,7 +125,7 @@ namespace acommon {
 
   Better::~Better() {}
 
-  IsBetter Better::better_match(IsBetter prev)
+  IsBetter Better::better_match (IsBetter prev)
   {
     if (prev == WorseMatch)
       return prev;
@@ -256,6 +258,7 @@ namespace acommon {
     String code;
     PosibErr<String> str = config->retrieve("lang");
     p = str.data.c_str();
+    CERR.printf(">>%s\n", p);
     code += asc_tolower(*p++); code += asc_tolower(*p++);
     String lang = code;
     bool have_country = false;

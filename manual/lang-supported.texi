@@ -64,7 +64,7 @@
 @item ho @tab Hiri Motu @tab Latin @tab - @tab -
 @item hr @tab Croatian @tab Latin @tab Yes @tab -
 @item hsb @tab Upper Sorbian @tab Latin @tab Experimental @tab -
-@item ht @tab Haitian Creole @tab Latin @tab - @tab -
+@item ht @tab Haitian Creole @tab Latin @tab Maybe @tab -
 @item hu @tab Hungarian @tab Latin @tab Experimental @tab -
 @item hy @tab Armenian @tab Armenian @tab - @tab -
 @item hz @tab Herero @tab Latin @tab - @tab -
@@ -84,6 +84,7 @@
 @item ki @tab Kikuyu / Gikuyu @tab Latin @tab - @tab -
 @item kj @tab Kwanyama @tab Latin @tab - @tab -
 @item kk @tab Kazakh @tab Cyrillic @tab - @tab -
+@item kl @tab Kalaallisut / Greenlandic @tab Latin @tab Maybe @tab -
 @item kn @tab Kannada @tab Kannada @tab - @tab -
 @item kr @tab Kanuri @tab Latin @tab - @tab -
 @item ks @tab Kashmiri @tab Arabic @tab - @tab -
@@ -94,7 +95,7 @@
 @item
 @item la @tab Latin @tab Latin @tab Experimental @tab -
 @item lb @tab Luxembourgish @tab Latin @tab Maybe @tab -
-@item lg @tab Ganda @tab Latin @tab - @tab -
+@item lg @tab Ganda @tab Latin @tab Maybe @tab -
 @item li @tab Limburgian @tab Latin @tab Maybe @tab -
 @item ln @tab Lingala @tab Latin @tab - @tab -
 @item lt @tab Lithuanian @tab Latin @tab Experimental @tab -
@@ -120,6 +121,7 @@
 @item nl @tab Dutch @tab Latin @tab Yes @tab Yes
 @item nn @tab Norwegian Nynorsk @tab Latin @tab Yes @tab -
 @item nr @tab South Ndebele @tab Latin @tab - @tab -
+@item nso @tab Northern Sotho @tab Latin @tab Maybe @tab -
 @item nv @tab Navajo @tab Latin @tab - @tab -
 @item ny @tab Nyanja @tab Latin @tab - @tab -
 @item
@@ -152,7 +154,7 @@
 @item sq @tab Albanian @tab Latin @tab Maybe @tab -
 @item sr @tab Serbian @tab Cyrillic, Latin @tab Planned @tab Yes
 @item ss @tab Swati @tab Latin @tab Maybe @tab -
-@item st @tab Southern Sotho @tab Latin @tab - @tab -
+@item st @tab Southern Sotho @tab Latin @tab Maybe @tab -
 @item su @tab Sundanese @tab Latin @tab - @tab -
 @item sv @tab Swedish @tab Latin @tab Yes @tab -
 @item sw @tab Swahili @tab Latin @tab Yes @tab -

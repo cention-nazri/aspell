@@ -1,5 +1,5 @@
 \input texinfo   @c -*-texinfo-*-
-@comment $Id: aspell.texi,v 1.34 2004/05/17 02:22:58 kevina Exp $
+@comment $Id: aspell.texi,v 1.35 2004/05/20 04:33:20 kevina Exp $
 @comment %**start of header
 @setfilename aspell.info
 @settitle GNU Aspell 0.60
@@ -3173,7 +3173,6 @@ support.
 Ispell dictionaries are available for the following languages:
 
 @itemize
-@item Belarusian (be)
 @item Estonian (et)
 @end itemize
 
@@ -3184,13 +3183,23 @@ them:
 
 @itemize
 @item Asturian (ast)
-@item Cebuano (cb)
+@item Basque (eu)
+@item Cebuano (ceb)
 @item Chamorro (ch)
 @item Cornish (kw)
 @item Frisian (fy)
+@item Ganda (lg)
+@item Haitian Creole (ht)
 @item Hawaiian (haw)
+@item Kalaallisut (kl)
+@item Limburgish (li)
+@item Low Saxon (nds)
+@item Luganda (lg)
+@item Northern Sotho (nso)
 @item Occitan (oc)
+@item Southern Sotho (st)
 @item Tok Pisin (tpi)
+@item Venda (ve)
 @end itemize
 
 @noindent

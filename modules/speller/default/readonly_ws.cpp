@@ -851,7 +851,7 @@ namespace {
             return make_err(invalid_word, MsgConv(lang)(w),
                             _("The total word length, with soundslike data, is larger than 240 characters."));
 
-          WordData * b = (WordData *)buf.alloc(total_size);
+          WordData * b = (WordData *)buf.alloc(total_size, sizeof(void *));
           *prev = b;
           b->next = 0;
           prev = &b->next;
