@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60-pre1\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-12-03 23:52-0700\n"
+"POT-Creation-Date: 2004-12-18 20:45-0700\n"
 "PO-Revision-Date: 2004-11-06 18:26-0700\n"
 "Last-Translator: Sanlig Badral <badral@users.sourceforge.net>\n"
 "Language-Team: Mongolian <openmn-translation@lists.sourceforge.net>\n"
@@ -1146,32 +1146,32 @@ msgstr "Энэ бол магад: "
 msgid "The required field \"name\" is missing."
 msgstr "Шаардлагатай талбар \"name\" дутуу байна."
 
-#: modules/speller/default/language.cpp:464
+#: modules/speller/default/language.cpp:475
 msgid "Empty string."
 msgstr "Хоосон стринг."
 
-#: modules/speller/default/language.cpp:468
+#: modules/speller/default/language.cpp:479
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear at the beginning of a word."
 msgstr "'%s' (U+%02X) тэмдэгт үгийн эхэнд байж болохгүй."
 
-#: modules/speller/default/language.cpp:470
-#: modules/speller/default/language.cpp:479
+#: modules/speller/default/language.cpp:481
+#: modules/speller/default/language.cpp:490
 #, c-format
 msgid ""
 "The character '%s' (U+%02X) must be followed by an alphabetic character."
 msgstr "'%s' (U+%02X) тэмдэгт өмнөө заавал нэг үсэг авна."
 
-#: modules/speller/default/language.cpp:472
+#: modules/speller/default/language.cpp:483
 msgid "Does not contain any alphabetic characters."
 msgstr "Ямар нэг цагаан толгойн үсэг агуулаагүй."
 
-#: modules/speller/default/language.cpp:477
+#: modules/speller/default/language.cpp:488
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear in the middle of a word."
 msgstr "'%s' тэмдэгт (U+%02X) үгийн дунд байх ёсгүй."
 
-#: modules/speller/default/language.cpp:484
+#: modules/speller/default/language.cpp:495
 msgid ""
 "The character '\\r' (U+0D) may not appear at the end of a word. This "
 "probably means means that the file is using MS-DOS EOL instead of Unix EOL."
@@ -1179,31 +1179,31 @@ msgstr ""
 "'\\r' (U+0D) тэмдэгт үгийн төгсгөлтд байх ёсгүй. Магад энэ файл Юникс EOL -н "
 "оронд MS-DOS EOLхэрэглэж байна."
 
-#: modules/speller/default/language.cpp:487
+#: modules/speller/default/language.cpp:498
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear at the end of a word."
 msgstr "'%s' тэмдэгт (U+%02X) үгийн төгсгөлд байх ёсгүй."
 
-#: modules/speller/default/language.cpp:519
+#: modules/speller/default/language.cpp:530
 #, c-format
 msgid "Warning: Removing invalid affix '%s' from word %s.\n"
 msgstr "Сануулга: '%s' хүчингүй аффиксыг %s үгээс устгаж байна.\n"
 
-#: modules/speller/default/language.cpp:520
+#: modules/speller/default/language.cpp:531
 #, c-format
 msgid "Warning: Removing inapplicable affix '%s' from word %s.\n"
 msgstr "Сануулга: '%s' хэрэггүй аффиксыг %s үгээс устгаж байна.\n"
 
-#: modules/speller/default/language.cpp:650
+#: modules/speller/default/language.cpp:661
 #, c-format
 msgid "Warning: %s Skipping string.\n"
 msgstr "Сануулга: %s стринг алгасав.\n"
 
-#: modules/speller/default/language.cpp:708
+#: modules/speller/default/language.cpp:719
 msgid "The total length is larger than 240 characters."
 msgstr "Нийт урт 240 тэмдэгтээс хэтэрлээ."
 
-#: modules/speller/default/language.cpp:712
+#: modules/speller/default/language.cpp:723
 #, c-format
 msgid "Warning: %s Skipping word.\n"
 msgstr "Сануулга: %s үгийг алгасав.\n"

@@ -1,3 +1,4 @@
+# Translation of aspell-0.60.2-b20041203.po to Russian
 # Translation of aspell-0.60.1-b20041026.po to Russian
 # Copyright (C) 2004 Free Software Foundation, Inc.
 # This file is distributed under the same license as the aspell package.
@@ -6,10 +7,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: aspell-0.60.1-b20041026\n"
+"Project-Id-Version: aspell-0.60.2-b20041203\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-12-03 23:52-0700\n"
-"PO-Revision-Date: 2004-11-06 18:37-0700\n"
+"POT-Creation-Date: 2004-12-18 20:45-0700\n"
+"PO-Revision-Date: 2004-12-06 13:16+0200\n"
 "Last-Translator: Pavel Maryanov <acid_jack@ukr.net>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -725,9 +726,9 @@ msgid "Unknown Action: %s"
 msgstr "Неизвестное действие: %s"
 
 #: prog/aspell.cpp:387
-#, fuzzy, c-format
+#, c-format
 msgid "Error: You must specify at least %d parameters for \"%s\".\n"
-msgstr "Вы должны указать параметр для %s"
+msgstr "Ошибка: Вы должны указать как минимум %d параметров для \"%s\".\n"
 
 #: prog/aspell.cpp:629
 msgid "Invalid Input"
@@ -840,7 +841,7 @@ msgstr "Извините, \"create/merge repl\" на данный момент не релизован.\n"
 #: prog/aspell.cpp:1851
 #, c-format
 msgid "\"%s\" is not a valid flag for the \"munch-list\" command."
-msgstr ""
+msgstr "\"%s\" - это неверный флаг для команды \"munch-list\"."
 
 #. TRANSLATORS: These should all be formated to fit in 80 column or
 #. less
@@ -920,11 +921,11 @@ msgstr "  -v|version       вывод номера версии"
 
 #: prog/aspell.cpp:2802
 msgid "  munch-list [simple] [single|multi] [keep]\n"
-msgstr ""
+msgstr "  munch-list [simple] [single|multi] [keep]\n"
 
 #: prog/aspell.cpp:2803
 msgid "    reduce the size of a word list via affix compression"
-msgstr ""
+msgstr "    уменьшение размера списка слов посредством сжатия аффикса"
 
 #: prog/aspell.cpp:2804
 msgid "  conv <from> <to> [<norm-form>]"
@@ -943,16 +944,14 @@ msgid "    perform Unicode normalization"
 msgstr "    выполнение нормализации Юникода"
 
 #: prog/aspell.cpp:2810
-#, fuzzy
 msgid "  dump|create|merge master|personal|repl [<name>]"
-msgstr "  dump|create|merge master|personal|repl [список слов]"
+msgstr "  dump|create|merge master|personal|repl [<имя>]"
 
 #: prog/aspell.cpp:2811
-#, fuzzy
 msgid ""
 "    dumps, creates or merges a master, personal, or replacement dictionary."
 msgstr ""
-"    дамп, создание или объединение списка слов: главный, личный или замены."
+"    дамп, создание или объединение словаря: главного, личного или замены."
 
 #. TRANSLATORS: "none", "internal" and "strict" are literal values
 #. and should not be translated.
@@ -1142,32 +1141,32 @@ msgstr "Это возможно вследствие: "
 msgid "The required field \"name\" is missing."
 msgstr "Отсутствует требуемое поле \"name\"."
 
-#: modules/speller/default/language.cpp:464
+#: modules/speller/default/language.cpp:475
 msgid "Empty string."
 msgstr "Пустая строка."
 
-#: modules/speller/default/language.cpp:468
+#: modules/speller/default/language.cpp:479
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear at the beginning of a word."
 msgstr "Символ '%s' (U+%02X) не может появляться в начале слова."
 
-#: modules/speller/default/language.cpp:470
-#: modules/speller/default/language.cpp:479
+#: modules/speller/default/language.cpp:481
+#: modules/speller/default/language.cpp:490
 #, c-format
 msgid ""
 "The character '%s' (U+%02X) must be followed by an alphabetic character."
 msgstr "После символа '%s' (U+%02X) должен следовать буквенный символ."
 
-#: modules/speller/default/language.cpp:472
+#: modules/speller/default/language.cpp:483
 msgid "Does not contain any alphabetic characters."
 msgstr "Не содержит никаких буквенных символов."
 
-#: modules/speller/default/language.cpp:477
+#: modules/speller/default/language.cpp:488
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear in the middle of a word."
 msgstr "Символ '%s' (U+%02X) не может появляться в середине слова."
 
-#: modules/speller/default/language.cpp:484
+#: modules/speller/default/language.cpp:495
 msgid ""
 "The character '\\r' (U+0D) may not appear at the end of a word. This "
 "probably means means that the file is using MS-DOS EOL instead of Unix EOL."
@@ -1175,31 +1174,31 @@ msgstr ""
 "Символ '\\r' (U+0D) не может появляться в конце слова. Возможно, это "
 "означает, что в файле используется символ конца файла MS-DOS, а не Unix."
 
-#: modules/speller/default/language.cpp:487
+#: modules/speller/default/language.cpp:498
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear at the end of a word."
 msgstr "Символ '%s' (U+%02X) не может появляться в конце слова."
 
-#: modules/speller/default/language.cpp:519
+#: modules/speller/default/language.cpp:530
 #, c-format
 msgid "Warning: Removing invalid affix '%s' from word %s.\n"
 msgstr "Предупреждение: Удаляется неверный аффикс '%s' из слова %s.\n"
 
-#: modules/speller/default/language.cpp:520
+#: modules/speller/default/language.cpp:531
 #, c-format
 msgid "Warning: Removing inapplicable affix '%s' from word %s.\n"
 msgstr "Предупреждение: Удаляется неподходящий аффикс '%s' из слова %s.\n"
 
-#: modules/speller/default/language.cpp:650
+#: modules/speller/default/language.cpp:661
 #, c-format
 msgid "Warning: %s Skipping string.\n"
 msgstr "Предупреждение: %s Пропускается строка.\n"
 
-#: modules/speller/default/language.cpp:708
+#: modules/speller/default/language.cpp:719
 msgid "The total length is larger than 240 characters."
 msgstr "Общая длина превышает 240 символов."
 
-#: modules/speller/default/language.cpp:712
+#: modules/speller/default/language.cpp:723
 #, c-format
 msgid "Warning: %s Skipping word.\n"
 msgstr "Предупреждение: %s Пропускается слово.\n"
@@ -1231,11 +1230,11 @@ msgstr "Общая длина слов с данными soundslike превышает 240 символов."
 
 #: modules/speller/default/suggest.cpp:1393
 msgid "one of ultra, fast, normal, slow, or bad-spellers"
-msgstr ""
+msgstr "один из: ultra, fast, normal, slow или bad-spellers"
 
 #: modules/speller/default/data.cpp:402
 msgid "is not one of the allowed types"
-msgstr ""
+msgstr "не из списка разрешённых типов"
 
 #: modules/filter/tex.cpp:251 modules/filter/tex.cpp:258
 msgid "a string of 'o','O','p',or 'P'"
@@ -1313,13 +1312,12 @@ msgid "filter for dealing with Texinfo documents"
 msgstr "фильтр для работы с документами Texinfo"
 
 #: modules/filter/texinfo-filter.info:13
-#, fuzzy
 msgid "Texinfo commands to ignore the parameters of"
-msgstr "игнорирование команд для сохранения заменяемых пар"
+msgstr "Игнорируемые команды Texinfo для параметров"
 
 #: modules/filter/texinfo-filter.info:41
 msgid "Texinfo environments to ignore"
-msgstr ""
+msgstr "Игнорируемые переменные окружения Texinfo"
 
 #: modules/filter/url-filter.info:7
 msgid "filter to skip URL like constructs"

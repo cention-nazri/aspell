@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60-b20040608\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-12-03 23:52-0700\n"
+"POT-Creation-Date: 2004-12-18 20:45-0700\n"
 "PO-Revision-Date: 2004-06-17 12:00-0500\n"
 "Last-Translator: Laurentiu Buzdugan <lbuz@rolix.org>\n"
 "Language-Team: Romanian <translation-team-ro@lists.sourceforge.net>\n"
@@ -1128,32 +1128,32 @@ msgstr "Aceasta probabil deoarece: "
 msgid "The required field \"name\" is missing."
 msgstr "Câmpul necesar \"name\" lipseºte."
 
-#: modules/speller/default/language.cpp:464
+#: modules/speller/default/language.cpp:475
 msgid "Empty string."
 msgstr "ªir de caractere gol."
 
-#: modules/speller/default/language.cpp:468
+#: modules/speller/default/language.cpp:479
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear at the beginning of a word."
 msgstr "Caracterul '%s' (U+%02X) nu poate apare la începutul unui cuvânt."
 
-#: modules/speller/default/language.cpp:470
-#: modules/speller/default/language.cpp:479
+#: modules/speller/default/language.cpp:481
+#: modules/speller/default/language.cpp:490
 #, c-format
 msgid ""
 "The character '%s' (U+%02X) must be followed by an alphabetic character."
 msgstr "Caracterul '%s' (U+%02X) trebuie urmat de o literã din alfabet."
 
-#: modules/speller/default/language.cpp:472
+#: modules/speller/default/language.cpp:483
 msgid "Does not contain any alphabetic characters."
 msgstr "Nu conþine nici o literã din alfabet"
 
-#: modules/speller/default/language.cpp:477
+#: modules/speller/default/language.cpp:488
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear in the middle of a word."
 msgstr "Caracterul '%s' (U+%02X) nu poate apare la mijlocul unui cuvânt."
 
-#: modules/speller/default/language.cpp:484
+#: modules/speller/default/language.cpp:495
 #, fuzzy
 msgid ""
 "The character '\\r' (U+0D) may not appear at the end of a word. This "
@@ -1163,31 +1163,31 @@ msgstr ""
 "înseamnã probabil cã fiºierul foloseºte EOL din MS-DOS în loc de EOL din "
 "Unix. "
 
-#: modules/speller/default/language.cpp:487
+#: modules/speller/default/language.cpp:498
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear at the end of a word."
 msgstr "Caracterul '%s' (U+%02X) nu poate apare la sfârºitul unui cuvânt."
 
-#: modules/speller/default/language.cpp:519
+#: modules/speller/default/language.cpp:530
 #, c-format
 msgid "Warning: Removing invalid affix '%s' from word %s.\n"
 msgstr "Avertisment: Îndepãrtez affix-ul incorect '%s' din cuvântul %s.\n"
 
-#: modules/speller/default/language.cpp:520
+#: modules/speller/default/language.cpp:531
 #, c-format
 msgid "Warning: Removing inapplicable affix '%s' from word %s.\n"
 msgstr "Avertisment: Îndepãrtez affix-ul incorect '%s' din cuvântul %s.\n"
 
-#: modules/speller/default/language.cpp:650
+#: modules/speller/default/language.cpp:661
 #, c-format
 msgid "Warning: %s Skipping string.\n"
 msgstr "Avertisment: %s Sãr peste ºir.\n"
 
-#: modules/speller/default/language.cpp:708
+#: modules/speller/default/language.cpp:719
 msgid "The total length is larger than 240 characters."
 msgstr "Lungimea totalã e mai mare de 240 caractere."
 
-#: modules/speller/default/language.cpp:712
+#: modules/speller/default/language.cpp:723
 #, c-format
 msgid "Warning: %s Skipping word.\n"
 msgstr "Avertisment: %s sare cuvânt.\n"

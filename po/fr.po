@@ -8,10 +8,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: aspell 0.60.1\n"
+"Project-Id-Version: aspell 0.60.2-b20041203\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-12-03 23:52-0700\n"
-"PO-Revision-Date: 2004-11-10 22:13+0200\n"
+"POT-Creation-Date: 2004-12-18 20:45-0700\n"
+"PO-Revision-Date: 2004-12-06 14:44+0200\n"
 "Last-Translator: Thierry Thomas <thierry@pompo.net>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -863,7 +863,7 @@ msgstr ""
 #: prog/aspell.cpp:1851
 #, c-format
 msgid "\"%s\" is not a valid flag for the \"munch-list\" command."
-msgstr ""
+msgstr "« %s » n'est pas valide pour la commande « munch-list »."
 
 #. TRANSLATORS: These should all be formated to fit in 80 column or
 #. less
@@ -944,11 +944,11 @@ msgstr "  -v|version       affiche la version"
 
 #: prog/aspell.cpp:2802
 msgid "  munch-list [simple] [single|multi] [keep]\n"
-msgstr ""
+msgstr "  munch-list [simple] [single|multi] [keep]\n"
 
 #: prog/aspell.cpp:2803
 msgid "    reduce the size of a word list via affix compression"
-msgstr ""
+msgstr "    réduit la taille d'une liste de mots par compression des affixes"
 
 #: prog/aspell.cpp:2804
 msgid "  conv <from> <to> [<norm-form>]"
@@ -967,12 +967,10 @@ msgid "    perform Unicode normalization"
 msgstr "    effectuer la normalisation Unicode"
 
 #: prog/aspell.cpp:2810
-#, fuzzy
 msgid "  dump|create|merge master|personal|repl [<name>]"
-msgstr "  dump|create|merge master|personal|repl [liste de mots]"
+msgstr "  dump|create|merge master|personal|repl [<nom>]"
 
 #: prog/aspell.cpp:2811
-#, fuzzy
 msgid ""
 "    dumps, creates or merges a master, personal, or replacement dictionary."
 msgstr ""
@@ -1170,33 +1168,33 @@ msgstr "Cela est la cause probable : "
 msgid "The required field \"name\" is missing."
 msgstr "Le champ requis \"name\" est manquant."
 
-#: modules/speller/default/language.cpp:464
+#: modules/speller/default/language.cpp:475
 msgid "Empty string."
 msgstr "Chaîne vide."
 
-#: modules/speller/default/language.cpp:468
+#: modules/speller/default/language.cpp:479
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear at the beginning of a word."
 msgstr "Le caractère '%s' (U+%02X) ne peut pas apparaître au début d'un mot."
 
-#: modules/speller/default/language.cpp:470
-#: modules/speller/default/language.cpp:479
+#: modules/speller/default/language.cpp:481
+#: modules/speller/default/language.cpp:490
 #, c-format
 msgid ""
 "The character '%s' (U+%02X) must be followed by an alphabetic character."
 msgstr ""
 "Le caractère '%s' (U+%02X) doit être suivi d'un caractère alphabétique."
 
-#: modules/speller/default/language.cpp:472
+#: modules/speller/default/language.cpp:483
 msgid "Does not contain any alphabetic characters."
 msgstr "Ne contient aucun caractère alphabétique."
 
-#: modules/speller/default/language.cpp:477
+#: modules/speller/default/language.cpp:488
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear in the middle of a word."
 msgstr "Le caractère '%s' (U+%02X) ne peut pas apparaître au milieu d'un mot."
 
-#: modules/speller/default/language.cpp:484
+#: modules/speller/default/language.cpp:495
 msgid ""
 "The character '\\r' (U+0D) may not appear at the end of a word. This "
 "probably means means that the file is using MS-DOS EOL instead of Unix EOL."
@@ -1205,31 +1203,31 @@ msgstr ""
 "signifie probablement que le fichier utilise des fins de ligne MS-DOS au "
 "lieu d'Unix."
 
-#: modules/speller/default/language.cpp:487
+#: modules/speller/default/language.cpp:498
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear at the end of a word."
 msgstr "Le caractère '%s' (U+%02X) ne peut pas apparaître à la fin d'un mot."
 
-#: modules/speller/default/language.cpp:519
+#: modules/speller/default/language.cpp:530
 #, c-format
 msgid "Warning: Removing invalid affix '%s' from word %s.\n"
 msgstr "Attention : suppression de l'affixe invalide « %s » du mot %s.\n"
 
-#: modules/speller/default/language.cpp:520
+#: modules/speller/default/language.cpp:531
 #, c-format
 msgid "Warning: Removing inapplicable affix '%s' from word %s.\n"
 msgstr "Attention : suppression de l'affixe non-applicable « %s » du mot %s.\n"
 
-#: modules/speller/default/language.cpp:650
+#: modules/speller/default/language.cpp:661
 #, c-format
 msgid "Warning: %s Skipping string.\n"
 msgstr "Attention : %s chaîne ignorée.\n"
 
-#: modules/speller/default/language.cpp:708
+#: modules/speller/default/language.cpp:719
 msgid "The total length is larger than 240 characters."
 msgstr "La longueur totale dépasse 240 caractères."
 
-#: modules/speller/default/language.cpp:712
+#: modules/speller/default/language.cpp:723
 #, c-format
 msgid "Warning: %s Skipping word.\n"
 msgstr "Attention : %s mot ignoré.\n"
@@ -1262,11 +1260,11 @@ msgstr "La longueur totale du mot, phonèmes inclus, dépasse 240 caractères."
 
 #: modules/speller/default/suggest.cpp:1393
 msgid "one of ultra, fast, normal, slow, or bad-spellers"
-msgstr ""
+msgstr "un parmi ultra, fast, normal, slow, ou bad-spellers"
 
 #: modules/speller/default/data.cpp:402
 msgid "is not one of the allowed types"
-msgstr ""
+msgstr "n'est pas un des types autorisés"
 
 #: modules/filter/tex.cpp:251 modules/filter/tex.cpp:258
 msgid "a string of 'o','O','p',or 'P'"

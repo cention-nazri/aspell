@@ -5,10 +5,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: aspell 0.60\n"
+"Project-Id-Version: aspell 0.60.2-b20041203\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-12-03 23:52-0700\n"
-"PO-Revision-Date: 2004-11-06 18:33-0700\n"
+"POT-Creation-Date: 2004-12-18 20:45-0700\n"
+"PO-Revision-Date: 2004-12-06 23:27+0100\n"
 "Last-Translator: Roland Illig <roland.illig@gmx.de>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -699,7 +699,7 @@ msgstr "In TeX-Modus wechseln."
 
 #: prog/aspell.cpp:206
 msgid "enter Nroff mode."
-msgstr "In Nroff-Modus wechseln."
+msgstr "In nroff-Modus wechseln."
 
 #: prog/aspell.cpp:304
 #, c-format
@@ -713,7 +713,7 @@ msgstr " hat keine Parameter."
 #: prog/aspell.cpp:324 prog/aspell.cpp:384
 #, c-format
 msgid "You must specify a parameter for \"%s\"."
-msgstr "Sie müssen einen Parameter für »%s« angeben."
+msgstr "Sie müssen einen Parameter für »%s« angeben"
 
 #: prog/aspell.cpp:373
 msgid "You must specify an action"
@@ -725,9 +725,9 @@ msgid "Unknown Action: %s"
 msgstr "Unbekannte Aktion: %s"
 
 #: prog/aspell.cpp:387
-#, fuzzy, c-format
+#, c-format
 msgid "Error: You must specify at least %d parameters for \"%s\".\n"
-msgstr "Sie müssen einen Parameter für %s angeben"
+msgstr "Fehler: Sie müssen mindestens %d Parameter für »%s« angeben.\n"
 
 #: prog/aspell.cpp:629
 msgid "Invalid Input"
@@ -736,7 +736,7 @@ msgstr "Ungültige Eingabe"
 #: prog/aspell.cpp:704
 #, c-format
 msgid "WARNING: Unable to enter Nroff mode: %s\n"
-msgstr ""
+msgstr "WARNUNG: Kann nicht in den nroff-Modus umschalten: %s\n"
 
 #: prog/aspell.cpp:725
 msgid "Time to load word list: "
@@ -843,7 +843,7 @@ msgstr ""
 #: prog/aspell.cpp:1851
 #, c-format
 msgid "\"%s\" is not a valid flag for the \"munch-list\" command."
-msgstr ""
+msgstr "»%s« ist keine gültige Option für den »munch-list«-Befehl."
 
 #. TRANSLATORS: These should all be formated to fit in 80 column or
 #. less
@@ -926,11 +926,11 @@ msgstr "  -v|version       Gibt eine Zeile mit Versionsinformationen aus"
 
 #: prog/aspell.cpp:2802
 msgid "  munch-list [simple] [single|multi] [keep]\n"
-msgstr ""
+msgstr "  munch-list [simple] [single|multi] [keep]\n"
 
 #: prog/aspell.cpp:2803
 msgid "    reduce the size of a word list via affix compression"
-msgstr ""
+msgstr "    Größe einer Wortliste mit Suffixkompression reduzieren"
 
 #: prog/aspell.cpp:2804
 msgid "  conv <from> <to> [<norm-form>]"
@@ -949,12 +949,10 @@ msgid "    perform Unicode normalization"
 msgstr "     Unicodenormalisierung aktivieren"
 
 #: prog/aspell.cpp:2810
-#, fuzzy
 msgid "  dump|create|merge master|personal|repl [<name>]"
-msgstr "  dump|create|merge master|personal|repl [Wortliste]"
+msgstr "  dump|create|merge master|personal|repl [<Wortliste>]"
 
 #: prog/aspell.cpp:2811
-#, fuzzy
 msgid ""
 "    dumps, creates or merges a master, personal, or replacement dictionary."
 msgstr ""
@@ -1150,32 +1148,32 @@ msgstr "Der Grund ist wahrscheinlich: "
 msgid "The required field \"name\" is missing."
 msgstr "Das benötigte Feld »name« fehlt."
 
-#: modules/speller/default/language.cpp:464
+#: modules/speller/default/language.cpp:475
 msgid "Empty string."
 msgstr "Leerer String."
 
-#: modules/speller/default/language.cpp:468
+#: modules/speller/default/language.cpp:479
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear at the beginning of a word."
 msgstr "Das Zeichen »%s« (U+%02X) darf nicht am Anfang eines Wortes stehen."
 
-#: modules/speller/default/language.cpp:470
-#: modules/speller/default/language.cpp:479
+#: modules/speller/default/language.cpp:481
+#: modules/speller/default/language.cpp:490
 #, c-format
 msgid ""
 "The character '%s' (U+%02X) must be followed by an alphabetic character."
 msgstr "Nach dem Zeichen »%s« (U+%02X) muss ein alphabetisches Zeichen folgen."
 
-#: modules/speller/default/language.cpp:472
+#: modules/speller/default/language.cpp:483
 msgid "Does not contain any alphabetic characters."
 msgstr "Enthält keine Buchstaben."
 
-#: modules/speller/default/language.cpp:477
+#: modules/speller/default/language.cpp:488
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear in the middle of a word."
 msgstr "Das Zeichen »%s« (U+%02X) darf nicht in der Mitte eines Wortes stehen."
 
-#: modules/speller/default/language.cpp:484
+#: modules/speller/default/language.cpp:495
 msgid ""
 "The character '\\r' (U+0D) may not appear at the end of a word. This "
 "probably means means that the file is using MS-DOS EOL instead of Unix EOL."
@@ -1184,31 +1182,31 @@ msgstr ""
 "könnte daran liegen, dass die Datei den MS-DOS-Zeilenumbruch anstelle des "
 "UNIX-Zeilenumbruchs benutzt. "
 
-#: modules/speller/default/language.cpp:487
+#: modules/speller/default/language.cpp:498
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear at the end of a word."
 msgstr "Das Zeichen »%s« (U+%02X) darf nicht am Ende eines Wortes stehen."
 
-#: modules/speller/default/language.cpp:519
+#: modules/speller/default/language.cpp:530
 #, c-format
 msgid "Warning: Removing invalid affix '%s' from word %s.\n"
 msgstr "Warnung: Entferne ungültige Endung »%s« vom Wort »%s«.\n"
 
-#: modules/speller/default/language.cpp:520
+#: modules/speller/default/language.cpp:531
 #, c-format
 msgid "Warning: Removing inapplicable affix '%s' from word %s.\n"
 msgstr "Warnung: Entferne nicht anwendbare Endung »%s« vom Wort »%s«.\n"
 
-#: modules/speller/default/language.cpp:650
+#: modules/speller/default/language.cpp:661
 #, c-format
 msgid "Warning: %s Skipping string.\n"
 msgstr "Warnung: »%s«: Überspringe Zeichenkette.\n"
 
-#: modules/speller/default/language.cpp:708
+#: modules/speller/default/language.cpp:719
 msgid "The total length is larger than 240 characters."
 msgstr "Das Wort ist insgesamt länger als 240 Zeichen."
 
-#: modules/speller/default/language.cpp:712
+#: modules/speller/default/language.cpp:723
 #, c-format
 msgid "Warning: %s Skipping word.\n"
 msgstr "Warnung: »%s«: Überspringe Wort.\n"
@@ -1243,10 +1241,11 @@ msgstr ""
 #: modules/speller/default/suggest.cpp:1393
 msgid "one of ultra, fast, normal, slow, or bad-spellers"
 msgstr ""
+"eins von »ultra«, »fast«, »normal«, »slow« (langsam), oder »bad-spellers«"
 
 #: modules/speller/default/data.cpp:402
 msgid "is not one of the allowed types"
-msgstr ""
+msgstr "ist von keinem der erlaubten Typen"
 
 #: modules/filter/tex.cpp:251 modules/filter/tex.cpp:258
 msgid "a string of 'o','O','p',or 'P'"
@@ -1293,7 +1292,7 @@ msgstr "HTML-Tags, deren Inhalt immer übersprungen wird"
 
 #: modules/filter/nroff-filter.info:7
 msgid "filter for dealing with Nroff documents"
-msgstr "Filter, um Nroff-Dokumente zu behandeln"
+msgstr "Filter, um nroff-Dokumente zu behandeln"
 
 #: modules/filter/sgml-filter.info:9
 msgid "filter for dealing with generic SGML/XML documents"
@@ -1324,13 +1323,12 @@ msgid "filter for dealing with Texinfo documents"
 msgstr "Filter, um Texinfo-Dokumente zu behandeln"
 
 #: modules/filter/texinfo-filter.info:13
-#, fuzzy
 msgid "Texinfo commands to ignore the parameters of"
-msgstr "ignoriere Kommandos, Ersetzungspaare zu speichern"
+msgstr "Texinfo-Befehle, deren Parameter ignoriert werden"
 
 #: modules/filter/texinfo-filter.info:41
 msgid "Texinfo environments to ignore"
-msgstr ""
+msgstr "zu ignorierende Texinfo-Umgebung"
 
 #: modules/filter/url-filter.info:7
 msgid "filter to skip URL like constructs"
@@ -1358,7 +1356,7 @@ msgstr "Modus, um alle Filter zu deaktivieren"
 
 #: modules/filter/modes/nroff.amf:7
 msgid "mode for checking Nroff documents"
-msgstr "Modus, um Nroff-Dokumente zu überprüfen"
+msgstr "Modus, um nroff-Dokumente zu überprüfen"
 
 #: modules/filter/modes/perl.amf:8
 msgid "mode for checking Perl comments and string literals"
