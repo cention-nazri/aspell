@@ -4,8 +4,8 @@
 // license along with this library if you did not you can find
 // it at http://www.gnu.org/.
 
-#include <stdio.h>
-#define DEBUG {fprintf(stderr,"File: %s(%i)\n",__FILE__,__LINE__);}
+//#include <stdio.h>
+//#define DEBUG {fprintf(stderr,"File: %s(%i)\n",__FILE__,__LINE__);}
 #include <string.h>
 #include <stdlib.h>
 #include <assert.h>
