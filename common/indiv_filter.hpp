@@ -9,6 +9,7 @@
 
 #include "string.hpp"
 #include "posib_err.hpp"
+#include "filter_char.hpp"
 
 namespace acommon {
 
@@ -40,7 +41,7 @@ namespace acommon {
     // in the document.  Passing in stings out of order, skipping
     // strings or passing them in more than once may lead to undefined
     // results.
-    virtual void process(char *, unsigned int size) = 0;
+    virtual void process(FilterChar * start, FilterChar * stop) = 0;
 
     virtual ~IndividualFilter() {}
 

@@ -49,13 +49,13 @@ namespace acommon {
     InWhat in_what;
     ClonePtr<StringMap> noskip_tags;
 
-    inline bool process_char(char c);
+    inline bool process_char(FilterChar::Chr c);
 
   public:
 
     PosibErr<void> setup(Config *);
     void reset();
-    void process(char *, unsigned int size);
+    void process(FilterChar *, FilterChar *);
   };
 
   PosibErr<void> SgmlFilter::setup(Config * opts) 
@@ -78,7 +78,7 @@ namespace acommon {
   }
 
   // yes this should be inlines, it is only called once
-  inline bool SgmlFilter::process_char(char c) {
+  inline bool SgmlFilter::process_char(FilterChar::Chr c) {
     if (!in_quote)
       if (c == '<') {
 	in_markup = true;
@@ -139,14 +139,12 @@ namespace acommon {
     return in_what != InValueNoSkip;
   }
 
-  void SgmlFilter::process(char * str, unsigned int size)
+  void SgmlFilter::process(FilterChar * cur, FilterChar * stop)
   {
-    char * i = str;
-    char * stop = str + size;
-    while (i != stop) {
-      if (process_char(*i))
-	*i = ' ';
-      ++i;
+    while (cur != stop) {
+      if (process_char(*cur))
+	*cur = ' ';
+      ++cur;
     }
   }
 

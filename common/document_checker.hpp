@@ -11,12 +11,14 @@
 #include "char_vector.hpp"
 #include "copy_ptr.hpp"
 #include "can_have_error.hpp"
+#include "filter_char.hpp"
 
 namespace acommon {
 
   class Config;
   class Speller;
   class Tokenizer;
+  class Convert;
 
   struct Token {
     unsigned int offset;
@@ -49,7 +51,8 @@ namespace acommon {
     void (* status_fun_)(void *, Token, int);
     void * status_fun_data_;
     Speller * speller_;
-    CharVector proc_str_;
+    Convert * conv_;
+    Vector<FilterChar> proc_str_;
   };
 
   PosibErr<DocumentChecker *> new_document_checker(Speller *, Config *, Filter *);

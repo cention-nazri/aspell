@@ -762,10 +762,10 @@ INIT {
 	      $accum->{headers}{'mutable string'} = true;
 	      $accum->{headers}{'convert'} = true;
 	      $ret .= "  ths->temp_str_$snum.clear();\n";
-	      $ret .= "  ths->from_encoded_->convert($n, ${n}_size, ths->temp_str_$snum);\n";
+	      $ret .= "  ths->to_internal_->convert($n, ${n}_size, ths->temp_str_$snum);\n";
 	      $ret .= "  ths->temp_str_$snum.append('\\0');\n";
 	      $ret .= "  unsigned int s$snum = ths->temp_str_$snum.size();\n";
-	      $ret .= "  ths->from_encoded_->append_null(ths->temp_str_$snum);\n";
+	      $ret .= "  ths->to_internal_->append_null(ths->temp_str_$snum);\n";
 	      $_ = "MutableString(ths->temp_str_$snum.data(), s$snum)";
 	      $snum++;
 	    } else {
@@ -795,6 +795,10 @@ INIT {
 	    $ret .= "  if (to_encoded_ != 0) (*to_encoded)($exp,temp_str_);\n";
 	    $ret .= "  else                  temp_str_ = $exp;\n";
 	    $exp = "temp_str_0.data()";
+	  }
+	  if ($ret_type->{type} eq 'const word list') {
+	    $accum->{headers}{'word list'} = true;
+	    $ret .= "  const_cast<WordList *>(ret.data)->from_internal_ = ths->from_internal_;\n";
 	  }
 	  $ret .= "  ";
 	  $ret .= "return " unless $ret_type->{type} eq 'void';

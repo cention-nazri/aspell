@@ -43,7 +43,7 @@ namespace acommon {
   public:
     PosibErr<void> setup(Config *);
     void reset();
-    void process(char *, unsigned int size);
+    void process(FilterChar *, FilterChar *);
   };
 
   PosibErr<void> EmailFilter::setup(Config * opts) 
@@ -63,10 +63,9 @@ namespace acommon {
     n = 0;
   }
 
-  void EmailFilter::process(char * str, unsigned int size)
+  void EmailFilter::process(FilterChar * str, FilterChar * end)
   {
-    char * end = str + size;
-    char * line_begin = str;
+    FilterChar * line_begin = str;
     while (str < end) {
       if (prev_newline && is_quote_char.have(*str))
 	in_quote = true;

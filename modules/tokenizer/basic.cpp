@@ -17,60 +17,53 @@ namespace acommon {
     bool advance();
   };
 
-#define increment__ \
-  do { \
-    prev = cur; \
-    cur = next; \
-    res = to_encoded_->convert_next_char(next,word); /* advances next */\
-    if (!res) word.append('\0'); /* to avoid special cases at the end */\
-    ++p; \
-  } while (false)
-
   bool TokenizerBasic::advance() {
-    begin = end;
-    bool res;
-    const char * prev = begin;
-    const char * cur;
-    const char * next;
-    int p = 0;
+    word_begin = word_end;
+    begin_pos = end_pos;
+    FilterChar * cur = word_begin;
+    unsigned int cur_pos = begin_pos;
     word.clear();
 
-    // get the first 2 characters 
-    cur = prev;
-    res = to_encoded_->convert_next_char(cur,word);
-    if (!res) return false;
-    next = cur;
-    res = to_encoded_->convert_next_char(next,word);
-    if (!res) word.append('\0');
-
     // skip spaces (non-word characters)
-    while (word[p] != '\0' &&
-	   !(is_word(word[p])
-	     || (is_begin(word[p]) && is_word(word[p+1]))))
-      increment__;
+    while (*cur != 0 &&
+	   !(is_word(*cur)
+	     || (is_begin(*cur) && is_word(cur[1])))) 
+    {
+      cur_pos += cur->width;
+      ++cur;
+    }
 
-    // remove the trailing space from the word
-    p = 0;
-    begin = end = prev;
-    word.erase(word.begin(), word.end() - 2);
+    if (*cur == 0) return false;
 
-    if (word[0] == '\0') return false;
+    word_begin = cur;
+    begin_pos = cur_pos;
 
-    if (is_begin(word[p]) && is_word(word[p+1]))
-      increment__;
+    if (is_begin(*cur) && is_word(cur[1]))
+    {
+      cur_pos += cur->width;
+      ++cur;
+    }
 
-    while (is_word(word[p]) || 
-	   (is_middle(word[p]) && 
-	    p > 0 && is_word(word[p-1]) &&
-	    is_word(word[p+1]) )) 
-      increment__;
+    while (is_word(*cur) || 
+	   (is_middle(*cur) && 
+	    cur > word_begin && is_word(cur[-1]) &&
+	    is_word(cur[1]) )) 
+    {
+      word.append(*cur);
+      cur_pos += cur->width;
+      ++cur;
+    }
 
-    if (is_end(word[p]))
-      increment__;
+    if (is_end(*cur))
+    {
+      word.append(*cur);
+      cur_pos += cur->width;
+      ++cur;
+    }
 
-    word.resize(word.size() - 2); 
     word.append('\0');
-    end = prev;
+    word_end = cur;
+    end_pos = cur_pos;
 
     return true;
   }

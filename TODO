@@ -1,11 +1,2 @@
-Modify mk-src.pl aor mk-src.in to deal with the new convert classes
-Making sure to add the null charater at the end when necessary
 
-Make final changes to add support for converting words
 
-Add tokenizer.
-
-Add basic filter support.
-
-Add ability to spell check documents where the input is given one
-chunk at a time.

@@ -29,8 +29,8 @@ namespace acommon {
     virtual StringEnumeration * clone() const = 0;
     virtual void assign(const StringEnumeration * other) = 0;
     CharVector temp_str;
-    Convert * to_encoded_;
-    StringEnumeration() : ref_count_(0), copyable_(2), to_encoded_(0) {}
+    Convert * from_internal_;
+    StringEnumeration() : ref_count_(0), copyable_(2), from_internal_(0) {}
     virtual ~StringEnumeration() {}
   };
   

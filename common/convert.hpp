@@ -9,32 +9,62 @@
 
 #include "string.hpp"
 #include "posib_err.hpp"
+#include "char_vector.hpp"
+#include "filter_char.hpp"
+#include "stack_ptr.hpp"
 
 namespace acommon {
 
   class OStream;
   class Config;
 
+  typedef Vector<FilterChar> FilterCharVector;
+
+  struct Decode {
+    virtual PosibErr<void> init(ParmString code, Config &) {return no_err;}
+    virtual void decode(const char * in, int size, 
+			FilterCharVector & out) const = 0;
+  };
+  struct Encode {
+    // null characters should be tretead like any other character
+    // by the encoder.
+    virtual PosibErr<void> init(ParmString, Config &) {return no_err;}
+    virtual void encode(const FilterChar * in, const FilterChar * stop, 
+			CharVector & out) const = 0;
+    // encodes the string by modifying the input, if it can't be done
+    // return false
+    virtual bool encode_direct(FilterChar * in, FilterChar * stop) const
+      {return false;}
+  };
+  struct Conv { // convert directy from in_code to out_code
+    // should not take owenership of decode and encode 
+    // decode and encode guaranteed to stick around for the life
+    // of the object
+    virtual PosibErr<void> init(const Decode *, const Encode *, 
+				Config &) {return no_err;}
+    virtual void convert(const char * in, int size, 
+			 CharVector & out) const = 0;
+  };
+
   class Convert {
   private:
     String in_code_;
     String out_code_;
     
-    static const unsigned int null_len_ = 4; // POSIB FIXME: Be more precise
+    StackPtr<Decode> decode_;
+    StackPtr<Encode> encode_;
+    StackPtr<Conv> conv_;
 
-  protected:
-    Convert(ParmString incode, ParmString outcode);
+    static const unsigned int null_len_ = 4; // POSIB FIXME: Be more precise
 
   public:
 
-    virtual PosibErr<void> init(Config &) {return no_err;}
+    PosibErr<void> init(Config &, ParmString in, ParmString out);
 
-    virtual ~Convert() {}
-    
     const char * in_code() const   {return in_code_.c_str();}
     const char * out_code() const  {return out_code_.c_str();}
 
-    void append_null(OStream & out) const
+    void append_null(CharVector & out) const
     {
       const char nul[8] = {0}; // 8 should be more than enough
       out.write(nul, null_len_);
@@ -46,27 +76,17 @@ namespace acommon {
     // if you need a null character at the end, add it yourself
     // with append_null
 
-    void convert(ParmString in, int size, OStream & out) const
-    {
-      if (size == -1)
-	convert(in,out);
-      else
-	convert_until(in, in + size, out);
-      const char buf[4] = {0};
-      out.write(buf, 4);
-    }
+    void decode(const char * in, int size, FilterCharVector & out) const 
+      {decode_->decode(in,size,out);}
+    
+    void encode(const FilterChar * in, const FilterChar * stop, 
+		CharVector & out) const
+      {encode_->encode(in,stop,out);}
 
-    virtual void convert(const char * in, OStream & out) const;
-
-    virtual const char * convert_until (const char * in, const char * stop,
-					OStream & out) const;
-  
-    virtual bool convert_next_char (const char * & in, 
-				    OStream & out) const = 0;
-    // converts the next char. Advances "in" to the location of the next
-    // string returns false if there is nothing more to convert
-    // (ie a null character).  Will not advance in on a null character.
-
+    bool encode_direct(FilterChar * in, FilterChar * stop) const
+      {return encode_->encode_direct(in,stop);}
+    void convert(const char * in, int size, CharVector & out) const
+      {conv_->convert(in,size,out);}
     
   };
 

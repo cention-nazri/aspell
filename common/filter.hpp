@@ -7,10 +7,11 @@
 #ifndef ASPELL_FILTER__HPP
 #define ASPELL_FILTER__HPP
 
-#include "posib_err.hpp"
-#include "copy_ptr.hpp"
-#include "vector.hpp"
 #include "can_have_error.hpp"
+#include "copy_ptr.hpp"
+#include "filter_char.hpp"
+#include "posib_err.hpp"
+#include "vector.hpp"
 
 namespace acommon {
 
@@ -22,7 +23,7 @@ namespace acommon {
   public:
     PosibErr<void> setup(Speller * speller, Config * config);
     void reset();
-    void process(char * str, unsigned int size);
+    void process(FilterChar * start, FilterChar * stop);
     void add_filter(IndividualFilter * filter);
     Config * config() {return config_;} 
     Filter();

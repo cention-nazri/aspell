@@ -24,6 +24,13 @@ namespace acommon
     T * data() {
       return &front();
     }
+
+    T * pbegin() {
+      return &*begin();
+    }
+    T * pend() {
+      return &*end();
+    }
   };
 }
 

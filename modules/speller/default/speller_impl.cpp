@@ -625,10 +625,10 @@ namespace aspeller {
     PosibErr<Convert *> conv;
     conv = new_convert(*c, user_enc, sys_enc);
     if (conv.has_err()) return conv;
-    to_encoded_.reset(conv);
+    to_internal_.reset(conv);
     conv = new_convert(*c, sys_enc, user_enc);
     if (conv.has_err()) return conv;
-    from_encoded_.reset(conv);
+    from_internal_.reset(conv);
 
     unconditional_run_together_ = config_->retrieve_bool("run-together");
     run_together_specified_     = config_->retrieve_bool("run-together-specified");
@@ -683,7 +683,7 @@ namespace aspeller {
       tok->char_type_[i].middle = lang_->special(i).middle;
       tok->char_type_[i].end    = lang_->special(i).end;
     }
-    tok->to_encoded_ = to_encoded_;
+    tok->conv_ = to_internal_;
   }
 
 

@@ -6,6 +6,7 @@
 
 #include "document_checker.hpp"
 #include "tokenizer.hpp"
+#include "convert.hpp"
 #include "speller.hpp"
 #include "config.hpp"
 #include "copy_ptr-t.hpp"
@@ -25,6 +26,7 @@ namespace acommon {
     tokenizer_.reset(tokenizer);
     filter_.reset(filter);
     speller_ = speller;
+    conv_ = speller->to_internal_;
     return no_err;
   }
 
@@ -44,14 +46,11 @@ namespace acommon {
   void DocumentChecker::process(const char * str, int size)
   {
     proc_str_.clear();
-    if (size == -1)
-      proc_str_.write(str);
-    else
-      proc_str_.write(str, size);
-    proc_str_ << '\0';
+    conv_->decode(str, size, proc_str_);
+    proc_str_.append(0);
     if (filter_)
-      filter_->process(proc_str_.data(), strlen(proc_str_.data()));
-    tokenizer_->reset(proc_str_.data());
+      filter_->process(proc_str_.pbegin(), proc_str_.pend());
+    tokenizer_->reset(proc_str_.pbegin(), proc_str_.pend());
   }
 
   Token DocumentChecker::next_misspelling()
@@ -71,8 +70,8 @@ namespace acommon {
       correct = speller_->check(MutableString(tokenizer_->word.data(),
 					      tokenizer_->word.size() - 1));
       //COUT << "\" is " << (correct ? "correct" : "incorrect") << "\n";
-      tok.len  = tokenizer_->end - tokenizer_->begin;
-      tok.offset = tokenizer_->begin - proc_str_.data();
+      tok.len  = tokenizer_->end_pos - tokenizer_->begin_pos;
+      tok.offset = tokenizer_->begin_pos;
       if (status_fun_)
 	(*status_fun_)(status_fun_data_, tok, correct);
     } while (correct);

@@ -598,12 +598,12 @@ class: filter
 		/
 		void
 
-	method: process
-	
-		/
-		void
-		char pointer: str
-		int: size
+#	method: process
+#	
+#		/
+#		void
+#		char pointer: str
+#		int: size
 
 	method: config
 
@@ -705,8 +705,8 @@ group: word list
 class: word list
 	c impl headers => string enumeration
 	/
-	cxx member: to encoded
-		what => class Convert * to_encoded_
+	cxx member: from internal
+		what => class Convert * from_internal_
 		default => 0
 
 	method: empty
@@ -723,7 +723,7 @@ class: word list
 		const
 		c impl =>
 			StringEnumeration * els = ths->elements();
-			els->to_encoded_ = ths->to_encoded_;
+			els->from_internal_ = ths->from_internal_;
 			return els;
 		/
 		string enumeration
@@ -743,12 +743,12 @@ class: string enumeration
 	method: next
 		c impl =>
 			const char * s = ths->next();
-			if (s == 0 || ths->to_encoded_ == 0) \{
+			if (s == 0 || ths->from_internal_ == 0) \{
 			  return s;
 			\} else \{
 			  ths->temp_str.clear();
-			  ths->to_encoded_->convert(ths->next(),ths->temp_str);
-			  ths->to_encoded_->append_null(ths->temp_str);
+			  ths->from_internal_->convert(s,-1,ths->temp_str);
+			  ths->from_internal_->append_null(ths->temp_str);
 			  return ths->temp_str.data();
 			\}
 		/

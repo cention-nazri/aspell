@@ -8,6 +8,7 @@
 #define ACOMMON_TOKENIZER__HPP
 
 #include "char_vector.hpp"
+#include "filter_char.hpp"
 
 namespace acommon {
 
@@ -18,28 +19,32 @@ namespace acommon {
   class Tokenizer {
 
   public:
-    Tokenizer() : begin(0), end(0), to_encoded_(0) {}
-    virtual ~Tokenizer() {}
+    Tokenizer();
+    virtual ~Tokenizer();
 
-    CharVector word; // this word is in the final encoded form
-    const char * begin; // pointers back to the orignal word
-    const char * end;
+    FilterChar * word_begin;
+    FilterChar * word_end;
+    FilterChar * end;
     
-    // the string is expected to be null terminated
-    void reset (const char * i) {end = i;}
-    bool at_end() const {return begin == end; /* == 0 */}
+    CharVector word; // this word is in the final encoded form
+    unsigned int begin_pos; // pointers back to the orignal word
+    unsigned int end_pos;
+    
+    // The string passed in _must_ have a null character
+    // at stop - 1. (ie stop must be one past the end)
+    void reset (FilterChar * in, FilterChar * stop);
+    bool at_end() const {return word_begin == word_end;}
     
     virtual bool advance() = 0; // returns false if there is nothing left
 
-    bool is_begin(char c) const
-      {return char_type_[static_cast<unsigned char>(c)].begin;}
-    bool is_middle(char c) const
-      {return char_type_[static_cast<unsigned char>(c)].middle;}
-    bool is_end(char c) const
-      {return char_type_[static_cast<unsigned char>(c)].end;}
-    bool is_word(char c) const
-      {return char_type_[static_cast<unsigned char>(c)].word;}
-
+    bool is_begin(unsigned char c) const
+      {return char_type_[c].begin;}
+    bool is_middle(unsigned char c) const
+      {return char_type_[c].middle;}
+    bool is_end(unsigned char c) const
+      {return char_type_[c].end;}
+    bool is_word(unsigned char c) const
+      {return char_type_[c].word;}
 
   public: // but don't use
     // The speller class is expected to fill these members in
@@ -52,7 +57,7 @@ namespace acommon {
     };
     
     CharType char_type_[256];
-    Convert * to_encoded_;
+    Convert * conv_;
   };
 
   // returns a new tokenizer and sets it up with the given speller

@@ -19,8 +19,9 @@
 
 namespace acommon {
 
-  typedef u_int32_t Uni32;
-  typedef u_int16_t Uni16;
+  typedef unsigned char Uni8;
+  typedef u_int16_t     Uni16;
+  typedef u_int32_t     Uni32;
 
 
   //////////////////////////////////////////////////////////////////////
@@ -94,7 +95,7 @@ namespace acommon {
   public:
     FromUniLookup(char u = '?') : unknown(u) {}
     void reset();
-    char operator[] (Uni32 key) const;
+    inline char operator[] (Uni32 key) const;
     bool insert(Uni32 key, char value);
   };
 
@@ -105,7 +106,7 @@ namespace acommon {
     overflow_end = overflow;
   }
 
-  char FromUniLookup::operator[] (Uni32 k) const
+  inline char FromUniLookup::operator[] (Uni32 k) const
   {
     const UniItem * i = data + (unsigned char)k * 4;
 
@@ -171,50 +172,6 @@ namespace acommon {
     return true;
   }
 
-
-  //////////////////////////////////////////////////////////////////////
-  //
-  //  StriaghtThrough
-  //
-
-  class StraightThrough : public Convert
-  {
-  public:
-    StraightThrough(ParmString e)
-      : Convert(e,e) {}
-    void convert (const char   * in, 
-			     OStream & out) const;
-    const char * convert_until (const char   * in, const char * stop, 
-				OStream & out) const;
-    bool convert_next_char (const char * & in, 
-			    OStream & out) const;
-  };
-
-  void StraightThrough::convert(const char * in, 
-					   OStream & out) const
-  {
-    out.write(in);
-  }
-
-  const char * StraightThrough::convert_until(const char * in, 
-					      const char * stop,
-					      OStream & out) const
-  {
-    out.write(in, stop-in);
-    return stop;
-  }
-
-  bool StraightThrough::convert_next_char (const char * & in, 
-					   OStream & out) const
-  {
-    if (*in != '\0') {
-      out.write(in,1);
-      ++in;
-      return true;
-    } else {
-      return false;
-    }
-  }
 
   //////////////////////////////////////////////////////////////////////
   //
@@ -292,7 +249,6 @@ namespace acommon {
     return no_err;
   }
 
-
   //////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////
   //
@@ -302,363 +258,192 @@ namespace acommon {
   //////////////////////////////////////////////////////////////////////
 
 
-  Convert::Convert(ParmString incode, ParmString outcode)
-    : in_code_(incode), out_code_(outcode) 
-  {}
-
   bool operator== (const Convert & rhs, const Convert & lhs)
   {
     return strcmp(rhs.in_code(), lhs.in_code()) == 0
       && strcmp(rhs.out_code(), lhs.out_code()) == 0;
   }
 
-  void Convert::convert(const char *  in, 
-				   OStream & out) const
-  {
-    while (convert_next_char(in, out));
-  }
+  //////////////////////////////////////////////////////////////////////
+  //
+  // Trivial Conversion
+  //
 
-  const char * Convert::convert_until (const char *  in, 
-				       const char * stop, 
-				       OStream & out) const
+  template <typename Chr>
+  struct DecodeDirect : public Decode 
   {
-    while (in < stop && convert_next_char(in, out));
-    return in;
-  }
+    void decode(const char * in0, int size, FilterCharVector & out) const {
+      const Chr * in = reinterpret_cast<const Chr *>(in0);
+      if (size == -1) {
+	for (;*in; ++in)
+	  out.append(*in);
+      } else {
+	const Chr * stop = reinterpret_cast<const Chr *>(in0 +size);
+	for (;in != stop; ++in)
+	  out.append(*in);
+      }
+    }
+  };
+
+  template <typename Chr>
+  struct EncodeDirect : public Encode
+  {
+    void encode(const FilterChar * in, const FilterChar * stop, 
+		CharVector & out) const {
+      for (; in != stop; ++in) {
+	Chr c = in->chr;
+	out.append(&c, sizeof(Chr));
+      }
+    }
+    bool encode_direct(FilterChar *, FilterChar *) const {
+      return true;
+    }
+  };
+
+  template <typename Chr>
+  struct ConvDirect : public Conv
+  {
+    void convert(const char * in0, int size, CharVector & out) const {
+      if (size == -1) {
+	const Chr * in = reinterpret_cast<const Chr *>(in0);
+	for (;*in != 0; ++in)
+	  out.append(in, sizeof(Chr));
+      } else {
+	out.append(in0, size);
+      }
+    }
+  };
 
   //////////////////////////////////////////////////////////////////////
   //
-  //  Char to Uni16
+  //  Lookup Conversion
   //
 
-  class Char_Uni16 : public Convert
+  struct DecodeLookup : public Decode 
   {
-  public:
     ToUniLookup lookup;
-    Char_Uni16(ParmString e)
-      : Convert(e, "machine unsigned 16") {}
-    PosibErr<void> init(Config & c);
-    bool convert_next_char (const char * & in, 
-			    OStream & out) const;
+    PosibErr<void> init(ParmString code, Config & c) 
+      {FromUniLookup unused;
+      return read_in_char_data(c, code, lookup, unused);}
+    void decode(const char * in, int size, FilterCharVector & out) const {
+      if (size == -1) {
+	for (;*in; ++in)
+	  out.append(lookup[*in]);
+      } else {
+	const char * stop = in + size;
+	for (;in != stop; ++in)
+	  out.append(lookup[*in]);
+      }
+    }
   };
 
-  PosibErr<void> Char_Uni16::init(Config & c)
+  struct EncodeLookup : public Encode 
   {
-    FromUniLookup unused;
-    return read_in_char_data(c, in_code(), lookup, unused);
-  }
-
-  bool Char_Uni16
-  ::convert_next_char (const char * & in, 
-		       OStream & out) const
-  {
-    if (*in != '\0') {
-      Uni16 d = lookup[*in];
-      out.write((char *)&d, 2);
-      ++in;
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  //////////////////////////////////////////////////////////////////////
-  //
-  //  Char to Uni32
-  //
-
-  class Char_Uni32 : public Convert
-  {
-  public:
-    ToUniLookup lookup;
-    Char_Uni32(ParmString e)
-      : Convert(e, "machine unsigned 32") {}
-    PosibErr<void> init(Config & c);
-    bool convert_next_char (const char * & in, 
-			    OStream & out) const;
-  };
-
-  PosibErr<void> Char_Uni32::init(Config & c)
-  {
-    FromUniLookup unused;
-    return read_in_char_data(c, in_code(), lookup, unused);
-  }
-
-
-  bool Char_Uni32
-  ::convert_next_char (const char * & in, 
-		       OStream & out) const
-  {
-    if (*in != '\0') {
-      Uni32 d = lookup[*in];
-      out.write((char *)&d, 4);
-      ++in;
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  //////////////////////////////////////////////////////////////////////
-  //
-  //  Char to UTF8
-  //
-
-  class Char_UTF8 : public Convert
-  {
-  public:
-    ToUniLookup lookup;
-    Char_UTF8(ParmString e)
-      : Convert(e, "UTF-8") {}
-    PosibErr<void> init(Config & c);
-    bool convert_next_char (const char * & in, 
-			    OStream & out) const;
-  };
-
-  PosibErr<void> Char_UTF8::init(Config & c)
-  {
-    FromUniLookup unused;
-    return read_in_char_data(c, in_code(), lookup, unused);
-  }
-
-
-  bool Char_UTF8
-  ::convert_next_char (const char * & in, 
-		       OStream & out) const
-  {
-    if (*in != '\0') {
-      Uni32 c = lookup[*in];
-      char str[4];
-
-      if (c < 0x80) {
-	str[0] = (char)c;
-	out.write(str, 1);
-      }
-      else if (c < 0x800) {
-	str[0] = (char)(0xC0 | c>>6);
-	str[1] = (char)(0x80 | c & 0x3F);
-	out.write(str, 2);
-      }
-      else if (c < 0x10000) {
-	str[0] = (0xE0 | c>>12);
-	str[1] = (0x80 | c>>6 & 0x3F);
-	str[2] = (0x80 | c & 0x3F);
-	out.write(str, 3);
-      }
-      else if (c < 0x200000) {
-	str[0] = (0xF0 | c>>18);
-	str[1] = (0x80 | c>>12 & 0x3F);
-	str[2] = (0x80 | c>>6 & 0x3F);
-	str[3] = (0x80 | c & 0x3F);
-	out.write(str, 4);
-      }
-
-      ++in;
-      return true;
-
-    } else {
-
-      return false;
-
-    }
-  }
-
-  //////////////////////////////////////////////////////////////////////
-  //
-  //  Uni16 to Char
-  //
-
-  class Uni16_Char : public Convert
-  {
-  public:
     FromUniLookup lookup;
-    Uni16_Char(ParmString e)
-      : Convert("machine unsigned 16", e) {}
-    PosibErr<void> init(Config & c);
-    bool convert_next_char (const char * & in, 
-			    OStream & out) const;
-  };
-
-  PosibErr<void> Uni16_Char::init(Config & c)
-  {
-    ToUniLookup unused;
-    return read_in_char_data(c, out_code(), unused, lookup);
-  }
-
-
-  bool Uni16_Char
-  ::convert_next_char (const char * & in, 
-		       OStream & out) const
-  {
-    Uni16 c = *(const Uni16 *)(in);
-    if (c != 0) {
-      char d = lookup[c];
-      out.write(&d, 1);
-      in += 2;
-      return true;
-    } else {
-      return false;
+    PosibErr<void> init(ParmString code, Config & c) 
+      {ToUniLookup unused;
+      return read_in_char_data(c, code, unused, lookup);}
+    void encode(const FilterChar * in, const FilterChar * stop, 
+		CharVector & out) const {
+      for (; in != stop; ++in) {
+	out.append(lookup[*in]);
+      }
     }
-  }
+    bool encode_direct(FilterChar * in, FilterChar * stop) const {
+      for (; in != stop; ++in)
+	*in = lookup[*in];
+      return true;
+    }
+  };
 
   //////////////////////////////////////////////////////////////////////
   //
-  //  Uni32 to Char
+  //  UTF8
   //
-
-  class Uni32_Char : public Convert
-  {
-  public:
-    FromUniLookup lookup;
-    Uni32_Char(ParmString e)
-      : Convert("machine unsigned 32", e) {}
-    PosibErr<void> init(Config & c);
-    bool convert_next_char (const char * & in, 
-			    OStream & out) const;
-  };
-
-  PosibErr<void> Uni32_Char::init(Config & c)
-  {
-    ToUniLookup unused;
-    return read_in_char_data(c, out_code(), unused, lookup);
-  }
-
-
-  bool Uni32_Char
-  ::convert_next_char (const char * & in, 
-		       OStream & out) const
-  {
-    Uni32 c = *(const Uni32 *)(in);
-    if (c != 0) {
-      char d = lookup[c];
-      out.write(&d, 1);
-      in += 4;
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  //////////////////////////////////////////////////////////////////////
-  //
-  //  UTF8 to Char
-  //
-
-  class UTF8_Char : public Convert
-  {
-  public:
-    FromUniLookup lookup;
-    UTF8_Char(ParmString e)
-      : Convert("UTF-8", e) {}
-    PosibErr<void> init(Config & c);
-    bool convert_next_char (const char * & in, 
-			    OStream & out) const;
-  };
-
-  PosibErr<void> UTF8_Char::init(Config & c) 
-  {
-    ToUniLookup unused;
-    return read_in_char_data(c, out_code(), unused, lookup);
-  }
-
+  
 #define get_check_next \
-  c = *in;                                        \
-  if ((c & 0xC0) != 0x80) {u = '?'; goto FINISH;} \
-  ++in;                                           \
-  u <<= 6;                                        \
-  u |= c & 0x3F
+  c = *in;                                                       \
+  if ((c & 0xC0) != 0x80 || in == stop) return FilterChar('?',u);\
+  ++in;                                                          \
+  u <<= 6;                                                       \
+  u |= c & 0x3F;                                                 \
+  ++w;
 
-
-  bool UTF8_Char
-  ::convert_next_char (const char * & in, 
-		       OStream & out) const
+  static inline FilterChar from_utf8 (const char * & in, const char * stop)
   {
-    if (*in == '\0') {
-      return false;
-    }
-
     Uni32 u = (Uni32)(-1);
+    FilterChar::Width w = 1;
 
-    char c = *in++;
-    while ((c & 0xC0) == 0x80) c = *in++;
+    // the first char is guaranteed not to be off the end
+    char c = *in;
+    ++in;
+    while ((c & 0xC0) == 0x80) {c = *in; ++in; ++w;}
     if ((c & 0x80) == 0x00) { // 1-byte wide
       u = c;
     } else if ((c & 0xE0) == 0xC0) { // 2-byte wide
-      u  = c & 0x1F; 
+      u  = c & 0x1F;
       get_check_next;
     } else if ((c & 0xF0) == 0xE0) { // 3-byte wide
-      u  = c & 0x0F; 
+      u  = c & 0x0F;
       get_check_next;
       get_check_next;
     } else if ((c & 0xF8) == 0xF0) { // 4-byte wide
-      u  = c & 0x0E; 
+      u  = c & 0x0E;
       get_check_next;
       get_check_next;
       get_check_next;
     }
 
-    FINISH:
-
-    assert (u != (Uni32)(-1));
-
-    char d = lookup[u];
-    out.write(&d, 1);
-    return true;
-
+    return FilterChar(u, w);
+  }
+  
+  static inline void to_utf8 (FilterChar in, CharVector & out)
+  {
+    FilterChar::Chr c = in;
+    
+    if (c < 0x80) {
+      out.append(c);
+    }
+    else if (c < 0x800) {
+      out.append(0xC0 | c>>6);
+      out.append(0x80 | c & 0x3F);
+    }
+    else if (c < 0x10000) {
+      out.append(0xE0 | c>>12);
+      out.append(0x80 | c>>6 & 0x3F);
+      out.append(0x80 | c & 0x3F);
+    }
+    else if (c < 0x200000) {
+      out.append(0xF0 | c>>18);
+      out.append(0x80 | c>>12 & 0x3F);
+      out.append(0x80 | c>>6 & 0x3F);
+      out.append(0x80 | c & 0x3F);
+    }
   }
 
-  //////////////////////////////////////////////////////////////////////
-  //
-  //  Char to Char
-  //
-
-  class Char_Char : public Convert
+  struct DecodeUtf8 : public Decode 
   {
-  public:
-    CharLookup lookup;
-  
-    Char_Char(ParmString in, ParmString out)
-      : Convert(in, out) {}
-    PosibErr<void> init(Config & c);
-    bool convert_next_char (const char * & in, 
-			    OStream & out) const;
+    ToUniLookup lookup;
+    void decode(const char * in, int size, FilterCharVector & out) const {
+      const char * stop = in + size; // this is OK even if size == -1
+      while (*in && in != stop) {
+	out.append(from_utf8(in, stop));
+      }
+    }
+  };
+
+  struct EncodeUtf8 : public Encode 
+  {
+    FromUniLookup lookup;
+    void encode(const FilterChar * in, const FilterChar * stop, 
+		CharVector & out) const {
+      for (; in != stop; ++in) {
+	to_utf8(*in, out);
+      }
+    }
   };
 
   
-  PosibErr<void> Char_Char::init(Config & c)
-  {
-    ToUniLookup   to;
-    FromUniLookup from;
-    {
-      FromUniLookup unused;
-      RET_ON_ERR(read_in_char_data(c, in_code(), to, unused));
-    } {
-      ToUniLookup unused;
-      RET_ON_ERR(read_in_char_data(c, out_code(), unused, from));
-    }
-    lookup.reset();
-    for (unsigned int i = 0; i != 256; ++i) {
-      lookup.insert(i, from[to[i]]);
-    }
-    return no_err;
-  }
-
-
-  bool Char_Char
-  ::convert_next_char (const char * & in, 
-		       OStream & out) const
-  {
-    if (*in != '\0') {
-      char d = lookup[*in];
-      out.write(&d, 1);
-      in += 1;
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-
   //////////////////////////////////////////////////////////////////////
   //
   // new_aspell_convert
@@ -684,27 +469,73 @@ namespace acommon {
     if (out == "ascii") 
       out = "iso8859-1";
 
-    StackPtr<Convert> conv;
-
-    if (in == out)
-      conv = new StraightThrough(in);
-    else if (in == "machine unsigned 16")
-      conv = new Uni16_Char(out);
-    else if (in == "machine unsigned 32")
-      conv = new Uni32_Char(out);
-    else if (in == "utf-8")
-      conv = new UTF8_Char(out);
-    else if (out == "machine unsigned 16")
-      conv = new Char_Uni16(in);
-    else if (out == "machine unsigned 32")
-      conv = new Char_Uni32(in);
-    else if (out == "utf-8")
-      conv = new Char_UTF8(in);
-    else
-      conv = new Char_Char(in, out);
-
-    RET_ON_ERR(conv->init(c));
+    StackPtr<Convert> conv(new Convert);
+    RET_ON_ERR(conv->init(c, in, out));
     return conv.release();
+    
+  }
+  
+  struct ConvGeneric : public Conv {
+
+    const Decode * d_;
+    const Encode * e_;
+
+    PosibErr<void> init(const Decode * d, const Encode * e, Config &) {
+      d_ = d;
+      e_ = e;
+      return no_err;
+    }
+
+    void convert(const char * in, int size, CharVector & out) const {
+      FilterCharVector buf;
+      buf.reserve(size == -1 ? 128 : size);
+      d_->decode(in, size, buf);
+      e_->encode(buf.pbegin(), buf.pend(), out);
+    }
+  };
+  
+  PosibErr<void> Convert::init(Config & c, ParmString in, ParmString out)
+  {
+    in_code_ = in;
+    out_code_ = out;
+    
+    if (in_code_ == "iso8859-1")
+      decode_ = new DecodeDirect<Uni8>;
+    else if (in_code_ == "machine unsigned 16")
+      decode_ = new DecodeDirect<Uni16>;
+    else if (in_code_ == "machine unsigned 32")
+      decode_ = new DecodeDirect<Uni32>;
+    else if (in_code_ == "utf-8")
+      decode_ = new DecodeUtf8;
+    else
+      decode_ = new DecodeLookup;
+    RET_ON_ERR(decode_->init(in_code_, c));
+    
+    if (out_code_ == "iso8859-1")
+      encode_ = new EncodeDirect<Uni8>;
+    else if (out_code_ == "machine unsigned 16")
+      encode_ = new EncodeDirect<Uni16>;
+    else if (out_code_ == "machine unsigned 32")
+      encode_ = new EncodeDirect<Uni32>;
+    else if (out_code_ == "utf-8")
+      encode_ = new EncodeUtf8;
+    else
+      encode_ = new EncodeLookup;
+    RET_ON_ERR(encode_->init(out_code_, c));
+
+    if (in_code_ == out_code_) {
+      if (in_code_ == "machine unsigned 16")
+	conv_ = new ConvDirect<Uni16>;
+      else if (in_code_ == "machine unsigned 32")
+	conv_ = new ConvDirect<Uni32>;
+      else
+	conv_ = new ConvDirect<char>;
+    } else {
+      conv_ = new ConvGeneric;
+    }
+    RET_ON_ERR(conv_->init(decode_, encode_, c));
+
+    return no_err;
   }
 
 }

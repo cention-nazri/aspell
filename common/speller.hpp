@@ -43,8 +43,8 @@ namespace acommon {
   public:
     CharVector temp_str_0;
     CharVector temp_str_1;
-    ClonePtr<Convert> from_encoded_;
-    ClonePtr<Convert> to_encoded_;
+    ClonePtr<Convert> to_internal_;
+    ClonePtr<Convert> from_internal_;
   protected:
     CopyPtr<Config> config_;
     Speller(SpellerLtHandle h);

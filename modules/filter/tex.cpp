@@ -50,12 +50,12 @@ namespace acommon {
 
     bool end_option(char u, char l);
 
-    inline bool process_char(char c);
+    inline bool process_char(FilterChar::Chr c);
     
   public:
     PosibErr<void> setup(Config *);
     void reset();
-    void process(char *, unsigned int size);
+    void process(FilterChar *, FilterChar *);
   };
 
   //
@@ -99,7 +99,7 @@ namespace acommon {
 #  define top stack.back()
 
   // yes this should be inlined, it is only called once
-  inline bool TexFilter::process_char(char c) 
+  inline bool TexFilter::process_char(FilterChar::Chr c) 
   {
     // deal with comments
     if (c == '%' && !prev_backslash) in_comment = true;
@@ -209,14 +209,12 @@ namespace acommon {
     return false;
   }
 
-  void TexFilter::process(char * str, unsigned int size)
+  void TexFilter::process(FilterChar * cur, FilterChar * stop)
   {
-    char * i = str;
-    char * stop = str + size;
-    while (i != stop) {
-      if (process_char(*i))
-	*i = ' ';
-      ++i;
+    while (cur != stop) {
+      if (process_char(*cur))
+	*cur = ' ';
+      ++cur;
     }
   }
 
