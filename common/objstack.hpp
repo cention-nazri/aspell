@@ -120,6 +120,7 @@ public:
     }
     return bottom;
   }
+  // returns a pointer the the new beginning of the temp memory
   void * resize_temp(size_t size) {
     if (temp_end == 0)
       return alloc_temp(size);
@@ -134,12 +135,24 @@ public:
     }
     return bottom;
   }
+  // returns a pointer to the beginning of the new memory (in
+  // otherwords the END of the temp memory BEFORE the call to grow
+  // temp) NOT the beginning if the temp memory
   void * grow_temp(size_t s) {
     if (temp_end == 0)
       return alloc_temp(s);
     unsigned old_size = temp_end - bottom;
-    resize_temp(old_size + s);
-    return bottom + old_size;}
+    if (bottom + size <= top) {
+      temp_end = bottom + size;
+    } else {
+      size_t s = temp_end - bottom;
+      byte * p = bottom;
+      new_chunk();
+      memcpy(bottom, p, s);
+      temp_end = bottom + size;
+    }
+    return bottom + old_size;
+  }
   void abort_temp() {
     temp_end = 0;}
   void commit_temp() {
