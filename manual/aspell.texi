@@ -1,5 +1,5 @@
 \input texinfo   @c -*-texinfo-*-
-@comment $Id: aspell.texi,v 1.5 2004/02/05 01:23:08 kevina Exp $
+@comment $Id: aspell.texi,v 1.6 2004/02/12 01:26:19 kevina Exp $
 @comment %**start of header
 @setfilename aspell.info
 @settitle GNU Aspell 0.51
@@ -8,7 +8,6 @@
 @comment %**end of header
 @copying
 This is the user's manual for Aspell
-($Revision: 1.5 $ $Date: 2004/02/05 01:23:08 $).
 
 Copyright @copyright{} 2000--2004 Kevin Atkinson.
 
@@ -39,7 +38,6 @@ are LGPL Compatible.
 
 @titlepage
 @title GNU Aspell 0.51
-@subtitle for $Revision: 1.5 $ $Date: 2004/02/05 01:23:08 $
 @author Kevin Atkinson (@email{kevina@@gnu.org})
 @page
 @vskip 0pt plus 1filll
@@ -53,44 +51,26 @@ are LGPL Compatible.
 @top GNU Aspell
 GNU Aspell is a spell checker designed to eventually replace Ispell.
 It can either be used as a library or as an independent spell checker.
-Its main feature is that it does a much better job of coming up with
-possible suggestions than just about any other spell checker out there
-for the English language, including Ispell and Microsoft Word.  It
-also has many other technical enhancements over Ispell such as using
-shared memory for dictionaries and intelligently handling personal
-dictionaries when more than one Aspell process is open at once.
 
 @menu
 * Introduction::                
-* Getting Started::             
 * Basic Usage::                 
 * Customizing Aspell::          
 * Working With Dictionaries::   
 * Writing programs to use Aspell::  
 * Adding Support For Other Languages::  
 * How Aspell Works::            
-* Changelog::                   
+* Support::                     
+* Helping Out::                 
 * To Do::                       
+* Installing::                  
+* ChangeLog::                   
 * Credits::                     
-* Copying This Manual::         
-* Using the Libraries::         
-* Index::                       
+* Copying::                     
+@c * Index::                       
 
 @detailmenu
  --- The Detailed Node Listing ---
-
-Introduction
-
-* Comparison to other spell checker engines::  
-
-Getting Started
-
-* Requirements::                
-* Obtaining Aspell::            
-* Support::                     
-* Helping Out::                 
-* Compiling & Installing::      
-* Using aspell-import::         
 
 Basic Usage
 
@@ -108,9 +88,13 @@ Customizing Aspell
 Notes on Various Options
 
 * Notes on Various Filters and Filter Modes::  
+* Notes on the Prefix Option::  
+* Notes on Typo-Analysis::      
+* Notes on the Different Suggestion Modes::  
 
 Working With Dictionaries
 
+* Using aspell-import::         
 * How Aspell Selects an Appropriate Dictionary::  
 * Listing Available Dictionaries::  
 * Dumping the Contents of the Word List::  
@@ -136,27 +120,21 @@ Adding Support For Other Languages
 
 To Do
 
-* Things that need to be done::  
-* Good ideas that are worth implementing::  
-* Notes and Status of various items::  
+* Important Items::             
+* Other Items::                 
+* Notes on Various Items::      
 
-Copying This Manual
+Copying
 
-* GNU Free Documentation License::  License for copying this manual
-
-Using the Libraries
-
-* Library Copying::  License for using the libraries
+* GNU Free Documentation License::  
+* GNU Lesser General Public License::  
 
 @end detailmenu
 @end menu
 
-@insertcopying
 @end ifnottex
 
-
-
-@node Introduction, Getting Started, Top, Top
+@node Introduction, Basic Usage, Top, Top
 @chapter Introduction
 
 GNU Aspell is a spell checker designed to eventually replace Ispell.
@@ -168,11 +146,8 @@ also has many other technical enhancements over Ispell such as using
 shared memory for dictionaries and intelligently handling personal
 dictionaries when more than one Aspell process is open at once.
 
-@menu
-* Comparison to other spell checker engines::  
-@end menu
+The latest version of Aspell can always be found at @uref{http://aspell.net}
 
-@node Comparison to other spell checker engines,  , Introduction, Introduction
 @section Comparison to other spell checker engines
 
 @multitable {Alternate Dictionaries} {Aspell} {Ispell} {Netscape} {Microsoft}
@@ -253,10 +228,6 @@ errors.
 
 @itemize @bullet
 @item
-Support for affix compression (However this should change soon once
-Kevin Hendricks is integrated)
-
-@item
 Lower memory footprint
 
 @item
@@ -266,362 +237,8 @@ Perhaps better support for spell checking (La)TeX files.
 Support for spell checking Nroff files.
 @end itemize
 
-@node Getting Started, Basic Usage, Introduction, Top
-@chapter Getting Started
 
-@menu
-* Requirements::                
-* Obtaining Aspell::            
-* Support::                     
-* Helping Out::                 
-* Compiling & Installing::      
-* Using aspell-import::         
-@end menu
-
-@node Requirements, Obtaining Aspell, Getting Started, Getting Started
-@section Requirements
-
-Aspell requires gcc 2.95 (or better) as the C++ compiler.  Other C++
-compilers should work with some effort.  Other C++ compilers for
-mostly POSIX compliant (Unix, Linux, BeOS, CygWin) systems should work
-without any major problems provided that the compile can handle all of
-the advanced C++ features Aspell uses.  C++ compilers for non-Unix
-systems might work but it will take some work.  Aspell at very least
-requires a Unix-like environment (@file{sh}, @file{grep}, @file{sed},
-@file{tr}, &c@dots{}) in order to build.  Aspell also uses a few POSIX
-functions when necessary.
-
-@node Obtaining Aspell, Support, Requirements, Getting Started
-@section Obtaining Aspell
-
-The latest version can always be found at GNU Aspell's home page at 
-@uref{http://aspell.net}.
-
-@node Support, Helping Out, Obtaining Aspell, Getting Started
-@section Support
-
-Support for Aspell can be found on the Aspell mailing lists.
-Instructions for joining the various mailing lists (and an archive of
-them) can be found off the Aspell home page at
-@uref{http://aspell.net}.
-
-@node Helping Out, Compiling & Installing, Support, Getting Started
-@section Helping Out
-
-I have very little time to work on Aspell so I desperately need other
-people to help with the development of Aspell.  There are a lot of
-things that need to be done before I consider Aspell complete.  For a
-list of them see @ref{To Do}.  I would really appreciate some help
-with doing them.  If you are interested in helping with one of them
-please let me know.
-
-I am also looking for someone to eventually take over the maintenance
-and development of Aspell.  If you are interested please contact me
-directly.
-
-@node Compiling & Installing, Using aspell-import, Helping Out, Getting Started
-@section Compiling & Installing
-
-@subsection Generic Install Instructions
-
-@example
-./configure && make
-@end example
-
-For additional @file{configure} options type @code{./configure
---help}.  You can control what C++ compiler is used by setting the
-environment variable @env{CXX} before running configure and you can
-control what flags are passed to the C++ compile via the environment
-variable @env{CXXFLAGS}.  Static libraries are disabled by default
-since static libraries will not work right due to the mixing of C and
-C++.  When a C program links with the static libraries in Aspell it is
-likely to crash because Aspell's C++ objects are not getting
-initialized correctly.  However, if for some reason you want them, you
-can enable them via @code{--enable-static}.
-
-Aspell should then compile without any additional user intervention.
- If you run into problems please first check the sections below as that
- might solve your problem.
-
-To install the program simply type
-
-@example
-make install
-@end example
-
-After Aspell is installed at least one dictionary needs to be
-installed.  You can find them at @uref{http://aspell.net/}.  The
-@file{aspell} program must be in your path in order for the
-dictionaries to install correctly.
-
-If you do not have Ispell or the traditional Unix @code{spell} utility
-installed on your system than you should also copy the compatibly
-scripts @code{ispell} and @code{spell} located in the @file{scripts/}
-directory into your binary directory which is usually
-@file{/usr/local/bin} so that programs that expect the
-@command{ispell} or @command{spell} command will work correctly.
-
-@subsection General Problems
-
-Aspell does not use a released version of GNU @command{libtool}.  If
-you have a need to modify @file{configure.ac} or any of the
-@file{Makefile.am} filess you should install the CVS version of
-@command{libtool}.
-
-@subsection Curses Notes
-
-If you are having problems compiling @file{termios.cc} than the most
-likely reason is due to incompatibilities with the curses
-implementation on your system.  If this is the case than you can
-explicitly disable the curses library with @option{--disable-curses}.
-By doing this you will lose the nice full screen interface but
-hopefully you will be able to at least get Aspell to compile
-correctly.
-
-If the curses library is installed in a non-standard location than you
-can specify the library and include directory with
-@option{--enable-curses=@var{lib}} and
-@option{--enable-curses-include=@var{dir}}.
- 
-@option{@var{lib}} can either be the complete path of the library---for
-example
-
-@example 
-/usr/local/curses/libcurses.a
-@end example
-
-or the name of the library (for example 
-@file{ncurses}) or a combined location and library in the form 
-@option{-L@var{libdir} -l@var{lib}}
- (for example 
-@option{-L/usr/local/ncurses/lib -lncurses}).
- 
-@option{@var{dir}} is the location of the curses header files (for example
-@file{/usr/local/ncurses/include}).
- 
-@subsection Upgrading from Aspell 0.50
-
-The dictionary format has changed so dictionaries will need to be
-recompiled.
-
-@subsection Upgrading from Aspell .33/Pspell .12
-
-Aspell has undergone an extremely large number of changes since the
-previous Aspell/Pspell release.  For one thing Pspell has been merged
-with Aspell so there in no longer two separate libraries you have to
-worry about.
-
-Because of the massive changes between Aspell/Pspell and aspell 0.50
-you may want to clean out the old files before installing the the new
-Aspell.  To do so do a @code{make uninstall} in the original Aspell
-and Pspell source directories.
-
-The way dictionaries are handled has also changed.  This includes a
-change in the naming conventions of both language names and
-dictionaries.  Due to the language name change, your old personal
-dictionaries will not be recognized.  However, you can import the old
-dictionaries by running the @code{aspell-import} script.  This also
-means that dictionaries designed to work with older versions of Aspell
-are not likely to function correctly.  Fortunately new dictionary
-packages are available for most languages.  You can find them off of
-the Aspell home page at @uref{http://aspell.net}.
-
-The Pspell abi is now part of Aspell except that the name of
-everything has changed due to the renaming of Pspell to Aspell.  In
-particular please note the following name changes:
-
-@example
-pspell -> aspell
-manager -> speller
-emulation -> enumeration
-master_word_list -> main_word_list
-@end example
-
-Please also note that the name of the @option{language-tag} option has
-changed to @option{lang}.  However, for backward compatibility the
-@option{language-tag} option will still work.
-
-However, you should also be able to build applications that require
-Pspell with the new Aspell as a backward compatibility header file is
-provided.
-
-Due to a change in the way dictionaries are handled, scanning for
-@file{.pwli} files in order to get find out which dictionaries are
-available will no longer work.  This means that programs that relied
-on this technique may have problems finding dictionaries.
-Fortunately, GNU Aspell now provided a uniform way to list all
-installed dictionaries via the c api.  See the file
-@file{list-dicts.c} in the @file{examples/} directory for an example
-of how to do this.  Unfortunately there isn't any simple way to find
-out which dictionaries are installed which will work with both the old
-Aspell/Pspell and the new GNU Aspell.
-
-@subsection Upgrading from a pre-release snapshot
-
-At the last minute I decided to merge the @file{speller-util} program
-into the main @file{aspell} program.  You may wish to remove that
-@file{speller-util} program to avoid confusion.  This also means that
-dictionaries designed to work with the snapshot will no longer work
-with the official release.
- 
-
-@subsection WIN32 Notes
-
-@subsubsection Getting the WIN32 version
-
-The latest version of the native Aspell/WIN32 port
-can be found at  
-@uref{http://aspell.net/win32}.
- 
-@subsubsection Building the WIN32 version
-
-There are two basically different ways of building Aspell using GCC
-for WIN32: You can either use the Cygwin compiler, which will produce
-binaries that depend on the posix layer in @file{cygwin1.dll}.  The
-other way is using MinGW GCC, those binaries use the native C runtime
-from Microsoft (MSVCRT.DLL).  If you intend to use or link against the
-Aspell libraries using a native WIN32 compiler (e.g.  MS Visual C++),
-you will need the MinGW built ones to avoid problems caused by the
-different runtime libraries.
-
-Building Aspell using Cygwin: This works exactly like on other POSIX
-compatible systems using the @kbd{configure && make && make install}
-cycle.  Some versions of Cygwin GCC will fail to link, this is caused
-by an incorrect @file{libstdc++.la} in the @code{/lib} directory.
-After removing or renaming this file, the build progress should work
-(GCC-2.95 and GCC-3.x should work).
-
-Building Aspell using MinGW: To compile Aspell with the MinGW
-compiler, you will need at least GCC-3.2 (as shipped with MinGW-2.0.3)
-and some GNU tools like @command{rm} and @command{cp}.  The origin of
-those tools doesn't matter, it has shown to work with any tools from
-MinGW/MSys, Cygwin or Linux.  To build Aspell, move into the
-@file{win32} subdirectory and type @kbd{make}.  You can enable some
-additional build options by either commenting out the definitions at
-the head of the Makefile or passing those values as environment
-variables or at the @command{make} command line.  Following options
-are supported:
-
-@table @option
-@item DEBUGVERSION
-If set to "1", the binaries will include debugging information
-(resulting in a much bigger size).
-
-@item CURSESDIR
-Enter the path to the pdcurses library here, in order to get a nicer
-console interface (see below).
- 
-@item MSVCLIB
-Enter the filename of MS @file{lib.exe} here, if you want to build
-libraries that can be imported from MS Visual C++.
- 
-@item WIN32_RELOCATABLE
-If set to "1", Aspell will detect the prefix from the path where the
-DLL resides (see below for further datails).
- 
-@item TARGET
-Sets a prefix to be used for cross compilation (e.g.
-@file{/usr/local/bin/i586-mingw32msvc-} to cross compile from Linux).
-@end table
-
-
-There are also a MinGW compilers available for Cygwin and Linux, both
-versions are able to compile Aspell using the prebuilt
-@file{Makefile}.  While the Cygwin port automatically detects the
-correct compiler, the Linux version depends on setting the
-@env{TARGET} variable in the @file{Makefile} (or environment) to the
-correct compiler prefix.
-
-Other compilers may work.  There is a patch for MS Visual C++ 6.0
-available at @uref{ftp://ftp.gnu.org/gnu/aspell}, but it needs a lot
-of changes to the Aspell sources.  It has also been reported that the
-Intel C++ compiler can be used for compilation.
-
-@subsubsection (PD)Curses
-
-In order to get the nice full screen interface when spell checking
-files, a curses implementation that does not require Cygwin is
-required.  The PDCurses (@uref{http://pdcurses.sourceforge.net})
-implementation is known to work, other implementations may work
-however they have not been tested.  See the previous section for
-information on specifying the location of the curses library and
-include file.
-
-Curses notes:
-
-@itemize @bullet
-
-@item
-PDcurses built with MinGW needs to be compiled with
-@option{-DPDC_STATIC_BUILD} to avoid duplicate declaration of
-@file{DllMain} when compiling @file{aspell.exe}.
-
-@item
-The curses enabled version can cause trouble in some shells (MSys
-@command{rxvt}, @command{emacs}) and will produce errors like
-@samp{initscr() LINES=1 COLS=1: too small}.  Use a non-curses version
-for those purposes.
-@end itemize
-
-@subsubsection Directories
-
-If Aspell is compiled with @option{WIN32_RELOCATABLE=1}, it can be run
-from any directory: it will set @option{@var{prefix}} according to its
-install location (assuming it resides in @file{@var{prefix}\\bin}).  Your
-personal wordlists will be saved in the @file{@var{prefix}} directory with
-their names changed from @file{.aspell.@var{lang}.*} to @file{@var{lang}.*}
-(you can override the path by setting the @env{HOME} environment
-variable).
- 
-@subsubsection Installer
-
-The installer registers the DLLs as shared libraries, you should
-increase the reference counter to avoid the libraries being
-uninstalled if your application still depends on them (and decrease it
-again when uninstalling your program).  The reference counters are
-located under:
-@example
-HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\SharedDLLs
-@end example
-
-The install location and version numbers are stored under
-
-@example
-HKLM\SOFTWARE\Aspell
-@end example
-
-@subsubsection WIN32 consoles
-
-The console uses a different encoding than GUI applications, changing
-this to to a Windows encoding (e.g.  1252) is not supported on
-Win9x/Me.  On WinNT (and later) those codepages can be set by first
-changing the console font to @samp{lucida console}, then changing the
-codepage using @kbd{chcp 1252}.
-
-Some alternative shells (e.g. MSys' @command{rxvt} or Cygwin's
-@command{bash}) do a codepage conversion (if correctly set up), so
-running Aspell inside those shells might be a workaround for Win9x.
-
-@node Using aspell-import,  , Compiling & Installing, Getting Started
-@section Using @command{aspell-import}
-
-The @command{aspell-import} Perl script will look for old personal
-dictionaries and will import them into GNU Aspell.  It will look for
-both Ispell and Aspell ones.  To use it just run it from the command
-prompt.  If you get an error about @file{/usr/bin/perl} not being
-found than instead try @kbd{perl @var{bindir}/aspell-import}.  When
-running the script if you get a message like:
-
-@verbatim
-Error: No word lists can be found for the language "de".
-@end verbatim
-
-This means that you have not installed support for the given language,
-in this case @code{de} for German.  To rectify the situation download
-and install a dictionary designed to work with GNU Aspell 0.50 or
-better.
-
-@node Basic Usage, Customizing Aspell, Getting Started, Top
+@node Basic Usage, Customizing Aspell, Introduction, Top
 @chapter Basic Usage
 
 For a quick reference on the Aspell utility use the command 
@@ -1324,16 +941,18 @@ installed and available filters and the corresponding options are
 listed.
 
 
-@node Notes on Various Options,  , Printing Help screen, Customizing Aspell
+@node Notes on Various Options
 @section Notes on Various Options
 
 @menu
 * Notes on Various Filters and Filter Modes::  
+* Notes on the Prefix Option::  
+* Notes on Typo-Analysis::      
+* Notes on the Different Suggestion Modes::  
 @end menu
 
-@node Notes on Various Filters and Filter Modes,  , Notes on Various Options, Notes on Various Options
+@node Notes on Various Filters and Filter Modes
 @subsection Notes on Various Filters and Filter Modes
-@c @anchor{filter}
 
 Aspell now has rudimentary filter support.  You can either select from
 individual filters or chose a filter mode.  To select a filter mode
@@ -1526,6 +1145,7 @@ than one delimiter pair is specified by one call of
 comma separated list.  To indicate that a context is always closed by
 end of line use @code{\0} sequence as closing delimiter.
 
+@node Notes on the Prefix Option
 @subsection Notes on the Prefix Option
 
 The @option{prefix} option is there to allow Aspell to easily be
@@ -1540,14 +1160,8 @@ values of directories.  If a directory option is explicitly given a
 value than changing the value of @option{prefix} has no effect on that
 directory option.
 
-@c @menu
-@c * Notes on Typo-Analysis::      
-@c * Notes on the Different Suggestion Modes::  
-@c @end menu
-
-@c @node Notes on Typo-Analysis, Notes on the Different Suggestion Modes, Notes on Various Options, Notes on Various Options
+@node Notes on Typo-Analysis
 @subsection Notes on Typo-Analysis and the Keyboard Definition File
-@anchor{Notes on Typo-Analysis}
 
 Aspell .33 and better will, in general, give a higher priority to
 certain misspellings which are likely to be due to typos such as
@@ -1576,13 +1190,8 @@ in mind that Aspell completely ignores accents when scoring words so
 that the key '@kbd{o}' and '@kbd{@"o}' will appear to be the same key
 to aspell even if they are in fact separate keys on your keyboard.
 
-@c @menu
-@c * Notes on the Different Suggestion Modes::            
-@c @end menu
-
-@c @node Notes on the Different Suggestion Modes,  , Notes on Various Options, Notes on Various Options
+@node Notes on the Different Suggestion Modes
 @subsection Notes on the Different Suggestion Modes
-@anchor{Notes on the Different Suggestion Modes}
 
 In order to understand what these suggestion modes do, a basic
 understanding of how aspell works is required.  For that @ref{How
@@ -1597,11 +1206,7 @@ This method will use the fastest method available to come up with
 decent suggestions.  This currently means that it will look for
 soundslikes within one edit distance apart without doing any
 typo-analysis or using replacement tables.  
-FIXME: Update:
-It is slower than Ispell by a factor of 1.5 to 2 when
-a single word list is used.  Its speed is only minimally affected by
-the size of the word list, if at all, but it is strongly affected by
-the number of word lists used.  In this mode Aspell gets about 87% of
+In this mode Aspell gets about 87% of
 the words from my small test kernel of misspelled words.  (Go to
 @uref{http://aspell.net/test} for more info on the test kernel as well
 as comparisons of this version of Aspell with previous versions and
@@ -1609,18 +1214,16 @@ other spell checkers.)
 
 @item fast
 This method is like @option{ultra} except that it also performs
-typo-analysis and uses replacement tables.
-The typo-analysis brings words which are likely to be due to typos to
-the beginning of the list but slows things down by a factor of about
-two.  This mode should get around the same number of words that the
+typo-analysis and uses replacement tables.  The typo-analysis brings
+words which are likely to be due to typos to the beginning of the
+list.  This mode should get around the same number of words that the
 @option{ultra} method does.
 
 @item normal
 This method normally looks for soundslikes within two edit distance
-apart and performs typo-analysis unless it is turned off.  Is is around
-10 times slower than fast mode with the English word list but returns
-better suggestions.  Its speed is directly proportional to the size of
-the word list.  This mode gets 93% of the words.
+apart and performs typo-analysis unless it is turned off.  Is is
+several slower than fast mode but it returns better suggestions. This
+mode gets 93% of the words.
 
 @item slow
 
@@ -1647,6 +1250,7 @@ to the @option{normal} if jump tables were used.
 @chapter Working With Dictionaries
 
 @menu
+* Using aspell-import::         
 * How Aspell Selects an Appropriate Dictionary::  
 * Listing Available Dictionaries::  
 * Dumping the Contents of the Word List::  
@@ -1656,7 +1260,27 @@ to the @option{normal} if jump tables were used.
 * AWLI files::                  
 @end menu
 
-@node How Aspell Selects an Appropriate Dictionary, Listing Available Dictionaries, Working With Dictionaries, Working With Dictionaries
+@node Using aspell-import, How Aspell Selects an Appropriate Dictionary, Working With Dictionaries, Working With Dictionaries
+@section Using @command{aspell-import}
+
+The @command{aspell-import} Perl script will look for old personal
+dictionaries and will import them into GNU Aspell.  It will look for
+both Ispell and Aspell ones.  To use it just run it from the command
+prompt.  If you get an error about @file{/usr/bin/perl} not being
+found than instead try @kbd{perl @var{bindir}/aspell-import}.  When
+running the script if you get a message like:
+
+@verbatim
+Error: No word lists can be found for the language "de".
+@end verbatim
+
+This means that you have not installed support for the given language,
+in this case @code{de} for German.  To rectify the situation download
+and install a dictionary designed to work with GNU Aspell 0.50 or
+better.
+
+
+@node How Aspell Selects an Appropriate Dictionary, Listing Available Dictionaries, Using aspell-import, Working With Dictionaries
 @section How Aspell Selects an Appropriate Dictionary
 
 If the @option{master} option is set in any fashion (via the command
@@ -2776,17 +2400,20 @@ affix compression.
 The affix file is expected to be named @file{@var{lang}_affix.dat}.  It is
 the exact same format as those used by MySpell.  More information can
 be found in the myspell/ directory of the distribution or at 
-@url{http://lingucomponent.openoffice.org/dictionary.html}.
+@uref{http://lingucomponent.openoffice.org/dictionary.html}.
 
-An existing word list can be "munched" using the @command{munch} program
-in the myspell/ directory.
+An existing word list, without affix info, can be affix compressed
+using using the @command{munch} program found in the myspell/ directory.
 
 In order for Aspell to efficiently come up with with suggestions words
-are partially expanded when creating a dictionary.  They are expanded so
-that any affix flags do not effect the first 3 letters of the word.
-This effectively means that all prefixes are expanded.  If you find this
-unacceptable you can turn off this feature by adding the line
-@samp{use-jump-tables false} to the language data file.  This will ....
+are partially expanded when creating a dictionary.  They are expanded
+so that any affix flags do not effect the first 3 letters of the word.
+This effectively means that all prefixes are expanded.  If you find
+this unacceptable you can turn off this feature by adding the line
+@samp{use-jump-tables false} to the language data file.  This will
+turn off the use of jump tables.  You can still get the same
+suggestion quality with jump tables turned off but it will be a lot
+slower.  @xref{Notes on the Different Suggestion Modes}.
 
 It is possible to have both soundslike and affix support but without
 the affix compression.  In this case all words are expanded when
@@ -2819,8 +2446,8 @@ actual word is a run-together.  I plan on more intelligently
 supporting run-together words when coming up with suggestions in a
 future version of Aspell.
 
-@node How Aspell Works, Changelog, Adding Support For Other Languages, Top
-@chapter How Aspell Works
+@node How Aspell Works, Support, Adding Support For Other Languages, Top
+@appendix How Aspell Works
 
 The magic behind my spell checker comes from merging Lawrence Philips
 excellent metaphone algorithm and Ispell's near miss strategy which is
@@ -2871,37 +2498,393 @@ For more details about exactly how each step is performed please see
 the file @file{suggest.cc}.  For more information on the metaphone
 algorithm please see the data file @file{english_phonet.dat}.
 
-@node Changelog, To Do, How Aspell Works, Top
-@appendix Changelog
+@node Support, Helping Out, How Aspell Works, Top
+@appendix Support
+
+Support for Aspell can be found on the Aspell mailing lists.
+Instructions for joining the various mailing lists (and an archive of
+them) can be found off the Aspell home page at
+@uref{http://aspell.net}.
+
+@node Helping Out, To Do, Support, Top
+@appendix Helping Out
+
+I have very little time to work on Aspell so I desperately need other
+people to help with the development of Aspell.  There are a lot of
+things that need to be done before I consider Aspell complete.  For a
+list of them see @ref{To Do}.  I would really appreciate some help
+with doing them.  If you are interested in helping with one of them
+please let me know.
+
+I am also looking for someone to eventually take over the maintenance
+and development of Aspell.  If you are interested please contact me
+directly.
+
+@node To Do, Installing, Helping Out, Top
+@appendix To Do
+
+@menu
+* Important Items::             
+* Other Items::                 
+* Notes on Various Items::      
+@end menu
+
+@node Important Items, Other Items, To Do, To Do
+@appendixsec Important Items
+
+Words in bold indicate how you should refer to the item when
+discussing it with me or others.
+
+@appendixsubsec Things that will be done by Aspell 0.51
+
+These items are already done, or close to it, in the develpment (this)
+version of Aspell.
+
+@itemize @bullet
+@item
+Make Aspell @strong{Thread safe}. Even though Aspell itself is not
+multi-threaded I would like it to be thread safe so that it can be
+used by multi-threaded programs. There are several areas of Aspell
+that that are potently thread unsafe (such as accessing a global pool)
+and several several classes which have the potential of being used by
+more than one thread (such as the personal dictionary). @emph{[In Progress]}
+@item
+Enhance @strong{ispell.el} so that it will work better with the new Aspell. 
+@emph{[In Progress]}
+@end itemize
+
+@appendixsubsec Things that need to be done
+
+These items need to be done before I consider Aspell finished. If you
+are interested in helping me with one of these tasks please email
+me. Good C++ skills are needed for most of these tasks involving
+coding. I hope to have these all done by Aspell 0.51.
+
+@itemize @bullet
+@item
+Clean up copyright notices and bring the Aspell package up to
+@strong{GNU Standards}.
+@item
+Allow Aspell to @strong{check documents which are in UTF-8}. I don't know the
+proper way to use Unicode characters with the curses library, and I
+can't seam to find any concrete documentation on how to do it. If you
+have experience in this area I would really appreciate it if you could
+enlighten me.
+@item
+Come up with a @strong{nroff mode} for spell checking. I know nothing about
+nroff. I would gladly write the filter if someone would be willing to
+work with me in developing one. All I really need to know is what to
+skip.
+@end itemize
+
+@appendixsubsec Things I would like to get done
+
+I would like to get these done. However, I may still consider Aspell
+finished with out. They will probably eventually get
+implemented. However, I could still use help with them.
+
+@itemize @bullet
+@item 
+Use Lawrence Philips' new @strong{Double Metaphone algorithm}. See
+@uref{http://aspell.sourceforge.net/metaphone/}. The main task involved
+here is converting the algorithm into table form. This will take some
+time but their is no real programming experience is required. If you
+want to help with Aspell but don't have any real programming
+experience, this would be a great place to start.
+@item
+Create a @strong{C++ interface} for Aspell, possibly on top of the C one.
+@item
+Write a @strong{GUI} for the aspell utility. Ideally it should be able to do
+everything the Aspell utility can do and not just be able spell check
+a document.
+@item
+Better @strong{support for compound words}. If you speak a language
+which has a lot of compound of run-together words I would appreciate
+hearing back from you. The current support for @emph{conditional}
+compound words will disappear in Aspell 0.51 since no one seams to be
+using it. Support for @emph{unconditional} compound words will still
+be available. However, several people have informed me that they need
+more. I attempted to provide that, but it wasn't powerful enough, and
+hence unused. Thus, I am going to start from scratch, but I need to
+know exactly what is involved in correct compound formation.
+@item
+Rank suggestions based on @strong{frequency information}.  Both global
+frequency and document specific frequency can be used.  The latter will
+require that the whole document be made available to the spell checker.
+Also use frequency information to flag words which are found in the
+dictionary but not in common usage, and thus might not be what was
+intended.
+@item
+Be able to accept @strong{words with spaces in them} as many languages
+have words, such as a word in a foreign phrase, which only make sense
+when followed by other words.
+@end itemize
+
+@node Other Items, Notes on Various Items, Important Items, To Do
+@appendixsec Other Items
+
+These items all sound like good ideas however I am not sure when I
+will get to implementing them if ever.  Words in bold indicate how you
+should refer to the item when discussing it with me or others.
+
+@itemize @bullet
+@item
+Come up with a plug-in for @command{gEdit} the gnome text editor.
+
+@item
+Change languages (and thus dictionaries) based on the information in
+the actual document.
+
+@item
+Come up with a @command{nroff} mode for spell checking.
+
+@item
+Come up with a mode that will skip words based on the symbols that
+(almost) always surround the word.  (@strong{Word skipping by context})
+
+@item
+Create two @strong{server modes} for Aspell.  One that uses the DICT
+protocol and one that uses @command{ispell -a} method of communication
+via some arbitrary port.
+
+@item
+Come up with @strong{thread safe personal dictionaries}.
+
+@item
+Use the @strong{Hidden Markov Model} to base the suggestions on not only
+the word itself but on the context around the word.
+
+@item
+Having a way to @strong{email the personal dictionary} and/or
+replacement list to a particular address either periodically or when
+it grows to a certain size.
+@end itemize
+
+The following good ideas were found in the ispell @file{WISHES} file
+so I thought I would pass them on.
+
+@itemize @bullet
+@item
+Ispell should be smart enough to ignore hyphenation signs, such as the
+@TeX{} @samp{\-} hyphenation indicator.
+
+@item
+(Jeff Edmonds) The personal dictionary should be able to remove
+certain words from the master dictionary, so that obscure words like
+"wether" wouldn't mask favorite typos.
+
+@item
+(Jeff Edmonds) It would be wonderful if Ispell could correct inserted
+spaces such as "th e" for "the" or even "can not" for "cannot".
+
+@item
+Since Ispell has dictionaries available to it, it is conceivable that
+it could automatically determine the language of a particular file by
+choosing the dictionary that produced the fewest spelling errors on
+the first few lines.
+@end itemize
+
+@node Notes on Various Items,  , Other Items, To Do
+@appendixsec Notes on Various Items
+
+@appendixsubsec Word skipping by context
+
+This was posted on the Aspell mailing list on January 1, 1999:
+
+I had an idea on a great general way to determine if a word should be
+skipped.  Determine the words to skip based on the symbols that
+(almost) always surround the word.
+
+For example when asked to check the following C++ code:
+@example
+cout << "My age is: " << num << endl; 
+cout << "Next year I will be " << num + 1 << endl; 
+@end example
+
+@code{cout}, @code{num}, and @code{endl} will all be skipped.
+@code{cout} will be skipped because it is always preceded by a
+@samp{<<}.  @code{num} will be skipped because it is always preceded
+by a @samp{<<}.  And @code{endl} will be skipped because it is always
+between a @samp{<<} and a @samp{;}.
+
+Given the following HTML code.
+@example
+<table width=50% cellspacing=0 cellpadding=1> 
+<tr><td>One<td>Two<td>Three 
+<tr><td>1<td>2<td>3 
+</table>
+
+<table cellspacing=0 cellpadding=1> 
+</table>
+@end example
+
+@code{table}, @code{width} @code{cellspacing}, @code{cellpadding},
+@code{tr}, @code{td} will all be skipped because they are always
+enclosed in ``@samp{<>}''.  Now of course @code{table} and
+@code{width} would be marked as correct anyway however there is no
+harm in skipping them.
+
+So I was wondering if anyone on this list has any experience in
+writing this sort of context recognition code or could give me some
+pointers in the right direction.
+
+This sort of word skipping will be very powerful if done right.  I
+imagine that it could replace specific spell checker modes for @TeX{},
+Nroff, SGML etc because it will automatically be able to figure out
+where it should skip words.  It could also probably do a very good job
+on programming languages code.
+
+If you are interested in helping be out with this or just have general
+comments about the idea please let me know.
+
+@appendixsubsec Hidden Markov Model
+
+Knud Haugaard S@o{}rensen suggested this one.  From his email on the
+Aspell mailing list:
+
+consider these examples:
+
+@example
+a fone number.
+ -> a phone number.
+ 
+a fone dress.
+ -> a fine dress.
+@end example
+
+the example illustrates that the right correction might depend on the
+context of the word.
+
+So I suggest that you take a look on HMM to solve this problem.
+
+This might also provide a good base to include grammar correction in
+Aspell. 
+
+see this link 
+@uref{http://www.cse.ogi.edu/CSLU/HLTsurvey/ch1node7.html}.
+
+I think it is a great idea.
+ However unfortunately it will probably be very complicated to implement.
+ Perhaps in the far future.
+
+@appendixsubsec Email the Personal Dictionary
+
+Some one suggest in a personal email:
+
+@quotation
+Have you thought of adding a function to aspell, that - when the
+personal dictionary has grown significantly - sends the user's
+personal dictionary to the maintainer of the corresponding aspell
+dictionary? (if the user allows it)
+
+It would be a very useful service to the dictionary maintainers, and I
+think most users can see their benefit in it too.
+@end quotation
+
+And I replied:
+
+@quotation
+Yes I have considered something like that but not for the personal
+dictionaries but rather the replacement word list in order to get
+better test data for @uref{http://aspell.sourceforge.net/test/}.
+@end quotation
+
+The problem is I don't know of a good way to do this since Aspell can
+also be used as a library.  It also is not a real high priority,
+especially since I would first need to learn how to send email within
+a C++ program.
+
+@appendixsubsec Words With Spaces in Them
+
+While this is something I would like to do it is not a simple task.
+The basic problem is that when tokenizing a string there is no good
+way to keep phrases together.  So the solution is to somehow add
+special conditions to certain words which will dictate which words can
+come before/after it.  Then there is also a problem of how to come up
+with intelligent suggestions.  What further complicates things is that
+many applications send words to Aspell a word at a time.  So even if
+Aspell did support such a thing many applications that would use
+Aspell will not.  So, in order for this to work applications will need
+to send text to Aspell a document or at least a sentence at a time.
+Unfortunately the framework for doing this is not there yet.  It will
+be once I finish the filter interface.  Another possible is to provide
+callback functions in which Aspell will be able to request the
+previous or next word on request.  Yet again the framework for doing
+this is not there.  Perhaps sometime in the near future.
+
+@c @node Installing, ChangeLog, To Do, Top
+@c @appendix Installing
+
+@include readme.texi
+
+@node ChangeLog, Credits, Installing, Top
+@appendix ChangeLog
 
 @heading Changes from 0.50.? to 0.51
 
 @itemize @bullet
 @item
-Added support for loadable filters thanks to Christoph Hinterm@"uller
-
+Added support for loadable filters thanks to Christoph Hintermüller
 @item
-Enhanced TeX filter to support recognize accent commands such as the
-German umlaute and to treat words with hyphenation characters in them
-as one word, also thanks to Christoph Hinterm@"uller
-
+Enhanced TEX filter to support recognizing accent commands, such as
+the German umlaute, and to treat words with hyphenation characters in
+them as one word, also thanks to Christoph Hintermüller
 @item
 Added gettext support thanks to Sergey Poznyakoff
-
 @item
 Reworked how the dictionary is stored to take up less space (around
 80% for the English language) and be faster in some cases.
-
 @item
 Reworked the build system so that a single Makefile is used for most
 of the code.
-
 @item
-Converted manual to texinfo format thanks to Chris Martin
-
+Support for Affix Compression.  Affix compression stores the root word
+and then a list of prefixes and suffixes that the word can take, and
+thus saves a lot of space.  The codebase comes from MySpell found in
+OpenOffice.  It uses the same affix file OpenOffice (and Mozilla) use.
+However, affix compression is currently incompatible with sounds like
+look up which means that the suggestion quality will suffer.
 @item
-Added support for affix compression.
+Added support for MySpell Replacement Tables for better suggestions
+when phonet information is not available.
+@item
+Manual has has been converted to texinfo format thanks to the work of
+Chris Martin.
+@end itemize
 
+@heading Changes from 0.50.4.1 to 0.50.5 (Feb 10, 2003)
+
+@itemize @bullet
+@item
+Reworked url filter which fixed several bugs and now accepts
+"bla.bla/kdkdl" as a url.
+@item
+Fixed bug in which the url filter was coming before all other filters
+when it was suppose to come after. This solved a number of problems
+where the url filter was interfering with other filters.
+@item
+Small bug fix in SGML filter.
+@item
+Added code page charsets, ie cp125?.dat.
+@item
+Added natural (split) keyboard data file as "split.kbd"
+@item
+Compile fixes for the upcoming Gcc 3.4
+@item
+Removed Solaris link hack as it was causing more problems than it
+fixes.
+@item
+Compile fixes for Sun WorkShop 6 compiler, but there may still be some
+problems, especially with linking.
+@item
+Included patch to help compile with Microsoft Visual C++ 6.
+@item
+Minor manual fixes.
+@item
+Updated the TODO section to reflect the current progress with the next
+major version of Aspell (0.51).
+@item
+Updated to Autoconf 2.59, Automake 1.82, and Libtool 1.5.2.
 @end itemize
 
 @heading Changes from 0.50.4 to 0.50.4.1 (Oct 11, 2003)
@@ -4028,277 +4011,11 @@ Added documentation for the C++ library
 Other minor bug fixes.
 @end itemize
 
-@node To Do, Credits, Changelog, Top
-@appendix To Do
-@c @anchor{todo}
-
-Words in bold indicate how you should refer to the item when
-discussing it with me or others.
-
-@menu
-* Things that need to be done::  
-* Good ideas that are worth implementing::  
-* Notes and Status of various items::  
-@end menu
-
-@node Things that need to be done, Good ideas that are worth implementing, To Do, To Do
-@appendixsec Things that need to be done
-
-These items need to be done before I consider Aspell finished.
-Unfortunately, I do not have the time to do all so if you are
-interested in helping me with one of these tasks please email me.
-Good C++ skills are needed for most of these tasks involving coding.
-
-@itemize @bullet
-@item
-Clean up copyright notices and bring the Aspell package up to GNU
-Standards.
-
-@item
-Allow Aspell to check documents which are in @acronym{UTF-8}.  The
-main thing to be done is to get Aspell to display @acronym{UTF-8}
-correctly.  This will involve being able to get the length of
-@acronym{UTF-8} strings and display @acronym{UTF-8} using the curses
-library.
-
-@item
-Make Aspell thread safe.  Even though Aspell itself is not
-multi-threaded I would like it to be thread safe so that it can be
-used by multi-threaded programs.  There are several areas of Aspell
-that that are potentially thread unsafe (such as accessing a global
-pool) and several classes which have the potential of being used by
-more than one thread (such as the personal dictionary).
-
-@item
-Integrate Kevin Hendricks affix compression code into Aspell.  His
-code is already in use in OpenOffice as part of the lingucomponent
-component.  More information can be found at
-@uref{http://whiteboard.openoffice.org/lingucomponent/dictionary.html}.
-The latest version of his code is also available there.
-
-@item
-Create a C++ interface for Aspell, possibly on top of the C one.
-
-@item
-Enhance @file{ispell.el} so that it will work better with the new
-Aspell.
-@end itemize
-
-@node Good ideas that are worth implementing, Notes and Status of various items, Things that need to be done, To Do
-@appendixsec Good ideas that are worth implementing
-
-These items all sound like good ideas however I am not sure when I
-will get to implementing them if ever.
-
-@itemize @bullet
-@item
-Use Lawrence Philips' new Double Metaphone algorithm.  See
-@uref{http://aspell.sourceforge.net/metaphone/}.
-
-@item
-Use frequency information to help rank suggestions.  Both global
-frequency and document specific frequency can be used.  The latter will
-require that the whole document be made available to the spell checker.
-
-Also use frequency information to flag words which are found in the
-dictionary but not in common usage, and thus might not be what was
-intended.
-
-@item
-Come up with a plug-in for @command{gEdit} the gnome text editor.
-
-@item
-Change languages (and thus dictionaries) based on the information in
-the actual document.
-
-@item
-Come up with a @command{nroff} mode for spell checking.
-
-@item
-Come up with a mode that will skip words based on the symbols that
-(almost) always surround the word.  (@emph{Word skipping by context})
-
-@item
-Create two @emph{server modes} for Aspell.  One that uses the DICT
-protocol and one that uses @command{ispell -a} method of communication
-via some arbitrary port.
-
-@item
-Come up with @emph{thread safe personal dictionaries}.
-
-@item
-Use the @emph{Hidden Markov Model} to base the suggestions on not only
-the word itself but on the context around the word.
-
-@item
-Having a way to @emph{email} @emph{the personal dictionary} and/or
-replacement list to a particular address either periodically or when
-it grows to a certain size.
-
-@item
-Be able to accept @emph{words with spaces in them} as many languages
-have words such as a word in a foreign phrase which only make sense
-when followed by other words.
-@end itemize
-
-The following good ideas were found in the ispell @file{WISHES} file
-so I thought I would pass them on.
-
-@itemize @bullet
-@item
-Ispell should be smart enough to ignore hyphenation signs, such as the
-@TeX{} @samp{\-} hyphenation indicator.
-
-@item
-(Jeff Edmonds) The personal dictionary should be able to remove
-certain words from the master dictionary, so that obscure words like
-"wether" wouldn't mask favorite typos.
-
-@item
-(Jeff Edmonds) It would be wonderful if Ispell could correct inserted
-spaces such as "th e" for "the" or even "can not" for "cannot".
-
-@item
-Since Ispell has dictionaries available to it, it is conceivable that
-it could automatically determine the language of a particular file by
-choosing the dictionary that produced the fewest spelling errors on
-the first few lines.
-@end itemize
-
-@node Notes and Status of various items,  , Good ideas that are worth implementing, To Do
-@appendixsec Notes and Status of various items
-
-I want to implement this to give other people an idea of how it should
-be done and because I am really sick of having to spell check through
-url and email address.
-
-@appendixsubsec Word skipping by context
-
-This was posted on the Aspell mailing list on January 1, 1999:
-
-I had an idea on a great general way to determine if a word should be
-skipped.  Determine the words to skip based on the symbols that
-(almost) always surround the word.
-
-For example when asked to check the following C++ code:
-@example
-cout << "My age is: " << num << endl; 
-cout << "Next year I will be " << num + 1 << endl; 
-@end example
-
-@code{cout}, @code{num}, and @code{endl} will all be skipped.
-@code{cout} will be skipped because it is always preceded by a
-@samp{<<}.  @code{num} will be skipped because it is always preceded
-by a @samp{<<}.  And @code{endl} will be skipped because it is always
-between a @samp{<<} and a @samp{;}.
-
-Given the following HTML code.
-@example
-<table width=50% cellspacing=0 cellpadding=1> 
-<tr><td>One<td>Two<td>Three 
-<tr><td>1<td>2<td>3 
-</table>
-
-<table cellspacing=0 cellpadding=1> 
-</table>
-@end example
-
-@code{table}, @code{width} @code{cellspacing}, @code{cellpadding},
-@code{tr}, @code{td} will all be skipped because they are always
-enclosed in ``@samp{<>}''.  Now of course @code{table} and
-@code{width} would be marked as correct anyway however there is no
-harm in skipping them.
-
-So I was wondering if anyone on this list has any experience in
-writing this sort of context recognition code or could give me some
-pointers in the right direction.
-
-This sort of word skipping will be very powerful if done right.  I
-imagine that it could replace specific spell checker modes for @TeX{},
-Nroff, SGML etc because it will automatically be able to figure out
-where it should skip words.  It could also probably do a very good job
-on programming languages code.
-
-If you are interested in helping be out with this or just have general
-comments about the idea please let me know.
-
-@appendixsubsec Hidden Markov Model
-
-Knud Haugaard S@o{}rensen suggested this one.  From his email on the
-Aspell mailing list:
-
-consider these examples:
-
-@example
-a fone number.
- -> a phone number.
- 
-a fone dress.
- -> a fine dress.
-@end example
-
-the example illustrates that the right correction might depend on the
-context of the word.
-
-So I suggest that you take a look on HMM to solve this problem.
-
-This might also provide a good base to include grammar correction in
-Aspell. 
-
-see this link 
-@uref{http://www.cse.ogi.edu/CSLU/HLTsurvey/ch1node7.html}.
-
-I think it is a great idea.
- However unfortunately it will probably be very complicated to implement.
- Perhaps in the far future.
-
-@appendixsubsec Email the Personal Dictionary
-
-Some one suggest in a personal email:
-
-@quotation
-Have you thought of adding a function to aspell, that - when the
-personal dictionary has grown significantly - sends the user's
-personal dictionary to the maintainer of the corresponding aspell
-dictionary? (if the user allows it)
-
-It would be a very useful service to the dictionary maintainers, and I
-think most users can see their benefit in it too.
-@end quotation
-
-And I replied:
-
-@quotation
-Yes I have considered something like that but not for the personal
-dictionaries but rather the replacement word list in order to get
-better test data for @uref{http://aspell.sourceforge.net/test/}.
-@end quotation
-
-The problem is I don't know of a good way to do this since Aspell can
-also be used as a library.  It also is not a real high priority,
-especially since I would first need to learn how to send email within
-a C++ program.
-
-@appendixsubsec Words With Spaces in Them
-
-While this is something I would like to do it is not a simple task.
-The basic problem is that when tokenizing a string there is no good
-way to keep phrases together.  So the solution is to somehow add
-special conditions to certain words which will dictate which words can
-come before/after it.  Then there is also a problem of how to come up
-with intelligent suggestions.  What further complicates things is that
-many applications send words to Aspell a word at a time.  So even if
-Aspell did support such a thing many applications that would use
-Aspell will not.  So, in order for this to work applications will need
-to send text to Aspell a document or at least a sentence at a time.
-Unfortunately the framework for doing this is not there yet.  It will
-be once I finish the filter interface.  Another possible is to provide
-callback functions in which Aspell will be able to request the
-previous or next word on request.  Yet again the framework for doing
-this is not there.  Perhaps sometime in the near future.
-
-@node Credits, Copying This Manual, To Do, Top
+@node Credits, Copying, ChangeLog, Top
 @appendix Credits
+
+The following people have contributed a significant amount of code to
+GNU Aspell:
 
 @itemize @bullet
 @item
@@ -4332,107 +4049,42 @@ To the LyX development team for giving me a great tool for the
 development of this manual.
 @end itemize
 
-@appendix Glossary and References
+@node Copying
+@appendix Copying
 
-@table @strong
-@item affix
-in grammar, a word element that, when added to a word, modifies its
-meaning or function; prefix, infix, or suffix.
+Copyright @copyright{} 2000--2004 Kevin Atkinson.
 
-@item Debian
-A 100% Open Source Linux distribution 
-@uref{http://www.debian.org}
+@quotation
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.1 or
+any later version published by the Free Software Foundation; with no
+Invariant Sections, no Front-Cover Texts and no Back-Cover Texts.  A
+copy of the license is included in the section entitled "GNU Free
+Documentation License".
 
-@item DICT protocol
-A TCP transaction based query/response protocol that allows a client
-to access dictionary definitions from a set of natural language
-dictionary databases.  @uref{http://www.dict.org/}
+The library and utility program is copyright @copyright{} 2000-2002 by
+Kevin Atkinson.  You can redistribute it and/or modify it under the
+terms of the GNU Lesser General Public License as (LGPL) published by
+the Free Software Foundation; either version 2.1 of the License, or
+(at your option) any later version.
 
-
-@item Gnome
-A project to build a complete, user-friendly desktop based entirely on
-free software.  @uref{http://www.gnome.org/}
-
-@item GTK+
-A library for creating graphical user interfaces for the X Window
-System.  It is designed to be small, efficient, and flexible.
-@uref{http://www.gtk.org/}
-
-@item GUI
-Graphics User Interface
-
-@item Ispell.el
-Emacs interface for Ispell.
- 
-@uref{http://www.kdstevens.com/~stevens/ispell-page.html}
-
-@item Ispell
-An international spell checker which is just about the only decent
-Open Source spell checker out there.  (except Aspell of course).
-@uref{http://fmg-www.cs.ucla.edu/geoff/ispell.html}
-
-@item ispell -a
-An Ispell mode that is designed to be used by other applications
-though a pipe.
-
-@item KDE
-A powerful graphical desktop environment for Unix workstations.
-@uref{http://www.kde.org}
-
-@item Linux
-A Open Source version of Unix which runs on many platforms.
-@uref{http://www.linux.org/}
-
-@item LyX
-An What You See is What You Mean document editor for the X environment,
-@uref{http://www.lyx.org}
-
-@item Open Source 
-Software where the source code is available for anyone to extend or
-modify.  @uref{http://www.opensource.org/}
-
-@item Red Hat
-A commercial Linux distribution.  @uref{http://www.redhat.com}
-
-@item RPM
-Red Hat's packing format also used by other Linux distributions.
-
-@item STL
-Standard Template Library.  A C++ library of container classes,
-algorithms, and iterators.
-
-@item SGI STL
- Silicon Graphics implantation of the STL.
- @uref{http://www.sgi.com/Technology/STL/}
-
-
-@item STLPort
-A port of SGI STL designed to run on compilers that don't support all
-the latest features of C++.  @uref{http://corp.metabyte.com/~fbp/stl/}
-@end table
-
-@node Copying This Manual, Using the Libraries, Credits, Top
-@appendix Copying This Manual
+Certain parts of the library, as indicated at the top of the source
+file, are under a weaker license.  However, all parts of the library
+are LGPL Compatible.
+@end quotation
 
 @menu
-* GNU Free Documentation License::  License for copying this manual
+* GNU Free Documentation License::  
+* GNU Lesser General Public License::  
 @end menu
 
 @include fdl.texi
-
-@node Using the Libraries, Index, Copying This Manual, Top
-@appendix Using the Libraries
-
-@menu
-* Library Copying::  License for using the libraries
-@end menu
-
 @include lgpl.texi
 
-@node Index,  , Using the Libraries, Top
-@unnumbered Index
+@c @node Index,  , Copying, Top
+@c @unnumbered Index
 
-@printindex cp
+@c @printindex cp
 
 @bye
 

@@ -1,5 +1,5 @@
-@node Library Copying
-@appendixsec GNU LESSER GENERAL PUBLIC LICENSE
+@node GNU Lesser General Public License
+@appendixsec GNU Lesser General Public License
 
 @cindex LGPL, Lesser General Public License
 @center Version 2.1, February 1999
