@@ -427,40 +427,50 @@ namespace aspeller {
     return false;
   }
 
+  static PosibErrBase invalid_word_e(const Language & l,
+                                     ParmString word,
+                                     const char * msg,
+                                     char chr = 0)
+  {
+    if (chr) {
+      char m[200];
+      snprintf(m, 200, msg, MsgConv(l)(chr));
+      return make_err(invalid_word, MsgConv(l)(word), m);
+    } else {
+      return make_err(invalid_word, MsgConv(l)(word), msg);
+    }
+  }
+
   PosibErr<void> check_if_valid(const Language & l, ParmString word) {
     if (*word == '\0') 
-      return make_err(invalid_word, MsgConv(l)(word), _("Empty string."));
+      return invalid_word_e(l, word, _("Empty string."));
     const char * i = word;
     if (!l.is_alpha(*i)) {
-      if (!l.special(*i).begin) {
-        char m[70];
-        snprintf(m, 70, 
-                 _("The character '%s' may not appear at the beginning of a word."),
-                 MsgConv(l)(*i));
-        return make_err(invalid_word, MsgConv(l)(word), m);
-      } else if (!l.is_alpha(*(i+1))) {
-	return make_err(invalid_word, MsgConv(l)(word), _("Does not contain any letters."));
-      }
+      if (!l.special(*i).begin)
+        return invalid_word_e(l, word, _("The character '%s' may not appear at the beginning of a word."), *i);
+      else if (!l.is_alpha(*(i+1)))
+        return invalid_word_e(l, word, _("The character '%s' must be followed by a alphabetic character."), *i);
+      else if (!*(i+1))
+        return invalid_word_e(l, word, _("Does not contain any alphabetic characters.."));
     }
     for (;*(i+1) != '\0'; ++i) { 
       if (!l.is_alpha(*i)) {
-	if (!l.special(*i).middle) {
-          char m[70];
-          snprintf(m, 70, 
-                   _("The character '%s' may not appear in the middle of a word."),
-                   MsgConv(l)(*i));
-          return make_err(invalid_word, MsgConv(l)(word), m);
-        }
+        if (!l.special(*i).middle)
+          return invalid_word_e(l, word, _("The character '%s' may not appear in the middle of a word."), *i);
+        else if (!l.is_alpha(*(i+1)))
+          return invalid_word_e(l, word, _("The character '%s' must be followed by a alphabetic character."), *i);
+        else if (!l.is_alpha(*(i-1)))
+          return invalid_word_e(l, word, _("The character '%s' must be preceded by a alphabetic character."), *i);
       }
     }
     if (!l.is_alpha(*i)) {
-      if (!l.special(*i).end) {
-        char m[70];
-        snprintf(m, 70, 
-                 _("The character '%s' may not appear at the end of a word."),
-                 MsgConv(l)(*i));
-        return make_err(invalid_word, MsgConv(l)(word), m);
-      }
+      if (*i == '\r')
+        return invalid_word_e(l, word, _("The character '\\r' may not appear at the end of a word. " 
+                                         "This probably means means that the file is using MS-DOS EOL instead of Unix EOL. "), *i);
+      if (!l.special(*i).end)
+        return invalid_word_e(l, word, _("The character '%s' may not appear at the end of a word."), *i);        
+      else if (!l.is_alpha(*(i-1)))
+        return invalid_word_e(l, word, _("The character '%s' must be preceded by a alphabetic character."), *i);
     }
     return no_err;
   }
