@@ -8,7 +8,11 @@
 #include <stdio.h>
 
 #ifndef va_copy
-#define va_copy __va_copy
+#  ifdef __va_copy
+#    define va_copy __va_copy
+#  else
+#    define va_copy(dst, src) memcpy(&dst, &src, sizeof(va_list))
+#  endif
 #endif
 
 #include "string.hpp"

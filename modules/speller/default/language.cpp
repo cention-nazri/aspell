@@ -225,7 +225,7 @@ namespace aspeller {
 #ifdef HAVE_LANGINFO_CODESET
       if (!tmp) tmp = nl_langinfo(CODESET);
 #endif
-      if (is_ascii_enc(tmp)) tmp = 0;
+      if (ascii_encoding(*config, tmp)) tmp = 0;
       if (tmp)
         RET_ON_ERR(mesg_conv_.setup(*config, charmap_, fix_encoding_str(tmp, buf), NormTo));
       else 

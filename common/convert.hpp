@@ -199,7 +199,8 @@ namespace acommon {
 
   const char * fix_encoding_str(ParmStr enc, String & buf);
 
-  bool is_ascii_enc(ParmStr enc);
+  // also returns true if the encoding is unknown
+  bool ascii_encoding(const Config & c, ParmStr enc0);
 
   enum Normalize {NormNone, NormFrom, NormTo};
 

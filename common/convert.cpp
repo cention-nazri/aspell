@@ -16,6 +16,7 @@
 #include "errors.hpp"
 #include "stack_ptr.hpp"
 #include "cache-t.hpp"
+#include "file_util.hpp"
 #include "file_data_util.hpp"
 #include "vararray.hpp"
 
@@ -882,12 +883,25 @@ namespace acommon {
       return buf.c_str();
   }
 
-  bool is_ascii_enc(ParmStr enc)
+  bool ascii_encoding(const Config & c, ParmStr enc0)
   {
-    return (enc == "ASCII" || enc == "ascii" 
-            || enc == "ANSI_X3.4-1968");
+    if (enc0.empty()) return true;
+    if (enc0 == "ANSI_X3.4-1968" 
+        || enc0 == "ASCII" || enc0 == "ascii") return true;
+    String buf;
+    const char * enc = fix_encoding_str(enc0, buf);
+    if (strcmp(enc, "utf-8") == 0 
+        || strcmp(enc, "ucs-2") == 0 
+        || strcmp(enc, "ucs-4") == 0) return false;
+    String dir1,dir2,file_name;
+    fill_data_dir(&c, dir1, dir2);
+    file_name << dir1 << enc << ".cset";
+    if (file_exists(file_name)) return false;
+    if (dir1 == dir2) return true;
+    file_name.clear();
+    file_name << dir2 << enc << ".cset";
+    return !file_exists(file_name);
   }
-
 
   PosibErr<Convert *> internal_new_convert(const Config & c,
                                            ParmString in, 

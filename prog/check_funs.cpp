@@ -12,10 +12,9 @@
    CURSES_INCLUDE_WORKAROUND_1
    CURSES_ONLY
    HAVE_GETCH
+   HAVE_MBRLEN
    All these macros need to have a true value and not just be defined
 */
-
-#include <wchar.h>
 
 #include "settings.h"
 
@@ -57,8 +56,10 @@ extern "C" {int getch();}
 
 #if HAVE_LIBCURSES
 
-#  if USE_NCURSESW
+#  if HAVE_LIBNCURSESW
 #    include <ncursesw/curses.h>
+#  elif HAVE_LIBNCURSES
+#    include <ncurses/curses.h>
 #  else
 #    include <curses.h>
 #  endif
@@ -101,6 +102,12 @@ static SCREEN * term;
 #endif
 
 #endif // HAVE_LIBCURSES
+
+#ifdef HAVE_MBRLEN
+#  include <wchar.h>
+#else
+#  define mbrlen(x,y,z) 1
+#endif
 
 static void cleanup (void) {
 #if   HAVE_LIBCURSES
@@ -523,7 +530,7 @@ void display_misspelled_word() {
         }
         int len = mbrlen(j, MB_CUR_MAX, NULL);
         if (len > 0) {
-          waddnstr(text_w, j, len);
+          waddnstr(text_w, const_cast<char *>(j), len);
         } else {
           waddch(text_w, ' ');
           len = 1;

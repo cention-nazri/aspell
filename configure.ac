@@ -76,7 +76,7 @@ dnl [  --enable-aspell5-compatibility  install aspell 0.50 compatibility librari
 dnl
 
 AC_PROG_CXX
-if test "$GXX" == "yes" && expr match + "$CXXFLAGS" + ".*-O" > /dev/null
+if test "$GXX" == "yes" && expr "$CXXFLAGS" : '.*-O' > /dev/null
 then
   CXXFLAGS="$CXXFLAGS -fno-exceptions"
 fi
@@ -91,8 +91,8 @@ AC_PROG_LIBTOOL
 
 dnl DL stuff
 
-AC_CHECK_HEADERS(dlfcn.h)
-AC_CHECK_LIB(dl, dlopen)
+AC_CHECK_HEADERS(dlfcn.h,,[enable_compile_in_filters=yes])
+AC_CHECK_LIB(dl, dlopen,,[enable_compile_in_filters=yes])
 
 dnl
 
@@ -209,20 +209,6 @@ AC_TRY_COMPILE(
    AC_DEFINE(USE_LOCALE, 1, [Defined if Posix locales are supported])],
   [AC_MSG_RESULT(no)] )
 
-AC_MSG_CHECKING(if posix mutexes are supported)
-AC_TRY_COMPILE(
-  [#include <pthread.h>],
-  [pthread_mutex_t lck;
-   pthread_mutex_init(&lck, 0);
-   pthread_mutex_lock(&lck);
-   pthread_mutex_unlock(&lck);
-   pthread_mutex_destroy(&lck);],
-  [AC_MSG_RESULT(yes)
-   AC_DEFINE(USE_POSIX_MUTEX, 1, [Defined if Posix mutexes are supported])],
-  [AC_MSG_RESULT(no)
-   AC_MSG_WARN([Unable to find locking mechanism, Aspell will not be thread safe.])] )
-
-
 if test "$enable_regex" == "yes"
 then
   AC_MSG_CHECKING(if posix regex are supported)
@@ -238,6 +224,52 @@ then
 fi
 
 AM_LANGINFO_CODESET
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                                                                 #
+#                   Posix lock function tests                     #
+#                                                                 #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+AC_SUBST(PTHREAD_LIB)
+
+AC_MSG_CHECKING(if posix mutexes are supported)
+
+ORIG_LIBS="$LIBS"
+
+for l in '' '-lpthread' 
+do 
+  if test -z "$use_posix_mutex"
+  then
+    LIBS="$l $ORIG_LIBS"
+    AC_TRY_LINK(
+      [#include <pthread.h>],
+      [pthread_mutex_t lck;
+       pthread_mutex_init(&lck, 0);
+       pthread_mutex_lock(&lck);
+       pthread_mutex_unlock(&lck);
+       pthread_mutex_destroy(&lck);],
+      [PTHREAD_LIB=$l
+       use_posix_mutex=1])
+  fi
+done
+
+LIBS="$ORIG_LIBS"
+
+if test "$use_posix_mutex"
+then
+  if test -z "$PTHREAD_LIB"
+  then
+    AC_MSG_RESULT(yes)
+  else
+    AC_MSG_RESULT([yes (in $PTHREAD_LIB)])
+  fi
+  AC_DEFINE(USE_POSIX_MUTEX, 1, [Defined if Posix mutexes are supported])
+else
+  AC_MSG_RESULT(no)
+  AC_MSG_WARN([Unable to find locking mechanism, Aspell will not be thread safe.])
+fi
+
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                                                                 #
@@ -265,67 +297,81 @@ fi
 
 if test "$use_curses"
 then
- 
+
+  ORIG_LIBS="$LIBS"
+  ORIG_CPPFLAGS="$CPPFLAGS"
+  CPPFLAGS="$CURSES_INCLUDE $ORIG_CPPFLAGS"
+
   if test -z "$CURSES_LIB"
   then
 
-    AC_CHECK_LIB(ncursesw, initscr,
-      [CURSES_LIB=-lncursesw],
+    AC_MSG_CHECKING(for working curses libraray)
+  
+    LIBS="-lncursesw $ORIG_LIBS"
+    AC_TRY_LINK(
+      [#include <ncursesw/curses.h>], [initscr()],
+      [CURSES_LIB=-lncursesw
+       AC_DEFINE(HAVE_LIBNCURSESW, 1, [Defined to 1 if libncursesw is available])],
       [
 
     dnl else if
-    AC_CHECK_LIB(ncurses, initscr,
-      [CURSES_LIB=-lncurses],
+    LIBS="-lncurses $ORIG_LIBS"
+    AC_TRY_LINK(
+      [#include <ncurses/curses.h>], [initscr()],
+      [CURSES_LIB=-lncurses
+       AC_DEFINE(HAVE_LIBNCURSES, 1, [Defined to 1 if libncurses is available])],
       [
 
     dnl else if
-    AC_CHECK_LIB(curses, initscr,
-      [CURSES_LIB=-lcurses]) ] ) ] )
+    LIBS="-lcurses $ORIG_LIBS"
+    AC_TRY_LINK(
+      [#include <curses.h>], [initscr()],
+      [CURSES_LIB=-lcurses]
+    ) ]) ])
+
+    if test -n "$CURSES_LIB"
+    then
+      AC_MSG_RESULT([found in $CURSES_LIB])
+    else
+      AC_MSG_RESULT([not found])
+    fi
 
   fi
 
   if test -n "$CURSES_LIB"
   then
-     ORIG_LIBS="$LIBS"
-     ORIG_CPPFLAGS="$CPPFLAGS"
-     CPPFLAGS="$CURSES_INCLUDE $CPPFLAGS"
-     LIBS="$CURSES_LIB $LIBS"
+     LIBS="$CURSES_LIB $ORIG_LIBS"
 
      AC_MSG_CHECKING(for wide character support in curses libraray)
      AC_TRY_LINK(
        [#include <wchar.h>
-        #include <ncursesw/curses.h>
+        #if HAVE_LIBNCURSESW
+        #  include <ncursesw/curses.h>
+        #elif HAVE_LIBNCURSES
+        #  include <ncurses/curses.h>
+        #else
+        #  include <curses.h>
+        #endif
        ],
        [wchar_t wch = 0;
         addnwstr(&wch, 1);],
        [AC_MSG_RESULT(yes)
-        AC_DEFINE(USE_NCURSESW, 1,
-                  [Defined if wide character support found in ncursesw/])
-        AC_DEFINE(HAVE_WIDE_CURSES, 1,
-                  [Defined if curses libraray includes wide character support])],
-       [
-
-     dnl else if
-     AC_TRY_LINK(
-       [#include <wchar.h>
-        #include <curses.h>
-       ],
-       [wchar_t wch = 0;
-        addnwstr(&wch, 1);],
-       [AC_MSG_RESULT(yes)
-        AC_DEFINE(HAVE_WIDE_CURSES, 1, [])],
-       [
-
-     dnl else
-     AC_MSG_RESULT(no)
-     ] ) ] )
+        AC_DEFINE(HAVE_WIDE_CURSES, 1, [Defined if curses libraray includes wide character support])],
+       [AC_MSG_RESULT(no)])
 
      AC_MSG_CHECKING(if standard curses include sequence will work)
      AC_TRY_LINK(
        [#include <termios.h>
 	#include <unistd.h>
-	#include <curses.h>
-	#include <term.h>],
+        #if HAVE_LIBNCURSESW
+        #  include <ncursesw/curses.h>
+        #elif HAVE_LIBNCURSES
+        #  include <ncurses/curses.h>
+        #else
+        #  include <curses.h>
+        #endif
+	#include <term.h>
+       ],
        [tigetstr(const_cast<char *>("cup"));],
        [AC_MSG_RESULT(yes)
 	AC_DEFINE(HAVE_LIBCURSES, 1, 
@@ -340,7 +386,13 @@ then
      AC_TRY_LINK(
        [#include <termios.h>
 	#include <unistd.h>
-	#include <curses.h>
+        #if HAVE_LIBNCURSESW
+        #  include <ncursesw/curses.h>
+        #elif HAVE_LIBNCURSES
+        #  include <ncurses/curses.h>
+        #else
+        #  include <curses.h>
+        #endif
 	extern "C" {char * tigetstr(char * capname);}],
        [tigetstr(const_cast<char *>("cup"));],
        [AC_MSG_RESULT(yes)
@@ -353,7 +405,14 @@ then
      dnl else if
      AC_MSG_CHECKING(if curses without Unix stuff will work)
      AC_TRY_LINK(
-       [#include <curses.h>],
+       [#if HAVE_LIBNCURSESW
+        #  include <ncursesw/curses.h>
+        #elif HAVE_LIBNCURSES
+        #  include <ncurses/curses.h>
+        #else
+        #  include <curses.h>
+        #endif
+       ],
        [initscr();],
        [AC_MSG_RESULT(yes)
 	AC_DEFINE(HAVE_LIBCURSES, 1, [])
@@ -370,9 +429,11 @@ then
 
      ]) ]) ])
 
-     CPPFLAGS="$ORIG_CPPFLAGS"
-     LIBS="$ORIG_LIBS"
   fi
+
+  CPPFLAGS="$ORIG_CPPFLAGS"
+  LIBS="$ORIG_LIBS"
+
 fi
 
 if test -z "$posix_termios" -a -z "$curses_only"
@@ -396,7 +457,7 @@ fi
 if test -z "$posix_termios" -a -z "$use_curses"
 then
   dnl else if
-  AC_MSG_CHECKING(if getch supported)
+  AC_MSG_CHECKING(if getch is supported)
   AC_TRY_LINK(
     [extern "C" {int getch();}],
     [char c = getch();],
@@ -412,7 +473,17 @@ then
   AC_DEFINE(POSIX_TERMIOS, 1, [Defined if Posix Termios is Supported])
 fi
 
-
+AC_MSG_CHECKING(if mbrlen is supported)
+AC_TRY_LINK(
+  [#include <wchar.h>
+   #include <stddef.h>
+   #include <stdlib.h>],
+  [size_t s = mbrlen("bla", MB_CUR_MAX, 0);],
+  [AC_MSG_RESULT(yes)
+   AC_DEFINE(HAVE_MBRLEN, 1, [Defined if mbrlen is supported])
+  ],
+  [AC_MSG_RESULT(no)]
+)
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                                                                 #

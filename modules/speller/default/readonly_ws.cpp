@@ -182,7 +182,7 @@ namespace {
   {
     char   sl[4];
     u32int loc;
-    Jump() : sl(), loc() {}
+    Jump() {memset(this, 0, sizeof(Jump));}
   };
   
   class ReadOnlyDict : public Dictionary

@@ -16,6 +16,12 @@
 
 namespace acommon {
 
+  // needed for darwin
+  template HashTable<StringMap::Parms>::iterator 
+           HashTable<StringMap::Parms>::find_i(char const* const&, bool&);
+  template std::pair<HashTable<StringMap::Parms>::iterator,bool>
+           HashTable<StringMap::Parms>::insert(const StringPair &);
+
   void StringMap::copy(const StringMap & other)
   {
     lookup_ = other.lookup_;

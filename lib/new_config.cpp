@@ -6,6 +6,8 @@
 
 #include <string.h>
 
+#include "settings.h"
+
 #include "config.hpp"
 #include "errors.hpp"
 #include "filter.hpp"
@@ -22,7 +24,9 @@ namespace acommon {
     Config * config = new_basic_config();
     config->set_filter_modules(filter_modules_begin, filter_modules_end);
     activate_filter_modes(config);
+#ifdef HAVE_LIBDL
     config->load_filter_hook = get_dynamic_filter;
+#endif
     return config;
   }
 

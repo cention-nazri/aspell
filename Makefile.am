@@ -91,7 +91,7 @@ libaspell_la_SOURCES =\
   lib/string_pair_enumeration-c.cpp\
   lib/new_checker.cpp
 
-libaspell_la_LIBADD =  $(LIBINTL)
+libaspell_la_LIBADD =  $(LIBINTL) $(PTHREAD_LIB)
 
 if INCREMENTED_SONAME
 libaspell_la_LDFLAGS = -version-info 16:0:0

@@ -1,5 +1,5 @@
 // This file is part of The New Aspell
-// Copyright (C) 2002 by Kevin Atkinson under the GNU LGPL license
+// Copyright (C) 2002,2003,2004 by Kevin Atkinson under the GNU LGPL license
 // version 2.0 or 2.1.  You should have received a copy of the LGPL
 // license along with this library if you did not you can find
 // it at http://www.gnu.org/.
@@ -19,6 +19,9 @@
 
 #ifdef USE_LOCALE
 # include <locale.h>
+#endif
+
+#ifdef HAVE_LANGINFO_CODESET
 # include <langinfo.h>
 #endif
 
@@ -343,7 +346,7 @@ int main (int argc, const char *argv[])
   const char * codeset = 0;
 #ifdef HAVE_LANGINFO_CODESET
   codeset = nl_langinfo(CODESET);
-  if (is_ascii_enc(codeset)) codeset = 0;
+  if (ascii_encoding(*options, codeset)) codeset = 0;
 #endif
 
 // #ifdef USE_LOCALE
@@ -490,11 +493,11 @@ void setup_display_conv()
   String enc;
 #ifdef ENABLE_NLS
   gettext_enc = bind_textdomain_codeset("aspell", 0);
-  if (gettext_enc && is_ascii_enc(gettext_enc)) gettext_enc = 0;
+  if (ascii_encoding(*options,gettext_enc)) gettext_enc = 0;
 #endif
 #ifdef HAVE_LANGINFO_CODESET
   env_enc = nl_langinfo(CODESET);
-  if (is_ascii_enc(env_enc)) env_enc = 0;
+  if (ascii_encoding(*options, env_enc)) env_enc = 0;
 #endif
   if (gettext_enc && env_enc && strcmp(gettext_enc,env_enc) != 0) 
   {
@@ -1898,7 +1901,7 @@ void print_help (bool verbose) {
   load_all_filters(options);
   if (verbose) {
     printf(_("\n"
-             "Aspell %s alpha.  Copyright 2000-2004 by Kevin Atkinson.\n"
+             "Aspell %s.  Copyright 2000-2004 by Kevin Atkinson.\n"
              "\n"), VERSION);
     for (unsigned i = 0; i < help_text_size; ++i)
       puts(gt_(help_text[i]));

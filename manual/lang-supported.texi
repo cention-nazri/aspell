@@ -74,6 +74,7 @@
 @item hz @tab Herero @tab Latin @tab - @tab -
 @item
 @item ia @tab Interlingua (IALA) @tab Latin @tab Yes @tab -
+@item iba @tab Iban @tab Latin @tab Maybe @tab -
 @item id @tab Indonesian @tab Latin @tab Yes @tab -
 @item ig @tab Igbo @tab Latin @tab Maybe @tab -
 @item ii @tab Sichuan Yi @tab Yi @tab - @tab -
@@ -111,6 +112,7 @@
 @item
 @item mg @tab Malagasy @tab Latin @tab Maybe @tab -
 @item mi @tab Maori @tab Latin @tab Yes @tab -
+@item min @tab Minangkabau @tab Latin @tab Maybe @tab -
 @item mk @tab Macedonian @tab Cyrillic @tab Yes @tab -
 @item ml @tab Malayalam @tab Malayalam @tab Maybe @tab -
 @item mn @tab Mongolian @tab Cyrillic @tab Maybe @tab -

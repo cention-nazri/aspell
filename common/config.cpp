@@ -15,6 +15,9 @@
 
 #ifdef USE_LOCALE
 # include <locale.h>
+#endif
+
+#ifdef HAVE_LANGINFO_CODESET
 # include <langinfo.h>
 #endif
 
@@ -456,11 +459,9 @@ namespace acommon {
 				   const ConfigModule * i, 
 				   const ConfigModule * end) 
   {
-
     while (i != end) {
-      if (strcmp(key, i->name) == 0){ 
+      if (strcmp(key, i->name) == 0)
 	return i;
-      }
       ++i;
     }
     return i;
@@ -560,16 +561,16 @@ namespace acommon {
 
 #if defined USE_LOCALE && defined HAVE_LANGINFO_CODESET
 
-  static inline void get_encoding(String & final_str)
+  static inline void get_encoding(const Config & c, String & final_str)
   {
     const char * codeset = nl_langinfo(CODESET);
-    if (is_ascii_enc(codeset)) codeset = "none";
+    if (ascii_encoding(c, codeset)) codeset = "none";
     final_str = codeset;
   }
 
 #else
 
-  static inline void get_encoding(String & final_str)
+  static inline void get_encoding(const Config &, String & final_str)
   {
     final_str = "none";
   }
@@ -598,7 +599,7 @@ namespace acommon {
 	
       } else if (strcmp(i, "encoding") == 0) {
 
-        get_encoding(final_str);
+        get_encoding(*this, final_str);
 
       } else if (strcmp(i, "special") == 0) {
 
@@ -1358,7 +1359,7 @@ namespace acommon {
     , {"encoding",   KeyInfoString, "!encoding",
        N_("encoding to expect data to be in"), KEYINFO_COMMON}
     , {"filter",   KeyInfoList  , "url",
-       N_("add or removes a filter"), KEYINFO_MAY_CHANGE | KEYINFO_COMMON}
+       N_("add or removes a filter"), KEYINFO_MAY_CHANGE}
     , {"filter-path", KeyInfoList, DICT_DIR,
        N_("path(s) aspell looks for filters")}
     //, {"option-path", KeyInfoList, DATA_DIR,
