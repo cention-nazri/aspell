@@ -647,7 +647,7 @@ static void encodeit(CondsLookup & l, ObjStack & buf,
   // see if we already have this conds matrix
 
   CondsLookup::iterator itr = l.find(cs);
-  if (itr != l.end()) {
+  if (!(itr == l.end())) {
     ptr->conds = *itr;
     return;
   }
