@@ -1,0 +1,35 @@
+
+#INCLUDES = 
+
+noinst_PROGRAMS = mk-dirs_h
+
+dirs.h: mk-dirs_h
+	echo '#define PREFIX "${prefix}"'            >  dirs.h
+	./mk-dirs_h ${prefix} DICT_DIR ${pkglibdir}  >> dirs.h
+	./mk-dirs_h ${prefix} DATA_DIR ${pkgdatadir} >> dirs.h
+	./mk-dirs_h ${prefix} CONF_DIR ${sysconfdir} >> dirs.h
+
+mk_dirs_h_SOURCES = mk-dirs_h.cpp
+
+config.cpp: dirs.h
+
+dist-hook:
+	-rm dirs.h
+
+CLEANFILES = dirs.h
+
+
+
+lib_LTLIBRARIES = libpspell-common.la
+
+libpspell_common_la_SOURCES = \
+  string.cpp getdata.cpp itemize.cpp file_util.cpp \
+  string_buffer.cpp \
+  string_map.cpp string_list.cpp \
+  config.cpp\
+  posib_err.cpp errors.cpp error.cpp\
+  fstream.cpp iostream.cpp info.cpp \
+  can_have_error.cpp
+#  convert.cpp
+
+libpspell_common_la_LDFLAGS = -release 0.15.0
