@@ -586,49 +586,48 @@ class: filter
 
 	# FIME make a "methods" of the next two contractors
 
-	constructor: new aspell filter
-		returns alt type
-		c impl =>
-			PosibErr<Filter *> ret = new_filter(speller,config);
-			if (ret.has_err()) \{
-			  return new CanHaveError(ret.release_err());
-			\} else \{
-			  return ret;
-			\}
-		/
-		can have error
-		speller: speller
-		config: config
+#	constructor: new aspell filter
+#		returns alt type
+#		c impl =>
+#			PosibErr<Filter *> ret = new_filter(config);
+#			if (ret.has_err()) \{
+#			  return new CanHaveError(ret.release_err());
+#			\} else \{
+#			  return ret;
+#			\}
+#		/
+#		can have error
+#		config: config
 
 	constructor: to aspell filter
 		c impl => return static_cast<Filter *>(obj);
 		/
 		can have error: obj
 
-	method: setup
-
-		posib err
-		/
-		void
-		speller: speller
-		config: config
-
-	method: reset
-
-		/
-		void
-
+#	method: setup
+#
+#		posib err
+#		/
+#		void
+#		speller: speller
+#		config: config
+#
+#	method: reset
+#
+#		/
+#		void
+#
 #	method: process
 #	
 #		/
 #		void
 #		char pointer: str
 #		int: size
-
-	method: config
-
-		/
-		config
+#
+#	method: config
+#
+#		/
+#		config
 }
 
 group: document checker
@@ -652,7 +651,7 @@ class: document checker
 	constructor: new aspell document checker
 		returns alt type
 		c impl =>
-			PosibErr<DocumentChecker *> ret = new_document_checker(speller,config,filter);
+			PosibErr<DocumentChecker *> ret = new_document_checker(speller);
 			if (ret.has_err()) \{
 			  return new CanHaveError(ret.release_err());
 			\} else \{
@@ -670,8 +669,6 @@ class: document checker
 		/
 		can have error
 		speller: speller
-		config: config
-		filter: filter
 
 	constructor: to aspell document checker
 		c impl => return static_cast<DocumentChecker *>(obj);
@@ -706,11 +703,6 @@ class: document checker
 			will be null and token.size will be 0
 		/
 		token object
-
-	method: config
-
-		/
-		config
 
 	method: filter
 

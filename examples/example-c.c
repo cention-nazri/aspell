@@ -263,7 +263,7 @@ static void check_document(AspellSpeller * speller, const char * filename)
   }
 
   /* Set up the document checker */
-  ret = new_aspell_document_checker(speller, 0, 0);
+  ret = new_aspell_document_checker(speller);
   if (aspell_error(ret) != 0) {
     printf("Error: %s\n",aspell_error_message(ret));
     return;

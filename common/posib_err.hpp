@@ -196,7 +196,7 @@ namespace acommon {
     return PosibErrBase().prim_err(inf, p1, p2, p3, p4);
   }
 
-  static const PosibErrBase no_err;
+  static const PosibErr<void> no_err;
 
   //
   //

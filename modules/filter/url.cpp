@@ -11,16 +11,16 @@ namespace acommon {
   class UrlFilter : public IndividualFilter 
   {
   public:
-    PosibErr<void> setup(Config *);
+    PosibErr<bool> setup(Config *);
     void reset() {}
     void process(FilterChar * &, FilterChar * &);
   };
 
-  PosibErr<void> UrlFilter::setup(Config *) 
+  PosibErr<bool> UrlFilter::setup(Config *) 
   {
     name_ = "url";
     order_num_ = 0.95;
-    return no_err;
+    return true;
   }
 
   void UrlFilter::process(FilterChar * & str0, FilterChar * & end)

@@ -11,18 +11,18 @@
 #include "posib_err.hpp"
 #include "char_vector.hpp"
 #include "filter_char.hpp"
+#include "filter_char_vector.hpp"
 #include "stack_ptr.hpp"
+#include "filter.hpp"
 
 namespace acommon {
 
   class OStream;
   class Config;
 
-  typedef Vector<FilterChar> FilterCharVector;
-
   struct Decode {
     virtual PosibErr<void> init(ParmString code, Config &) {return no_err;}
-    virtual void decode(const char * in, int size, 
+    virtual void decode(const char * in, int size,
 			FilterCharVector & out) const = 0;
   };
   struct Encode {
@@ -55,9 +55,16 @@ namespace acommon {
     StackPtr<Encode> encode_;
     StackPtr<Conv> conv_;
 
+    FilterCharVector buf;
+
     static const unsigned int null_len_ = 4; // POSIB FIXME: Be more precise
 
   public:
+
+    // This filter is used when the convert method is called.  It must
+    // be set up by an external entity as this class does not set up
+    // this class in any way.
+    Filter filter;
 
     PosibErr<void> init(Config &, ParmString in, ParmString out);
 
@@ -85,8 +92,19 @@ namespace acommon {
 
     bool encode_direct(FilterChar * in, FilterChar * stop) const
       {return encode_->encode_direct(in,stop);}
-    void convert(const char * in, int size, CharVector & out) const
-      {conv_->convert(in,size,out);}
+
+    // convert has the potential to use internal buffers and
+    // is therefore not const.  It is also not thread safe
+    // and I have no intention to make it thus.
+
+    void convert(const char * in, int size, CharVector & out) {
+      if (conv_ && filter.empty())
+	conv_->convert(in,size,out);
+      else
+	generic_convert(in,size,out);
+    }
+
+    void generic_convert(const char * in, int size, CharVector & out);
     
   };
 

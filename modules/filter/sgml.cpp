@@ -4,6 +4,8 @@
 // license along with this library if you did not you can find
 // it at http://www.gnu.org/.
 
+#include <stdio.h>
+
 #include "asc_ctype.hpp"
 #include "config.hpp"
 #include "indiv_filter.hpp"
@@ -11,6 +13,7 @@
 #include "mutable_container.hpp"
 #include "copy_ptr-t.hpp"
 #include "clone_ptr-t.hpp"
+#include "filter_char_vector.hpp"
 
 namespace acommon {
 
@@ -41,7 +44,7 @@ namespace acommon {
   class SgmlFilter : public IndividualFilter 
   {
     bool in_markup;
-    char in_quote;
+    FilterChar::Chr in_quote;
     bool new_token;
     String tag_name;
     String parm_name;
@@ -50,15 +53,15 @@ namespace acommon {
     ClonePtr<StringMap> noskip_tags;
 
     inline bool process_char(FilterChar::Chr c);
+ 
+    public:
 
-  public:
-
-    PosibErr<void> setup(Config *);
+    PosibErr<bool> setup(Config *);
     void reset();
     void process(FilterChar * &, FilterChar * &);
   };
 
-  PosibErr<void> SgmlFilter::setup(Config * opts) 
+  PosibErr<bool> SgmlFilter::setup(Config * opts) 
   {
     name_ = "sgml";
     order_num_ = 0.35;
@@ -66,7 +69,7 @@ namespace acommon {
     ToLowerMap tl_noskip_tags(noskip_tags);
     RET_ON_ERR(opts->retrieve_list("sgml-check", &tl_noskip_tags));
     reset();
-    return no_err;
+    return true;
   }
   
   void SgmlFilter::reset() 
@@ -148,14 +151,124 @@ namespace acommon {
       ++cur;
     }
   }
+  
+  //
+  //
+  //
+
+  class SgmlDecoder : public IndividualFilter 
+  {
+    FilterCharVector buf;
+  public:
+    PosibErr<bool> setup(Config *);
+    void reset() {}
+    void process(FilterChar * &, FilterChar * &);
+  };
+
+  PosibErr<bool> SgmlDecoder::setup(Config *) 
+  {
+    name_ = "sgml-decoder";
+    order_num_ = 0.65;
+    return true;
+  }
+
+  void SgmlDecoder::process(FilterChar * & start, FilterChar * & stop)
+  {
+    buf.clear();
+    FilterChar * i = start;
+    --stop;
+    while (i != stop)
+    {
+      if (*i == '&') {
+	FilterChar * i0 = i;
+	FilterChar::Chr chr;
+	++i;
+	if (*i == '#') {
+	  chr = 0;
+	  ++i;
+	  while (asc_isdigit(*i)) {
+	    chr *= 10;
+	    chr += *i - '0';
+	    ++i;
+	  }
+	} else {
+	  while (asc_isalpha(*i) || asc_isdigit(*i)) {
+	    ++i;
+	  }
+	  chr = '?';
+	}
+	if (*i == ';')
+	  ++i;
+	buf.append(FilterChar(chr, i0, i));
+      } else {
+	buf.append(*i);
+	++i;
+      }
+    }
+    buf.append(*i); // to append final null character
+    start = buf.pbegin();
+    stop  = buf.pend();
+  }
+
+  //
+  //
+  //
+
+  class SgmlEncoder : public IndividualFilter 
+  {
+    FilterCharVector buf;
+  public:
+    PosibErr<bool> setup(Config *);
+    void reset() {}
+    void process(FilterChar * &, FilterChar * &);
+  };
+
+  PosibErr<bool> SgmlEncoder::setup(Config *) 
+  {
+    name_ = "sgml-encoder";
+    order_num_ = 0.99;
+    return true;
+  }
+
+  void SgmlEncoder::process(FilterChar * & start, FilterChar * & stop)
+  {
+    buf.clear();
+    FilterChar * i = start;
+    while (i != stop)
+    {
+      if (*i > 127) {
+	buf.append("&#", i->width);
+	char b[10];
+	sprintf(b, "%d", i->chr);
+	buf.append(b, 0);
+	buf.append(';', 0);
+      } else {
+	buf.append(*i);
+      }
+      ++i;
+    }
+    start = buf.pbegin();
+    stop  = buf.pend();
+  }
 
   //
   //
   //
   
+  IndividualFilter * new_sgml_decoder() 
+  {
+    return new SgmlDecoder();
+  }
+
   IndividualFilter * new_sgml_filter() 
   {
     return new SgmlFilter();
+  }
+
+  IndividualFilter * new_sgml_encoder() 
+  {
+    return 0;
+    //return new SgmlEncoder();
   }
   
   static const KeyInfo sgml_options[] = {

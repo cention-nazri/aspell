@@ -14,14 +14,17 @@
 #include "asc_ctype.hpp"
 #include "can_have_error.hpp"
 #include "config.hpp"
+#include "convert.hpp"
 #include "enumeration.hpp"
 #include "errors.hpp"
+#include "filter.hpp"
 #include "fstream.hpp"
 #include "getdata.hpp"
 #include "info.hpp"
 #include "speller.hpp"
-#include "string_list.hpp"
+#include "stack_ptr.hpp"
 #include "string_enumeration.hpp"
+#include "string_list.hpp"
 
 #if 0
 #include "preload.h"
@@ -382,14 +385,14 @@ namespace acommon {
   PosibErr<Speller *> new_speller(Config * c0) 
   {
     RET_ON_ERR_SET(find_word_list(c0), Config *, c);
-    Speller * m = get_speller_class(c);
-    PosibErrBase err = m->setup(c);
-    if (err.has_err()) {
-      delete m;
-      return err;
-    } else {
-      return m;
-    }
+    StackPtr<Speller> m(get_speller_class(c));
+    RET_ON_ERR(m->setup(c));
+    
+    // Add enocder and decoder filters if any
+    RET_ON_ERR(setup_filter(m->to_internal_->filter, c, true, false, false));
+    RET_ON_ERR(setup_filter(m->from_internal_->filter, c, false, false, true));
+
+    return m.release();
   }
 
   void delete_speller(Speller * m) 

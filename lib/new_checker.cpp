@@ -13,13 +13,13 @@
 namespace acommon {
 
   PosibErr<DocumentChecker *> 
-  new_document_checker(Speller * speller, Config * config, Filter * filter)
+  new_document_checker(Speller * speller)
   {
     StackPtr<DocumentChecker> checker(new DocumentChecker());
-    Tokenizer * tokenizer = new_tokenizer(speller, config);
-    if (!filter) // FIXME deal with error and avoid memory leaks
-      filter = new_filter(speller, config);
-    RET_ON_ERR(checker->setup(tokenizer, speller, config, filter));
+    Tokenizer * tokenizer = new_tokenizer(speller);
+    StackPtr<Filter> filter(new Filter);
+    setup_filter(*filter, speller->config(), true, true, false);
+    RET_ON_ERR(checker->setup(tokenizer, speller, filter.release()));
     return checker.release();
   }
 

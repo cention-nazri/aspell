@@ -69,7 +69,7 @@ namespace acommon {
   }
 #undef increment__
 
-  PosibErr<Tokenizer *> new_tokenizer(Speller * speller, Config *)
+  PosibErr<Tokenizer *> new_tokenizer(Speller * speller)
   {
     Tokenizer * tok = new TokenizerBasic();
     speller->setup_tokenizer(tok);

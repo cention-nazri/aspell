@@ -420,6 +420,19 @@ namespace acommon {
   // new_aspell_convert
   //
 
+  void Convert::generic_convert(const char * in, int size, 
+				CharVector & out)
+  {
+    buf.clear();
+    decode_->decode(in, size, buf);
+    buf.append(0);
+    FilterChar * start = buf.pbegin();
+    FilterChar * stop = buf.pend();
+    if (!filter.empty())
+      filter.process(start, stop);
+    encode_->encode(start, stop, out);
+  }
+
   PosibErr<Convert *> new_convert(Config & c,
 				  ParmString in, 
 				  ParmString out) 
@@ -445,25 +458,6 @@ namespace acommon {
     return conv.release();
     
   }
-  
-  struct ConvGeneric : public Conv {
-
-    const Decode * d_;
-    const Encode * e_;
-
-    PosibErr<void> init(const Decode * d, const Encode * e, Config &) {
-      d_ = d;
-      e_ = e;
-      return no_err;
-    }
-
-    void convert(const char * in, int size, CharVector & out) const {
-      FilterCharVector buf;
-      buf.reserve(size == -1 ? 128 : size);
-      d_->decode(in, size, buf);
-      e_->encode(buf.pbegin(), buf.pend(), out);
-    }
-  };
   
   PosibErr<void> Convert::init(Config & c, ParmString in, ParmString out)
   {
@@ -501,10 +495,10 @@ namespace acommon {
 	conv_ = new ConvDirect<Uni32>;
       else
 	conv_ = new ConvDirect<char>;
-    } else {
-      conv_ = new ConvGeneric;
     }
-    RET_ON_ERR(conv_->init(decode_, encode_, c));
+
+    if (conv_)
+      RET_ON_ERR(conv_->init(decode_, encode_, c));
 
     return no_err;
   }

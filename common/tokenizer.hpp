@@ -63,7 +63,7 @@ namespace acommon {
   // returns a new tokenizer and sets it up with the given speller
   // class
 
-  PosibErr<Tokenizer *> new_tokenizer(Speller *, Config *);
+  PosibErr<Tokenizer *> new_tokenizer(Speller *);
 
 }
 

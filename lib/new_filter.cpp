@@ -5,6 +5,7 @@
 // at http://www.gnu.org/.
 
 #include "filter.hpp"
+#include "indiv_filter.hpp"
 #include "parm_string.hpp"
 #include "config.hpp"
 #include "string_list.hpp"
@@ -38,19 +39,23 @@ namespace acommon {
 
   struct FilterEntry {
     const char * name;
-    IndividualFilter * (* constructor) ();
+    IndividualFilter * (* decoder) ();
+    IndividualFilter * (* filter) ();
+    IndividualFilter * (* encoder) ();
   };
   
   IndividualFilter * new_url_filter ();
   IndividualFilter * new_email_filter ();
   IndividualFilter * new_tex_filter ();
+  IndividualFilter * new_sgml_decoder ();
   IndividualFilter * new_sgml_filter ();
+  IndividualFilter * new_sgml_encoder ();
 
   static FilterEntry standard_filters[] = {
-    {"url",   new_url_filter},
-    {"email", new_email_filter},
-    {"tex", new_tex_filter},
-    {"sgml", new_sgml_filter}
+    {"url",   0, new_url_filter, 0},
+    {"email", 0, new_email_filter, 0},
+    {"tex", 0, new_tex_filter, 0},
+    {"sgml", new_sgml_decoder, new_sgml_filter, new_sgml_encoder}
   };
   static unsigned int standard_filters_size 
   = sizeof(standard_filters)/sizeof(FilterEntry);
@@ -85,31 +90,55 @@ namespace acommon {
   // actual code
   //
 
-  IndividualFilter * new_individual_filter(ParmString);
+  FilterEntry * find_individual_filter(ParmString);
 
-  PosibErr<Filter *> new_filter(Speller * speller, 
-				Config * config)
+  PosibErr<void> setup_filter(Filter & filter, 
+			      Config * config, 
+			      bool use_decoder, 
+			      bool use_filter, 
+			      bool use_encoder)
   {
-    StackPtr<Filter> filter(new Filter());
-    filter->setup(speller, config);
     StackPtr<StringList> sl(new_string_list());
-    filter->config()->retrieve_list("filter", sl);
+    config->retrieve_list("filter", sl);
     Enumeration<StringEnumeration> els = sl->elements();
+    StackPtr<IndividualFilter> ifilter;
     const char * filter_name;
     while ( (filter_name = els.next()) != 0) 
     {
-      IndividualFilter * ifilter = new_individual_filter(filter_name);
-      filter->add_filter(ifilter);
+      FilterEntry * f = find_individual_filter(filter_name);
+      assert(f); //FIXME: Return Error Condition
+
+      if (use_decoder && f->decoder && (ifilter = f->decoder())) {
+	RET_ON_ERR_SET(ifilter->setup(config), bool, keep);
+	if (!keep)
+	  ifilter.release();
+	else
+	  filter.add_filter(ifilter.release());
+      } 
+      if (use_filter && f->filter && (ifilter = f->filter())) {
+	RET_ON_ERR_SET(ifilter->setup(config), bool, keep);
+	if (!keep)
+	  ifilter.release();
+	else
+	  filter.add_filter(ifilter.release());
+      }
+      if (use_encoder && f->encoder && (ifilter = f->encoder())) {
+	RET_ON_ERR_SET(ifilter->setup(config), bool, keep);
+	if (!keep)
+	  ifilter.release();
+	else
+	  filter.add_filter(ifilter.release());
+      }
     }
-    return filter.release();
+    return no_err;
   }
-  
-  IndividualFilter * new_individual_filter(ParmString filter_name)
+
+  FilterEntry * find_individual_filter(ParmString filter_name)
   {
     unsigned int i = 0;
     while (i != standard_filters_size) {
       if (standard_filters[i].name == filter_name)
-	return (*standard_filters[i].constructor)();
+	return standard_filters + i;
       ++i;
     }
     return 0;

@@ -53,7 +53,7 @@ namespace acommon {
     inline bool process_char(FilterChar::Chr c);
     
   public:
-    PosibErr<void> setup(Config *);
+    PosibErr<bool> setup(Config *);
     void reset();
     void process(FilterChar * &, FilterChar * &);
   };
@@ -76,7 +76,7 @@ namespace acommon {
   //
   //
 
-  PosibErr<void> TexFilter::setup(Config * opts) 
+  PosibErr<bool> TexFilter::setup(Config * opts) 
   {
     name_ = "tex";
     order_num_ = 0.35;
@@ -85,7 +85,7 @@ namespace acommon {
     RET_ON_ERR(opts->retrieve_list("tex-command", &commands_in));
     check_comments = opts->retrieve_bool("tex-check-comments");
     reset();
-    return no_err;
+    return true;
   }
   
   void TexFilter::reset() 

@@ -18,23 +18,27 @@ namespace acommon {
   class Config;
   class Speller;
   class IndividualFilter;
+  class StringList;
 
   class Filter : public CanHaveError {
   public:
-    PosibErr<void> setup(Speller * speller, Config * config);
+    bool empty() const {return filters_.empty();}
     void reset();
     void process(FilterChar * & start, FilterChar * & stop);
     void add_filter(IndividualFilter * filter);
-    Config * config() {return config_;} 
+    // setup the filter where the string list is the list of 
+    // filters to use.
     Filter();
     ~Filter();
   private:
-    CopyPtr<Config> config_;
     typedef Vector<IndividualFilter *> Filters;
     Filters filters_;
   };
   
-  PosibErr<Filter *> new_filter(Speller *, Config *);
+  PosibErr<void> setup_filter(Filter &, Config *, 
+			      bool use_decoder, 
+			      bool use_filter, 
+			      bool use_encoder);
 
 }
 

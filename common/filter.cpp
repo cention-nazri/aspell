@@ -16,16 +16,8 @@ namespace acommon {
 
   Filter::Filter() {}
 
-  PosibErr<void> Filter::setup(Speller * speller, Config * config) 
-  {
-    config_.reset(speller->config()->clone());
-    config_->merge(*config_);
-    return no_err;
-  }
-
   void Filter::add_filter(IndividualFilter * filter)
   {
-    filter->setup(config_);
     Filters::iterator cur, end;
     cur = filters_.begin();
     end = filters_.end();

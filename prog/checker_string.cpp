@@ -41,8 +41,7 @@ CheckerString::CheckerString(AspellSpeller * speller,
   diff_ = 0;
   has_repl_ = false;
 
-  checker_.reset(new_document_checker(reinterpret_cast<Speller *>(speller), 
-				      0, 0));
+  checker_.reset(new_document_checker(reinterpret_cast<Speller *>(speller)));
   checker_->process(cur_line_->data(), cur_line_->size());
 }
 

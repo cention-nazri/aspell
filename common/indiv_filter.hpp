@@ -22,7 +22,9 @@ namespace acommon {
     //
     // any options effecting this filter should start with the filter
     // name followed by a dash
-    virtual PosibErr<void> setup(Config *) = 0;
+    // should return true if the filter should be used false otherwise
+    // (in which case it will be deleted)
+    virtual PosibErr<bool> setup(Config *) = 0;
 
     // reset the internal state of the filter
     //
@@ -31,9 +33,10 @@ namespace acommon {
 
     // process the string
     //
-    // expected to modify the string by blanking out parts 
-    // of the string that are to be skipped with spaces (' ', ASCII 32)
-    // modifying the string in any way could lead to undefined results
+    // The filter may either modify the string passed in or use its
+    // own buffer for the output.  If the string uses its own buffer
+    // start and stop should be set to the beginning and one past the
+    // end of its buffer respectfully.
     //
     // The string passed in should only be split on white space
     // characters.  Furthermore, between calles to reset, each string
@@ -41,6 +44,13 @@ namespace acommon {
     // in the document.  Passing in stings out of order, skipping
     // strings or passing them in more than once may lead to undefined
     // results.
+    //
+    // The following properties are garanteed to be true and must
+    // stay true:
+    //   strlen    == stop - start - 1;
+    //   *stop[-1] == '\0';
+    // this way it is always safe to look one character ahead.
+    //
     virtual void process(FilterChar * & start, FilterChar * & stop) = 0;
 
     virtual ~IndividualFilter() {}

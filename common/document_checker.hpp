@@ -12,6 +12,7 @@
 #include "copy_ptr.hpp"
 #include "can_have_error.hpp"
 #include "filter_char.hpp"
+#include "filter_char_vector.hpp"
 
 namespace acommon {
 
@@ -32,12 +33,11 @@ namespace acommon {
     // will take ownership of tokenizer and filter (even if there is an error)
     // config only used for this method.
     // speller expected to stick around.
-    PosibErr<void> setup(Tokenizer *, Speller *, Config *, Filter *);
+    PosibErr<void> setup(Tokenizer *, Speller *, Filter *);
     void reset();
     void process(const char * str, int size);
     Token next_misspelling();
     
-    Config * config() {return filter_->config();}
     Filter * filter() {return filter_;}
 
     void set_status_fun(void (*)(void *, Token, int), void *); 
@@ -52,10 +52,10 @@ namespace acommon {
     void * status_fun_data_;
     Speller * speller_;
     Convert * conv_;
-    Vector<FilterChar> proc_str_;
+    FilterCharVector proc_str_;
   };
 
-  PosibErr<DocumentChecker *> new_document_checker(Speller *, Config *, Filter *);
+  PosibErr<DocumentChecker *> new_document_checker(Speller *);
 
 }
 

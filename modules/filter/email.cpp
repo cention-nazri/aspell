@@ -41,19 +41,19 @@ namespace acommon {
     QuoteChars is_quote_char;
     
   public:
-    PosibErr<void> setup(Config *);
+    PosibErr<bool> setup(Config *);
     void reset();
     void process(FilterChar * &, FilterChar * &);
   };
 
-  PosibErr<void> EmailFilter::setup(Config * opts) 
+  PosibErr<bool> EmailFilter::setup(Config * opts) 
   {
     name_ = "email";
     order_num_ = 0.85;
     opts->retrieve_list("email-quote", &is_quote_char);
     margin = opts->retrieve_int("email-margin");
     reset();
-    return no_err;
+    return true;
   }
   
   void EmailFilter::reset() 

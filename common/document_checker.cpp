@@ -20,8 +20,7 @@ namespace acommon {
   DocumentChecker::~DocumentChecker() {}
 
   PosibErr<void> DocumentChecker
-  ::setup(Tokenizer * tokenizer, Speller * speller, 
-	  Config * config, Filter * filter)
+  ::setup(Tokenizer * tokenizer, Speller * speller, Filter * filter)
   {
     tokenizer_.reset(tokenizer);
     filter_.reset(filter);
