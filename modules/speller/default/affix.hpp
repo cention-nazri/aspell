@@ -96,8 +96,6 @@ namespace aspeller {
     bool suffix_check(const LookupInfo &, ParmString, CheckInfo &, GuessInfo *,
                       int sfxopts, AffEntry* ppfx) const;
 
-    void get_word(String & word, const CheckInfo &) const;
-
     void munch(ParmString word, CheckList *) const;
 
     WordAff * expand(ParmString word, ParmString aff, 

@@ -36,15 +36,17 @@ namespace acommon {
 
   struct CheckInfo {
     const CheckInfo * next;
-    const char * word; // generally the root
-    const char * pre_strip;
+    ParmString word; // generally the root
+    short pre_strip_len;
+    short pre_add_len;
     const char * pre_add;
-    const char * suf_strip;
+    short suf_strip_len;
+    short suf_add_len;
     const char * suf_add;
-    int pre_flag;
-    int suf_flag;
-    int guess;
-    int compound;
+    short pre_flag;
+    short suf_flag;
+    short guess;
+    short compound;
   };
 
   class Speller : public CanHaveError

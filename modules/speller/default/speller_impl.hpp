@@ -213,11 +213,11 @@ namespace aspeller {
 
   struct LookupInfo {
     SpellerImpl * sp;
-    enum Mode {Word, Guess, Soundslike, AlwaysTrue} mode;
+    enum Mode {Word, Guess, Clean, Soundslike, AlwaysTrue} mode;
     SpellerImpl::WS::const_iterator begin;
     SpellerImpl::WS::const_iterator end;
     inline LookupInfo(SpellerImpl * s, Mode m);
-    inline bool lookup (ParmString word, WordEntry & o) const;
+    bool lookup (ParmString word, WordEntry & o) const;
   };
 
   inline LookupInfo::LookupInfo(SpellerImpl * s, Mode m) : sp(s), mode(m) {
@@ -226,11 +226,12 @@ namespace aspeller {
       begin = sp->affix_ws.begin(); 
       end = sp->affix_ws.end();
       return;
-    case Guess: 
+    case Guess:
       begin = sp->check_ws.begin(); 
       end = sp->check_ws.end(); 
       mode = Word; 
       return;
+    case Clean:
     case Soundslike: 
       begin = sp->suggest_affix_ws.begin(); 
       end = sp->suggest_affix_ws.end(); 

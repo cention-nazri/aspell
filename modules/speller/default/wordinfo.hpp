@@ -29,7 +29,7 @@ namespace aspeller {
     void (* adv_)(WordEntry *);
     void (* free_)(WordEntry *);
     void * intr[2];
-    enum What {Other, Word, Soundslike, Stripped, Misspelled} what;
+    enum What {Other, Word, Soundslike, Clean, Misspelled} what;
     // if type is Word than aff will be defined, otherwise it won't
     bool at_end() {return !word;}
     bool adv() {if (adv_) {adv_(this); return true;} word = 0; return false;}
@@ -48,9 +48,8 @@ namespace aspeller {
       1 bit:  all upper
       1 bit:  title
       1 bit:  with accents
-
+      1 bit:  clean
   */
-
 }
 
 #endif

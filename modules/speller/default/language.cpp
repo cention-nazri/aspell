@@ -44,6 +44,8 @@ namespace aspeller {
     , {"flag-char",           KeyInfoString, ":", "", 0, FOR_CONFIG}
     , {"repl-table",          KeyInfoString, "none", ""}
     , {"sug-split-chars",     KeyInfoString, "- ", "", 0, FOR_CONFIG}
+    , {"store-as",            KeyInfoString, "stripped", ""}
+    , {"try",                 KeyInfoString, "", ""}
   };
 
   static GlobalCache<Language> language_cache("language");
@@ -79,14 +81,13 @@ namespace aspeller {
     if (!data.have("name"))
       return make_err(bad_file_format, path, _("The required field \"name\" is missing."));
 
-    String sbuf;
+    String buf;
     name_          = data.retrieve("name");
-    charset_       = fix_encoding_str(data.retrieve("charset"), sbuf);
-    data_encoding_ = fix_encoding_str(data.retrieve("data-encoding"), sbuf);
+    charset_       = fix_encoding_str(data.retrieve("charset"), buf);
+    data_encoding_ = fix_encoding_str(data.retrieve("data-encoding"), buf);
 
     {
 #ifdef ENABLE_NLS
-      String buf;
       const char * tmp = 0;
       tmp = bind_textdomain_codeset("aspell", 0);
       if (!tmp) tmp = nl_langinfo(CODESET);
@@ -103,7 +104,7 @@ namespace aspeller {
     Conv iconv;
     iconv.setup(*config, data_encoding_, charset_);
 
-    String buf; DataPair d;
+    DataPair d;
 
     init(data.retrieve("special"), d, buf);
     while (split(d)) {
@@ -145,6 +146,21 @@ namespace aspeller {
     //
     //
     //
+
+    buf = data.retrieve("store-as");
+    if (buf == "stripped") {
+      store_as_ = Stripped;
+      to_clean_ = to_stripped_;
+    } else {
+      store_as_ = Lower;
+      to_clean_ = to_lower_;
+    }
+
+    clean_chars_   = get_clean_chars(*this);
+    
+    //
+    //
+    //
     
     for (int i = 0; i != 256; ++i) 
       to_normalized_[i] = 0;
@@ -176,7 +192,6 @@ namespace aspeller {
     if (pe.has_err()) return pe;
     soundslike_.reset(pe);
     soundslike_chars_ = soundslike_->soundslike_chars();
-    stripped_chars_   = get_stripped_chars(*this);
 
     //
     // prep affix code
@@ -402,6 +417,22 @@ namespace aspeller {
     return chars_list;
   }
 
+  String get_clean_chars(const Language & lang) {
+    bool chars_set[256] = {0};
+    String     chars_list;
+    for (int i = 0; i != 256; ++i) 
+    {
+      char c = static_cast<char>(i);
+	if (lang.is_alpha(c) || lang.special(c).any())
+	  chars_set[static_cast<unsigned char>(lang.to_clean(c))] = true;
+    }
+    for (int i = 0; i != 256; ++i) 
+    {
+      if (chars_set[i]) 
+	chars_list += static_cast<char>(i);
+    }
+    return chars_list;
+  }
 
   PosibErr<Language *> new_language(const Config & config, ParmString lang)
   {

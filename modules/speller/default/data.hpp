@@ -108,7 +108,7 @@ namespace aspeller {
     bool affix_compressed;
     bool have_soundslike; // only true when there is true phonet data
     bool fast_scan;  // can effectly scan for all soundslikes (or
-                     // stripped words if have_soundslike is false)
+                     // clean words if have_soundslike is false)
                      // with an edit distance of 1 or 2
     bool fast_lookup; // can effectly find all words with a given soundslike
                       // when the SoundslikeWord is not given
@@ -126,7 +126,7 @@ namespace aspeller {
     virtual bool lookup (ParmString word, WordEntry &,
                          const SensitiveCompare &) const;
     
-    virtual bool stripped_lookup(ParmString, WordEntry &) const;
+    virtual bool clean_lookup(ParmString, WordEntry &) const;
 
     virtual bool soundslike_lookup(const WordEntry &, WordEntry &) const;
     virtual bool soundslike_lookup(ParmString, WordEntry & o) const;

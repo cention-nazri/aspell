@@ -251,7 +251,7 @@ struct SoundslikeElements : public SoundslikeEnumeration {
   }
 };
 
-struct StrippedElements : public SoundslikeEnumeration {
+struct CleanElements : public SoundslikeEnumeration {
 
   typedef WordLookup::const_iterator Itr;
 
@@ -260,7 +260,7 @@ struct StrippedElements : public SoundslikeEnumeration {
 
   WordEntry d;
 
-  StrippedElements(Itr i0, Itr end0) : i(i0), end(end0) {
+  CleanElements(Itr i0, Itr end0) : i(i0), end(end0) {
     d.what = WordEntry::Word;
     d.aff  = "";
   }
@@ -319,7 +319,7 @@ public:
 
   bool lookup (ParmString word, WordEntry &, const SensitiveCompare &) const;
 
-  bool stripped_lookup(const char * sondslike, WordEntry &) const;
+  bool clean_lookup(const char * sondslike, WordEntry &) const;
 
   bool soundslike_lookup(const WordEntry & soundslike, WordEntry &) const;
   bool soundslike_lookup(ParmString soundslike, WordEntry &) const;
@@ -356,7 +356,7 @@ bool WritableDict::lookup(ParmString word, WordEntry & o,
   return false;
 }
 
-bool WritableDict::stripped_lookup(const char * sl, WordEntry & o) const
+bool WritableDict::clean_lookup(const char * sl, WordEntry & o) const
 {
   o.clear();
   pair<WordLookup::iterator, WordLookup::iterator> p(word_lookup->equal_range(sl));
@@ -405,7 +405,7 @@ bool WritableDict::soundslike_lookup(ParmString word, WordEntry & o) const
   
   } else {
 
-    return WritableDict::stripped_lookup(word, o);
+    return WritableDict::clean_lookup(word, o);
 
   }
 }
@@ -415,7 +415,7 @@ SoundslikeEnumeration * WritableDict::soundslike_elements() const {
     return new SoundslikeElements(soundslike_lookup_.begin(), 
                                   soundslike_lookup_.end());
   else
-    return new StrippedElements(word_lookup->begin(),
+    return new CleanElements(word_lookup->begin(),
                                 word_lookup->end());
 }
 
@@ -545,7 +545,7 @@ public:
 
   bool lookup(ParmString, WordEntry &, const SensitiveCompare &) const;
 
-  bool stripped_lookup(ParmString sondslike, WordEntry &) const;
+  bool clean_lookup(ParmString sondslike, WordEntry &) const;
 
   bool soundslike_lookup(const WordEntry &, WordEntry &) const;
   bool soundslike_lookup(ParmString, WordEntry &) const;
@@ -591,7 +591,7 @@ bool WritableReplDict::lookup(ParmString word, WordEntry & o,
   return false;
 }
 
-bool WritableReplDict::stripped_lookup(ParmString sl, WordEntry & o) const
+bool WritableReplDict::clean_lookup(ParmString sl, WordEntry & o) const
 {
   o.clear();
   pair<WordLookup::iterator, WordLookup::iterator> p(word_lookup->equal_range(sl));
@@ -630,7 +630,7 @@ bool WritableReplDict::soundslike_lookup(ParmString soundslike, WordEntry & o) c
       return true;
     }
   } else {
-    return WritableReplDict::stripped_lookup(soundslike, o);
+    return WritableReplDict::clean_lookup(soundslike, o);
   }
 }
 
@@ -639,8 +639,8 @@ SoundslikeEnumeration * WritableReplDict::soundslike_elements() const {
     return new SoundslikeElements(soundslike_lookup_.begin(), 
                                   soundslike_lookup_.end());
   else
-    return new StrippedElements(word_lookup->begin(),
-                                word_lookup->end());
+    return new CleanElements(word_lookup->begin(),
+                             word_lookup->end());
 }
 
 WritableReplDict::Enum * WritableReplDict::detailed_elements() const {

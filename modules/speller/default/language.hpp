@@ -42,6 +42,8 @@ namespace aspeller {
 
   enum CasePattern {Other, FirstUpper, AllUpper};
 
+  enum StoreAs {Stripped, Lower};
+
   class Language : public Cacheable {
   public:
     typedef const Config CacheConfig;
@@ -80,11 +82,14 @@ namespace aspeller {
     char          to_sl_[256];
     int           to_uni_[256];
     CharType      char_type_[256];
+    char *        to_clean_;
+
+    StoreAs       store_as_;
 
     int max_normalized_;
 
     String      soundslike_chars_;
-    String      stripped_chars_;
+    String      clean_chars_;
 
     StackPtr<Soundslike> soundslike_;
     StackPtr<AffixMgr>   affix_;
@@ -129,6 +134,9 @@ namespace aspeller {
     char de_accent(char c) const {return de_accent_[to_uchar(c)];}
 
     char to_sl(char c) const {return to_sl_[to_uchar(c)];}
+
+    char to_clean(char c) const {return to_clean_[to_uchar(c)];}
+    bool is_clean(char c) const {return to_clean(c) == c;}
   
     int to_uni(char c) const {return to_uni_[to_uchar(c)];}
   
@@ -153,9 +161,7 @@ namespace aspeller {
     }
     
     const char * soundslike_chars() const {return soundslike_chars_.c_str();}
-    const char * stripped_chars() const {return stripped_chars_.c_str();}
-
-    bool have_soundslike() const {return soundslike_;}
+    const char * clean_chars() const {return clean_chars_.c_str();}
 
     const AffixMgr * affix() const {return affix_;}
 
@@ -177,6 +183,14 @@ namespace aspeller {
       *res = '\0';
       return res;
     }
+    char * to_clean(char * res, const char * str) const {
+      for (; *str; ++str) {
+        if (special(*str).any()) ++str;
+        *res++ = to_clean(*str);
+      }
+      *res = '\0';
+      return res;
+    }
 
     const char * to_lower(String & res, const char * str) const {
       res.clear(); while (*str) res += to_lower(*str++); return res.str();}
@@ -190,6 +204,14 @@ namespace aspeller {
       }
       return res.str();
     }
+    const char * to_clean(String & res, const char * str) const {
+      res.clear();
+      for (; *str; ++str) {
+        if (special(*str).any()) ++str;
+        res += to_clean(*str);
+      }
+      return res.str();
+    }
 
     bool is_lower(const char * str) const {
       while (*str) {if (!is_lower(*str++)) return false;} return true;}
@@ -197,6 +219,8 @@ namespace aspeller {
       while (*str) {if (!is_upper(*str++)) return false;} return true;}
     bool is_stripped(const char * str) const {
       while (*str) {if (!is_stripped(*str++)) return false;} return true;}
+    bool is_clean(const char * str) const {
+      while (*str) {if (!is_clean(*str++)) return false;} return true;}
 
     CasePattern case_pattern(ParmString word) const  
     {
@@ -273,7 +297,7 @@ namespace aspeller {
       if (lang->special(*a).begin) ++a;
       if (lang->special(*b).begin) ++b;
       while (*a != '\0' && *b != '\0' 
-	     && lang->to_stripped(*a) == lang->to_stripped(*b)) 
+	     && lang->to_clean(*a) == lang->to_clean(*b)) 
       {
 	++a, ++b;
 	if (lang->special(*a).middle) ++a;
@@ -281,8 +305,8 @@ namespace aspeller {
       }
       if (lang->special(*a).end) ++a;
       if (lang->special(*b).end) ++b;
-      return static_cast<unsigned char>(lang->to_stripped(*a)) 
-	- static_cast<unsigned char>(lang->to_stripped(*b));
+      return static_cast<unsigned char>(lang->to_clean(*a)) 
+	- static_cast<unsigned char>(lang->to_clean(*b));
     }
   };
 
@@ -309,7 +333,7 @@ namespace aspeller {
 	if (lang->special(*s).any()) ++s;
 	if (*s == 0) break;
 	if (lang->char_type(*s) == Language::letter)
-	  h=5*h + lang->to_stripped(*s);
+	  h=5*h + lang->to_clean(*s);
 	++s;
       }
       return h;
@@ -371,6 +395,8 @@ namespace aspeller {
   };
 
   String get_stripped_chars(const Language & l);
+
+  String get_clean_chars(const Language & l);
   
   PosibErr<void> check_if_valid(const Language & l, ParmString word);
 

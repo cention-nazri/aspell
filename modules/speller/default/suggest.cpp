@@ -64,7 +64,7 @@
 #include "stack_ptr.hpp"
 #include "suggest.hpp"
 
-#include "iostream.hpp"
+//#include "iostream.hpp"
 //#define DEBUG_SUGGEST
 
 using namespace aspeller;
@@ -86,7 +86,8 @@ namespace {
   //
   struct OriginalWord {
     String   word;
-    String   stripped;
+    String   lower;
+    String   clean;
     String   soundslike;
     CasePattern  case_pattern;
     OriginalWord() {}
@@ -99,8 +100,9 @@ namespace {
 
   struct ScoreWordSound {
     char *  word;
-    char *  word_stripped;
+    char *  word_clean;
     int           score;
+    int           word_score;
     int           soundslike_score;
     bool          count;
     WordEntry * repl_list;
@@ -144,7 +146,8 @@ namespace {
       : lang(l), original_word(), parms(p)
     {
       original_word.word = w;
-      l->to_stripped(original_word.stripped, w.str());
+      l->to_lower(original_word.lower, w.str());
+      l->to_clean(original_word.clean, w.str());
       l->to_soundslike(original_word.soundslike, w.str());
       original_word.case_pattern = l->case_pattern(w);
     }
@@ -167,42 +170,28 @@ namespace {
     NearMisses         near_misses;
     NearMissesFinal  * near_misses_final;
 
+    String             tmpbuf;
     ObjStack           buffer;
 
-    bool use_soundslike, fast_scan, fast_lookup, affix_compress_soundslike;
+    bool use_soundslike, fast_scan, fast_lookup, affix_compress, affix_compress_soundslike;
 
     static const bool do_count = true;
     static const bool dont_count = false;
 
     const String & active_soundslike() {
-      return use_soundslike ? original_word.soundslike : original_word.stripped;
-    };
-    const char * soundslike_chars() {
-      return use_soundslike ? lang->soundslike_chars() : lang->stripped_chars();
+      return use_soundslike ? original_word.soundslike : original_word.clean;
     }
 
+    void try_word(ParmString str, int score);
     void try_sound(ParmString, int score);
-    void add_nearmiss(MutableString word, int score, bool count, WordEntry * rl = 0)
+    void add_nearmiss(MutableString word, int w_score, int sl_score, bool count, 
+                      WordEntry * rl = 0);
+    void add_nearmiss_word(MutableString word, int word_score, bool count, 
+                           WordEntry * rl = 0);
+    void add_nearmiss(MutableString word, int sl_score, bool count, 
+                      WordEntry * rl = 0)
     {
-      near_misses.push_front(ScoreWordSound());
-      ScoreWordSound & d = near_misses.front();
-      d.word = word;
-
-      if (parms->use_typo_analysis) {
-	unsigned int l = word.size;
-	if (l > max_word_length) max_word_length = l;
-      }
-
-      if (!lang->is_stripped(word)) { // FIXME: avoid the need for this test
-        d.word_stripped = (char *)buffer.alloc(word.size + 1);
-        lang->LangImpl::to_stripped((char *)d.word_stripped, word);
-      } else {
-	d.word_stripped = d.word;
-      }
-
-      d.soundslike_score = score;
-      d.count = count;
-      d.repl_list = rl;
+      add_nearmiss(word, -1, sl_score, count, rl);
     }
     int needed_level(int want, int soundslike_score) {
       int n = (100*want - parms->soundslike_weight*soundslike_score)
@@ -233,9 +222,11 @@ namespace {
 
     void try_others();
     void try_split();
-    void try_one_edit();
+    void try_one_edit_word();
+    void try_one_edit_sl();
     void try_scan();
     void try_repl();
+    void try_ngram();
 
     void score_list();
     void transfer();
@@ -245,6 +236,7 @@ namespace {
       : Score(l,w,p), threshold(1), max_word_length(0), speller(m) ,
         use_soundslike(m->use_soundslike),
         fast_scan(m->fast_scan), fast_lookup(m->fast_lookup),
+        affix_compress(!m->affix_ws.empty()),
 	affix_compress_soundslike(!m->suggest_affix_ws.empty()) {}
     void get_suggestions(NearMissesFinal &sug);
   };
@@ -256,10 +248,51 @@ namespace {
 
   void Working::get_suggestions(NearMissesFinal & sug) {
     near_misses_final = & sug;
-    if (active_soundslike().empty()) return;
     try_others();
     score_list();
     transfer();
+  }
+
+  void Working::try_word(ParmString str, int score)  
+  {
+    String word;
+    WordEntry sw;
+    for (SpellerImpl::WS::const_iterator i = speller->suggest_ws.begin();
+         i != speller->suggest_ws.end();
+         ++i)
+    {
+      i->dict->clean_lookup(str, sw);
+      for (;!sw.at_end(); sw.adv()) {
+        ParmString sw_word(sw.word);
+        char * w = (char *)buffer.alloc(sw_word.size() + 1);
+        i->convert.convert(sw_word, w);
+        WordEntry * repl = 0;
+        if (sw.what == WordEntry::Misspelled) {
+          repl = new WordEntry;
+          const ReplacementDict * repl_dict
+            = static_cast<const ReplacementDict *>(i->dict);
+          repl_dict->repl_lookup(sw, *repl);
+        }
+        add_nearmiss(MutableString(w, sw_word.size()), score, do_count, repl);
+      }
+    }
+    if (affix_compress) {
+      CheckInfo ci; memset(&ci, 0, sizeof(ci));
+      bool res = lang->affix()->affix_check(LookupInfo(speller, LookupInfo::Clean), str, ci, 0);
+      if (!res) return;
+      size_t slen = ci.word.size() - ci.pre_strip_len - ci.suf_strip_len;
+      size_t wlen = slen + ci.pre_add_len + ci.suf_add_len;
+      char * tmp = (char *)buffer.alloc(wlen + 1);
+      if (ci.pre_add_len) 
+        memcpy(tmp, ci.pre_add, ci.pre_add_len);
+      memcpy(tmp + ci.pre_add_len, ci.word.str() + ci.pre_strip_len, slen);
+      if (ci.suf_add_len) 
+        memcpy(tmp + ci.pre_add_len + slen, ci.suf_add, ci.suf_add_len);
+      tmp[wlen] = '\0';
+      // no need to convert word as clean lookup is not supported
+      // when affixes are involved
+      add_nearmiss(MutableString(tmp, wlen), score, do_count);
+    }
   }
   
   void Working::try_sound(ParmString str, int score)  
@@ -285,25 +318,44 @@ namespace {
         add_nearmiss(MutableString(w, sw_word.size()), score, do_count, repl);
       }
     }
-    if (affix_compress_soundslike) {
-      CheckInfo ci; memset(&ci, 0, sizeof(ci));
-      bool res = lang->affix()->affix_check(LookupInfo(speller, LookupInfo::Soundslike), str, ci, 0);
-      if (!res) return;
-      
-      // FIXME: This is not completely correct when there are multiple
-      //   words for a single stripped word.
-      for (SpellerImpl::WS::const_iterator i = speller->suggest_affix_ws.begin();
-	   i != speller->suggest_affix_ws.end();
-	   ++i) 
-      {
-	i->dict->soundslike_lookup(ci.word, sw);
-	for (;!sw.at_end(); sw.adv()) { // FIXME: Ineffecent
-	  word.clear();
-	  i->convert.convert(sw.word, word);
-	  lang->affix()->get_word(word, ci); 
-	  add_nearmiss(buffer.dup(word), score, do_count);
-	}
-      }
+  }
+  
+  void Working::add_nearmiss(MutableString word, int w_score, int sl_score, 
+                             bool count, WordEntry * rl)
+  {
+    near_misses.push_front(ScoreWordSound());
+    ScoreWordSound & d = near_misses.front();
+    d.word = word;
+    
+    if (parms->use_typo_analysis) {
+      unsigned int l = word.size;
+      if (l > max_word_length) max_word_length = l;
+    }
+    
+    if (!lang->is_clean(word)) { // FIXME: avoid the need for this test
+      d.word_clean = (char *)buffer.alloc(word.size + 1);
+      lang->LangImpl::to_clean((char *)d.word_clean, word);
+    } else {
+      d.word_clean = d.word;
+    }
+    
+    d.word_score       = w_score;
+    d.soundslike_score = sl_score;
+    d.count = count;
+    d.repl_list = rl;
+  }
+
+  void Working::add_nearmiss_word(MutableString word, int w_score, 
+                                  bool count, WordEntry * rl)
+  {
+    if (use_soundslike) {
+      tmpbuf.clear();
+      lang->to_soundslike(tmpbuf, word);
+      int sl_score = edit_distance(original_word.soundslike, tmpbuf, 
+                                   parms->edit_distance_weights);
+      add_nearmiss(word, w_score, sl_score, count, rl);
+    } else {
+      add_nearmiss(word, w_score, w_score, count, rl);
     }
   }
 
@@ -316,7 +368,7 @@ namespace {
     try_split();
 
     if (parms->soundslike_level == 1 && (!fast_scan || !use_soundslike))
-      try_one_edit();
+      try_one_edit_word();
     else
       try_scan();
     
@@ -333,8 +385,10 @@ namespace {
     if (word.size() < 4 || parms->split_chars.empty()) return;
     size_t i = 0;
     
-    char * new_word = new char[word.size() + 2];
-    strncpy(new_word, word.data(), word.size());
+    String new_word_str;
+    new_word_str.resize(word.size() + 1);
+    char * new_word = new_word_str.data();
+    memcpy(new_word, word.data(), word.size());
     new_word[word.size() + 1] = '\0';
     new_word[word.size() + 0] = new_word[word.size() - 1];
     
@@ -352,14 +406,78 @@ namespace {
         }
       }
     }
-    
-    delete[] new_word;
   }
 
-  void Working::try_one_edit() 
+  void Working::try_one_edit_word() 
   {
-    const String & soundslike = active_soundslike();
-    const char * replace_list = soundslike_chars();
+    const String & original = original_word.clean;
+    const char * replace_list = lang->clean_chars();
+    char a,b;
+    const char * c;
+    String new_word;
+    size_t i;
+
+    // Change one letter
+    
+    new_word = original;
+    
+    for (i = 0; i != original.size(); ++i) {
+      for (c = replace_list; *c; ++c) {
+        if (*c == original[i]) continue;
+        new_word[i] = *c;
+        try_word(new_word, parms->edit_distance_weights.sub);
+      }
+      new_word[i] = original[i];
+    }
+    
+    // Interchange two adjacent letters.
+    
+    for (i = 0; i+1 != original.size(); ++i) {
+      a = new_word[i];
+      b = new_word[i+1];
+      new_word[i] = b;
+      new_word[i+1] = a;
+      try_word(new_word,parms->edit_distance_weights.swap);
+      new_word[i] = a;
+      new_word[i+1] = b;
+    }
+
+    // Add one letter
+
+    new_word += ' ';
+    i = new_word.size()-1;
+    while(true) {
+      for (c=replace_list; *c; ++c) {
+        new_word[i] = *c;
+        try_word(new_word,parms->edit_distance_weights.del1);
+      }
+      if (i == 0) break;
+      new_word[i] = new_word[i-1];
+      --i;
+    }
+    
+    // Delete one letter
+
+    if (original.size() > 1) {
+      new_word = original;
+      a = new_word[new_word.size() - 1];
+      new_word.resize(new_word.size() - 1);
+      i = new_word.size();
+      while (true) {
+        try_word(new_word,parms->edit_distance_weights.del2);
+        if (i == 0) break;
+        b = a;
+        a = new_word[i-1];
+        new_word[i-1] = b;
+        --i;
+      }
+    }
+  }
+
+  void Working::try_one_edit_sl() 
+  {
+    const String & soundslike = original_word.soundslike;
+    const char * replace_list = lang->soundslike_chars();
     char a,b;
     const char * c;
     String new_soundslike;
@@ -428,7 +546,7 @@ namespace {
 
   void Working::try_scan() 
   {
-    const char * original_soundslike = active_soundslike().c_str();
+    const char * original_soundslike = active_soundslike().str();
     //unsigned int original_soundslike_len = strlen(original_soundslike);
     
     EditDist (* edit_dist_fun)(const char *, const char *, 
@@ -462,12 +580,12 @@ namespace {
           sl = sw->word;
         } else if (!*sw->aff) {
           sl_buf.clear();
-          sl = lang->LangImpl::to_stripped(sl_buf, sw->word);
+          sl = lang->LangImpl::to_clean(sl_buf, sw->word);
         } else {
           goto affix_case;
         }
 
-        score = edit_dist_fun(sl, original_soundslike, parms->edit_distance_weights);
+        score = edit_dist_fun(sl, original_soundslike, parms->edit_distance_weights );
         stopped_at = score.stopped_at - sl;
         if (score >= LARGE_NUM) continue;
         stopped_at = LARGE_NUM;
@@ -493,11 +611,6 @@ namespace {
 
         exp_buf.reset();
 
-        // FIXME: enhance expand to only used stripped words and
-        //        prefixes so that only the root word needs to be
-        //        stripped.  BUT this could cause a problem if there
-        //        is a different expansion depending on the accent
-
         // first expand any prefixes
         if (fast_scan) { // if fast_scan than no prefixes
           single.word.str = sw->word;
@@ -514,7 +627,7 @@ namespace {
         {
           // try the root word
           sl_buf.clear();
-          lang->LangImpl::to_stripped(sl_buf, p->word);
+          lang->LangImpl::to_clean(sl_buf, p->word);
           score = edit_dist_fun(sl_buf.c_str(), original_soundslike, parms->edit_distance_weights);
           stopped_at = score.stopped_at - sl_buf.c_str();
 
@@ -541,7 +654,7 @@ namespace {
           // iterate through fully expanded words, if any
           for (WordAff * q = exp_list; q; q = q->next) {
             sl_buf.clear();
-            lang->to_stripped(sl_buf, q->word);
+            lang->to_clean(sl_buf, q->word);
             score = edit_dist_fun(sl_buf.c_str(), original_soundslike, parms->edit_distance_weights);
             if (score >= LARGE_NUM) continue;
             char * wf = (char *)buffer.alloc(q->word.size + 1);
@@ -563,15 +676,14 @@ namespace {
       : begin(b), end(e), repl(r), repl_len(strlen(r)) {}
   };
 
-  // only use when soundslike == stripped
   void Working::try_repl() 
   {
     CharVector buf;
     Vector<ReplTry> repl_try;
     StackPtr<SuggestReplEnumeration> els(lang->repl());
     const SuggestRepl * r = 0;
-    const char * word = original_word.stripped.c_str();
-    const char * wend = word + original_word.stripped.size();
+    const char * word = original_word.lower.c_str();
+    const char * wend = word + original_word.lower.size();
     while (r = els->next(), r) 
     {
       const char * p = word;
@@ -618,8 +730,8 @@ namespace {
 	if (!use_soundslike)
 	  word_score = i->soundslike_score;
 	else if (level >= int(i->soundslike_score/parms->edit_distance_weights.min))
-	  word_score = edit_distance(original_word.stripped.c_str(),
-				     i->word_stripped,
+	  word_score = edit_distance(original_word.clean,
+				     i->word_clean,
 				     level, level,
 				     parms->edit_distance_weights);
 	else
@@ -679,8 +791,8 @@ namespace {
       if (!use_soundslike)
 	word_score = i->soundslike_score;
       else if (initial_level < max_level)
-	word_score = edit_distance(original_word.stripped.c_str(),
-				   i->word_stripped,
+	word_score = edit_distance(original_word.clean.c_str(),
+				   i->word_clean,
 				   initial_level+1,max_level,
 				   parms->edit_distance_weights);
       else
@@ -745,6 +857,7 @@ namespace {
 	 << original_word.word << '\t' 
 	 << original_word.soundslike << '\t'
 	 << "\n";
+    String sl;
 #  endif
     int c = 1;
     hash_set<String,HashString<String> > duplicates_check;
@@ -757,7 +870,7 @@ namespace {
 	 ++i, ++c) {
 #    ifdef DEBUG_SUGGEST
       COUT << i->word << '\t' << i->score 
-           << '\t' << lang->to_soundslike(i->word) << "\n";
+           << '\t' << lang->to_soundslike(sl, i->word) << "\n";
 #    endif
       if (i->repl_list != 0) {
  	String::size_type pos;

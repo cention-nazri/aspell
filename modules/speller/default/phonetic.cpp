@@ -65,12 +65,12 @@ namespace aspeller {
     PosibErr<void> setup(Conv &) {return no_err;}
     
     String soundslike_chars() const {
-      return get_stripped_chars(*lang);
+      return get_clean_chars(*lang);
     }
 
     char * to_soundslike(char * res, const char * str, int size) const 
     {
-      return lang->LangImpl::to_stripped(res, str);
+      return lang->LangImpl::to_clean(res, str);
     }
 
     const char * name() const {

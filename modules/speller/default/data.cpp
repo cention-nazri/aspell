@@ -259,7 +259,7 @@ namespace aspeller {
     return false;
   }
   
-  bool Dictionary::stripped_lookup(ParmString, WordEntry &) const 
+  bool Dictionary::clean_lookup(ParmString, WordEntry &) const 
   {
     return false;
   }

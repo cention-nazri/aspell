@@ -743,8 +743,9 @@ void pipe()
           guess.clear();
           if (ci->pre_add && ci->pre_add[0])      guess << ci->pre_add << '+';
           guess << ci->word;
-          if (ci->pre_strip && ci->pre_strip[0]) guess << '-' << ci->pre_strip;
-          if (ci->suf_strip && ci->suf_strip[0]) guess << '-' << ci->suf_strip;
+          // FIXME NOW!!!!
+          //if (ci->pre_strip && ci->pre_strip[0]) guess << '-' << ci->pre_strip;
+          //if (ci->suf_strip && ci->suf_strip[0]) guess << '-' << ci->suf_strip;
           if (ci->suf_add   && ci->suf_add[0])   guess << '+' << ci->suf_add;
           real_speller->lang().fix_case(casep, guess.data(), guess.data());
           guesses << ", " << oconv(guess.str());

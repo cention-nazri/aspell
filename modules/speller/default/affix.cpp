@@ -65,7 +65,7 @@ static char EMPTY[1] = {0};
 
 //////////////////////////////////////////////////////////////////////
 //
-// *Entry struct definations
+//*Entry struct definations
 //
 
 struct AffEntry
@@ -188,7 +188,7 @@ CheckList::CheckList()
 void CheckList::reset()
 {
   for (CheckInfo * p = data + 1; p != data + 1 + gi.num; ++p) {
-    free(const_cast<char *>(p->word));
+    free(const_cast<char *>(p->word.str()));
     p->word = 0;
   }
   gi.reset(data);
@@ -261,9 +261,6 @@ PosibErr<void> AffixMgr::parse_file(const char * affpath, Conv & iconv)
 
   // step one is to parse the affix file building up the internal
   // affix data structures
-
-  // FIXME: Make sure that the encoding used for the affix file
-  //   is the same as the internal encoding used for the language
 
   // read in each line ignoring any that do not
   // start with a known line type indicator
@@ -606,13 +603,14 @@ void AffixMgr::encodeit(AffEntry * ptr, const char * cs)
 {
   byte c;
   int i, j, k;
-  byte mbr[MAXLNLEN];
+  int nc = strlen(cs);
+  VARARRAYM(byte, mbr, nc + 1, MAXLNLEN);
 
   // now clear the conditions array */
   for (i=0;i<SETSIZE;i++) ptr->conds[i] = (byte) 0;
 
   // now parse the string to create the conds array */
-  int nc = strlen(cs);
+  
   int neg = 0;   // complement indicator
   int grp = 0;   // group indicator
   int n = 0;     // number of conditions
@@ -790,29 +788,6 @@ bool AffixMgr::affix_check(const LookupInfo & linf, ParmString word,
   return suffix_check(linf, sword, ci, gi, 0, NULL);
 }
 
-void AffixMgr::get_word(String & word, const CheckInfo & ci) const
-{
-  CasePattern cp = lang->LangImpl::case_pattern(word);
-  if (ci.pre_add) {
-    if (cp == FirstUpper) word[0] = lang->to_lower(word[0]);
-    size_t s = strlen(ci.pre_add);
-    word.replace(0, strlen(ci.pre_strip), ci.pre_add, s);
-    if (cp == FirstUpper) word[0] = lang->to_title(word[0]);
-    else if (cp == AllUpper)
-      for (size_t i = 0; i != s; ++i) word[i] = lang->to_upper(word[i]);
-  }
-  if (ci.suf_add) {
-    size_t strip = strlen(ci.suf_strip);
-    size_t s     = strlen(ci.suf_add);
-    size_t start = word.size() - strip;
-    word.replace(start, strip, ci.suf_add, s);
-    if (cp == AllUpper)
-      for (size_t i = start; i != start + s; ++i) 
-	word[i] = lang->to_upper(word[i]);
-  }
-}
-
-
 void AffixMgr::munch(ParmString word, CheckList * cl) const
 {
   LookupInfo li(0, LookupInfo::AlwaysTrue);
@@ -928,7 +903,8 @@ static void free_aff(WordEntry * w)
 
 struct LookupBookkepping
 {
-  const char * aff;
+  const char * aff; // the affix here is a list of valid affixes for
+                    // the word
   bool alloc;
   LookupBookkepping() : aff(0), alloc(false) {}
 };
@@ -948,11 +924,7 @@ static void append_aff(LookupBookkepping & s, WordEntry & o)
   s.alloc = true;
 }
 
-// FIXME: There are some problems with stripped lookup when accents
-//   are in the word AND the affix conditions depends on those accents
-//   being there as they WONT BE in the stripped word.
-
-inline bool LookupInfo::lookup (ParmString word, WordEntry & o) const
+bool LookupInfo::lookup (ParmString word, WordEntry & o) const
 {
   SpellerImpl::WS::const_iterator i = begin;
   const char * w = 0;
@@ -966,16 +938,25 @@ inline bool LookupInfo::lookup (ParmString word, WordEntry & o) const
       }
       ++i;
     } while (i != end);
-  } else if (mode == Soundslike) {
+  } else if (mode == Clean) {
     do {
-      if (i->dict->soundslike_lookup(word, o)) {
+      if (i->dict->clean_lookup(word, o)) {
         w = o.word;
         if (s.aff == 0) s.aff = o.aff;
         else append_aff(s, o); // this should not be a very common case
-        while (o.adv()) append_aff(s, o); // neither should this
       }
       ++i;
     } while (i != end);
+//   } else if (mode == Soundslike) {
+//     do {
+//       if (i->dict->soundslike_lookup(word, o)) {
+//         w = o.word;
+//         if (s.aff == 0) s.aff = o.aff;
+//         else append_aff(s, o); // this should not be a very common case
+//         while (o.adv()) append_aff(s, o); // neither should this
+//       }
+//       ++i;
+//    } while (i != end);
   } else {
     o.word = strdup(word);
     o.aff  = word + strlen(word);
@@ -1085,8 +1066,9 @@ bool PfxEntry::check(const LookupInfo & linf, ParmString word,
           else if (gi && gi->last != lci) {
             while (lci = const_cast<CheckInfo *>(lci->next), lci) {
               lci->pre_flag = achar;
+              lci->pre_strip_len = stripl;
+              lci->pre_add_len = appndl;
               lci->pre_add = appnd;
-              lci->pre_strip = strip;
             }
           }
         }
@@ -1094,8 +1076,9 @@ bool PfxEntry::check(const LookupInfo & linf, ParmString word,
               
       if (lci) {
         lci->pre_flag = achar;
+        lci->pre_strip_len = stripl;
+        lci->pre_add_len = appndl;
         lci->pre_add = appnd;
-        lci->pre_strip = strip;
       }
       if (lci ==&ci) return true;
     }
@@ -1193,8 +1176,9 @@ bool SfxEntry::check(const LookupInfo & linf, ParmString word,
         if (lci) {
           lci->word = wordinfo.word;
           lci->suf_flag = achar;
+          lci->suf_strip_len = stripl;
+          lci->suf_add_len = appndl;
           lci->suf_add = appnd;
-          lci->suf_strip = strip;
         }
         
         if (lci == &ci) return true;

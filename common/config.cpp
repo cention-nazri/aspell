@@ -990,7 +990,7 @@ namespace acommon {
        N_("location of language data files")}
     , {"dict-dir", KeyInfoString, DICT_DIR,
        N_("location of the main word list")}
-    , {"encoding",   KeyInfoString, "iso8859-1",
+    , {"encoding",   KeyInfoString, "iso-8859-1",
        N_("encoding to expect data to be in")}
     , {"filter",   KeyInfoList  , "url",
        N_("add or removes a filter"), KEYINFO_MAY_CHANGE}
@@ -1022,7 +1022,7 @@ namespace acommon {
        N_("deprecated, use lang instead")}
     , {"local-data-dir", KeyInfoString, "<actual-dict-dir>",
        N_("location of local language data files")     }
-    , {"master",        KeyInfoString, "",
+    , {"master",        KeyInfoString, "<lang>",
        N_("base name of the main dictionary to use")}
     , {"master-flags",  KeyInfoString, "", 0}
     , {"master-path",   KeyInfoString, "<dict-dir/master>",   0}
@@ -1065,16 +1065,18 @@ namespace acommon {
        N_("use typo analysis, override sug-mode default")}
     , {"sug-repl-table", KeyInfoBool, "true",
        N_("use replacement tables, override sug-mode default")}
-    , {"sug-split-chars", KeyInfoString, " -",
+    , {"sug-split-chars", KeyInfoString, " -", // FIXME: Problem with specifying
        N_("characters to insert when a word is split"), KEYINFO_UTF8}
     , {"word-list-path", KeyInfoList, DATA_DIR,
        N_("search path for word list information files")}
-    , {"affix-char",          KeyInfoString, "/", 
+    , {"affix-char",          KeyInfoString, "/", // FIXME: Implement
        N_("indicator for affix flags in word lists"), KEYINFO_UTF8}
-    , {"flag-char",           KeyInfoString, ":",
+    , {"flag-char",           KeyInfoString, ":", // FIXME: Implement
        N_("indicator for additional flags in word lists"), KEYINFO_UTF8}
     , {"use-other-dicts", KeyInfoBool, "true",
        N_("use personal, replacement & session dictionaries")}
+    , {"warn", KeyInfoBool, "false", // FIXME: Implement
+       N_("enable warnings")}
     
     //
     // These options are only used when creating dictionaries

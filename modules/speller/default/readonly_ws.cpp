@@ -173,7 +173,7 @@ namespace {
 
     struct ElementsParms;
     struct SoundslikeElements;
-    struct StrippedElements;
+    struct CleanElements;
 
   public:
     WordEntryEnumeration * detailed_elements() const;
@@ -475,13 +475,13 @@ namespace {
     data.word = tmp;
     data.intr[0] = 0;
     if (!sl) {
-      data.what = WordEntry::Stripped;
+      data.what = WordEntry::Clean;
       data.aff  = 0;
     }
     return &data;
   }
 
-  struct ReadOnlyDict::StrippedElements : public SoundslikeEnumeration
+  struct ReadOnlyDict::CleanElements : public SoundslikeEnumeration
   {
     WordEntry data;
     const char * cur;
@@ -492,11 +492,11 @@ namespace {
 
     WordEntry * next(int stopped_at);
 
-    StrippedElements(const ReadOnlyDict * o)
+    CleanElements(const ReadOnlyDict * o)
       : cur(o->word_block + 2) {data.what = WordEntry::Word;}
   };
 
-  WordEntry * ReadOnlyDict::StrippedElements::next(int) {
+  WordEntry * ReadOnlyDict::CleanElements::next(int) {
 
     const char * tmp = cur;
     cur += next_pos();
@@ -513,7 +513,7 @@ namespace {
     if (jump1)
       return new SoundslikeElements(this);
     else
-      return new StrippedElements(this);
+      return new CleanElements(this);
 
   }
     
@@ -528,7 +528,7 @@ namespace {
   }
 
   //static 
-  //void ReadOnlyDict::stripped_next(WordEntry * w) {}
+  //void ReadOnlyDict::clean_next(WordEntry * w) {}
 
   bool ReadOnlyDict::striped_lookup(ParmString sl, WordEntry & w) const
   {
@@ -665,7 +665,7 @@ namespace {
     bool affix_compress = (lang.affix() && 
                            config.retrieve_bool("affix-compress"));
     
-    bool use_soundslike = (lang.have_soundslike() &&
+    bool use_soundslike = (strcmp(lang.soundslike_name(),"none") != 0 &&
                            config.retrieve_bool("use-soundslike"));
    
     bool use_jump_tables = use_soundslike || config.retrieve_bool("use-jump-tables");
@@ -966,7 +966,7 @@ namespace {
 
 	} else {
 
-	  lang.LangImpl::to_stripped(sl, i->first);
+	  lang.LangImpl::to_clean(sl, i->first);
           data.write('\0');
           data.write('\0');
 
