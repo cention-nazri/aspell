@@ -1865,7 +1865,7 @@ void munch_list()
 
 // This version works the same way as the myspell "munch" program.
 // However, because the results depends on the hash table used and the
-// order of the word list it won't produce identical results.
+// order of the word list it wonn't produce identical results.
 
 struct SML_WordEntry {
   const char * word;
@@ -2337,7 +2337,7 @@ void munch_list_complete(bool multi, bool simplify)
     }
   }
 
-  // If a base word has both prefixed and suffixes try to combine them.
+  // If a base word has both prefixes and suffixes try to combine them.
   // This can lead to multiple entries for the same base word.  If "multi"
   // is true than include all the entries.  Otherwise, only include the
   // one with the largest number of expansions.  This is a greedy choice
