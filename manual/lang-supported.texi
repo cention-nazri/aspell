@@ -116,7 +116,7 @@
 @item nb @tab Norwegian Bokmal @tab Latin @tab Yes @tab -
 @item nd @tab North Ndebele @tab Latin @tab - @tab -
 @item nds @tab Low Saxon @tab Latin @tab Maybe @tab -
-@item ne @tab Nepali @tab Devanagari @tab - @tab -
+@item ne @tab Nepali @tab Devanagari @tab Maybe @tab -
 @item ng @tab Ndonga @tab Latin @tab - @tab -
 @item nl @tab Dutch @tab Latin @tab Yes @tab Yes
 @item nn @tab Norwegian Nynorsk @tab Latin @tab Yes @tab -
