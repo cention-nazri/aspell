@@ -47,7 +47,7 @@ public:
   PosibErr<void> clear() {lookup_.clear(); buffer_.reset(); return no_err;}
   
   StringMap() : empty_str() {}
-  StringMap(const StringMap & other) {copy(other);}
+  StringMap(const StringMap & other) : empty_str() {copy(other);}
   StringMap & operator= (const StringMap & o) {clear(); copy(o); return *this;}
   ~StringMap() {}
   
