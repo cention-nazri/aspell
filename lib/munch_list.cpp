@@ -262,24 +262,24 @@ struct WorkingLt {
 //
 
 void munch_list_complete(Language * lang,
-                         GetStringCallback * get_string, void * gs_data,
-                         PutStringCallback * put_string, void * ps_data,
+                         GetWordCallback * get_string, void * gs_data,
+                         PutWordCallback * put_string, void * ps_data,
                          bool multi, bool simplify)
 {
-  FullConv iconv(lang->to_internal_);
   FullConv oconv(lang->from_internal_);
-  const char * word;
   String buf;
   ObjStack exp_buf;
   WordAff * exp_list;
   GuessInfo gi;
   CML_Table table;
   ObjStack table_buf;
+  Word word;
 
   // add words to dictionary
-  while (word = get_string(gs_data), word) {
-    buf = word;
-    char * w = iconv(buf.mstr(), buf.size());
+  while (get_string(gs_data, &word)) {
+    buf.clear();
+    lang->to_internal_->convert(word.str, word.len, buf);
+    char * w = buf.mstr();
     char * af = strchr(w, '/');
     size_t s;
     if (af != 0) {
@@ -687,15 +687,24 @@ void munch_list_complete(Language * lang,
     // Finally print the resulting list
 
     for (unsigned i = 0; i != to_keep.size(); ++i) {
-      buf = to_keep[i]->word;
-      if (to_keep[i]->aff[0]) buf << '/' << to_keep[i]->aff;
-      bool res = put_string(ps_data, oconv(buf));
+      buf.clear();
+      lang->from_internal_->convert(to_keep[i]->word, -1, buf);
+      if (to_keep[i]->aff[0]) {
+        lang->from_internal_->convert("/", 1, buf);
+        lang->from_internal_->convert(to_keep[i]->aff, -1, buf);
+      }
+      word.str = buf.str();
+      word.len = buf.size();
+      bool res = put_string(ps_data, &word);
       if (!res) goto quit;
     }
     for (unsigned i = 0; i != to_keep_exp.size(); ++i) {
       if (!to_keep_exp[i]) {
         assert(!entries[i]->aff);
-        bool res = put_string(ps_data, oconv(entries[i]->word));
+        lang->from_internal_->convert(to_keep[i]->word, -1, buf);
+        word.str = buf.str();
+        word.len = buf.size();
+        bool res = put_string(ps_data, &word);
         if (!res) goto quit;
       }
     }
@@ -715,9 +724,9 @@ quit:
 namespace acommon {
 
 extern "C" int aspell_language_munch_list(Language * ths, 
-                                          GetStringCallback * in_cb, 
+                                          GetWordCallback * in_cb, 
                                           void * in_cb_data, 
-                                          PutStringCallback * out_cb, 
+                                          PutWordCallback * out_cb, 
                                           void * out_cb_data, 
                                           MunchListParms * parms)
 {

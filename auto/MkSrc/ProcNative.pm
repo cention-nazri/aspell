@@ -68,7 +68,7 @@ $info{class}{proc}{native} = sub {
 $info{callback}{proc}{native} = sub {
   my ($d) = @_;
   return (make_desc($d->{desc}).
-          make_callback($d->{name}, @{$d->{data}}, {mode => 'cc'}).";\n\n");
+          make_callback($d->{name}, @{$d->{data}}, {mode => 'native'}).";\n\n");
 };
 
 $info{errors}{proc}{native} = sub {

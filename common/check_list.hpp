@@ -34,7 +34,7 @@ namespace acommon {
     }
     void * alloc(unsigned s) {return buf.alloc_bottom(s);}
     char * dup(ParmString str) {return buf.dup(str);}
-  private:
+  public: // but don't use
     ObjStack buf;
   };
 

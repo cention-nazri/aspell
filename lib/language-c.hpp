@@ -11,9 +11,6 @@
 
 namespace acommon {
 
-class MunchWordList;
-class ExpandWordList;
-
 class Language : public CanHaveError 
 {
 public:
@@ -24,11 +21,12 @@ public:
   String temp_str_1;
   ClonePtr<FullConvert> to_internal_;
   ClonePtr<FullConvert> from_internal_;
-  
-  MunchWordList * munch_wl;
-  ExpandWordList * expand_wl;
 
-  Language() : munch_wl(0), expand_wl(0) {}
+  // gi     is used by munch
+  // gi.buf is used by expand
+  GuessInfo gi;
+  
+  Language() {}
   ~Language();
 };
 

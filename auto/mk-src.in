@@ -738,15 +738,21 @@ enum: case pattern
 	first upper
 	all lower
 	all upper
-callback: get string callback
+struct: word
 	/
-	string
-	void pointer: data
-callback: put string callback
+	string: str
+	int: len
+		default => -1
+callback: get word callback
 	/
 	bool
 	void pointer: data
-	string: str
+	word: word
+callback: put word callback
+	/
+	bool
+	void pointer: data
+	const word: word
 struct: munch list parms
 	/
 	constructor
@@ -790,21 +796,25 @@ class: language
 	method: munch
 		no c impl
 		/
-		const word list
+		int
 		encoded string: str
+		put word callback: out cb
+		void pointer: out cb data
 	method: expand
 		no c impl
 		/
-		const word list
+		int
 		encoded string: str
+		put word callback: out cb
+		void pointer: out cb data
 		int: limit
 	method: munch list
 		no c impl
 		/
 		int
-		get string callback: in cb
+		get word callback: in cb
 		void pointer: in cb data
-		put string callback: out cb
+		put word callback: out cb
 		void pointer: out cb data
 		munch list parms: parms
 }

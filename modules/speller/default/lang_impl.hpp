@@ -350,10 +350,10 @@ namespace aspeller {
 
     static inline PosibErr<LangImpl *> get_new(const String & lang,
                                                const Config * config) {
-      abort(); // FIXME!
-      //StackPtr<LangImpl> l(new LangImpl());
-      //RET_ON_ERR(l->setup(lang, config));
-      //return l.release();
+      //abort(); // FIXME!
+      StackPtr<LangImpl> l(new LangImpl());
+      RET_ON_ERR(l->setup(lang, config));
+      return l.release();
     }
 
     bool cache_key_eq(const String & l) const  {return name_ == l;}

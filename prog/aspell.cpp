@@ -1631,19 +1631,20 @@ void soundslike() {
 // munch
 //
 
+int put_word_munch(void *, const AspellWord * w)
+{
+  COUT << ' ' << w->str;
+  return true;
+}
+
 void munch() 
 {
   AspellLanguage * lang = new_language();
   String word;
-  const char * w;
   while (CIN.getline(word)) {
-    const AspellWordList * wl = aspell_language_munch(lang, word.str(), word.size());
-    AspellStringEnumeration * els = aspell_word_list_elements(wl);
     COUT << word;
-    while (w = aspell_string_enumeration_next(els), w)
-      COUT << ' ' << w;
+    aspell_language_munch(lang, word.str(), word.size(), put_word_munch, 0);
     COUT << '\n';
-    delete_aspell_string_enumeration(els);
   }
   delete_aspell_language(lang);
 }
@@ -1652,6 +1653,22 @@ void munch()
 //
 // expand
 //
+
+int put_word_expand_1(void * d, const AspellWord * w)
+{
+  bool & prev = *static_cast<bool *>(d);
+  if (prev) COUT << ' ';
+  COUT << w->str;
+  prev = true;
+  return true;
+}
+
+int put_word_expand_2(void * d, const AspellWord * w)
+{
+  const char * str = static_cast<const char *>(d);
+  COUT << str << ' ' << w->str << '\n';
+  return true;
+}
 
 void expand() 
 {
@@ -1663,38 +1680,20 @@ void expand()
     limit = atoi(args[1].c_str());
   AspellLanguage * lang = new_language();
   String word;
-  const char * w;
   while (CIN.getline(word)) {
-    const AspellWordList * wl = aspell_language_expand(lang, word.str(), word.size(), limit);
-    AspellStringEnumeration * els = aspell_word_list_elements(wl);
     if (level <= 2) {
-      if (level == 2) 
-        COUT << word << ' ';
-      w = aspell_string_enumeration_next(els);
-      while (w) {
-        COUT << w;
-        w = aspell_string_enumeration_next(els);
-        if (w) COUT << ' ';
-      }
+      if (level == 2) COUT << word << ' ';
+      bool prev = false;
+      aspell_language_expand(lang, word.str(), word.size(), 
+                             put_word_expand_1, &prev, 
+                             limit);
       COUT << '\n';
     } else if (level >= 3) {
-      double ratio = 0;
-      // FIXME
-      //if (level >= 4) {
-      //  for (WordAff * p = exp_list; p; p = p->next)
-      //    ratio += p->word.size;
-      //  ratio /= exp_list->word.size; // it is assumed the first
-      //                                // expansion is just the root
-      //}
-      while (w = aspell_string_enumeration_next(els), w) {
-        COUT << word << ' ' << w;
-        if (level >= 4) COUT.printf(" %f\n", ratio);
-        else COUT << '\n';
-      }
+      aspell_language_expand(lang, word.str(), word.size(), 
+                             put_word_expand_2, const_cast<char *>(word.str()), 
+                             limit);
     }
-    delete_aspell_string_enumeration(els);
   }
-
   delete_aspell_language(lang);
 }
 
@@ -1778,16 +1777,19 @@ void combine()
 // munch list
 //
 
-const char * get_word_ml(void * d) 
+int get_word_ml(void * d, AspellWord * w) 
 {
   String * str = static_cast<String *>(d);
-  CIN.getline(*str);
-  return str->str();
+  bool res = CIN.getline(*str);
+  if (!res) return false;
+  w->str = str->str();
+  w->len = str->size();
+  return true;
 }
 
-int put_word_ml(void *, const char * str)
+int put_word_ml(void *, const AspellWord * w)
 {
-  COUT << str << '\n';
+  COUT << w->str << '\n';
   return true;
 }
 
