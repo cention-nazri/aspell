@@ -8,9 +8,11 @@
 #define ASPELL_STRTONUM__HPP
 
 namespace acommon {
-
-  double strtod_c(const char * nptr, char ** endptr);
-  long strtoi_c(const char * npter,char ** endptr);
+   
+  // Local independent numeric conversion.  It is OK if
+  //   nptr == *endptr
+  double strtod_c(const char * nptr, const char ** endptr);
+  long strtoi_c(const char * npter, const char ** endptr);
 
 }
 

@@ -13,6 +13,8 @@
 #include "copy_ptr-t.hpp"
 #include "strtonum.hpp"
 #include "errors.hpp"
+#include "asc_ctype.hpp"
+
 #ifdef HAVE_LIBDL
 #  include <dlfcn.h>
 #endif
@@ -72,118 +74,67 @@ namespace acommon {
     clear();
   }
 
-  PosibErr<bool> verify_version(const char * relOp, const char * actual, 
-                                const char * required) 
+  static PosibErr<int> version_compare(const char * x, const char * y)
+  {
+    do {
+      int xn = 0, yn = 0;
+      if (*x) {
+        if (!asc_isdigit(*x)) return make_err(bad_version_string);
+        xn = strtoi_c(x, &x);}
+      if (*y) {
+        if (!asc_isdigit(*y)) return make_err(bad_version_string);
+        yn = strtoi_c(y, &y);}
+      int diff = xn - yn;
+      if (diff != 0) return diff;
+      if (*x) {
+        if (*x != '.') return make_err(bad_version_string);
+        ++x;}
+      if (*y) {
+        if (*y != '.') return make_err(bad_version_string);
+        ++y;}
+    } while (*x || *y);
+    return 0;
+  }
+
+  PosibErr<bool> verify_version(const char * rel_op, 
+                                const char * actual, const char * required) 
   {
     assert(actual != NULL && required != NULL);
 
-    char * actVers = (char *) actual;
-    char * reqVers = (char *) required;
-    while ( * actVers != '\0' || * reqVers != '\0'  ) {
-      
-      char * nextActVers = actVers;
-      char * nextReqVers = reqVers;
-      int actNum = strtoi_c(actVers,&nextActVers);
-      int reqNum = strtoi_c(reqVers,&nextReqVers);
+    RET_ON_ERR_SET(version_compare(actual, required), int, cmp);
 
-
-      if ( nextReqVers ==  reqVers) {
-        while ( *nextReqVers == 'x' || *nextReqVers == 'X' ) {
-          nextReqVers++;
-        }
-        if ( reqVers == nextReqVers && reqVers != '\0') {
-          return make_err(bad_version_string);
-        }
-        else if ( reqVers != '\0' ) {
-          reqNum = actNum;
-        }
-      }
-      if (    ( nextActVers == actVers )
-           && ( actVers != '\0' ) ) {
-        return make_err(bad_version_string);
-      }
-      if ( relOp != NULL && relOp[0] == '>' && actVers != '\0' && 
-           ( reqVers == '\0' || actNum > reqNum ) ) {
-        return true;
-      }
-      if ( relOp != NULL && relOp[0] == '<' && reqVers != '\0' &&
-           ( actVers == '\0' || actNum < reqNum ) ) {
-        return true;
-      }
-      if ( actNum == reqNum ) {
-        actVers = nextActVers;
-        reqVers = nextReqVers;
-        while ( *actVers == '.' ) {
-          actVers++;
-        }
-        while ( *reqVers == '.' ) {
-          reqVers++;
-        }
-        continue;
-      }
-      if ( relOp != NULL && relOp[0] == '!' ) {
-        return true;
-      }
-      return false;
-    }
-    if ( relOp != NULL && relOp[0] != '\0' &&
-         ( relOp[0] == '!'  || 
-           ( relOp[1] != '=' && relOp[0] != '=' ) ) ) {
-      return false;
-    }
-    return true;
+    if (cmp == 0 && strchr(rel_op, '=')) return true;
+    if (cmp < 0  && strchr(rel_op, '<')) return true;
+    if (cmp > 0  && strchr(rel_op, '>')) return true;
+    return false;
   }
 
-  PosibErr<void> check_version(char * requirement)
+  PosibErr<void> check_version(const char * requirement)
   {
-    char * relop = requirement;
-    char swap = '\0';
+    const char * s = requirement;
     
-    if (*requirement == '>' || *requirement == '<' || *requirement == '!' )
-      requirement++;
-    if (*requirement == '=')
-      requirement++;
+    if (*s == '>' || *s == '<') s++;
+    if (*s == '=')              s++;
+
+    String rel_op(requirement, s - requirement);
+    String req_ver(s);
     
-    String reqVers(requirement);
+    char act_ver[] = PACKAGE_VERSION;
+
+    char * seek = act_ver;
+    while (*seek && *seek != '-') ++seek; // remove any part after the '-'
+    *seek = '\0';
+
+    PosibErr<bool> peb = verify_version(rel_op.str(), act_ver, req_ver.str());
     
-    swap = *requirement;
-    *requirement = '\0';
-    
-    String relOp(relop);
-    
-    *requirement = swap;
-    
-    char actVersion[] = PACKAGE_VERSION;
-    char * act = &actVersion[0];
-    char * seek = act;
-    
-    while (seek != NULL && 
-           *seek != '\0' && 
-           *seek < '0' && *seek > '9'&& 
-           *seek != '.' && 
-           *seek != 'x' && *seek != 'X' )
-      seek++;
-    act = seek;
-    while (seek != NULL && seek != '\0' && 
-           ((*seek >= '0' && *seek <= '9' ) || 
-            *seek == '.' || 
-            *seek == 'x' || 
-            *seek == 'X'))
-      seek++;
-    if ( seek != NULL ) {
-      *seek = '\0';
-    }
-    
-    PosibErr<bool> peb = verify_version(relOp.c_str(),act,requirement);
-    
-    if ( peb.has_err() ) {
+    if (peb.has_err()) {
       peb.ignore_err();
       return make_err(confusing_version);
-    }
-    if ( peb == false ) {
+    } else if ( peb == false ) {
       return make_err(bad_version);
+    } else {
+      return no_err;
     }
-    return no_err;
   }
 }
 

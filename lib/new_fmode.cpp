@@ -325,9 +325,9 @@ namespace acommon {
 
     number.erase(magicFilePosition,magic.size() - magicFilePosition);
 
-    char * num = (char *)number.str();
-    char * numEnd = num + number.size();
-    char * endHere = numEnd;
+    const char * num = number.str();
+    const char * numEnd = num + number.size();
+    const char * endHere = numEnd;
     long position = 0;
 
     if (    ( number.size() == 0 ) 

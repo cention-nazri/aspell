@@ -55,9 +55,9 @@ namespace acommon {
 
   void load_all_filters(Config * config);
 
-  PosibErr<bool> verify_version(const char * relOp, const char * actual,
-                                const char * required);
-  PosibErr<void> check_version(char * requirement);
+  PosibErr<bool> verify_version(const char * relOp, 
+                                const char * actual, const char * required);
+  PosibErr<void> check_version(const char * requirement);
 
   PosibErr<StringPairEnumeration *> available_filters(Config *);
   PosibErr<StringPairEnumeration *> available_filter_modes(Config *);

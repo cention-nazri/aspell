@@ -11,7 +11,7 @@
 
 namespace acommon {
 
-  static double strtodbl_c(const char * nptr, char ** endptr)
+  static double strtodbl_c(const char * nptr, const char ** endptr)
   {
     double x = 0.0;
     double y = 0.0;
@@ -49,17 +49,17 @@ namespace acommon {
     return negative ? -(x + y) : (x + y);
   }
 
-  double strtod_c(const char * nptr, char ** endptr)
+  double strtod_c(const char * nptr, const char ** endptr)
   {
     double x;
-    char * eptr;
+    const char * eptr;
     x = strtodbl_c(nptr, &eptr);
     if (*eptr == 'E' || *eptr == 'e') {
       const char *nptr2 = eptr;
       long int y, i;
       double e = 1.0;
       nptr2++;
-      y = strtol(nptr2, &eptr, 10);
+      y = strtol(nptr2, (char **)&eptr, 10);
       if (y) {
         for (i=0; i < ( y < 0 ? -y : y); i++)
           e *= 10.0;
@@ -71,8 +71,8 @@ namespace acommon {
     return x;
   }
 
-  long strtoi_c(const char * npter,char ** endptr) {
-    
+  long strtoi_c(const char * npter, const char ** endptr) {
+
     char * str = (char*)npter;
     long num = 0;
     long sign = 1;

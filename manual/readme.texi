@@ -20,7 +20,7 @@ The latest version can always be found at GNU Aspell's home page at
 * Loadable Filter Notes::       
 * Upgrading from Aspell 0.50::  
 * Upgrading from Aspell .33/Pspell .12::  
-* Upgrading from a pre-0.50 snapshot::  
+* Upgrading from a Pre-0.50 snapshot::  
 * WIN32 Notes::                 
 @end menu
 
@@ -115,9 +115,9 @@ Support for being able to load additional filter modules at run-time
 has only been verified to work on Linux platforms.  If you get linker
 errors when trying to use a filter, then it is likely that loadable
 filter support is not working yet on your platform.  Thus, in order to
-get Aspell to work corretly you will need to avoid compiling the
+get Aspell to work correctly you will need to avoid compiling the
 filters as individual modules by using the
-@option{--disable-compile-in-filters} when configuring aspell with
+@option{--disable-compile-in-filters} when configuring Aspell with
 @command{./configure}.
 
 @node Upgrading from Aspell 0.50
@@ -191,7 +191,7 @@ are not likely to function correctly.  Fortunately new dictionary
 packages are available for most languages.  You can find them off of
 the Aspell home page at @uref{http://aspell.net}.
 
-The Pspell abi is now part of Aspell except that the name of
+The Pspell ABI is now part of Aspell except that the name of
 everything has changed due to the renaming of Pspell to Aspell.  In
 particular please note the following name changes:
 
@@ -215,14 +215,14 @@ Due to a change in the way dictionaries are handled, scanning for
 available will no longer work.  This means that programs that relied
 on this technique may have problems finding dictionaries.
 Fortunately, GNU Aspell now provided a uniform way to list all
-installed dictionaries via the c api.  See the file
+installed dictionaries via the c API.  See the file
 @file{list-dicts.c} in the @file{examples/} directory for an example
 of how to do this.  Unfortunately there isn't any simple way to find
 out which dictionaries are installed which will work with both the old
 Aspell/Pspell and the new GNU Aspell.
 
-@node Upgrading from a pre-0.50 snapshot
-@appendixsec Upgrading from a pre-0.50 snapshot
+@node Upgrading from a Pre-0.50 snapshot
+@appendixsec Upgrading from a Pre-0.50 snapshot
 
 At the last minute I decided to merge the @file{speller-util} program
 into the main @file{aspell} program.  You may wish to remove that
@@ -243,7 +243,7 @@ can be found at
 
 There are two basically different ways of building Aspell using GCC
 for WIN32: You can either use the Cygwin compiler, which will produce
-binaries that depend on the posix layer in @file{cygwin1.dll}.  The
+binaries that depend on the POSIX layer in @file{cygwin1.dll}.  The
 other way is using MinGW GCC, those binaries use the native C runtime
 from Microsoft (MSVCRT.DLL).  If you intend to use or link against the
 Aspell libraries using a native WIN32 compiler (e.g.  MS Visual C++),
@@ -283,7 +283,7 @@ libraries that can be imported from MS Visual C++.
 
 @item WIN32_RELOCATABLE
 If set to "1", Aspell will detect the prefix from the path where the
-DLL resides (see below for further datails).
+DLL resides (see below for further details).
 
 @item TARGET
 Sets a prefix to be used for cross compilation (e.g.

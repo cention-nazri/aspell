@@ -42,21 +42,21 @@ GNU Aspell is a spell checker designed to eventually replace Ispell.
 It can either be used as a library or as an independent spell checker.
 
 @menu
-* Introduction::
-* Support::
-* Basic Usage::
-* Customizing Aspell::
-* Working With Dictionaries::
-* Writing programs to use Aspell::
-* Adding Support For Other Languages::
-* Implementation Notes::
-* Languages Which Aspell can Support::
-* Language Related Issues::
-* To Do::
-* Installing::
-* ChangeLog::
-* Authors::
-* Copying::
+* Introduction::                
+* Support::                     
+* Basic Usage::                 
+* Customizing Aspell::          
+* Working With Dictionaries::   
+* Writing programs to use Aspell::  
+* Adding Support For Other Languages::  
+* Implementation Notes::        
+* Languages Which Aspell can Support::  
+* Language Related Issues::     
+* To Do::                       
+* Installing::                  
+* ChangeLog::                   
+* Authors::                     
+* Copying::                     
 
 @detailmenu
  --- The Detailed Node Listing ---
@@ -69,80 +69,80 @@ Basic Usage
 
 Customizing Aspell
 
-* Specifying Options::
-* The Options::
-* Dumping Configuration Values::
-* Notes on Various Options::
+* Specifying Options::          
+* The Options::                 
+* Dumping Configuration Values::  
+* Notes on Various Options::    
 
 Notes on Various Options
 
-* Notes on Various Filters and Filter Modes::
-* Notes on the Prefix Option::
-* Notes on Typo-Analysis::
-* Notes on the Different Suggestion Modes::
+* Notes on Various Filters and Filter Modes::  
+* Notes on the Prefix Option::  
+* Notes on Typo-Analysis::      
+* Notes on the Different Suggestion Modes::  
 
 Working With Dictionaries
 
-* Using aspell-import::
-* How Aspell Selects an Appropriate Dictionary::
-* Listing Available Dictionaries::
-* Dumping the Contents of the Word List::
-* Creating an Individual Word List::
-* Using Multi Dictionaries::
-* Dictionary Naming::
-* AWLI files::
+* Using aspell-import::         
+* How Aspell Selects an Appropriate Dictionary::  
+* Listing Available Dictionaries::  
+* Dumping the Contents of the Word List::  
+* Creating an Individual Word List::  
+* Using Multi Dictionaries::    
+* Dictionary Naming::           
+* AWLI files::                  
 
 Writing programs to use Aspell
 
-* Through the C API::
-* Through A Pipe::
-* Notes on Storing Replacement Pairs::
+* Through the C API::           
+* Through A Pipe::              
+* Notes on Storing Replacement Pairs::  
 
 Adding Support For Other Languages
 
-* The Language Data File::
-* Compiling the Word List::
-* Phonetic Code::
-* The Simpile Soundslike::
-* Replacement Tables::
-* Affix Compression::
-* Controlling the Behavior of Run-together Words::
-* Creating A New Character Set::
-* Format of the Character Set Data File::
-* Creating An Offical Dictionary Package::
+* The Language Data File::      
+* Compiling the Word List::     
+* Phonetic Code::               
+* The Simple Soundslike::       
+* Replacement Tables::          
+* Affix Compression::           
+* Controlling the Behavior of Run-together Words::  
+* Creating A New Character Set::  
+* Format of the Character Set Data File::  
+* Creating An Official Dictionary Package::  
 
 Implementation Notes
 
-* Aspell Suggestion Strategy::
-* Notes on 8-bit Characters::
+* Aspell Suggestion Strategy::  
+* Notes on 8-bit Characters::   
 
 Languages Which Aspell can Support
 
-* Supported::
-* Unsupported::
-* Multiple Scripts::
-* Planned Dictionaries::
-* References::
+* Supported::                   
+* Unsupported::                 
+* Multiple Scripts::            
+* Planned Dictionaries::        
+* References::                  
 
 Language Related Issues
 
-* Compound Words::
-* Words With Symbols in Them::
-* Unicode Normalization::
-* German Sharp S ::
-* Context Sensitive Spelling::
+* Compound Words::              
+* Words With Symbols in Them::  
+* Unicode Normalization::       
+* German Sharp S::              
+* Context Sensitive Spelling::  
 
 To Do
 
-* Important Items::
-* Other Items::
-* Notes on Various Items::
+* Important Items::             
+* Other Items::                 
+* Notes on Various Items::      
 
 Notes on Various Items
 
-* Word skipping by context::
-* Hidden Markov Model::
-* Email the Personal Dictionary::
+* Word skipping by context::    
+* Hidden Markov Model::         
+* Email the Personal Dictionary::  
 
 Copying
 
@@ -368,8 +368,8 @@ that encoding.
 @node Using Aspell as a Replacement for Ispell
 @section Using Aspell as a Replacement for Ispell
 
-As of GNU Aspell 0.60.1 Aspell should be able to completly replase
-Ispell for most applications.  The Ispell compatilty script should
+As of GNU Aspell 0.60.1 Aspell should be able to completely replace
+Ispell for most applications.  The Ispell compatibility script should
 work for most applications which expect Ispell.  However their are
 some differences which you should be aware of.
 
@@ -394,7 +394,7 @@ calls the @command{ispell} command to check the file change
 
 If that is impossible than the @command{run-with-aspell} script can be
 used.  This script modifies the patch so that programs see the Ispell
-compatibity script instead of the actual true @command{ispell}
+compatibility script instead of the actual true @command{ispell}
 command.  The format of the script is:
 
 @example
@@ -411,20 +411,20 @@ Ispell such as Ispell's own scripts.
 
 @subsection Differences From Ispell
 
-Nevertheless, Aspell is not Ispell, nor is it meant to completly
+Nevertheless, Aspell is not Ispell, nor is it meant to completely
 emulate the behavior of Ispell.  The @command{aspell} command is not
 identical to the @command{ispell} command when not used in ``pipe''
 mode.  If an application expects to the @command{ispell} command than
-the Ispell comataibility script should be used.  
+the Ispell compatibility script should be used.  
 
-@subsubsection Funcationaly of the Ispell Compatibility Script
+@subsubsection Functionally of the Ispell Compatibility Script
 
 The Ispell compatibility script provides the following Ispell
-functionaly.
+functionally.
 
 @itemize @bullet
 @item
-The ability to check a file when called with out any mode paramaters.
+The ability to check a file when called with out any mode parameters.
 
 @item
 The pipe or -a mode.
@@ -434,7 +434,7 @@ The list of -l mode.
 
 @item
 The version or -v mode.  A single line is returned which, while not
-being identical to the line Ispell returns, is suffesent to fool most
+being identical to the line Ispell returns, is sufficient to fool most
 programs.
 
 @item
@@ -447,12 +447,12 @@ underlying language.
 
 @item
 The ability to dump the affix file when called with '-D'.  However the
-format of the affix file is diffrent.  Furthermore, not all languages
+format of the affix file is different.  Furthermore, not all languages
 have an affix file.
 
 @end itemize
 
-However the Ispell script currently unable to emmulate the 
+However the Ispell script currently unable to emulate the 
 the '-A' pipe mode.  This is different from the normal pipe mode in
 that the special @code{&Include_File&} is recognized.
 
@@ -485,14 +485,14 @@ script is called by uncommenting the indicated line in the
 
 @subsubsection Pipe Mode Compatibility
 
-The Aspell pipe mode shold be identical to the Ispell pipe mode except
+The Aspell pipe mode should be identical to the Ispell pipe mode except
 if the line starts with a '$$' as that will trigger special Aspell
 only commands or if the line starts with a '~' which is ignored by Aspell.
 
 @subsubsection Other Differences
 
-The compiled dictionary format is completly different than Ispell's.
-Furthermore the format of the language data files's are different than
+The compiled dictionary format is completely different than Ispell's.
+Furthermore the format of the language data files' are different than
 Ispell's affix file.  However, all known Ispell dictionaries been
 converted to Aspell format, except for Albanian (sq) as I was unable
 to find the source word list.
@@ -512,9 +512,9 @@ can.
 @node Using Aspell with other Applications
 @section Using Aspell with other Applications
 
-@subsection With Emacs and Xemacs
+@subsection With Emacs and XEmacs
 
-The easiest way to use Aspell with Emacs or Xemacs is to add this
+The easiest way to use Aspell with Emacs or XEmacs is to add this
 line:
 
 @verbatim
@@ -622,10 +622,10 @@ options take a specific value, and @dfn{list} options can either have
 entries added or removed from the list.
 
 @menu
-* Specifying Options::
-* The Options::
-* Dumping Configuration Values::
-* Notes on Various Options::
+* Specifying Options::          
+* The Options::                 
+* Dumping Configuration Values::  
+* Notes on Various Options::    
 @end menu
 
 @node Specifying Options
@@ -694,7 +694,7 @@ example to remove all filters use @samp{--clear-filter}.
 
 A list option can also be set directly, in which case it will be set to
 a single value.  To directly set a list option to multiple values prefix
-the option name with a @samp{lset-} and seperate each value with a
+the option name with a @samp{lset-} and separate each value with a
 @samp{:}.  For example to use the URL and TeX filter use
 @samp{--lset-filter url:tex}.
 
@@ -770,7 +770,7 @@ example to remove all filters use @samp{clear-filter}.
 
 A list option can also be set directly, in which case it will be set to
 a single value.  To directly set a list option to multiple values prefix
-the option name with a @samp{lset-} and seperate each value with a
+the option name with a @samp{lset-} and separate each value with a
 @samp{:}.  For example to use the URL and TeX filter use
 @samp{lset-filter url:tex}.  To include a literal @samp{:} use
 @samp{\:}.
@@ -819,7 +819,7 @@ an Appropriate Dictionary}):
 
 @item master,-d
 @i{(string)}
-Base name of the dictionary to use.  If this option is specifed than
+Base name of the dictionary to use.  If this option is specified than
 Aspell will either use this dictionary or die.
 
 @item dict-dir
@@ -885,7 +885,7 @@ limited to, @samp{iso-8859-*}, @samp{utf-8}, @samp{ucs-2},
 based on the current locale.  Thus if your locale currently uses the
 @samp{utf-8} encoding than everything will be in @acronym{UTF-8}.  The
 @samp{ucs-2} and @samp{ucs-4} encodings are intended to be used by other
-programs using the Aspell library and is not suppotted by the Aspell
+programs using the Aspell library and is not supported by the Aspell
 utility.
 
 @item normalize
@@ -902,7 +902,7 @@ creating dictionaries.
 
 @item norm-form
 @i{(string)}
-The normalization form the output should be in.  This option primarly
+The normalization form the output should be in.  This option primarily
 effects the normalization form of the suggestions as when spell
 checkering as the actual text is unchanged unless there is an error.
 Valid values are @samp{none}, @samp{nfd} for fully decomposition
@@ -923,7 +923,7 @@ full composition.
 
 @subsection Checker Options
 
-These options control the behaviour of Aspell when checking
+These options control the behavior of Aspell when checking
 documents.
 
 @table @b
@@ -1000,7 +1000,7 @@ Email quote characters.
 
 @item email-margin
 @i{(integer)}
-The number of chararacters that can appear before the quote character
+The number of characters that can appear before the quote character
 @end table
 
 @subsubsection html
@@ -1036,6 +1036,19 @@ check @TeX{} comments
 
 @c @item tex-multi-byte
 @c (@i{list}) TeX multi byte letter en|decoding
+
+@end table
+
+@subsection texinfo
+This filter hides all Texinfo command from Aspell.  It can also hide
+Texinfo paramaters and envirments not corresponding to readable text.
+
+@table @b
+@item texinfo-ignore
+Texinfo command to ignore the parameters of.
+
+@item texinfo-ignore-env
+Texinfo environments to ignore.
 
 @end table
 
@@ -1189,10 +1202,10 @@ To find out the current value of a particular option use
 @section Notes on Various Options
 
 @menu
-* Notes on Various Filters and Filter Modes::
-* Notes on the Prefix Option::
-* Notes on Typo-Analysis::
-* Notes on the Different Suggestion Modes::
+* Notes on Various Filters and Filter Modes::  
+* Notes on the Prefix Option::  
+* Notes on Typo-Analysis::      
+* Notes on the Different Suggestion Modes::  
 @end menu
 
 @node Notes on Various Filters and Filter Modes
@@ -1403,6 +1416,10 @@ The TeX filter mode is also available via @option{latex} alias name.
 @c for it.
 @c @end quotation
 
+@subsubsection Texinfo Filter
+
+FIXME: writeme
+
 @subsubsection Nroff Filter
 
 The @option{nroff} filter mode allows you to check the spelling of
@@ -1457,7 +1474,7 @@ end of line use @code{\0} sequence as closing delimiter.
 @subsubsection Ccpp Filter Mode
 
 The @option{ccpp} filter mode will limit spell checking to C/C++ comments
-and string literals. Any code inbetween will be left alone.
+and string literals. Any code in between will be left alone.
 
 @node Notes on the Prefix Option
 @subsection Notes on the Prefix Option
@@ -1587,14 +1604,14 @@ to the @option{normal} if jump tables were used.
 @chapter Working With Dictionaries
 
 @menu
-* Using aspell-import::
-* How Aspell Selects an Appropriate Dictionary::
-* Listing Available Dictionaries::
-* Dumping the Contents of the Word List::
-* Creating an Individual Word List::
-* Using Multi Dictionaries::
-* Dictionary Naming::
-* AWLI files::
+* Using aspell-import::         
+* How Aspell Selects an Appropriate Dictionary::  
+* Listing Available Dictionaries::  
+* Dumping the Contents of the Word List::  
+* Creating an Individual Word List::  
+* Using Multi Dictionaries::    
+* Dictionary Naming::           
+* AWLI files::                  
 @end menu
 
 @node Using aspell-import
@@ -1737,7 +1754,7 @@ The option @option{--clean-words} can be be added when creating a
 dictionary if you want Aspell to remove invalid characters from the
 beginning and end of a word like the "clean" command does. In addition
 the options @option{--dont-skip-invalid-words} and
-@option{--dont-clean-affixes} can be specifed to turn the warnings into
+@option{--dont-clean-affixes} can be specified to turn the warnings into
 errors.
 
 The compiled dictionary file are endian order dependent.  When a
@@ -1811,7 +1828,7 @@ have a name in the following format:
 where @var{language} is the two letter language code, @var{region} is
 the two letter region code, @var{variety} is any extra information to
 distinguish the word list from other ones with the same language and
-spelling.  Multiple varieties can be used by seperating them with a '-'.
+spelling.  Multiple varieties can be used by separating them with a '-'.
 Finally, @var{size} is the size of the dictionary.  If no size is
 specified that the default size of 60 will be assumed.
 
@@ -1857,9 +1874,9 @@ Aspell API can be used directly but that is not recommended as the
 actual Aspell API is constantly changing.
 
 @menu
-* Through the C API::
-* Through A Pipe::
-* Notes on Storing Replacement Pairs::
+* Through the C API::           
+* Through A Pipe::              
+* Notes on Storing Replacement Pairs::  
 @end menu
 
 @node Through the C API
@@ -2042,7 +2059,7 @@ tool.
 @subsection Examples
 
 Two simple examples are included in the examples directory.  The
-@code{example-c} program demenstrates most of the Aspell library
+@code{example-c} program demonstrates most of the Aspell library
 functionality and the @code{list-dicts} lists the available
 dictionaries.
 
@@ -2054,7 +2071,7 @@ objects, including the AspellSpeller class, should not be used by
 multiple threads unless they are protected by locks or it is only
 accessed by read-only methods.  A method is read-only only if a
 @code{const} object is passed in.  Many methods that seam to be
-read-only are not becuase they may store state information in the
+read-only are not because they may store state information in the
 object.
 
 @node Through A Pipe
@@ -2211,7 +2228,7 @@ began, begging, begin, begun, @dots{}
 @end example
 
 @noindent
-However because it knows the user mispelled @emph{beginning} as
+However because it knows the user misspelled @emph{beginning} as
 @emph{beging} it will instead suggest:
 
 @example
@@ -2259,16 +2276,16 @@ Adding a language to Aspell is fairly straightforward.  You basically
 need to create the language data file, and compile a new word list.
 
 @menu
-* The Language Data File::
-* Compiling the Word List::
-* Phonetic Code::
-* The Simpile Soundslike::
-* Replacement Tables::
-* Affix Compression::
-* Controlling the Behavior of Run-together Words::
-* Creating A New Character Set::
-* Format of the Character Set Data File::
-* Creating An Offical Dictionary Package::
+* The Language Data File::      
+* Compiling the Word List::     
+* Phonetic Code::               
+* The Simple Soundslike::       
+* Replacement Tables::          
+* Affix Compression::           
+* Controlling the Behavior of Run-together Words::  
+* Creating A New Character Set::  
+* Format of the Character Set Data File::  
+* Creating An Official Dictionary Package::  
 @end menu
 
 @node The Language Data File
@@ -2345,9 +2362,9 @@ special ' -*- - -*-
 The name of the soundslike data for the language.  The data is
 expected to be in the file @file{@var{name}_phonetic.dat}.
 
-If @var{name} is @samp{simpile} then a very simpile soundslike is
+If @var{name} is @samp{simpile} then a very simple soundslike is
 used.  This is nearly as powerful as full phonetic soundslike but it
-can be computed a lot faster.  (@pxref{The Simpile Soundslike})
+can be computed a lot faster.  (@pxref{The Simple Soundslike})
 
 If the soundslike name is @samp{none}, or this option is not specified,
 than no soundslike will be used.  The effective soundslike is the word
@@ -2434,7 +2451,7 @@ includes instructions for creating the AWLI file.
 @node Phonetic Code
 @section Phonetic Code
 
-@c @emph{(The following section was origanlly written by Bj@"orn Jacke,
+@c @emph{(The following section was originally written by Bj@"orn Jacke,
 @c bjoern.jacke at gmx de)}
 
 Aspell is in fact the spell checker that comes up with the best
@@ -2772,10 +2789,10 @@ If you think that this section helped you or if you think that this is
 just a waste of time you can send any feedback to
 @email{bjoern.jacke@@gmx.de}.
 
-@node The Simpile Soundslike
-@section The Simpile Soundslike
+@node The Simple Soundslike
+@section The Simple Soundslike
 
-The simpile soundslike goes something like this:
+The simple soundslike goes something like this:
 
 @example
 sl0[0] = lookup0(word[0])
@@ -2801,16 +2818,16 @@ affix compression is used and the @option{partially-expand} is given
 the results will be identical to the results when affix compression is
 not used.
 
-Of course it is not nearly as powerfull as the phonetic soundslike.
+Of course it is not nearly as powerful as the phonetic soundslike.
 
 @node Replacement Tables
 @section Replacement Tables
 
 When phonetic code is not used a replacement table can be used instead.
 To enable the use of a replacement table add the line @code{repl-table
-@var{lang}}, in which case the replacemnet table is excepted to be in
+@var{lang}}, in which case the replacement table is excepted to be in
 the file @file{@var{lang}_repl.dat}.  A complete file name can also be
-specifed in place of @var{lang}.  For compatibility with MySpell the
+specified in place of @var{lang}.  For compatibility with MySpell the
 replacement table can also be part of the affix file, in which case
 @option{repl-table} will be @file{@var{lang}_affix.dat"}.
 
@@ -2823,7 +2840,7 @@ REP [what] [replacement]
 @end example
 
 For example a possible English replacement table definition
-to handle misspelt consonants:
+to handle misspelled consonants:
 
 @example
 REP 8
@@ -2865,9 +2882,9 @@ does this by only storing the soundslike for the root word.  When a
 word is misspelled it will search for a soundslike close to all
 possible roots of the misspelled word.
 
-When no soundslike infomation, or the simpile soundslike, is used it
+When no soundslike information, or the simple soundslike, is used it
 may be beneficial to specify the option @option{partially-expand}
-which will partially expand a word with affix infomation so that the
+which will partially expand a word with affix information so that the
 affix flags do not effect the first 3 letters of the word.  This will
 allow Aspell to get more accurate results when scanning the list for near
 misses since the full word can be used and not just the root.
@@ -2990,7 +3007,7 @@ In addition all chars in ispell aff files are in uppercase.
 
 @subsection Specifying Affix Flags
 
-Affig flages are specified in the word list by specifing tham after
+Affix flags are specified in the word list by specifying them after
 the @samp{/} character:
 
 @example
@@ -3054,11 +3071,11 @@ The line(s) starting with @samp{=} do not specify the exact name of the
 file, but rather the name of the unicode mapping that is used.  Unless
 you change the unicode mapping, this line should not be changed.
 
-@node Creating An Offical Dictionary Package
-@section Creating An Offical Dictionary Package
+@node Creating An Official Dictionary Package
+@section Creating An Official Dictionary Package
 
 Once you have a basic dictionary working, you should consider creating
-an offical package so that it can be distributed with Aspell.  To do so
+an official package so that it can be distributed with Aspell.  To do so
 download
 @url{ftp://alpha.gnu.org/@/gnu/aspell/@/aspell-lang-@var{version}.tar.bz2}.
 
@@ -3066,8 +3083,8 @@ download
 @appendix Implementation Notes
 
 @menu
-* Aspell Suggestion Strategy::
-* Notes on 8-bit Characters::
+* Aspell Suggestion Strategy::  
+* Notes on 8-bit Characters::   
 @end menu
 
 @node Aspell Suggestion Strategy
@@ -3201,11 +3218,11 @@ script.  The only logographic writing system in current use are those
 based on h@`anzi which includes Chinese, Japanese, and sometimes Korean.
 
 @menu
-* Supported::
-* Unsupported::
-* Multiple Scripts::
-* Planned Dictionaries::
-* References::
+* Supported::                   
+* Unsupported::                 
+* Multiple Scripts::            
+* Planned Dictionaries::        
+* References::                  
 @end menu
 
 @node Supported
@@ -3279,7 +3296,7 @@ All ISO-8859 character leaves the characters 0x00 - 0x1F, and 0x80 -
 those, 0x01 - 0x0F, 0x11 - 0x1F and 0x80 - 0x9F may be mapped to
 anything in Aspell.  This is a total of 62 characters which can be
 remapped in any ISO-8859 character set.  Thus, by remapping 37 of the 62
-characters to the previously specifed Unicode code-points, any modified
+characters to the previously specified Unicode code-points, any modified
 ISO-8859 character set can be used for any Latin languages covered by
 ISO-8859.  Of course decomposing every single accented character wastes
 a lot of space, so only characters that cannot be represented in the
@@ -3293,7 +3310,7 @@ Latin, Latin-1 Supplement, Latin Extended-A, Latin Extended-B, and Latin
 Extended Additional) can be represented using around 175 basic letters,
 and 25 modifiers which is less than 210 and can thus fit in an Aspell
 8-bit character set.  Since this unicode range covers any possible Latin
-language this special character set can be used to reperesnt any word
+language this special character set can be used to represent any word
 written using the Latin script if so desired.
 
 @appendixsubsec Syllabic
@@ -3322,7 +3339,7 @@ of the Unicode normalization process.
 
 @appendixsubsubsec The Yi Syllabary
 
-A very large syllabary with 819 distince symbols.  However, like
+A very large syllabary with 819 distinct symbols.  However, like
 Ethiopic, it should be possible to support this script by breaking it
 up.
 
@@ -3497,11 +3514,11 @@ of a new issue not discussed here, please email me at
 @email{kevina@@gnu.org}.
 
 @menu
-* Compound Words::
-* Words With Symbols in Them::
-* Unicode Normalization::
-* German Sharp S ::
-* Context Sensitive Spelling::
+* Compound Words::              
+* Words With Symbols in Them::  
+* Unicode Normalization::       
+* German Sharp S::              
+* Context Sensitive Spelling::  
 @end menu
 
 @node Compound Words
@@ -3718,9 +3735,9 @@ I attempt to implement support for context sensitive spelling.
 @appendix To Do
 
 @menu
-* Important Items::
-* Other Items::
-* Notes on Various Items::
+* Important Items::             
+* Other Items::                 
+* Notes on Various Items::      
 @end menu
 
 @node Important Items
@@ -3882,9 +3899,9 @@ the first few lines.
 @appendixsec Notes on Various Items
 
 @menu
-* Word skipping by context::
-* Hidden Markov Model::
-* Email the Personal Dictionary::
+* Word skipping by context::    
+* Hidden Markov Model::         
+* Email the Personal Dictionary::  
 @end menu
 
 @node  Word skipping by context
