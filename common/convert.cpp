@@ -257,8 +257,9 @@ namespace acommon {
     void * sub_table;
   } 
 #ifdef __GNUC__    
-    __attribute__ ((aligned (16)));
+    __attribute__ ((aligned (16)))
 #endif
+  ;
 
   struct ToUniNormEntry
   {
@@ -272,8 +273,9 @@ namespace acommon {
     void * sub_table;
   } 
 #ifdef __GNUC__    
-    __attribute__ ((aligned (16)));
+    __attribute__ ((aligned (16)))
 #endif
+  ;
   
   //////////////////////////////////////////////////////////////////////
   //
