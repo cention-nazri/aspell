@@ -4,12 +4,7 @@
 // license along with this library if you did not you can find
 // it at http://www.gnu.org/.
 
-#include <stdio.h>
-#include <assert.h>
-#include <stdlib.h>
-#include <sys/types.h>
-
-#include "iostream.hpp"
+#include <string.h>
 
 #include "asc_ctype.hpp"
 #include "convert.hpp"
@@ -21,9 +16,9 @@
 
 namespace acommon {
 
-  typedef unsigned char Uni8;
-  typedef u_int16_t     Uni16;
-  typedef u_int32_t     Uni32;
+  typedef unsigned char  Uni8;
+  typedef unsigned short Uni16;
+  typedef unsigned int   Uni32;
 
 
   //////////////////////////////////////////////////////////////////////
