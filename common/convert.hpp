@@ -392,7 +392,15 @@ namespace acommon {
     }
   };
 
-
+  struct MBLen 
+  {
+    enum Encoding {Other, UTF8, UCS2, UCS4} encoding;
+    MBLen() : encoding(Other) {}
+    PosibErr<void> setup(const Config &, ParmString enc);
+    unsigned operator()(const char * str, const char * stop);
+    unsigned operator()(const char * str, unsigned byte_size) {
+      return operator()(str, str + byte_size);}
+  };
 
 }
 

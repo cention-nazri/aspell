@@ -844,7 +844,7 @@ namespace acommon {
       return "iso-8859-1";
     else if (buf == "machine unsigned 16" || buf == "utf-16")
       return "ucs-2";
-    else if (buf == "machine unsigned 32" || buf == "ucs-4")
+    else if (buf == "machine unsigned 32" || buf == "utf-32")
       return "ucs-4";
     else
       return buf.c_str();
@@ -991,4 +991,35 @@ namespace acommon {
 
     return no_err;
   }
+
+  PosibErr<void> MBLen::setup(const Config &, ParmString enc0)
+  {
+    String buf;
+    const char * enc = fix_encoding_str(enc0,buf);
+    if      (strcmp(enc, "utf-8") == 0) encoding = UTF8;
+    else if (strcmp(enc, "ucs-2") == 0) encoding = UCS2;
+    else if (strcmp(enc, "ucs-4") == 0) encoding = UCS4;
+    else                                encoding = Other;
+    return no_err;
+  }
+
+  unsigned MBLen::operator()(const char * str, const char * stop)
+  {
+    unsigned size = 0;
+    switch (encoding) {
+    case Other: 
+      return stop - str;
+    case UTF8:
+      for (; str != stop; ++str) {
+        if ((*str & 0x80) == 0 || (*str & 0xC0) == 0xC0) ++size;
+      }
+      return size;
+    case UCS2:
+      return (stop - str)/2;
+    case UCS4:
+      return (stop - str)/4;
+    }
+    return 0;
+  }
+  
 }

@@ -606,6 +606,9 @@ void pipe()
   Config * config = real_speller->config();
   Conv iconv(setup_conv(config, &real_speller->lang()));
   Conv oconv(setup_conv(&real_speller->lang(), config));
+  MBLen mb_len;
+  if (!config->retrieve_bool("byte-offsets")) 
+    mb_len.setup(*config, config->retrieve("encoding"));
   if (do_time)
     COUT << _("Time to load word list: ")
          << (clock() - start)/(double)CLOCKS_PER_SEC << "\n";
@@ -615,6 +618,7 @@ void pipe()
   const char * w;
   CharVector buf;
   char * line;
+  char * line0;
   char * word;
   char * word2;
   int    ignore;
@@ -732,6 +736,7 @@ void pipe()
     case '^':
       ignore = 1;
     default:
+      line0 = line;
       line += ignore;
       checker->process(line, strlen(line));
       while (Token token = checker->next_misspelling()) {
@@ -762,10 +767,11 @@ void pipe()
         if (suggest) 
           suggestions = aspell_speller_suggest(speller, word, -1);
 	finish = clock();
+        unsigned offset = mb_len(line0, token.offset + ignore);
 	if (suggestions && !aspell_word_list_empty(suggestions)) 
         {
-          COUT.printf("& %s %u %u:", word, aspell_word_list_size(suggestions), 
-                      token.offset + ignore);
+          COUT.printf("& %s %u %u:", word, 
+                      aspell_word_list_size(suggestions), offset);
 	  AspellStringEnumeration * els 
 	    = aspell_word_list_elements(suggestions);
 	  if (options->retrieve_bool("reverse")) {
@@ -792,9 +798,9 @@ void pipe()
 	  COUT.put('\n');
 	} else {
           if (guesses.empty())
-            COUT.printf("# %s %u\n", word, token.offset + ignore);
+            COUT.printf("# %s %u\n", word, offset);
           else
-            COUT.printf("? %s 0 %u: %s", word, token.offset + ignore,
+            COUT.printf("? %s 0 %u: %s", word, offset,
                         guesses.c_str() + 2);
 	}
 	if (do_time)

@@ -1137,6 +1137,8 @@ namespace acommon {
        N_("suggest possible replacements"), KEYINFO_MAY_CHANGE}
     , {"time"   , KeyInfoBool, "false",
        N_("time load time and suggest time in pipe mode"), KEYINFO_MAY_CHANGE}
+    , {"byte-offsets", KeyInfoBool, "false",
+       N_("use byte offsets instead of character offsets")}
   };
 
   const KeyInfo * config_impl_keys_begin = config_keys;
