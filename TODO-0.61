@@ -14,15 +14,15 @@ normalization code if possible. Also:
   Allow the encoding option to use the generic multi-character
   conversions when it makes sense.
 
-This will effectly allow Aspell to handle multi-character letters as
+This will effectively allow Aspell to handle multi-character letters as
 well as Ispell which is the one major area Ispell is currently better
 than Aspell.
 
-ALMOST DONE: Still a few rough spots, especally with Ispell compatibly.
+ALMOST DONE: Still a few rough spots, especially with Ispell compatibly.
   - "ascii" can not be used as a name for a language specific encoding
   - the "+" command in pipe mode doesn't also changes the multi-character
-    conversion layer, in Ispell it ONLY changaged the filter
-  - The multi-character conversion lawer is not selected based on the file
+    conversion layer, in Ispell it ONLY changes the filter
+  - The multi-character conversion lawyer is not selected based on the file
     name extension as in Ispell
 Also need to update the manual to reflect the changes.
 
@@ -31,7 +31,7 @@ Rewrite the document checker interface to correctly handle the case
 when the replacement is more than one word. [DONE]
 
 4) 
-Create a special pipe mode that ignores special charaters at the
+Create a special pipe mode that ignores special characters at the
 beginning of a line so that a user can feed it a text file as is.
 
 
@@ -50,7 +50,16 @@ add additional features. [Gary Setter] [DONE]
 
 OTHER POSSIBILITIES:
 
-Develop a more powerfull C API for Aspell. Ideally this API should
+1) Develop a more powerful C API for Aspell. Ideally this API should
 allow one to perform all the tasks the Aspell utility can do. This
 included the ability to check whole documents, and create
-dictionaries, among other things.
+dictionaries, among other things.  Also add a suggestion mode which
+makes it possible to retrieve the score of the suggestion amount other
+information.
+
+2)
+Develop a GUI interface for Aspell.  It will probably be very similar
+to the old Gaspell.
+
+
+
