@@ -1,4 +1,4 @@
-UTOMAKE_OPTIONS = foreign subdir-objects
+AUTOMAKE_OPTIONS = foreign subdir-objects
 SUBDIRS = . po manual
 DIST_SUBDIRS = ${SUBDIRS} examples lib5
 
