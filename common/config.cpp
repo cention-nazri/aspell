@@ -83,8 +83,8 @@ namespace acommon {
   typedef Notifier * NotifierPtr;
   
   Config::Config(ParmStr name,
-		 const KeyInfo * mainbegin, 
-		 const KeyInfo * mainend)
+                 const KeyInfo * mainbegin, 
+                 const KeyInfo * mainend)
     : name_(name)
     , first_(0), insert_point_(&first_), others_(0)
     , committed_(true), attached_(false)
@@ -171,7 +171,7 @@ namespace acommon {
     for(; i != end; ++i) {
       Notifier * tmp = (*i)->clone(this);
       if (tmp != 0)
-	notifier_list.push_back(tmp);
+        notifier_list.push_back(tmp);
     }
   }
 
@@ -210,7 +210,7 @@ namespace acommon {
   }
 
   void Config::set_filter_modules(const ConfigModule * modbegin, 
-				  const ConfigModule * modend)
+                                  const ConfigModule * modend)
   {
     assert(filter_modules_ptrs.empty());
     filter_modules.clear();
@@ -218,7 +218,7 @@ namespace acommon {
   }
 
   void Config::set_extra(const KeyInfo * begin, 
-			       const KeyInfo * end) 
+                               const KeyInfo * end) 
   {
     extra_begin = begin;
     extra_end   = end;
@@ -280,7 +280,7 @@ namespace acommon {
   }
 
   bool Config::replace_notifier(const Notifier * o, 
-				      Notifier * n) 
+                                      Notifier * n) 
   {
     Vector<Notifier *>::iterator i   = notifier_list.begin();
     Vector<Notifier *>::iterator end = notifier_list.end();
@@ -439,7 +439,7 @@ namespace acommon {
   }
 
   PosibErr<void> Config::retrieve_list(ParmStr key, 
-				       MutableContainer * m) const
+                                       MutableContainer * m) const
   {
     RET_ON_ERR_SET(keyinfo(key), const KeyInfo *, ki);
     if (ki->type != KeyInfoList) return make_err(key_not_list, ki->name);
@@ -450,24 +450,24 @@ namespace acommon {
   }
 
   static const KeyInfo * find(ParmStr key, 
-			      const KeyInfo * i, 
-			      const KeyInfo * end) 
+                              const KeyInfo * i, 
+                              const KeyInfo * end) 
   {
     while (i != end) {
       if (strcmp(key, i->name) == 0)
-	return i;
+        return i;
       ++i;
     }
     return i;
   }
 
   static const ConfigModule * find(ParmStr key, 
-				   const ConfigModule * i, 
-				   const ConfigModule * end) 
+                                   const ConfigModule * i, 
+                                   const ConfigModule * end) 
   {
     while (i != end) {
       if (strcmp(key, i->name) == 0)
-	return i;
+        return i;
       ++i;
     }
     return i;
@@ -490,8 +490,8 @@ namespace acommon {
 
       String k(s, h - s);
       const ConfigModule * j = acommon::find(k,
-					     filter_modules.pbegin(),
-					     filter_modules.pend());
+                                             filter_modules.pbegin(),
+                                             filter_modules.pend());
       
       if (j == filter_modules.pend() && load_filter_hook && committed_) {
         // FIXME: This isn't quite right
@@ -600,18 +600,18 @@ namespace acommon {
         if (entry = lookup("actual-lang"), entry) {
           return entry->value;
         } else if (have("master")) {
-	  final_str = "<unknown>";
-	} else {
-	  get_lang(final_str);
-	}
-	
+          final_str = "<unknown>";
+        } else {
+          get_lang(final_str);
+        }
+        
       } else if (strcmp(i, "encoding") == 0) {
 
         get_encoding(*this, final_str);
 
       } else if (strcmp(i, "special") == 0) {
 
-	// do nothing
+        // do nothing
 
       }
 #ifdef WIN32PORT
@@ -657,7 +657,7 @@ namespace acommon {
       else {
       
         fprintf(stderr, "!%s unimplemented", i);
-	abort(); // this should not happen
+        abort(); // this should not happen
       
       }
     
@@ -665,55 +665,55 @@ namespace acommon {
     
       if (!in_replace) {
 
-	if (*i == '<') {
-	  in_replace = true;
-	} else {
-	  final_str += *i;
-	}
+        if (*i == '<') {
+          in_replace = true;
+        } else {
+          final_str += *i;
+        }
 
       } else { // in_replace
       
-	if (*i == '/' || *i == ':' || *i == '|' || *i == '#' || *i == '^') {
-	  char sep = *i;
-	  String second;
-	  ++i;
-	  while (*i != '\0' && *i != '>') second += *i++;
-	  if (sep == '/') {
-	    String s1 = retrieve(replace);
-	    String s2 = retrieve(second);
-	    final_str += add_possible_dir(s1, s2);
-	  } else if (sep == ':') {
-	    String s1 = retrieve(replace);
-	    final_str += add_possible_dir(s1, second);
-	  } else if (sep == '#') {
-	    String s1 = retrieve(replace);
-	    assert(second.size() == 1);
-	    unsigned int s = 0;
-	    while (s != s1.size() && s1[s] != second[0]) ++s;
-	    final_str.append(s1, s);
-	  } else if (sep == '^') {
-	    String s1 = retrieve(replace);
-	    String s2 = retrieve(second);
-	    final_str += figure_out_dir(s1, s2);
-	  } else { // sep == '|'
-	    assert(replace[0] == '$');
-	    const char * env = getenv(replace.c_str()+1);
-	    final_str += env ? env : second;
-	  }
-	  replace = "";
-	  in_replace = false;
+        if (*i == '/' || *i == ':' || *i == '|' || *i == '#' || *i == '^') {
+          char sep = *i;
+          String second;
+          ++i;
+          while (*i != '\0' && *i != '>') second += *i++;
+          if (sep == '/') {
+            String s1 = retrieve(replace);
+            String s2 = retrieve(second);
+            final_str += add_possible_dir(s1, s2);
+          } else if (sep == ':') {
+            String s1 = retrieve(replace);
+            final_str += add_possible_dir(s1, second);
+          } else if (sep == '#') {
+            String s1 = retrieve(replace);
+            assert(second.size() == 1);
+            unsigned int s = 0;
+            while (s != s1.size() && s1[s] != second[0]) ++s;
+            final_str.append(s1, s);
+          } else if (sep == '^') {
+            String s1 = retrieve(replace);
+            String s2 = retrieve(second);
+            final_str += figure_out_dir(s1, s2);
+          } else { // sep == '|'
+            assert(replace[0] == '$');
+            const char * env = getenv(replace.c_str()+1);
+            final_str += env ? env : second;
+          }
+          replace = "";
+          in_replace = false;
 
-	} else if (*i == '>') {
+        } else if (*i == '>') {
 
-	  final_str += retrieve(replace).data;
-	  replace = "";
-	  in_replace = false;
+          final_str += retrieve(replace).data;
+          replace = "";
+          in_replace = false;
 
-	} else {
+        } else {
 
-	  replace += *i;
+          replace += *i;
 
-	}
+        }
 
       }
       
@@ -1110,34 +1110,34 @@ namespace acommon {
 
     const KeyInfo * next() {
       if (i == cd->keyinfo_end) {
-	if (include_extra)
-	  i = cd->extra_begin;
-	else
-	  i = cd->extra_end;
+        if (include_extra)
+          i = cd->extra_begin;
+        else
+          i = cd->extra_end;
       }
       
       module_changed = false;
       if (i == cd->extra_end) {
-	m = cd->filter_modules.pbegin();
-	if (!include_modules || m == cd->filter_modules.pend()) return 0;
-	else {
+        m = cd->filter_modules.pbegin();
+        if (!include_modules || m == cd->filter_modules.pend()) return 0;
+        else {
           i = m->begin;
           module_changed = true;
         }
       }
 
       if (m == 0){
-	return i++;
+        return i++;
       }
 
       if (m == cd->filter_modules.pend()){
-	return 0;
+        return 0;
       }
 
       while (i == m->end) {
-	++m;
-	if (m == cd->filter_modules.pend()) return 0;
-	else {
+        ++m;
+        if (m == cd->filter_modules.pend()) return 0;
+        else {
           i = m->begin;
           module_changed = true;
         }
@@ -1220,7 +1220,7 @@ namespace acommon {
   }
 
   void Config::write_to_stream(OStream & out, 
-			       bool include_extra) 
+                               bool include_extra) 
   {
     KeyInfoEnumeration * els = possible_elements(include_extra);
     const KeyInfo * i;
@@ -1251,7 +1251,7 @@ namespace acommon {
       obuf.printf("# %s (%s)\n#   %s\n",
                   i->name, _(keyinfo_type_name[i->type]), _(i->desc));
       if (i->def != 0) {
-	if (i->type != KeyInfoList) {
+        if (i->type != KeyInfoList) {
           buf.resize(strlen(i->def) * 2 + 1);
           escape(buf.data(), i->def);
           obuf.printf("# default: %s", buf.data());
@@ -1263,18 +1263,18 @@ namespace acommon {
           }
           obuf << '\n';
           const Entry * entry = lookup(i->name);
-	  if (entry) {
+          if (entry) {
             have_value = true;
             buf.resize(entry->value.size() * 2 + 1);
             escape(buf.data(), entry->value.str());
-	    obuf.printf("%s %s\n", i->name, buf.data());
+            obuf.printf("%s %s\n", i->name, buf.data());
           }
-	} else {
+        } else {
           unsigned s = obuf.size();
           ListDump ld(obuf, i->name);
           lookup_list(i, ld, false);
           have_value = s != obuf.size();
-	}
+        }
       }
       obuf << '\n';
       if (!(i->flags & KEYINFO_HIDDEN) || have_value)
@@ -1574,8 +1574,8 @@ namespace acommon {
   Config * new_basic_config() { 
     aspell_gettext_init();
     return new Config("aspell",
-		      config_impl_keys_begin,
-		      config_impl_keys_end);
+                      config_impl_keys_begin,
+                      config_impl_keys_end);
   }
   
 }
