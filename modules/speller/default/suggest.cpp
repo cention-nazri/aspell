@@ -32,6 +32,9 @@
 // of how the words sounds. It is not the phoneme of the word by any
 // means.  For more information on the metaphone algorithm please see
 // the file metaphone.cc which included a detailed description of it.
+//
+// NOTE: It is assumed that that strlen(soundslike) <= strlen(word)
+//       for any possible word
 
 // POSSIBLE OPTIMIZATION:
 //   store the number of letters that are the same as the previous 
@@ -103,6 +106,7 @@ namespace {
     int           word_score;
     int           soundslike_score;
     bool          count;
+    bool          too_large;
     WordEntry * repl_list;
     ScoreWordSound() {repl_list = 0;}
     ~ScoreWordSound() {delete repl_list;}
@@ -495,6 +499,7 @@ namespace {
     d.word = word;
     d.soundslike = sl;
     //d.word_size = word_size;
+    d.too_large = word_size * parms->edit_distance_weights.max > 0x8000;
     
     if (parms->use_typo_analysis) {
       unsigned int l = word_size;
@@ -1010,16 +1015,21 @@ namespace {
         //CERR.printf("%s %s %s %d %d\n", i->word, i->word_clean, i->soundslike,
         //            i->word_score, i->soundslike_score);
 
-        if (i->word_score >= LARGE_NUM) {
+        if (i->too_large) {
+          // it is assumed that strlen(i->soundslike) <= i->word_score
+          if (i->word_score >= LARGE_NUM) i->word_score = LARGE_NUM - 1;
+          if (i->soundslike_score >= LARGE_NUM) i->soundslike_score = LARGE_NUM - 1;
+        }
 
-            int sl_score = i->soundslike_score < LARGE_NUM ? i->soundslike_score : 0;
-            int level = needed_level(try_for, sl_score);
-            
-            if (level >= int(sl_score/parms->edit_distance_weights.min)) 
-              i->word_score = edit_distance(original.clean,
-                                            i->word_clean,
-                                            level, level,
-                                            parms->edit_distance_weights);
+        if (i->word_score >= LARGE_NUM) {
+          int sl_score = i->soundslike_score < LARGE_NUM ? i->soundslike_score : 0;
+          int level = needed_level(try_for, sl_score);
+          
+          if (level >= int(sl_score/parms->edit_distance_weights.min)) 
+            i->word_score = edit_distance(original.clean,
+                                          i->word_clean,
+                                          level, level,
+                                          parms->edit_distance_weights);
         }
         
         if (i->word_score >= LARGE_NUM) goto cont1;
