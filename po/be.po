@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.51\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-04-17 08:37-0400\n"
+"POT-Creation-Date: 2004-04-25 03:58-0400\n"
 "PO-Revision-Date: 2004-01-06 16:34+0200\n"
 "Last-Translator: Vital khilko <dojlid@mova.org>\n"
 "Language-Team: Belarusian <i18n@mova.org>\n"
@@ -255,6 +255,10 @@ msgstr ""
 #: common/config.cpp:1139
 msgid "time load time and suggest time in pipe mode"
 msgstr "час загрузкі й час прапановы ў рэжыме канала"
+
+#: common/config.cpp:1141
+msgid "use byte offsets instead of character offsets"
+msgstr ""
 
 #: common/convert.cpp:283 common/convert.cpp:400
 #, c-format
@@ -507,101 +511,101 @@ msgstr "Невядомае дзеяньне: %s"
 msgid "Invalid Input"
 msgstr "Недапушчальны ўвод"
 
-#: prog/aspell.cpp:610
+#: prog/aspell.cpp:613
 msgid "Time to load word list: "
 msgstr "Час загрузкі сьпісу словаў: "
 
-#: prog/aspell.cpp:801
+#: prog/aspell.cpp:807
 #, fuzzy, c-format
 msgid "Suggestion Time: %f\n"
 msgstr "Час прапанаваньня: "
 
-#: prog/aspell.cpp:842
+#: prog/aspell.cpp:848
 msgid "You must specify a file name."
 msgstr "Вы мусіце пазначыць назву файла."
 
-#: prog/aspell.cpp:852
+#: prog/aspell.cpp:858
 #, c-format
 msgid "Could not open the file \"%s\" for reading"
 msgstr "Немагчыма адкрыць файл \"%s\" для чытаньня"
 
-#: prog/aspell.cpp:867
+#: prog/aspell.cpp:873
 #, c-format
 msgid "Could not open the file \"%s\"  for writing. File not saved."
 msgstr "Немагчыма адкрыць файл \"%s\"  для запісу. Файл не захаваны."
 
-#: prog/aspell.cpp:880
+#: prog/aspell.cpp:886
 #, c-format
 msgid "Invalid keymapping: %s"
 msgstr "Недапушчальнае мапаваньне клявішаў:·%s"
 
-#: prog/aspell.cpp:897
+#: prog/aspell.cpp:903
 msgid "Ignore"
 msgstr "Ігнараваць"
 
-#: prog/aspell.cpp:898
+#: prog/aspell.cpp:904
 msgid "Ignore all"
 msgstr "Ігнараваць усё"
 
-#: prog/aspell.cpp:899
+#: prog/aspell.cpp:905
 msgid "Replace"
 msgstr "Замяніць"
 
-#: prog/aspell.cpp:900
+#: prog/aspell.cpp:906
 msgid "Replace all"
 msgstr "Замяніць усё"
 
-#: prog/aspell.cpp:901
+#: prog/aspell.cpp:907
 msgid "Add"
 msgstr "Дадаць"
 
-#: prog/aspell.cpp:902
+#: prog/aspell.cpp:908
 msgid "Add Lower"
 msgstr "Дадаць малымі літарамі"
 
-#: prog/aspell.cpp:903
+#: prog/aspell.cpp:909
 msgid "Abort"
 msgstr "Адкінуць"
 
-#: prog/aspell.cpp:904
+#: prog/aspell.cpp:910
 msgid "Exit"
 msgstr "ВЫйсьці"
 
-#: prog/aspell.cpp:980
+#: prog/aspell.cpp:986
 msgid "Are you sure you want to abort? "
 msgstr "Вы сапраўды жадаеце адкінуць?"
 
-#: prog/aspell.cpp:1000
+#: prog/aspell.cpp:1006
 msgid "With: "
 msgstr "З: "
 
-#: prog/aspell.cpp:1016
+#: prog/aspell.cpp:1022
 msgid "Sorry that is an invalid choice!"
 msgstr "Выбачайце, але гэта памылковы выбар!"
 
-#: prog/aspell.cpp:1186
+#: prog/aspell.cpp:1192
 msgid "Sorry \"filter\" is currently unimplemented.\n"
 msgstr "Выбачайце \"фільтар\" зараз не працаздольны.\n"
 
-#: prog/aspell.cpp:1278
+#: prog/aspell.cpp:1284
 msgid "Can't merge a master word list yet. Sorry."
 msgstr "Немагчыма зараз аб'яднаць асноўны сьпіс словаў. Выбачайце."
 
-#: prog/aspell.cpp:1303
+#: prog/aspell.cpp:1309
 msgid "Sorry \"create/merge personal\" is currently unimplemented.\n"
 msgstr ""
 "Выбачайце \"стварэньне/аб'яднаньне пэрсанальнага\" зараз непрацаздольнае.\n"
 
-#: prog/aspell.cpp:1312 prog/aspell.cpp:1369
+#: prog/aspell.cpp:1318 prog/aspell.cpp:1375
 #, c-format
 msgid "Sorry I won't overwrite \"%s\""
 msgstr "Выбачайце, трэба перазапісаць \"%s\""
 
-#: prog/aspell.cpp:1360
+#: prog/aspell.cpp:1366
 msgid "Sorry \"create/merge repl\" is currently unimplemented.\n"
 msgstr "Выбачайце пакуль гэтая апэрацыя непрацаздольная.\n"
 
-#: prog/aspell.cpp:1733
+#: prog/aspell.cpp:1739
 #, fuzzy, c-format
 msgid ""
 "\n"
@@ -658,7 +662,7 @@ msgstr ""
 "[выбары] адзін з наступных выбараў:\n"
 "\n"
 
-#: prog/aspell.cpp:1763
+#: prog/aspell.cpp:1769
 #, fuzzy, c-format
 msgid ""
 "\n"
@@ -677,26 +681,26 @@ msgstr ""
 msgid "The required field \"name\" is missing."
 msgstr ""
 
-#: modules/speller/default/language.cpp:485
+#: modules/speller/default/language.cpp:489
 msgid "Empty string."
 msgstr ""
 
-#: modules/speller/default/language.cpp:491
+#: modules/speller/default/language.cpp:495
 #, c-format
 msgid "The character '%s' may not appear at the beginning of a word."
 msgstr ""
 
-#: modules/speller/default/language.cpp:495
+#: modules/speller/default/language.cpp:499
 #, fuzzy
 msgid "Does not contain any letters."
 msgstr " не патрабуе ніякіх парамэтраў."
 
-#: modules/speller/default/language.cpp:503
+#: modules/speller/default/language.cpp:507
 #, c-format
 msgid "The character '%s' may not appear in the middle of a word."
 msgstr ""
 
-#: modules/speller/default/language.cpp:513
+#: modules/speller/default/language.cpp:517
 #, c-format
 msgid "The character '%s' may not appear at the end of a word."
 msgstr ""

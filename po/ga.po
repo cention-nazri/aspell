@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60-b20040402\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-04-17 08:37-0400\n"
+"POT-Creation-Date: 2004-04-25 03:58-0400\n"
 "PO-Revision-Date: 2004-04-07 11:12-0600\n"
 "Last-Translator: Kevin Patrick Scannell <scannell@SLU.EDU>\n"
 "Language-Team: Irish <ga@li.org>\n"
@@ -243,6 +243,10 @@ msgstr "tabhair moltaí d'fhocail mílitrithe"
 #: common/config.cpp:1139
 msgid "time load time and suggest time in pipe mode"
 msgstr "tomhais fad ama lódála/molta i modh phíopa"
+
+#: common/config.cpp:1141
+msgid "use byte offsets instead of character offsets"
+msgstr ""
 
 #: common/convert.cpp:283 common/convert.cpp:400
 #, c-format
@@ -499,101 +503,101 @@ msgstr "Feidhm Anaithnid: %s"
 msgid "Invalid Input"
 msgstr "Ionchur Neamhbhailí"
 
-#: prog/aspell.cpp:610
+#: prog/aspell.cpp:613
 msgid "Time to load word list: "
 msgstr "Fad ama chun an liosta focal a lódáil: "
 
-#: prog/aspell.cpp:801
+#: prog/aspell.cpp:807
 #, c-format
 msgid "Suggestion Time: %f\n"
 msgstr "Fad ama chun na moltaí a ghineadh: %f\n"
 
-#: prog/aspell.cpp:842
+#: prog/aspell.cpp:848
 msgid "You must specify a file name."
 msgstr "Is gá ainm comhaid ar a laghad a thabhairt."
 
-#: prog/aspell.cpp:852
+#: prog/aspell.cpp:858
 #, c-format
 msgid "Could not open the file \"%s\" for reading"
 msgstr "Níorbh fhéidir an comhad \"%s\" a oscailt chun é a léamh"
 
-#: prog/aspell.cpp:867
+#: prog/aspell.cpp:873
 #, c-format
 msgid "Could not open the file \"%s\"  for writing. File not saved."
 msgstr ""
 "Níorbh fhéidir an comhad \"%s\" a oscailt chun é a scríobh.  Ní shábháladh."
 
-#: prog/aspell.cpp:880
+#: prog/aspell.cpp:886
 #, c-format
 msgid "Invalid keymapping: %s"
 msgstr "Eochairmhapáil neamhbhailí: %s"
 
-#: prog/aspell.cpp:897
+#: prog/aspell.cpp:903
 msgid "Ignore"
 msgstr "Déan neamhshuim"
 
-#: prog/aspell.cpp:898
+#: prog/aspell.cpp:904
 msgid "Ignore all"
 msgstr "Déan neamhshuim ar gach"
 
-#: prog/aspell.cpp:899
+#: prog/aspell.cpp:905
 msgid "Replace"
 msgstr "Ionadaigh"
 
-#: prog/aspell.cpp:900
+#: prog/aspell.cpp:906
 msgid "Replace all"
 msgstr "Ionadaigh gach"
 
-#: prog/aspell.cpp:901
+#: prog/aspell.cpp:907
 msgid "Add"
 msgstr "Coinnigh"
 
-#: prog/aspell.cpp:902
+#: prog/aspell.cpp:908
 msgid "Add Lower"
 msgstr "Coinnigh le litir bheag"
 
-#: prog/aspell.cpp:903
+#: prog/aspell.cpp:909
 msgid "Abort"
 msgstr "Tobscoir"
 
-#: prog/aspell.cpp:904
+#: prog/aspell.cpp:910
 msgid "Exit"
 msgstr "Fág"
 
-#: prog/aspell.cpp:980
+#: prog/aspell.cpp:986
 msgid "Are you sure you want to abort? "
 msgstr "Ar mhaith leat an clár a thobscor? "
 
-#: prog/aspell.cpp:1000
+#: prog/aspell.cpp:1006
 msgid "With: "
 msgstr "Le: "
 
-#: prog/aspell.cpp:1016
+#: prog/aspell.cpp:1022
 msgid "Sorry that is an invalid choice!"
 msgstr "Tá brón orm; is neamhbhailí an rogha sin!"
 
-#: prog/aspell.cpp:1186
+#: prog/aspell.cpp:1192
 msgid "Sorry \"filter\" is currently unimplemented.\n"
 msgstr "Tá brón orm; níl \"filter\" ar fáil faoi láthair.\n"
 
-#: prog/aspell.cpp:1278
+#: prog/aspell.cpp:1284
 msgid "Can't merge a master word list yet. Sorry."
 msgstr "Tá brón orm; ní féidir máistirliosta focal a chumasc go fóill."
 
-#: prog/aspell.cpp:1303
+#: prog/aspell.cpp:1309
 msgid "Sorry \"create/merge personal\" is currently unimplemented.\n"
 msgstr "Tá brón orm; níl \"create/merge personal\" ar fáil faoi láthair.\n"
 
-#: prog/aspell.cpp:1312 prog/aspell.cpp:1369
+#: prog/aspell.cpp:1318 prog/aspell.cpp:1375
 #, c-format
 msgid "Sorry I won't overwrite \"%s\""
 msgstr "Tá brón orm; ní féidir an comhad \"%s\" a fhorscríobh"
 
-#: prog/aspell.cpp:1360
+#: prog/aspell.cpp:1366
 msgid "Sorry \"create/merge repl\" is currently unimplemented.\n"
 msgstr "Tá brón orm; níl \"create/merge repl\" ar fáil faoi láthair.\n"
 
-#: prog/aspell.cpp:1733
+#: prog/aspell.cpp:1739
 #, c-format
 msgid ""
 "\n"
@@ -650,7 +654,7 @@ msgstr ""
 "is iad [roghanna] ceann amháin nó níos mó de:\n"
 "\n"
 
-#: prog/aspell.cpp:1763
+#: prog/aspell.cpp:1769
 #, c-format
 msgid ""
 "\n"
@@ -670,25 +674,25 @@ msgstr "Is dócha é seo de bharr: "
 msgid "The required field \"name\" is missing."
 msgstr "Tá an réimse riachtanach \"name\" ar iarraidh."
 
-#: modules/speller/default/language.cpp:485
+#: modules/speller/default/language.cpp:489
 msgid "Empty string."
 msgstr "Teaghrán folamh."
 
-#: modules/speller/default/language.cpp:491
+#: modules/speller/default/language.cpp:495
 #, c-format
 msgid "The character '%s' may not appear at the beginning of a word."
 msgstr "Ní ceadaítear an carachtar '%s' ar dtús focail."
 
-#: modules/speller/default/language.cpp:495
+#: modules/speller/default/language.cpp:499
 msgid "Does not contain any letters."
 msgstr "Níl aon litir ann."
 
-#: modules/speller/default/language.cpp:503
+#: modules/speller/default/language.cpp:507
 #, fuzzy, c-format
 msgid "The character '%s' may not appear in the middle of a word."
 msgstr "Ní ceadaítear an carachtar '%s' sa lár focail."
 
-#: modules/speller/default/language.cpp:513
+#: modules/speller/default/language.cpp:517
 #, c-format
 msgid "The character '%s' may not appear at the end of a word."
 msgstr "Ní ceadaítear an carachtar '%s' ag deireadh focail."
