@@ -6,8 +6,8 @@
 
 #include <stdio.h>
 #include <assert.h>
-#include <ctype.h>
 
+#include "asc_ctype.hpp"
 #include "string.hpp"
 #include "fstream.hpp"
 #include "errors.hpp"
@@ -54,7 +54,7 @@ namespace acommon {
   void FStream::skipws() 
   {
     int c;
-    while (c = getc(file_), c != EOF && isspace(c));
+    while (c = getc(file_), c != EOF && asc_isspace(c));
     ungetc(c, file_);
   }
 
@@ -63,7 +63,7 @@ namespace acommon {
     skipws();
     int c;
     str = "";
-    while (c = getc(file_), c != EOF && !isspace(c))
+    while (c = getc(file_), c != EOF && !asc_isspace(c))
       str += static_cast<char>(c);
     ungetc(c, file_);
     return *this;

@@ -16,6 +16,7 @@
 #endif
 #include <dirent.h>
 
+#include "asc_ctype.hpp"
 #include "config.hpp"
 #include "errors.hpp"
 #include "fstream.hpp"
@@ -328,7 +329,7 @@ namespace acommon {
     if (p0 == 0)
       p0 = p2;
     p1 = p2;
-    if (p0 + 2 < p1 && isdigit(p1[-1]) && isdigit(p1[-2]) && p1[-3] == '-')
+    if (p0 + 2 < p1 && asc_isdigit(p1[-1]) && asc_isdigit(p1[-2]) && p1[-3] == '-')
       p1 -= 2;
 
     to_add->c_struct.name = 0;

@@ -4,10 +4,10 @@
 // license along with this library if you did not you can find
 // it at http://www.gnu.org/.
 
-#include <ctype.h>
 #include <string.h>
 #include <stdlib.h>
 
+#include "asc_ctype.hpp"
 #include "itemize.hpp"
 #include "mutable_container.hpp"
 
@@ -50,7 +50,7 @@ namespace acommon {
   ItemizeItem ItemizeTokenizer::next() 
   {
     ItemizeItem li;
-    while (*i != '\0' && (isspace(*i) || *i == ',')) ++i;
+    while (*i != '\0' && (asc_isspace(*i) || *i == ',')) ++i;
     if (*i == '\0') return li;
     li.action = *i;
     if (*i == '+' || *i == '-') {
@@ -62,11 +62,11 @@ namespace acommon {
     } else {
       li.action = '+';
     }
-    while (*i != '\0' && *i != ',' && isspace(*i)) ++i;
+    while (*i != '\0' && *i != ',' && asc_isspace(*i)) ++i;
     if (*i == '\0' || *i == ',') return next();
     li.name = i;
     while (*i != '\0' && *i != ',') ++i;
-    while (isspace(*(i-1))) --i;
+    while (asc_isspace(*(i-1))) --i;
     if (*i != '\0') {
       *i = '\0';
       ++i;

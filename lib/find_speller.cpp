@@ -6,11 +6,11 @@
 
 #include <assert.h>
 #include <string.h>
-#include <ctype.h>
 
 // POSIX includes
 #include <dirent.h>
 
+#include "asc_ctype.hpp"
 #include "can_have_error.hpp"
 #include "config.hpp"
 #include "enumeration.hpp"
@@ -248,13 +248,13 @@ namespace acommon { // FIXME: Should this be a diffrent namespace?
     String code;
     PosibErr<String> str = config->retrieve("lang");
     p = str.data.c_str();
-    code += tolower(*p++); code += tolower(*p++);
+    code += asc_tolower(*p++); code += asc_tolower(*p++);
     String lang = code;
     bool have_country = false;
     if (*p == '-' || *p == '_') {
       ++p;
       have_country = true;
-      code += '_'; code += toupper(*p++); code += toupper(*p++);
+      code += '_'; code += asc_toupper(*p++); code += asc_toupper(*p++);
     }
   
     //

@@ -25,11 +25,11 @@
 */
 
 #include <string.h>
-#include <ctype.h>
 #include <assert.h>
 
 #include <vector>
 
+#include "asc_ctype.hpp"
 #include "string.hpp"
 #include "phonet.hpp"
 #include "errors.hpp"
@@ -163,6 +163,7 @@ namespace aspeller {
     return parms;
   }
 
+  // FIXME: Get this information from the language class
   void init_phonet_charinfo(PhonetParms & parms) {
     
     const unsigned char * vowels_low = 
@@ -173,9 +174,9 @@ namespace aspeller {
     int i;
     /**  create "to_upper" and "is_alpha" arrays  **/
     for (i = 0; i < 256; i++) {
-      parms.to_upper[i] = islower(i) ?  (unsigned char) toupper(i) 
-                              	      : (unsigned char) i;
-      parms.is_alpha[i] = isalpha(i);
+      parms.to_upper[i] = asc_islower(i) ?  (unsigned char) toupper(i) 
+	                                 : (unsigned char) i;
+      parms.is_alpha[i] = asc_isalpha(i);
     }
     for (i = 0; vowels_low[i] != '\0'; i++) {
       /**  toupper doen't handel "unusual" characters  **/

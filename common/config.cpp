@@ -4,7 +4,6 @@
 // license along with this library if you did not you can find
 // it at http://www.gnu.org/.
 
-#include <ctype.h>
 #include <string.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -12,6 +11,7 @@
 
 #include "dirs.h"
 
+#include "asc_ctype.hpp"
 #include "config.hpp"
 #include "errors.hpp"
 #include "file_util.hpp"
@@ -306,12 +306,12 @@ namespace acommon {
 	  lang = getenv("LANG");
 	if (lang == 0) break;
 	i = lang;
-	if (! (islower(i[0]) && islower(i[1])) ) break;
+	if (! (asc_islower(i[0]) && asc_islower(i[1])) ) break;
 	final_str.assign(i, 2);
 	i += 2;
 	if (! (i[0] == '_' || i[0] == '-')) break;
 	i += 1;
-	if (! (isupper(i[0]) && isupper(i[1])) ) break;
+	if (! (asc_isupper(i[0]) && asc_isupper(i[1])) ) break;
 	final_str += '_';
 	final_str.append(i, 2);
 

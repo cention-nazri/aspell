@@ -7,9 +7,9 @@
 #include <stdio.h>
 #include <assert.h>
 #include <stdlib.h>
-#include <ctype.h>
 #include <stdint.h>
 
+#include "asc_ctype.hpp"
 #include "convert.hpp"
 #include "fstream.hpp"
 #include "getdata.hpp"
@@ -673,9 +673,9 @@ namespace acommon {
 
     unsigned int i;
     for (i = 0; i != in_s.size(); ++i)
-      in_s[i] = tolower(in_s[i]);
+      in_s[i] = asc_tolower(in_s[i]);
     for (i = 0; i != out_s.size(); ++i)
-      out_s[i] = tolower(out_s[i]);
+      out_s[i] = asc_tolower(out_s[i]);
     in  = in_s .c_str();
     out = out_s.c_str();
 
