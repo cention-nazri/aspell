@@ -70,6 +70,17 @@ namespace acommon {
     ungetc(c, file_);
     return *this;
   }
+  FStream & FStream::operator<< (const char * str)
+  {
+    fputs(str, file_);
+    return *this;
+  }
+
+  FStream & FStream::operator<< (const String &str)
+  {
+    fputs(str.c_str(), file_);
+    return *this;
+  }
 
   FStream & FStream::operator<< (ParmStr str)
   {
