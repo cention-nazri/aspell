@@ -56,6 +56,16 @@ namespace acommon {
       return res;
     }
 
+    __attribute__ ((format (scanf,2,3)))
+      int scan(const char * format, ...)
+    {
+      va_list ap;
+      va_start(ap, format);
+      int res = vfscanf(file_, format, ap);
+      va_end(ap);
+      return res;
+    }
+
     void flush() {fflush(file_);}
 
     // flushes the stream and goes to the beginning of the file

@@ -21,14 +21,14 @@ namespace acommon {
   class Config;
 
   struct Decode {
-    virtual PosibErr<void> init(ParmString code, Config &) {return no_err;}
+    virtual PosibErr<void> init(ParmString code, const Config &) {return no_err;}
     virtual void decode(const char * in, int size,
 			FilterCharVector & out) const = 0;
   };
   struct Encode {
     // null characters should be tretead like any other character
     // by the encoder.
-    virtual PosibErr<void> init(ParmString, Config &) {return no_err;}
+    virtual PosibErr<void> init(ParmString, const Config &) {return no_err;}
     virtual void encode(const FilterChar * in, const FilterChar * stop, 
 			CharVector & out) const = 0;
     // encodes the string by modifying the input, if it can't be done
@@ -36,15 +36,17 @@ namespace acommon {
     virtual bool encode_direct(FilterChar * in, FilterChar * stop) const
       {return false;}
   };
-  struct Conv { // convert directly from in_code to out_code
+  struct DirectConv { // convert directly from in_code to out_code
     // should not take owenership of decode and encode 
     // decode and encode guaranteed to stick around for the life
     // of the object
     virtual PosibErr<void> init(const Decode *, const Encode *, 
-				Config &) {return no_err;}
+				const Config &) {return no_err;}
     virtual void convert(const char * in, int size, 
 			 CharVector & out) const = 0;
   };
+
+  typedef FilterCharVector ConvertBuffer;
 
   class Convert {
   private:
@@ -53,9 +55,9 @@ namespace acommon {
     
     StackPtr<Decode> decode_;
     StackPtr<Encode> encode_;
-    StackPtr<Conv> conv_;
+    StackPtr<DirectConv> conv_;
 
-    FilterCharVector buf;
+    ConvertBuffer buf_;
 
     static const unsigned int null_len_ = 4; // POSIB FIXME: Be more precise
 
@@ -66,7 +68,7 @@ namespace acommon {
     // this class in any way.
     Filter filter;
 
-    PosibErr<void> init(Config &, ParmString in, ParmString out);
+    PosibErr<void> init(const Config &, ParmString in, ParmString out);
 
     const char * in_code() const   {return in_code_.c_str();}
     const char * out_code() const  {return out_code_.c_str();}
@@ -93,16 +95,28 @@ namespace acommon {
     bool encode_direct(FilterChar * in, FilterChar * stop) const
       {return encode_->encode_direct(in,stop);}
 
+    // does NOT pass it through filters
+    void convert(const char * in, int size, CharVector & out, ConvertBuffer & buf) const
+    {
+      if (conv_) {
+	conv_->convert(in,size,out);
+      } else {
+        buf.clear();
+        decode_->decode(in, size, buf);
+        buf.append(0);
+        encode_->encode(buf.pbegin(), buf.pend(), out);
+      }
+    }
+
     // convert has the potential to use internal buffers and
     // is therefore not const.  It is also not thread safe
     // and I have no intention to make it thus.
 
     void convert(const char * in, int size, CharVector & out) {
-      if (conv_ && filter.empty()) {
-	conv_->convert(in,size,out);
-      }
-      else {
-	generic_convert(in,size,out);
+      if (filter.empty()) {
+        convert(in,size,out,buf_);
+      } else {
+        generic_convert(in,size,out);
       }
     }
 
@@ -112,10 +126,25 @@ namespace acommon {
 
   bool operator== (const Convert & rhs, const Convert & lhs);
 
-  class Config;
+  const char * fix_encoding_str(ParmString enc, String & buf);
+
+  bool is_ascii_enc(ParmString enc);
+
+  PosibErr<Convert *> internal_new_convert(const Config & c, 
+                                           ParmString in, ParmString out,
+                                           bool if_needed);
   
-  PosibErr<Convert *> new_convert(Config &,
-				  ParmString in, ParmString out);
+  static inline PosibErr<Convert *> new_convert(const Config & c,
+                                                ParmString in, ParmString out)
+  {
+    return internal_new_convert(c,in,out,false);
+  }
+  
+  static inline PosibErr<Convert *> new_convert_if_needed(const Config & c,
+                                                          ParmString in, ParmString out)
+  {
+    return internal_new_convert(c,in,out,true);
+  }
 
 }
 

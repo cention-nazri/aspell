@@ -24,6 +24,7 @@ namespace aspeller {
   //   for ConfigData's use and the otehr for users.
   static const KeyInfo lang_config_keys[] = {
     {"charset",             KeyInfoString, "iso-8859-1", "", ""}
+    , {"data-encoding",       KeyInfoString, "<charset>", "", ""}
     , {"name",                KeyInfoString, "", "", ""}
     , {"run-together",        KeyInfoBool,   "", "", "c"}
     , {"run-together-limit",  KeyInfoInt,    "", "", "c"}
@@ -75,17 +76,35 @@ namespace aspeller {
     if (!data.have("name"))
       return make_err(bad_file_format, path, _("The required field \"name\" is missing."));
 
-    name_         = data.retrieve("name");
-    charset_      = data.retrieve("charset");
+    name_          = data.retrieve("name");
+    charset_       = data.retrieve("charset");
+    data_encoding_ = data.retrieve("data-encoding");
 
     if (strncmp(charset_.c_str(), "iso8859", 7) == 0)
       charset_.insert(3, 1, '-'); // For backwards compatibility
+
+    {
+#ifdef ENABLE_NLS
+      String buf;
+      const char * tmp = 0;
+      tmp = bind_textdomain_codeset("aspell", 0);
+      if (!tmp) tmp = nl_langinfo(CODESET);
+      if (is_ascii_enc(tmp)) tmp = 0;
+      if (tmp)
+        mesg_conv_.setup(*config, charset_, fix_encoding_str(tmp, buf));
+      else 
+#endif
+        mesg_conv_.setup(*config, charset_, data_encoding_);
+    }
+
+    Conv iconv;
+    iconv.setup(*config, data_encoding_, charset_);
 
     FixedBuffer<> buf; DataPair d;
 
     init(data.retrieve("special"), d, buf);
     while (split(d)) {
-      char c = d.key[0];
+      char c = iconv(d.key)[0];
       split(d);
       special_[to_uchar(c)] = 
         SpecialChar (d.key[0] == '*',d.key[1] == '*', d.key[2] == '*');
@@ -148,7 +167,8 @@ namespace aspeller {
     // prep phonetic code
     //
 
-    PosibErr<Soundslike *> pe = new_soundslike(data.retrieve("soundslike"), 
+    PosibErr<Soundslike *> pe = new_soundslike(data.retrieve("soundslike"),
+                                               iconv,
                                                this);
     if (pe.has_err()) return pe;
     soundslike_.reset(pe);
@@ -159,7 +179,7 @@ namespace aspeller {
     // prep affix code
     //
 
-    affix_.reset(new_affix_mgr(data.retrieve("affix"), this));
+    affix_.reset(new_affix_mgr(data.retrieve("affix"), iconv, this));
 
     //
     // fill repl tables (if any)
@@ -183,8 +203,8 @@ namespace aspeller {
         ::to_lower(d.key);
         assert(d.key == "rep"); // FIXME
         split(d);
-        repls_[i].substr = buf_.dup(d.key);
-        repls_[i].repl   = buf_.dup(d.value);
+        repls_[i].substr = buf_.dup(iconv(d.key));
+        repls_[i].repl   = buf_.dup(iconv(d.value));
       }
 
     }
@@ -309,36 +329,33 @@ namespace aspeller {
     return true;
   }
 
-  static PosibErr<void> invalid_char(ParmString word, char letter, ParmString where)
+  static PosibErr<void> invalid_char(ParmString word, ParmString letter, ParmString where)
   {
-    String m;
-    m += "The character '";
-    m += letter;
-    m += "' may not appear at the ";
-    m += where;
-    m += " of a word.";
+    char m[70];
+    snprintf(m, 70, _("The character '%s' may not appear at the %s of a word."),
+             letter.str(), where.str());
     return make_err(invalid_word, word, m);
   }
 
   PosibErr<void> check_if_valid(const Language & l, ParmString word) {
     if (*word == '\0') 
-      return make_err(invalid_word, word, _("Empty string."));
+      return make_err(invalid_word, MsgConv(l)(word), _("Empty string."));
     const char * i = word;
     if (l.char_type(*i) != Language::letter) {
       if (!l.special(*i).begin)
-	return invalid_char(word, *i, "beginning");
+	return invalid_char(MsgConv(l)(word), MsgConv(l)(*i), _("beginning"));
       else if (l.char_type(*(i+1)) != Language::letter)
-	return make_err(invalid_word, word, _("Does not contain any letters."));
+	return make_err(invalid_word, MsgConv(l)(word), _("Does not contain any letters."));
     }
     for (;*(i+1) != '\0'; ++i) { 
       if (l.char_type(*i) != Language::letter) {
 	if (!l.special(*i).middle)
-	  return invalid_char(word, *i, "middle");
+	  return invalid_char(MsgConv(l)(word), MsgConv(l)(*i), _("middle"));
       }
     }
     if (l.char_type(*i) != Language::letter) {
       if (!l.special(*i).end)
-	return invalid_char(word, *i, "end");
+	return invalid_char(MsgConv(l)(word), MsgConv(l)(*i), _("end"));
     }
     return no_err;
   }

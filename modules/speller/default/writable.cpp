@@ -8,6 +8,7 @@
 #include "file_util.hpp"
 #include "fstream.hpp"
 #include "language.hpp"
+#include "getdata.hpp"
 
 namespace {
 
@@ -48,6 +49,11 @@ protected:
   PosibErr<void> load(ParmString, Config *);
   PosibErr<void> merge(ParmString);
   PosibErr<void> save_as(ParmString);
+
+  String file_encoding;
+  Conv iconv;
+  Conv oconv;
+  PosibErr<void> set_file_encoding(ParmString, const Config * c, const Language *);
 };
 
 template <typename Base>
@@ -60,6 +66,13 @@ protected:
   PosibErr<void> update_file_info(FStream & f) {
     return Base::update_file_info(f);
   }
+  PosibErr<void> set_file_encoding(ParmString enc, const Config * c) {
+    return WritableBaseCode::set_file_encoding(enc, c, Base::lang());
+  }
+  void set_lang_hook(Config * c) {
+    set_file_encoding(Base::lang()->data_encoding(), c);
+  }
+
 public:
   WritableBase(const char * s, const char * cs) 
     : WritableBaseCode(s,cs) {}
@@ -188,6 +201,21 @@ PosibErr<void> WritableBaseCode::save(bool do_update) {
 
   return no_err;
 }
+
+PosibErr<void> WritableBaseCode::set_file_encoding(ParmString enc, const Config * c,
+                                                   const Language * lang)
+{
+  if (enc == file_encoding) return no_err;
+  if (enc == "") enc = lang->charset();
+  RET_ON_ERR(iconv.setup(*c, enc, lang->charset()));
+  RET_ON_ERR(oconv.setup(*c, lang->charset(), enc));
+  if (iconv || oconv) 
+    file_encoding = enc;
+  else
+    file_encoding = "";
+  return no_err;
+}
+
 
 /////////////////////////////////////////////////////////////////////
 // 
@@ -449,32 +477,43 @@ PosibErr<void> WritableWS::merge(FStream & in,
                                  Config * config)
 {
   typedef PosibErr<void> Ret;
-  unsigned int c;
   unsigned int ver;
-  String word, sound;
 
-  in >> word;
-  if (word == "personal_wl")
+  FixedBuffer<256> buf;
+  DataPair dp;
+
+  if (!getline(in, dp, buf))
+    make_err(bad_file_format, file_name);
+
+  split(dp);
+  if (dp.key == "personal_wl")
     ver = 10;
-  else if (word == "personal_ws-1.1")
+  else if (dp.key == "personal_ws-1.1")
     ver = 11;
   else 
     return make_err(bad_file_format, file_name);
 
-  in >> word;
+  split(dp);
   {
-    Ret pe = set_check_lang(word, config);
+    Ret pe = set_check_lang(dp.key, config);
     if (pe.has_err())
       return pe.with_file(file_name);
   }
 
-  in >> c; // not used at the moment
-  for (;;) {
-    in >> word;
+  split(dp); // count not used at the moment
+
+  split(dp);
+  if (dp.key.size > 0)
+    set_file_encoding(dp.key, config);
+  else
+    set_file_encoding("", config);
+  
+  while (getline(in, dp, buf)) {
     if (ver == 10)
-      in >> sound;
-    if (!in) break;
-    Ret pe = add(word);
+      split(dp);
+    else
+      dp.key = dp.value;
+    Ret pe = add(iconv(dp.key));
     if (pe.has_err()) {
       clear();
       return pe.with_file(file_name);
@@ -485,7 +524,8 @@ PosibErr<void> WritableWS::merge(FStream & in,
 
 PosibErr<void> WritableWS::save(FStream & out, ParmString file_name) 
 {
-  out.print("personal_ws-1.1 %s %i\n", lang_name(), word_lookup->size());
+  out.print("personal_ws-1.1 %s %i %s\n", 
+            lang_name(), word_lookup->size(), file_encoding.c_str());
 
   SoundslikeLookup::const_iterator i = soundslike_lookup_.begin();
   SoundslikeLookup::const_iterator e = soundslike_lookup_.end();
@@ -494,7 +534,7 @@ PosibErr<void> WritableWS::save(FStream & out, ParmString file_name)
   
   for (;i != e; ++i) {
     for (j = i->second.begin(); j != i->second.end(); ++j) {
-      out.print("%s\n", *j);
+      out.print("%s\n", oconv(*j));
     }
   }
   return no_err;
@@ -736,7 +776,7 @@ PosibErr<void> WritableReplS::add(ParmString mis, ParmString cor, ParmString sl)
 
 PosibErr<void> WritableReplS::save (FStream & out, ParmString file_name) 
 {
-  out.print("personal_repl-1.1 %s 0\n", lang_name());
+  out.print("personal_repl-1.1 %s 0 %s\n", lang_name(), file_encoding.c_str());
   
   WordLookup::iterator i = word_lookup->begin();
   WordLookup::iterator e = word_lookup->end();
@@ -746,7 +786,7 @@ PosibErr<void> WritableReplS::save (FStream & out, ParmString file_name)
     StrVector * v = get_vector(*i);
     for (StrVector::iterator j = v->begin(); j != v->end(); ++j)
     {
-      out.print("%s %s\n", *i, *j);
+      out.print("%s %s\n", oconv(*i), oconv(*j));
     }
   }
   return no_err;
@@ -757,32 +797,44 @@ PosibErr<void> WritableReplS::merge(FStream & in,
                                     Config * config)
 {
   typedef PosibErr<void> Ret;
-  unsigned int c;
   unsigned int version;
   String word, mis, sound, repl;
   unsigned int num_words, num_repls;
 
-  in >> word;
-  if (word == "personal_repl")
+  FixedBuffer<256> buf;
+  DataPair dp;
+
+  if (!getline(in, dp, buf))
+    make_err(bad_file_format, file_name);
+
+  split(dp);
+  if (dp.key == "personal_repl")
     version = 10;
-  else if (word == "personal_repl-1.1") 
+  else if (dp.key == "personal_repl-1.1") 
     version = 11;
   else
     return make_err(bad_file_format, file_name);
 
-  in >> word;
+  split(dp);
   {
-    Ret pe = set_check_lang(word, config);
+    Ret pe = set_check_lang(dp.key, config);
     if (pe.has_err())
       return pe.with_file(file_name);
   }
 
-  unsigned int num_soundslikes;
+  unsigned int num_soundslikes = 0;
   if (version == 10) {
-    in >> num_soundslikes;
+    split(dp);
+    num_soundslikes = atoi(dp.key);
   }
-  in >> c;  // not used at the moment
-  in.skipws();
+
+  split(dp); // not used at the moment
+
+  split(dp);
+  if (dp.key.size > 0)
+    set_file_encoding(dp.key, config);
+  else
+    set_file_encoding("", config);
 
   if (version == 11) {
 
@@ -791,7 +843,7 @@ PosibErr<void> WritableReplS::merge(FStream & in,
       if (!in) break;
       in.getline(repl, '\n');
       if (!in) make_err(bad_file_format, file_name);
-      WritableReplS::add(mis, repl);
+      WritableReplS::add(iconv(mis), iconv(repl));
     } while (true);
 
   } else {

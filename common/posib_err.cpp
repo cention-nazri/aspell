@@ -31,7 +31,7 @@ namespace acommon {
 				   ParmString p1, ParmString p2, 
 				   ParmString p3, ParmString p4)
   {
-    const char * s0 = inf->mesg ? gettext(inf->mesg) : "";
+    const char * s0 = inf->mesg ? _(inf->mesg) : "";
     const char * s;
     ParmString p[4] = {p1,p2,p3,p4};
     StrSize m[10];
@@ -77,7 +77,7 @@ namespace acommon {
     assert(err_ != 0);
     assert(err_->refcount == 1);
     char * m = const_cast<char *>(err_->err->mesg);
-    const char * mesg = gettext (m);
+    const char * mesg = _(m);
     unsigned int orig_len = strlen(mesg);
     unsigned int new_len = fn.size() + 2 + orig_len + 1;
     char * s = new char[new_len];
@@ -96,7 +96,7 @@ namespace acommon {
     assert (err_);
     assert (!err_->handled);
     fputs(_("Unhandled Error: "), stderr);
-    fputs(gettext (err_->err->mesg), stderr);
+    fputs(_(err_->err->mesg), stderr);
     fputs("\n", stderr);
     abort();
   }

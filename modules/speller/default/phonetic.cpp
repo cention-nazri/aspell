@@ -18,7 +18,7 @@ namespace aspeller {
   public:
     GenericSoundslike(const Language * l) : lang(l) {}
 
-    PosibErr<void> setup() {return no_err;}
+    PosibErr<void> setup(Conv &) {return no_err;}
     
     String soundslike_chars() const {
       bool chars_set[256] = {0};
@@ -65,7 +65,7 @@ namespace aspeller {
   public:
     NoSoundslike(const Language * l) : lang(l) {}
 
-    PosibErr<void> setup() {return no_err;}
+    PosibErr<void> setup(Conv &) {return no_err;}
     
     String soundslike_chars() const {
       return get_stripped_chars(*lang);
@@ -96,20 +96,15 @@ namespace aspeller {
 
     PhonetSoundslike(const Language * l) : lang(l) {}
 
-    PosibErr<void> setup() {
+    PosibErr<void> setup(Conv & iconv) {
       String file;
       file += lang->data_dir();
       file += '/';
       file += lang->name();
       file += "_phonet.dat";
-      PosibErr<PhonetParms *> pe = load_phonet_rules(file);
+      PosibErr<PhonetParms *> pe = new_phonet(file, iconv, lang);
       if (pe.has_err()) return pe;
       phonet_parms.reset(pe);
-      for (int i = 0; i != 256; ++i) {
-	phonet_parms->to_upper[i] = lang->to_upper(i);
-	phonet_parms->is_alpha[i] = lang->is_alpha(i);
-      }
-      init_phonet_hash(*phonet_parms);
       return no_err;
     }
 
@@ -121,17 +116,17 @@ namespace aspeller {
       for (const char * * i = phonet_parms->rules + 1; 
 	   *(i-1) != PhonetParms::rules_end;
 	   i += 2) 
-	{
-	  for (const char * j = *i; *j; ++j) 
-	    {
-	      chars_set[static_cast<unsigned char>(*j)] = true;
-	    }
-	}
+      {
+        for (const char * j = *i; *j; ++j) 
+        {
+          chars_set[static_cast<unsigned char>(*j)] = true;
+        }
+      }
       for (int i = 0; i != 256; ++i) 
-	{
-	  if (chars_set[i]) 
-	    chars_list += static_cast<char>(i);
-	}
+      {
+        if (chars_set[i]) 
+          chars_list += static_cast<char>(i);
+      }
       return chars_list;
     }
     
@@ -155,6 +150,7 @@ namespace aspeller {
   
   
   PosibErr<Soundslike *> new_soundslike(ParmString name, 
+                                        Conv & iconv,
                                         const Language * lang)
   {
     Soundslike * sl;
@@ -165,7 +161,7 @@ namespace aspeller {
     } else {
       sl = new PhonetSoundslike(lang);
     }
-    PosibErrBase pe = sl->setup();
+    PosibErrBase pe = sl->setup(iconv);
     if (pe.has_err()) {
       delete sl;
       return pe;

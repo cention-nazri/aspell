@@ -31,6 +31,7 @@
 #include "asc_ctype.hpp"
 #include "check_funs.hpp"
 #include "config.hpp"
+#include "convert.hpp"
 #include "document_checker.hpp"
 #include "enumeration.hpp"
 #include "errors.hpp"
@@ -50,6 +51,8 @@
 #include "directory.hpp"
 
 using namespace acommon;
+
+using aspeller::Conv;
 
 // action functions declarations
 
@@ -219,10 +222,6 @@ int main (int argc, const char *argv[])
 #ifdef USE_LOCALE
   setlocale (LC_ALL, "");
 #endif
-#ifdef ENABLE_NLS
-  bindtextdomain (PACKAGE, LOCALEDIR);
-  textdomain (PACKAGE);
-#endif
 
   EXIT_ON_ERR(options->read_in_settings());
 
@@ -320,7 +319,7 @@ int main (int argc, const char *argv[])
 
 #ifdef USE_LOCALE
   const char * codeset = nl_langinfo(CODESET);
-  if (!options->have("encoding") && codeset && strcmp(codeset, "ANSI_X3.4-1968") != 0)
+  if (!options->have("encoding") && codeset && !is_ascii_enc(codeset))
     EXIT_ON_ERR(options->replace("encoding", codeset));
 #endif
 
@@ -393,11 +392,42 @@ int main (int argc, const char *argv[])
   return 0;
 }
 
+
 /////////////////////////////////////////////////////////
 //
 // Action Functions
 //
 //
+
+  
+static PosibErr<Convert *> setup_conv(const aspeller::Language * lang,
+                                      Config * config)
+{
+  if (config->have("encoding")) {
+    PosibErr<Convert *> pe = new_convert_if_needed(*config,
+                                                   lang->charset(),
+                                                   config->retrieve("encoding"));
+    if (pe.has_err()) {print_error(pe.get_err()->mesg); exit(1);}
+    return pe.data;
+  } else {
+    return 0;
+  }
+}
+ 
+static PosibErr<Convert *> setup_conv(Config * config,
+                                      const aspeller::Language * lang)
+{
+  if (config->have("encoding")) {
+    PosibErr<Convert *> pe = new_convert_if_needed(*config,
+                                                   config->retrieve("encoding"),
+                                                   lang->charset());
+    if (pe.has_err()) {print_error(pe.get_err()->mesg); exit(1);}
+    return pe.data;
+  } else {
+    return 0;
+  }
+}
+
 
 ///////////////////////////
 //
@@ -537,7 +567,10 @@ void pipe()
     exit(1);
   }
   AspellSpeller * speller = to_aspell_speller(ret);
-  Config * config = reinterpret_cast<Speller *>(speller)->config();
+  aspeller::SpellerImpl * real_speller = reinterpret_cast<aspeller::SpellerImpl *>(speller);
+  Config * config = real_speller->config();
+  Conv iconv(setup_conv(config, &real_speller->lang()));
+  Conv oconv(setup_conv(&real_speller->lang(), config));
   if (do_time)
     COUT << _("Time to load word list: ")
          << (clock() - start)/(double)CLOCKS_PER_SEC << "\n";
@@ -576,7 +609,7 @@ void pipe()
       word = trim_wspace(line + 1);
       aspell_speller_add_to_personal
 	(speller, 
-	 reinterpret_cast<Speller *>(speller)->to_lower(word), -1);
+	 real_speller->to_lower(word), -1);
       BREAK_ON_SPELLER_ERR;
       break;
     case '@':
@@ -593,13 +626,13 @@ void pipe()
       err = config->replace("mode", word);
       if (err.get_err())
 	config->replace("mode", "tex");
-      reload_filters(reinterpret_cast<Speller *>(speller));
+      reload_filters(real_speller);
       checker.del();
       checker = new_checker(speller, print_star);
       break;
     case '-':
       config->remove("filter");
-      reload_filters(reinterpret_cast<Speller *>(speller));
+      reload_filters(real_speller);
       checker.del();
       checker = new_checker(speller, print_star);
       break;
@@ -665,11 +698,11 @@ void pipe()
       while (Token token = checker->next_misspelling()) {
 	word = line + token.offset;
 	word[token.len] = '\0';
+        const char * cword = iconv(word);
         String guesses, guess;
-        const CheckInfo * ci = reinterpret_cast<Speller *>(speller)->check_info();
+        const CheckInfo * ci = real_speller->check_info();
         aspeller::CasePattern casep 
-          = aspeller::case_pattern(reinterpret_cast<aspeller::SpellerImpl *>
-                                   (speller)->lang(), word);
+          = aspeller::case_pattern(real_speller->lang(), cword);
         while (ci) {
           guess.clear();
           if (ci->pre_add && ci->pre_add[0])      guess << ci->pre_add << "+";
@@ -678,8 +711,7 @@ void pipe()
           if (ci->suf_strip && ci->suf_strip[0]) guess << "-" << ci->suf_strip;
           if (ci->suf_add   && ci->suf_add[0])   guess << "+" << ci->suf_add;
           guesses << ", " 
-                  << aspeller::fix_case(reinterpret_cast<aspeller::SpellerImpl * >(speller)->lang(),
-                                        casep, guess);
+                  << oconv(aspeller::fix_case(real_speller->lang(),casep, guess));
           ci = ci->next;
         }
 	start = clock();
@@ -1125,7 +1157,7 @@ public:
   bool at_end() const {return *in;}
 };
 
-void dump (aspeller::LocalWordSet lws) 
+void dump (aspeller::LocalWordSet lws, Convert * conv) 
 {
   using namespace aspeller;
 
@@ -1135,8 +1167,10 @@ void dump (aspeller::LocalWordSet lws)
       BasicWordSet * ws = static_cast<BasicWordSet *>(lws.word_set);
       StackPtr<WordEntryEnumeration> els(ws->detailed_elements());
       WordEntry * wi;
-      while (wi = els->next(), wi)
-	wi->write(COUT,*(ws->lang()), lws.local_info.convert) << "\n";
+      while (wi = els->next(), wi) {
+        wi->write(COUT,*ws->lang(), lws.local_info.convert, conv);
+        COUT << '\n';
+      }
     }
     break;
   case DataSet::basic_multi_set:
@@ -1145,7 +1179,7 @@ void dump (aspeller::LocalWordSet lws)
 	(static_cast<BasicMultiSet *>(lws.word_set)->detailed_elements());
       LocalWordSet ws;
       while (ws = els->next(), ws) 
-	dump (ws);
+	dump (ws, conv);
     }
     break;
   default:
@@ -1181,9 +1215,9 @@ void master () {
                     LoadableDataSet *, mas);
     LocalWordSetInfo wsi;
     wsi.set(mas->lang(), config);
-    dump(LocalWordSet(mas,wsi));
+    StackPtr<Convert> conv(setup_conv(mas->lang(), config));
+    dump(LocalWordSet(mas,wsi), conv);
     delete mas;
-    
   }
 }
 
@@ -1227,15 +1261,16 @@ void personal () {
 
     StackPtr<Config> config(new_basic_config());
     EXIT_ON_ERR(config->read_in_settings(options));
-
     WritableWordSet * per = new_default_writable_word_set();
     per->load(config->retrieve("personal-path"), config);
     StackPtr<WordEntryEnumeration> els(per->detailed_elements());
     LocalWordSetInfo wsi;
     wsi.set(per->lang(), config);
+    StackPtr<Convert> conv(setup_conv(per->lang(), config));
+
     WordEntry * wi;
     while (wi = els->next(), wi) {
-      wi->write(COUT,*(per->lang()), wsi.convert);
+      wi->write(COUT,*(per->lang()), wsi.convert, conv);
       COUT << "\n";
     }
     delete per;
@@ -1297,10 +1332,11 @@ void repl() {
  
      WordEntry * rl = 0;
      WordEntry words;
+     Conv conv(setup_conv(repl->lang(), config));
      while ((rl = els->next())) {
        repl->repl_lookup(*rl, words);
        do {
-         COUT << rl->word << ": " << words.word << "\n";
+         COUT << conv(rl->word) << ": " << conv(words.word) << "\n";
        } while (words.adv());
      }
      delete repl;
@@ -1318,9 +1354,11 @@ void soundslike() {
   PosibErr<Language *> res = new_language(*options);
   if (!res) {print_error(res.get_err()->mesg); exit(1);}
   lang.reset(res.data);
+  Conv iconv(setup_conv(options, lang));
+  Conv oconv(setup_conv(lang, options));
   String word;
-  while (CIN >> word) {
-    COUT << word << '\t' << lang->to_soundslike(word) << "\n";
+  while (CIN.getline(word)) {
+    COUT << word << '\t' << oconv(lang->to_soundslike(iconv(word))) << "\n";
   } 
 }
 
@@ -1336,16 +1374,18 @@ void munch()
   PosibErr<Language *> res = new_language(*options);
   if (!res) {print_error(res.get_err()->mesg); exit(1);}
   lang.reset(res.data);
+  Conv iconv(setup_conv(options, lang));
+  Conv oconv(setup_conv(lang, options));
   String word;
   CheckList * cl = new_check_list();
   while (CIN.getline(word)) {
-    lang->affix()->munch(word, cl);
+    lang->affix()->munch(iconv(word), cl);
     COUT << word;
     for (const aspeller::CheckInfo * ci = check_list_data(cl); ci; ci = ci->next)
     {
-      COUT << ' ' << ci->word << '/';
-      if (ci->pre_flag != 0) COUT << static_cast<char>(ci->pre_flag);
-      if (ci->suf_flag != 0) COUT << static_cast<char>(ci->suf_flag);
+      COUT << ' ' << oconv(ci->word) << '/';
+      if (ci->pre_flag != 0) COUT << oconv(static_cast<char>(ci->pre_flag));
+      if (ci->suf_flag != 0) COUT << oconv(static_cast<char>(ci->suf_flag));
     }
     COUT << '\n';
   }
@@ -1371,12 +1411,14 @@ void expand()
   PosibErr<Language *> res = new_language(*options);
   if (!res) {print_error(res.get_err()->mesg); exit(1);}
   lang.reset(res.data);
+  Conv iconv(setup_conv(options, lang));
+  Conv oconv(setup_conv(lang, options));
   String word;
   ObjStack exp_buf;
   WordAff * exp_list;
   while (CIN.getline(word)) {
     CharVector buf; buf.append(word.c_str(), word.size() + 1);
-    char * w = buf.data();
+    char * w = iconv(buf);
     char * af = strchr(w, '/');
     size_t s;
     if (af != 0) {
@@ -1387,15 +1429,14 @@ void expand()
       af = w + s;
     }
     exp_buf.reset();
-    exp_list = lang->affix()->expand(ParmString(w, s), ParmString(af), 
-                                     exp_buf, limit);
+    exp_list = lang->affix()->expand(w, af, exp_buf, limit);
     if (level <= 2) {
       if (level == 2) 
         COUT << word << ' ';
       WordAff * p = exp_list;
       while (p) {
-        COUT << p->word;
-        if (p->aff[0]) COUT << '/' << (const char *)p->aff;
+        COUT << oconv(p->word);
+        if (p->aff[0]) COUT << '/' << oconv((const char *)p->aff);
         p = p->next;
         if (p) COUT << ' ';
       }
@@ -1409,8 +1450,8 @@ void expand()
                                       // expansion is just the root
       }
       for (WordAff * p = exp_list; p; p = p->next) {
-        COUT << word << ' ' << p->word;
-        if (p->aff[0]) COUT << '/' << (const char *)p->aff;
+        COUT << word << ' ' << oconv(p->word);
+        if (p->aff[0]) COUT << '/' << oconv((const char *)p->aff);
         if (level >= 4) COUT.print(" %f\n", ratio);
         else COUT << '\n';
       }
@@ -1423,7 +1464,7 @@ void expand()
 // combine
 //
 
-void combine_aff(String & aff, const char * app)
+static void combine_aff(String & aff, const char * app)
 {
   for (; *app; ++app) {
     if (!memchr(aff.c_str(),*app,aff.size()))
@@ -1431,17 +1472,17 @@ void combine_aff(String & aff, const char * app)
   }
 }
 
-void print_wordaff(const String & base, const String & affs)
+static void print_wordaff(const String & base, const String & affs, Conv & oconv)
 {
   if (base.empty()) return;
-  COUT << base;
+  COUT << oconv(base);
   if (affs.empty())
     COUT << '\n';
   else
-    COUT.print("/%s\n", affs.c_str());
+    COUT.print("/%s\n", oconv(affs));
 }
 
-bool lower_equal(aspeller::Language * l, ParmString a, ParmString b)
+static bool lower_equal(aspeller::Language * l, ParmString a, ParmString b)
 {
   if (a.size() != b.size()) return false;
   if (l->to_lower(a[0]) != l->to_lower(b[0])) return false;
@@ -1455,10 +1496,13 @@ void combine()
   PosibErr<Language *> res = new_language(*options);
   if (!res) {print_error(res.get_err()->mesg); exit(1);}
   lang.reset(res.data);
+  Conv iconv(setup_conv(options, lang));
+  Conv oconv(setup_conv(lang, options));
   String word;
   String base;
   String affs;
   while (CIN.getline(word)) {
+    word = iconv(word);
 
     CharVector buf; buf.append(word.c_str(), word.size() + 1);
     char * w = buf.data();
@@ -1480,13 +1524,13 @@ void combine()
         combine_aff(affs, af);
       }
     } else {
-      print_wordaff(base, affs);
+      print_wordaff(base, affs, oconv);
       base = w;
       affs = af;
     }
 
   }
-  print_wordaff(base, affs);
+  print_wordaff(base, affs, oconv);
 }
 
 //////////////////////////
@@ -1536,7 +1580,7 @@ void print_help_line(char abrv, char dont_abrv, const char * name,
     command += "=<str>";
   if (type == KeyInfoInt)
     command += "=<int>";
-  const char * tdesc = gettext(desc);
+  const char * tdesc = _(desc);
   printf("  %-27s %s\n", command.c_str(), tdesc); // FIXME: consider word wrapping
 }
 
@@ -1637,7 +1681,7 @@ void print_help () {
     "  dump|create|merge master|personal|repl [word list]\n"
     "    dumps, creates or merges a master, personal, or replacement word list.\n"
     "\n"
-    "  <expr>           regular expression matching filtername(s) or `all'\n"
+    "  <expr>           regular expression matching filtername(s) or \"all\"\n"
     "\n"
     "[options] is any of the following:\n"
     "\n"), VERSION);
@@ -1648,7 +1692,7 @@ void print_help () {
     if (k->type == KeyInfoDescript && !strncmp(k->name,"filter-",7)) {
       printf(_("\n"
                "  %s filter: %s\n"
-               "    NOTE: in ambiguous case prefix following options by `filter-'\n"),
+               "    NOTE: in ambiguous case prefix following options by \"filter-\"\n"),
                &(k->name)[7],k->desc);
       continue;
     }

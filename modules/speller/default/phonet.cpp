@@ -35,6 +35,8 @@
 #include "errors.hpp"
 #include "fstream.hpp"
 #include "getdata.hpp"
+#include "language.hpp"
+#include "objstack.hpp"
 
 using namespace acommon;
 
@@ -64,11 +66,17 @@ namespace aspeller {
 
   struct PhonetParmsImpl : public PhonetParms {
     void * data;
+    ObjStack strings;
     PhonetParmsImpl() : data(0) {}
     ~PhonetParmsImpl() {if (data) free(data);}
   };
+
+  static void init_phonet_hash(PhonetParms & parms);
   
-  PosibErr<PhonetParms *> load_phonet_rules(const String & file) {
+  PosibErr<PhonetParms *> new_phonet(const String & file, 
+                                     Conv & iconv,
+                                     const Language * lang) 
+  {
     FixedBuffer<> buf; DataPair dp;
 
     FStream in;
@@ -76,32 +84,26 @@ namespace aspeller {
 
     PhonetParmsImpl * parms = new PhonetParmsImpl();
 
+    parms->lang = lang;
+
     parms->followup        = true;
     parms->collapse_result = false;
 
-    int size = 0;
     int num = 0;
-    while (true) {
-      if (!getdata_pair(in, dp, buf)) break;
+    while (getdata_pair(in, dp, buf)) {
       if (dp.key != "followup" && dp.key != "collapse_result" &&
-	  dp.key != "version") {
+	  dp.key != "version")
 	++num;
-	size += dp.key.size + 1;
-	if (dp.value != "_") {
-	  size += dp.value.size + 1;
-	}
-      }
     }
 
+    in.restart();
+
     size_t vsize = sizeof(char *) * (2 * num + 2);
-    parms->data = malloc(size + vsize);
-    
-    char * begin = (char *)parms->data + vsize;
-    char * d = begin;
+    parms->data = malloc(vsize);
 
     const char * * r = (const char * *)parms->data;
 
-    in.restart();
+    char * empty_str = parms->strings.dup("");
 
     while (true) {
       if (!getdata_pair(in, dp, buf)) break;
@@ -112,23 +114,15 @@ namespace aspeller {
       } else if (dp.key == "version") {
 	parms->version = dp.value;
       } else {
-	memcpy(d, dp.key.str, dp.key.size + 1);
-	*r = d;
+	*r = parms->strings.dup(iconv(dp.key));
 	++r;
-	d += dp.key.size + 1;
 	if (dp.value == "_") {
-	  *r = "";
+	  *r = empty_str;
 	} else {
-	  memcpy(d, dp.value.str, dp.value.size + 1);
-	  *r = d;
-	  d += dp.value.size + 1;
+	  *r = parms->strings.dup(iconv(dp.value));
 	}
 	++r;
       }
-    }
-    if (d != begin + size) {
-      delete parms;
-      return make_err(file_error, file);
     }
     if (parms->version.empty()) {
       delete parms;
@@ -138,35 +132,13 @@ namespace aspeller {
     *(r+1) = PhonetParms::rules_end;
     parms->rules = (const char * *)parms->data;
 
+    init_phonet_hash(*parms);
+
     return parms;
   }
 
-  // FIXME: Get this information from the language class
-  void init_phonet_charinfo(PhonetParms & parms) {
-    
-    const unsigned char * vowels_low = 
-      (const unsigned char *) "àáâãäåæçèéêëìíîïğñòóôõöøùúûüışßÿ";
-    const unsigned char * vowels_cap =
-      (const unsigned char *) "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖØÙÚÛÜİŞßÿ";
-    
-    int i;
-    /**  create "to_upper" and "is_alpha" arrays  **/
-    for (i = 0; i < 256; i++) {
-      parms.to_upper[i] = asc_islower(i) ?  (unsigned char) asc_toupper(i) 
-	                                 : (unsigned char) i;
-      parms.is_alpha[i] = asc_isalpha(i);
-    }
-    for (i = 0; vowels_low[i] != '\0'; i++) {
-      /**  toupper doen't handel "unusual" characters  **/
-      parms.to_upper[vowels_low[i]] = vowels_cap[i];
-      parms.to_upper[vowels_cap[i]] = vowels_cap[i];
-      parms.is_alpha[vowels_low[i]] = parms.is_alpha[vowels_cap[i]] = true;
-    }
-
-  }
-
-  void init_phonet_hash(PhonetParms & parms) {
-
+  static void init_phonet_hash(PhonetParms & parms) 
+  {
     int i, k;
 
     for (i = 0; i < parms.hash_size; i++) {
@@ -205,7 +177,6 @@ namespace aspeller {
     /**  result:  >= 0:  length of "target"    **/
     /**            otherwise:  error            **/
 
-
     int  i,j,k=0,n,p,z;
     int  k0,n0,p0=-333,z0;
     int len = strlen(inword)+1;
@@ -217,7 +188,7 @@ namespace aspeller {
     
     /**  to_upperize string  **/
     for (i = 0; inword[i] != '\0'; i++)
-      word[i] = parms.to_upper[(uchar)inword[i]];
+      word[i] = parms.lang->to_upper(inword[i]);
     word[i] = '\0';
 
     /**  check word  **/
@@ -251,7 +222,7 @@ namespace aspeller {
           }
           if (*s == '(') {
             /**  check letters in "(..)"  **/
-            if (parms.is_alpha[(uchar)word[i+k]]  // ...could be implied?
+            if (parms.lang->is_alpha(word[i+k])  // ...could be implied?
                 && strchr(s+1, word[i+k]) != NULL) {
               k++;
               while (*s != ')')
@@ -277,12 +248,13 @@ namespace aspeller {
 
           if (*s == '\0'
               || (*s == '^'  
-                 && (i == 0  ||  ! parms.is_alpha[(uchar)word[i-1]])
-                 && (*(s+1) != '$'
-                 || (! parms.is_alpha[(uchar)word[i+k0]] )))
+                  && (i == 0  ||  ! parms.lang->is_alpha(word[i-1]))
+                  && (*(s+1) != '$'
+                      || (! parms.lang->is_alpha(word[i+k0]) )))
               || (*s == '$'  &&  i > 0  
-                 &&  parms.is_alpha[(uchar)word[i-1]]
-                 && (! parms.is_alpha[(uchar)word[i+k0]] ))) {
+                  &&  parms.lang->is_alpha(word[i-1])
+                  && (! parms.lang->is_alpha(word[i+k0]) ))) 
+          {
             /**  search for followup rules, if:     **/
             /**  parms.followup and k > 1  and  NO '-' in searchstring **/
             c0 = word[i+k-1];
@@ -308,7 +280,7 @@ namespace aspeller {
                 }
                 if (*s == '(') {
                   /**  check letters  **/
-                  if (parms.is_alpha[(uchar)word[i+k0]]
+                  if (parms.lang->is_alpha(word[i+k0])
                       &&  strchr (s+1, word[i+k0]) != NULL) {
                     k0++;
                     while (*s != ')'  &&  *s != '\0')
@@ -331,7 +303,8 @@ namespace aspeller {
 
                 if (*s == '\0'
                     /**  *s == '^' cuts  **/
-                    || (*s == '$'  &&  ! parms.is_alpha[(uchar)word[i+k0]])) {
+                    || (*s == '$'  &&  ! parms.lang->is_alpha(word[i+k0]))) 
+                {
                   if (k0 == k) {
                     /**  this is just a piece of the string  **/
                     #ifdef PHONET_TRACE

@@ -827,12 +827,12 @@ namespace acommon {
         int prefix_end = 0;
         if(strncmp(i->name,"filter-",7) == 0)
           prefix_end = 7;
-        out << "###  " << &(i->name)[prefix_end] << " Filter: " << gettext(i->desc)
+        out << "###  " << &(i->name)[prefix_end] << " Filter: " << _(i->desc)
             << "\n###    " << _("configured as follows") << "\n\n\n";
         continue;
       }
       out << "# " << (i->type ==  KeyInfoList ? "add|rem-" : "") << i->name
-	  << " descrip: " << (i->def == 0 ? "(action option) " : "") << gettext(i->desc)
+	  << " descrip: " << (i->def == 0 ? "(action option) " : "") << _(i->desc)
 	  << '\n';
       if (i->def != 0) {
 	buf.resize(strlen(i->def) * 2 + 1);

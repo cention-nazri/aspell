@@ -21,6 +21,7 @@ namespace acommon {
   class Config;
   class FStream;
   class OStream;
+  class Convert;
 }
 
 namespace aspeller {

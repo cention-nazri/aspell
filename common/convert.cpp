@@ -175,7 +175,7 @@ namespace acommon {
   // read in char data
   //
 
-  PosibErr<void> read_in_char_data (Config & config,
+  PosibErr<void> read_in_char_data (const Config & config,
 				    ParmString encoding,
 				    ToUniLookup & to,
 				    FromUniLookup & from)
@@ -189,10 +189,9 @@ namespace acommon {
     FStream data;
     PosibErrBase err = data.open(file_name, "r");
     if (err.get_err()) { 
-      String mesg;
-      mesg  = " This could also mean that the file \"";
-      mesg += file_name;
-      mesg += "\" could not be opened for reading or does not exist.";
+      char mesg[128];
+      snprintf(mesg, 128, _("This could also mean that the file \"%s\" could not be opened for reading or does not exist."),
+               file_name.c_str());
       return make_err(unknown_encoding, encoding, mesg);
     }
     unsigned int chr;
@@ -267,7 +266,7 @@ namespace acommon {
   };
 
   template <typename Chr>
-  struct ConvDirect : public Conv
+  struct ConvDirect : public DirectConv
   {
     void convert(const char * in0, int size, CharVector & out) const {
       if (size == -1) {
@@ -288,7 +287,7 @@ namespace acommon {
   struct DecodeLookup : public Decode 
   {
     ToUniLookup lookup;
-    PosibErr<void> init(ParmString code, Config & c) 
+    PosibErr<void> init(ParmString code, const Config & c) 
       {FromUniLookup unused;
       return read_in_char_data(c, code, lookup, unused);}
     void decode(const char * in, int size, FilterCharVector & out) const {
@@ -306,7 +305,7 @@ namespace acommon {
   struct EncodeLookup : public Encode 
   {
     FromUniLookup lookup;
-    PosibErr<void> init(ParmString code, Config & c) 
+    PosibErr<void> init(ParmString code, const Config & c) 
       {ToUniLookup unused;
       return read_in_char_data(c, code, unused, lookup);}
     void encode(const FilterChar * in, const FilterChar * stop, 
@@ -328,11 +327,12 @@ namespace acommon {
   //
   
 #define get_check_next \
-  c = *in;                                                       \
-  if ((c & 0xC0) != 0x80 || in == stop) return FilterChar('?',u);\
-  ++in;                                                          \
-  u <<= 6;                                                       \
-  u |= c & 0x3F;                                                 \
+  if (in == stop) goto error;          \
+  c = *in;                             \
+  if ((c & 0xC0) != 0x80) goto error;  \
+  ++in;                                \
+  u <<= 6;                             \
+  u |= c & 0x3F;                       \
   ++w;
 
   static inline FilterChar from_utf8 (const char * & in, const char * stop)
@@ -343,7 +343,8 @@ namespace acommon {
     // the first char is guaranteed not to be off the end
     char c = *in;
     ++in;
-    while ((c & 0xC0) == 0x80) {c = *in; ++in; ++w;}
+
+    while (in != stop && (c & 0xC0) == 0x80) {c = *in; ++in; ++w;}
     if ((c & 0x80) == 0x00) { // 1-byte wide
       u = c;
     } else if ((c & 0xE0) == 0xC0) { // 2-byte wide
@@ -354,13 +355,30 @@ namespace acommon {
       get_check_next;
       get_check_next;
     } else if ((c & 0xF8) == 0xF0) { // 4-byte wide
-      u  = c & 0x0E;
+      u  = c & 0x07;
       get_check_next;
       get_check_next;
       get_check_next;
+    } else if ((c & 0xFC) == 0xF8) { // 5-byte wide
+      u  = c & 0x03;
+      get_check_next;
+      get_check_next;
+      get_check_next;
+      get_check_next;
+    } else if ((c & 0xFE) == 0xFC) { // 6-byte wide
+      u  = c & 0x03;
+      get_check_next;
+      get_check_next;
+      get_check_next;
+      get_check_next;
+      get_check_next;
+    } else {
+      goto error;
     }
 
     return FilterChar(u, w);
+  error:
+    return FilterChar('?', w);
   }
   
   static inline void to_utf8 (FilterChar in, CharVector & out)
@@ -385,8 +403,23 @@ namespace acommon {
       out.append(0x80 | c>>6 & 0x3F);
       out.append(0x80 | c & 0x3F);
     }
+    else if (c < 0x4000000) {
+      out.append(0xF8 | c>>24);
+      out.append(0x80 | c>>18 & 0x3F);
+      out.append(0x80 | c>>12 & 0x3F);
+      out.append(0x80 | c>>6 & 0x3F);
+      out.append(0x80 | c & 0x3F);
+    }
+    else if (c < 0x80000000) {
+      out.append(0xF8 | c>>30);
+      out.append(0x80 | c>>24 & 0x3F);
+      out.append(0x80 | c>>18 & 0x3F);
+      out.append(0x80 | c>>12 & 0x3F);
+      out.append(0x80 | c>>6 & 0x3F);
+      out.append(0x80 | c & 0x3F);
+    }
   }
-
+  
   struct DecodeUtf8 : public Decode 
   {
     ToUniLookup lookup;
@@ -415,14 +448,13 @@ namespace acommon {
   // new_aspell_convert
   //
 
-  void Convert::generic_convert(const char * in, int size, 
-				CharVector & out)
+  void Convert::generic_convert(const char * in, int size, CharVector & out)
   {
-    buf.clear();
-    decode_->decode(in, size, buf);
-    buf.append(0);
-    FilterChar * start = buf.pbegin();
-    FilterChar * stop = buf.pend();
+    buf_.clear();
+    decode_->decode(in, size, buf_);
+    buf_.append(0);
+    FilterChar * start = buf_.pbegin();
+    FilterChar * stop = buf_.pend();
     if (!filter.empty()) {
       filter.decode(start, stop);
       filter.process(start, stop);
@@ -431,7 +463,7 @@ namespace acommon {
     encode_->encode(start, stop, out);
   }
 
-  static inline const char * fix_encoding_str(ParmString enc, String & buf)
+  const char * fix_encoding_str(ParmString enc, String & buf)
   {
     buf.reserve(enc.size() + 1);
     for (size_t i = 0; i != enc.size(); ++i)
@@ -450,9 +482,17 @@ namespace acommon {
       return buf.c_str();
   }
 
-  PosibErr<Convert *> new_convert(Config & c,
-				  ParmString in, 
-				  ParmString out) 
+  bool is_ascii_enc(ParmString enc)
+  {
+    return (enc == "ASCII" || enc == "ascii" 
+            || enc == "ANSI_X3.4-1968");
+  }
+
+
+  PosibErr<Convert *> internal_new_convert(const Config & c,
+                                           ParmString in, 
+                                           ParmString out,
+                                           bool if_needed)
   {
     String in_s;
     in = fix_encoding_str(in, in_s);
@@ -460,13 +500,15 @@ namespace acommon {
     String out_s;
     out = fix_encoding_str(out, out_s); 
 
+    if (if_needed && in == out) return 0;
+
     StackPtr<Convert> conv(new Convert);
     RET_ON_ERR(conv->init(c, in, out));
     return conv.release();
     
   }
-  
-  PosibErr<void> Convert::init(Config & c, ParmString in, ParmString out)
+
+  PosibErr<void> Convert::init(const Config & c, ParmString in, ParmString out)
   {
     in_code_ = in;
     out_code_ = out;

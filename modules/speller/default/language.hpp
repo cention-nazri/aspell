@@ -6,6 +6,7 @@
 #include "affix.hpp"
 #include "cache.hpp"
 #include "config.hpp"
+#include "convert.hpp"
 #include "phonetic.hpp"
 #include "posib_err.hpp"
 #include "stack_ptr.hpp"
@@ -40,6 +41,89 @@ namespace aspeller {
     }
   };
 
+  struct ConvObj {
+    Convert * ptr;
+    ConvObj(Convert * c = 0) : ptr(c) {}
+    ~ConvObj() {delete ptr;}
+    PosibErr<void> setup(const Config & c, ParmString from, ParmString to)
+    {
+      delete ptr;
+      ptr = 0;
+      PosibErr<Convert *> pe = new_convert_if_needed(c, from, to);
+      if (pe.has_err()) return pe;
+      ptr = pe.data;
+      return no_err;
+    }
+    operator const Convert * () const {return ptr;}
+  private:
+    ConvObj(const ConvObj &);
+    void operator=(const ConvObj &);
+  };
+
+  struct ConvP {
+    const Convert * conv;
+    ConvertBuffer buf0;
+    CharVector buf;
+    operator bool() const {return conv;}
+    ConvP(const Convert * c = 0) : conv(c) {}
+    ConvP(const ConvObj & c) : conv(c.ptr) {}
+    ConvP(const ConvP & c) : conv(c.conv) {}
+    void operator=(const ConvP & c) { conv = c.conv; }
+    PosibErr<void> setup(const Config & c, ParmString from, ParmString to)
+    {
+      delete conv;
+      conv = 0;
+      PosibErr<Convert *> pe = new_convert_if_needed(c, from, to);
+      if (pe.has_err()) return pe;
+      conv = pe.data;
+      return no_err;
+    }
+    char * operator() (MutableString str)
+    {
+      if (conv) {
+        buf.clear();
+        conv->convert(str, str.size, buf, buf0);
+        return buf.data();
+      } else {
+        return str;
+      }
+    }
+    char * operator() (CharVector & str) 
+    {
+      return operator()(MutableString(str.data(),str.size()-1));
+    }
+    char * operator() (char * str)
+    {
+      return operator()(MutableString(str,strlen(str)));
+    }
+    const char * operator() (ParmString str)
+    {
+      if (conv) {
+        buf.clear();
+        conv->convert(str, str.size(), buf, buf0);
+        return buf.data();
+      } else {
+        return str;
+      }
+    }
+    const char * operator() (char c)
+    {
+      char buf2[2] = {c, 0};
+      return operator()(ParmString(buf2,1));
+    }
+  };
+
+  struct Conv : public ConvP
+  {
+    ConvObj conv_obj;
+    Conv(Convert * c = 0) : ConvP(c), conv_obj(c) {}
+    PosibErr<void> setup(const Config & c, ParmString from, ParmString to)
+    {
+      RET_ON_ERR(conv_obj.setup(c,from,to));
+      conv = conv_obj.ptr;
+    }
+  };
+
   class Language : public Cacheable {
   public:
     typedef Config  CacheConfig;
@@ -60,6 +144,9 @@ namespace aspeller {
     String   dir_;
     String   name_;
     String   charset_;
+    String   data_encoding_;
+
+    ConvObj  mesg_conv_;
 
     unsigned char to_uchar(char c) const {return static_cast<unsigned char>(c);}
 
@@ -90,6 +177,7 @@ namespace aspeller {
     void operator=(const Language &);
 
   public:
+
     Language() {}
     PosibErr<void> setup(const String & lang, Config * config);
     void set_lang_defaults(Config & config);
@@ -97,6 +185,9 @@ namespace aspeller {
     const char * data_dir() const {return dir_.c_str();}
     const char * name() const {return name_.c_str();}
     const char * charset() const {return charset_.c_str();}
+    const char * data_encoding() const {return data_encoding_.c_str();}
+
+    const Convert * mesg_conv() const {return mesg_conv_.ptr;}
 
     char to_upper(char c) const {return to_upper_[to_uchar(c)];}
     bool is_upper(char c) const {return to_upper(c) == c;}
@@ -153,6 +244,12 @@ namespace aspeller {
     }
 
     bool cache_key_eq(const String & l) const  {return name_ == l;}
+  };
+
+  struct MsgConv : public ConvP
+  {
+    MsgConv(const Language * l) : ConvP(l->mesg_conv()) {}
+    MsgConv(const Language & l) : ConvP(l.mesg_conv()) {}
   };
 
   struct InsensitiveCompare {
@@ -358,6 +455,11 @@ namespace aspeller {
       return word;
     }
   }
+
+  /////////////////////////////////////////////////////////
+  //
+  // Conversion to/from internal encoding utilities
+  //
 
   String get_stripped_chars(const Language & l);
   

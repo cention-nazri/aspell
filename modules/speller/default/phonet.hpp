@@ -27,6 +27,9 @@ using namespace acommon;
 
 namespace aspeller {
 
+  class Language;
+  class Conv;
+
   struct PhonetParms {
     String version;
     
@@ -36,8 +39,7 @@ namespace aspeller {
     static const char * const rules_end;
     const char * * rules;
 
-    char to_upper[256];
-    bool is_alpha[256];
+    const Language * lang;
 
     static const int hash_size = 256;
     int hash[hash_size];
@@ -45,8 +47,6 @@ namespace aspeller {
     virtual ~PhonetParms() {}
   };
 
-  void init_phonet_charinfo(PhonetParms & parms);
-  void init_phonet_hash(PhonetParms & parms);
   int phonet (const char * inword, char * target, 
 	      const PhonetParms & parms);
 
@@ -55,7 +55,9 @@ namespace aspeller {
   // the istream must be seekable
 #endif
 
-  PosibErr<PhonetParms *> load_phonet_rules(const String & file);
+  PosibErr<PhonetParms *> new_phonet(const String & file, 
+                                     Conv & iconv,
+                                     const Language * lang);
 
 }
 

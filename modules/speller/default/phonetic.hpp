@@ -10,6 +10,7 @@ using namespace acommon;
 namespace aspeller {
 
   class Language;
+  class Conv;
  
   class Soundslike {
   public:
@@ -17,11 +18,12 @@ namespace aspeller {
     virtual String to_soundslike(ParmString) const = 0;
     virtual const char * name() const = 0;
     virtual const char * version() const = 0;
-    virtual PosibErr<void> setup() = 0;
+    virtual PosibErr<void> setup(Conv &) = 0;
     virtual ~Soundslike() {}
   };
 
   PosibErr<Soundslike *> new_soundslike(ParmString name,
+                                        Conv & conv,
                                         const Language * lang);
 };
 

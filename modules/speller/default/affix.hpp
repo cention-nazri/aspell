@@ -38,6 +38,7 @@ namespace aspeller {
   using namespace acommon;
 
   class Language;
+  class Conv;
 
   class SpellerImpl;
   using acommon::CheckInfo;
@@ -88,7 +89,7 @@ namespace aspeller {
 
     unsigned int max_strip() const {return max_strip_;}
 
-    PosibErr<void> setup(ParmString affpath);
+    PosibErr<void> setup(ParmString affpath, Conv &);
 
     bool affix_check(const LookupInfo &, ParmString, CheckInfo &, GuessInfo *) const;
     bool prefix_check(const LookupInfo &, ParmString, CheckInfo &, GuessInfo *) const;
@@ -112,9 +113,9 @@ namespace aspeller {
                             unsigned char * new_aff = 0, WordAff * * * l = 0) const;
     
   private:
-    PosibErr<void> parse_file(const char * affpath);
+    PosibErr<void> parse_file(const char * affpath, Conv &);
 
-    void encodeit(AffEntry * ptr, char * cs);
+    void encodeit(AffEntry * ptr, const char * cs);
     PosibErr<void> build_pfxlist(PfxEntry* pfxptr);
     PosibErr<void> build_sfxlist(SfxEntry* sfxptr);
     PosibErr<void> process_pfx_order();
@@ -122,8 +123,8 @@ namespace aspeller {
   };
 
   PosibErr<AffixMgr *> new_affix_mgr(ParmString name, 
+                                     Conv &,
                                      const Language * lang);
-
 }
 
 #endif

@@ -51,6 +51,7 @@ libaspell_la_SOURCES =\
   common/objstack.cpp \
   common/strtonum.cpp\
   common/directory.cpp\
+  common/gettext_init.cpp\
   modules/speller/default/readonly_ws.cpp\
   modules/speller/default/suggest.cpp\
   modules/speller/default/data.cpp\

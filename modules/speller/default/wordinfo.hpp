@@ -8,6 +8,7 @@
 
 namespace acommon {
   class OStream;
+  class Convert;
 }
 
 namespace aspeller {
@@ -34,7 +35,7 @@ namespace aspeller {
     bool adv() {if (adv_) {adv_(this); return true;} word = 0; return false;}
     operator bool () const {return word != 0;}
     OStream & write(OStream & o, const Language & l,
-		    const ConvertWord &) const;
+		    const ConvertWord &, Convert * c = 0) const;
     WordEntry() : word(0), aff(0), adv_(0), free_(0){}
     void clear() {if (free_) free_(this); word = 0; aff = 0; adv_ = 0; free_ = 0;}
     ~WordEntry() {if (free_) free_(this);}

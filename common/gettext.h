@@ -68,7 +68,9 @@
 
 /* short cut macros */
 
-#define _(String) gettext (String)
+/* I use dgettext so that the right domain will be looked at when
+   Aspell is used as a library */
+#define _(String) dgettext ("aspell", String)
 #define N_(String) gettext_noop (String)
 
 #endif /* _LIBGETTEXT_H */

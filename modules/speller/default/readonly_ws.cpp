@@ -666,6 +666,9 @@ namespace {
    
     bool use_jump_tables = use_soundslike || config.retrieve_bool("use-jump-tables");
 
+    Conv iconv;
+    iconv.setup(config, config.retrieve("encoding"), lang.charset());
+
     //CERR << (affix_compress ? "  AFFIX COMPRESS" : "")
     //     << (use_soundslike ? "  USING SOUNDSLIKE" : "") 
     //     << (use_jump_tables ? "  USING JUMP TABLES" : "")
@@ -735,7 +738,8 @@ namespace {
 	unsigned int s = strlen(w0);
 	CharVector tstr;
 	tstr.append(w0, s+1);
-	char * w = tstr.data();
+	char * w = iconv(tstr);
+        s = strlen(w);
 
         char * p0 = strchr(w, '/');
 
@@ -815,7 +819,7 @@ namespace {
             for (j =word_hash->multi_find(w); !j.at_end(); j.adv()) {
               if (strcmp(w, j.deref()->data)==0) {
                 if (p->aff)
-                  CERR << "WARNING: Ignoring duplicate: " << w << '\n';
+                  CERR << "WARNING: Ignoring duplicate: " << MsgConv(lang)(w) << '\n';
                 dup = true;
                 // FIXME: deal with duplicates properly
               }

@@ -141,5 +141,13 @@ namespace acommon {
     d.value.size = l;
   }
 
+  bool getline(IStream & in, DataPair & d, Buffer & buf)
+  {
+    char * end = in.getline(buf.data, buf.size);
+    if (end == 0) return false;
+    d.value.str  = buf.data;
+    d.value.size = end - buf.data;
+    return true;
+  }
 
 }

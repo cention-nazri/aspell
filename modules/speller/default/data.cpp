@@ -5,6 +5,7 @@
 // at http://www.gnu.org/.
 
 #include "config.hpp"
+#include "convert.hpp"
 #include "data.hpp"
 #include "data_id.hpp"
 #include "errors.hpp"
@@ -180,15 +181,24 @@ namespace aspeller {
     //return new BasicWordSetEnumeration(detailed_elements());
   }
 
+#define write_conv(s) do { \
+    if (!c) {o << s;} \
+    else {ParmString ss(s); buf.clear(); c->convert(ss.str(), ss.size(), buf); o.write(buf.data(), buf.size()-1);} \
+  } while (false)
+
   OStream & WordEntry::write (OStream & o,
                               const Language & l,
-                              const ConvertWord & c) const
+                              const ConvertWord & cw,
+                              Convert * c) const
   {
     String w;
-    c.convert(word, w);
-    o << w;
-    if (aff && *aff)
-      o << '/' << aff;
+    CharVector buf;
+    cw.convert(word, w);
+    write_conv(w);
+    if (aff && *aff) {
+      o << '/';
+      write_conv(aff);
+    }
     return o;
   }
 
@@ -257,7 +267,7 @@ namespace aspeller {
     
     if (actual_type & ~allowed)
       return make_err(bad_file_format, true_file_name
-		      , "is not one of the allowed types");
+		      , _("is not one of the allowed types"));
 
     LoadableDataSet * ws = 0;
     if (speller != 0)

@@ -63,5 +63,7 @@ namespace acommon {
 
   // preps a string for split
   void init(ParmString str, DataPair & d, const Buffer & buf);
+
+  bool getline(IStream & in, DataPair & d, Buffer & buf);
 }
 #endif

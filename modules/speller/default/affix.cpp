@@ -158,7 +158,7 @@ void CheckList::reset()
 // Affix Manager
 //
 
-PosibErr<void> AffixMgr::setup(ParmString affpath)
+PosibErr<void> AffixMgr::setup(ParmString affpath, Conv & iconv)
 {
   // register hash manager and load affix data from aff file
   //cpdmin = 3;  // default value
@@ -170,7 +170,7 @@ PosibErr<void> AffixMgr::setup(ParmString affpath)
     sFlag[i] = NULL;
     max_strip_f[i] = 0;
   }
-  return parse_file(affpath);
+  return parse_file(affpath, iconv);
 }
 
 AffixMgr::~AffixMgr()
@@ -208,7 +208,7 @@ static inline void MAX(int & lhs, int rhs)
 }
 
 // read in aff file and build up prefix and suffix entry objects 
-PosibErr<void> AffixMgr::parse_file(const char * affpath)
+PosibErr<void> AffixMgr::parse_file(const char * affpath, Conv & iconv)
 {
   // io buffers
   FixedBuffer<> buf; DataPair dp;
@@ -232,8 +232,10 @@ PosibErr<void> AffixMgr::parse_file(const char * affpath)
 
     /* parse in the name of the character set used by the .dict and .aff */
 
-    if (dp.key == "SET") 
+    if (dp.key == "SET") {
       encoding = strings.dup(dp.value);
+      // FIXME: check if match
+    }
 
     /* parse in the flag used by the controlled compound words */
     //else if (d.key == "COMPOUNDFLAG")
@@ -249,7 +251,7 @@ PosibErr<void> AffixMgr::parse_file(const char * affpath)
       affix_type = dp.key[0];
 
     if (affix_type == ' ') continue;
-    
+
     //
     // parse this affix: P - prefix, S - suffix
     //
@@ -263,7 +265,7 @@ PosibErr<void> AffixMgr::parse_file(const char * affpath)
       split(dp);
       if (dp.key.empty()) goto error;
       // key is affix char
-      achar = dp.key[0];
+      achar = iconv(dp.key)[0];
 
       split(dp);
       if (dp.key.empty()) goto error;
@@ -288,9 +290,10 @@ PosibErr<void> AffixMgr::parse_file(const char * affpath)
         split(dp);
         if (dp.key.empty()) goto error;
         // key is affix charter
-        if (dp.key[0] != achar) {
-          String msg;
-          msg << "affix "<< achar << "is corrupt " << ", possible incorrect count";
+        if (iconv(dp.key)[0] != achar) {
+          char msg[64];
+          snprintf(msg, 64, _("affix '%s' is corrupt, possible incorrect count"), 
+                   MsgConv(lang)(achar));
           return make_err(bad_file_format, affix_file, msg);
         }
         nptr->achar = achar;
@@ -299,10 +302,11 @@ PosibErr<void> AffixMgr::parse_file(const char * affpath)
         if (dp.key.empty()) goto error;
         // key is strip 
         if (dp.key != "0") {
-          MAX(max_strip_, dp.key.size);
-          MAX(max_strip_f[(byte)achar], dp.key.size);
-          nptr->strip = strings.dup(dp.key);
-          nptr->stripl = dp.key.size;
+          ParmString s0(iconv(dp.key));
+          MAX(max_strip_, s0.size());
+          MAX(max_strip_f[(byte)achar], s0.size());
+          nptr->strip = strings.dup(s0);
+          nptr->stripl = s0.size();
         } else {
           nptr->strip= strings.dup("");
           nptr->stripl = 0;
@@ -312,8 +316,8 @@ PosibErr<void> AffixMgr::parse_file(const char * affpath)
         if (dp.key.empty()) goto error;
         // key is affix string or 0 for null
         if (dp.key != "0") {
-          nptr->appnd = strings.dup(dp.key);
-          nptr->appndl = dp.key.size;
+          nptr->appnd = strings.dup(iconv(dp.key));
+          nptr->appndl = strlen(nptr->appnd);
         } else {
           nptr->appnd  = strings.dup("");
           nptr->appndl = 0;
@@ -322,7 +326,7 @@ PosibErr<void> AffixMgr::parse_file(const char * affpath)
         split(dp);
         if (dp.key.empty()) goto error;
         // key is the conditions descriptions
-        encodeit(nptr,dp.key);
+        encodeit(nptr,iconv(dp.key));
     
         // now create SfxEntry or PfxEntry objects and use links to
         // build an ordered (sorted by affix string) list
@@ -334,8 +338,8 @@ PosibErr<void> AffixMgr::parse_file(const char * affpath)
     }
     continue;
   error:
-    String msg;
-    msg << "affix "<< achar << "is corrupt";
+    char msg[32];
+    snprintf(msg, 32, _("affix '%s' is corrupt"), MsgConv(lang)(achar));
     return make_err(bad_file_format, affix_file, msg);
   }
   afflst.close();
@@ -598,7 +602,7 @@ PosibErr<void> AffixMgr::process_sfx_order()
 // file affentry.cxx which describes what is going on here
 // in much more detail
 
-void AffixMgr::encodeit(AffEntry * ptr, char * cs)
+void AffixMgr::encodeit(AffEntry * ptr, const char * cs)
 {
   byte c;
   int i, j, k;
@@ -1208,6 +1212,7 @@ bool SfxEntry::check(const LookupInfo & linf, ParmString word,
 
 
 PosibErr<AffixMgr *> new_affix_mgr(ParmString name, 
+                                   Conv & iconv,
                                    const Language * lang)
 {
   if (name == "none")
@@ -1220,7 +1225,7 @@ PosibErr<AffixMgr *> new_affix_mgr(ParmString name,
   file += "_affix.dat";
   AffixMgr * affix;
   affix = new AffixMgr(lang);
-  PosibErrBase pe = affix->setup(file);
+  PosibErrBase pe = affix->setup(file, iconv);
   if (pe.has_err()) {
     delete affix;
     return pe;
