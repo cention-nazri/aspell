@@ -33,7 +33,6 @@
 @item Marshallese (mh)
 @item Minangkabau (min)
 @item Ndebele (nd)
-@item Low Saxon (nds)
 @item Ndonga (ng)
 @item Niue (niu)
 @item Northern Sotho (nso)
