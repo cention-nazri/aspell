@@ -13,8 +13,12 @@
 #include "simple_string.hpp"
 #include "writable_base.hpp"
 
-using namespace std;
 using namespace aspeller;
+using namespace std;
+
+// FIXME: WritableReplS and WritableWS are very similar and this WritableBase
+//   nonsense is probably overly complicated.  Combine both info a single file
+//   writable_sets.cpp or something similar....
 
 namespace aspeller_default_writable_wl {
 
@@ -23,30 +27,32 @@ namespace aspeller_default_writable_wl {
   //  WritableWS
   //
 
+  struct Hash {
+    InsensitiveHash f;
+    Hash(const Language * l) : f(l) {}
+    size_t operator() (const SimpleString & s) const {
+      return f(s.c_str());
+    }
+  };
+
+  struct Equal {
+    InsensitiveEqual f;
+    Equal(const Language * l) : f(l) {}
+    bool operator() (const SimpleString & a, const SimpleString & b) const
+    {
+      return f(a.c_str(), b.c_str());
+    }
+  };
+
+  typedef hash_multiset<SimpleString,Hash,Equal>        WordLookup;
+  typedef Vector<const char *>                          RealSoundslikeWordList;
+  typedef hash_map<SimpleString,RealSoundslikeWordList> SoundslikeLookup;
+
   class WritableWS : public WritableBase<WritableWordSet>
   {
   public: //but don't use
-    struct Hash {
-      InsensitiveHash f;
-      Hash(const Language * l) : f(l) {}
-      size_t operator() (const SimpleString & s) const {
-	return f(s.c_str());
-      }
-    };
-    struct Equal {
-      InsensitiveEqual f;
-      Equal(const Language * l) : f(l) {}
-      bool operator() (const SimpleString & a, const SimpleString & b) const
-      {
-	return f(a.c_str(), b.c_str());
-      }
-    };
-    typedef hash_multiset<SimpleString,Hash,Equal> WordLookup;
-    CopyPtr<WordLookup>                            word_lookup;
-    
-    typedef Vector<const char *>                       RealSoundslikeWordList;
-    typedef hash_map<SimpleString,RealSoundslikeWordList> SoundslikeLookup;
-    SoundslikeLookup                                      soundslike_lookup_;
+    CopyPtr<WordLookup> word_lookup;
+    SoundslikeLookup    soundslike_lookup_;
 
     PosibErr<void> save(FStream &, ParmString);
     PosibErr<void> merge(FStream &, ParmString, Config * config = 0);
@@ -57,9 +63,6 @@ namespace aspeller_default_writable_wl {
     }
     
   public:
-
-    struct ElementsParms;
-    struct SoundslikeWordsParms;
 
     WritableWS() : WritableBase<WritableWordSet>(".pws", ".per") {
       have_soundslike = true; fast_lookup = true;
@@ -74,39 +77,23 @@ namespace aspeller_default_writable_wl {
 
     bool lookup (ParmString word, WordEntry &, const SensitiveCompare &) const;
 
-    bool lookup_unlocked (ParmString word, WordEntry &, const SensitiveCompare &) const;
     bool stripped_lookup(const char * sondslike, WordEntry &) const;
 
     bool soundslike_lookup(const char * soundslike, WordEntry &) const;
     bool soundslike_lookup(const WordEntry & soundslike, WordEntry &) const;
 
-    Enum * detailed_elements() const;
+    WordEntryEnumeration * detailed_elements() const;
 
-    struct SoundslikeElements;
     SoundslikeEnumeration * soundslike_elements() const;
   };
 
-  struct WritableWS::ElementsParms {
-    typedef WordEntry *                Value;
-    typedef WordLookup::const_iterator Iterator;
-    Iterator end_;
-    WordEntry data;
-    ElementsParms(Iterator e) : end_(e) {}
-    bool endf(Iterator i) const {return i==end_;}
-    Value deref(Iterator i) {data.word = i->c_str(); return &data;}
-    static Value end_state() {return 0;}
-  };
-
-  WritableWS::Enum * WritableWS::detailed_elements() const {
-    return new MakeEnumeration<ElementsParms>
-      (word_lookup->begin(),ElementsParms(word_lookup->end()));
-  }
-
-  WritableWS::Size WritableWS::size() const {
+  WritableWS::Size WritableWS::size() const 
+  {
     return word_lookup->size();
   }
 
-  bool WritableWS::empty() const {
+  bool WritableWS::empty() const 
+  {
     return word_lookup->empty();
   }
 
@@ -198,6 +185,7 @@ namespace aspeller_default_writable_wl {
       if (c(word,p.first->c_str())) {
 	o.what = WordEntry::Word;
 	o.word = p.first->c_str();
+	o.aff  = "";
         return true;
       }
       ++p.first;
@@ -210,9 +198,10 @@ namespace aspeller_default_writable_wl {
     o.clear();
     pair<WordLookup::iterator, WordLookup::iterator> 
       p(word_lookup->equal_range(SimpleString(sl,1)));
-    if (p.first != p.second) return false;
+    if (p.first == p.second) return false;
     o.what = WordEntry::Word;
     o.word = p.first->c_str();
+    o.aff  = "";
     return true;
     // FIXME: Deal with multiple entries
   }  
@@ -226,12 +215,13 @@ namespace aspeller_default_writable_wl {
     if (i == end) w->adv_ = 0;
   }
 
-  static void sl_init(const WritableWS::RealSoundslikeWordList * tmp, WordEntry & o)
+  static void sl_init(const RealSoundslikeWordList * tmp, WordEntry & o)
   {
     o.what = WordEntry::Word;
     const char * const * i   = tmp->pbegin();
     const char * const * end = tmp->pend();
     o.word = *i;
+    o.aff  = "";
     ++i;
     if (i != end) {
       o.intr[0] = (void *)i;
@@ -250,6 +240,7 @@ namespace aspeller_default_writable_wl {
     } else {
       o.what = WordEntry::Word;
       o.word = word.word;
+      o.aff  = "";
     }
     return true;
   }
@@ -270,7 +261,7 @@ namespace aspeller_default_writable_wl {
     }
   }
 
-  struct WritableWS::SoundslikeElements : public SoundslikeEnumeration {
+  struct SoundslikeElements : public SoundslikeEnumeration {
 
     typedef SoundslikeLookup::const_iterator Itr;
 
@@ -292,9 +283,51 @@ namespace aspeller_default_writable_wl {
     }
   };
     
+  struct StrippedElements : public SoundslikeEnumeration {
+
+    typedef WordLookup::const_iterator Itr;
+
+    Itr i;
+    Itr end;
+
+    WordEntry d;
+
+    StrippedElements(Itr i0, Itr end0) : i(i0), end(end0) {
+      d.what = WordEntry::Word;
+      d.aff  = "";
+    }
+
+    WordEntry * next(int) {
+      if (i == end) return 0;
+      d.word = i->c_str();
+      ++i;
+      return &d;
+    }
+  };
+    
   SoundslikeEnumeration * WritableWS::soundslike_elements() const {
-    return new SoundslikeElements(soundslike_lookup_.begin(), 
-				  soundslike_lookup_.end());
+    if (have_soundslike)
+      return new SoundslikeElements(soundslike_lookup_.begin(), 
+				    soundslike_lookup_.end());
+    else
+      return new StrippedElements(word_lookup->begin(),
+				  word_lookup->end());
+  }
+
+  struct ElementsParms {
+    typedef WordEntry *                Value;
+    typedef WordLookup::const_iterator Iterator;
+    Iterator end_;
+    WordEntry data;
+    ElementsParms(Iterator e) : end_(e) {}
+    bool endf(Iterator i) const {return i==end_;}
+    Value deref(Iterator i) {data.word = i->c_str(); return &data;}
+    static Value end_state() {return 0;}
+  };
+
+  WritableWS::Enum * WritableWS::detailed_elements() const {
+    return new MakeEnumeration<ElementsParms>
+      (word_lookup->begin(),ElementsParms(word_lookup->end()));
   }
 
 }

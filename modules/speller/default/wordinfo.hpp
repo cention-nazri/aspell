@@ -28,7 +28,7 @@ namespace aspeller {
     void (* adv_)(WordEntry *);
     void (* free_)(WordEntry *);
     void * intr[2];
-    enum What {Other, Word, Soundslike, Stripped, Misspelled, Repl} what;
+    enum What {Other, Word, Soundslike, Stripped, Misspelled} what;
     // if type is Word than aff will be defined, otherwise it won't
     bool at_end() {return !word;}
     bool adv() {if (adv_) {adv_(this); return true;} word = 0; return false;}

@@ -57,7 +57,7 @@
 #include "stack_ptr.hpp"
 #include "suggest.hpp"
 
-//#include "iostream.hpp"
+#include "iostream.hpp"
 //#define DEBUG_SUGGEST
 
 using namespace aspeller;
@@ -175,7 +175,6 @@ namespace aspeller_default_suggest {
     const char * soundslike_chars() {
       return use_soundslike ? lang->soundslike_chars() : lang->stripped_chars();
     }
-    
 
     void try_sound(const char *, int ms);
     void add_nearmiss(const char * word, int ms, bool count, 
@@ -681,7 +680,7 @@ namespace aspeller_default_suggest {
 #    endif
       if (i->repl_list != 0) {
  	string::size_type pos;
- 	while (!i->repl_list->at_end()) {
+	do {
  	  dup_pair = duplicates_check.insert(fix_case(i->repl_list->word));
  	  if (dup_pair.second && 
  	      ((pos = dup_pair.first->find(' '), pos == String::npos)
@@ -689,7 +688,7 @@ namespace aspeller_default_suggest {
  	       : (speller->check((String)dup_pair.first->substr(0,pos)) 
  		  && speller->check((String)dup_pair.first->substr(pos+1))) ))
  	    near_misses_final->push_back(*dup_pair.first);
- 	}
+ 	} while (i->repl_list->adv());
       } else {
 	dup_pair = duplicates_check.insert(fix_case(i->word));
 	if (dup_pair.second )

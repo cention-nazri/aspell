@@ -70,51 +70,53 @@ namespace aspeller {
   PosibErr<void> SpellerImpl::store_replacement(MutableString mis, 
 						MutableString cor)
   {
-    return store_replacement(mis.str(),cor.str(), true);
+    return SpellerImpl::store_replacement(mis.str(),cor.str(), true);
   }
-
 
   PosibErr<void> SpellerImpl::store_replacement(const String & mis, 
 						const String & cor, 
 						bool memory) 
   {
     if (ignore_repl) return no_err;
-// FIXME
-//     DataSetCollection::Iterator i = wls_->locate(personal_repl_id);
-//     if (i == wls_->end()) return no_err;
-//     String::size_type pos;
-//     Enumeration<StringEnumeration> sugels 
-//       = intr_suggest_->suggest(mis.c_str()).elements();
-//     const char * first_word = sugels.next();
-//     const char * w1;
-//     const char * w2 = 0;
-//     if (pos = cor.find(' '), pos == String::npos 
-// 	? (w1 =check_simple(cor).word) != 0
-// 	: ((w1 = check_simple((String)cor.substr(0,pos)).word) != 0
-// 	   && (w2 = check_simple((String)cor.substr(pos+1)).word) != 0) ) { 
-//       // cor is a correct spelling
-//       String cor_orignal_casing(w1);
-//       if (w2 != 0) {
-// 	cor_orignal_casing += cor[pos];
-// 	cor_orignal_casing += w2;
-//       }
-//       if (first_word == 0 || cor != first_word) {
-// 	static_cast<WritableReplacementSet *>(i->data_set)
-// 	  ->add(aspeller::to_lower(lang(), mis), 
-// 		cor_orignal_casing);
-//       }
+    DataSetCollection::Iterator i = wls_->locate(personal_repl_id);
+    if (i == wls_->end()) return no_err;
+    String::size_type pos;
+    StackPtr<StringEnumeration> sugels(intr_suggest_->suggest(mis.c_str()).elements());
+    const char * first_word = sugels->next();
+    CheckInfo w1, w2;
+    String cor1, cor2;
+    bool correct = false;
+    if (pos = cor.find(' '), pos == String::npos) {
+      cor1 = cor;
+      correct = check_affix(cor, w1, 0);
+    } else {
+      cor1 = (String)cor.substr(0,pos);
+      cor2 = (String)cor.substr(pos+1);
+      correct = check_affix(cor1, w1, 0) && check_affix(cor2, w2, 0);
+    }
+    if (correct) {
+      String cor_orignal_casing(cor1);
+      if (!cor2.empty()) {
+ 	cor_orignal_casing += cor[pos];
+ 	cor_orignal_casing += cor2;
+      }
+      if (first_word == 0 || cor != first_word) {
+ 	static_cast<WritableReplacementSet *>(i->data_set)
+ 	  ->add(aspeller::to_lower(lang(), mis), 
+ 		cor_orignal_casing);
+      }
       
-//       if (memory && prev_cor_repl_ == mis) 
-// 	store_replacement(prev_mis_repl_, cor, false);
+      if (memory && prev_cor_repl_ == mis) 
+ 	store_replacement(prev_mis_repl_, cor, false);
       
-//     } else { // cor is not a correct spelling
+    } else { //!correct
       
-//       if (memory) {
-// 	if (prev_cor_repl_ != mis)
-// 	  prev_mis_repl_ = mis;
-// 	prev_cor_repl_ = cor;
-//       }
-//     }
+      if (memory) {
+	 if (prev_cor_repl_ != mis)
+ 	  prev_mis_repl_ = mis;
+ 	prev_cor_repl_ = cor;
+       }
+    }
     return no_err;
   }
 
@@ -551,16 +553,28 @@ namespace aspeller {
     
     change_id(ltemp, main_id);
 
+    use_soundslike = true;
+
+    {
+      DataSetCollection::Iterator i   = wls_->begin();
+      DataSetCollection::Iterator end = wls_->end();
+      for (; i != end; ++i) {
+	if (const BasicWordSet * ws = dynamic_cast<const BasicWordSet *>(i->data_set)) 
+	  use_soundslike = use_soundslike && ws->have_soundslike;
+      }
+    }
+
     StringList extra_dicts;
     config_->retrieve_list("extra-dicts", &extra_dicts);
     StringListEnumeration els = extra_dicts.elements_obj();
     const char * dict_name;
     while ( (dict_name = els.next()) != 0)
       RET_ON_ERR(add_data_set(dict_name,*config_, this));
-    
+
     {
       BasicWordSet * temp;
       temp = new_default_writable_word_set();
+      temp->have_soundslike = use_soundslike;
       PosibErrBase pe = temp->load(config_->retrieve("personal-path"),config_);
       if (pe.has_err(cant_read_file))
 	temp->set_check_lang(lang_name(), config_);
@@ -573,6 +587,7 @@ namespace aspeller {
     {
       BasicWordSet * temp;
       temp = new_default_writable_word_set();
+      temp->have_soundslike = use_soundslike;
       temp->set_check_lang(lang_name(), config_);
       steal(temp);
       change_id(temp, session_id);
@@ -580,6 +595,7 @@ namespace aspeller {
      
     {
       BasicReplacementSet * temp = new_default_writable_replacement_set();
+      temp->have_soundslike = use_soundslike;
       PosibErrBase pe = temp->load(config_->retrieve("repl-path"),config_);
       if (pe.has_err(cant_read_file))
 	temp->set_check_lang(lang_name(), config_);
@@ -634,8 +650,6 @@ namespace aspeller {
       }
     }
 
-    use_soundslike = true;
-
     const std::type_info * ti = 0;
     while (!all_ws.empty())
     {
@@ -667,7 +681,6 @@ namespace aspeller {
       }
       if (cur->use_to_suggest) {
         suggest_ws.push_back(inf);
-        use_soundslike = use_soundslike && inf.ws->have_soundslike;
         if (inf.ws->affix_compressed) suggest_affix_ws.push_back(inf);
       }
     }

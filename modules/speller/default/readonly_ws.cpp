@@ -30,6 +30,8 @@
 //   '-'.
 
 #include <map>
+// FIXME: There is NO real need to use a map here.  Simpily use a vector or list
+//   and then sort when done
 
 using std::pair;
 

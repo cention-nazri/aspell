@@ -156,6 +156,8 @@ namespace aspeller {
     virtual bool stripped_lookup(const char * sondslike, WordEntry &) const {return false;}
 
     // garanteed to be constant time
+    // FIXME: are both functions needed since a WordEntry can easily be created from
+    //   just a word?
     virtual bool soundslike_lookup(const WordEntry &, WordEntry &) const = 0;
     virtual bool soundslike_lookup(const char * sondslike, WordEntry &) const = 0;
 
@@ -181,6 +183,8 @@ namespace aspeller {
       basic_type = basic_replacement_set;
     }
 
+    // FIXME: are both functions needed since a WordEntry can easily be created from
+    //   just a word?
     virtual bool repl_lookup(const WordEntry &, WordEntry &) const = 0;
     virtual bool repl_lookup(const char * word, WordEntry &) const = 0;
   };

@@ -1045,6 +1045,8 @@ namespace acommon {
 
   char mode_string[128] = "filter mode";
 
+  // FIXME: CANT_CHANGE should be the default once attached
+
   static const KeyInfo config_keys[] = {
     {"actual-dict-dir", KeyInfoString, "<dict-dir^master>", 0}
     , {"actual-lang",     KeyInfoString, "!actual-lang", 0}
