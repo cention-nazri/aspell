@@ -40,7 +40,7 @@
 
 #include "gettext.h"
 
-//#include "iostream.hpp"
+#include "iostream.hpp"
 
 #define DEFAULT_LANG "en_US"
 
@@ -811,6 +811,7 @@ namespace acommon {
   PosibErr<void> Config::set(Entry * entry0, bool do_unescape)
   {
     StackPtr<Entry> entry(entry0);
+
     if (entry->action == NoOp)
       entry->key = base_name(entry->key.str(), &entry->action);
 
@@ -931,6 +932,14 @@ namespace acommon {
 
       entry->key = ki->name;
       
+      // FIXME: This is the correct thing to do but it causes problems
+      //        with changing a filter mode in "pipe" mode and probably
+      //        elsewhere.
+      //if (attached_ && !(ki->flags & KEYINFO_MAY_CHANGE)) {
+      //  pe = make_err(cant_change_value, entry->key);
+      //  goto error;
+      //}
+
       int place_holder = entry->place_holder;
       
       if (conv && ki->flags & KEYINFO_UTF8)
