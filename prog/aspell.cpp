@@ -1346,8 +1346,15 @@ void expand()
     CharVector buf; buf.append(word.c_str(), word.size() + 1);
     char * w = buf.data();
     char * af = strchr(w, '/');
-    af[0] = '\0';
-    lang->affix()->expand(ParmString(w, af-w), ParmString(af + 1), cl);
+    size_t s;
+    if (af != 0) {
+      s = af - w;
+      *af++ = '\0';
+    } else {
+      s = strlen(w);
+      af = w + s;
+    }
+    lang->affix()->expand(ParmString(w, s), ParmString(af), cl);
     const aspeller::CheckInfo * ci = check_list_data(cl);
     if (level <= 2) {
       if (level == 2) 
