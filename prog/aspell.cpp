@@ -395,6 +395,9 @@ DocumentChecker * new_checker(Speller * speller,
 
 void pipe() 
 {
+  assert(setvbuf(stdin, 0, _IOLBF, 0) == 0);
+  assert(setvbuf(stdout, 0, _IOLBF, 0) == 0);
+
   bool terse_mode = true;
   bool do_time = options->retrieve_bool("time");
   clock_t start,finish;
@@ -406,9 +409,10 @@ void pipe()
          << (clock() - start)/(double)CLOCKS_PER_SEC << "\n";
   bool print_star = true;
   StackPtr<DocumentChecker> checker(new_checker(speller, print_star));
+  int c;
   const char * w;
-  char line[1024];
-  char * l;
+  CharVector buf;
+  char * line;
   char * word;
   char * word2;
   int    ignore;
@@ -417,8 +421,12 @@ void pipe()
   print_ver();
 
   for (;;) {
-    l = fgets(line, 256, stdin);
-    if (l == 0) break;
+    buf.clear();
+    while (c = getchar(), c != '\n' && c != EOF)
+      buf.push_back(static_cast<char>(c));
+    buf.push_back('\0');
+    if (c == EOF) break;
+    line = buf.data();
     ignore = 0;
     switch (line[0]) {
     case '\n':
@@ -740,6 +748,9 @@ void check(bool interactive)
 
 void filter()
 {
+  assert(setvbuf(stdin, 0, _IOLBF, 0) == 0);
+  assert(setvbuf(stdout, 0, _IOLBF, 0) == 0);
+  
 }
 
 
