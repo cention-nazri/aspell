@@ -57,8 +57,8 @@
 #include "stack_ptr.hpp"
 #include "suggest.hpp"
 
-#include "iostream.hpp"
-#define DEBUG_SUGGEST
+//#include "iostream.hpp"
+//#define DEBUG_SUGGEST
 
 using namespace aspeller;
 using namespace acommon;
