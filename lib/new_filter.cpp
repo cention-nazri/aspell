@@ -158,20 +158,22 @@ namespace acommon
       addcount=0;
       //fprintf(stderr, "Loading %s ... \n", filter_name);
       FilterEntry * f = find_individual_filter(filter_name);
-  //Changed for reflecting new filter loadability dependent uppon existance of libdl
-  //if there is not libdl than the following behaves like as ever
-  //means filter name different from standard filters is rejected
-  //if libdl is existent filter name  different from standard filters is checked against
-  //all filters added. If the filter is contained the corresponding decoder encoder and
-  //filter is loaded.
+      // Changed for reflecting new filter loadability dependent uppon
+      // existance of libdl if there is not libdl than the following
+      // behaves like as ever means filter name different from
+      // standard filters is rejected if libdl is existent filter name
+      // different from standard filters is checked against all
+      // filters added. If the filter is contained the corresponding
+      // decoder encoder and filter is loaded.
 #ifdef HAVE_LIBDL
       if (!f) {
 
-        for (currentfilter=(ConfigModule*)filter_modules_begin+standard_filters_size;
+        for (currentfilter = (ConfigModule*)filter_modules_begin+standard_filters_size;
 	     currentfilter < (ConfigModule*)filter_modules_end; 
-	     currentfilter++) {
-          if (strcmp(currentfilter->name,filter_name) == 0) {
-            break;
+	     currentfilter++) 
+	  {
+	    if (strcmp(currentfilter->name,filter_name) == 0) {
+	      break;
           }
         }
         if (currentfilter >= filter_modules_end) {
@@ -182,9 +184,9 @@ namespace acommon
             ((filterhandle[2]=dlopen(currentfilter->load,RTLD_NOW)) == NULL)) {
           return make_err(cant_dlopen_file,"filter setup",filter_name,dlerror());
         }
-        ((void *)dynamicfilter.decoder) = dlsym(filterhandle[0].val(),"new_decoder");
-        ((void *)dynamicfilter.encoder) = dlsym(filterhandle[1].val(),"new_encoder");
-        ((void *)dynamicfilter.filter)  = dlsym(filterhandle[2].val(),"new_filter");
+        dynamicfilter.decoder = (FilterFun *)dlsym(filterhandle[0].val(),"new_decoder");
+        dynamicfilter.encoder = (FilterFun *)dlsym(filterhandle[1].val(),"new_encoder");
+        dynamicfilter.filter  = (FilterFun *)dlsym(filterhandle[2].val(),"new_filter");
         if (!dynamicfilter.decoder &&
 	    !dynamicfilter.encoder &&
 	    !dynamicfilter.filter) {
@@ -242,14 +244,15 @@ namespace acommon
   }
 
   
-//the FilterOptionExpandNotifier was added in order to be able to expand filter
-//and corresponding Option list during runtime.
-//It implements the entire loadability if not loaded and handed to Config class
-//via addnotifier there will not be any filter loadability
-//If shared between multiple config objects having their own
-//FilterOptionExpandNotifier class each of them increments the
-//filter_modules_referencing counter in order to indicate that they too changes
-//the filter modules structure
+  // the FilterOptionExpandNotifier was added in order to be able to
+  // expand filter and corresponding Option list during runtime.
+  // It implements the entire loadability if not loaded and handed to
+  // Config class via addnotifier there will not be any filter
+  // loadability
+  // If shared between multiple config objects having their own
+  // FilterOptionExpandNotifier class each of them increments the
+  // filter_modules_referencing counter in order to indicate that they
+  // too changes the filter modules structure
   class FilterOptionExpandNotifier : public Notifier {
     PathBrowser optionpath;
     PathBrowser filterpath;
@@ -348,8 +351,8 @@ namespace acommon
           }
         }
         free((ConfigModule*)filter_modules_begin);
-        (ConfigModule*)filter_modules_begin=&filter_modules[0];
-        (ConfigModule*)filter_modules_end=filter_modules_begin+filter_modules_size/
+        filter_modules_begin=(ConfigModule*)&filter_modules[0];
+        filter_modules_end=(ConfigModule*)filter_modules_begin+filter_modules_size/
                                                                sizeof(ConfigModule);
       }
       if (config != NULL) {
@@ -364,7 +367,7 @@ namespace acommon
 
   PosibErr<void> FilterOptionExpandNotifier::item_added(const KeyInfo * key, ParmString value) {
     int namelength=strlen(key->name);
-    ConfigModule * current=(ConfigModule*)filter_modules_begin;
+    ConfigModule * current = (ConfigModule*)filter_modules_begin;
     String optionname="";
     String filtername="lib";
     FStream options;
@@ -563,16 +566,16 @@ bool emptyfile=true;
               begin[optsize-1].name=begin[optsize-1].def=begin[optsize-1].desc=NULL;
             }
             if (norealoption && (begin != NULL)) {
-              begin[0].type=KeyInfoDescript;
-              ((char*)begin[0].def)=NULL;
+              begin[0].type = KeyInfoDescript;
+              begin[0].def  = NULL;
               if (begin[0].desc != NULL) {
-                free(((char*)begin[0].desc));
-                ((char*)begin[0].desc)=NULL;
+                free((char*)begin[0].desc);
+                begin[0].desc = NULL;
               }
               if (optionkeyvalue.length() == 0) {
                 optionkeyvalue="-";
               }
-              if ((((char*)begin[0].desc)=strdup(optionkeyvalue.c_str())) == NULL ) {
+              if ((begin[0].desc=strdup(optionkeyvalue.c_str())) == NULL ) {
                 if (begin !=NULL) {
                   release_options(begin,begin+optsize);
                   free(begin);
@@ -580,17 +583,17 @@ bool emptyfile=true;
                 return make_err(cant_describe_filter,"add_filter",value);
               }
               if (begin[0].name == NULL) {
-                if ((((char*)begin[0].name)=
-                     malloc(strlen(value)+strlen("filter-")+1)) == NULL) {
+                if ((begin[0].name = 
+		     (const char *)malloc(strlen(value)+strlen("filter-")+1)) == NULL) {
                   if (begin !=NULL) {
                     release_options(begin,begin+optsize);
                     free(begin);
                   }
                   return make_err(cant_describe_filter,"add_filter",value);
                 }
-                ((char*)begin[0].name)[0]='\0';
-                strncat(((char*)begin[0].name),"filter-",7);
-                strncat(((char*)begin[0].name),value,strlen(value));
+                ((char *)begin[0].name)[0]='\0';
+                strncat((char*)begin[0].name,"filter-",7);
+                strncat((char*)begin[0].name,value,strlen(value));
               }
             }
             else {
@@ -605,7 +608,7 @@ bool emptyfile=true;
                 sprintf(linenumber,"%i",linecount);
                 return make_err(identical_option,"add_filter",optionname,linenumber);
               }
-              if ((((char*)begin[optsize-1].name)=strdup(optionkeyvalue.c_str())) == NULL) {
+              if (((begin[optsize-1].name)=strdup(optionkeyvalue.c_str())) == NULL) {
                 if (begin !=NULL) {
                   release_options(begin,begin+optsize);
                   free(begin);
@@ -613,8 +616,8 @@ bool emptyfile=true;
                 return make_err(cant_extend_options,"add_filter",value);
               }
               begin[optsize-1].type=KeyInfoBool;
-              ((char*)begin[optsize-1].def)=NULL;
-              ((char*)begin[optsize-1].desc)=NULL;
+              begin[optsize-1].def  = NULL;
+              begin[optsize-1].desc = NULL;
               begin[optsize-1].otherdata[0]='\0';
               activeoption=1;
             }
@@ -661,7 +664,7 @@ bool emptyfile=true;
                 free((void*)begin[optsize-1].def);
               }
             }  
-            if ((((char*)begin[optsize-1].def)=strdup(optionkeyvalue.c_str()) ) == NULL) {
+            if (((begin[optsize-1].def)=strdup(optionkeyvalue.c_str()) ) == NULL) {
               if (begin != NULL) {
                 release_options(begin,begin+optsize);
                 free(begin);
@@ -672,7 +675,7 @@ bool emptyfile=true;
           }
           if ((optionkey.no_case() == "desc") ||
               (optionkey.no_case() == "description")) {
-            if ((((char*)begin[optsize-1].desc)=strdup(optionkeyvalue.c_str())) == NULL) {
+            if (((begin[optsize-1].desc)=strdup(optionkeyvalue.c_str())) == NULL) {
               if (begin != NULL) {
                 release_options(begin,begin+optsize);
                 free(begin);
@@ -719,8 +722,8 @@ bool emptyfile=true;
             return make_err(cant_extend_options,"add_filter",value);
           }
           memcpy(mbegin,filter_modules_begin,(modsize)*sizeof(ConfigModule));
-          ((ConfigModule*)filter_modules_begin)=mbegin;
-          ((ConfigModule*)filter_modules_end)=mbegin+modsize;
+          filter_modules_begin = mbegin;
+          filter_modules_end   = mbegin+modsize;
           config->set_modules(filter_modules_begin,filter_modules_end);
         }
         if ((mbegin=(ConfigModule*)realloc((ConfigModule*)filter_modules_begin,
@@ -731,12 +734,12 @@ bool emptyfile=true;
           }
           return make_err(cant_extend_options,"add_filter",value);
         }
-        (char*)(mbegin[modsize-1].name)=strdup(value);
-        (char*)(mbegin[modsize-1].load)=strdup(filtername.c_str());
-        (KeyInfo*)(mbegin[modsize-1].begin)=begin;
-        (KeyInfo*)(mbegin[modsize-1].end)=begin+optsize;
-        ((ConfigModule*)filter_modules_begin)=mbegin;
-        ((ConfigModule*)filter_modules_end)=mbegin+modsize;
+        mbegin[modsize-1].name  = strdup(value);
+        mbegin[modsize-1].load  = strdup(filtername.c_str());
+        mbegin[modsize-1].begin = begin;
+        mbegin[modsize-1].end   = begin+optsize;
+        filter_modules_begin = mbegin;
+        filter_modules_end   = mbegin+modsize;
         config->set_modules(filter_modules_begin,filter_modules_end);
         return no_err;
       }

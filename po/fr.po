@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Aspell 0.51\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-01-26 04:48-0500\n"
+"POT-Creation-Date: 2004-01-30 19:30-0500\n"
 "PO-Revision-Date: 2004-01-06 23:25+0200\n"
 "Last-Translator: Thierry Thomas <thierry@pompo.net>\n"
 "Language-Team: French <aspell-devel@gnu.org>\n"
@@ -519,7 +519,7 @@ msgstr ""
 "La création et la fusion de listes de remplacement ne sont \n"
 "pas encore implémentées.\n"
 
-#: prog/aspell.cpp:1480
+#: prog/aspell.cpp:1482
 #, fuzzy, c-format
 msgid ""
 "\n"
@@ -577,7 +577,7 @@ msgstr ""
 "[options] à choisir parmi :\n"
 "\n"
 
-#: prog/aspell.cpp:1511
+#: prog/aspell.cpp:1513
 #, c-format
 msgid ""
 "\n"

@@ -73,7 +73,7 @@ namespace acommon {
   {
     const StringMapNode * * i = 0;
 
-    (StringMapNode * * )i = ((StringMap * )this)->find(key);
+    i = (const StringMapNode * *)((StringMap * )this)->find(key);
     if (*i == 0) {
       return 0;
     } else {

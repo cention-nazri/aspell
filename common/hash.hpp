@@ -258,7 +258,7 @@ namespace acommon {
   template <typename K, typename HF, typename E, bool m>
   struct HashSetParms 
   {
-    typedef const K Value;
+    typedef K Value;
     typedef const K Key;
     static const bool is_multi = m;
     HF hash;

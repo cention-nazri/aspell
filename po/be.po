@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.51\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-01-26 04:48-0500\n"
+"POT-Creation-Date: 2004-01-30 19:30-0500\n"
 "PO-Revision-Date: 2004-01-06 16:34+0200\n"
 "Last-Translator: Vital khilko <dojlid@mova.org>\n"
 "Language-Team: Belarusian <i18n@mova.org>\n"
@@ -499,7 +499,7 @@ msgstr "Выбачайце, трэба перазапісаць \"%s\""
 msgid "Sorry \"create/merge repl\" is currently unimplemented.\n"
 msgstr "Выбачайце пакуль гэтая апэрацыя непрацаздольная.\n"
 
-#: prog/aspell.cpp:1480
+#: prog/aspell.cpp:1482
 #, fuzzy, c-format
 msgid ""
 "\n"
@@ -556,7 +556,7 @@ msgstr ""
 "[выбары] адзін з наступных выбараў:\n"
 "\n"
 
-#: prog/aspell.cpp:1511
+#: prog/aspell.cpp:1513
 #, c-format
 msgid ""
 "\n"

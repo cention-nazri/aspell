@@ -558,7 +558,7 @@ namespace acommon {
   PosibErr<const MDInfoListAll *>
   MDInfoListofLists::get_lists(Config * c)
   {
-    LOCK(lock);
+    Lock l(lock);
     Config * config = (Config *)c; // FIXME: WHY?
     int & pos = config->md_info_list_index;
     StringList dirs;

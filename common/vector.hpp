@@ -28,7 +28,7 @@ namespace acommon
       insert(this->end(), begin, begin+size);
     }
     int alloc(int s) {
-      int pos = size();
+      int pos = this->size();
       this->resize(pos + s);
       return pos;
     }
@@ -44,11 +44,11 @@ namespace acommon
 
     template <typename U>
     U * datap() { 
-      return reinterpret_cast<U * >(&front());
+      return reinterpret_cast<U * >(&this->front());
     }
     template <typename U>
     U * datap(int pos) {
-      return reinterpret_cast<U * >(&front() + pos);
+      return reinterpret_cast<U * >(&this->front() + pos);
     }
   };
 }

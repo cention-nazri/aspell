@@ -240,7 +240,6 @@ namespace aspeller {
   private:
     class FindIterator
     {
-      friend class HashTable;
     public: // but don't use
       const vector_type * vector;
       const Parms       * parms;
@@ -263,7 +262,7 @@ namespace aspeller {
       ConstFindIterator() {}
       ConstFindIterator(const HashTable * ht, const key_type & k) 
 	: FindIterator(ht,k) {}
-      const value_type & deref() const {return (*this->vector)[i];}
+      const value_type & deref() const {return (*this->vector)[this->i];}
     };
 
     class MutableFindIterator : public FindIterator 
@@ -273,7 +272,7 @@ namespace aspeller {
       MutableFindIterator(HashTable * ht, const key_type & k) 
 	: FindIterator(ht,k) {}
       value_type & deref() const {
-	return (*const_cast<vector_type *>(this->vector))[i];
+	return (*const_cast<vector_type *>(this->vector))[this->i];
       }
     };
     
