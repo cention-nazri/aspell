@@ -9,8 +9,8 @@ namespace aspeller {
   // limit_edit_distance finds the shortest edit distance but will
   // stop and return a number at least as large as LARGE_NUM if it has
   // to do more edits than a set limit.
-  // Note that this does NOT bean than the score returned <= limit*w.max
-  // as sub vs submarine will return 6*(cost of insertion) no matter what
+  // Note that this does NOT mean that the score returned is <= limit*w.max
+  // as "sub" vs "submarine" will return 6*(cost of insertion) no matter what
   // the limit is.
   // The edit distance is 
   // (cost of swap)(# of swaps) + (cost of deletion)(# of deletions) 
@@ -19,11 +19,13 @@ namespace aspeller {
 
   // Preconditions:
   //  (limit+1)*w.min < limit*w.max
-  //  limit <= 5 (use edit_distance if n > 5)
+  //  limit <= 5 (use edit_distance if limit > 5)
+  // where w.min and w.max is the minimum and maximum cost of an edit
+  // respectfully.
 
   // The running time is asymptotically bounded above by 
   // (3^l)*n where l is the limit and n is the maxium of strlen(a),strlen(b)
-  // Based ob my informal tests however the n does not really matter
+  // Based on my informal tests, however, the n does not really matter
   // and the running time is more like (3^l).
 
   // limit_edit_distance, based on my informal tests, turns out to be
@@ -31,7 +33,7 @@ namespace aspeller {
   // smaller for short strings (<= 5) and less than for longer strings
 
   // limit2_edit_distance(a,b,w) = limit_edit_distance(a,b,2,w)
-  //  but is roughly 2/3's faster
+  // but is roughly 2/3's faster
 
   struct EditDist {
     int          score;
