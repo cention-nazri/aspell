@@ -24,17 +24,30 @@ namespace acommon {
     free_segments();
   }
 
-  void Checker::free_segments(Segment * l)
+  void Checker::free_segments(Segment * f, Segment * l)
   {
-    while (first && first != l) {
-      Segment * next = first->next;
-      delete first;
-      first = next;
+    assert(!f || l);
+
+    if (!first) return;
+
+    Segment * cur = f ? f->next : first;
+    while (cur && cur != l) {
+      Segment * next = cur->next;
+      if (cur->which && 
+          (!next || cur->which != next->which) &&
+          (!f    || f->which != cur->which))
+        string_freed_callback_(string_freed_callback_data_, cur->which);
+      delete cur;
+      cur = next;
     }
-    if (first)
-      first->prev = 0;
-    else
-      last = 0;
+
+    if (!f) {
+      first = cur;
+      if (first)
+        first->prev = 0;
+      else
+        last = 0;
+    }
   }
 
   void Checker::init(Speller * speller)
@@ -90,15 +103,17 @@ namespace acommon {
       last->next = seg;
       last = seg;
       if (!span_strings_) add_separator();
-    } else if (filter_) {
-      proc_str_.clear();
-      conv_->decode(str, size, proc_str_);
-      proc_str_.append(0);
-      FilterChar * begin = proc_str_.pbegin();
-      FilterChar * end   = proc_str_.pend() - 1;
-      filter_->process(begin, end);
     } else {
-      // do nothing
+      if (filter_) {
+        proc_str_.clear();
+        conv_->decode(str, size, proc_str_);
+        proc_str_.append(0);
+        FilterChar * begin = proc_str_.pbegin();
+        FilterChar * end   = proc_str_.pend() - 1;
+        filter_->process(begin, end);
+      }
+      if (which)
+        string_freed_callback_(string_freed_callback_data_, which);
     }
   }
 
@@ -138,13 +153,8 @@ namespace acommon {
       // Free any segments between token.b and token, exclusive, as
       // they are no longer needed, and there won't be any refrences
       // to them after this function
-      if (token.b.seg != token.e.seg) {
-        Segment * tmp = token.b.seg;
-        while (tmp->next != token.e.seg) {
-          tmp = tmp->next;
-          delete tmp->prev;
-        }
-      }
+      if (token.b.seg != token.e.seg) 
+        free_segments(token.b.seg, token.e.seg);
       
       prev_seg->end = token.b.pos;
       prev_seg->next = seg;

@@ -110,7 +110,7 @@ namespace aspeller {
 
     token.correct = speller->check(word);
 
-    free_segments(prev_.seg);
+    free_segments(0, prev_.seg);
 
     //fprintf(stderr, ">>%s\n", word.str());
 

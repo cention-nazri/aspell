@@ -105,8 +105,11 @@ namespace acommon {
     
     CheckerToken token;
 
-    void free_segments(Segment * l = 0); // free up but not including "l".
-    // if l is NULL than free all segments
+    void free_segments(Segment * f = 0, Segment * l = 0); 
+    // free all segments between f and l, but not including f and l
+    // if f and l is null than free all segments
+    // if f is null than free all segments up to l
+    // if f is non-null than l must also be non-null
     
     // this needs to be called by the derived class in the constructor
     void init(Speller * speller);
@@ -139,7 +142,7 @@ namespace acommon {
     //
     // A refrence to the orignal string is NOT kept, therefore you
     // are free to delete or modify the original string.  However 
-    // if the need_more_callback is defined you might want to keep
+    // if the more_data_callback is defined you might want to keep
     // the string around ...
 
     void add_separator();
