@@ -15,6 +15,19 @@
 
 #include <stdio.h>
 
+#if defined(__CYGWIN__) || defined (_WIN32)
+
+#  include <io.h>
+#  include <fcntl.h>
+
+#  define SETBIN(fno)  _setmode( _fileno( fno ), _O_BINARY )
+
+#else
+
+#  define SETBIN(fno)
+
+#endif
+
 void usage () 
 {
   fputs("Compresses or uncompresses sorted word lists.\n"     , stderr);
@@ -45,7 +58,7 @@ int main (int argc, const char *argv[]) {
 
     usage();
     return 1;
-
+    
   } else if (argv[1][0] == 'c') {
 
     char s1[256];
@@ -53,6 +66,8 @@ int main (int argc, const char *argv[]) {
     char * prev = s2;
     char * cur = s1;
     *prev = '\0';
+
+    SETBIN (stdout);
 
     while (get_word(stdin, cur)) {
       int i = 0;
@@ -77,6 +92,9 @@ int main (int argc, const char *argv[]) {
     char cur[256];
     int i;
     int c;
+
+    SETBIN (stdin);
+
     i = getc(stdin);
     while (i != -1 ) {
       if (i == 0)

@@ -27,19 +27,17 @@ static void print_word_list(AspellSpeller * speller,
   }
 }
 
-static void check_for_error(AspellSpeller * speller)
-{
-  if (aspell_speller_error(speller) != 0) {
-    printf("Error: %s\n", aspell_speller_error_message(speller));
+#define check_for_error(speller)                                  \
+  if (aspell_speller_error(speller) != 0) {                       \
+    printf("Error: %s\n", aspell_speller_error_message(speller)); \
+    break;                                                        \
   }
-}
 
-static void check_for_config_error(AspellConfig * config)
-{
-  if (aspell_config_error(config) != 0) {
-    printf("Error: %s\n", aspell_config_error_message(config));
+#define check_for_config_error(config)                            \
+  if (aspell_config_error(config) != 0) {                         \
+    printf("Error: %s\n", aspell_config_error_message(config));   \
+    break;                                                        \
   }
-}
 
 static void check_document(AspellSpeller * speller, const char * file);
 
@@ -61,10 +59,6 @@ int main(int argc, const char *argv[])
   config = new_aspell_config();
 
   aspell_config_replace(config, "lang", argv[1]);
-
-  aspell_config_replace(config, "sug-mode", "ultra"); 
-  /* to make things faster, espacally when not compiled with optimiztion, 
-     REMOVE BEFORE RELEASE */
 
   if (argc >= 3 && argv[2][0] != '-' && argv[2][1] != '\0')
     aspell_config_replace(config, "size", argv[2]);
