@@ -71,7 +71,6 @@ libaspell_la_SOURCES =\
   modules/speller/default/language.cpp\
   modules/speller/default/leditdist.cpp\
   modules/speller/default/affix.cpp\
-  lib/filter-c.cpp\
   lib/word_list-c.cpp\
   lib/info-c.cpp\
   lib/mutable_container-c.cpp\
