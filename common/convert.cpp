@@ -1051,10 +1051,12 @@ namespace acommon {
     }
 
     //printf("%s => %s\n", conv->in_code(),  conv->out_code());
-
+    
     if (simple) return conv.release();
 
     // now add conv filters to the data stream
+
+    return conv.release();
   }
 
   PosibErr<Decode *> Decode::get_new(const String & key, const Config * c)
