@@ -38,7 +38,7 @@ CheckerString::CheckerString(Speller * speller,
 
   end_ = lines_.end() - 1;
   cur_line_ = lines_.begin();
-  diff = 0;
+  diff_ = 0;
   has_repl_ = false;
 
   checker_.reset(new_document_checker(speller, 0, 0));
