@@ -180,7 +180,8 @@ struct CondsLookupParms {
 
 typedef HashTable<CondsLookupParms> CondsLookup;
 
-void encodeit(CondsLookup &, ObjStack &, AffEntry * ptr, char * cs);
+static void encodeit(CondsLookup &, ObjStack &, 
+                     AffEntry * ptr, char * cs);
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -203,40 +204,9 @@ PosibErr<void> AffixMgr::setup(ParmString affpath, Conv & iconv)
 }
 
 AffixMgr::AffixMgr(const Language * l) 
-  : lang(l), data_buf(1024*16)
-{
-}
+  : lang(l), data_buf(1024*16) {}
 
-AffixMgr::~AffixMgr()
-{
-#if 0
-  // pass through linked prefix entries and clean up
-  for (int i=0; i < SETSIZE ;i++) {
-    pFlag[i] = NULL;
-    PfxEntry * ptr = pStart[i];
-    PfxEntry * nptr = NULL;
-    while (ptr) {
-      nptr = ptr->next;
-      delete ptr;
-      ptr = nptr;
-      nptr = NULL;
-    }
-  }
-
-  // pass through linked suffix entries and clean up
-  for (int j=0; j < SETSIZE ; j++) {
-    sFlag[j] = NULL;
-    SfxEntry * ptr = sStart[j];
-    SfxEntry * nptr = NULL;
-    while (ptr) {
-      nptr = ptr->next;
-      delete ptr;
-      ptr = nptr;
-      nptr = NULL;
-    }
-  }
-#endif
-}
+AffixMgr::~AffixMgr() {}
 
 static inline void MAX(int & lhs, int rhs) 
 {
@@ -626,7 +596,8 @@ void Conds::normalize(char * str)
 // file affentry.cxx which describes what is going on here
 // in much more detail
 
-void encodeit(CondsLookup & l, ObjStack & buf, AffEntry * ptr, char * cs)
+static void encodeit(CondsLookup & l, ObjStack & buf, 
+                     AffEntry * ptr, char * cs)
 {
   byte c;
   int i, j, k;
