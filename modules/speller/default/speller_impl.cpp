@@ -21,6 +21,8 @@
 #include "convert.hpp"
 #include "stack_ptr.hpp"
 
+#include "iostream.hpp"
+
 namespace aspeller {
   //
   // data_access functions

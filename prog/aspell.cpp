@@ -438,7 +438,7 @@ bool get_word_pair(char * line, char * & w1, char * & w2)
   *w2 = '\0';
   ++w2;
   w1 = trim_wspace(line);
-  w1 = trim_wspace(w2);
+  w2 = trim_wspace(w2);
   return true;
 }
 
@@ -573,7 +573,7 @@ void pipe()
 	case 'r':
 	  switch(line[3]) {
 	  case 'a':
-	    if (get_word_pair(line + 3, word, word2))
+	    if (get_word_pair(line + 4, word, word2))
 	      aspell_speller_store_replacement(speller, word, -1, word2, -1);
 	    break;
 	  }
@@ -581,11 +581,11 @@ void pipe()
 	case 'c':
 	  switch (line[3]) {
 	  case 's':
-	    if (get_word_pair(line + 3, word, word2))
+	    if (get_word_pair(line + 4, word, word2))
 	      BREAK_ON_ERR(err = config->replace(word, word2));
 	    break;
 	  case 'r':
-	    word = trim_wspace(line + 3);
+	    word = trim_wspace(line + 4);
 	    BREAK_ON_ERR_SET(config->retrieve(word), 
 			     PosibErr<String>, ret);
 	    break;

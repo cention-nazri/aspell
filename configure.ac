@@ -1,16 +1,13 @@
-AC_PREREQ(2.53)
-
 AC_INIT(GNU Aspell, 0.51)
 AC_CONFIG_SRCDIR(prog/aspell.cpp)
 AC_CANONICAL_SYSTEM
 AM_INIT_AUTOMAKE
 AM_CONFIG_HEADER(common/settings.h)
 
-
 AM_MAINTAINER_MODE
 
 AC_ARG_ENABLE(docdir, 
-[  --enable-docdir=DIR      documentation files in DIR [PREFIX/doc/aspell] ], 
+[  --enable-docdir=DIR      documentation files in DIR [PREFIX/doc/aspell] ],
 pkgdocdir=$enable_docdir, pkgdocdir=\${prefix}/share/doc/aspell )
 AC_SUBST(pkgdocdir)
 

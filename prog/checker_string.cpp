@@ -80,7 +80,7 @@ bool CheckerString::next_misspelling()
   if (has_repl_) {
     has_repl_ = false;
     CharVector word;
-    bool correct = aspell_speller_check(speller_, get_word(word), -1);
+    bool correct = aspell_speller_check(speller_, &*word_begin_, word_size_);
     if (!correct)
       return true;
     diff_ += word_size_ - tok_.len;
@@ -101,6 +101,8 @@ void CheckerString::replace(ParmString repl)
 {
   assert(word_size_ > 0);
   int offset = word_begin_ - cur_line_->begin();
+  aspell_speller_store_replacement(speller_, &*word_begin_, word_size_, 
+				   repl, -1);
   cur_line_->replace(word_begin_, word_begin_ + word_size_,
 		     repl.str(), repl.str() + repl.size());
   word_begin_ = cur_line_->begin() + offset;
