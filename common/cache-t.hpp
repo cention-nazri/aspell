@@ -2,13 +2,12 @@
 #define __ACOMMON_CACHE_T__
 
 #include <assert.h>
-#include <vector>
 
 #include "string.hpp"
 #include "lock.hpp"
 #include "cache.hpp"
 
-#include "iostream.hpp"
+//#include "iostream.hpp"
 
 namespace acommon {
 
@@ -38,29 +37,38 @@ private:
     }
     void add(Data * node) {
       node->next = first;
+      node->attached = true;
       first = node;
     }
     void del(Data * d) {
-      assert(d->refcount == 0);
       Cacheable * * cur = (Cacheable * *)(&first);
       while (*cur && *cur != d) cur = &((*cur)->next);
       assert(*cur);
       *cur = (*cur)->next;
+      d->attached = false;
     }
   };
   List list;
 public:
   PosibErr<Data *> get(const Key & key, Config * config) {
     LOCK(&lock);
-    //CERR << "Getting " << key << "\n";
     Data * n = list.find(key);
-    if (n) {/*CERR << "FOUND IN CACHE\n";*/ goto ret;}
-    { PosibErr<Data *> res = Data::get_new(key, config);
-      if (res.has_err()) {/*CERR << "ERROR\n";*/ return res;}
-      n = res.data;}
-    list.add(n);
-    n->cache = this;
-    //CERR << "LOADED FROM DISK\n";
+    {
+      //CERR << "Getting " << key << "\n";
+      if (n) {
+        //CERR << "FOUND IN CACHE\n"; 
+        goto ret;
+      }
+      PosibErr<Data *> res = Data::get_new(key, config);
+      if (res.has_err()) {
+        //CERR << "ERROR\n"; 
+        return res;
+      }
+      n = res.data;
+      list.add(n);
+      n->cache = this;
+      //CERR << "LOADED FROM DISK\n";
+    } 
   ret:
     n->refcount++;
     return n;
@@ -72,7 +80,8 @@ public:
     assert(d->refcount >= 0);
     if (d->refcount != 0) return;
     //CERR << "DEL\n";
-    list.del(d);
+    if (d->attached)
+      list.del(d);
     delete d;
   }
 };

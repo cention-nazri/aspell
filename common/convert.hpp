@@ -14,18 +14,32 @@
 #include "filter_char_vector.hpp"
 #include "stack_ptr.hpp"
 #include "filter.hpp"
+#include "cache.hpp"
 
 namespace acommon {
 
   class OStream;
   class Config;
 
-  struct Decode {
+  struct ConvBase : public Cacheable {
+    typedef const Config CacheConfig;
+    typedef const char * CacheKey;
+    String key;
+    bool cache_key_eq(const char * l) const  {return key == l;}
+    ConvBase() {}
+  private:
+    ConvBase(const ConvBase &);
+    void operator=(const ConvBase &);
+  };
+
+  struct Decode : public ConvBase {
     virtual PosibErr<void> init(ParmString code, const Config &) {return no_err;}
     virtual void decode(const char * in, int size,
 			FilterCharVector & out) const = 0;
+    static PosibErr<Decode *> get_new(const String &, const Config *);
+    virtual ~Decode() {}
   };
-  struct Encode {
+  struct Encode : public ConvBase {
     // null characters should be tretead like any other character
     // by the encoder.
     virtual PosibErr<void> init(ParmString, const Config &) {return no_err;}
@@ -35,8 +49,10 @@ namespace acommon {
     // return false
     virtual bool encode_direct(FilterChar * in, FilterChar * stop) const
       {return false;}
+    static PosibErr<Encode *> get_new(const String &, const Config *);
+    virtual ~Encode() {}
   };
-  struct DirectConv { // convert directly from in_code to out_code
+  struct DirectConv  { // convert directly from in_code to out_code
     // should not take owenership of decode and encode 
     // decode and encode guaranteed to stick around for the life
     // of the object
@@ -44,24 +60,26 @@ namespace acommon {
 				const Config &) {return no_err;}
     virtual void convert(const char * in, int size, 
 			 CharVector & out) const = 0;
+    virtual ~DirectConv() {}
   };
 
   typedef FilterCharVector ConvertBuffer;
 
   class Convert {
   private:
-    String in_code_;
-    String out_code_;
-    
-    StackPtr<Decode> decode_;
-    StackPtr<Encode> encode_;
+    CachePtr<Decode> decode_;
+    CachePtr<Encode> encode_;
     StackPtr<DirectConv> conv_;
 
     ConvertBuffer buf_;
 
     static const unsigned int null_len_ = 4; // POSIB FIXME: Be more precise
 
+    Convert(const Convert &);
+    void operator=(const Convert &);
+
   public:
+    Convert() {}
 
     // This filter is used when the convert method is called.  It must
     // be set up by an external entity as this class does not set up
@@ -70,12 +88,12 @@ namespace acommon {
 
     PosibErr<void> init(const Config &, ParmString in, ParmString out);
 
-    const char * in_code() const   {return in_code_.c_str();}
-    const char * out_code() const  {return out_code_.c_str();}
+    const char * in_code() const   {return decode_->key.c_str();}
+    const char * out_code() const  {return encode_->key.c_str();}
 
     void append_null(CharVector & out) const
     {
-      const char nul[8] = {0,0,0,0,0,0,0,0}; // 8 should be more than enough
+      const char nul[4] = {0,0,0,0}; // 4 should be enough
       out.write(nul, null_len_);
     }
 
@@ -96,6 +114,7 @@ namespace acommon {
       {return encode_->encode_direct(in,stop);}
 
     // does NOT pass it through filters
+    // DOES NOT use an internal state
     void convert(const char * in, int size, CharVector & out, ConvertBuffer & buf) const
     {
       if (conv_) {

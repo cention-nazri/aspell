@@ -13,6 +13,7 @@
 #include "config.hpp"
 #include "errors.hpp"
 #include "stack_ptr.hpp"
+#include "cache-t.hpp"
 
 namespace acommon {
 
@@ -442,6 +443,13 @@ namespace acommon {
     }
   };
 
+  //////////////////////////////////////////////////////////////////////
+  //
+  // Cache
+  //
+
+  static GlobalCache<Decode> decode_cache;
+  static GlobalCache<Encode> encode_cache;
   
   //////////////////////////////////////////////////////////////////////
   //
@@ -509,39 +517,51 @@ namespace acommon {
     
   }
 
+  PosibErr<Decode *> Decode::get_new(const String & key, const Config * c)
+  {
+    StackPtr<Decode> ptr;
+    if (key == "iso-8859-1")
+      ptr.reset(new DecodeDirect<Uni8>);
+    else if (key == "utf-16")
+      ptr.reset(new DecodeDirect<Uni16>);
+    else if (key == "utf-32")
+      ptr.reset(new DecodeDirect<Uni32>);
+    else if (key == "utf-8")
+      ptr.reset(new DecodeUtf8);
+    else
+      ptr.reset(new DecodeLookup);
+    RET_ON_ERR(ptr->init(key, *c));
+    ptr->key = key;
+    return ptr.release();
+  }
+
+  PosibErr<Encode *> Encode::get_new(const String & key, const Config * c)
+  {
+    StackPtr<Encode> ptr;
+    if (key == "iso-8859-1")
+      ptr.reset(new EncodeDirect<Uni8>);
+    else if (key == "utf-16")
+      ptr.reset(new EncodeDirect<Uni16>);
+    else if (key == "utf-32")
+      ptr.reset(new EncodeDirect<Uni32>);
+    else if (key == "utf-8")
+      ptr.reset(new EncodeUtf8);
+    else
+      ptr.reset(new EncodeLookup);
+    RET_ON_ERR(ptr->init(key, *c));
+    ptr->key = key;
+    return ptr.release();
+  }
+
   PosibErr<void> Convert::init(const Config & c, ParmString in, ParmString out)
   {
-    in_code_ = in;
-    out_code_ = out;
-    
-    if (in_code_ == "iso-8859-1")
-      decode_ = new DecodeDirect<Uni8>;
-    else if (in_code_ == "utf-16")
-      decode_ = new DecodeDirect<Uni16>;
-    else if (in_code_ == "utf-32")
-      decode_ = new DecodeDirect<Uni32>;
-    else if (in_code_ == "utf-8")
-      decode_ = new DecodeUtf8;
-    else
-      decode_ = new DecodeLookup;
-    RET_ON_ERR(decode_->init(in_code_, c));
-    
-    if (out_code_ == "iso-8859-1")
-      encode_ = new EncodeDirect<Uni8>;
-    else if (out_code_ == "utf-16")
-      encode_ = new EncodeDirect<Uni16>;
-    else if (out_code_ == "utf-32")
-      encode_ = new EncodeDirect<Uni32>;
-    else if (out_code_ == "utf-8")
-      encode_ = new EncodeUtf8;
-    else
-      encode_ = new EncodeLookup;
-    RET_ON_ERR(encode_->init(out_code_, c));
+    RET_ON_ERR(decode_.setup(&decode_cache, &c, in));
+    RET_ON_ERR(encode_.setup(&encode_cache, &c, out));
 
-    if (in_code_ == out_code_) {
-      if (in_code_ == "utf-16")
+    if (in == out) {
+      if (in == "utf-16")
 	conv_ = new ConvDirect<Uni16>;
-      else if (in_code_ == "utf-32")
+      else if (in == "utf-32")
 	conv_ = new ConvDirect<Uni32>;
       else
 	conv_ = new ConvDirect<char>;

@@ -27,9 +27,11 @@ class Cacheable
 public: // but don't use
   Cacheable * next;
   mutable int refcount;
+  bool attached;
   void * cache;
   void copy() const;
-  Cacheable() : next(0), refcount(0), cache(0) {}
+  Cacheable() : next(0), refcount(0), attached(false), cache(0) {}
+  virtual ~Cacheable() {}
 };
 
 template <class Data>
@@ -39,7 +41,7 @@ class CachePtr
 
 public:
   void reset(Data * p) {
-    if (ptr)
+    if (ptr) 
       release_cache_data(static_cast<GlobalCache<Data> *>(ptr->cache), ptr);
     ptr = p;
   }
@@ -56,10 +58,13 @@ public:
   void operator=(const CachePtr & other) {copy(other.ptr);}
   ~CachePtr() {reset(0);}
 
-  void setup(GlobalCache<Data> * cache, 
-             typename Data::CacheConfig * config, 
-             const typename Data::CacheKey & key) {
-    reset(get_cache_data(cache, config, key));
+  PosibErr<void> setup(GlobalCache<Data> * cache, 
+                       typename Data::CacheConfig * config, 
+                       const typename Data::CacheKey & key) {
+    PosibErr<Data *> pe = get_cache_data(cache, config, key);
+    if (pe.has_err()) return pe;
+    reset(pe.data);
+    return no_err;
   }
 };
 

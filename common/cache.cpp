@@ -1,12 +1,6 @@
 
 #include "cache-t.hpp"
 
-#ifdef USE_FILE_INO
-#  include <sys/types.h>
-#  include <sys/stat.h>
-#  include <unistd.h>
-#endif
-
 namespace acommon {
 
 void Cacheable::copy() const
@@ -25,7 +19,6 @@ struct CacheableImpl : public Cacheable
   bool cache_key_eq(const CacheKey &);
   static PosibErr<CacheableImpl *> get_new(const CacheKey &, CacheConfig *);
 };
-
 
 #if 0
 
