@@ -662,6 +662,7 @@ namespace {
   using namespace aspeller;
 
   struct WordData {
+    static const unsigned struct_size;
     WordData * next;
     char * sl;
     char * aff;
@@ -669,8 +670,11 @@ namespace {
     byte sl_size;
     byte data_size;
     byte flags;
-    char word[];
+    char word[1];
   };
+
+  const unsigned WordData::struct_size = sizeof(WordData) - 1;
+  
 
   struct SoundslikeLess {
     InsensitiveCompare icomp;
@@ -838,7 +842,7 @@ namespace {
           const char * w = p->word.str;
           s = p->word.size;
           
-          unsigned total_size = sizeof(WordData);
+          unsigned total_size = WordData::struct_size;
           unsigned data_size = s + 1;
           unsigned aff_size = strlen((const char *)p->aff);
           if (aff_size > 0) data_size += aff_size + 1;
@@ -849,7 +853,7 @@ namespace {
           if (strcmp(sl,w) == 0) sl = w;
           if (sl != w) total_size += sl_size + 1;
 
-          if (total_size - sizeof(WordData) > 240)
+          if (total_size - WordData::struct_size > 240)
             return make_err(invalid_word, MsgConv(lang)(w),
                             _("The total word length, with soundslike data, is larger than 240 characters."));
 
