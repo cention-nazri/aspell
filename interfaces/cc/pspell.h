@@ -22,6 +22,7 @@
 #define pspell_string_emulation_assign  aspell_string_enumeration_assign
 #define pspell_string_emulation_at_end  aspell_string_enumeration_at_end
 #define pspell_string_emulation_next    aspell_string_enumeration_next
+#define delete_pspell_string_emulation  delete_aspell_string_enumeration
 
 #define PspellStringPair          AspellStringPair
 #define PspellStringPairEmulation AspellStringPairEnumeration
