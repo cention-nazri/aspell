@@ -907,7 +907,16 @@ namespace acommon {
     , {"strip-accents" , KeyInfoBool, "false", "strip accents from word lists"}
     , {"sug-mode",   KeyInfoString, "normal", "suggestion mode"}
     , {"word-list-path", KeyInfoList, DATA_DIR, "Search path for word list information files"}
-
+    
+    //
+    // These options are specific to the "aspell" utility.  They are
+    // here so that they can be specified in configuration files.
+    //
+    , {"backup",  KeyInfoBool, "true", "create a backup file by appending \".bak\""}
+    , {"reverse", KeyInfoBool, "false", "reverse the order of the suggest list"}
+    , {"time"   , KeyInfoBool, "false", "time load time and suggest time in pipe mode"}
+    , {"keymapping", KeyInfoString, "aspell", "keymapping for check mode, one of aspell ispell"}
+    
   };
 
   const KeyInfo * config_impl_keys_begin = config_keys;

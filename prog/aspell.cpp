@@ -136,13 +136,6 @@ static const ModeAbrv mode_abrvs[] = {
 
 static const ModeAbrv *  mode_abrvs_end = mode_abrvs + 3;
 
-static const KeyInfo extra[] = {
-  {"backup",  KeyInfoBool, "true", "create a backup file by appending \".bak\""},
-  {"reverse", KeyInfoBool, "false", "reverse the order of the suggest list"},
-  {"time"   , KeyInfoBool, "false", "time load time and suggest time in pipe mode"},
-  {"keymapping", KeyInfoString, "aspell", "keymapping for check mode, one of aspell ispell"}
-};
-
 const PossibleOption * find_option(char c) {
   const PossibleOption * i = possible_options;
   while (i != possible_options_end && i->abrv != c) 
@@ -177,7 +170,6 @@ static const PossibleOption * find_option(const char * str) {
 int main (int argc, const char *argv[]) 
 {
   EXIT_ON_ERR(options->read_in_settings());
-  options->set_extra(extra, extra+sizeof(extra)/sizeof(KeyInfo));
 
   if (argc == 1) {print_help(); return 0;}
 
