@@ -4,7 +4,7 @@
 # mk-src.pl -- Perl program to automatically generate interface code.
 #
 # This file is part of The New Aspell
-# Copyright (C) 2001 by Kevin Atkinson under the GNU LGPL
+# Copyright (C) 2001-2002 by Kevin Atkinson under the GNU LGPL
 # license version 2.0 or 2.1.  You should have received a copy of the
 # LGPL license along with this library if you did not you can find it
 # at http://www.gnu.org/.
@@ -239,7 +239,7 @@ sub create_cc_file ( % )  {
 /* Automatically generated file.  Do not edit directly. */
 
 /* This file is part of The New Aspell
- * Copyright (C) 2001 by Kevin Atkinson under the GNU LGPL
+ * Copyright (C) 2001-2002 by Kevin Atkinson under the GNU LGPL
  * license version 2.0 or 2.1.  You should have received a copy of the
  * LGPL license along with this library if you did not you can find it
  * at http://www.gnu.org/.                                              */
@@ -384,12 +384,25 @@ INIT {
     return $str;
   }
 
-  sub make_func ( $ \@ $ ; \% ) {
-    my ($name, $d, $p, $accum) = @_;
+  sub make_desc ( $ ; $) {
+    my ($desc, $indent) = @_;
+    return '' unless defined $desc;
+    my @desc = split /\n/, $desc;
+    $indent = 0 unless defined $indent;
+    $indent = ' 'x$indent;
+    return ("$indent/* ".
+	    join("\n$indent * ", @desc).
+	    " */\n");
+  }
+
+  sub make_func ( $ $ \@ $ ; \% ) {
+    my ($name, $desc, $d, $p, $accum) = @_;
     $accum = {} unless defined $accum;
     my @d = @$d;
     return join '',
-      (to_type_name(shift @d, {%$p,pos=>'return'}, %$accum),
+      ("\n",
+       make_desc($desc),
+       to_type_name(shift @d, {%$p,pos=>'return'}, %$accum),
        ' ',
        to_lower $name,
        '(',
@@ -397,13 +410,13 @@ INIT {
        ')');
   }
 
-  sub make_c_func ( $ \@ $ ; \% ) {
-    my ($name, $d, $p, $accum) = @_;
+  sub make_c_func ( $ $ \@ $ ; \% ) {
+    my ($name, $desc, $d, $p, $accum) = @_;
     $accum = {} unless defined $accum;
     $p->{use_name} = false unless exists $p->{use_name};
     $name = "aspell $name" unless $name =~ /aspell/;
     $name =~ s/aspell\ ?// if exists $p->{no_aspell};
-    return make_func $name, @$d, $p, %$accum;
+    return make_func $name, $desc, @$d, $p, %$accum;
   }
 
   sub make_c_method ($ $ $ ; \% ) {
@@ -412,6 +425,7 @@ INIT {
     my $mode = $p->{mode};
     my $name = $d->{name};
     my $func = '';
+    my $desc = $d->{desc};
     my @data = ();
     @data = @{$d->{data}} if defined $d->{data};
     if ($d->{type} eq 'constructor') {
@@ -421,11 +435,11 @@ INIT {
 	$func = "new aspell $class";
       }
       splice @data, 0, 0, {type => $class} unless exists $d->{'returns alt type'};
-      return make_c_func $func, @data, $p, %$accum;
+      return make_c_func $func, $desc, @data, $p, %$accum;
     } elsif ($d->{type} eq 'destructor') {
       $func = "delete aspell $class";
       splice @data, 0, 0, ({type => 'void'}, {type => $class, name=>'ths'});
-      return make_c_func $func, @data, $p, %$accum;
+      return make_c_func $func, $desc, @data, $p, %$accum;
     } elsif ($d->{type} eq 'method') {
       if (exists $d->{'c func'}) {
 	$func = $d->{'c func'};
@@ -439,7 +453,7 @@ INIT {
       } else {
 	splice @data, 1, 0, {type => "$class", name=>'ths'};
       }
-      return make_c_func $func, @data, $p, %$accum;
+      return make_c_func $func, $desc, @data, $p, %$accum;
     } else {
       return undef;
     }
@@ -448,7 +462,7 @@ INIT {
   sub make_cxx_method ( $ ; \% ) {
     my ($d, $accum) = @_;
     my $ret;
-    $ret .= make_func $d->{name}, @{$d->{data}}, {mode=>'native'}, %$accum;
+    $ret .= make_func $d->{name}, $d->{desc}, @{$d->{data}}, {mode=>'native'}, %$accum;
     $ret .= " const" if exists $d->{const};
     return $ret;
   }
@@ -470,7 +484,12 @@ INIT {
   $info{group}{proc}{cc} = sub {
     my ($data) = @_;
     my $ret;
-    $ret .= "/* $data->{name} */\n";
+    my $stars = (70 - length $data->{name})/2;
+    $ret .= "/";
+    $ret .= '*'x$stars;
+    $ret .= " $data->{name} ";
+    $ret .= '*'x$stars;
+    $ret .= "/\n";
     foreach my $d (@{$data->{data}}) {
       $ret .= "\n\n";
       $ret .= $info{$d->{type}}{proc}{cc}->($d);
@@ -482,7 +501,9 @@ INIT {
   $info{enum}{proc}{cc} = sub {
     my ($d) = @_;
     my $n = "Aspell".to_mixed($d->{name});
-    return ("enum $n {" .
+    return ("\n".
+	    make_desc($d->{desc}).
+	    "enum $n {" .
 	    join(', ',
 		 map {"Aspell".to_mixed($d->{prefix}).to_mixed($_->{type})}
 		 @{$d->{data}}).
@@ -497,13 +518,14 @@ INIT {
     $struct .= "Aspell";
     $struct .= to_mixed($d->{name});
     return (join "\n\n", grep {$_ ne ''}
-	    join ("\n",
-		  "$t $struct {",
-		  (map {"  ". to_type_name($_, {mode=>'cc'}). ";"}
+	    join ('',
+		  "$t $struct {\n",
+		  (map {"\n".make_desc($_->{desc},2).
+			"  ".to_type_name($_, {mode=>'cc'}). ";\n"}
 		   grep {$_->{type} ne 'method'
 			   && $_->{type} ne 'cxx constructor'}
 		   @{$d->{data}}),
-		  "};"),
+		  "\n};\n"),
 	    "typedef $t $struct $struct;",
 	    join ("\n",
 		  map {make_c_method($d->{name}, $_, {mode=>'cc'}).";"}
