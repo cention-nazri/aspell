@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60-b20040608\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-07-14 07:47-0400\n"
+"POT-Creation-Date: 2004-07-15 19:06-0400\n"
 "PO-Revision-Date: 2004-06-13 19:07+0200\n"
 "Last-Translator: Elros Cyriatan <cyriatan@fastmail.fm>\n"
 "Language-Team: Dutch <vertaling@nl.linux.org>\n"
@@ -728,215 +728,215 @@ msgstr "U dient een actie op te geven"
 msgid "Unknown Action: %s"
 msgstr "Onbekende actie: %s"
 
-#: prog/aspell.cpp:604
+#: prog/aspell.cpp:603
 msgid "Invalid Input"
 msgstr "Ongeldige invoer"
 
-#: prog/aspell.cpp:692
+#: prog/aspell.cpp:691
 msgid "Time to load word list: "
 msgstr "Tijd voor laden woordenlijst: "
 
-#: prog/aspell.cpp:889
+#: prog/aspell.cpp:888
 #, c-format
 msgid "Suggestion Time: %f\n"
 msgstr "Tijd voor suggestie: %f\n"
 
-#: prog/aspell.cpp:932
+#: prog/aspell.cpp:931
 msgid "You must specify a file name."
 msgstr "U dient een bestandsnaam op te geven."
 
-#: prog/aspell.cpp:942
+#: prog/aspell.cpp:941
 #, c-format
 msgid "Could not open the file \"%s\" for reading"
 msgstr "Kon bestand \"%s\" niet openen om te lezen"
 
-#: prog/aspell.cpp:957
+#: prog/aspell.cpp:956
 #, fuzzy, c-format
 msgid "Could not open the file \"%s\" for writing. File not saved."
 msgstr ""
 "Kon het bestand \"%s\" niet openen om te schrijven. Bestand niet opgeslagen."
 
-#: prog/aspell.cpp:970
+#: prog/aspell.cpp:969
 #, c-format
 msgid "Invalid keymapping: %s"
 msgstr "Ongeldige toetsafbeelding: %s"
 
-#: prog/aspell.cpp:990
+#: prog/aspell.cpp:989
 msgid "Ignore"
 msgstr "Negeren"
 
-#: prog/aspell.cpp:991
+#: prog/aspell.cpp:990
 msgid "Ignore all"
 msgstr "Alle negeren"
 
-#: prog/aspell.cpp:992
+#: prog/aspell.cpp:991
 msgid "Replace"
 msgstr "Vervangen"
 
-#: prog/aspell.cpp:993
+#: prog/aspell.cpp:992
 msgid "Replace all"
 msgstr "Alle vervangen"
 
-#: prog/aspell.cpp:994
+#: prog/aspell.cpp:993
 msgid "Add"
 msgstr "Toevoegen"
 
-#: prog/aspell.cpp:995
+#: prog/aspell.cpp:994
 msgid "Add Lower"
 msgstr "Lager toevoegen"
 
-#: prog/aspell.cpp:996
+#: prog/aspell.cpp:995
 msgid "Abort"
 msgstr "Afbreken"
 
-#: prog/aspell.cpp:997
+#: prog/aspell.cpp:996
 msgid "Exit"
 msgstr "Afsluiten"
 
-#: prog/aspell.cpp:1073
+#: prog/aspell.cpp:1072
 #, fuzzy
 msgid "Are you sure you want to abort (y/n)? "
 msgstr "Wilt u echt afbreken? "
 
-#: prog/aspell.cpp:1093
+#: prog/aspell.cpp:1092
 msgid "With: "
 msgstr "Met: "
 
-#: prog/aspell.cpp:1109
+#: prog/aspell.cpp:1108
 msgid "Sorry that is an invalid choice!"
 msgstr "Sorry, die keuze is ongeldig!"
 
-#: prog/aspell.cpp:1330
+#: prog/aspell.cpp:1329
 msgid "Sorry \"filter\" is currently unimplemented.\n"
 msgstr "Sorry, \"filter\" is op dit moment nog niet geïmplementeerd.\n"
 
-#: prog/aspell.cpp:1464
+#: prog/aspell.cpp:1463
 msgid "Can't merge a master word list yet. Sorry."
 msgstr "Kan hoofdwoordenlijst nog niet samenvoegen. Sorry."
 
-#: prog/aspell.cpp:1488
+#: prog/aspell.cpp:1487
 msgid "Sorry \"create/merge personal\" is currently unimplemented.\n"
 msgstr ""
 "Sorry, \"aanmaken/samenvoegen persoonlijk\" is nog niet geïmplementeerd.\n"
 
-#: prog/aspell.cpp:1497 prog/aspell.cpp:1553
+#: prog/aspell.cpp:1496 prog/aspell.cpp:1552
 #, c-format
 msgid "Sorry I won't overwrite \"%s\""
 msgstr "Sorry, ik ga \"%s\" niet overschrijven"
 
-#: prog/aspell.cpp:1544
+#: prog/aspell.cpp:1543
 msgid "Sorry \"create/merge repl\" is currently unimplemented.\n"
 msgstr ""
 "Sorry, \"aanmaken/samenvoegen dubbelen\" is nog niet geïmplementeerd.\n"
 
 #. TRANSLATORS: These should all be formated to fit in 80 column or
 #. less
-#: prog/aspell.cpp:1850
+#: prog/aspell.cpp:1849
 msgid "Usage: aspell [options] <command>"
 msgstr ""
 
-#: prog/aspell.cpp:1851
+#: prog/aspell.cpp:1850
 msgid "<command> is one of:"
 msgstr ""
 
-#: prog/aspell.cpp:1852
+#: prog/aspell.cpp:1851
 msgid "  -?|usage         display a brief usage message"
 msgstr ""
 
-#: prog/aspell.cpp:1853
+#: prog/aspell.cpp:1852
 msgid "  help             display a detailed help message"
 msgstr ""
 
-#: prog/aspell.cpp:1854
+#: prog/aspell.cpp:1853
 msgid "  -c|check <file>  to check a file"
 msgstr ""
 
-#: prog/aspell.cpp:1855
+#: prog/aspell.cpp:1854
 msgid "  -a|pipe          \"ispell -a\" compatibility mode"
 msgstr ""
 
-#: prog/aspell.cpp:1856
+#: prog/aspell.cpp:1855
 msgid "  [dump] config    dumps the current configuration to stdout"
 msgstr ""
 
-#: prog/aspell.cpp:1857
+#: prog/aspell.cpp:1856
 msgid "  config <key>     prints the current value of an option"
 msgstr ""
 
-#: prog/aspell.cpp:1858
+#: prog/aspell.cpp:1857
 msgid "  [dump] dicts | filters | modes"
 msgstr ""
 
-#: prog/aspell.cpp:1859
+#: prog/aspell.cpp:1858
 msgid "    lists available dictionaries / filters / filter modes"
 msgstr ""
 
-#: prog/aspell.cpp:1860
+#: prog/aspell.cpp:1859
 msgid "[options] is any of the following:"
 msgstr ""
 
-#: prog/aspell.cpp:1873
+#: prog/aspell.cpp:1872
 msgid ""
 "  list             produce a list of misspelled words from standard input"
 msgstr ""
 
-#: prog/aspell.cpp:1876
+#: prog/aspell.cpp:1875
 msgid ""
 "  soundslike       returns the sounds like equivalent for each word entered"
 msgstr ""
 
-#: prog/aspell.cpp:1877
+#: prog/aspell.cpp:1876
 msgid "  munch            generate possible root words and affixes"
 msgstr ""
 
-#: prog/aspell.cpp:1878
+#: prog/aspell.cpp:1877
 msgid "  expand [1-4]     expands affix flags"
 msgstr ""
 
-#: prog/aspell.cpp:1879
+#: prog/aspell.cpp:1878
 msgid ""
 "  clean [strict]   cleans a word list so that every line is a valid word"
 msgstr ""
 
-#: prog/aspell.cpp:1881
+#: prog/aspell.cpp:1880
 msgid "  -v|version       prints a version line"
 msgstr ""
 
-#: prog/aspell.cpp:1882
+#: prog/aspell.cpp:1881
 msgid "  conv <from> <to> [<norm-form>]"
 msgstr ""
 
-#: prog/aspell.cpp:1883
+#: prog/aspell.cpp:1882
 msgid "    converts from one encoding to another"
 msgstr ""
 
-#: prog/aspell.cpp:1884
+#: prog/aspell.cpp:1883
 msgid "  norm (<norm-map> | <from> <norm-map> <to>) [<norm-form>]"
 msgstr ""
 
-#: prog/aspell.cpp:1885
+#: prog/aspell.cpp:1884
 #, fuzzy
 msgid "    perform Unicode normalization"
 msgstr "Unicode normalisatie aan zetten"
 
-#: prog/aspell.cpp:1888
+#: prog/aspell.cpp:1887
 msgid "  dump|create|merge master|personal|repl [word list]"
 msgstr ""
 
-#: prog/aspell.cpp:1889
+#: prog/aspell.cpp:1888
 msgid ""
 "    dumps, creates or merges a master, personal, or replacement word list."
 msgstr ""
 
 #. TRANSLATORS: "none", "internal" and "strict" are literal values
 #. and should not be translated.
-#: prog/aspell.cpp:1893
+#: prog/aspell.cpp:1892
 msgid ""
 "  <norm-form>      normalization form to use, either none, internal, or "
 "strict"
 msgstr ""
 
-#: prog/aspell.cpp:1903
+#: prog/aspell.cpp:1902
 #, c-format
 msgid ""
 "\n"
@@ -944,7 +944,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: prog/aspell.cpp:1937
+#: prog/aspell.cpp:1936
 msgid ""
 "Available Dictionaries:\n"
 "    Dictionaries can be selected directly via the \"-d\" or \"master\"\n"
@@ -952,20 +952,20 @@ msgid ""
 "    \"variety\", and \"size\" options.\n"
 msgstr ""
 
-#: prog/aspell.cpp:1958
+#: prog/aspell.cpp:1957
 msgid ""
 "Available Filters (and associated options):\n"
 "    Filters can be added or removed via the \"filter\" option.\n"
 msgstr ""
 
-#: prog/aspell.cpp:1965
+#: prog/aspell.cpp:1964
 #, c-format
 msgid ""
 "\n"
 "  %s filter: %s\n"
 msgstr ""
 
-#: prog/aspell.cpp:1982
+#: prog/aspell.cpp:1981
 msgid ""
 "Available Filter Modes:\n"
 "    Filter Modes are reconfigured combinations of filters optimized for\n"
@@ -974,119 +974,119 @@ msgid ""
 "    type from the extension, and possibility the contents, of the file.\n"
 msgstr ""
 
-#: prog/check_funs.cpp:287
+#: prog/check_funs.cpp:281
 msgid "Error: Stdin not a terminal."
 msgstr ""
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:724
+#: prog/check_funs.cpp:718
 msgid "Enter"
 msgstr ""
 
-#: prog/check_funs.cpp:726
+#: prog/check_funs.cpp:720
 msgid "Accept Changes"
 msgstr ""
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:729
+#: prog/check_funs.cpp:723
 msgid "Backspace"
 msgstr ""
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:731
+#: prog/check_funs.cpp:725
 msgid "Control-H"
 msgstr ""
 
-#: prog/check_funs.cpp:732
+#: prog/check_funs.cpp:726
 msgid "Delete the previous character"
 msgstr ""
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:735
+#: prog/check_funs.cpp:729
 msgid "Left"
 msgstr ""
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:737
+#: prog/check_funs.cpp:731
 msgid "Control-B"
 msgstr ""
 
-#: prog/check_funs.cpp:738
+#: prog/check_funs.cpp:732
 msgid "Move Back one space"
 msgstr ""
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:741
+#: prog/check_funs.cpp:735
 msgid "Right"
 msgstr ""
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:743
+#: prog/check_funs.cpp:737
 msgid "Control-F"
 msgstr ""
 
-#: prog/check_funs.cpp:744
+#: prog/check_funs.cpp:738
 msgid "Move Forward one space"
 msgstr ""
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:747
+#: prog/check_funs.cpp:741
 msgid "Home"
 msgstr ""
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:749
+#: prog/check_funs.cpp:743
 msgid "Control-A"
 msgstr ""
 
-#: prog/check_funs.cpp:750
+#: prog/check_funs.cpp:744
 msgid "Move to the beginning of the line"
 msgstr ""
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:753
+#: prog/check_funs.cpp:747
 msgid "End"
 msgstr ""
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:755
+#: prog/check_funs.cpp:749
 msgid "Control-E"
 msgstr ""
 
-#: prog/check_funs.cpp:756
+#: prog/check_funs.cpp:750
 msgid "Move to the end of the line"
 msgstr ""
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:759
+#: prog/check_funs.cpp:753
 msgid "Delete"
 msgstr ""
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:761
+#: prog/check_funs.cpp:755
 msgid "Control-D"
 msgstr ""
 
-#: prog/check_funs.cpp:762
+#: prog/check_funs.cpp:756
 #, fuzzy
 msgid "Delete the next character"
 msgstr "e-mail aanhaaltekens"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:766
+#: prog/check_funs.cpp:760
 msgid "Control-K"
 msgstr ""
 
-#: prog/check_funs.cpp:767
+#: prog/check_funs.cpp:761
 msgid "Kill all characters to the EOL"
 msgstr ""
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:771
+#: prog/check_funs.cpp:765
 msgid "Control-C"
 msgstr ""
 
-#: prog/check_funs.cpp:772
+#: prog/check_funs.cpp:766
 msgid "Abort This Operation"
 msgstr ""
 
