@@ -977,24 +977,23 @@ namespace acommon {
     return ptr.release();
   }
 
+  Convert::~Convert() {}
+
   PosibErr<void> Convert::init(const Config & c, ParmStr in, ParmStr out)
   {
-    RET_ON_ERR(setup(decode_d, &decode_cache, &c, in));
-    decode_ = decode_d.get();
-    RET_ON_ERR(setup(encode_d, &encode_cache, &c, out));
-    encode_ = encode_d.get();
+    RET_ON_ERR(setup(decode_c, &decode_cache, &c, in));
+    decode_ = decode_c.get();
+    RET_ON_ERR(setup(encode_c, &encode_cache, &c, out));
+    encode_ = encode_c.get();
 
     conv_ = 0;
     if (in == out) {
       if (in == "ucs-2") {
-        assert(sizeof(ConvDirect<Uni16>) <= memory_size);
-        conv_ = new (memory) ConvDirect<Uni16>;
+        conv_ = new ConvDirect<Uni16>;
       } else if (in == "ucs-4") {
-        assert(sizeof(ConvDirect<Uni32>) <= memory_size);
-        conv_ = new (memory) ConvDirect<Uni32>;
+        conv_ = new ConvDirect<Uni32>;
       } else {
-        assert(sizeof(ConvDirect<char>) <= memory_size);
-        conv_ = new (memory) ConvDirect<char>;
+        conv_ = new ConvDirect<char>;
       }
     }
 
@@ -1012,16 +1011,17 @@ namespace acommon {
 
     RET_ON_ERR(setup(norm_tables_, &norm_tables_cache, &c, out));
 
-    RET_ON_ERR(setup(decode_d, &decode_cache, &c, in));
-    decode_ = decode_d.get();
+    RET_ON_ERR(setup(decode_c, &decode_cache, &c, in));
+    decode_ = decode_c.get();
 
-    assert(sizeof(EncodeNormLookup) <= memory_size);
     if (c.retrieve_bool("norm-strict")) {
-      encode_ = new (memory) EncodeNormLookup(norm_tables_->strict);
+      encode_s = new EncodeNormLookup(norm_tables_->strict);
+      encode_ = encode_s;
       encode_->key = out;
       encode_->key += ":strict";
     } else {
-      encode_ = new (memory) EncodeNormLookup(norm_tables_->internal);
+      encode_s = new EncodeNormLookup(norm_tables_->internal);
+      encode_ = encode_s;
       encode_->key = out;
       encode_->key += ":internal";
     }
@@ -1041,15 +1041,15 @@ namespace acommon {
 
     RET_ON_ERR(setup(norm_tables_, &norm_tables_cache, &c, in));
 
-    RET_ON_ERR(setup(encode_d, &encode_cache, &c, out));
-    encode_ = encode_d.get();
+    RET_ON_ERR(setup(encode_c, &encode_cache, &c, out));
+    encode_ = encode_c.get();
 
-    assert(sizeof(DecodeNormLookup) <= memory_size);
     NormTables::ToUni::const_iterator i = norm_tables_->to_uni.begin();
     for (; i != norm_tables_->to_uni.end() && i->name != norm_form; ++i);
     assert(i != norm_tables_->to_uni.end());
 
-    decode_ = new (memory) DecodeNormLookup(i->ptr);
+    decode_s = new DecodeNormLookup(i->ptr);
+    decode_ = decode_s;
     decode_->key = in;
     decode_->key += ':';
     decode_->key += i->name;

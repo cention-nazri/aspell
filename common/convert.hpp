@@ -94,15 +94,14 @@ namespace acommon {
 
   class Convert {
   private:
-    CachePtr<Decode> decode_d;
+    CachePtr<Decode> decode_c;
+    StackPtr<Decode> decode_s;
     Decode * decode_;
-    CachePtr<Encode> encode_d;
+    CachePtr<Encode> encode_c;
+    StackPtr<Encode> encode_s;
     Encode * encode_;
     CachePtr<NormTables> norm_tables_;
-    DirectConv * conv_;
-
-    static const size_t memory_size = 96;
-    char memory[memory_size];
+    StackPtr<DirectConv> conv_;
 
     ConvertBuffer buf_;
 
@@ -113,6 +112,7 @@ namespace acommon {
 
   public:
     Convert() {}
+    ~Convert();
 
     // This filter is used when the convert method is called.  It must
     // be set up by an external entity as this class does not set up
