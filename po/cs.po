@@ -6,10 +6,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: aspell 0.60-b20040424\n"
+"Project-Id-Version: aspell 0.60-b20040511\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-05-12 17:54-0400\n"
-"PO-Revision-Date: 2004-04-26 15:45+0200\n"
+"POT-Creation-Date: 2004-05-15 19:54-0400\n"
+"PO-Revision-Date: 2004-05-14 17:25+0200\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -201,9 +201,8 @@ msgid "enable Unicode normalization"
 msgstr "povolit normalizaci Unicode"
 
 #: common/config.cpp:1107
-#, fuzzy
 msgid "Unicode normalization required for the current lang"
-msgstr "forma normalizace Unicode: none, nfd, nfc, comp"
+msgstr "Normalizace Unicode vyžadovaná pro aktuální jazyk"
 
 #: common/config.cpp:1109
 msgid "Unicode normalization form: none, nfd, nfc, comp"
@@ -211,11 +210,11 @@ msgstr "forma normalizace Unicode: none, nfd, nfc, comp"
 
 #: common/config.cpp:1111
 msgid "avoid lossy conversions"
-msgstr ""
+msgstr "nepoužívat ztrátové konverze"
 
 #: common/config.cpp:1118
 msgid "compute the soundslike on demand rather than storing"
-msgstr ""
+msgstr "počítat podobnost zvuku na požádání místo ukládání"
 
 #: common/config.cpp:1120
 msgid "use affix compression when creating dictionaries"
@@ -223,7 +222,7 @@ msgstr "při tvorbě slovníků používat kompresi přípon"
 
 #: common/config.cpp:1122
 msgid "partially expand affixes for better suggestions"
-msgstr ""
+msgstr "částečně rozbalovat přípony pro lepší návrhy"
 
 #: common/config.cpp:1128
 msgid "create a backup file by appending \".bak\""
@@ -263,9 +262,9 @@ msgstr ""
 "soubor neexistuje."
 
 #: common/convert.cpp:536 common/convert.cpp:642 common/convert.cpp:688
-#, fuzzy, c-format
+#, c-format
 msgid "The Unicode code point U+%04X is unsupported."
-msgstr "Kód unicode U+%04X není podporován."
+msgstr "Kód Unicode U+%04X není podporován."
 
 #: common/convert.cpp:812
 #, c-format
@@ -677,25 +676,25 @@ msgstr "To je pravděpodobně protože: "
 msgid "The required field \"name\" is missing."
 msgstr "Vyžadované pole \"name\" chybí."
 
-#: modules/speller/default/language.cpp:425
+#: modules/speller/default/language.cpp:430
 msgid "Empty string."
 msgstr "Prázdný řetězec."
 
-#: modules/speller/default/language.cpp:431
+#: modules/speller/default/language.cpp:436
 #, c-format
 msgid "The character '%s' may not appear at the beginning of a word."
 msgstr "Znak '%s' nesmí být na začátku slova."
 
-#: modules/speller/default/language.cpp:435
+#: modules/speller/default/language.cpp:440
 msgid "Does not contain any letters."
 msgstr "Neobsahuje žádná písmena."
 
-#: modules/speller/default/language.cpp:443
+#: modules/speller/default/language.cpp:448
 #, c-format
 msgid "The character '%s' may not appear in the middle of a word."
 msgstr "Znak '%s' nesmí být uprostřed slova."
 
-#: modules/speller/default/language.cpp:453
+#: modules/speller/default/language.cpp:458
 #, c-format
 msgid "The character '%s' may not appear at the end of a word."
 msgstr "Znak '%s' nesmí být na konci slova."
@@ -736,10 +735,9 @@ msgid "Affix flags found in word but no affix file given."
 msgstr "Příznaky přípon nalezeny ve slově, ale nezadán soubor přípon."
 
 #: modules/speller/default/readonly_ws.cpp:851
-#, fuzzy
 msgid ""
 "The total word length, with soundslike data, is larger than 240 characters."
-msgstr "Celková délka slova je větší než 240 znaků."
+msgstr "Celková délka slova s daty o podobnosti zvuku je větší než 240 znaků."
 
 #. TRANSLATORS: Like the strings in config.cpp, all strings in *-filter.opt
 #. should be under 50 characters, begin with a lower case character and 
@@ -773,13 +771,12 @@ msgid "Filters for encoding, filtering and decoding sgml characters"
 msgstr "Filtry pro kódování, filtrování a dekódování znaků sgml"
 
 #: modules/filter/sgml-filter.opt:13
-#, fuzzy
 msgid "sgml attributes to always check"
-msgstr "atributy sgml, které vždy kontrolovat."
+msgstr "atributy sgml, které vždy kontrolovat"
 
 #: modules/filter/sgml-filter.opt:19
 msgid "sgml tags to always skip the contents of"
-msgstr ""
+msgstr "tagy sgml, jejichž obsah vždy přeskakovat"
 
 #: modules/filter/tex-filter.opt:7
 msgid "Filter for recognizing TeX/LaTeX commands"
@@ -807,9 +804,6 @@ msgstr "Filtr pro skrývání url/cest a podobně před Aspellem"
 
 #~ msgid "strip accents from word lists"
 #~ msgstr "odstranit ze seznamu slov diakritiku"
-
-#~ msgid "encode soundslike infomation when creating dicts"
-#~ msgstr "při tvorbě slovníků kódovat informace o zvuku"
 
 #~ msgid "use jump tables when creating dictionaries"
 #~ msgstr "při tvorbě slovníků používat tabulky skoků"

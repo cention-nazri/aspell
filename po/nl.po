@@ -6,10 +6,10 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: aspell 0.60-b20040424\n"
+"Project-Id-Version: aspell 0.60-b20040511\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-05-12 17:54-0400\n"
-"PO-Revision-Date: 2004-04-30 15:34+0200\n"
+"POT-Creation-Date: 2004-05-15 19:54-0400\n"
+"PO-Revision-Date: 2004-05-15 15:22+0200\n"
 "Last-Translator: Elros Cyriatan <cyriatan@fastmail.fm>\n"
 "Language-Team: Dutch <vertaling@nl.linux.org>\n"
 "MIME-Version: 1.0\n"
@@ -206,9 +206,8 @@ msgid "enable Unicode normalization"
 msgstr "Unicode normalisatie aan zetten"
 
 #: common/config.cpp:1107
-#, fuzzy
 msgid "Unicode normalization required for the current lang"
-msgstr "Unicode normalisatie formaat: geen, nfd, nfc, compatibel"
+msgstr "Unicode normalisatie vereist voor huidige taal"
 
 #: common/config.cpp:1109
 msgid "Unicode normalization form: none, nfd, nfc, comp"
@@ -216,11 +215,11 @@ msgstr "Unicode normalisatie formaat: geen, nfd, nfc, compatibel"
 
 #: common/config.cpp:1111
 msgid "avoid lossy conversions"
-msgstr ""
+msgstr "informatieverlies gevende omzettingen vermijden"
 
 #: common/config.cpp:1118
 msgid "compute the soundslike on demand rather than storing"
-msgstr ""
+msgstr "de klinkt-als op vraag berekenen in plaats van opslaan"
 
 #: common/config.cpp:1120
 msgid "use affix compression when creating dictionaries"
@@ -228,7 +227,7 @@ msgstr "uitgangen inpakken bij aanmaken woordenboeken"
 
 #: common/config.cpp:1122
 msgid "partially expand affixes for better suggestions"
-msgstr ""
+msgstr "achtervoegsels gedeeltelijk uitbreiden voor betere suggesties"
 
 #: common/config.cpp:1128
 msgid "create a backup file by appending \".bak\""
@@ -268,9 +267,9 @@ msgstr ""
 "lezen, of niet bestaat."
 
 #: common/convert.cpp:536 common/convert.cpp:642 common/convert.cpp:688
-#, fuzzy, c-format
+#, c-format
 msgid "The Unicode code point U+%04X is unsupported."
-msgstr "Het unicode codepunt U+%04X wordt niet ondersteund."
+msgstr "Het Unicode codepunt U+%04X wordt niet ondersteund."
 
 #: common/convert.cpp:812
 #, c-format
@@ -689,25 +688,25 @@ msgstr "Dit is waarschijnlijk, omdat: "
 msgid "The required field \"name\" is missing."
 msgstr "Het vereiste veld \"name\" (naam) ontbreekt."
 
-#: modules/speller/default/language.cpp:425
+#: modules/speller/default/language.cpp:430
 msgid "Empty string."
 msgstr "Lege tekst."
 
-#: modules/speller/default/language.cpp:431
+#: modules/speller/default/language.cpp:436
 #, c-format
 msgid "The character '%s' may not appear at the beginning of a word."
 msgstr "Het teken '%s' mag niet voorkomen aan het begin van een woord."
 
-#: modules/speller/default/language.cpp:435
+#: modules/speller/default/language.cpp:440
 msgid "Does not contain any letters."
 msgstr "Bevat geen letters."
 
-#: modules/speller/default/language.cpp:443
+#: modules/speller/default/language.cpp:448
 #, c-format
 msgid "The character '%s' may not appear in the middle of a word."
 msgstr "Het teken '%s' mag niet voorkomen middenin een woord."
 
-#: modules/speller/default/language.cpp:453
+#: modules/speller/default/language.cpp:458
 #, c-format
 msgid "The character '%s' may not appear at the end of a word."
 msgstr "Het teken '%s' mag niet voorkomen aan het einde van een woord."
@@ -750,10 +749,10 @@ msgstr ""
 "gegeven."
 
 #: modules/speller/default/readonly_ws.cpp:851
-#, fuzzy
 msgid ""
 "The total word length, with soundslike data, is larger than 240 characters."
-msgstr "De totale woordlengte is groter dan 240 tekens."
+msgstr ""
+"De totale woordlengte, met klinkt-als gegevens, is groter dan 240 tekens."
 
 #. TRANSLATORS: Like the strings in config.cpp, all strings in *-filter.opt
 #. should be under 50 characters, begin with a lower case character and 
@@ -787,13 +786,12 @@ msgid "Filters for encoding, filtering and decoding sgml characters"
 msgstr "Filters voor het coderen, filteren en decoderen van SGML tekens"
 
 #: modules/filter/sgml-filter.opt:13
-#, fuzzy
 msgid "sgml attributes to always check"
-msgstr "SGML attributen om altijd te controleren."
+msgstr "sgml attributen om altijd te controleren"
 
 #: modules/filter/sgml-filter.opt:19
 msgid "sgml tags to always skip the contents of"
-msgstr ""
+msgstr "sgml tags waarvan de inhoud altijd moet worden overgeslagen"
 
 #: modules/filter/tex-filter.opt:7
 msgid "Filter for recognizing TeX/LaTeX commands"
@@ -818,17 +816,3 @@ msgstr "tekens gebruikt voor coderen van afbreeklokaties"
 #: modules/filter/url-filter.opt:7
 msgid "Filter for hiding urls/paths and similar from Aspell"
 msgstr "Filter voor het verbergen van URLs/paden en dergelijke van Aspell"
-
-#~ msgid "strip accents from word lists"
-#~ msgstr "accenten uit woordenlijsten weggooien"
-
-#~ msgid "encode soundslike infomation when creating dicts"
-#~ msgstr "klinkt-als informatie coderen bij aanmaken woordenboeken"
-
-#~ msgid "use jump tables when creating dictionaries"
-#~ msgstr "springtabellen gebruiken bij aanmaken woordenboeken"
-
-#~ msgid "Affix compression is currently incompatible with soundslike lookup."
-#~ msgstr ""
-#~ "Achtervoegsel compressie gaat op dit moment niet samen met klinkt-als "
-#~ "opzoeken."

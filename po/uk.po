@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60-b20040402\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-05-12 17:54-0400\n"
+"POT-Creation-Date: 2004-05-15 19:54-0400\n"
 "PO-Revision-Date: 2004-04-20 16:03+0200\n"
 "Last-Translator: Maxim V. Dziumanenko <mvd@mylinux.com.ua>\n"
 "Language-Team: Ukrainian <translation-team-uk@lists.sourceforge.net>\n"
@@ -677,25 +677,25 @@ msgstr "Можливо, це тому-що: "
 msgid "The required field \"name\" is missing."
 msgstr "Відсутнє обов'язкове поле \"name\"."
 
-#: modules/speller/default/language.cpp:425
+#: modules/speller/default/language.cpp:430
 msgid "Empty string."
 msgstr "Порожній рядок."
 
-#: modules/speller/default/language.cpp:431
+#: modules/speller/default/language.cpp:436
 #, c-format
 msgid "The character '%s' may not appear at the beginning of a word."
 msgstr "Символ \"%s\" не може з'явитись на початку слова."
 
-#: modules/speller/default/language.cpp:435
+#: modules/speller/default/language.cpp:440
 msgid "Does not contain any letters."
 msgstr "Не містить ніяких літер."
 
-#: modules/speller/default/language.cpp:443
+#: modules/speller/default/language.cpp:448
 #, fuzzy, c-format
 msgid "The character '%s' may not appear in the middle of a word."
 msgstr "Символ \"%s\" не може з'являтись у середині слова."
 
-#: modules/speller/default/language.cpp:453
+#: modules/speller/default/language.cpp:458
 #, c-format
 msgid "The character '%s' may not appear at the end of a word."
 msgstr "Символ \"%s\" не може з'являтись наприкінці слова."
