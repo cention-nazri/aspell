@@ -15,7 +15,7 @@ void ObjStack::setup_chunk()
 
 
 ObjStack::ObjStack(size_t chunk_s, size_t align)
-  : chunk_size(chunk_s), min_align(align)
+  : chunk_size(chunk_s), min_align(align), temp_end(0)
 {
   first_free = first = (Node *)malloc(chunk_size);
   first->next = 0;

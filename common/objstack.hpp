@@ -4,6 +4,7 @@
 
 #include "parm_string.hpp"
 #include <stdlib.h>
+#include <assert.h>
 
 namespace acommon {
 
@@ -22,6 +23,7 @@ class ObjStack
   Node * reserve;
   byte * top;
   byte * bottom;
+  byte * temp_end;
   void setup_chunk();
   void new_chunk();
 
@@ -49,11 +51,10 @@ public:
   // This alloc_bottom does NOT check alignment.  However, if you always
   // insert objects with a multiple of min_align than it will always
   // me aligned as such.
-  void * alloc_bottom(size_t size) 
-  {loop:
+  void * alloc_bottom(size_t size)  {
     byte * tmp = bottom;
     bottom += size;
-    if (bottom > top) {new_chunk(); goto loop;}
+    if (bottom > top) {new_chunk(); tmp = bottom; bottom += size;}
     return tmp;
   }
   // This alloc_bottom will insure that the object is aligned based on the
@@ -74,10 +75,9 @@ public:
   // This alloc_bottom does NOT check alignment.  However, if you
   // always insert objects with a multiple of min_align than it will
   // always be aligned as such.
-  void * alloc_top(size_t size)
-  {loop:
+  void * alloc_top(size_t size) {
     top -= size;
-    if (top < bottom) {new_chunk(); goto loop;}
+    if (top < bottom) {new_chunk(); top -= size;}
     return top;
   }
   // This alloc_top will insure that the object is aligned based on
@@ -99,6 +99,40 @@ public:
   void * alloc(size_t size) {return alloc_top(size);}
   void * alloc(size_t size, size_t align) {return alloc_top(size,align);}
   char * dup(ParmString str) {return dup_top(str);}
+
+  // alloc_temp allocates an object from the bottom which can be
+  // resized untill it is commited.  If the resizing will involve
+  // moving the object than the data will be copied in the same way
+  // realloc does.  Any previously allocated objects are aborted when
+  // alloc_temp is called.
+  void * alloc_temp(size_t size) {
+    temp_end = bottom + size;
+    if (temp_end > top) {
+      new_chunk();
+      temp_end = bottom + size;
+    }
+    return bottom;
+  }
+  void * resize_temp(size_t size) {
+    if (bottom + size <= top) {
+      temp_end = bottom + size;
+    } else {
+      size_t s = temp_end - bottom;
+      byte * p = bottom;
+      new_chunk();
+      memcpy(bottom, p, s);
+      temp_end = bottom + size;
+    }
+    return bottom;
+  }
+  void * grow_temp(size_t s) {
+    return resize_temp(temp_end - bottom + s);}
+  void abort_temp() {
+    temp_end = 0;}
+  void commit_temp() {
+    bottom = temp_end;
+    temp_end = 0;}
+
 };
 
 typedef ObjStack StringBuffer;
