@@ -302,7 +302,8 @@ namespace acommon {
 	delete k;
       }
     }
-    //delete[] data;
+    delete[] data;
+    data = 0;
   }
 
   //
