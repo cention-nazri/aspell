@@ -4,67 +4,13 @@
 // LGPL license along with this library if you did not you can find it
 // at http://www.gnu.org/.
 
-// Aspell's main word list data is stored in 4 large blocks of memory
+// Aspell's main word list is laid out as follows:
 //
-// * The Word Hash Table
-// * The Word List
-// * The Soundslike Hash Table
-// * The Soundslike List
-//
-// 1a) The Word Hash Table
-// This consists of an open address hash table which contains pointers
-// to the actual words in the word list
-//
-// 1b) The Word List
-// This consists of the actual word list and is layed out as follows:
-//   <Word1><null char><Word2><null char>...
-//
-// 2a) The Soundslike Hash Table
-// This consists of an open address hash table which contains pointers
-// to a soundslike object.
-//
-// 2b) The Soundslike Object
-// The soundslike object is layed out as follow:
-//  What:  <Word1 pointer><Word2 p.>...<Num of Words><Soundslike><null char>
-//  Types: <const char *><const char *>...<unsigned short int><char[]><char>
-
-//         <unsigned int><unsigned int>...<unsigned short int><char[]><char>
-// The pointer to the object points to the beginning of the Soundslike string
-// The Word pointers consists of the the words which have the same 
-//   soundslike pattern
-//
-// 2c) The Soundslike List
-// This consists of Soundslike Objects back to back:
-//  <Soundslike object 1><Soundslike object 2> ...
-// There is no delimiter between the objects
-//
-//
-//                          Format of the *.wrd files
-//
-// (This part is in ascii format)
-// <"master_wl"><ws><lang name><ws><# words><ws>
-//     <hash size><ws><size of list block><\n>
-// (The rest is in binary format>
-// <Wordlist>
-// <Word Hash Table>
-//
-// The word hash table is a vector of unsigned its which contains an offset
-// of where they can be found in the word list.
-//
-//                          Format of the *.sl files
-//
-// (This part is in ascii format)
-// <"master_wl"><ws><lang name><ws><# words><ws>
-//     <hash size><ws><size of list block><\n>
-// (The rest is in binary format>
-// <Soundslike object list>
-// <Soundslike Hash Table>
-//
-// Soundslike oject is laid out as follows:
-//   <Num of Words><Word 1 offset>...<Soundslike><\0>
-//   <unsigned short int><unsigned int>...<char[]><char>
-// And like the .wrd file the hash table contains offsets not pointers.
-//
+// * header
+// * jump table for editdist 1
+// * jump table for editdist 2
+// * data block
+// * hash table
 
 #include <map>
 

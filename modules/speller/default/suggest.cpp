@@ -33,13 +33,6 @@
 // means.  For more information on the metaphone algorithm please see
 // the file metaphone.cc which included a detailed description of it.
 
-
-// NOTES TO SELF
-// Consider jump starting the distance alogo. when to words have the same
-// prefix
-// Consider short circling the distance algo. when to words have the same
-// suffix
-
 #include "getdata.hpp"
 
 #include "fstream.hpp"
