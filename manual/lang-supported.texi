@@ -46,7 +46,7 @@
 @item et @tab Estonian @tab Latin @tab 0.60 @tab -
 @item eu @tab Basque @tab Latin @tab Maybe @tab -
 @item
-@item fa @tab Persian @tab Arabic @tab Maybe @tab -
+@item fa @tab Persian @tab Arabic @tab 0.60 @tab -
 @item ff @tab Fulah @tab Latin @tab - @tab -
 @item fi @tab Finnish @tab Latin @tab 0.60 @tab -
 @item fj @tab Fijian @tab Latin @tab Maybe @tab -
@@ -85,7 +85,7 @@
 @item is @tab Icelandic @tab Latin @tab 0.50 @tab -
 @item it @tab Italian @tab Latin @tab 0.50 @tab -
 @item
-@item jv @tab Javanese @tab Javanese, Latin @tab - @tab -
+@item jv @tab Javanese @tab Javanese, Latin @tab Maybe @tab -
 @item
 @item ka @tab Georgian @tab Georgian @tab - @tab -
 @item kac @tab Kachin @tab Latin @tab Maybe @tab -
@@ -132,6 +132,7 @@
 @item nds @tab Low Saxon @tab Latin @tab Maybe @tab -
 @item ne @tab Nepali @tab Devanagari @tab Maybe @tab -
 @item ng @tab Ndonga @tab Latin @tab Maybe @tab -
+@item niu @tab Niuean @tab Latin @tab Maybe @tab -
 @item nl @tab Dutch @tab Latin @tab 0.50 @tab Yes
 @item nn @tab Norwegian Nynorsk @tab Latin @tab 0.50 @tab -
 @item nr @tab South Ndebele @tab Latin @tab - @tab -
@@ -182,6 +183,7 @@
 @item tg @tab Tajik @tab Cyrillic @tab Maybe @tab Incomplete
 @item ti @tab Tigrinya @tab Ethiopic @tab Maybe @tab -
 @item tk @tab Turkmen @tab Latin @tab Planned @tab -
+@item tkl @tab Tokelau @tab Latin @tab Maybe @tab -
 @item tl @tab Tagalog @tab Latin @tab 0.50 @tab -
 @item tn @tab Tswana @tab Latin @tab 0.50 @tab -
 @item to @tab Tonga @tab Latin @tab Maybe @tab -
