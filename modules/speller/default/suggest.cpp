@@ -831,7 +831,7 @@ namespace {
   PosibErr<void> SuggestImpl::setup(SpellerImpl * m)
   {
     speller_ = m;
-    parms_.set(m->config()->retrieve("sug-mode"));
+    RET_ON_ERR(parms_.set(m->config()->retrieve("sug-mode")));
     if (m->config()->retrieve("sug-mode") == "normal" 
         && !m->fast_scan) parms_.soundslike_level = 1;
 
