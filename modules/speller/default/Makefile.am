@@ -19,4 +19,5 @@ libaspell_speller_default_la_SOURCES = \
 
 libaspell_speller_default_la_LDFLAGS = -release 0.50
 
+EXTRA_DIST = *.hpp
 

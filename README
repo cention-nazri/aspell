@@ -1,0 +1,61 @@
+
+2002/07/22
+
+The New Aspell is complete enough to function as a replacement for
+both the old Aspell/Pspell replacement with a few exceptions.
+However, the New Aspell is still in a pre-alpha state and has not been
+tested that well at all.  So, only use it if you plan to help in some
+way with the testing or development of the new Aspell.
+
+The functionally of the old Aspell utility is now broken up into to
+utilities.  "aspell" and "speller-util".  The "aspell" program handles
+the checking of documents while "speller-util" handles the management
+of dictionaries.
+
+If different prefixes are specified for the New Aspell and the old
+Aspell/Pspell the two should be able to peacefully coexist.  However,
+the two both use ASPELL_CONF and the .aspell.conf file for reading
+configuration information which may give you some problems as some of
+the options have changed.  The two also share the same personal
+word-lists, however, since the format of them has not changed, this
+should not be a problem.
+
+The main features missing from the old Aspell/Pspell is an HTML and
+TeX filter.  Those should be ported over shortly.
+
+See README-CVS if building from CVS.
+
+To build and install:
+
+  ./configure --disable-static <options>
+  make
+  make install
+
+You will then need to install a dictionary package for the new aspell.
+You can find them at http://aspell.net.  The "speller-util" program
+must be in your path in order for the dictionaries to install
+correctly.
+
+LIBRARY NOTES:
+
+The name of everything has changed due to the renaming of Pspell to
+Aspell however you should also be able to build applications that
+require Pspell with the new aspell as a backwards compatibility header
+file is provided.  No real documentation currently exists for the new
+interface so for now refer to the Pspell docs keeping in mind the
+following changes in the name of things:
+
+  pspell -> aspell
+  manager -> speller
+  emulation -> enumeration
+  master_word_list -> main_word_list
+
+You can also see aspell0.c in the example directory for example of
+using the new interface.
+
+The only header file which needs to be included for using the new
+Aspell through the C interface is "aspell.h".  This header file also
+contains some documentation on what the various functions do.
+
+Using static libraries will NOT work due to the mixing of C and C++.
+

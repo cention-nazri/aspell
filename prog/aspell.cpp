@@ -741,7 +741,7 @@ void filter()
 
 void print_ver () {
   COUT << "@(#) International Ispell Version 3.1.20 " 
-       << "(but really Aspell " << VERSION << " alpha)" << "\n";
+       << "(but really Aspell " << VERSION << ")" << "\n";
 }
 
 ///////////////////////////

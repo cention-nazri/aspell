@@ -9,6 +9,8 @@ aspell_SOURCES = aspell.cpp check_funs.cpp checker_string.cpp
 
 aspell_LDADD = ../lib/libaspell.la $(CURSES_LIB)
 
+EXTRA_DIST = *.hpp
+
 
 
 

@@ -23,3 +23,5 @@ libpspell_la_SOURCES = dummy.cpp
 libpspell_la_LIBADD = libaspell.la
 
 libpspell_la_LDFLAGS = -version-info 15:0:0
+
+

@@ -35,4 +35,4 @@ libaspell_common_la_SOURCES = \
 
 libaspell_common_la_LDFLAGS = -release 0.50
 
-
+EXTRA_DIST = *.hpp

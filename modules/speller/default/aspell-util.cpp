@@ -504,7 +504,7 @@ void soundslike() {
 //
 
 void print_ver () {
-  COUT << "Aspell Util version " << VERSION << " alpha" << "\n";
+  COUT << "Aspell Util version " << VERSION << "\n";
 }
 
 ///////////////////////////
