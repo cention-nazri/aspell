@@ -6,10 +6,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: aspell 0.60\n"
+"Project-Id-Version: aspell 0.60.1-b20041026\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
 "POT-Creation-Date: 2004-11-06 18:15-0700\n"
-"PO-Revision-Date: 2004-11-06 18:36-0700\n"
+"PO-Revision-Date: 2004-11-07 16:54-0700\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -722,9 +722,9 @@ msgid "Invalid Input"
 msgstr "Neplatný vstup"
 
 #: prog/aspell.cpp:695
-#, fuzzy, c-format
+#, c-format
 msgid "WARNING: Unable to enter Nroff mode: %s\n"
-msgstr "přejít do režimu TeX."
+msgstr "VAROVÁNÍ: Nemohu přejít do režimu Nroff: %s\n"
 
 #: prog/aspell.cpp:716
 msgid "Time to load word list: "
@@ -1335,3 +1335,45 @@ msgstr "režim pro kontrolu dokumentů Texinfo"
 #: modules/filter/modes/url.amf:5
 msgid "mode to skip URL like constructs (default mode)"
 msgstr "režim pro přeskakování konstrukcí podobných URL (implicitní režim)"
+
+#~ msgid "filter for processing Nroff documents"
+#~ msgstr "filtr pro práci s dokumenty Nroff"
+
+#~ msgid "Empty value; only bool type option and \"rem-all\" list prefix."
+#~ msgstr ""
+#~ "Prázdná hodnota; jen přepínač typu bool a předpona seznamu \"rem-all\"."
+
+#~ msgid "Filter \"%filter:1\" could not be found in filter paths."
+#~ msgstr "Filtr \"%filter:1\" nelze najít v cestě filtrů."
+
+#~ msgid "Can't find the option file \"%option:2\"."
+#~ msgstr "Nemohu najít soubor přepínačů \"%option:2\"."
+
+#~ msgid "Filter for eliminating email quote characters"
+#~ msgstr "Filtr pro eliminaci znaků citací z e-mailu"
+
+#~ msgid "Filters for encoding, filtering and decoding sgml characters"
+#~ msgstr "Filtry pro kódování, filtrování a dekódování znaků sgml"
+
+#~ msgid "multi character coded letters (<char>:<rep>[:<rep>[...]])"
+#~ msgstr "písmena kódovaná více znaky (<znak>:<náhr>[:<náhr>[...]])"
+
+#~ msgid "characters used to encode hyphenation locations"
+#~ msgstr "znaky používané pro kódování umístění dělení slov"
+
+#~ msgid "Filter for hiding urls/paths and similar from Aspell"
+#~ msgstr "Filtr pro skrývání url/cest a podobně před Aspellem"
+
+#~ msgid "indicator for additional flags in word lists"
+#~ msgstr "indikátor dalších příznaků v seznamech slov"
+
+#~ msgid "strip accents from word lists"
+#~ msgstr "odstranit ze seznamu slov diakritiku"
+
+#~ msgid "use jump tables when creating dictionaries"
+#~ msgstr "při tvorbě slovníků používat tabulky skoků"
+
+#~ msgid "Affix compression is currently incompatible with soundslike lookup."
+#~ msgstr ""
+#~ "Komprese přípon momentálně není kompatibilní s vyhledáváním podle "
+#~ "podobnosti zvuku."
