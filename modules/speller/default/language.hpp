@@ -249,6 +249,17 @@ namespace aspeller {
 	  out += lang->de_accent(in[i]);
       }
     }
+    void convert(ParmString in, char * out) const
+    {
+      if (!strip_accents) {
+        memcpy(out, in, in.size() + 1);
+      } else {
+        unsigned int i = 0;
+	for (; i != in.size(); ++i)
+	  out[i] = lang->de_accent(in[i]);
+        out[i] = '\0';
+      }
+    }
   };
 
   inline String to_lower(const Language & l, ParmString word) 
@@ -274,6 +285,15 @@ namespace aspeller {
       if (l.special(*i).any()) ++i;
       new_word.push_back(l.to_stripped(*i));
     }
+  }
+  
+  inline void to_stripped(const Language & l, ParmString word, char * o)
+  {
+    for (const char * i = word; *i; ++i) {
+      if (l.special(*i).any()) ++i;
+      *o++ = l.to_stripped(*i);
+    }
+    *o = '\0';
   }
 
   inline String to_stripped(const Language & l, ParmString word) 

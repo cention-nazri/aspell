@@ -63,7 +63,6 @@ libaspell_la_SOURCES =\
   modules/speller/default/typo_editdist.cpp\
   modules/speller/default/editdist.cpp\
   modules/speller/default/primes.cpp\
-  modules/speller/default/l2editdist.cpp\
   modules/speller/default/language.cpp\
   modules/speller/default/leditdist.cpp\
   modules/speller/default/split.cpp\

@@ -33,9 +33,6 @@
 // means.  For more information on the metaphone algorithm please see
 // the file metaphone.cc which included a detailed description of it.
 
-// FIXME: avoid copying around strings
-//        instead write the word directly to its final location
-
 #include "getdata.hpp"
 
 #include "fstream.hpp"
@@ -64,7 +61,7 @@ using namespace aspeller;
 using namespace acommon;
 using namespace std;
 
-namespace aspeller_default_suggest {
+namespace {
 
   typedef vector<String> NearMissesFinal;
 
@@ -160,14 +157,12 @@ namespace aspeller_default_suggest {
     NearMisses         near_misses;
     NearMissesFinal  * near_misses_final;
 
-    BasicList<String>      strings;
+    ObjStack           buffer;
 
     bool use_soundslike, fast_scan, fast_lookup, affix_compress_soundslike;
 
     static const bool do_count = true;
     static const bool dont_count = false;
-    static const bool do_need_alloc = true;
-    static const bool dont_need_alloc = false;
 
     const String & active_soundslike() {
       return use_soundslike ? original_word.soundslike : original_word.stripped;
@@ -177,26 +172,20 @@ namespace aspeller_default_suggest {
     }
 
     void try_sound(ParmString, int score);
-    void add_nearmiss(ParmString word, int score, bool count, 
-		      bool need_alloc, WordEntry * rl = 0) 
+    void add_nearmiss(ParmString word, int score, bool count, WordEntry * rl = 0)
     {
       near_misses.push_front(ScoreWordSound());
       ScoreWordSound & d = near_misses.front();
-      if (need_alloc) {
-	strings.push_front(word);
-	d.word = strings.front().c_str();
-      } else {
-	d.word = word;
-      }
+      d.word = word;
 
       if (parms.use_typo_analysis) {
-	unsigned int l = strlen(word);
+	unsigned int l = word.size();
 	if (l > max_word_length) max_word_length = l;
       }
 
-      if (!is_stripped(*lang,word)) {
-	strings.push_front(to_stripped(*lang,word));
-	d.word_stripped = strings.front().c_str();
+      if (!is_stripped(*lang,word)) { // FIXME: avoid the need for this test
+        d.word_stripped = (char *)buffer.alloc(word.size());
+        to_stripped(*lang, word, (char *)d.word_stripped);
       } else {
 	d.word_stripped = d.word;
       }
@@ -273,8 +262,9 @@ namespace aspeller_default_suggest {
     {
       i->ws->soundslike_lookup(str, sw);
       for (;!sw.at_end(); sw.adv()) {
-        word.clear();
-        i->convert.convert(sw.word, word);
+        ParmString sw_word(sw.word);
+        char * w = (char *)buffer.alloc(sw_word.size() + 1);
+        i->convert.convert(sw_word, w);
         WordEntry * repl = 0;
         if (sw.what == WordEntry::Misspelled) {
           repl = new WordEntry;
@@ -282,7 +272,7 @@ namespace aspeller_default_suggest {
             = static_cast<const BasicReplacementSet *>(i->ws);
           repl_set->repl_lookup(sw, *repl);
         }
-        add_nearmiss(word, score, do_count, do_need_alloc, repl);
+        add_nearmiss(ParmString(w, sw_word.size()), score, do_count, repl);
       }
     }
     if (affix_compress_soundslike) {
@@ -297,11 +287,11 @@ namespace aspeller_default_suggest {
 	   ++i) 
       {
 	i->ws->soundslike_lookup(ci.word, sw);
-	for (;!sw.at_end(); sw.adv()) {
+	for (;!sw.at_end(); sw.adv()) { // FIXME: Ineffecent
 	  word.clear();
 	  i->convert.convert(sw.word, word);
-	  lang->affix()->get_word(word, ci);
-	  add_nearmiss(word.c_str(), score, do_count, do_need_alloc);
+	  lang->affix()->get_word(word, ci); 
+	  add_nearmiss(buffer.dup(word), score, do_count);
 	}
       }
     }
@@ -346,8 +336,9 @@ namespace aspeller_default_suggest {
         for (size_t j = 0; j != parms.split_chars.size(); ++j)
         {
           new_word[i] = parms.split_chars[j];
-          add_nearmiss(new_word, parms.edit_distance_weights.del2*3/2,
-                       dont_count, do_need_alloc);
+          add_nearmiss(buffer.dup(new_word), 
+                       parms.edit_distance_weights.del2*3/2,
+                       dont_count);
         }
       }
     }
@@ -442,7 +433,6 @@ namespace aspeller_default_suggest {
     WordEntry w;
     const char * sl = 0;
     String sl_buf;
-    String word;
     EditDist score;
     unsigned int stopped_at = LARGE_NUM;
     CheckList cl;
@@ -474,8 +464,9 @@ namespace aspeller_default_suggest {
 	//CERR << sw->word << "\n";
         for (; !w.at_end(); w.adv()) {
 	  //CERR << "  " << w.word << "\n";
-          word.clear();
-          i->convert.convert(w.word, word);
+          ParmString w_word(w.word);
+          char * wf = (char *)buffer.alloc(w_word.size() + 1);
+          i->convert.convert(w_word, wf);
           WordEntry * repl = 0;
           if (w.what == WordEntry::Misspelled) {
             repl = new WordEntry;
@@ -483,7 +474,7 @@ namespace aspeller_default_suggest {
               = static_cast<const BasicReplacementSet *>(i->ws);
             repl_set->repl_lookup(w, *repl);
           }
-          add_nearmiss(word.c_str(), score, do_count, do_need_alloc, repl);
+          add_nearmiss(ParmString(wf, w_word.size()), score, do_count, repl);
         }
         continue;
 
@@ -498,9 +489,10 @@ namespace aspeller_default_suggest {
           stopped_at = score.stopped_at - sl;
           if (score >= LARGE_NUM) continue;
           stopped_at = LARGE_NUM;
-          word.clear();
-          i->convert.convert(ci_cur->word, word);
-          add_nearmiss(word.c_str(), score, do_count, do_need_alloc, 0);
+          ParmString w_word(ci_cur->word);
+          char * wf = (char *)buffer.alloc(w_word.size() + 1);
+          i->convert.convert(w_word, wf);
+          add_nearmiss(ParmString(wf, w_word.size()), score, do_count);
         }
       }
     }
@@ -817,7 +809,7 @@ namespace aspeller_default_suggest {
 
 namespace aspeller {
   Suggest * new_default_suggest(SpellerImpl * m) {
-    return new aspeller_default_suggest::SuggestImpl(m);
+    return new SuggestImpl(m);
   }
 
   //Suggest * new_default_suggest(SpellerImpl * m, const SuggestParms & p) {

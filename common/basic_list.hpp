@@ -2,8 +2,9 @@
 #define autil__basic_list_hh
 
 #include <list>
+//#include <ext/slist>
 
-#include <assert.h>
+//#include <assert.h>
 
 // This file is part of The New Aspell
 // Copyright (C) 2001 by Kevin Atkinson under the GNU LGPL license
@@ -31,12 +32,14 @@ namespace acommon {
 
   template <typename T>
   class BasicList {
-    std::list<T> data_;
+    //typedef __gnu_cxx::slist<T> List;
+    typedef std::list<T> List;
+    List data_;
   public:
     // treat the iterators as forward iterators only
-    typedef typename std::list<T>::iterator       iterator;
-    typedef typename std::list<T>::const_iterator const_iterator;
-    typedef typename std::list<T>::size_type      size_type;
+    typedef typename List::iterator       iterator;
+    typedef typename List::const_iterator const_iterator;
+    typedef typename List::size_type      size_type;
     bool empty() {return data_.empty();}
     void clear() {data_.clear();}
     size_type size() {return data_.size();}
@@ -53,9 +56,10 @@ namespace acommon {
     template<class Pred> void sort(Pred pr) {data_.sort(pr);}
     void splice_into (BasicList & other, iterator prev, iterator cur)
     {
-      ++prev;
-      assert (prev == cur);
+      //++prev;
+      //assert (prev == cur);
       data_.splice(data_.begin(),other.data_,cur);
+      //data_.splice_after(data_.begin(), prev);
     }
   };
 

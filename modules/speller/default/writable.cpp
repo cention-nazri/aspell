@@ -9,7 +9,7 @@
 #include "fstream.hpp"
 #include "language.hpp"
 
-namespace aspell_writable {
+namespace {
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -822,8 +822,6 @@ WritableReplS::~WritableReplS()
 }
 
 }
-
-using namespace aspell_writable;
 
 namespace aspeller {
 

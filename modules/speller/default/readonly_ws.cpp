@@ -122,7 +122,7 @@ static inline void mmap_free(char *, unsigned int)
 
 #endif
 
-namespace aspeller_default_readonly_ws {
+namespace {
 
   using namespace aspeller;
 
@@ -514,7 +514,7 @@ namespace aspeller_default_readonly_ws {
     
   static void soundslike_next(WordEntry * w)
   {
-    const char * cur = static_cast<const char *>(w->intr[0]);
+    const char * cur = (const char *)(w->intr[0]);
     w->word = cur;
     unsigned int len = strlen(cur);
     cur += len + 1;
@@ -577,12 +577,12 @@ namespace aspeller_default_readonly_ws {
 namespace aspeller {
 
   BasicWordSet * new_default_readonly_word_set() {
-    return new aspeller_default_readonly_ws::ReadOnlyWS();
+    return new ReadOnlyWS();
   }
   
 }
 
-namespace aspeller_default_readonly_ws {
+namespace {
 
   using namespace aspeller;
 
@@ -1114,7 +1114,7 @@ namespace aspeller {
     if (!res) return res;
     lang.reset(res.data);
     lang->set_lang_defaults(config);
-    aspeller_default_readonly_ws::create(els,*lang,config);
+    create(els,*lang,config);
     return no_err;
   }
 }

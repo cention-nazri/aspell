@@ -45,9 +45,9 @@ namespace acommon {
 
     FILE * c_stream();
     int file_no();
-
+    
     __attribute__ ((format (printf,2,3)))
-    int print(const char * format, ...)
+      int print(const char * format, ...)
     {
       va_list ap;
       va_start(ap, format);

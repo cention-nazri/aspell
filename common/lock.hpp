@@ -24,7 +24,7 @@ namespace acommon {
 #define __attribute__(x)
 #endif
 
-#define LOCK(l) const Lock __attribute__((__unused__)) the_lock(l) 
+#define LOCK(l) const Lock the_lock(l);
 
 #ifdef USE_POSIX_MUTEX
   class Mutex {
