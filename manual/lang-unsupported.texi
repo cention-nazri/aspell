@@ -1,8 +1,8 @@
-@multitable {Code} {Language Name} {Han + Hangeul}
+@multitable {Code} {Language Name} {Han, Hangul}
 @item @b{Code} @tab @b{Language Name} @tab @b{Script}
 @item ja @tab Japanese @tab Japanese
 @item km @tab Khmer @tab Khmer
-@item ko @tab Korean @tab Han + Hangeul
+@item ko @tab Korean @tab Han, Hangul
 @item pi @tab Pali @tab Thai
 @item th @tab Thai @tab Thai
 @item zh @tab Chinese @tab Han

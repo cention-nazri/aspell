@@ -1,5 +1,5 @@
 \input texinfo   @c -*-texinfo-*-
-@comment $Id: aspell.texi,v 1.21 2004/04/13 07:28:06 kevina Exp $
+@comment $Id: aspell.texi,v 1.22 2004/04/13 20:19:37 kevina Exp $
 @comment %**start of header
 @setfilename aspell.info
 @settitle GNU Aspell 0.60
@@ -2957,10 +2957,10 @@ Even though the Ethiopic script has more than 220 distinct characters
 with a little work Aspell can still handle it.  The idea is to split
 each character into two parts based on the matrix representation.  The
 first 3 bits will be the first part and could be mapped to
-@samp{10000???}.  The next 6 bits will be the second part and could be
+@samp{10110???}.  The next 6 bits will be the second part and could be
 mapped to @samp{11??????}.  The combined character will then be mapped
 with the upper bits coming first.  Thus each Ethiopic syllabary will
-have the form @samp{11?????? 10000???}.  By mapping the first and second
+have the form @samp{11?????? 10110???}.  By mapping the first and second
 parts to separate 8-bit characters it is easy to tell which part
 represents the consonant and which part represents the vowel of the
 syllabary.  This encoding of the syllabary is far more useful to Aspell
@@ -2994,18 +2994,6 @@ With only 120 distinct symbols, Aspell can actually support this one as
 is.  However, as previously mentioned, it may be beneficial to break it
 up into the consonant-vowel representation anyway.
 
-@appendixsubsec Hangul
-
-Koren in generally written in hangul or a mixture of han and hangul.
-Aspell should be able to spell check the hangul part of the writing.  In
-Hangul letters individual letters, known as jamo, are grouped together
-in syllable blocks.  Unicode allows Hangul to be stored in one of three
-ways, individual jamo letters (Hangul Compatibility Jamo, U+3130 -
-U+318F), decomposed jamo (Hangul Jamo, U+1100 - U+11FF), and precoposed
-sylable blocks (Hangul Syllables, U+AC00 - U+D7AF).  Aspell will only
-work with the first form.
-
-
 @node Unsupported
 @appendixsec Unsupported
 
@@ -3029,9 +3017,9 @@ the foreseeable future.
 
 H@`anzi Characters are used to write Chinese, Japanese, Korean, and were
 once used to write Vietnamese.  Each h@`anzi character represents a
-syllable of a spoken word and also has a meaning.  Since there are around
-3,000 of them in common usage it is unlikely that Aspell will ever be
-able to support spell checking languages written using h@`anzi.
+syllable of a spoken word and also has a meaning.  Since there are
+around 3,000 of them in common usage it is unlikely that Aspell will
+ever be able to support spell checking languages written using h@`anzi.
 However, I am not even sure if these languages need spell checking since
 h@`anzi characters are generally not entered in directly.  Furthermore
 even if Aspell could spell check h@`anzi the exiting suggestion strategy
@@ -3040,21 +3028,35 @@ to be developed.
 
 @appendixsubsec Japanese
 
-Modern Japanese is written in a mixture of @dfn{hiragana}, @dfn{katakana},
-@dfn{kanji}, and sometimes @dfn{romaji}.  @dfn{Hiragana} and @dfn{katakana} are
-both syllabaries unique to Japan, @dfn{kanji} is a modified form of
-h@`anzi, and @dfn{romaji} uses the Latin alphabet.  With some work, Aspell
-should be able to check the non-kanji part of Japanese text.  However,
-based on my limited understanding of Japanese hiragana is often used at
-the end of kanji.  Thus if Aspell was to simply separate out the
-hiragana from kanji it would end up with a lot of word endings which are
-not proper words and will thus be flagged as misspellings.  However,
-this can be fairly easily rectified as text is tokenized into words
-before it is converted into Aspell's internal encoding.  In fact, some
-Japanese text is written in entirely in one script.  For example books
-for children and foreigners are sometimes written entirely in hiragana.
-Thus, Aspell could prove at least somewhat useful for spell checking
-Japanese.
+Modern Japanese is written in a mixture of @dfn{hiragana},
+@dfn{katakana}, @dfn{kanji}, and sometimes @dfn{romaji}.  @dfn{Hiragana}
+and @dfn{katakana} are both syllabaries unique to Japan, @dfn{kanji} is
+a modified form of h@`anzi, and @dfn{romaji} uses the Latin alphabet.
+With some work, Aspell should be able to check the non-kanji part of
+Japanese text.  However, based on my limited understanding of Japanese
+hiragana is often used at the end of kanji.  Thus if Aspell was to
+simply separate out the hiragana from kanji it would end up with a lot
+of word endings which are not proper words and will thus be flagged as
+misspellings.  However, this can be fairly easily rectified as text is
+tokenized into words before it is converted into Aspell's internal
+encoding.  In fact, some Japanese text is written in entirely in one
+script.  For example books for children and foreigners are sometimes
+written entirely in hiragana.  Thus, Aspell, in its current state, could
+prove at least somewhat useful for spell checking Japanese.
+
+@appendixsubsec Hangul
+
+Koren in generally written in hangul or a mixture of han and hangul.  In
+Hangul letters individual letters, known as jamo, are grouped together
+in syllable blocks.  Unicode allows Hangul to be stored in one of three
+ways, (A) Individual jamo letters (Hangul Compatibility Jamo, U+3130 -
+U+318F), (D) decomposed jamo (Hangul Jamo, U+1100 - U+11FF), and (C)
+precoposed sylable blocks (Hangul Syllables, U+AC00 - U+D7AF).  In order
+for Aspell to work with Hangul it needs to be form A.  Unfortually the
+existing Normalization code in Aspell will not be able to adequately
+deal with converting Hangul from form D and C to form A and back again.
+However, once this code is written Aspell should be able to spell check
+Hangul with out any problem.
 
 @node Multiple Scripts
 @appendixsec Languages Written in Multiple Scripts
@@ -3076,33 +3078,28 @@ support.
 @multitable @columnfractions .05 .20 .75
 
 @item be @tab Belarusian
-@tab Ispell Dictionary available
+@tab Ispell Dictionary available.
 
 @item et @tab Estonian
-@tab Ispell Dictionary available
+@tab Ispell Dictionary available.
 
 @item fi @tab Finnish 
-@tab Ispell Dictionary available
-
-@item gd @tab Scottish Gaelic
 @tab Ispell Dictionary available.
-@uref{http://packages.debian.org/@/unstable/text/igaelic}
 
-@item gv @tab Manx Gaelic
-@tab Ispell Dictionary available. 
-@uref{http://packages.debian.org/@/unstable/text/imanx}
-
-@item he @tab Hebrew
-@tab Working with authors of Hspell.
-@uref{http://www.ivrix.org.il/@/projects/spell-checker}
+@item fi @tab Latin
+@tab Ispell/MySpell Dictionary available.
 
 @item sq @tab Albanian
-@tab Ispell Dictionary available
+@tab Ispell Dictionary available.
 
 @item vi @tab Vietnamese
 @tab Word list available at 
 @uref{http://@/www.informatik.uni-leipzig.de/@/~duc/software/misc/@/wordlist.html}.
 Working with them to create an Aspell dictionary. 
+
+@item yi @tab Yiddish
+@tab Word list available.
+
 @end multitable
 
 @node References

@@ -10,6 +10,7 @@
 @item an @tab Aragonese @tab Latin @tab - @tab -
 @item ar @tab Arabic @tab Arabic @tab - @tab -
 @item as @tab Assamese @tab Bengali @tab - @tab -
+@item ast @tab Asturian / Bable @tab Latin @tab Maybe @tab -
 @item av @tab Avar @tab Cyrillic @tab - @tab -
 @item ay @tab Aymara @tab Latin @tab - @tab -
 @item az @tab Azerbaijani @tab Cyrillic, Latin @tab - @tab -
@@ -28,7 +29,7 @@
 @item ca @tab Catalan / Valencian @tab Latin @tab Yes @tab -
 @item ce @tab Chechen @tab Cyrillic @tab - @tab -
 @item ceb @tab Cebuano @tab Latin @tab Maybe @tab -
-@item ch @tab Chamorro @tab Latin @tab - @tab -
+@item ch @tab Chamorro @tab Latin @tab Maybe @tab -
 @item co @tab Corsican @tab Latin @tab - @tab -
 @item cr @tab Cree @tab Canadian Syllabics, Latin @tab - @tab -
 @item cs @tab Czech @tab Latin @tab Yes @tab Yes
@@ -55,7 +56,7 @@
 @item fj @tab Fijian @tab Latin @tab - @tab -
 @item fo @tab Faroese @tab Latin @tab Yes @tab -
 @item fr @tab French @tab Latin @tab Yes @tab Yes
-@item fy @tab Frisian @tab Latin @tab - @tab -
+@item fy @tab Frisian @tab Latin @tab Maybe @tab -
 @item
 @item ga @tab Irish @tab Latin @tab Yes @tab Yes
 @item gd @tab Scottish Gaelic @tab Latin @tab Yes @tab -
@@ -65,7 +66,8 @@
 @item gv @tab Manx Gaelic @tab Latin @tab Yes @tab -
 @item
 @item ha @tab Hausa @tab Latin @tab - @tab -
-@item he @tab Hebrew @tab Hebrew @tab Planned @tab -
+@item haw @tab Hawaiian @tab Latin @tab Maybe @tab -
+@item he @tab Hebrew @tab Hebrew @tab Experimental @tab -
 @item hi @tab Hindi @tab Devanagari @tab - @tab -
 @item ho @tab Hiri Motu @tab Latin @tab - @tab -
 @item hr @tab Croatian @tab Latin @tab Yes @tab -
@@ -96,15 +98,14 @@
 @item kk @tab Kazakh @tab Cyrillic @tab - @tab -
 @item kl @tab Kalaallisut / Greenlandic @tab Latin @tab - @tab -
 @item kn @tab Kannada @tab Kannada @tab - @tab -
-@item ko @tab Korean @tab Hangul @tab - @tab -
 @item kr @tab Kanuri @tab Latin @tab - @tab -
 @item ks @tab Kashmiri @tab Arabic, Devanagari @tab - @tab -
 @item ku @tab Kurdish @tab Arabic, Cyrillic, Latin @tab - @tab -
 @item kv @tab Komi @tab Cyrillic @tab - @tab -
-@item kw @tab Cornish @tab Latin @tab - @tab -
+@item kw @tab Cornish @tab Latin @tab Maybe @tab -
 @item ky @tab Kirghiz @tab Cyrillic, Latin @tab - @tab -
 @item
-@item la @tab Latin @tab Latin @tab Maybe @tab -
+@item la @tab Latin @tab Latin @tab Planned @tab -
 @item lb @tab Luxembourgish @tab Latin @tab Maybe @tab -
 @item lg @tab Ganda @tab Latin @tab - @tab -
 @item li @tab Limburgan @tab Latin @tab - @tab -
@@ -137,7 +138,7 @@
 @item nv @tab Navajo @tab Latin @tab - @tab -
 @item ny @tab Nyanja @tab Latin @tab - @tab -
 @item
-@item oc @tab Occitan / Provencal @tab Latin @tab - @tab -
+@item oc @tab Occitan / Provencal @tab Latin @tab Maybe @tab -
 @item oj @tab Ojibwa @tab Ojibwe @tab - @tab -
 @item om @tab Oromo @tab Ethiopic @tab - @tab -
 @item or @tab Oriya @tab Oriya @tab - @tab -
@@ -149,7 +150,7 @@
 @item ps @tab Pushto @tab Arabic @tab - @tab -
 @item pt @tab Portuguese @tab Latin @tab Yes @tab Yes
 @item
-@item qu @tab Quechua @tab Latin @tab Maybe @tab -
+@item qu @tab Quechua @tab Latin @tab - @tab -
 @item
 @item rm @tab Raeto-Romance @tab Latin @tab - @tab -
 @item rn @tab Rundi @tab Latin @tab - @tab -
@@ -184,6 +185,7 @@
 @item tl @tab Tagalog @tab Latin, Tagalog @tab - @tab -
 @item tn @tab Tswana @tab Latin @tab Yes @tab -
 @item to @tab Tonga @tab Latin @tab - @tab -
+@item tpi @tab Tok Pisin @tab Latin @tab Maybe @tab -
 @item tr @tab Turkish @tab Latin @tab Yes @tab -
 @item ts @tab Tsonga @tab Latin @tab - @tab -
 @item tt @tab Tatar @tab Cyrillic @tab - @tab -
@@ -200,11 +202,11 @@
 @item vo @tab Volapuk @tab Latin @tab - @tab -
 @item
 @item wa @tab Walloon @tab Latin @tab Yes @tab Incomplete
-@item wo @tab Wolof @tab Latin @tab Maybe @tab -
+@item wo @tab Wolof @tab Latin @tab - @tab -
 @item
 @item xh @tab Xhosa @tab Latin @tab - @tab -
 @item
-@item yi @tab Yiddish @tab Hebrew @tab Maybe @tab -
+@item yi @tab Yiddish @tab Hebrew @tab Planned @tab -
 @item yo @tab Yoruba @tab Latin @tab - @tab -
 @item
 @item za @tab Zhuang @tab Latin @tab - @tab -
