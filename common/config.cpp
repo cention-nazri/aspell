@@ -502,7 +502,6 @@ namespace acommon {
     }                                                         \
   } while (false)
 
-
   class NotifyListBlockChange : public MutableContainer 
   {
     const KeyInfo * key_info;
@@ -559,8 +558,8 @@ namespace acommon {
     RET_ON_ERR_SET(keyinfo(key), const KeyInfo *, ki);
     key = ki->name;
 
-    if (ki->otherdata[1] && attached_)
-      return make_err(cant_change_value, key);
+    //if (attached_) // FIXME
+    //  return make_err(cant_change_value, key);
   
     assert(ki->def != 0); // if null this key should never have values
 			  // directly added to it
@@ -682,8 +681,8 @@ namespace acommon {
     RET_ON_ERR_SET(keyinfo(k), const KeyInfo *, ki);
     const char * key = ki->name;
 
-    if (ki->otherdata[1] && attached_)
-      return make_err(cant_change_value, key);
+    //if (attached_) // FIXME
+    //  return make_err(cant_change_value, key);
   
     assert(ki->def != 0); // if null this key should never have values
     // directly added to it
@@ -882,7 +881,6 @@ namespace acommon {
 
   void Config::merge(const Config & other) {
     StackPtr<KeyInfoEnumeration> els(possible_elements());
-    bool diff_name = strcmp(name(), other.name()) != 0;
     const KeyInfo * k;
     const KeyInfo * other_k;
     const char * other_name;
@@ -891,18 +889,8 @@ namespace acommon {
     while ( (k = els->next()) != 0) {
       if (k->type == KeyInfoDescript) continue; // FIXME: hack
 
-      if (diff_name && k->otherdata[0] == 'p'
-          && strncmp(k->name, other.name_.c_str(), other.name_.size())
-          && k->name[other.name_.size()] == '_')
-        other_name = k->name + other.name_.size();
-      else
-        other_name = k->name;
-
+      other_name = k->name;
       other_k = other.keyinfo(other_name);
-      if (diff_name && other_k && other_k->otherdata[0] == 'r') continue;
-      // the other key is a prefix key so skip it
-      // when this is a prefix key than this key
-      // would be prefix_
 
       if (other_k != 0 &&
           strcmp(k->def, other_k->def) == 0
@@ -966,8 +954,6 @@ namespace acommon {
   }
 
 
-#define CANT_CHANGE 1
-
 #ifdef ENABLE_WIN32_RELOCATABLE
 #  define HOME_DIR "<prefix>"
 #  define PERSONAL "<actual-lang>.pws"
@@ -990,14 +976,14 @@ namespace acommon {
        /* TRANSLATORS: The remaing strings in config.cpp should be kept
           under 50 characters, begin with a lower case character and not
           include any trailing punctuation marks. */
-       N_("main configuration file")             , {0, CANT_CHANGE}}
+       N_("main configuration file")}
     , {"conf-dir", KeyInfoString, CONF_DIR,
-       N_("location of main configuration file") ,{0, CANT_CHANGE}}
+       N_("location of main configuration file")}
     , {"conf-path",     KeyInfoString, "<conf-dir/conf>",     0}
     , {"data-dir", KeyInfoString, DATA_DIR,
-       N_("location of language data files"), "r"}
+       N_("location of language data files")}
     , {"dict-dir", KeyInfoString, DICT_DIR,
-       N_("location of the main word list")      }
+       N_("location of the main word list")}
     , {"encoding",   KeyInfoString, "iso8859-1",
        N_("encoding to expect data to be in")}
     , {"filter",   KeyInfoList  , "url",
@@ -1006,13 +992,14 @@ namespace acommon {
        N_("path(es) aspell looks for filters")}
     , {"option-path", KeyInfoList, FILTER_OPT_DIR,
        N_("path(es) aspell looks for options descriptions")}
-    , {"mode",     KeyInfoString, "url",             mode_string }
+    , {"mode",     KeyInfoString, "url",
+       mode_string}
     , {"extra-dicts", KeyInfoList, "",
        N_("extra dictionaries to use")}
     , {"home-dir", KeyInfoString, HOME_DIR,
-       N_("location for personal files") }
+       N_("location for personal files")}
     , {"ignore",   KeyInfoInt   , "1",
-       N_("ignore words <= n chars")             }
+       N_("ignore words <= n chars")}
     , {"ignore-accents" , KeyInfoBool, "false",
        N_("ignore accents when checking words")}
     , {"ignore-case", KeyInfoBool  , "false",
@@ -1038,13 +1025,13 @@ namespace acommon {
     , {"module-search-order", KeyInfoList, "",
        N_("search order for modules")}
     , {"per-conf", KeyInfoString, ".aspell.conf",
-       N_("personal configuration file"),{0, CANT_CHANGE}}
+       N_("personal configuration file")}
     , {"per-conf-path", KeyInfoString, "<home-dir/per-conf>", 0}
     , {"personal", KeyInfoString, PERSONAL,
        N_("personal dictionary file name")}
     , {"personal-path", KeyInfoString, "<home-dir/personal>", 0}
     , {"prefix",   KeyInfoString, PREFIX,
-       N_("prefix directory"), {0, CANT_CHANGE}}
+       N_("prefix directory")}
     , {"repl",     KeyInfoString, REPL,
        N_("replacements list file name") }
     , {"repl-path",     KeyInfoString, "<home-dir/repl>",     0}
@@ -1057,7 +1044,7 @@ namespace acommon {
     , {"save-repl", KeyInfoBool  , "true",
        N_("save replacement pairs on save all")}
     , {"set-prefix", KeyInfoBool, "true",
-       N_("set the prefix based on executable location"), {0, CANT_CHANGE}} 
+       N_("set the prefix based on executable location")}
     , {"size",          KeyInfoString, "+60",
        N_("size of the word list")}
     , {"spelling",   KeyInfoString, "",
@@ -1073,13 +1060,13 @@ namespace acommon {
     , {"sug-repl-table", KeyInfoBool, "true",
        N_("use replacement tables, override sug-mode default")}
     , {"sug-split-chars", KeyInfoString, " -",
-       N_("characters to insert when a word is split")}
+       N_("characters to insert when a word is split"), KEYINFO_UTF8}
     , {"word-list-path", KeyInfoList, DATA_DIR,
        N_("search path for word list information files")}
     , {"affix-char",          KeyInfoString, "/", 
-       N_("indicator for affix flags in word lists")}
+       N_("indicator for affix flags in word lists"), KEYINFO_UTF8}
     , {"flag-char",           KeyInfoString, ":",
-       N_("indicator for additional flags in word lists")}
+       N_("indicator for additional flags in word lists"), KEYINFO_UTF8}
     
     //
     // These options are only used when creating dictionaries
@@ -1109,7 +1096,6 @@ namespace acommon {
        N_("suggest possible replacements")}
     , {"time"   , KeyInfoBool, "false",
        N_("time load time and suggest time in pipe mode")}
-    
   };
 
   const KeyInfo * config_impl_keys_begin = config_keys;

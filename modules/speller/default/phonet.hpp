@@ -25,10 +25,11 @@
 
 using namespace acommon;
 
+namespace acommon {struct Conv;}
+
 namespace aspeller {
 
   class Language;
-  class Conv;
 
   struct PhonetParms {
     String version;

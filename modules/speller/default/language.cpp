@@ -19,28 +19,27 @@
 
 namespace aspeller {
 
-  // FIXME: The "c" might conflict with ConfigData Use of that slot
-  //   work on a policy to avoid that such resering the first half
-  //   for ConfigData's use and the otehr for users.
+  static const int FOR_CONFIG = 1;
+
   static const KeyInfo lang_config_keys[] = {
-    {"charset",             KeyInfoString, "iso-8859-1", "", ""}
-    , {"data-encoding",       KeyInfoString, "<charset>", "", ""}
-    , {"name",                KeyInfoString, "", "", ""}
-    , {"run-together",        KeyInfoBool,   "", "", "c"}
-    , {"run-together-limit",  KeyInfoInt,    "", "", "c"}
-    , {"run-together-min",    KeyInfoInt,    "", "", "c"}
-    , {"soundslike",          KeyInfoString, "none", "", ""}
-    , {"special",             KeyInfoString, "", "", ""}
-    , {"ignore-accents" ,     KeyInfoBool, "", "", "c"}
-    , {"use-soundslike" ,     KeyInfoBool, "", "", "c"}
-    , {"use-jump-tables",     KeyInfoBool, "", "", "c"}
-    , {"keyboard",            KeyInfoString, "standard", "", "c"} 
-    , {"affix",               KeyInfoString, "none", "", ""}
-    , {"affix-compress",      KeyInfoBool, "false", "", "c"}
-    , {"affix-char",          KeyInfoString, "/", "", "c"}
-    , {"flag-char",           KeyInfoString, ":", "", "c"}
-    , {"repl-table",          KeyInfoString, "none", "", ""}
-    , {"sug-split-chars",     KeyInfoString, "- ", "", "c"}
+    {"charset",             KeyInfoString, "iso-8859-1", ""}
+    , {"data-encoding",       KeyInfoString, "<charset>", ""}
+    , {"name",                KeyInfoString, "", ""}
+    , {"run-together",        KeyInfoBool,   "", "", 0, FOR_CONFIG}
+    , {"run-together-limit",  KeyInfoInt,    "", "", 0, FOR_CONFIG}
+    , {"run-together-min",    KeyInfoInt,    "", "", 0, FOR_CONFIG}
+    , {"soundslike",          KeyInfoString, "none", ""}
+    , {"special",             KeyInfoString, "", ""}
+    , {"ignore-accents" ,     KeyInfoBool, "", "", 0, FOR_CONFIG}
+    , {"use-soundslike" ,     KeyInfoBool, "", "", 0, FOR_CONFIG}
+    , {"use-jump-tables",     KeyInfoBool, "", "", 0, FOR_CONFIG}
+    , {"keyboard",            KeyInfoString, "standard", "", 0, FOR_CONFIG} 
+    , {"affix",               KeyInfoString, "none", ""}
+    , {"affix-compress",      KeyInfoBool, "false", "", 0, FOR_CONFIG}
+    , {"affix-char",          KeyInfoString, "/", "", 0, FOR_CONFIG}
+    , {"flag-char",           KeyInfoString, ":", "", 0, FOR_CONFIG}
+    , {"repl-table",          KeyInfoString, "none", ""}
+    , {"sug-split-chars",     KeyInfoString, "- ", "", 0, FOR_CONFIG}
   };
 
   static GlobalCache<Language> language_cache;
@@ -95,6 +94,8 @@ namespace aspeller {
       else 
 #endif
         mesg_conv_.setup(*config, charset_, data_encoding_);
+      to_utf8_.setup(*config, charset_, "utf-8");
+      from_utf8_.setup(*config, "utf-8", charset_);
     }
 
     Conv iconv;
@@ -208,7 +209,6 @@ namespace aspeller {
       }
 
     }
-    
     return no_err;
   }
 
@@ -216,16 +216,21 @@ namespace aspeller {
   {
     StackPtr<KeyInfoEnumeration> els(lang_config_->possible_elements(false));
     const KeyInfo * k;
+    Conv to_utf8;
+    to_utf8.setup(config, data_encoding_, "utf-8");
     while ((k = els->next()) != 0) {
-      if (k->otherdata[0] == 'c' 
+      if (k->other_data == FOR_CONFIG 
 	  && lang_config_->have(k->name) && !config.have(k->name))
       {
-	config.replace(k->name, lang_config_->retrieve(k->name));
+        const KeyInfo * ck = config.keyinfo(k->name);
+        if (ck->flags & KEYINFO_UTF8)
+          config.replace(k->name, to_utf8(lang_config_->retrieve(k->name)));
+        else
+          config.replace(k->name, lang_config_->retrieve(k->name));
       }
     }
   }
-  
-  
+    
   // FIXME: Bug, returns true when inword is a prefix of word
   //        ie (going, go)
   bool SensitiveCompare::operator() (const char * word, 
@@ -329,11 +334,29 @@ namespace aspeller {
     return true;
   }
 
-  static PosibErr<void> invalid_char(ParmString word, ParmString letter, ParmString where)
+  static inline PosibErr<void> invalid_char(ParmString word, ParmString letter, 
+                                            const char * where)
   {
     char m[70];
-    snprintf(m, 70, _("The character '%s' may not appear at the %s of a word."),
-             letter.str(), where.str());
+    switch (where[0]) {
+    case 'b':
+      snprintf(m, 70, 
+               _("The character '%s' may not appear at the beginning of a word."),
+               letter.str());
+      break;
+    case 'm':
+      snprintf(m, 70, 
+               _("The character '%s' may not appear at the middle of a word."),
+               letter.str());
+      break;
+    case 'e':
+      snprintf(m, 70, 
+               _("The character '%s' may not appear at the end of a word."),
+               letter.str());
+      break;
+    default:
+      abort();
+    }
     return make_err(invalid_word, word, m);
   }
 
@@ -343,19 +366,19 @@ namespace aspeller {
     const char * i = word;
     if (l.char_type(*i) != Language::letter) {
       if (!l.special(*i).begin)
-	return invalid_char(MsgConv(l)(word), MsgConv(l)(*i), _("beginning"));
+	return invalid_char(MsgConv(l)(word), MsgConv(l)(*i), "beg");
       else if (l.char_type(*(i+1)) != Language::letter)
 	return make_err(invalid_word, MsgConv(l)(word), _("Does not contain any letters."));
     }
     for (;*(i+1) != '\0'; ++i) { 
       if (l.char_type(*i) != Language::letter) {
 	if (!l.special(*i).middle)
-	  return invalid_char(MsgConv(l)(word), MsgConv(l)(*i), _("middle"));
+	  return invalid_char(MsgConv(l)(word), MsgConv(l)(*i), "middle");
       }
     }
     if (l.char_type(*i) != Language::letter) {
       if (!l.special(*i).end)
-	return invalid_char(MsgConv(l)(word), MsgConv(l)(*i), _("end"));
+	return invalid_char(MsgConv(l)(word), MsgConv(l)(*i), "end");
     }
     return no_err;
   }

@@ -7,11 +7,12 @@
 
 using namespace acommon;
 
+namespace acommon {struct Conv;}
+
 namespace aspeller {
 
   class Language;
-  class Conv;
- 
+
   class Soundslike {
   public:
     virtual String soundslike_chars() const = 0;

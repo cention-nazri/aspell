@@ -13,6 +13,7 @@ TYPE list
 DESCRIPTION email quote characters
 DEFAULT >
 DEFAULT |
+FLAGS utf-8
 ENDOPTION
 
 OPTION margin

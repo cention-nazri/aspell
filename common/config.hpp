@@ -27,6 +27,11 @@ namespace acommon {
   // an error.  Extra accepted keys can be added with the set_extra 
   // method.
 
+  // Unless otherwise states all data is expected to be stored UTF-8
+  // format.  Filenames, however should be untranslated.  That is
+  // filenames may contain 8-bit characters but they are not
+  // necessarly in UTF-8 format.
+
   // An r in the otherdata[0] value means that when merged into
   // a config of a different type it will be renamed to
   // <config name>_<name>
@@ -188,6 +193,7 @@ namespace acommon {
     virtual ~KeyInfoEnumeration() {}
   };
 
+  static const int KEYINFO_UTF8 = 1 << 1;
 }
 
 #endif

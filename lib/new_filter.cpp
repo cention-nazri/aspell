@@ -601,7 +601,7 @@ namespace acommon
 	      cur_opt->type = KeyInfoBool;
               cur_opt->def  = NULL;
               cur_opt->desc = NULL;
-              cur_opt->otherdata[0]='\0';
+              cur_opt->flags = 0;
               active_option = 1;
             }
             norealoption = 0;
@@ -683,15 +683,16 @@ namespace acommon
             continue;
           }
 
-	  //
-	  // key == other
-	  //
-          if (d.key == "other") {
-            strncpy(cur_opt->otherdata,option_value.c_str(),15);
-            cur_opt->otherdata[15]='\0';
+          
+ 	  //
+ 	  // key == flags
+ 	  //
+          if (d.key == "flags") {
+            if (d.value == "utf-8" || d.value == "UTF-8")
+              cur_opt->flags = KEYINFO_UTF8;
             continue;
           }
-
+           
 	  //
 	  // key == endoption
 	  //

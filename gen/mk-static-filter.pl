@@ -53,6 +53,8 @@ while ($filename=shift) {
      (${$option}{"DEFAULT"}.=prep_str($_)) && next;
     ( $_=~s/^DES(?:CRIPTION)[ \t]+//i) && (($_=~s/\\(?=[ \t])//g) || 1) &&
      (${$option}{"DESCRIPTION"}=prep_str($_)) && next;
+    ( $_=~s/^FLAGS[ \t]+//i) && 
+     (${$option}{"FLAGS"}=prep_str($_)) && next;
     ( $_=~s/^ENDOPTION(?:[ \t]+|$)//i) && 
      (($inoption=0)||1) && next;
     ( $_=~s/^STATIC[ \t]+//i) && (($feature=uc $_ ) || 1) &&
@@ -116,7 +118,9 @@ while ($filter = shift @filterhashes) {
     ((lc ${$option}{"TYPE"}) eq "string") && printf STATICFILTERS "KeyInfoString,";
     ((lc ${$option}{"TYPE"}) eq "list") && printf STATICFILTERS "KeyInfoList,";
     print STATICFILTERS "\"".${$option}{"DEFAULT"}."\",\""
-                            .${$option}{"DESCRIPTION"}."\"}";
+                            .${$option}{"DESCRIPTION"}."\"";
+    print STATICFILTERS ", KEYINFO_UTF8" if (lc ${$option}{"FLAGS"} eq "utf-8");
+    print STATICFILTERS "}";
   }
   printf STATICFILTERS "\n  };\n";
   printf STATICFILTERS "\n  const KeyInfo * ".${$filter}{"NAME"}."_options_begin = ".

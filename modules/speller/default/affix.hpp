@@ -31,6 +31,7 @@
 namespace acommon {
   class Config;
   struct CheckInfo;
+  struct Conv;
 }
 
 namespace aspeller {
@@ -38,7 +39,6 @@ namespace aspeller {
   using namespace acommon;
 
   class Language;
-  class Conv;
 
   class SpellerImpl;
   using acommon::CheckInfo;

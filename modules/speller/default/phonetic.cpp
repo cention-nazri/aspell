@@ -8,8 +8,6 @@
 #include "file_data_util.hpp"
 #include "clone_ptr-t.hpp"
 
-#include <vector>
-
 namespace aspeller {
   
   class GenericSoundslike : public Soundslike {

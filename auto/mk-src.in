@@ -210,11 +210,9 @@ struct: key info
 		desc => the default value of the key
 	string: desc
 		desc => a brief description of the key or null if internal value
-	array 16 char: otherdata
-		desc => other data used by config implementations
-			should be set to 0 if not used
-
-}
+	int: flags
+	int: other data
+}       
 group: config
 {
 no native

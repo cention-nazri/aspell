@@ -1,7 +1,7 @@
 // Copyright 2000 by Kevin Atkinson under the terms of the LGPL
 
-#ifndef __aspeller_language__
-#define __aspeller_language__
+#ifndef ASPELLER_LANGUAGE__HPP
+#define ASPELLER_LANGUAGE__HPP
 
 #include "affix.hpp"
 #include "cache.hpp"
@@ -16,7 +16,6 @@
 using namespace acommon;
 
 namespace acommon {
-  class Config;
   struct CheckInfo;
 }
 
@@ -38,89 +37,6 @@ namespace aspeller {
     const SuggestRepl * next() {
       if (i_ == end_) return 0;
       return i_++;
-    }
-  };
-
-  struct ConvObj {
-    Convert * ptr;
-    ConvObj(Convert * c = 0) : ptr(c) {}
-    ~ConvObj() {delete ptr;}
-    PosibErr<void> setup(const Config & c, ParmString from, ParmString to)
-    {
-      delete ptr;
-      ptr = 0;
-      PosibErr<Convert *> pe = new_convert_if_needed(c, from, to);
-      if (pe.has_err()) return pe;
-      ptr = pe.data;
-      return no_err;
-    }
-    operator const Convert * () const {return ptr;}
-  private:
-    ConvObj(const ConvObj &);
-    void operator=(const ConvObj &);
-  };
-
-  struct ConvP {
-    const Convert * conv;
-    ConvertBuffer buf0;
-    CharVector buf;
-    operator bool() const {return conv;}
-    ConvP(const Convert * c = 0) : conv(c) {}
-    ConvP(const ConvObj & c) : conv(c.ptr) {}
-    ConvP(const ConvP & c) : conv(c.conv) {}
-    void operator=(const ConvP & c) { conv = c.conv; }
-    PosibErr<void> setup(const Config & c, ParmString from, ParmString to)
-    {
-      delete conv;
-      conv = 0;
-      PosibErr<Convert *> pe = new_convert_if_needed(c, from, to);
-      if (pe.has_err()) return pe;
-      conv = pe.data;
-      return no_err;
-    }
-    char * operator() (MutableString str)
-    {
-      if (conv) {
-        buf.clear();
-        conv->convert(str, str.size, buf, buf0);
-        return buf.data();
-      } else {
-        return str;
-      }
-    }
-    char * operator() (CharVector & str) 
-    {
-      return operator()(MutableString(str.data(),str.size()-1));
-    }
-    char * operator() (char * str)
-    {
-      return operator()(MutableString(str,strlen(str)));
-    }
-    const char * operator() (ParmString str)
-    {
-      if (conv) {
-        buf.clear();
-        conv->convert(str, str.size(), buf, buf0);
-        return buf.data();
-      } else {
-        return str;
-      }
-    }
-    const char * operator() (char c)
-    {
-      char buf2[2] = {c, 0};
-      return operator()(ParmString(buf2,1));
-    }
-  };
-
-  struct Conv : public ConvP
-  {
-    ConvObj conv_obj;
-    Conv(Convert * c = 0) : ConvP(c), conv_obj(c) {}
-    PosibErr<void> setup(const Config & c, ParmString from, ParmString to)
-    {
-      RET_ON_ERR(conv_obj.setup(c,from,to));
-      conv = conv_obj.ptr;
     }
   };
 
@@ -147,6 +63,8 @@ namespace aspeller {
     String   data_encoding_;
 
     ConvObj  mesg_conv_;
+    ConvObj  to_utf8_;
+    ConvObj  from_utf8_;
 
     unsigned char to_uchar(char c) const {return static_cast<unsigned char>(c);}
 
@@ -188,6 +106,8 @@ namespace aspeller {
     const char * data_encoding() const {return data_encoding_.c_str();}
 
     const Convert * mesg_conv() const {return mesg_conv_.ptr;}
+    const Convert * to_utf8() const {return to_utf8_.ptr;}
+    const Convert * from_utf8() const {return from_utf8_.ptr;}
 
     char to_upper(char c) const {return to_upper_[to_uchar(c)];}
     bool is_upper(char c) const {return to_upper(c) == c;}

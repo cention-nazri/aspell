@@ -231,6 +231,8 @@ int main (int argc, const char *argv[])
   const PossibleOption * o;
   const char           * parm;
 
+  Vector<StringPair> utf8_opts;
+
   //
   // process command line options by setting the appropriate options
   // in "options" and/or pushing non-options onto "argv"
@@ -303,7 +305,10 @@ int main (int argc, const char *argv[])
 	  args.push_back(parm);
       } else {
 	if (o->name[0] != '\0') {
-	  EXIT_ON_ERR(options->replace(o->name, parm));
+          if (options->keyinfo(o->name).data->flags & KEYINFO_UTF8)
+            utf8_opts.push_back(StringPair(strdup(o->name), strdup(parm)));
+          else
+            EXIT_ON_ERR(options->replace(o->name, parm));
 	}
       }
     } else {
@@ -319,7 +324,25 @@ int main (int argc, const char *argv[])
 
 #ifdef USE_LOCALE
   const char * codeset = nl_langinfo(CODESET);
-  if (!options->have("encoding") && codeset && !is_ascii_enc(codeset))
+  if (is_ascii_enc(codeset)) codeset = 0;
+#endif
+  if (!utf8_opts.empty()) {
+    Conv to_utf8;
+#ifdef USE_LOCALE
+    EXIT_ON_ERR(to_utf8.setup(*options, codeset, "utf-8"));
+#endif
+    for (Vector<StringPair>::iterator i = utf8_opts.begin(); 
+         i != utf8_opts.end();
+         ++i)
+    {
+      EXIT_ON_ERR(options->replace(i->first, to_utf8(i->second)));
+      free((char *)i->first);
+      free((char *)i->second);
+    }
+    utf8_opts.clear();
+  }
+#ifdef USE_LOCALE
+  if (!options->have("encoding") && codeset)
     EXIT_ON_ERR(options->replace("encoding", codeset));
 #endif
 
@@ -400,7 +423,7 @@ int main (int argc, const char *argv[])
 //
 
   
-static PosibErr<Convert *> setup_conv(const aspeller::Language * lang,
+static Convert * setup_conv(const aspeller::Language * lang,
                                       Config * config)
 {
   if (config->have("encoding")) {
@@ -414,8 +437,8 @@ static PosibErr<Convert *> setup_conv(const aspeller::Language * lang,
   }
 }
  
-static PosibErr<Convert *> setup_conv(Config * config,
-                                      const aspeller::Language * lang)
+static Convert * setup_conv(Config * config,
+                            const aspeller::Language * lang)
 {
   if (config->have("encoding")) {
     PosibErr<Convert *> pe = new_convert_if_needed(*config,

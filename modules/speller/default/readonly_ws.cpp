@@ -54,7 +54,6 @@ using std::pair;
 #include "vector.hpp"
 #include "vector_hash-t.hpp"
 #include "check_list.hpp"
-
 #include "iostream.hpp"
 
 typedef unsigned int   u32int;
