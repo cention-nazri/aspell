@@ -219,7 +219,7 @@ namespace acommon {
     }
     return path.str();
   try_again:
-    closedir((DIR *)dir_handle);
+    if (dir_handle) closedir((DIR *)dir_handle);
     dir_handle = 0;
   get_next_dir:
     dir = els->next();

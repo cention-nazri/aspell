@@ -10,7 +10,7 @@ filterdir = ${pkglibdir}
 optdir = ${pkgdatadir}
 localedir = ${datadir}/locale
 
-export PERLPROG=@PERLPROG@
+PERLPROG = @PERLPROG@
 
 AM_CPPFLAGS = -I${srcdir}/gen -I${srcdir}/common \
               -I${srcdir}/interfaces/cc/ -I${srcdir}/modules/speller/default/
