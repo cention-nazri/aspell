@@ -386,16 +386,26 @@ namespace acommon {
     return config;
   }
 
+  PosibErr<void> reload_filters(Speller * m) 
+  {
+    m->to_internal_->filter.clear();
+    m->from_internal_->filter.clear();
+    // Add enocder and decoder filters if any
+    RET_ON_ERR(setup_filter(m->to_internal_->filter, m->config(), 
+			    true, false, false));
+    RET_ON_ERR(setup_filter(m->from_internal_->filter, m->config(), 
+			    false, false, true));
+    return no_err;
+  }
+
   PosibErr<Speller *> new_speller(Config * c0) 
   {
     RET_ON_ERR_SET(find_word_list(c0), Config *, c);
     StackPtr<Speller> m(get_speller_class(c));
     RET_ON_ERR(m->setup(c));
-    
-    // Add enocder and decoder filters if any
-    RET_ON_ERR(setup_filter(m->to_internal_->filter, c, true, false, false));
-    RET_ON_ERR(setup_filter(m->from_internal_->filter, c, false, false, true));
 
+    RET_ON_ERR(reload_filters(m));
+    
     return m.release();
   }
 

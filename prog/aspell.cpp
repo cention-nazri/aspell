@@ -448,7 +448,7 @@ void pipe()
     exit(1);
   }
   AspellSpeller * speller = to_aspell_speller(ret);
-  Config * config = reinterpret_cast<Config *>(config);
+  Config * config = reinterpret_cast<Speller *>(speller)->config();
   if (do_time)
     COUT << "Time to load word list: " 
          << (clock() - start)/(double)CLOCKS_PER_SEC << "\n";
@@ -500,11 +500,13 @@ void pipe()
       err = config->replace("mode", word);
       if (err.get_err())
 	config->replace("mode", "tex");
+      reload_filters(reinterpret_cast<Speller *>(speller));
       checker.del();
       checker = new_checker(speller, print_star);
       break;
     case '-':
       config->remove("filter");
+      reload_filters(reinterpret_cast<Speller *>(speller));
       checker.del();
       checker = new_checker(speller, print_star);
       break;

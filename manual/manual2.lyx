@@ -115,18 +115,12 @@ The eventual goal is to convert this manual into Texinfo.
 Introduction
 \layout Standard
 
-[FIXME]
-\layout Standard
-
 GNU Aspell is a Free and Open Source spell checker designed to eventually
  replace Ispell.
+ It can either be used as a library or as an independent spell checker.
  Its main feature is that it does a much better job of coming up with possible
- suggestions than Ispell does.
- In fact recent tests shows that it even does better than Microsoft Word
- 97's spell checker in some cases.
- In addition it has both compile time and run time support for other non-English
- languages.
- Aspell also functions as a library which can be used by other programs.
+ suggestions than just about any other spell checker, including Ispell and
+ Microsoft Word.
 \layout Section
 
 Comparison to other spell checker engines
@@ -404,7 +398,7 @@ t word pairs.
 \end_inset 
 
  for more info and how you can help contribute to the test kernel.
- The current scores for aspell are 88 in
+ The current scores for Aspell are 88 in
 \series bold 
  fast 
 \series default 
@@ -516,7 +510,7 @@ Aspell requires gcc 2.95 (or better) as the C++ compiler.
 Obtaining
 \layout Standard
 
-The latest version can always be found at Aspell's home page at 
+The latest version can always be found at GNI Aspell's home page at 
 \begin_inset LatexCommand \url{http://aspell.net}
 
 \end_inset 
@@ -840,15 +834,15 @@ However, you should also be able to build applications that require Pspell
  with the new Aspell as a backwards compatibility header file is provided.
 \layout Standard
 
-The format of the complied dictionaries has almost certenly changed.
+The format of the complied dictionaries has almost certainly changed.
  So you will need to recompile them for the new Aspell.
 \layout Chapter
 
 Basic Usage
 \layout Standard
 
-Two seperate utilties are now used to control Aspell, "aspell" and "speller-util
-".
+Two separate utilities are now used to control Aspell, "aspell" and "speller-uti
+l".
  The "aspell" program handles the checking of documents while "speller-util"
  handles the management of dictionaries.
  For a quick reference on either utility use 
@@ -1969,7 +1963,7 @@ machine unsigned 32
 \end_inset 
 
 .
- However, the aspell utility will cuuretly only function correctly with
+ However, the aspell utility will currently only function correctly with
  8-bit encodings.
  I hope to provide utf-8 support in the future.
  The two 
@@ -2378,6 +2372,36 @@ sgml
 <emphasis/important/
 \layout Standard
 
+This filter will also translate sgml characters of the form 
+\begin_inset Quotes eld
+\end_inset 
+
+&#num;
+\begin_inset Quotes erd
+\end_inset 
+
+.
+ Other sgml characters such as 
+\begin_inset Quotes eld
+\end_inset 
+
+&amp;
+\begin_inset Quotes erd
+\end_inset 
+
+ will simply be skiped over so that the word 
+\begin_inset Quotes eld
+\end_inset 
+
+amp
+\begin_inset Quotes erd
+\end_inset 
+
+ for example will not be spell checked.
+ Eventually full support for properly translating sgml characters will be
+ added.
+\layout Standard
+
 The option 
 \series bold 
 add|rem-sgml-check
@@ -2402,10 +2426,6 @@ add|rem-sgml-extension
  The default is html, htm, php, and sgml.
  The extension are not case sensitive so extensions like .HTM will also be
  recognized.
-\layout Standard
-
-[FIXME: Add note about sgml character decoding and possable enhance the
- code to do so]
 \layout Subsubsection
 
 TeX Filter/Mode

@@ -22,7 +22,8 @@ namespace acommon {
 
   class Filter : public CanHaveError {
   public:
-    bool empty() const {return filters_.empty();}
+    bool empty() const {return filters_.empty();} 
+    void clear();
     void reset();
     void process(FilterChar * & start, FilterChar * & stop);
     void add_filter(IndividualFilter * filter);

@@ -317,6 +317,7 @@ namespace acommon {
       ++i;
     
       if (strcmp(i, "lang") == 0) do {
+
 	if (have("master")) {
 	  final_str = "<unknown>";
 	  break;
@@ -339,7 +340,15 @@ namespace acommon {
 	if (locale == "C")
 	  setlocale(LC_MESSAGES, locale.c_str());
 	
-      } while (false); else if (strcmp(i, "special") == 0) {
+      } while (false); else if (strcmp(i, "actual-lang") == 0) {
+	
+	unsigned int len = 0;
+	final_str = retrieve("lang");
+	while (len < final_str.size() && final_str[len] != '_')
+	  ++len;
+	final_str.resize(len);
+
+      } else if (strcmp(i, "special") == 0) {
 
 	// do nothing
 
@@ -865,7 +874,7 @@ namespace acommon {
 
   static const KeyInfo config_keys[] = {
     {"actual-dict-dir", KeyInfoString, "<dict-dir^master>", 0}
-    , {"actual-lang",     KeyInfoString, "<lang>", 0}
+    , {"actual-lang",     KeyInfoString, "!actual-lang", 0}
     , {"conf",     KeyInfoString, "aspell.conf",  "main configuration file"             , {0, CANT_CHANGE}}
     , {"conf-dir", KeyInfoString, CONF_DIR,      "location of main configuration file" ,{0, CANT_CHANGE}}
     , {"conf-path",     KeyInfoString, "<conf-dir/conf>",     0}

@@ -212,7 +212,7 @@ namespace aspeller {
     typedef VirEnumeration<SoundslikeWord>  VirSoundslikeEmul;
     typedef Enumeration<VirSoundslikeEmul>  SoundslikeEmul;
 
-    virtual StringEnumeration * elements() const {abort();} //FIXME
+    StringEnumeration * elements() const;
     virtual VirEmul * detailed_elements() const = 0;
     virtual Size   size()     const = 0;
     virtual bool   empty()    const {return !size();}

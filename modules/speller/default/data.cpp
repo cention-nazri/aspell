@@ -15,6 +15,10 @@
 
 namespace aspeller {
 
+  //
+  // DataSet impl
+  //
+
   DataSet::Id::Id(DataSet * p, const FileName & fn)
     : ptr(p)
   {
@@ -121,7 +125,10 @@ namespace aspeller {
     }
     const_cast<const char * &>(name) = path.c_str() + i;
   }
-  
+
+  //
+  // LoadableDataSet impl
+  //
 
   PosibErr<void> LoadableDataSet::set_file_name(ParmString fn) 
   {
@@ -141,6 +148,39 @@ namespace aspeller {
 #endif
     return no_err;
   }
+
+  //
+  // BasicWordSet
+  //
+
+  class BasicWordSetEnumeration : public StringEnumeration 
+  {
+    BasicWordSet::Emul real_;
+  public:
+    BasicWordSetEnumeration(BasicWordSet::VirEmul * r) : real_(r) {}
+
+    bool at_end() const {
+      return real_.at_end();
+    }
+    const char * next() {
+      return real_.next().word; // FIXME: It's not this simple
+    }
+    StringEnumeration * clone() const {
+      return new BasicWordSetEnumeration(*this);
+    }
+    void assign(const StringEnumeration * other) {
+      *this = *static_cast<const BasicWordSetEnumeration *>(other);
+    }
+  };
+
+  StringEnumeration * BasicWordSet::elements() const 
+  {
+    return new BasicWordSetEnumeration(detailed_elements());
+  }
+
+  //
+  // CompoundInfo impl
+  //
 
   const char * CompoundInfo::read(const char * i, 
 				  const Language & lang)
@@ -228,6 +268,10 @@ namespace aspeller {
     abort();
   }
 
+  //
+  // SingleWordInfo impl
+  //
+
   void SingleWordInfo::append_word(String & w, const Language &, 
 				   const ConvertWord & c) const
   {
@@ -235,6 +279,10 @@ namespace aspeller {
     if (middle_char != '\0')
       w += middle_char;
   }
+  
+  //
+  // [Basic]WordInfo impl
+  //
 
   void WordInfo::get_word(String & word, const Language & l, 
 			  const ConvertWord & c) const
@@ -266,6 +314,10 @@ namespace aspeller {
     return o;
   }
 
+  //
+  // add_data_set
+  //
+
   PosibErr<LoadableDataSet *> add_data_set(ParmString fn,
 					   Config & config,
 					   SpellerImpl * speller,
@@ -273,7 +325,8 @@ namespace aspeller {
 					   ParmString dir,
 					   DataType allowed)
   {
-    static const char * suffix_list[] = {"", ".multi", ".alias", ".spcl", ".special",
+    static const char * suffix_list[] = {"", ".multi", ".alias", 
+					 ".spcl", ".special",
 					 ".pws", ".prepl"};
     FStream in;
     const char * * suffix;
@@ -366,6 +419,10 @@ namespace aspeller {
     return ws;
     
   }
+
+  //
+  // LocalWordSetInfo
+  //
   
   void LocalWordSetInfo::set_language(const Language * l)
   {

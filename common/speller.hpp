@@ -100,6 +100,12 @@ namespace acommon {
 
   };
 
+
+  // This function is current a hack to reload the filters in the
+  // speller class.  I hope to eventually find a better way.
+  PosibErr<void> reload_filters(Speller * m);
+
+
   PosibErr<Speller *> new_speller(Config * c);
 
 }

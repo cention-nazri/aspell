@@ -46,13 +46,19 @@ namespace acommon {
     //COUT << "AFTER: " << str;
   }
 
-  Filter::~Filter() 
+  void Filter::clear()
   {
     Filters::iterator cur, end;
     cur = filters_.begin();
     end = filters_.end();
     for (; cur != end; ++cur)
       delete *cur;
+    filters_.clear();
+  }
+
+  Filter::~Filter() 
+  {
+    clear();
   }
 
 }

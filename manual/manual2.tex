@@ -102,15 +102,11 @@ version.
 
 \chapter{Introduction}
 
-{[}FIXME{]}
-
 GNU Aspell is a Free and Open Source spell checker designed to eventually
-replace Ispell. Its main feature is that it does a much better job
-of coming up with possible suggestions than Ispell does. In fact recent
-tests shows that it even does better than Microsoft Word 97's spell
-checker in some cases. In addition it has both compile time and run
-time support for other non-English languages. Aspell also functions
-as a library which can be used by other programs.
+replace Ispell. It can either be used as a library or as an independent
+spell checker. Its main feature is that it does a much better job
+of coming up with possible suggestions than just about any other spell
+checker, including Ispell and Microsoft Word.
 
 
 \section{Comparison to other spell checker engines}
@@ -160,7 +156,7 @@ x&
 The suggestion Intelligence is based on a small test kernel of misspelled/correct
 word pairs. Go to \url{http://aspell.net/test} for more info and
 how you can help contribute to the test kernel. The current scores
-for aspell are 88 in \textbf{fast} mode, 93 in \textbf{normal} mode,
+for Aspell are 88 in \textbf{fast} mode, 93 in \textbf{normal} mode,
 and 98 in \textbf{bad spellers} mode see section \ref{suggestion}
 for more information about the various suggestion modes.
 
@@ -222,7 +218,8 @@ that the CygWin environment is used to to build it.
 
 \section{Obtaining}
 
-The latest version can always be found at Aspell's home page at \url{http://aspell.net}.
+The latest version can always be found at GNI Aspell's home page at
+\url{http://aspell.net}.
 
 
 \section{Support}
@@ -369,13 +366,13 @@ However, you should also be able to build applications that require
 Pspell with the new Aspell as a backwards compatibility header file
 is provided.
 
-The format of the complied dictionaries has almost certenly changed.
+The format of the complied dictionaries has almost certainly changed.
 So you will need to recompile them for the new Aspell.
 
 
 \chapter{Basic Usage}
 
-Two seperate utilties are now used to control Aspell, \char`\"{}aspell\char`\"{}
+Two separate utilities are now used to control Aspell, \char`\"{}aspell\char`\"{}
 and \char`\"{}speller-util\char`\"{}. The \char`\"{}aspell\char`\"{}
 program handles the checking of documents while \char`\"{}speller-util\char`\"{}
 handles the management of dictionaries. For a quick reference on either
@@ -783,7 +780,7 @@ for email, '-H' for Html/Sgml, or '-t' for Tex)
 \item [encoding]\textit{(string)} The encoding the input text is in. Valid
 values are {}``utf-8'', {}``iso8859-{*}'', {}``koi8-r'', {}``viscii'',
 {}``cp1252'', {}``machine unsigned 16'', {}``machine unsigned
-32''. However, the aspell utility will cuuretly only function correctly
+32''. However, the aspell utility will currently only function correctly
 with 8-bit encodings. I hope to provide utf-8 support in the future.
 The two {}``machine unsigned'' encodings are entended to be used
 by other programs using the Aspell librarary and it is unlikly the
@@ -906,6 +903,12 @@ as
 \begin{quote}
 <emphasis/important/
 \end{quote}
+This filter will also translate sgml characters of the form {}``\&\#num;''.
+Other sgml characters such as {}``\&amp;'' will simply be skiped
+over so that the word {}``amp'' for example will not be spell checked.
+Eventually full support for properly translating sgml characters will
+be added.
+
 The option \textbf{add|rem-sgml-check} controls which sgml tags should
 always be checked. The default is {}``alt''.
 
@@ -913,9 +916,6 @@ The option \textbf{add|rem-sgml-extension} controls which file extensions
 are recognized as sgml/html files. The default is html, htm, php,
 and sgml. The extension are not case sensitive so extensions like
 .HTM will also be recognized.
-
-{[}FIXME: Add note about sgml character decoding and possable enhance
-the code to do so{]}
 
 
 \subsubsection{\TeX{} Filter/Mode}
