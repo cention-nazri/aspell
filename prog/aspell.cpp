@@ -664,7 +664,7 @@ void abort_check();
 void check(bool interactive)
 {
   String file_name;
-  String backup_name;
+  String new_name;
   FILE * in = 0;
   FILE * out = 0;
   Mapping mapping;
@@ -676,23 +676,17 @@ void check(bool interactive)
     }
     
     file_name = args[0];
-    backup_name = file_name;
+    new_name = file_name;
+    new_name += ".new";
 
-    backup_name += ".bak";
-    if (! rename_file(file_name, backup_name) ) {
-      CERR << "Error: Could not rename the file \"" << file_name 
-	   << "\" to \"" << backup_name << "\".\n";
-      exit(-1);
-    }
-
-    in = fopen(backup_name.c_str(), "r");
+    in = fopen(file_name.c_str(), "r");
     if (!in) {
       CERR << "Error: Could not open the file \"" << file_name
 	   << "\" for reading.\n";
       exit(-1);
     }
     
-    out = fopen(file_name.c_str(), "w");
+    out = fopen(new_name.c_str(), "w");
     if (!out) {
       CERR << "Error: Could not open the file \"" << file_name
            << "\" for writing.  File not saved.\n";
@@ -869,8 +863,11 @@ exit_loop:
     delete_aspell_speller(speller);
     
     bool keep_backup = options->retrieve_bool("backup");
-    if (!keep_backup)
-      remove_file(backup_name);
+    String backup_name = file_name;
+    backup_name += ".bak";
+    if (keep_backup)
+      rename_file(file_name, backup_name);
+    rename_file(new_name, file_name);
     
     //end_check();
     
@@ -881,7 +878,7 @@ abort_loop:
     state.del(); // to close the file handles
     delete_aspell_speller(speller);
 
-    rename_file(backup_name, file_name);
+    remove_file(new_name);
 
     return;
   }
