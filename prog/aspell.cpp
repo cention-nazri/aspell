@@ -452,12 +452,12 @@ void pipe()
       err = speller->config()->replace("mode", word);
       if (err.get_err())
 	speller->config()->replace("mode", "tex");
-      checker.release();
+      checker.del();
       checker = new_checker(speller, print_star);
       break;
     case '-':
       speller->config()->remove("filter");
-      checker.release();
+      checker.del();
       checker = new_checker(speller, print_star);
       break;
     case '~':
@@ -737,9 +737,9 @@ void check(bool interactive)
  exit_loop:
 
   speller->save_all_word_lists();
-  state.release(); // not strictly needed, but to be safe as the
-                   // CheckerString is also responsible for closing
-                   // the files
+  state.del(); // not strictly needed, but to be safe as the
+               // CheckerString is also responsible for closing the
+               // files
   
   //end_check();
   
