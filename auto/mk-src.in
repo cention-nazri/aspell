@@ -23,7 +23,7 @@ The format of mk-src.in is as follows:
 
   <<tab>> means everything should be indented by one tab
 
-See MkSrc::Info for a description of the categorys and options
+See MkSrc::Info for a description of the categories and options
 
 =cut
 
@@ -50,7 +50,7 @@ methods: destructible
 #
 #	method: ref count
 #		desc => returns a pointer to an int which may be used
-#			for refrence counting.	It will default to 0.
+#			for reference counting.	It will default to 0.
 #			This integer is not used by the actual library
 #			but may be used my some of the front ends.
 #		c only
@@ -78,8 +78,8 @@ methods: copyable
 #	method: copyable
 #		desc => Returns 0 if this object can not be copied,
 #			1 if it may be copies, 2 if it should be
-#			copyied.  Used by some of the front end to
-#			detrime if a deep or shallow copy should be 
+#			copied.  Used by some of the front end to
+#			determine if a deep or shallow copy should be
 #			made.
 #		cxx impl => return copyable_
 #		/
@@ -234,7 +234,7 @@ class: config
 
 	method: set extra
 		desc => sets extra keys which this config class should accept
-			begin and end are expected to point to the begging 
+			begin and end are expected to point to the begining
 			and end of an array of Aspell Key Info
 		/
 		void
@@ -262,7 +262,7 @@ class: config
 	method: get default
 		posib err
 		desc => returns the default value for given key which
-			way involve substating variables, thus it is
+			may involve substating variables, thus it is
 			not the same as keyinfo(key)->def returns null
 			and sets error_num to PERROR_UNKNOWN_KEY if
 			the key is not valid. Uses the temporary
@@ -272,7 +272,7 @@ class: config
 		string: key
 
 	method: elements
-		desc => returns a newly alloacted enumeration of all the
+		desc => returns a newly allocated enumeration of all the
 			key/value pairs. This DOES not include ones
 			which are set to their default values
 		/
@@ -281,10 +281,10 @@ class: config
 	method: replace
 		posib err
 		desc => inserts an item, if the item already exists it
-			will be replaced. returns true if it succesed
-			or false on error. If the key in not valid it
+			will be replaced. returns true if it succeeds
+			or false on error. If the key is not valid it
 			sets error_num to PERROR_UNKNOWN_KEY, if the
-			value is not valid it will sets error_num to
+			value is not valid it will set error_num to
 			PERROR_BAD_VALUE, if the value can not be
 			changed it sets error_num to
 			PERROR_CANT_CHANGE_VALUE, and if the value is
@@ -297,13 +297,13 @@ class: config
 
 	method: remove
 		posib err
-		desc => remove a key and returns true if it exists 
-			otherise return false. This effictly sets the
+		desc => remove a key and return true if it exists
+			otherise return false. This effectively sets the
 			key to its default value. Calling replace with
 			a value of "<default>" will also call
-			remove. If the key does not exists sets
-			error_num to 0 or PERROR_NOT, if the key in
-			not valid sets error_num to
+			remove. If the key does not exist, then it sets
+			error_num to 0 or PERROR_NOT, if the key is
+			not valid, then sets error_num to
 			PERROR_UNKNOWN_KEY, if the value can not be
 			changed sets error_num to
 			PERROR_CANT_CHANGE_VALUE
@@ -488,7 +488,7 @@ errors:
 		unknown encoding
 			mesg => The encoding "%encod" is not known.
 		not simple encoding
-			mesg => The encoding "%encod" is not a simple encoding and therefor can not be used in this context.
+			mesg => The encoding "%encod" is not a simple encoding and therefore can not be used in this context.
 		encoding not supported
 			mesg => The encoding "%encod" is not supported.
 		conversion not supported
@@ -1015,7 +1015,7 @@ class: string map
 	
 	method: insert
 		desc => Insert a new element. 
-			Will NOT overright an existing entry.
+			Will NOT overwrite an existing entry.
 			Returns false if the element already exists.
 		/
 		bool
@@ -1024,7 +1024,7 @@ class: string map
 
 	method: replace
 		desc => Insert a new element. 
-			Will overright an existing entry.
+			Will overwrite an existing entry.
 			Always returns true.
 		/
 		bool
@@ -1036,7 +1036,7 @@ class: string map
 		desc => Looks up an element.
 			Returns null if the element did not exist.
 			Returns an empty string if the element exists but has a null value.
-			Otherwises returns the value
+			Otherwise returns the value
 		/
 		string
 		string: key
@@ -1068,7 +1068,7 @@ group: cache
 /
 func: reset cache
 	desc => Reset the global cache(s) so that cache queries will create a new
-		object.	 If exiting objects are still in use they are not deleted.
+		object.	 If existing objects are still in use they are not deleted.
 		If which is NULL than ALL caches will be reset.	 Current caches are
 		"encode", "decode", "dictionary", "language", and "keyboard".
 	/
@@ -1186,11 +1186,11 @@ class: document checker
 	/
 	posib err constructor: 
 		desc => Creates a new document checker.
-			The speller class is expect to last until this
+			The speller class is expected to last until this
 			class is destroyed.
-			If config is given it will be used to overwide
+			If config is given it will be used to override
 			any relevent options set by this speller class.
-			The config class is not once this function is done.
+			The config class is not used once this function is done.
 			If filter is given then it will take ownership of 
 			the filter class and use it to do the filtering.
 			You are expected to free the checker when done.
@@ -1212,9 +1212,9 @@ class: document checker
 	
 		desc => process a string
 			The string passed in should only be split on white space
-			characters.  Furthermore, between calles to reset, each string
+			characters.  Furthermore, between calls to reset, each string
 			should be passed in exactly once and in the order they appeared
-			in the document.  Passing in stings out of order, skipping
+			in the document.  Passing in strings out of order, skipping
 			strings or passing them in more than once may lead to undefined
 			results.
 		/
@@ -1225,7 +1225,7 @@ class: document checker
 	method: next misspelling
 	
 		desc => returns the next misspelled word in the processed string
-			if there are no more misspelled word than token.word
+			if there are no more misspelled words then token.word
 			will be null and token.size will be 0
 		/
 		token object
@@ -1256,13 +1256,13 @@ class: convert
 	destructible methods
 
 	method: needed
-		desc => returns true if a conversion if needed
+		desc => returns true if a conversion is needed
 		/
 		bool
 
 	method:
 		desc => converts a null terminated string.
-			If no conversion is needed returns the orignal string,
+			If no conversion is needed then it returns original string,
 			otherwise returns the converted string.	 The string
 			returned is only valid until the next call to convert.
 		/
