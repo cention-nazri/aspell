@@ -25,7 +25,7 @@ namespace acommon {
     size_t old_size = end_ - begin_;
     size_t new_size = (storage_end_ - begin_) * 3 / 2;
     if (new_size < 64) new_size = 64;
-    if (new_size + 1 < s) new_size = s + 1;
+    if (new_size < s + 1) new_size = s + 1;
     if (old_size == 0) {
       if (begin_) free(begin_);
       begin_ = (char *)malloc(new_size);

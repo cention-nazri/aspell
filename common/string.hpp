@@ -18,6 +18,17 @@
 #include "ostream.hpp"
 #include "istream.hpp"
 
+//
+// acommon::String is similar to std::string, but without many of the
+// extra non-stl like methods.  The string is guaranteed to be stored
+// in a continues areas of memory but is not guaranteed to be null
+// terminated.  However, space is always allocated for the null
+// characters.  Thus, the c_str() method will never invalided any
+// exiting pointers.  The method ensure_null_end() will null terminate
+// the string.  Once null terminated the string will remain as such
+// until the length of the string changes.
+//
+
 namespace acommon {
 
   template <typename Ret> class PosibErr;
