@@ -12,6 +12,8 @@
 
 namespace acommon {
 
+  typedef int c_boolean;
+
   class Config;
   struct DictInfo;
   class DictInfoEnumeration;
@@ -31,13 +33,16 @@ namespace acommon {
     StringList * dict_dirs;
   };
 
+  PosibErr<void> get_dict_file_name(const DictInfo *, 
+				    String & main_wl, String & flags);
+  
   struct DictInfo {
-    const char * file;
+    const char * name;
     const char * code;
     const char * jargon;
-    ModuleInfo * module;
     int size;
     const char * size_str;
+    const ModuleInfo * module;
   };
 
   struct MDInfoListAll;
@@ -81,7 +86,7 @@ namespace acommon {
 			     const char * dir,
 			     const char * name,
 			     unsigned int name_size,
-			     IStream &);
+			     const ModuleInfo *);
   public: // but don't use
     unsigned int size_;
     DictInfoNode * head_;

@@ -607,16 +607,17 @@ struct: module info
 	string: name
 	double: order num
 	string: lib dir
-	string list: pwli dirs
+	string list: dict dirs
+	string list: dict exts
 
 struct: dict info
 	/
-	string: file
+	string: name
 	string: code
 	string: jargon
-	module info: module
 	int: size
 	string: size str
+	module info: module
 
 class: module info list
 	/

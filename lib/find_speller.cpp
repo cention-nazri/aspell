@@ -239,7 +239,7 @@ namespace acommon { // FIXME: Should this be a diffrent namespace?
     BetterList b_module;
     BetterSize b_size;
     Better * better[4] = {&b_code,&b_jargon,&b_module,&b_size};
-    const char * best_file = 0;
+    const DictInfo * best = 0;
 
     //
     // retrieve and normalize code
@@ -347,7 +347,7 @@ namespace acommon { // FIXME: Should this be a diffrent namespace?
       if (is_better == BetterMatch) {
 	for (int i = 0; i != 4; ++i)
 	  better[i]->set_best_from_cur();
-	best_file  = entry->file;
+	best = entry;
       }
     }
 
@@ -356,15 +356,12 @@ namespace acommon { // FIXME: Should this be a diffrent namespace?
     //
     // set config to best match
     //
-    if (best_file != 0) {
-      FStream f;
-      RET_ON_ERR(f.open(best_file, "r"));
+    if (best != 0) {
       String main_wl,flags;
-      bool res = getdata_pair(f, main_wl, flags);
-      f.close();
-      if (!res) {
+      PosibErrBase ret = get_dict_file_name(best, main_wl, flags);
+      if (ret.has_err()) {
 	delete config;
-	return make_err(bad_file_format,  best_file, "");
+	return ret;
       }
       config->replace("lang", b_code.best);
       config->replace("language-tag", b_code.best);
