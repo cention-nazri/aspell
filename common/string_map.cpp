@@ -16,11 +16,15 @@
 
 namespace acommon {
 
-  // needed for darwin
+  // These template instantiations are needed for darwin but VC6 has
+  // problems with them
+#ifndef _MSC_VER
   template HashTable<StringMap::Parms>::iterator 
            HashTable<StringMap::Parms>::find_i(char const* const&, bool&);
   template std::pair<HashTable<StringMap::Parms>::iterator,bool>
            HashTable<StringMap::Parms>::insert(const StringPair &);
+#endif
+
 
   void StringMap::copy(const StringMap & other)
   {
