@@ -83,7 +83,7 @@ namespace acommon {
     ////////////////////////////////////////////////////////////////
     // 
     // Strings from this point on are expected to be in the 
-    // encoding specified by encoding()
+    // encoding specified by config->retrieve("encoding")
     //
 
     virtual PosibErr<bool> check(MutableString) = 0;

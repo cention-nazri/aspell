@@ -274,8 +274,11 @@ namespace acommon {
   const char * fix_encoding_str(ParmStr enc, String & buf);
 
   // Follows any alias files
+  // currently only follows a single level
   // it is ok if enc and buf are part of the same string.
-  PosibErr<const char *> resolve_alias(const Config & c, ParmStr enc, String & buf);
+  const char * resolve_alias(const Config & c, ParmStr enc, String & buf);
+
+  void get_base_enc(String & res, ParmStr enc);
 
   // also returns true if the encoding is unknown
   bool ascii_encoding(const Config & c, ParmStr enc0);
@@ -500,6 +503,7 @@ namespace acommon {
     }
   };
 
+  // DOES NOT take ownership of the conversion filter
   struct FullConv {
     FullConvert * conv;
     CharVector buf;
@@ -509,6 +513,7 @@ namespace acommon {
     FullConv(const FullConv & c) : conv(c.conv) {}
     void operator=(const FullConv & c) { conv = c.conv; }
   public:
+    void reset(FullConvert * c = 0) {conv = c;}
     char * operator() (char * str, size_t sz)
     {
       if (conv) {

@@ -606,7 +606,7 @@ namespace aspeller {
     const char * sys_enc = lang_->charmap();
     String user_enc = config_->retrieve("encoding");
     if (user_enc == "none") {
-      config_->replace("encoding", sys_enc);
+      //config_->replace("encoding", sys_enc);
       user_enc = sys_enc;
     }
 
@@ -617,6 +617,15 @@ namespace aspeller {
     conv = new_full_convert(*config_, sys_enc, user_enc, NormTo);
     if (conv.has_err()) return conv;
     from_internal_.reset(conv);
+
+    String tmp;
+    get_base_enc(tmp, to_internal_->in_code());
+    config_->replace("encoding", tmp);
+
+    //printf("%s => %s :: %s => %s\n", 
+    //       to_internal_->in_code(), to_internal_->out_code(),
+    //       from_internal_->in_code(), from_internal_->out_code());
+
     return no_err;
   }
 

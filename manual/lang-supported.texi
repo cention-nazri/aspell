@@ -130,7 +130,7 @@
 @item
 @item nb @tab Norwegian Bokmal @tab Latin @tab 0.50 @tab -
 @item nd @tab North Ndebele @tab Latin @tab Maybe @tab -
-@item nds @tab Low Saxon @tab Latin @tab Maybe @tab -
+@item nds @tab Low Saxon @tab Latin @tab 0.60 @tab -
 @item ne @tab Nepali @tab Devanagari @tab Maybe @tab -
 @item ng @tab Ndonga @tab Latin @tab Maybe @tab -
 @item niu @tab Niuean @tab Latin @tab Maybe @tab -
@@ -143,7 +143,7 @@
 @item
 @item oc @tab Occitan / Provencal @tab Latin @tab Maybe @tab -
 @item om @tab Oromo @tab Latin @tab - @tab -
-@item or @tab Oriya @tab Oriya @tab - @tab -
+@item or @tab Oriya @tab Oriya @tab 0.60 @tab -
 @item os @tab Ossetic @tab Cyrillic @tab - @tab -
 @item
 @item pa @tab Punjabi @tab Gurmukhi @tab - @tab -

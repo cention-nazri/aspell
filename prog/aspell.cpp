@@ -514,11 +514,11 @@ static SimpleConvert * setup_conv(Config * config,
   }
 }
 
-void setup_display_conv()
+void setup_display_conv(Config * config)
 {
   const char * gettext_enc = 0;
   const char * env_enc = 0;
-  String doc_enc = options->retrieve("encoding");
+  String doc_enc = config->retrieve("encoding");
   String enc;
 #ifdef ENABLE_NLS
   gettext_enc = bind_textdomain_codeset("aspell", 0);
@@ -783,18 +783,14 @@ void pipe()
       err = config->replace("mode", word);
       if (err.get_err())
 	config->replace("mode", "tex");
-      reload_filters(real_speller);
-      checker.del();
-      checker = new_checker(speller, status_fun_inf);
-      break;
+      goto reload_filters;
     case '-':
       config->remove("filter");
-      reload_filters(real_speller);
-      checker.del();
-      checker = new_checker(speller, status_fun_inf);
-      break;
+      goto reload_filters;
     case '~':
-      break;
+      word = trim_wspace(line + 1);
+      BREAK_ON_ERR(config->replace("encoding", word));
+      goto reload_filters;
     case '!':
       terse_mode = true;
       print_star = false;
@@ -928,6 +924,15 @@ void pipe()
       COUT.put('\n');
     }
     if (c == EOF) break;
+    continue;
+  reload_filters:
+    BREAK_ON_ERR(config->replace("encoding", word));
+    BREAK_ON_ERR(reload_filters(real_speller));
+    checker.del();
+    checker = new_checker(speller, status_fun_inf);
+    iconv.reset(real_speller->to_internal_);
+    oconv.reset(real_speller->from_internal_);
+    continue;
   }
 
   delete_aspell_speller(speller);
@@ -953,7 +958,7 @@ struct Mapping {
 
 void abort_check();
 
-void setup_display_conv();
+void setup_display_conv(Config *);
 
 void check()
 {
@@ -1014,9 +1019,10 @@ void check()
     exit(1);
   }
 
-  setup_display_conv();
-
   AspellSpeller * speller = to_aspell_speller(ret);
+  aspeller::SpellerImpl * real_speller = reinterpret_cast<aspeller::SpellerImpl *>(speller);
+
+  setup_display_conv(real_speller->config());
 
   state = new CheckerString(speller,in,out,64);
  

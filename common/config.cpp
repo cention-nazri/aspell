@@ -1420,6 +1420,8 @@ namespace acommon {
        N_("location of the main word list")}
     , {"encoding",   KeyInfoString, "!encoding",
        N_("encoding to expect data to be in"), KEYINFO_COMMON}
+    //, {"encoding-layers",   KeyInfoString, "!encoding",
+    //   N_("encoding to expect data to be in"), KEYINFO_COMMON}
     , {"filter",   KeyInfoList  , "url",
        N_("add or removes a filter"), KEYINFO_MAY_CHANGE}
     , {"filter-path", KeyInfoList, DICT_DIR,

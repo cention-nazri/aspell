@@ -863,10 +863,14 @@ namespace acommon {
   
   const char * fix_encoding_str(ParmStr enc, String & buf)
   {
+    const char * i   = strrchr(enc, '.');
+    const char * end = enc + enc.size();
+    if (i) i++; 
+    else   i = enc;
     buf.clear();
-    buf.reserve(enc.size() + 1);
-    for (size_t i = 0; i != enc.size(); ++i)
-      buf.push_back(asc_tolower(enc[i]));
+    buf.reserve(end - i);
+    for (; i != end; ++i)
+      buf.push_back(asc_tolower(*i));
 
     if (strncmp(buf.c_str(), "iso8859", 7) == 0)
       buf.insert(buf.begin() + 3, '-'); // For backwards compatibility
@@ -883,8 +887,7 @@ namespace acommon {
       return buf.c_str();
   }
 
-  PosibErr<const char *> resolve_alias(const Config & c, 
-                                       ParmStr enc, String & buf)
+  const char * resolve_alias(const Config & c, ParmStr enc, String & buf)
   {
     String dir1 ,dir2,file_name;
     fill_data_dir(&c, dir1, dir2);
@@ -898,23 +901,31 @@ namespace acommon {
     return p;
   }
 
+  void get_base_enc(String & res, ParmStr enc)
+  {
+    size_t l = strcspn(enc, "|:/");
+    res.assign(enc, l);
+  }
+
   struct Encoding {
     String base;
     String norm_form; 
-    Vector<String> extra; // such as "tex", "texinfo", etc
+    Vector<String> layers; // such as "tex", "texinfo", etc
   };
 
   bool operator== (const Encoding & x, const Encoding & y)
   {
     if (x.base != y.base) return false;
     if (x.norm_form != y.norm_form) return false;
-    if (x.extra != y.extra) return false;
+    if (x.layers != y.layers) return false;
     return true;
   }
 
   PosibErr<void> decode_encoding_string(const Config & c,
                                         ParmStr str, Encoding & enc)
   {
+    String tmp;
+
     const char * slash = strchr(str, '/');
     const char * colon = strchr(str, ':');
 
@@ -930,45 +941,11 @@ namespace acommon {
       enc.base.assign(str);
     }
 
-    {
-      String tmp;
-      const char * s = fix_encoding_str(enc.base, tmp);
-      enc.base = resolve_alias(c, s, tmp);
-    }
+    const char * s = fix_encoding_str(enc.base, tmp);
+    enc.base = resolve_alias(c, s, tmp);
     
-    bool conv_filter = false;
-#if 0 //FIXME
-    {
-      // test for .cset or .cmap file
-      String dir1,dir2,file_name;
-      fill_data_dir(&c, dir1, dir2);
-      find_file(file_name,dir1,dir2,enc.base,".cmap");
-      if (file_exists(file_name)) goto done; 
-      find_file(file_name,dir1,dir2,enc.base,".cset");
-      if (file_exists(file_name)) goto done;
-
-      // test for gen conv filter -- FIXME: Should check for any conv
-      // filter
-      conv_filter = true;
-      find_file(file_name,dir1,dir2,enc.base,".conv");
-      if (file_exists(file_name)) goto done;
-
-      // if nothing found error
-      return make_err(unknown_encoding, str, 
-                      _("This could also mean that no data files were found."));
-    }
-
-  done:
-#endif
-
-    const char * extra = 0;
-    if (conv_filter) {
-      enc.base.clear();
-      enc.norm_form = "none";
-      extra = str;
-    } else if (slash) {
-      extra = slash + 1;
-    }
+    const char * layers = 0;
+    if (slash) layers = slash + 1;
        
     if (enc.norm_form.empty()) {
       if (c.retrieve_bool("normalize") || c.retrieve_bool("norm-required"))
@@ -979,14 +956,14 @@ namespace acommon {
     if (enc.norm_form == "none" && c.retrieve_bool("norm-required"))
       enc.norm_form = "nfc";
 
-    // push "extra" encoding on entra list
-    if (extra) {
+    // push "layers" encoding on extra list
+    if (layers) {
       do {
-        slash = strchr(extra,'/');
-        enc.extra.push_back(str);
-        if (slash) enc.extra.back().assign(extra, slash);
-        else       enc.extra.back().assign(extra);
-        extra = slash + 1;
+        slash = strchr(layers,'/');
+        if (slash) tmp.assign(layers, slash);
+        else       tmp.assign(layers);
+        enc.layers.push_back(resolve_alias(c, tmp.str(), tmp));
+        layers = slash + 1;
       } while (slash);
     }
     return no_err;
@@ -1021,20 +998,34 @@ namespace acommon {
     {
       const char * name0 = i->str();
       const char * colon = strchr(name0, ':');
+
       String name;
-      if (colon) name.assign(name0, colon);
-      else       name.assign(name0);
+      name += "l-";
+      name += c.retrieve("lang").data;
+      name += "-";
+      unsigned pre_len = name.size();
+      if (colon) name.append(name0, colon);
+      else       name.append(name0);
+
       GenConvFilterParms p(name);
       p.file = p.name;
       p.form = colon ? colon + 1 : "multi";
       StackPtr<IndividualFilter> f(new_convert_filter(decoder, p));
       PosibErr<bool> pe = f->setup((Config *)&c); // FIXME: Cast shold not
                                                   // be necessary
-      if (prev_err && pe.has_err(aerror_cant_read_file)) {return false;}
+      if (pe.has_err(cant_read_file)) {
+        name.erase(0, pre_len);
+        p.name = p.file = name;
+        f.del();
+        f = new_convert_filter(decoder, p);
+        pe = f->setup((Config *)&c);
+      }
+
+      if (prev_err && pe.has_err(cant_read_file)) {return false;}
       else if (pe.has_err()) return pe;
       if (fc == 0) return make_err(not_simple_encoding, name);
-      if (pe.data)
-        fc->add_filter(f.release());
+
+      if (pe.data) fc->add_filter(f.release());
     }
     return true;
   }
@@ -1057,8 +1048,8 @@ namespace acommon {
     if (if_needed && in == out) return 0;
 
     if (simple) {
-      if (! in.extra.empty()) return make_err(not_simple_encoding, in_s );
-      if (!out.extra.empty()) return make_err(not_simple_encoding, out_s);
+      if (! in.layers.empty()) return make_err(not_simple_encoding, in_s );
+      if (!out.layers.empty()) return make_err(not_simple_encoding, out_s);
     }
 
     StackPtr<Convert> conv;
@@ -1106,12 +1097,12 @@ namespace acommon {
     Vector<String>::const_iterator i;
     
     {
-      PosibErr<bool> pe = add_conv_filters(c, fc, in.extra, true,
+      PosibErr<bool> pe = add_conv_filters(c, fc, in.layers, true,
                                            prev_err.error == Convert::UnknownDecoder);
       if (pe.has_err()) return (PosibErrBase &)pe;
       if (!pe.data) return 0;
     } {
-      PosibErr<bool> pe = add_conv_filters(c, fc, out.extra, false,
+      PosibErr<bool> pe = add_conv_filters(c, fc, out.layers, false,
                                            prev_err.error == Convert::UnknownEncoder);
       if (pe.has_err()) return (PosibErrBase &)pe;
       if (!pe.data) return 0;
