@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.51-b20040219\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-05-21 18:07-0400\n"
+"POT-Creation-Date: 2004-05-26 19:14-0400\n"
 "PO-Revision-Date: 2004-03-01 12:59+0100\n"
 "Last-Translator: Danilo Segan <dsegan@gmx.net>\n"
 "Language-Team: Serbian <gnu@prevod.org>\n"
@@ -230,43 +230,44 @@ msgid "create a backup file by appending \".bak\""
 msgstr "направи резервни примерак додавањем „.bak“"
 
 # bug: original not shorter than 50
-#: common/config.cpp:1131
-msgid "make possible root/affix combinations not in the dictionary"
+#: common/config.cpp:1130
+#, fuzzy
+msgid "create missing root/affix combinations"
 msgstr "учини могућим корене/афиксне комбинације које нису у речнику"
 
-#: common/config.cpp:1133
+#: common/config.cpp:1132
 msgid "keymapping for check mode, aspell or ispell"
 msgstr "распоред тастера при провери, aspell или ispell"
 
-#: common/config.cpp:1135
+#: common/config.cpp:1134
 msgid "reverse the order of the suggest list"
 msgstr "обрни редослед списка предлога"
 
-#: common/config.cpp:1137
+#: common/config.cpp:1136
 msgid "suggest possible replacements"
 msgstr "предложи могуће замене"
 
-#: common/config.cpp:1139
+#: common/config.cpp:1138
 msgid "time load time and suggest time in pipe mode"
 msgstr "мери време учитавања и време предлога у цевкама"
 
-#: common/config.cpp:1141
+#: common/config.cpp:1140
 msgid "use byte offsets instead of character offsets"
 msgstr ""
 
-#: common/convert.cpp:287 common/convert.cpp:413
+#: common/convert.cpp:288 common/convert.cpp:414
 #, c-format
 msgid ""
 "This could also mean that the file \"%s\" could not be opened for reading or "
 "does not exist."
 msgstr ""
 
-#: common/convert.cpp:536 common/convert.cpp:642 common/convert.cpp:688
+#: common/convert.cpp:537 common/convert.cpp:643 common/convert.cpp:689
 #, fuzzy, c-format
 msgid "The Unicode code point U+%04X is unsupported."
 msgstr "Није подржано кодирање „%encod:1“."
 
-#: common/convert.cpp:812
+#: common/convert.cpp:813
 #, c-format
 msgid "Invalid UTF-8 sequence at position %d."
 msgstr ""
@@ -458,151 +459,151 @@ msgstr "%action:1: „%expression:2“ не представља исправа�
 msgid "Unhandled Error: "
 msgstr "Необрађена грешка: "
 
-#: prog/aspell.cpp:90
+#: prog/aspell.cpp:91
 #, fuzzy, c-format
 msgid "Error: %s\n"
 msgstr "Грешка: "
 
-#: prog/aspell.cpp:95
+#: prog/aspell.cpp:96
 msgid "Error: "
 msgstr "Грешка: "
 
-#: prog/aspell.cpp:191
+#: prog/aspell.cpp:194
 msgid "enter Email mode."
 msgstr "уђи у режим е-поште."
 
-#: prog/aspell.cpp:192
+#: prog/aspell.cpp:195
 msgid "enter Html/Sgml mode."
 msgstr "уђи у ХТМЛ/СГМЛ режим."
 
-#: prog/aspell.cpp:193
+#: prog/aspell.cpp:196
 msgid "enter TeX mode."
 msgstr "уђи у ТеХ режим."
 
-#: prog/aspell.cpp:289
+#: prog/aspell.cpp:292
 #, c-format
 msgid "Invalid Option: %s"
 msgstr "Неисправна опција: %s"
 
-#: prog/aspell.cpp:294
+#: prog/aspell.cpp:297
 msgid " does not take any parameters."
 msgstr " не прихвата никакве параметре."
 
-#: prog/aspell.cpp:302
+#: prog/aspell.cpp:305
 #, c-format
 msgid "You must specify a parameter for %s"
 msgstr "Морате навести параметар за %s"
 
-#: prog/aspell.cpp:330
+#: prog/aspell.cpp:333
 msgid "You must specify an action"
 msgstr "Морате навести акцију"
 
-#: prog/aspell.cpp:399 prog/aspell.cpp:405 prog/aspell.cpp:423
+#: prog/aspell.cpp:404 prog/aspell.cpp:410 prog/aspell.cpp:428
 #, c-format
 msgid "Unknown Action: %s"
 msgstr "Непозната акција: %s"
 
-#: prog/aspell.cpp:543
+#: prog/aspell.cpp:548
 msgid "Invalid Input"
 msgstr "Неисправан улаз"
 
-#: prog/aspell.cpp:617
+#: prog/aspell.cpp:636
 msgid "Time to load word list: "
 msgstr "Време за учитавање списка речи: "
 
-#: prog/aspell.cpp:811
+#: prog/aspell.cpp:833
 #, fuzzy, c-format
 msgid "Suggestion Time: %f\n"
 msgstr "Време за предлог: "
 
-#: prog/aspell.cpp:852
+#: prog/aspell.cpp:874
 msgid "You must specify a file name."
 msgstr "Морате навести име датотеке."
 
-#: prog/aspell.cpp:862
+#: prog/aspell.cpp:884
 #, c-format
 msgid "Could not open the file \"%s\" for reading"
 msgstr "Не могу да отворим датотеку „%s“ ради читања"
 
-#: prog/aspell.cpp:877
+#: prog/aspell.cpp:899
 #, c-format
 msgid "Could not open the file \"%s\"  for writing. File not saved."
 msgstr "Не могу да отворим датотеку „%s“ ради уписа. Датотека није сачувана."
 
-#: prog/aspell.cpp:890
+#: prog/aspell.cpp:912
 #, c-format
 msgid "Invalid keymapping: %s"
 msgstr "Неисправна мапа тастера: %s"
 
-#: prog/aspell.cpp:907
+#: prog/aspell.cpp:929
 msgid "Ignore"
 msgstr "Занемари"
 
-#: prog/aspell.cpp:908
+#: prog/aspell.cpp:930
 msgid "Ignore all"
 msgstr "Занемари све"
 
-#: prog/aspell.cpp:909
+#: prog/aspell.cpp:931
 msgid "Replace"
 msgstr "Замени"
 
-#: prog/aspell.cpp:910
+#: prog/aspell.cpp:932
 msgid "Replace all"
 msgstr "Замени све"
 
-#: prog/aspell.cpp:911
+#: prog/aspell.cpp:933
 msgid "Add"
 msgstr "Додај"
 
 # Да ли је ово у вези малих слова?
-#: prog/aspell.cpp:912
+#: prog/aspell.cpp:934
 msgid "Add Lower"
 msgstr "Додај мала"
 
-#: prog/aspell.cpp:913
+#: prog/aspell.cpp:935
 msgid "Abort"
 msgstr "Одустани"
 
-#: prog/aspell.cpp:914
+#: prog/aspell.cpp:936
 msgid "Exit"
 msgstr "Изађи"
 
-#: prog/aspell.cpp:990
+#: prog/aspell.cpp:1012
 msgid "Are you sure you want to abort? "
 msgstr "Сигурно желите да одустанете?"
 
 # Уз, са?
-#: prog/aspell.cpp:1010
+#: prog/aspell.cpp:1032
 msgid "With: "
 msgstr "Са: "
 
-#: prog/aspell.cpp:1026
+#: prog/aspell.cpp:1048
 msgid "Sorry that is an invalid choice!"
 msgstr "Нажалост, то је неисправан избор!"
 
-#: prog/aspell.cpp:1247
+#: prog/aspell.cpp:1269
 msgid "Sorry \"filter\" is currently unimplemented.\n"
 msgstr "Нажалост „filter“ није досад направљен.\n"
 
-#: prog/aspell.cpp:1339
+#: prog/aspell.cpp:1453
 msgid "Can't merge a master word list yet. Sorry."
 msgstr "Још увек не могу да стопим главни списак речи. Жао ми је."
 
-#: prog/aspell.cpp:1364
+#: prog/aspell.cpp:1477
 msgid "Sorry \"create/merge personal\" is currently unimplemented.\n"
 msgstr "Нажалост „create/merge personal“ није досад направљено.\n"
 
-#: prog/aspell.cpp:1373 prog/aspell.cpp:1432
+#: prog/aspell.cpp:1486 prog/aspell.cpp:1543
 #, c-format
 msgid "Sorry I won't overwrite \"%s\""
 msgstr "Нажалост, нећу преснимити „%s“"
 
-#: prog/aspell.cpp:1423
+#: prog/aspell.cpp:1534
 msgid "Sorry \"create/merge repl\" is currently unimplemented.\n"
 msgstr "Нажалост „create/merge repl“ није досад направљено.\n"
 
-#: prog/aspell.cpp:1798
-#, c-format
+#: prog/aspell.cpp:1908
+#, fuzzy, c-format
 msgid ""
 "\n"
 "Aspell %s alpha.  Copyright 2000-2004 by Kevin Atkinson.\n"
@@ -614,18 +615,25 @@ msgid ""
 "                    and help for filters matching <expr> if installed\n"
 "  -c|check <file>  to check a file\n"
 "  -a|pipe          \"ispell -a\" compatibility mode\n"
-"  -l|list          produce a list of misspelled words from standard input\n"
+"  list             produce a list of misspelled words from standard input\n"
 "  [dump] config [-e <expr>]  dumps the current configuration to stdout\n"
 "  config [+e <expr>] <key>   prints the current value of an option\n"
 "  soundslike       returns the sounds like equivalent for each word entered\n"
 "  munch            generate possible root words and affixes\n"
 "  expand [1-4]     expands affix flags\n"
+"  clean [strict]   cleans a word list so that every line is a valid word\n"
 "  filter           passes standard input through filters\n"
 "  -v|version       prints a version line\n"
+"  conv <from> <to> [<norm-form>]\n"
+"    converts from one encoding to another\n"
+"  norm (<norm-map> | <from> <norm-map> <to>) [<norm-form>]\n"
+"    perform unicode normlization\n"
 "  dump|create|merge master|personal|repl [word list]\n"
 "    dumps, creates or merges a master, personal, or replacement word list.\n"
 "\n"
 "  <expr>           regular expression matching filtername(s) or \"all\"\n"
+"  <norm-form>      normalization form to use, either none, internal, or "
+"strict\n"
 "\n"
 "[options] is any of the following:\n"
 "\n"
@@ -657,7 +665,7 @@ msgstr ""
 "[OPCIJE] могу бити неке од следећих:\n"
 "\n"
 
-#: prog/aspell.cpp:1828
+#: prog/aspell.cpp:1944
 #, c-format
 msgid ""
 "\n"
@@ -677,70 +685,84 @@ msgstr "Ово је вероватно због: "
 msgid "The required field \"name\" is missing."
 msgstr "Недостаје обавезно поље „name“."
 
-#: modules/speller/default/language.cpp:430
+#: modules/speller/default/language.cpp:445
 msgid "Empty string."
 msgstr "Празна ниска."
 
 # bug: string composition is bad, I've translated "beginning" as "at the beginning", and "middle" as "in the middle"
-#: modules/speller/default/language.cpp:436
+#: modules/speller/default/language.cpp:449
 #, fuzzy, c-format
-msgid "The character '%s' may not appear at the beginning of a word."
+msgid "The character '%s' (U+%02X) may not appear at the beginning of a word."
 msgstr "Знак „%s“ се не може јављати %s речи."
 
-#: modules/speller/default/language.cpp:440
-msgid "Does not contain any letters."
+#: modules/speller/default/language.cpp:451
+#: modules/speller/default/language.cpp:460
+#, c-format
+msgid ""
+"The character '%s' (U+%02X) must be followed by an alphabetic character."
+msgstr ""
+
+#: modules/speller/default/language.cpp:453
+#, fuzzy
+msgid "Does not contain any alphabetic characters."
 msgstr "Не садржи ниједно слово."
-
-# bug: string composition is bad, I've translated "beginning" as "at the beginning", and "middle" as "in the middle"
-#: modules/speller/default/language.cpp:448
-#, fuzzy, c-format
-msgid "The character '%s' may not appear in the middle of a word."
-msgstr "Знак „%s“ се не може јављати %s речи."
 
 # bug: string composition is bad, I've translated "beginning" as "at the beginning", and "middle" as "in the middle"
 #: modules/speller/default/language.cpp:458
 #, fuzzy, c-format
-msgid "The character '%s' may not appear at the end of a word."
+msgid "The character '%s' (U+%02X) may not appear in the middle of a word."
 msgstr "Знак „%s“ се не може јављати %s речи."
 
-#: modules/speller/default/affix.cpp:277
+#: modules/speller/default/language.cpp:465
+msgid ""
+"The character '\\r' (U+0D) may not appear at the end of a word. This "
+"probably means means that the file is using MS-DOS EOL instead of Unix EOL. "
+msgstr ""
+
+# bug: string composition is bad, I've translated "beginning" as "at the beginning", and "middle" as "in the middle"
+#: modules/speller/default/language.cpp:468
+#, fuzzy, c-format
+msgid "The character '%s' (U+%02X) may not appear at the end of a word."
+msgstr "Знак „%s“ се не може јављати %s речи."
+
+#: modules/speller/default/affix.cpp:238
 #, c-format
 msgid "Expected the file to be in \"%s\" not \"%s\"."
 msgstr ""
 
-#: modules/speller/default/affix.cpp:338
+#: modules/speller/default/affix.cpp:299
 #, c-format
 msgid "affix '%s' is corrupt, possible incorrect count"
 msgstr "афикс „%s“ је покварен, вероватно неисправан бројач"
 
-#: modules/speller/default/affix.cpp:385
+#: modules/speller/default/affix.cpp:346
 #, fuzzy, c-format
 msgid "Affix '%s' is corrupt"
 msgstr "афикс „%s“ је покварен"
 
-#: modules/speller/default/readonly_ws.cpp:360
+#: modules/speller/default/readonly_ws.cpp:358
 msgid "Wrong endian order."
 msgstr "Лош редослед бајтова."
 
-#: modules/speller/default/readonly_ws.cpp:383
+#: modules/speller/default/readonly_ws.cpp:381
 #, fuzzy
 msgid "Wrong soundslike."
 msgstr "Лоше звучи-као"
 
-#: modules/speller/default/readonly_ws.cpp:389
+#: modules/speller/default/readonly_ws.cpp:387
 #, fuzzy
 msgid "Wrong soundslike version."
 msgstr "Лоше издање звучи-као"
 
-#: modules/speller/default/readonly_ws.cpp:798
+#: modules/speller/default/readonly_ws.cpp:812
 msgid "The total word length is larger than 240 characters."
 msgstr ""
 
-#: modules/speller/default/readonly_ws.cpp:814
+#: modules/speller/default/readonly_ws.cpp:828
 msgid "Affix flags found in word but no affix file given."
 msgstr ""
 
-#: modules/speller/default/readonly_ws.cpp:852
+#: modules/speller/default/readonly_ws.cpp:866
 msgid ""
 "The total word length, with soundslike data, is larger than 240 characters."
 msgstr ""

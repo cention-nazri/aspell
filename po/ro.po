@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60-b20040424\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-05-21 18:07-0400\n"
+"POT-Creation-Date: 2004-05-26 19:14-0400\n"
 "PO-Revision-Date: 2004-04-25 12:00-0500\n"
 "Last-Translator: Laurentiu Buzdugan <lbuz@rolix.org>\n"
 "Language-Team: Romanian <translation-team-ro@lists.sourceforge.net>\n"
@@ -230,31 +230,32 @@ msgstr ""
 msgid "create a backup file by appending \".bak\""
 msgstr "creazã un fiºier de rezervã adãugând \".bak\""
 
-#: common/config.cpp:1131
-msgid "make possible root/affix combinations not in the dictionary"
+#: common/config.cpp:1130
+#, fuzzy
+msgid "create missing root/affix combinations"
 msgstr "fã posibile combinaþiile rãdãcinã/affix ce nu sunt în dictionar"
 
-#: common/config.cpp:1133
+#: common/config.cpp:1132
 msgid "keymapping for check mode, aspell or ispell"
 msgstr "mapare tastaturã pentru modul verificare, aspell sau ispell"
 
-#: common/config.cpp:1135
+#: common/config.cpp:1134
 msgid "reverse the order of the suggest list"
 msgstr "schimbã ordinea listei de sugestii"
 
-#: common/config.cpp:1137
+#: common/config.cpp:1136
 msgid "suggest possible replacements"
 msgstr "sugereazã înlocuiri posibile"
 
-#: common/config.cpp:1139
+#: common/config.cpp:1138
 msgid "time load time and suggest time in pipe mode"
 msgstr "cronometreazã timpul de încãrcare ºi sugereazã timpul în modul pipe"
 
-#: common/config.cpp:1141
+#: common/config.cpp:1140
 msgid "use byte offsets instead of character offsets"
 msgstr "Foloseºte offset-uri în octeþi în loc de offset-uri în caractere"
 
-#: common/convert.cpp:287 common/convert.cpp:413
+#: common/convert.cpp:288 common/convert.cpp:414
 #, c-format
 msgid ""
 "This could also mean that the file \"%s\" could not be opened for reading or "
@@ -263,12 +264,12 @@ msgstr ""
 "Aceasta ar putea de asemenea însemna cã fiºierul \"%s\" nu a putut fi "
 "deschis pentru citire sau cã nu existã."
 
-#: common/convert.cpp:536 common/convert.cpp:642 common/convert.cpp:688
+#: common/convert.cpp:537 common/convert.cpp:643 common/convert.cpp:689
 #, fuzzy, c-format
 msgid "The Unicode code point U+%04X is unsupported."
 msgstr "Codul unicode punct U+%04X nu este suportat."
 
-#: common/convert.cpp:812
+#: common/convert.cpp:813
 #, c-format
 msgid "Invalid UTF-8 sequence at position %d."
 msgstr "Secvenþã UTF-8 invalidã la poziþia %d."
@@ -460,149 +461,149 @@ msgstr "%action:1: `%expression:2' nu este o expresie regularã validã."
 msgid "Unhandled Error: "
 msgstr "Eroare neprelucratã: "
 
-#: prog/aspell.cpp:90
+#: prog/aspell.cpp:91
 #, c-format
 msgid "Error: %s\n"
 msgstr "Eroare: %s\n"
 
-#: prog/aspell.cpp:95
+#: prog/aspell.cpp:96
 msgid "Error: "
 msgstr "Eroare: "
 
-#: prog/aspell.cpp:191
+#: prog/aspell.cpp:194
 msgid "enter Email mode."
 msgstr "intrã mod Email."
 
-#: prog/aspell.cpp:192
+#: prog/aspell.cpp:195
 msgid "enter Html/Sgml mode."
 msgstr "intrã mod Html/Sgml."
 
-#: prog/aspell.cpp:193
+#: prog/aspell.cpp:196
 msgid "enter TeX mode."
 msgstr "intrã mod TeX."
 
-#: prog/aspell.cpp:289
+#: prog/aspell.cpp:292
 #, c-format
 msgid "Invalid Option: %s"
 msgstr "Opþiune Invalidã: %s"
 
-#: prog/aspell.cpp:294
+#: prog/aspell.cpp:297
 msgid " does not take any parameters."
 msgstr " nu ia nici un parametru."
 
-#: prog/aspell.cpp:302
+#: prog/aspell.cpp:305
 #, c-format
 msgid "You must specify a parameter for %s"
 msgstr "Trebuie sã specificaþi un parametru pentru %s"
 
-#: prog/aspell.cpp:330
+#: prog/aspell.cpp:333
 msgid "You must specify an action"
 msgstr "Trebuie sã specificaþi o acþiune"
 
-#: prog/aspell.cpp:399 prog/aspell.cpp:405 prog/aspell.cpp:423
+#: prog/aspell.cpp:404 prog/aspell.cpp:410 prog/aspell.cpp:428
 #, c-format
 msgid "Unknown Action: %s"
 msgstr "Acþiune necunoscutã: %s"
 
-#: prog/aspell.cpp:543
+#: prog/aspell.cpp:548
 msgid "Invalid Input"
 msgstr "Intrare Invalidã"
 
-#: prog/aspell.cpp:617
+#: prog/aspell.cpp:636
 msgid "Time to load word list: "
 msgstr "Timp de încãrcare a listei de cuvinte: "
 
-#: prog/aspell.cpp:811
+#: prog/aspell.cpp:833
 #, c-format
 msgid "Suggestion Time: %f\n"
 msgstr "Timp sugerat: %f\n"
 
-#: prog/aspell.cpp:852
+#: prog/aspell.cpp:874
 msgid "You must specify a file name."
 msgstr "Trebuie sã specificaþi un nume de fiºier."
 
-#: prog/aspell.cpp:862
+#: prog/aspell.cpp:884
 #, c-format
 msgid "Could not open the file \"%s\" for reading"
 msgstr "Nu am putut deschide fiºierul \"%s\" pentru citire."
 
-#: prog/aspell.cpp:877
+#: prog/aspell.cpp:899
 #, c-format
 msgid "Could not open the file \"%s\"  for writing. File not saved."
 msgstr "Nu am putut deschide fiºierul \"%s\"  pentru scriere. Fiºier nesalvat."
 
-#: prog/aspell.cpp:890
+#: prog/aspell.cpp:912
 #, c-format
 msgid "Invalid keymapping: %s"
 msgstr "Mapare tastaturã invalidã: %s"
 
-#: prog/aspell.cpp:907
+#: prog/aspell.cpp:929
 msgid "Ignore"
 msgstr "Ignorã"
 
-#: prog/aspell.cpp:908
+#: prog/aspell.cpp:930
 msgid "Ignore all"
 msgstr "Ignorã tot"
 
-#: prog/aspell.cpp:909
+#: prog/aspell.cpp:931
 msgid "Replace"
 msgstr "Înlocuieºte"
 
-#: prog/aspell.cpp:910
+#: prog/aspell.cpp:932
 msgid "Replace all"
 msgstr "Înlocuieºte tot"
 
-#: prog/aspell.cpp:911
+#: prog/aspell.cpp:933
 msgid "Add"
 msgstr "Adaugã"
 
-#: prog/aspell.cpp:912
+#: prog/aspell.cpp:934
 msgid "Add Lower"
 msgstr "Adaugã mai jos"
 
-#: prog/aspell.cpp:913
+#: prog/aspell.cpp:935
 msgid "Abort"
 msgstr "Renunþã"
 
-#: prog/aspell.cpp:914
+#: prog/aspell.cpp:936
 msgid "Exit"
 msgstr "Terminã"
 
-#: prog/aspell.cpp:990
+#: prog/aspell.cpp:1012
 msgid "Are you sure you want to abort? "
 msgstr "Sunteþi sigur(ã) cã doriþi sã renunþaþi? "
 
-#: prog/aspell.cpp:1010
+#: prog/aspell.cpp:1032
 msgid "With: "
 msgstr "Cu: "
 
-#: prog/aspell.cpp:1026
+#: prog/aspell.cpp:1048
 msgid "Sorry that is an invalid choice!"
 msgstr "Îmi pare rãu, aceasta este o alegere invalidã!"
 
-#: prog/aspell.cpp:1247
+#: prog/aspell.cpp:1269
 msgid "Sorry \"filter\" is currently unimplemented.\n"
 msgstr "Îmi pare rãu, \"filter\" nu este încã implementat.\n"
 
-#: prog/aspell.cpp:1339
+#: prog/aspell.cpp:1453
 msgid "Can't merge a master word list yet. Sorry."
 msgstr "Încã nu pot combina o listã de cuvinte principalã. Îmi pare rãu."
 
-#: prog/aspell.cpp:1364
+#: prog/aspell.cpp:1477
 msgid "Sorry \"create/merge personal\" is currently unimplemented.\n"
 msgstr "Îmi pare rãu, \"create/merge personal\" nu este încã implementat.\n"
 
-#: prog/aspell.cpp:1373 prog/aspell.cpp:1432
+#: prog/aspell.cpp:1486 prog/aspell.cpp:1543
 #, c-format
 msgid "Sorry I won't overwrite \"%s\""
 msgstr "Îmi pare rãu, nu pot suprascrie \"%s\""
 
-#: prog/aspell.cpp:1423
+#: prog/aspell.cpp:1534
 msgid "Sorry \"create/merge repl\" is currently unimplemented.\n"
 msgstr "Îmi pare rãu, \"create/merge repl\" nu este încã implementat.\n"
 
-#: prog/aspell.cpp:1798
-#, c-format
+#: prog/aspell.cpp:1908
+#, fuzzy, c-format
 msgid ""
 "\n"
 "Aspell %s alpha.  Copyright 2000-2004 by Kevin Atkinson.\n"
@@ -614,18 +615,25 @@ msgid ""
 "                    and help for filters matching <expr> if installed\n"
 "  -c|check <file>  to check a file\n"
 "  -a|pipe          \"ispell -a\" compatibility mode\n"
-"  -l|list          produce a list of misspelled words from standard input\n"
+"  list             produce a list of misspelled words from standard input\n"
 "  [dump] config [-e <expr>]  dumps the current configuration to stdout\n"
 "  config [+e <expr>] <key>   prints the current value of an option\n"
 "  soundslike       returns the sounds like equivalent for each word entered\n"
 "  munch            generate possible root words and affixes\n"
 "  expand [1-4]     expands affix flags\n"
+"  clean [strict]   cleans a word list so that every line is a valid word\n"
 "  filter           passes standard input through filters\n"
 "  -v|version       prints a version line\n"
+"  conv <from> <to> [<norm-form>]\n"
+"    converts from one encoding to another\n"
+"  norm (<norm-map> | <from> <norm-map> <to>) [<norm-form>]\n"
+"    perform unicode normlization\n"
 "  dump|create|merge master|personal|repl [word list]\n"
 "    dumps, creates or merges a master, personal, or replacement word list.\n"
 "\n"
 "  <expr>           regular expression matching filtername(s) or \"all\"\n"
+"  <norm-form>      normalization form to use, either none, internal, or "
+"strict\n"
 "\n"
 "[options] is any of the following:\n"
 "\n"
@@ -661,7 +669,7 @@ msgstr ""
 "[opþiuni] este oricare dintre urmãtoarele:\n"
 "\n"
 
-#: prog/aspell.cpp:1828
+#: prog/aspell.cpp:1944
 #, c-format
 msgid ""
 "\n"
@@ -681,65 +689,79 @@ msgstr "Aceasta probabil deoarece: "
 msgid "The required field \"name\" is missing."
 msgstr "Câmpul necesar \"name\" lipseºte."
 
-#: modules/speller/default/language.cpp:430
+#: modules/speller/default/language.cpp:445
 msgid "Empty string."
 msgstr "ªir de caractere gol."
 
-#: modules/speller/default/language.cpp:436
-#, c-format
-msgid "The character '%s' may not appear at the beginning of a word."
+#: modules/speller/default/language.cpp:449
+#, fuzzy, c-format
+msgid "The character '%s' (U+%02X) may not appear at the beginning of a word."
 msgstr "Caracterul '%s' nu poate apare la începutul unui cuvânt."
 
-#: modules/speller/default/language.cpp:440
-msgid "Does not contain any letters."
+#: modules/speller/default/language.cpp:451
+#: modules/speller/default/language.cpp:460
+#, c-format
+msgid ""
+"The character '%s' (U+%02X) must be followed by an alphabetic character."
+msgstr ""
+
+#: modules/speller/default/language.cpp:453
+#, fuzzy
+msgid "Does not contain any alphabetic characters."
 msgstr "Nu conþine nici o literã."
 
-#: modules/speller/default/language.cpp:448
-#, c-format
-msgid "The character '%s' may not appear in the middle of a word."
+#: modules/speller/default/language.cpp:458
+#, fuzzy, c-format
+msgid "The character '%s' (U+%02X) may not appear in the middle of a word."
 msgstr "Caracterul '%s' nu poate apare la mijlocul unui cuvânt."
 
-#: modules/speller/default/language.cpp:458
-#, c-format
-msgid "The character '%s' may not appear at the end of a word."
+#: modules/speller/default/language.cpp:465
+msgid ""
+"The character '\\r' (U+0D) may not appear at the end of a word. This "
+"probably means means that the file is using MS-DOS EOL instead of Unix EOL. "
+msgstr ""
+
+#: modules/speller/default/language.cpp:468
+#, fuzzy, c-format
+msgid "The character '%s' (U+%02X) may not appear at the end of a word."
 msgstr "Caracterul '%s' nu poate apare la sfârºitul unui cuvânt."
 
-#: modules/speller/default/affix.cpp:277
+#: modules/speller/default/affix.cpp:238
 #, c-format
 msgid "Expected the file to be in \"%s\" not \"%s\"."
 msgstr "M-am aºteptat ca fiºierul sã fie în \"%s\" nu în \"%s\"."
 
-#: modules/speller/default/affix.cpp:338
+#: modules/speller/default/affix.cpp:299
 #, c-format
 msgid "affix '%s' is corrupt, possible incorrect count"
 msgstr "affix-ul '%s' este corupt, numãrãtoare posibil incorectã"
 
-#: modules/speller/default/affix.cpp:385
+#: modules/speller/default/affix.cpp:346
 #, c-format
 msgid "Affix '%s' is corrupt"
 msgstr "Affix-ul '%s' este corupt"
 
-#: modules/speller/default/readonly_ws.cpp:360
+#: modules/speller/default/readonly_ws.cpp:358
 msgid "Wrong endian order."
 msgstr "Ordine endian-ã greºitã."
 
-#: modules/speller/default/readonly_ws.cpp:383
+#: modules/speller/default/readonly_ws.cpp:381
 msgid "Wrong soundslike."
 msgstr "\"Sunã ca\" greºit."
 
-#: modules/speller/default/readonly_ws.cpp:389
+#: modules/speller/default/readonly_ws.cpp:387
 msgid "Wrong soundslike version."
 msgstr "Versiune \"Sunã ca\" greºitã."
 
-#: modules/speller/default/readonly_ws.cpp:798
+#: modules/speller/default/readonly_ws.cpp:812
 msgid "The total word length is larger than 240 characters."
 msgstr "Lungimea totalã a cuvântului e mai mare de 240 caractere."
 
-#: modules/speller/default/readonly_ws.cpp:814
+#: modules/speller/default/readonly_ws.cpp:828
 msgid "Affix flags found in word but no affix file given."
 msgstr "Marcaje affix gãsie în cuvânt dar nici un fiºier de affix-e dat."
 
-#: modules/speller/default/readonly_ws.cpp:852
+#: modules/speller/default/readonly_ws.cpp:866
 #, fuzzy
 msgid ""
 "The total word length, with soundslike data, is larger than 240 characters."

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60-b20040511\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2004-05-21 18:07-0400\n"
+"POT-Creation-Date: 2004-05-26 19:14-0400\n"
 "PO-Revision-Date: 2004-05-14 17:25+0200\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
@@ -228,31 +228,32 @@ msgstr "částečně rozbalovat přípony pro lepší návrhy"
 msgid "create a backup file by appending \".bak\""
 msgstr "vytvořit záložní soubor připojením \".bak\""
 
-#: common/config.cpp:1131
-msgid "make possible root/affix combinations not in the dictionary"
+#: common/config.cpp:1130
+#, fuzzy
+msgid "create missing root/affix combinations"
 msgstr "umožnit dvojice kořen/přípona chybějící ve slovníku"
 
-#: common/config.cpp:1133
+#: common/config.cpp:1132
 msgid "keymapping for check mode, aspell or ispell"
 msgstr "mapování kláves při kontrole, aspell nebo ispell"
 
-#: common/config.cpp:1135
+#: common/config.cpp:1134
 msgid "reverse the order of the suggest list"
 msgstr "obrátit pořadí seznamu návrhů"
 
-#: common/config.cpp:1137
+#: common/config.cpp:1136
 msgid "suggest possible replacements"
 msgstr "navrhovat možné náhrady"
 
-#: common/config.cpp:1139
+#: common/config.cpp:1138
 msgid "time load time and suggest time in pipe mode"
 msgstr "měřit čas načítání a návrhů v režimu pipe"
 
-#: common/config.cpp:1141
+#: common/config.cpp:1140
 msgid "use byte offsets instead of character offsets"
 msgstr "používat posuny v bajtech místo ve znacích"
 
-#: common/convert.cpp:287 common/convert.cpp:413
+#: common/convert.cpp:288 common/convert.cpp:414
 #, c-format
 msgid ""
 "This could also mean that the file \"%s\" could not be opened for reading or "
@@ -261,12 +262,12 @@ msgstr ""
 "To by také mohlo znamenat, že soubor \"%s\" nelze otevřít pro čtení nebo "
 "soubor neexistuje."
 
-#: common/convert.cpp:536 common/convert.cpp:642 common/convert.cpp:688
+#: common/convert.cpp:537 common/convert.cpp:643 common/convert.cpp:689
 #, c-format
 msgid "The Unicode code point U+%04X is unsupported."
 msgstr "Kód Unicode U+%04X není podporován."
 
-#: common/convert.cpp:812
+#: common/convert.cpp:813
 #, c-format
 msgid "Invalid UTF-8 sequence at position %d."
 msgstr "Neplatná sekvence UTF-8 na pozici %d."
@@ -456,150 +457,150 @@ msgstr "%action:1: `%expression:2' není platný regulární výraz."
 msgid "Unhandled Error: "
 msgstr "Neobsloužená chyba: "
 
-#: prog/aspell.cpp:90
+#: prog/aspell.cpp:91
 #, c-format
 msgid "Error: %s\n"
 msgstr "Chyba: %s\n"
 
-#: prog/aspell.cpp:95
+#: prog/aspell.cpp:96
 msgid "Error: "
 msgstr "Chyba: "
 
-#: prog/aspell.cpp:191
+#: prog/aspell.cpp:194
 msgid "enter Email mode."
 msgstr "přejít do režimu E-mail."
 
-#: prog/aspell.cpp:192
+#: prog/aspell.cpp:195
 msgid "enter Html/Sgml mode."
 msgstr "přejít do režimu Html/Sgml."
 
-#: prog/aspell.cpp:193
+#: prog/aspell.cpp:196
 msgid "enter TeX mode."
 msgstr "přejít do režimu TeX."
 
-#: prog/aspell.cpp:289
+#: prog/aspell.cpp:292
 #, c-format
 msgid "Invalid Option: %s"
 msgstr "Neplatný přepínač: %s"
 
-#: prog/aspell.cpp:294
+#: prog/aspell.cpp:297
 msgid " does not take any parameters."
 msgstr " nemá žádné parametry."
 
-#: prog/aspell.cpp:302
+#: prog/aspell.cpp:305
 #, c-format
 msgid "You must specify a parameter for %s"
 msgstr "Musíte zadat parametr pro %s"
 
-#: prog/aspell.cpp:330
+#: prog/aspell.cpp:333
 msgid "You must specify an action"
 msgstr "Musíte určit akci"
 
-#: prog/aspell.cpp:399 prog/aspell.cpp:405 prog/aspell.cpp:423
+#: prog/aspell.cpp:404 prog/aspell.cpp:410 prog/aspell.cpp:428
 #, c-format
 msgid "Unknown Action: %s"
 msgstr "Neznámá akce: %s"
 
-#: prog/aspell.cpp:543
+#: prog/aspell.cpp:548
 msgid "Invalid Input"
 msgstr "Neplatný vstup"
 
-#: prog/aspell.cpp:617
+#: prog/aspell.cpp:636
 msgid "Time to load word list: "
 msgstr "Čas načítání seznamu slov: "
 
-#: prog/aspell.cpp:811
+#: prog/aspell.cpp:833
 #, c-format
 msgid "Suggestion Time: %f\n"
 msgstr "Čas návrhu: %f\n"
 
-#: prog/aspell.cpp:852
+#: prog/aspell.cpp:874
 msgid "You must specify a file name."
 msgstr "Musíte určit název souboru."
 
-#: prog/aspell.cpp:862
+#: prog/aspell.cpp:884
 #, c-format
 msgid "Could not open the file \"%s\" for reading"
 msgstr "Nemohu otevřít soubor \"%s\" pro čtení"
 
-#: prog/aspell.cpp:877
+#: prog/aspell.cpp:899
 #, c-format
 msgid "Could not open the file \"%s\"  for writing. File not saved."
 msgstr "Nemohu otevřít soubor \"%s\" pro zápis. Soubor nebyl uložen."
 
-#: prog/aspell.cpp:890
+#: prog/aspell.cpp:912
 #, c-format
 msgid "Invalid keymapping: %s"
 msgstr "Neplatné mapování kláves: %s"
 
-#: prog/aspell.cpp:907
+#: prog/aspell.cpp:929
 msgid "Ignore"
 msgstr "Ignorovat"
 
-#: prog/aspell.cpp:908
+#: prog/aspell.cpp:930
 msgid "Ignore all"
 msgstr "Ignorovat vše"
 
-#: prog/aspell.cpp:909
+#: prog/aspell.cpp:931
 msgid "Replace"
 msgstr "Nahradit"
 
-#: prog/aspell.cpp:910
+#: prog/aspell.cpp:932
 msgid "Replace all"
 msgstr "Nahradit vše"
 
-#: prog/aspell.cpp:911
+#: prog/aspell.cpp:933
 msgid "Add"
 msgstr "Přidat"
 
-#: prog/aspell.cpp:912
+#: prog/aspell.cpp:934
 msgid "Add Lower"
 msgstr "Přidat malá"
 
-#: prog/aspell.cpp:913
+#: prog/aspell.cpp:935
 msgid "Abort"
 msgstr "Přerušit"
 
-#: prog/aspell.cpp:914
+#: prog/aspell.cpp:936
 msgid "Exit"
 msgstr "Ukončit"
 
 # FIXME: "to abort"
-#: prog/aspell.cpp:990
+#: prog/aspell.cpp:1012
 msgid "Are you sure you want to abort? "
 msgstr "Jste si jisti, že chcete přerušit? "
 
-#: prog/aspell.cpp:1010
+#: prog/aspell.cpp:1032
 msgid "With: "
 msgstr "S: "
 
-#: prog/aspell.cpp:1026
+#: prog/aspell.cpp:1048
 msgid "Sorry that is an invalid choice!"
 msgstr "Lituji, to je neplatná volba!"
 
-#: prog/aspell.cpp:1247
+#: prog/aspell.cpp:1269
 msgid "Sorry \"filter\" is currently unimplemented.\n"
 msgstr "Lituji, \"filter\" momentálně není implementováno.\n"
 
-#: prog/aspell.cpp:1339
+#: prog/aspell.cpp:1453
 msgid "Can't merge a master word list yet. Sorry."
 msgstr "Zatím neumím sloučit hlavní seznam slov. Lituji."
 
-#: prog/aspell.cpp:1364
+#: prog/aspell.cpp:1477
 msgid "Sorry \"create/merge personal\" is currently unimplemented.\n"
 msgstr "Lituji, \"vytvořit/sloučit osobní\" momentálně není implementováno.\n"
 
-#: prog/aspell.cpp:1373 prog/aspell.cpp:1432
+#: prog/aspell.cpp:1486 prog/aspell.cpp:1543
 #, c-format
 msgid "Sorry I won't overwrite \"%s\""
 msgstr "Lituji, nepřepíšu \"%s\""
 
-#: prog/aspell.cpp:1423
+#: prog/aspell.cpp:1534
 msgid "Sorry \"create/merge repl\" is currently unimplemented.\n"
 msgstr "Lituji, \"vytvořit/sloučit náhr\" momentálně není implementováno.\n"
 
-#: prog/aspell.cpp:1798
-#, c-format
+#: prog/aspell.cpp:1908
+#, fuzzy, c-format
 msgid ""
 "\n"
 "Aspell %s alpha.  Copyright 2000-2004 by Kevin Atkinson.\n"
@@ -611,18 +612,25 @@ msgid ""
 "                    and help for filters matching <expr> if installed\n"
 "  -c|check <file>  to check a file\n"
 "  -a|pipe          \"ispell -a\" compatibility mode\n"
-"  -l|list          produce a list of misspelled words from standard input\n"
+"  list             produce a list of misspelled words from standard input\n"
 "  [dump] config [-e <expr>]  dumps the current configuration to stdout\n"
 "  config [+e <expr>] <key>   prints the current value of an option\n"
 "  soundslike       returns the sounds like equivalent for each word entered\n"
 "  munch            generate possible root words and affixes\n"
 "  expand [1-4]     expands affix flags\n"
+"  clean [strict]   cleans a word list so that every line is a valid word\n"
 "  filter           passes standard input through filters\n"
 "  -v|version       prints a version line\n"
+"  conv <from> <to> [<norm-form>]\n"
+"    converts from one encoding to another\n"
+"  norm (<norm-map> | <from> <norm-map> <to>) [<norm-form>]\n"
+"    perform unicode normlization\n"
 "  dump|create|merge master|personal|repl [word list]\n"
 "    dumps, creates or merges a master, personal, or replacement word list.\n"
 "\n"
 "  <expr>           regular expression matching filtername(s) or \"all\"\n"
+"  <norm-form>      normalization form to use, either none, internal, or "
+"strict\n"
 "\n"
 "[options] is any of the following:\n"
 "\n"
@@ -655,7 +663,7 @@ msgstr ""
 "[přepínač] je libovolný z následujících:\n"
 "\n"
 
-#: prog/aspell.cpp:1828
+#: prog/aspell.cpp:1944
 #, c-format
 msgid ""
 "\n"
@@ -676,65 +684,79 @@ msgstr "To je pravděpodobně protože: "
 msgid "The required field \"name\" is missing."
 msgstr "Vyžadované pole \"name\" chybí."
 
-#: modules/speller/default/language.cpp:430
+#: modules/speller/default/language.cpp:445
 msgid "Empty string."
 msgstr "Prázdný řetězec."
 
-#: modules/speller/default/language.cpp:436
-#, c-format
-msgid "The character '%s' may not appear at the beginning of a word."
+#: modules/speller/default/language.cpp:449
+#, fuzzy, c-format
+msgid "The character '%s' (U+%02X) may not appear at the beginning of a word."
 msgstr "Znak '%s' nesmí být na začátku slova."
 
-#: modules/speller/default/language.cpp:440
-msgid "Does not contain any letters."
+#: modules/speller/default/language.cpp:451
+#: modules/speller/default/language.cpp:460
+#, c-format
+msgid ""
+"The character '%s' (U+%02X) must be followed by an alphabetic character."
+msgstr ""
+
+#: modules/speller/default/language.cpp:453
+#, fuzzy
+msgid "Does not contain any alphabetic characters."
 msgstr "Neobsahuje žádná písmena."
 
-#: modules/speller/default/language.cpp:448
-#, c-format
-msgid "The character '%s' may not appear in the middle of a word."
+#: modules/speller/default/language.cpp:458
+#, fuzzy, c-format
+msgid "The character '%s' (U+%02X) may not appear in the middle of a word."
 msgstr "Znak '%s' nesmí být uprostřed slova."
 
-#: modules/speller/default/language.cpp:458
-#, c-format
-msgid "The character '%s' may not appear at the end of a word."
+#: modules/speller/default/language.cpp:465
+msgid ""
+"The character '\\r' (U+0D) may not appear at the end of a word. This "
+"probably means means that the file is using MS-DOS EOL instead of Unix EOL. "
+msgstr ""
+
+#: modules/speller/default/language.cpp:468
+#, fuzzy, c-format
+msgid "The character '%s' (U+%02X) may not appear at the end of a word."
 msgstr "Znak '%s' nesmí být na konci slova."
 
-#: modules/speller/default/affix.cpp:277
+#: modules/speller/default/affix.cpp:238
 #, c-format
 msgid "Expected the file to be in \"%s\" not \"%s\"."
 msgstr "Očekával jsem že soubor bude v \"%s\", ne \"%s\"."
 
-#: modules/speller/default/affix.cpp:338
+#: modules/speller/default/affix.cpp:299
 #, c-format
 msgid "affix '%s' is corrupt, possible incorrect count"
 msgstr "přípona '%s' je poškozena, možná nesprávný počet"
 
-#: modules/speller/default/affix.cpp:385
+#: modules/speller/default/affix.cpp:346
 #, c-format
 msgid "Affix '%s' is corrupt"
 msgstr "Přípona '%s' je poškozena"
 
-#: modules/speller/default/readonly_ws.cpp:360
+#: modules/speller/default/readonly_ws.cpp:358
 msgid "Wrong endian order."
 msgstr "Špatné pořadí bajtů."
 
-#: modules/speller/default/readonly_ws.cpp:383
+#: modules/speller/default/readonly_ws.cpp:381
 msgid "Wrong soundslike."
 msgstr "Špatná podobnost zvuku."
 
-#: modules/speller/default/readonly_ws.cpp:389
+#: modules/speller/default/readonly_ws.cpp:387
 msgid "Wrong soundslike version."
 msgstr "Špatná verze podobnosti zvuku."
 
-#: modules/speller/default/readonly_ws.cpp:798
+#: modules/speller/default/readonly_ws.cpp:812
 msgid "The total word length is larger than 240 characters."
 msgstr "Celková délka slova je větší než 240 znaků."
 
-#: modules/speller/default/readonly_ws.cpp:814
+#: modules/speller/default/readonly_ws.cpp:828
 msgid "Affix flags found in word but no affix file given."
 msgstr "Příznaky přípon nalezeny ve slově, ale nezadán soubor přípon."
 
-#: modules/speller/default/readonly_ws.cpp:852
+#: modules/speller/default/readonly_ws.cpp:866
 msgid ""
 "The total word length, with soundslike data, is larger than 240 characters."
 msgstr "Celková délka slova s daty o podobnosti zvuku je větší než 240 znaků."
