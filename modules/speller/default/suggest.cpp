@@ -290,7 +290,7 @@ namespace {
 
   void Working::get_suggestions(NearMissesFinal & sug) {
 
-    if (original.word.size() * parms->edit_distance_weights.max > 0x7FFF)
+    if (original.word.size() * parms->edit_distance_weights.max >= 0x8000)
       return; // to prevent overflow in the editdist functions
 
     near_misses_final = & sug;
@@ -499,7 +499,7 @@ namespace {
     d.word = word;
     d.soundslike = sl;
     //d.word_size = word_size;
-    d.too_large = word_size * parms->edit_distance_weights.max > 0x8000;
+    d.too_large = word_size * parms->edit_distance_weights.max >= 0x8000;
     
     if (parms->use_typo_analysis) {
       unsigned int l = word_size;
