@@ -52,13 +52,13 @@ namespace aspeller {
   PosibErr<void> SpellerImpl::add_to_personal(MutableString word) {
     DataSetCollection::Iterator i = wls_->locate(personal_id);
     if (i == wls_->end()) return no_err;
-    return static_cast<WritableWordSet *>(i->data_set)->add(word.str());
+    return static_cast<WritableWordSet *>(i->data_set)->add(word);
   }
   
   PosibErr<void> SpellerImpl::add_to_session(MutableString word) {
     DataSetCollection::Iterator i = wls_->locate(session_id);
     if (i == wls_->end()) return no_err;
-    return static_cast<WritableWordSet *>(i->data_set)->add(word.str());
+    return static_cast<WritableWordSet *>(i->data_set)->add(word);
   }
 
   PosibErr<void> SpellerImpl::clear_session() {
@@ -70,7 +70,7 @@ namespace aspeller {
   PosibErr<void> SpellerImpl::store_replacement(MutableString mis, 
 						MutableString cor)
   {
-    return SpellerImpl::store_replacement(mis.str(),cor.str(), true);
+    return SpellerImpl::store_replacement(mis,cor,true);
   }
 
   PosibErr<void> SpellerImpl::store_replacement(const String & mis, 
@@ -126,7 +126,7 @@ namespace aspeller {
 
   PosibErr<const WordList *> SpellerImpl::suggest(MutableString word) 
   {
-    return &suggest_->suggest(word.str());
+    return &suggest_->suggest(word);
   }
   
   SpellerImpl::SpecialId SpellerImpl::check_id(const DataSet::Id & wl) const {

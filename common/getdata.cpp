@@ -27,14 +27,14 @@ namespace acommon {
     } while (*p == '#' || *p == '\0');
 
     // get key
-    d.key.str_ = p;
+    d.key.str = p;
     while (*p != '\0' &&
            ((*p != ' ' && *p != '\t' && *p != '#') || *(p-1) == '\\')) ++p;
-    d.key.size_ = p - d.key.str_;
+    d.key.size = p - d.key.str;
 
     // figure out if there is a value and add terminate key
-    d.value.str_ = p; // in case there is no value
-    d.value.size_ = 0;
+    d.value.str = p; // in case there is no value
+    d.value.size = 0;
     if (*p == '#' || *p == '\0') {*p = '\0'; return true;}
     *p = '\0';
 
@@ -44,7 +44,7 @@ namespace acommon {
     if (*p == '\0' || *p == '#') {return true;}
 
     // get value
-    d.value.str_ = p;
+    d.value.str = p;
     while (*p != '\0' && (*p != '#' || *(p-1) == '\\')) ++p;
     
     // remove trailing white space and terminate value
@@ -52,7 +52,7 @@ namespace acommon {
     while (*p == ' ' || *p == '\t') --p;
     if (*p == '\\' && *(p + 1) != '\0') ++p;
     ++p;
-    d.value.size_ = p - d.value.str_;
+    d.value.size = p - d.value.str;
     *p = '\0';
 
     return true;
@@ -112,21 +112,21 @@ namespace acommon {
   bool split(DataPair & d)
   {
     char * p   = d.value;
-    char * end = p + d.value.size();
-    d.key.str_ = p;
+    char * end = p + d.value.size;
+    d.key.str = p;
     while (p != end) {
       ++p;
       if ((*p == ' ' || *p == '\t') && *(p-1) != '\\') break;
     }
-    d.key.size_ = p - d.key.str_;
+    d.key.size = p - d.key.str;
     *p = 0;
     if (p != end) {
       ++p;
       while (p != end && (*p == ' ' || *p == '\t')) ++p;
     }
-    d.value.str_ = p;
-    d.value.size_ = end - p;
-    return d.key.size_ != 0;
+    d.value.str = p;
+    d.value.size = end - p;
+    return d.key.size != 0;
   }
 
   void init(ParmString str, DataPair & d, const Buffer & buf)
@@ -137,8 +137,8 @@ namespace acommon {
     if (l > buf.size - 1) l = buf.size - 1;
     memcpy(buf.data, s, l);
     buf.data[l] = '\0';
-    d.value.str_  = buf.data;
-    d.value.size_ = l;
+    d.value.str  = buf.data;
+    d.value.size = l;
   }
 
 

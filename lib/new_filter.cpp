@@ -425,7 +425,7 @@ namespace acommon
 	    {
               fprintf(stderr,"warning: specifying filter twice makes no sense\n"
 		      "\tignoring `%s %s'\n",
-		      d.key.str(),d.value.str());
+		      d.key.str,d.value.str);
               continue;
             }
             empty_file = false;

@@ -27,7 +27,7 @@ namespace acommon {
     String(const char * s) : std::string(s) {}
     String(const char * s, unsigned int size) : std::string(s, size) {}
     String(ParmString s) : std::string(s) {}
-    String(MutableString s) : std::string(s.str(), s.size()) {}
+    String(MutableString s) : std::string(s.str, s.size) {}
     String(const std::string & s) : std::string(s) {}
     String(const String & other) : std::string(other) {}
 #ifndef __SUNPRO_CC
@@ -44,7 +44,7 @@ namespace acommon {
       return *this;
     }
     String & operator= (MutableString s) {
-      std::string::assign(s.str(), s.size());
+      std::string::assign(s.str, s.size);
       return *this;
     }
     String & operator= (const std::string & s) {

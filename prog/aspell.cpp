@@ -1354,8 +1354,11 @@ void munch()
 void expand() 
 {
   int level = 1;
-  if (args.size() != 0)
-    level = atoi(args[0].c_str());
+  if (args.size() > 0)
+    level = atoi(args[0].c_str()); //FIXME: More verbose
+  int limit = INT_MAX;
+  if (args.size() > 1)
+    limit = atoi(args[1].c_str());
   
   using namespace aspeller;
   CachePtr<Language> lang;
@@ -1363,7 +1366,8 @@ void expand()
   if (!res) {print_error(res.get_err()->mesg); exit(1);}
   lang.reset(res.data);
   String word;
-  CheckList * cl = new_check_list();
+  ObjStack exp_buf;
+  WordAff * exp_list;
   while (CIN.getline(word)) {
     CharVector buf; buf.append(word.c_str(), word.size() + 1);
     char * w = buf.data();
@@ -1376,34 +1380,36 @@ void expand()
       s = strlen(w);
       af = w + s;
     }
-    lang->affix()->expand(ParmString(w, s), ParmString(af), cl);
-    const aspeller::CheckInfo * ci = check_list_data(cl);
+    exp_buf.reset();
+    exp_list = lang->affix()->expand(ParmString(w, s), ParmString(af), 
+                                     exp_buf, limit);
     if (level <= 2) {
       if (level == 2) 
         COUT << word << ' ';
-      while (ci) {
-        COUT << ci->word;
-        ci = ci->next;
-        if (ci) COUT << ' ';
+      WordAff * p = exp_list;
+      while (p) {
+        COUT << p->word;
+        if (p->aff[0]) COUT << '/' << (const char *)p->aff;
+        p = p->next;
+        if (p) COUT << ' ';
       }
       COUT << '\n';
     } else if (level >= 3) {
       double ratio = 0;
       if (level >= 4) {
-        for (const aspeller::CheckInfo * cip = ci; cip; cip = cip->next)
-          ratio += strlen(cip->word);
-        ratio /= strlen(ci->word); // it is assumed the first
-                                   // expansion is just the root
+        for (WordAff * p = exp_list; p; p = p->next)
+          ratio += p->word.size;
+        ratio /= exp_list->word.size; // it is assumed the first
+                                      // expansion is just the root
       }
-      while (ci) {
-        COUT << word << ' ' << ci->word;
+      for (WordAff * p = exp_list; p; p = p->next) {
+        COUT << word << ' ' << p->word;
+        if (p->aff[0]) COUT << '/' << (const char *)p->aff;
         if (level >= 4) COUT.print(" %f\n", ratio);
         else COUT << '\n';
-        ci = ci->next;
       }
     }
   }
-  delete_check_list(cl);
 }
 
 //////////////////////////

@@ -36,10 +36,6 @@
 // FIXME: OPTIMIZATIONS
 //   store the number of letters that are the same as the previous 
 //     soundslike so that it can possible be skipped
-//   don't expand every affix immendently as the whole entry may be
-//     able to be skipped based on the scan of the root word.
-//     this will require storing the maxim number of words stripped
-//     with each entry
 
 #include "getdata.hpp"
 
@@ -442,9 +438,11 @@ namespace {
     const char * sl = 0;
     String sl_buf;
     EditDist score;
-    unsigned int stopped_at = LARGE_NUM;
-    CheckList cl;
-    const CheckInfo * ci_cur;
+    unsigned int limit = LARGE_NUM;
+    ObjStack exp_buf;
+    WordAff * exp_list;
+    WordAff single;
+    single.next = 0;
     
     for (SpellerImpl::WS::const_iterator i = speller->suggest_ws.begin();
          i != speller->suggest_ws.end();
@@ -452,7 +450,7 @@ namespace {
     {
       StackPtr<SoundslikeEnumeration> els(i->ws->soundslike_elements());
       
-      while ( (sw = els->next(stopped_at)) ) {
+      while ( (sw = els->next(limit)) ) {
 
         if (sw->what != WordEntry::Word) {
           sl = sw->word;
@@ -465,9 +463,9 @@ namespace {
         }
 
         score = edit_dist_fun(sl, original_soundslike, parms.edit_distance_weights);
-        stopped_at = score.stopped_at - sl;
+        limit = score.stopped_at - sl;
         if (score >= LARGE_NUM) continue;
-        stopped_at = LARGE_NUM;
+        limit = LARGE_NUM;
         i->ws->soundslike_lookup(*sw, w);
 	//CERR << sw->word << "\n";
         for (; !w.at_end(); w.adv()) {
@@ -488,19 +486,60 @@ namespace {
 
       affix_case:
 
-        lang->affix()->expand(sw->word, sw->aff, &cl);
-        ci_cur = cl.data + 1;
-        for (;ci_cur; ci_cur = ci_cur->next) {
+        exp_buf.reset();
+
+        // FIXME: enhance expand to only used stripped words and
+        //        prefixes so that only the root word needs to be
+        //        stripped.  BUT this could cause a problem if there
+        //        is a different expansion depending on if the the 
+        //        accent
+
+        // first expand any prefixes
+        if (fast_scan) {
+          single.word.str = sw->word;
+          single.word.size = strlen(sw->word);
+          single.aff = (const unsigned char *)sw->aff;
+          exp_list = &single;
+        } else {
+          exp_list = lang->affix()->expand_prefix(sw->word, sw->aff, exp_buf);
+        }
+
+        // iterate through each semi-expanded word, any affix flags
+        // are now suffixes
+        for (WordAff * p = exp_list; p; p = p->next)
+        {
+          // try the root word
           sl_buf.clear();
-          to_stripped(*lang, ci_cur->word, sl_buf);
+          to_stripped(*lang, p->word, sl_buf);
           score = edit_dist_fun(sl_buf.c_str(), original_soundslike, parms.edit_distance_weights);
-          stopped_at = score.stopped_at - sl;
-          if (score >= LARGE_NUM) continue;
-          stopped_at = LARGE_NUM;
-          ParmString w_word(ci_cur->word);
-          char * wf = (char *)buffer.alloc(w_word.size() + 1);
-          i->convert.convert(w_word, wf);
-          add_nearmiss(ParmString(wf, w_word.size()), score, do_count);
+          limit = score.stopped_at - sl_buf.c_str();
+
+          if (score < LARGE_NUM) {
+            char * wf = (char *)buffer.alloc(p->word.size + 1);
+            i->convert.convert(p->word, wf);
+            add_nearmiss(ParmString(wf, p->word.size), score, do_count);
+          }
+
+          // expand any suffixes, using limit as a hint to avoid
+          // unneeded expansions
+          if (p->word.size - lang->affix()->max_strip() >= limit)
+            exp_list = 0;
+          else
+            exp_list = lang->affix()->expand_suffix(p->word, p->aff, exp_buf, limit);
+
+          // reset limit if necessary
+          if (score < LARGE_NUM) limit = LARGE_NUM;
+
+          // iterate through fully expanded words, if any
+          for (WordAff * q = exp_list; q; q = q->next) {
+            sl_buf.clear();
+            to_stripped(*lang, q->word, sl_buf);
+            score = edit_dist_fun(sl_buf.c_str(), original_soundslike, parms.edit_distance_weights);
+            if (score >= LARGE_NUM) continue;
+            char * wf = (char *)buffer.alloc(q->word.size + 1);
+            i->convert.convert(q->word, wf);
+            add_nearmiss(ParmString(wf, q->word.size), score, do_count);
+          }
         }
       }
     }
@@ -915,7 +954,7 @@ namespace aspeller {
       FixedBuffer<64> buf;
       DataPair d;
       while (getdata_pair(in, d, buf)) {
-	if (d.key.size() != 2)
+	if (d.key.size != 2)
 	  return make_err(bad_file_format, file);
 	w.repl (l.to_normalized(d.key[0]),
 		l.to_normalized(d.key[1])) = w.repl_dis1;

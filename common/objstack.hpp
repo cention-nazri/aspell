@@ -19,8 +19,10 @@ class ObjStack
   size_t min_align;
   Node * first;
   Node * first_free;
+  Node * reserve;
   byte * top;
   byte * bottom;
+  void setup_chunk();
   void new_chunk();
 
   ObjStack(const ObjStack &);
@@ -40,6 +42,9 @@ public:
   // are a multiple of align.
   ObjStack(size_t chunk_s = 1024, size_t align = sizeof(void *));
   ~ObjStack();
+
+  void reset();
+  void trim();
   
   // This alloc_bottom does NOT check alignment.  However, if you always
   // insert objects with a multiple of min_align than it will always

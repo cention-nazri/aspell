@@ -724,7 +724,10 @@ namespace {
       word_hash->parms().equal_.cmp.lang = &lang;
       const char * w0;
       WordHash::MutableFindIterator j;
-      StackPtr<CheckList> cl(new_check_list());
+      ObjStack exp_buf;
+      WordAff * exp_list;
+      WordAff single;
+      single.next = 0;
       Vector<WordAff> af_list;
 
       while ( (w0 = els->next()) != 0) {
@@ -754,19 +757,20 @@ namespace {
           // Now expand any affix compression
           
           if (affixes) {
-            lang.affix()->expand(w, affixes, cl);
+            exp_buf.reset();
+            exp_list = lang.affix()->expand(w, affixes, exp_buf);
           } else {
-            cl->reset();
-            CheckInfo * ci = cl->gi.add();
-            ci->word = strdup(w);
+            exp_list = &single;
+            single.word.str = w;
+            single.word.size = strlen(w);
           }
 
           // iterate through each expanded word
           
-          for (const CheckInfo * ci = check_list_data(cl); ci; ci = ci->next)
+          for (WordAff * p = exp_list; p; p = p->next)
           {
-            const char * w = ci->word;
-            s = strlen(w);
+            const char * w = p->word.str;
+            s = p->word.size;
           
             bool dup = false;
             for (j =word_hash->multi_find(w); !j.at_end(); j.adv()) {
@@ -787,36 +791,30 @@ namespace {
 
         } else {
 
-          int n;
-          WordAff * p, * end;
-          WordAff wa_buf;
-
           if (use_jump_tables) {
             // expand any affixes which will effect the first
             // 3 letters of a word.  This is needed so that the
             // jump tables will function correctly
-            af_list.resize(strlen(affixes) * strlen(affixes) + 1);
-            n = lang.affix()->expand(w,affixes,3,af_list.data());
-            p = af_list.data();
-            end = p + n;
+            exp_buf.reset();
+            exp_list = lang.affix()->expand(w, affixes, exp_buf, 3);
           } else {
-            wa_buf.word = w;
-            wa_buf.af   = affixes;
-            p = & wa_buf;
-            end = p + 1;
+            single.word.str = w;
+            single.word.size = strlen(w);
+            single.aff = (const unsigned char *)affixes;
+            exp_list = &single;
           }
 
           // now interate through the list and insert
           // the words 
-          for (; p != end; ++p)
+          for (WordAff * p = exp_list; p; p = p->next)
           {
             //CERR << p->word << '/' << p->af << '\n';
-            s = p->word.size();
-            const char * w = p->word.c_str();
+            s = p->word.size;
+            const char * w = p->word.str;
             bool dup = false;
             for (j =word_hash->multi_find(w); !j.at_end(); j.adv()) {
               if (strcmp(w, j.deref()->data)==0) {
-                if (!p->af.empty())
+                if (p->aff)
                   CERR << "WARNING: Ignoring duplicate: " << w << '\n';
                 dup = true;
                 // FIXME: deal with duplicates properly
@@ -825,12 +823,13 @@ namespace {
             if (dup) continue;
 
             WordData * b;
-            b = (WordData *)buf.alloc(s + WordData::size + p->af.size() + 2);
-            b->total_size = s + 1 + p->af.size() + 1;
+            size_t aff_size = strlen((const char *)p->aff);
+            b = (WordData *)buf.alloc(s + WordData::size + aff_size + 2);
+            b->total_size = s + 1 + aff_size + 1;
             b->affix_offset = s + 1;
 
             memcpy(b->data, w, s + 1);
-            memcpy(b->data + s + 1, p->af.c_str(), p->af.size() + 1);
+            memcpy(b->data + s + 1, p->aff, aff_size + 1);
 
             word_hash->insert(b);
             ++num_entries;

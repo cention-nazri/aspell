@@ -86,9 +86,9 @@ namespace aspeller {
       if (dp.key != "followup" && dp.key != "collapse_result" &&
 	  dp.key != "version") {
 	++num;
-	size += dp.key.size() + 1;
+	size += dp.key.size + 1;
 	if (dp.value != "_") {
-	  size += dp.value.size() + 1;
+	  size += dp.value.size + 1;
 	}
       }
     }
@@ -112,16 +112,16 @@ namespace aspeller {
       } else if (dp.key == "version") {
 	parms->version = dp.value;
       } else {
-	memcpy(d, dp.key.str(), dp.key.size() + 1);
+	memcpy(d, dp.key.str, dp.key.size + 1);
 	*r = d;
 	++r;
-	d += dp.key.size() + 1;
+	d += dp.key.size + 1;
 	if (dp.value == "_") {
 	  *r = "";
 	} else {
-	  memcpy(d, dp.value.str(), dp.value.size() + 1);
+	  memcpy(d, dp.value.str, dp.value.size + 1);
 	  *r = d;
-	  d += dp.value.size() + 1;
+	  d += dp.value.size + 1;
 	}
 	++r;
       }

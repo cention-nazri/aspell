@@ -15,6 +15,7 @@
 #include "wordinfo.hpp"
 #include "fstream.hpp"
 #include "parm_string.hpp"
+#include "simple_string.hpp"
 #include "char_vector.hpp"
 #include "objstack.hpp"
 
@@ -54,8 +55,9 @@ namespace aspeller {
 
   struct WordAff
   {
-    String word;
-    String af;
+    SimpleString word;
+    const unsigned char * aff;
+    WordAff * next;
   };
 
   class AffixMgr
@@ -66,6 +68,9 @@ namespace aspeller {
     SfxEntry *          sStart[SETSIZE];
     PfxEntry *          pFlag[SETSIZE];
     SfxEntry *          sFlag[SETSIZE];
+
+    int max_strip_f[SETSIZE];
+    int max_strip_;
 
     const char *        encoding;
     //const char *        compound;
@@ -81,6 +86,8 @@ namespace aspeller {
     AffixMgr(const Language * l) : lang(l), data_(0) {}
     ~AffixMgr();
 
+    unsigned int max_strip() const {return max_strip_;}
+
     PosibErr<void> setup(ParmString affpath);
 
     bool affix_check(const LookupInfo &, ParmString, CheckInfo &, GuessInfo *) const;
@@ -90,12 +97,20 @@ namespace aspeller {
 
     void get_word(String & word, const CheckInfo &) const;
 
-    void  munch(ParmString word, CheckList *) const;
-    void  expand(ParmString word, ParmString affixes, CheckList *) const;
-    // expand enough so the affixes does not effect the first limit
-    // characters
-    int  expand(ParmString word, ParmString af, int limit, WordAff * l) const;
+    void munch(ParmString word, CheckList *) const;
 
+    WordAff * expand(ParmString word, ParmString aff, 
+                     ObjStack &, int limit = INT_MAX) const;
+
+    WordAff * expand_prefix(ParmString word, ParmString aff, 
+                            ObjStack & buf) const 
+    {
+      return expand(word,aff,buf,0);
+    }
+    WordAff * expand_suffix(ParmString word, const unsigned char * new_aff,
+                            ObjStack &, int limit = INT_MAX,
+                            unsigned char * new_aff = 0, WordAff * * * l = 0) const;
+    
   private:
     PosibErr<void> parse_file(const char * affpath);
 

@@ -1,5 +1,5 @@
 \input texinfo   @c -*-texinfo-*-
-@comment $Id: aspell.texi,v 1.6 2004/02/12 01:26:19 kevina Exp $
+@comment $Id: aspell.texi,v 1.7 2004/02/12 23:43:15 kevina Exp $
 @comment %**start of header
 @setfilename aspell.info
 @settitle GNU Aspell 0.51
@@ -2618,6 +2618,14 @@ intended.
 Be able to accept @strong{words with spaces in them} as many languages
 have words, such as a word in a foreign phrase, which only make sense
 when followed by other words.
+@item
+Support @strong{soundslike lookup with affix compression}.  I think it
+is possible, although I don't know how effective it will be.  The basic
+idea is to affix compress the soundslike codes and then match the
+codes up with affix compressed words.  If you are interested,
+email @email{aspell-devel@@gnu.org}, and I will explain it in more
+detail.
+
 @end itemize
 
 @node Other Items, Notes on Various Items, Important Items, To Do
@@ -4054,7 +4062,6 @@ development of this manual.
 
 Copyright @copyright{} 2000--2004 Kevin Atkinson.
 
-@quotation
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.1 or
 any later version published by the Free Software Foundation; with no
@@ -4071,7 +4078,6 @@ the Free Software Foundation; either version 2.1 of the License, or
 Certain parts of the library, as indicated at the top of the source
 file, are under a weaker license.  However, all parts of the library
 are LGPL Compatible.
-@end quotation
 
 @menu
 * GNU Free Documentation License::  
