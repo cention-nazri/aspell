@@ -88,13 +88,13 @@ libaspell_la_SOURCES =\
 
 libaspell_la_LIBADD =  $(LIBINTL)
 
-libaspell_la_LDFLAGS = ${extra_ldflags} -version-info 15:5:0
+libaspell_la_LDFLAGS = ${extra_ldflags} -version-info 16:0:1
 
 libpspell_la_SOURCES = lib/dummy.cpp
 
 libpspell_la_LIBADD = libaspell.la
 
-libpspell_la_LDFLAGS = ${extra_ldflags} -version-info 15:5:0
+libpspell_la_LDFLAGS = ${extra_ldflags} -version-info 16:0:1
 
 EXTRA_DIST += common/*.hpp common/*.h\
               modules/speller/default/*.hpp\
