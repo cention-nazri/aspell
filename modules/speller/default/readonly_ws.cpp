@@ -704,8 +704,9 @@ namespace {
     assert(sizeof(u16int) == 2);
     assert(sizeof(u32int) == 4);
 
-    bool full_soundslike = (strcmp(lang.soundslike_name(), "none") != 0 && 
-                            strcmp(lang.soundslike_name(), "simple"));
+    bool full_soundslike = !(strcmp(lang.soundslike_name(), "none") == 0 ||
+                             strcmp(lang.soundslike_name(), "stripped") == 0 ||
+                             strcmp(lang.soundslike_name(), "simple") == 0);
 
     bool affix_compress = (lang.affix() && 
                            config.retrieve_bool("affix-compress"));

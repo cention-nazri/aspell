@@ -95,6 +95,31 @@ namespace aspeller {
     }
   };
 
+  class StrippedSoundslike : public Soundslike {
+  private:
+    const Language * lang;
+  public:
+    StrippedSoundslike(const Language * l) : lang(l) {}
+
+    PosibErr<void> setup(Conv &) {return no_err;}
+    
+    String soundslike_chars() const {
+      return get_stripped_chars(*lang);
+    }
+
+    char * to_soundslike(char * res, const char * str, int size) const 
+    {
+      return lang->LangImpl::to_stripped(res, str);
+    }
+
+    const char * name() const {
+      return "stripped";
+    }
+    const char * version() const {
+      return "1.0";
+    }
+  };
+
   class PhonetSoundslike : public Soundslike {
 
     const Language * lang;
@@ -162,6 +187,8 @@ namespace aspeller {
     Soundslike * sl;
     if (name == "simple" || name == "generic") {
       sl = new SimpileSoundslike(lang);
+    } else if (name == "stripped") {
+      sl = new StrippedSoundslike(lang);
     } else if (name == "none") {
       sl = new NoSoundslike(lang);
     } else if (name == lang->name()) {
