@@ -27,7 +27,8 @@ namespace acommon {
     const char * name;
     double order_num;
     const char * lib_dir;
-    StringList * pwli_dirs;
+    StringList * dict_exts;
+    StringList * dict_dirs;
   };
 
   struct DictInfo {
@@ -39,71 +40,51 @@ namespace acommon {
     const char * size_str;
   };
 
-  struct MDInfoDefItem;
-  struct MDInfoDefList {
-    const MDInfoDefItem * begin;
-    const MDInfoDefItem * end;
-    MDInfoDefList()
-      : begin(0), end(0) {}
-    MDInfoDefList(const MDInfoDefItem * b, const MDInfoDefItem * e)
-      : begin(b), end(e) {}
-  };
   struct MDInfoListAll;
-  struct MDInfoNode;
-
-  struct MDInfoList 
-  {
-    unsigned int size_;
-    MDInfoNode * head_;
-    MDInfoList() : size_(0), head_(0) {}
-    virtual ~MDInfoList() {}
-    void clear();
-    PosibErr<void> fill(MDInfoListAll &,
-			Config *,
-			const StringListImpl & dirs,
-			const char * suffix);
-    virtual PosibErr<void> proc_file(MDInfoListAll &,
-				     Config *,
-				     const char * dir,
-				     const char * name,
-				     unsigned int name_size,
-				     IStream &) = 0;
-    virtual MDInfoDefList default_list() const;
-  };
-
+  
   struct ModuleInfoNode;
-
-  class ModuleInfoList : public MDInfoList {
+  
+  class ModuleInfoList {
   public:
+    ModuleInfoList() : size_(0), head_(0) {}
+    void clear();
+    PosibErr<void> fill(MDInfoListAll &, Config *);
     bool empty() const;
     unsigned int size() const;
     ModuleInfoEnumeration * elements() const;
-    virtual ~ModuleInfoList() {}
-    PosibErr<void> proc_file(MDInfoListAll &,
+    PosibErr<void> proc_info(MDInfoListAll &,
 			     Config *,
-			     const char * dir,
 			     const char * name,
 			     unsigned int name_size,
 			     IStream &);
-    MDInfoDefList default_list() const;
     ModuleInfoNode * find(const char * to_find, 
 			  unsigned int to_find_len);
+  public: // but don't use
+    unsigned int size_;
+    ModuleInfoNode * head_;
   };
-
+  
   ModuleInfoList * get_module_info_list(Config *);
 
-  class DictInfoList : public MDInfoList {
+  struct DictInfoNode;
+
+  class DictInfoList {
   public:
+    DictInfoList() : size_(0), head_(0) {}
+    void clear();
+    PosibErr<void> fill(MDInfoListAll &, Config *);
     bool empty() const;
     unsigned int size() const;
     DictInfoEnumeration * elements() const;
-    virtual ~DictInfoList() {}
     PosibErr<void> proc_file(MDInfoListAll &,
 			     Config *,
 			     const char * dir,
 			     const char * name,
 			     unsigned int name_size,
 			     IStream &);
+  public: // but don't use
+    unsigned int size_;
+    DictInfoNode * head_;
   };
 
   DictInfoList * get_dict_info_list(Config *);

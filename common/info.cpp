@@ -24,37 +24,6 @@ namespace acommon {
 
   /////////////////////////////////////////////////////////////////
   //
-  // Info Nodes
-  //
-
-  struct MDInfoNode
-  {
-    MDInfoNode * next;
-    MDInfoNode(MDInfoNode * n = 0) : next(n) {}
-    virtual ~MDInfoNode() {}
-  };
-  
-  struct ModuleInfoNode : public MDInfoNode
-  {
-    ModuleInfo c_struct;
-    String name;
-    String lib_dir;
-    StringListImpl pwli_dirs;
-  };
-
-  struct DictInfoNode : public MDInfoNode
-  {
-    DictInfo c_struct;
-    String file;
-    String code;
-    String jargon;
-    String size_str;
-  };
-
-  bool operator< (const DictInfoNode &, const DictInfoNode &);
-
-  /////////////////////////////////////////////////////////////////
-  //
   // Lists of Info Lists
   //
 
@@ -67,12 +36,12 @@ namespace acommon {
   {
     StringListImpl for_dirs;
     ModuleInfoList module_info_list;
-    StringListImpl pwli_dir_list;
+    StringListImpl dict_dir_list;
     DictInfoList   dict_info_list;
     void clear();
     PosibErr<void> fill(Config *, StringListImpl &);
     bool has_data() {return module_info_list.head_ != 0; }
-    PosibErr<void> fill_pwli_dir_list();
+    PosibErr<void> fill_dict_dir_list();
   };
 
   struct MDInfoListofLists
@@ -99,18 +68,6 @@ namespace acommon {
 
   /////////////////////////////////////////////////////////////////
   //
-  // Info Default List
-  //
-
-  struct MDInfoDefItem {
-    const char * dir;
-    const char * name;
-    const char * data;
-  };
-
-
-  /////////////////////////////////////////////////////////////////
-  //
   // Utility functions declaration
   //
 
@@ -119,54 +76,51 @@ namespace acommon {
 
   /////////////////////////////////////////////////////////////////
   //
-  // Node impl
+  // ModuleInfoList Impl
   //
 
-  bool operator< (const DictInfoNode & r, const DictInfoNode & l)
+  struct ModuleInfoNode
   {
-    const DictInfo & rhs = r.c_struct;
-    const DictInfo & lhs = l.c_struct;
-    int res = strcmp(rhs.code, lhs.code);
-    if (res < 0) return true;
-    if (res > 0) return false;
-    res = strcmp(rhs.jargon,lhs.jargon);
-    if (res < 0) return true;
-    if (res > 0) return false;
-    if (rhs.size < lhs.size) return true;
-    if (rhs.size > lhs.size) return false;
-    res = strcmp(rhs.module->name,lhs.module->name);
-    if (res < 0) return true;
-    return false;
-  }
+    ModuleInfoNode * next;
+    ModuleInfoNode(ModuleInfoNode * n = 0) : next(n) {}
+    ModuleInfo c_struct;
+    String name;
+    String lib_dir;
+    StringListImpl dict_exts;
+    StringListImpl dict_dirs;
+  };
 
+  struct ModuleInfoDefItem {
+    const char * name;
+    const char * data;
+  };
 
-  /////////////////////////////////////////////////////////////////
-  //
-  // Info Lists Impl.
-  //
+  static const ModuleInfoDefItem module_info_list_def_list[] = {
+    {"default", "order-num 0.50"}
+  };
 
-  void MDInfoList::clear() 
+  void ModuleInfoList::clear() 
   {
     while (head_ != 0) {
-      MDInfoNode * to_del = head_;
+      ModuleInfoNode * to_del = head_;
       head_ = head_->next;
       delete to_del;
     }
   }
 
-  PosibErr<void> MDInfoList::fill(MDInfoListAll & list_all,
-				  Config * config,
-				  const StringListImpl & dirs,
-				  const char * suffix)
+  PosibErr<void> ModuleInfoList::fill(MDInfoListAll & list_all,
+				      Config * config)
   {
-    MDInfoDefList def_list = default_list();
-    for (const MDInfoDefItem * i = def_list.begin; i != def_list.end; ++i)
+    const ModuleInfoDefItem * i   = module_info_list_def_list;
+    const ModuleInfoDefItem * end = module_info_list_def_list
+      + sizeof(module_info_list_def_list)/sizeof(ModuleInfoDefItem);
+    for (; i != end; ++i)
     {
       StringIStream in(i->data);
-      proc_file(list_all, config, i->dir, i->name, strlen(i->name), in);
+      proc_info(list_all, config, i->name, strlen(i->name), in);
     }
 
-    StringListEnumeration els = dirs.elements_obj();
+    StringListEnumeration els = list_all.for_dirs.elements_obj();
     const char * dir;
     while ( (dir = els.next()) != 0) {
       DIR * d = opendir(dir);
@@ -179,7 +133,7 @@ namespace acommon {
 	unsigned int name_size = dot_loc == 0 ? strlen(name) :  dot_loc - name;
       
 	// check if it ends in suffix
-	if (strcmp(name + name_size, suffix) != 0)
+	if (strcmp(name + name_size, ".asmi") != 0)
 	  continue;
       
 	String path;
@@ -188,35 +142,24 @@ namespace acommon {
 	path += name;
 	FStream in;
 	RET_ON_ERR(in.open(path, "r"));
-	RET_ON_ERR(proc_file(list_all, config, dir, name, name_size, in));
+	RET_ON_ERR(proc_info(list_all, config, name, name_size, in));
       }
     }
     return no_err;
   }
 
-  MDInfoDefList MDInfoList::default_list() const 
-  {
-    return MDInfoDefList();
-  }
-
-  /////////////////////////////////////////////////////////////////
-  //
-  // ModuleInfoList Impl
-  //
-  
-  PosibErr<void> ModuleInfoList::proc_file(MDInfoListAll &,
+  PosibErr<void> ModuleInfoList::proc_info(MDInfoListAll &,
 					   Config * config,
-					   const char * dir,
 					   const char * name,
 					   unsigned int name_size,
 					   IStream & in)
   {
-    MDInfoNode * * prev = &head_;
+    ModuleInfoNode * * prev = &head_;
     ModuleInfoNode * to_add = new ModuleInfoNode();
     to_add->c_struct.name = 0;
     to_add->c_struct.order_num = -1;
     to_add->c_struct.lib_dir = 0;
-    to_add->c_struct.pwli_dirs = 0;
+    to_add->c_struct.dict_dirs = 0;
 
     to_add->name.assign(name, name_size);
     to_add->c_struct.name = to_add->name.c_str();
@@ -239,9 +182,9 @@ namespace acommon {
       } else if (key == "lib-dir") {
 	to_add->lib_dir = data;
 	to_add->c_struct.lib_dir = to_add->lib_dir.c_str();
-      } else if (key == "pwli-dir") {
-	to_add->c_struct.pwli_dirs = &(to_add->pwli_dirs);
-	to_add->pwli_dirs.add(data);
+      } else if (key == "dict-dir") {
+	to_add->c_struct.dict_dirs = &(to_add->dict_dirs);
+	to_add->dict_dirs.add(data);
       } else {
 	err.prim_err(unknown_key, key);
 	goto ERROR;
@@ -249,7 +192,7 @@ namespace acommon {
     }
   
     while (*prev != 0 && 
-	   ((ModuleInfoNode *)*prev)->c_struct.order_num > to_add->c_struct.order_num)
+	   (*prev)->c_struct.order_num > to_add->c_struct.order_num)
       prev = &(*prev)->next;
     to_add->next = *prev;
     *prev = to_add;
@@ -263,28 +206,73 @@ namespace acommon {
   ModuleInfoNode * ModuleInfoList::find(const char * to_find, 
 					unsigned int to_find_len)
   {
-    for (ModuleInfoNode * n = (ModuleInfoNode *)head_; 
+    for (ModuleInfoNode * n = head_; 
 	 n != 0; 
-	 n = (ModuleInfoNode *)n->next)
+	 n = n->next)
+    {
       if (n->name.size() == to_find_len 
 	  && strncmp(n->name.c_str(), to_find, to_find_len) == 0) return n;
+    }
     return 0;
-  }
-
-  static const MDInfoDefItem module_info_list_def_list[] = {
-    {"", "default", "order-num 0.50"}
-  };
-  
-  MDInfoDefList ModuleInfoList::default_list() const {
-    return MDInfoDefList(module_info_list_def_list,
-			 module_info_list_def_list 
-			 + sizeof(module_info_list_def_list)/sizeof(MDInfoDefItem));
   }
 
   /////////////////////////////////////////////////////////////////
   //
   // DictInfoList Impl
   //
+
+  struct DictInfoNode
+  {
+    DictInfoNode * next;
+    DictInfoNode(DictInfoNode * n = 0) : next(n) {}
+    DictInfo c_struct;
+    String file;
+    String code;
+    String jargon;
+    String size_str;
+  };
+
+  bool operator< (const DictInfoNode & r, const DictInfoNode & l);
+
+  void DictInfoList::clear() 
+  {
+    while (head_ != 0) {
+      DictInfoNode * to_del = head_;
+      head_ = head_->next;
+      delete to_del;
+    }
+  }
+
+  PosibErr<void> DictInfoList::fill(MDInfoListAll & list_all,
+				    Config * config)
+  {
+    StringListEnumeration els = list_all.dict_dir_list.elements_obj();
+    const char * dir;
+    while ( (dir = els.next()) != 0) {
+      DIR * d = opendir(dir);
+      if (d==0) continue;
+    
+      struct dirent * entry;
+      while ( (entry = readdir(d)) != 0) {
+	const char * name = entry->d_name;
+	const char * dot_loc = strrchr(name, '.');
+	unsigned int name_size = dot_loc == 0 ? strlen(name) :  dot_loc - name;
+      
+	// check if it ends in suffix
+	if (strcmp(name + name_size, ".awli") != 0)
+	  continue;
+      
+	String path;
+	path += dir;
+	path += '/';
+	path += name;
+	FStream in;
+	RET_ON_ERR(in.open(path, "r"));
+	RET_ON_ERR(proc_file(list_all, config, dir, name, name_size, in));
+      }
+    }
+    return no_err;
+  }
 
   PosibErr<void> DictInfoList::proc_file(MDInfoListAll & list_all,
 					 Config * config,
@@ -293,13 +281,13 @@ namespace acommon {
 					 unsigned int name_size,
 					 IStream & in)
   {
-    MDInfoNode * * prev = &head_;
+    DictInfoNode * * prev = &head_;
     DictInfoNode * to_add = new DictInfoNode();
     const char * p0;
     const char * p1;
     const char * p2;
-    p0 = strnchr(name, '-', name_size - 5);
-    p2 = strnrchr(name, '-', name_size - 5);
+    p0 = strnchr(name, '-', name_size);
+    p2 = strnrchr(name, '-', name_size);
     p1 = p2;
     assert (p0 != 0);
     if (p0 + 2 < p1 && isdigit(p1[-1]) && isdigit(p1[-2]) && p1[-3] == '-')
@@ -338,6 +326,23 @@ namespace acommon {
     return no_err;
   }
 
+  bool operator< (const DictInfoNode & r, const DictInfoNode & l)
+  {
+    const DictInfo & rhs = r.c_struct;
+    const DictInfo & lhs = l.c_struct;
+    int res = strcmp(rhs.code, lhs.code);
+    if (res < 0) return true;
+    if (res > 0) return false;
+    res = strcmp(rhs.jargon,lhs.jargon);
+    if (res < 0) return true;
+    if (res > 0) return false;
+    if (rhs.size < lhs.size) return true;
+    if (rhs.size > lhs.size) return false;
+    res = strcmp(rhs.module->name,lhs.module->name);
+    if (res < 0) return true;
+    return false;
+  }
+
 
   /////////////////////////////////////////////////////////////////
   //
@@ -355,36 +360,41 @@ namespace acommon {
   void MDInfoListAll::clear()
   {
     module_info_list.clear();
-    pwli_dir_list.clear();
+    dict_dir_list.clear();
     dict_info_list.clear();
   }
 
   PosibErr<void> MDInfoListAll::fill(Config * c,
 				     StringListImpl & dirs)
   {
-    for_dirs = dirs;
     PosibErr<void> err;
-    err = module_info_list.fill(*this, c, for_dirs, ".asmi");
+
+    for_dirs = dirs;
+    err = module_info_list.fill(*this, c);
     if (err.has_err()) goto ERROR;
-    err = fill_pwli_dir_list();
+
+    dict_dir_list = dirs; // the normal data directores should be used
+			  // also when looking for dictionaries
+    err = fill_dict_dir_list();
     if (err.has_err()) goto ERROR;
-    pwli_dir_list = dirs;
-    err = dict_info_list.fill(*this, c, pwli_dir_list, ".pwli");
+    err = dict_info_list.fill(*this, c);
+
     if (err.has_err()) goto ERROR;
     return err;
+
   ERROR:
     clear();
     return err;
   }
 
-  PosibErr<void> MDInfoListAll::fill_pwli_dir_list()
+  PosibErr<void> MDInfoListAll::fill_dict_dir_list()
   {
-    for (MDInfoNode * n = module_info_list.head_; n != 0; n = n->next) {
-      StringListEnumeration e = 
-	((ModuleInfoNode *)n)->pwli_dirs.elements_obj();
+    for (ModuleInfoNode * n = module_info_list.head_; n != 0; n = n->next) 
+    {
+      StringListEnumeration e = n->dict_dirs.elements_obj();
       const char * dir;
       while ( (dir = e.next()) != 0 )
-	pwli_dir_list.add(dir);
+	dict_dir_list.add(dir);
     }
     return no_err;
   }
