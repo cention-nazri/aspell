@@ -4,12 +4,15 @@
 // license along with this library if you did not you can find
 // it at http://www.gnu.org/.
 
+#define COMPILE_IN_FILTER // url filter is always static
+
 #include "indiv_filter.hpp"
+#include "key_info.hpp"
+#include "loadable-filter-API.hpp"
 
 namespace acommon {
 
-  class UrlFilter : public IndividualFilter 
-  {
+  class UrlFilter : public IndividualFilter {
   public:
     PosibErr<bool> setup(Config *);
     void reset() {}
@@ -18,62 +21,43 @@ namespace acommon {
 
   PosibErr<bool> UrlFilter::setup(Config *) 
   {
-    name_ = "url";
+    name_ = "url-filter";
     order_num_ = 0.95;
     return true;
   }
 
-  void UrlFilter::process(FilterChar * & str0, FilterChar * & end)
+  static bool url_char(char c)
   {
-    enum {slash, who_cares} prev_char;
-    enum {wbegin, wmiddle, wend} word_pos;
-    bool blank_out;
-    int point_chars;
-    FilterChar * str = str0;
-    FilterChar * cur = str;
-    while (cur < end) {
-      prev_char = who_cares;
-      word_pos = wbegin;
-      blank_out = false;
-      point_chars = 0;
-      do {
-	if (cur + 1 == end ||
-	    cur[1] == ' ' || cur[1] == '\n' || cur[1] == '\t')
-	  word_pos = wend;
-	if (word_pos == wmiddle) {
-	  switch (*cur) {
-	  case '@':
-	    blank_out = true;
-	    prev_char = who_cares;
-	    break;
-	  case '.':
-	    ++point_chars;
-	    prev_char = who_cares;
-	    break;
-	  case '/':
-	    if (prev_char == slash) blank_out = true;
-	    prev_char = slash;
-	    break;
-	  default:
-	    prev_char = who_cares;
-	  }
-	}
-	if (word_pos == wbegin) word_pos = wmiddle;
-	++cur;
-      } while (word_pos != wend);
-      if (point_chars > 1) blank_out = true;
-      if (blank_out) {
-	for (FilterChar * i = str; i != cur; ++i)
-	  *i = ' ';
+    return c != '"' && c != ' ' && c != '\n' && c != '\t';
+  }
+ 
+  void UrlFilter::process(FilterChar * & str, FilterChar * & end)
+  {
+    for (FilterChar * cur = str; cur < end; ++cur) 
+    {
+      if (!url_char(*cur)) continue;
+      FilterChar * cur0 = cur;
+      bool blank_out = false;
+      int point_chars = 0;
+      // only consider special url deciding characters if they are in
+      // the middle of a word
+      for (++cur; cur + 1 < end && url_char(cur[1]); ++cur) {
+        if (blank_out) continue;
+        if ((cur[0] == '/' && (point_chars > 0 || cur[1] == '/'))
+            || cur[0] == '@') {
+          blank_out = true;
+        } else if (cur[0] == '.' && cur[1] != '.') { 
+          // count multiple '.' as one
+          if (point_chars < 1) ++point_chars;
+          else                 blank_out = true;
+        }
       }
-      str = cur;
+      ++cur;
+      if (blank_out) {
+	for (; cur0 != cur; ++cur0) *cur0 = ' ';
+      }
     }
   }
 
-  IndividualFilter * new_url_filter() 
-  {
-    return new UrlFilter();
-  }
-
-
+  ACTIVATE_FILTER(acommon,UrlFilter,url)
 }

@@ -460,17 +460,3 @@ msgstr "vérifier les commentaires TeX"
 #: modules/filter/tex.cpp:348
 msgid "TeX file extensions"
 msgstr "extensions des fichiers TeX"
-
-#: modules/filter/loadable.cpp:56
-#, c-format
-msgid "Can't load filter \"%s\": %s\n"
-msgstr "Impossible de charger le filtre « %s » : %s\n"
-
-#: modules/filter/loadable.cpp:64
-#, c-format
-msgid "Filter \"%s\" does not export symbol \"process\""
-msgstr "Le filtre « %s » n'exporte pas le symbole « process »"
-
-#: modules/filter/loadable.cpp:98
-msgid "Name of external filter to load"
-msgstr "Nom du fichier extérieur à télécharger"

@@ -8,6 +8,7 @@
 #include "indiv_filter.hpp"
 #include "mutable_container.hpp"
 #include "copy_ptr-t.hpp"
+#include "loadable-filter-API.hpp"
 
 namespace acommon {
 
@@ -48,10 +49,10 @@ namespace acommon {
 
   PosibErr<bool> EmailFilter::setup(Config * opts) 
   {
-    name_ = "email";
+    name_ = "email-filter";
     order_num_ = 0.85;
-    opts->retrieve_list("email-quote", &is_quote_char);
-    margin = opts->retrieve_int("email-margin");
+    opts->retrieve_list("filter-email-quote", &is_quote_char);
+    margin = opts->retrieve_int("filter-email-margin");
     reset();
     return true;
   }
@@ -91,20 +92,6 @@ namespace acommon {
 	*i = ' ';
   }
   
-  IndividualFilter * new_email_filter() 
-  {
-    return new EmailFilter();
-  }
-
-  static const KeyInfo email_options[] = {
-    {"email-quote", KeyInfoList, ">,|",
-     N_("email quote characters")},
-    {"email-margin", KeyInfoInt, "10",
-     N_("num chars that can appear before the quote char")}
-  };
-
-  const KeyInfo * email_options_begin = email_options;
-  const KeyInfo * email_options_end   = email_options + 2;
-
-
+ACTIVATE_FILTER(acommon,EmailFilter,email);
 }
+

@@ -1,4 +1,4 @@
-#include <strstream>
+#include <sstream>
 #include "split.hpp"
 
 using namespace std;
@@ -8,7 +8,7 @@ namespace aspeller {
 
   vector<String> split(const String & str) {
     vector<String> data;
-    istrstream s(str.c_str());
+    istringstream s(str.c_str());
     String item;
     while (s >> item) {
       data.push_back(item);

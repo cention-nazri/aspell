@@ -196,6 +196,7 @@ enum: key info type
 	int
 	bool
 	list
+	descript
 
 struct: key info
 	desc => The Key Info object is used for holding information
@@ -462,7 +463,46 @@ errors:
 			/
 			invalid flag
 			conflicting flags
+	filter
+		mesg => %where: "%filter":
+		parms => where, filter
+		/
+		cant dlopen file
+			mesg => %where: "%filter" dlopen returned "%return". 
+			parms => return
+		empty filter
+			mesg => %where: The file "%filter" does not contain any filter.
+		no such filter
+			mesg => %where: Filter "%filter" could not be found in filter paths.
+		no options
+			mesg => %where: %filter: can't find option description.
+		confusing version
+			mesg => %where: "%filter" Line %line confused by version control
+			parms => line
+		bad version
+			mesg => %where: "%filter": Line %line Aspell version does not match filter's requirement.
+			parms => line
+		cant extend options
+			mesg => %where: "%filter" error while extend Aspell options. (out of memory?)
+		identical option
+			mesg => %where: "%filter" Line %line Filter option already exists.
+			parms => line
+		options only
+			mesg => %where: "%filter" %line Use option modifiers only within named Option.
+			parms => line
+		invalid option modifier
+			mesg => %where: "%filter" %line Option modifier unknown.
+			parms => line
+		cant describe filter
+			mesg => %where: "%filter" error setting filter description.
 
+	expression
+		mesg => %action: invalid regular expression.
+		parms => action
+		/
+		invalid expression
+			mesg => %action: `%expression' is not a valid regular expression.
+			parms => expression
 }
 group: speller
 {
@@ -890,3 +930,4 @@ class: string pair enumeration
 	enumeration methods
 	copyable methods
 }
+

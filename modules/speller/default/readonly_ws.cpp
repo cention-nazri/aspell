@@ -563,11 +563,11 @@ namespace aspeller_default_readonly_ws {
     return ((i + size - 1)/size)*size;
   }
 
-  static void advance_file(FStream & OUT, int pos) {
-    int diff = pos - OUT.tell();
+  static void advance_file(FStream & out, int pos) {
+    int diff = pos - out.tell();
     assert(diff >= 0);
     for(; diff != 0; --diff)
-      OUT << '\0';
+      out << '\0';
   }
 
   PosibErr<void> create (ParmString base, 
@@ -863,39 +863,39 @@ namespace aspeller_default_readonly_ws {
 
     data_head.soundslike_count   = sound_map.size();
 
-    FStream OUT;
-    OUT.open(base, "wb");
+    FStream out;
+    out.open(base, "wb");
 
     // Write jump1 table
-    advance_file(OUT, data_head.head_size);
-    data_head.jump1_offset = OUT.tell() - data_head.head_size;
-    OUT.write(jump1.data(), jump1.size() * sizeof(SoundslikeJump));
+    advance_file(out, data_head.head_size);
+    data_head.jump1_offset = out.tell() - data_head.head_size;
+    out.write(jump1.data(), jump1.size() * sizeof(SoundslikeJump));
 
     // Write jump2 table
-    advance_file(OUT, round_up(OUT.tell(), page_size));
-    data_head.jump2_offset = OUT.tell() - data_head.head_size;
-    OUT.write(jump2.data(), jump2.size() * sizeof(SoundslikeJump));
+    advance_file(out, round_up(out.tell(), page_size));
+    data_head.jump2_offset = out.tell() - data_head.head_size;
+    out.write(jump2.data(), jump2.size() * sizeof(SoundslikeJump));
 
     // Write data block
-    advance_file(OUT, round_up(OUT.tell(), page_size));
-    data_head.word_offset = OUT.tell() - data_head.head_size;
-    OUT.write(data.data(), data.size());
+    advance_file(out, round_up(out.tell(), page_size));
+    data_head.word_offset = out.tell() - data_head.head_size;
+    out.write(data.data(), data.size());
 
     // Write hash
-    advance_file(OUT, round_up(OUT.tell(), page_size));
-    data_head.hash_offset = OUT.tell() - data_head.head_size;
-    OUT.write(&final_hash.front(), final_hash.size() * 4);
+    advance_file(out, round_up(out.tell(), page_size));
+    data_head.hash_offset = out.tell() - data_head.head_size;
+    out.write(&final_hash.front(), final_hash.size() * 4);
     
-    advance_file(OUT, round_up(OUT.tell(), page_size));
-    data_head.block_size = OUT.tell() - data_head.head_size;
+    advance_file(out, round_up(out.tell(), page_size));
+    data_head.block_size = out.tell() - data_head.head_size;
 
     // write data head to file
-    OUT.seek(0);
-    OUT.write(&data_head, sizeof(DataHead));
-    OUT.write(lang.name(), data_head.lang_name_size);
-    OUT.write(lang.soundslike_name(), data_head.soundslike_name_size);
-    OUT.write(lang.soundslike_version(), data_head.soundslike_version_size);
-    OUT.write(mid_chars, data_head.middle_chars_size); 
+    out.seek(0);
+    out.write(&data_head, sizeof(DataHead));
+    out.write(lang.name(), data_head.lang_name_size);
+    out.write(lang.soundslike_name(), data_head.soundslike_name_size);
+    out.write(lang.soundslike_version(), data_head.soundslike_version_size);
+    out.write(mid_chars, data_head.middle_chars_size); 
 
     return no_err;
   }

@@ -28,6 +28,7 @@ namespace acommon {
     String(ParmString s) : std::string(s) {}
     String(const std::string & s) : std::string(s) {}
     String(const String & other) : std::string(other) {}
+    inline String(const PosibErr<String> & other);
     String & operator= (const char * s) {
       std::string::operator= (s);
       return *this;
@@ -54,6 +55,8 @@ namespace acommon {
     void write (char c);
     void write (ParmString);
     void write (const void *, unsigned int);
+
+    String & no_case(); // FIXME: find a better way
   };
 
   inline String operator+ (ParmString rhs, ParmString lhs)

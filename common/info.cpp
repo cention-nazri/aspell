@@ -220,7 +220,7 @@ namespace acommon {
 	  {
 	    err.prim_err(bad_value, key, data,
 			 "a number between 0 and 1");
-	    goto ERROR;
+	    goto RETURN_ERROR;
 	  }
       } else if (key == "lib-dir") {
 	to_add->lib_dir = data;
@@ -232,19 +232,20 @@ namespace acommon {
 	to_add->c_struct.dict_dirs = &(to_add->dict_exts);
 	itemize(data, to_add->dict_exts);
       } else {
+fprintf(stderr,"File: %s(%i)\n",__FILE__,__LINE__);
 	err.prim_err(unknown_key, key);
-	goto ERROR;
+	goto RETURN_ERROR;
       }
     }
   
     while (*prev != 0 && 
-	   (*prev)->c_struct.order_num > to_add->c_struct.order_num)
+	   (*prev)->c_struct.order_num < to_add->c_struct.order_num)
       prev = &(*prev)->next;
     to_add->next = *prev;
     *prev = to_add;
     return err;
 
-  ERROR:
+  RETURN_ERROR:
     delete to_add;
     return err;
   }
@@ -486,15 +487,15 @@ namespace acommon {
 
     for_dirs = dirs;
     err = module_info_list.fill(*this, c);
-    if (err.has_err()) goto ERROR;
+    if (err.has_err()) goto RETURN_ERROR;
 
     fill_helper_lists(dirs);
     err = dict_info_list.fill(*this, c);
-    if (err.has_err()) goto ERROR;
+    if (err.has_err()) goto RETURN_ERROR;
 
     return err;
 
-  ERROR:
+  RETURN_ERROR:
     clear();
     return err;
   }

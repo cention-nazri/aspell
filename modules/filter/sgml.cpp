@@ -14,6 +14,13 @@
 #include "copy_ptr-t.hpp"
 #include "clone_ptr-t.hpp"
 #include "filter_char_vector.hpp"
+#include "loadable-filter-API.hpp"
+
+//right now unused option
+//  static const KeyInfo sgml_options[] = {
+//    {"sgml-extension", KeyInfoList, "html,htm,php,sgml",
+//     N_("sgml file extensions")}
+//  };
 
 namespace acommon {
 
@@ -55,10 +62,10 @@ namespace acommon {
 
   PosibErr<bool> SgmlFilter::setup(Config * opts) 
   {
-    name_ = "sgml";
+    name_ = "sgml-filter";
     order_num_ = 0.35;
     noskip_tags.clear();
-    RET_ON_ERR(opts->retrieve_list("sgml-check", &noskip_tags));
+    opts->retrieve_list("filter-sgml-check", &noskip_tags);
     reset();
     return true;
   }
@@ -242,33 +249,7 @@ namespace acommon {
     stop  = buf.pend() - 1;
   }
 
-  //
-  //
-  //
-  
-  IndividualFilter * new_sgml_decoder() 
-  {
-    return new SgmlDecoder();
-  }
-
-  IndividualFilter * new_sgml_filter() 
-  {
-    return new SgmlFilter();
-  }
-
-  IndividualFilter * new_sgml_encoder() 
-  {
-    return 0;
-    //return new SgmlEncoder();
-  }
-  
-  static const KeyInfo sgml_options[] = {
-    {"sgml-check", KeyInfoList, "alt",
-     N_("sgml attributes to always check.")},
-    {"sgml-extension", KeyInfoList, "html,htm,php,sgml",
-     N_("sgml file extensions")}
-  };
-  const KeyInfo * sgml_options_begin = sgml_options;
-  const KeyInfo * sgml_options_end = sgml_options + 2;
-
+  ACTIVATE_FILTER(acommon,SgmlFilter,sgml);
+  ACTIVATE_DECODER(acommon,SgmlDecoder,sgml);
+  //ACTIVATE_ENCODER(acommon,SgmlEncoder,sgml);
 }

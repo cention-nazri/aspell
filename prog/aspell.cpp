@@ -11,20 +11,24 @@
 //       C++ interface is currently incomplete.  The C interface is
 //       used in some places because without the strings will not get
 //       converted properly when the encoding is not the same as the
-//       internal encoding used by aspell.
+//       internal encoding used by Aspell.
 // 
 
 #include <deque>
-
 #include <ctype.h>
-#ifdef HAVE_LOCALE_H
+#include "settings.h"
+
+
+#ifdef USE_LOCALE
 # include <locale.h>
 #endif
 
-#include "settings.h"
-
 #include "aspell.h"
+#include <limits.h>
+//FIXME if Win(dos) is different
+#include <regex.h>
 
+#include "asc_ctype.hpp"
 #include "check_funs.hpp"
 #include "config.hpp"
 #include "document_checker.hpp"
@@ -43,6 +47,10 @@
 
 #include "speller_impl.hpp"
 #include "data.hpp"
+#include "directory.hpp"
+
+#include <stdio.h>
+#include <cstdio>
 
 using namespace acommon;
 
@@ -50,6 +58,7 @@ using namespace acommon;
 
 void print_ver();
 void print_help();
+void expand_expression(Config * config);
 void config();
 
 void check(bool interactive);
@@ -218,7 +227,7 @@ int main (int argc, const char *argv[])
   const char           * parm;
 
   //
-  // process command line options by setting the oprepreate options
+  // process command line options by setting the appropriate options
   // in "options" and/or pushing non-options onto "argv"
   //
   PossibleOption other_opt = OPTION("",'\0',0);
@@ -248,11 +257,13 @@ int main (int argc, const char *argv[])
 	while (j != mode_abrvs_end && j->abrv != argv[i][1]) ++j;
 	if (j == mode_abrvs_end) {
 	  o = find_option(argv[i][1]);
-	  if (argv[i][1] == 'v' && argv[i][2] == 'v') 
+	  if (argv[i][1] == 'v' && argv[i][2] == 'v'){ 
 	    // Hack for -vv
 	    parm = argv[i] + 3;
-	  else
+          }
+	  else {
 	    parm = argv[i] + 2;
+          }
 	} else {
 	  other_opt.name = "mode";
 	  other_opt.num_arg = 1;
@@ -304,7 +315,7 @@ int main (int argc, const char *argv[])
   }
 
   //
-  // perform the requisted action
+  // perform the requested action
   //
   String action_str = args.front();
   args.pop_front();
@@ -312,8 +323,9 @@ int main (int argc, const char *argv[])
     print_help();
   else if (action_str == "version")
     print_ver();
-  else if (action_str == "config")
+  else if (action_str == "config"){
     config();
+  }
   else if (action_str == "dicts")
     dicts();
   else if (action_str == "check")
@@ -379,9 +391,18 @@ void config ()
 {
   StackPtr<Config> config(new_config());
   EXIT_ON_ERR(config->read_in_settings(options));
-
-  if (args.size() == 0)
+  if ((args.size() > 0) &&
+      (args[0] == "+e")) {
+    args.pop_front();
+    if (args.size() == 0) {
+      args.push_front("all");
+    }
+    expand_expression(config);
+    args.pop_front();
+  }
+  if (args.size() == 0) {
     config->write_to_stream(COUT);
+  }
   else {
     EXIT_ON_ERR_SET(config->retrieve(args[0]), String, value);
     COUT << value << "\n";
@@ -414,17 +435,18 @@ void dicts()
 // pipe
 //
 
+// precond: strlen(str) > 0
 char * trim_wspace (char * str)
 {
-  unsigned int last = strlen(str) - 1;
-  while (isspace(str[0])) {
+  int last = strlen(str) - 1;
+  while (asc_isspace(str[0])) {
     ++str;
     --last;
   }
-  while (isspace(str[last])) {
-    str[last] = '\0';
+  while (last > 0 && asc_isspace(str[last])) {
     --last;
   }
+  str[last + 1] = '\0';
   return str;
 }
 
@@ -478,9 +500,11 @@ DocumentChecker * new_checker(AspellSpeller * speller,
 
 void pipe() 
 {
+#ifndef WIN32
   // set up stdin and stdout to be line buffered
   assert(setvbuf(stdin, 0, _IOLBF, 0) == 0); 
   assert(setvbuf(stdout, 0, _IOLBF, 0) == 0);
+#endif
 
   bool terse_mode = true;
   bool do_time = options->retrieve_bool("time");
@@ -508,21 +532,36 @@ void pipe()
   char * word2;
   int    ignore;
   PosibErrBase err;
+  
+  int pipemode=0;
 
+  if (args.size()) {
+    if (args.front() == "word") {
+      args.pop_front();
+      pipemode|=1;
+    }
+  }
+  if (args.size()) {
+    if (args.front() == "noauto") {
+      args.pop_front();
+      pipemode|=2;
+    }
+  }
   print_ver();
 
   for (;;) {
     buf.clear();
+    fflush(stdout);
     while (c = getchar(), c != '\n' && c != EOF)
       buf.push_back(static_cast<char>(c));
-    if (c == '\n')
-      buf.push_back(static_cast<char>(c));
+    buf.push_back('\n'); // always add new line so strlen > 0
     buf.push_back('\0');
     line = buf.data();
     ignore = 0;
     switch (line[0]) {
     case '\n':
-      continue;
+      if (c != EOF) continue;
+      else          break;
     case '*':
       word = trim_wspace(line + 1);
       aspell_speller_add_to_personal(speller, word, -1);
@@ -547,8 +586,9 @@ void pipe()
     case '+':
       word = trim_wspace(line + 1);
       err = config->replace("mode", word);
-      if (err.get_err())
+      if (err.get_err()){
 	config->replace("mode", "tex");
+      }
       reload_filters(reinterpret_cast<Speller *>(speller));
       checker.del();
       checker = new_checker(speller, print_star);
@@ -583,8 +623,9 @@ void pipe()
 	case 'c':
 	  switch (line[3]) {
 	  case 's':
-	    if (get_word_pair(line + 4, word, word2))
+	    if (get_word_pair(line + 4, word, word2)){
 	      BREAK_ON_ERR(err = config->replace(word, word2));
+            }
 	    break;
 	  case 'r':
 	    word = trim_wspace(line + 4);
@@ -612,18 +653,41 @@ void pipe()
 	// continue on (no break)
       }
     case '^':
+    case '?':
+    case '§':
       ignore = 1;
     default:
+      int oldpipemode=pipemode;
+      switch (line[0]) {
+        case '?': {
+          pipemode &= INT_MAX-2;
+          break;
+        }
+        case '§': {
+          pipemode &= INT_MAX-1;
+          break;
+        }
+      }
       line += ignore;
       checker->process(line, strlen(line));
-      while (Token token = checker->next_misspelling()) {
+
+bool steped=false;
+Token token ;
+
+      while ((token = checker->next_misspelling()) && !steped) {
+        if ( pipemode & 1 ) {
+          steped=true;
+        }
 	word = line + token.offset;
 	word[token.len] = '\0';
 	start = clock();
-        const AspellWordList * suggestions 
-	  = aspell_speller_suggest(speller, word, -1);
-	finish = clock();
-	if (!aspell_word_list_empty(suggestions)) {
+        const AspellWordList * suggestions = 0;
+        if ( !(pipemode & 2)) {
+          ((AspellWordList *) suggestions)
+             = aspell_speller_suggest(speller, word, -1);
+	  finish = clock();
+        }
+	if (suggestions && !aspell_word_list_empty(suggestions)) {
 	  COUT << "& " << word 
 	       << " " << aspell_word_list_size(suggestions) 
 	       << " " << token.offset + ignore
@@ -660,6 +724,7 @@ void pipe()
 	  COUT << "Suggestion Time: " 
 	       << (finish-start)/(double)CLOCKS_PER_SEC << "\n";
       }
+      pipemode=oldpipemode;
       COUT << "\n";
     }
     if (c == EOF) break;
@@ -988,8 +1053,10 @@ void Mapping::to_ispell()
 
 void filter()
 {
-  assert(setvbuf(stdin, 0, _IOLBF, 0) == 0);
-  assert(setvbuf(stdout, 0, _IOLBF, 0) == 0);
+  //assert(setvbuf(stdin, 0, _IOLBF, 0) == 0);
+  //assert(setvbuf(stdout, 0, _IOLBF, 0) == 0);
+  CERR << "Sorry \"filter\" is currently unimplemented.\n";
+  exit(3);
 }
 
 
@@ -1108,7 +1175,10 @@ void personal () {
   }
   options->replace("module", "aspeller");
   if (action == do_create || action == do_merge) {
-    abort(); // FIXME
+    CERR << "Sorry \"create/merge personal\" is currently unimplemented.\n";
+    exit(3);
+
+    // FIXME
 #if 0
     StackPtr<Speller> speller(new_speller(options));
 
@@ -1160,7 +1230,11 @@ void repl() {
   }
 
   if (action == do_create || action == do_merge) {
-    abort(); //fixme
+
+    CERR << "Sorry \"create/merge repl\" is currently unimplemented.\n";
+    exit(3);
+
+    // FIXME
 #if 0
     SpellerImpl speller(options);
 
@@ -1255,7 +1329,85 @@ void print_help_line(char abrv, char dont_abrv, const char * name,
   printf("  %-27s %s\n", command.c_str(), gettext (desc));
 }
 
+void expand_expression(Config * config){
+  StringList filtpath;
+  StringList optpath;
+  PathBrowser optionpath;
+  PathBrowser filterpath;
+  String candidate;
+  String toload;
+  size_t locate_ending=0;
+  size_t eliminate_path=0;
+  size_t hold_eliminator=0;
+//FIXME if Win(dos) is different
+  regex_t seekfor;
+  
+  if (args.size() != 0) {
+    if (args[0] == "all") {
+      args[0]=".*";
+    }
+    config->retrieve_list("filter-path",&filtpath);
+    config->retrieve_list("option-path",&optpath);
+    filterpath=filtpath;
+    optionpath=optpath;
+    if (regcomp(&seekfor,args[0].c_str(),REG_NEWLINE|REG_NOSUB)) {
+      make_err(invalid_expression,"help",args[0]);
+      return;
+    }
+    while (filterpath.expand_file_part(&seekfor,candidate)) {
+      if (((locate_ending=candidate.rfind("-filter.so")) !=
+           candidate.length() - 10)) {
+        if ((locate_ending=candidate.rfind(".flt")) !=
+            candidate.length() - 4) {
+          continue;
+        }
+        else {
+          candidate.erase(locate_ending,4);
+          eliminate_path=0;
+          while ((hold_eliminator=candidate.find('/',eliminate_path)) < 
+                 candidate.length()) {
+            eliminate_path=hold_eliminator+1;
+          }
+          toload=candidate.erase(0,eliminate_path);
+          if (regexec(&seekfor,toload.c_str(),0,NULL,0)) {
+            continue;
+          }
+        }
+      }
+      else {
+        candidate.erase(locate_ending,10);
+        eliminate_path=0;
+        while ((hold_eliminator=candidate.find('/',eliminate_path)) < 
+               candidate.length()) {
+          eliminate_path=hold_eliminator+1;
+        }
+        if (candidate.find("lib",eliminate_path) != eliminate_path) {
+          continue;
+        }
+        candidate.erase(0,eliminate_path);
+        candidate.erase(0,3);
+        locate_ending=candidate.length();
+        toload=candidate;
+        if (regexec(&seekfor,toload.c_str(),0,NULL,0)) {
+          continue;
+        }
+        candidate+="-filter.opt";
+        if (!optionpath.expand_filename(candidate)) {
+          continue;
+        }
+      }
+      config->replace("add-filter",toload.c_str());
+    }
+    regfree(&seekfor);
+  }
+}
+
 void print_help () {
+  char * expandedoptionname=NULL;
+  char * tempstring=NULL;
+  size_t expandedsize=0;
+
+  expand_expression(options);
   printf(_(
     "\n"
     "Aspell %s alpha.  Copyright 2000 by Kevin Atkinson.\n"
@@ -1263,17 +1415,20 @@ void print_help () {
     "Usage: aspell [options] <command>\n"
     "\n"
     "<command> is one of:\n"
-    "  -?|help          display this help message\n"
+    "  -?|help [<expr>] display this help message\n"
+    "                    and help for filters matching <expr>if nstalled\n"
     "  -c|check <file>  to check a file\n"
-    "  -a|pipe          \"ispell -a\" compatibility mode\n"
+    "  -a|pipe [word|noauto] \"ispell -a\" compatibility mode\n"
     "  -l|list          produce a list of misspelled words from standard input\n"
-    "  [dump] config    dumps the current configuration to stdout\n"
-    "  config <key>     prints the current value of an option\n"
-    "  soundslike       returns the soundslike equivalent for each word entered\n"
+    "  [dump] config [-e <expr>]  dumps the current configuration to stdout\n"
+    "  config [+e <expr>] <key>   prints the current value of an option\n"
+    "  soundslike       returns the sounds like equivalent for each word entered\n"
     "  filter           passes standard input through filters\n"
     "  -v|version       prints a version line\n"
     "  dump|create|merge master|personal|repl [word list]\n"
     "    dumps, creates or merges a master, personal, or replacement word list.\n"
+    "\n"
+    "  <expr>           regular expression matching filtername(s) or `all'\n"
     "\n"
     "[options] is any of the following:\n"
     "\n"), VERSION);
@@ -1281,11 +1436,49 @@ void print_help () {
   const KeyInfo * k;
   while (k = els.next(), k) {
     if (k->desc == 0) continue;
-    const PossibleOption * o = find_option(k->name);
+    if ((k->type == KeyInfoDescript) &&
+        !strncmp(k->name,"filter-",7)){
+      printf(_("\n"
+               "  %s Filter: %s\n"
+               "\tNOTE: in ambiguous case prefix following options by `filter-'\n"),
+               &(k->name)[7],k->desc);
+      if (expandedoptionname != NULL) {
+        free(expandedoptionname);
+        expandedsize=0;
+      }
+      if (!strncmp(k->name,"filter-",7)) {
+        expandedoptionname=strdup(&(k->name[7]));
+        expandedsize=strlen(k->name)-7;
+      }
+      else {
+        expandedoptionname=strdup(k->name);
+        expandedsize=strlen(k->name);
+      }
+      continue;
+    }
+    else if (k->type == KeyInfoDescript) {
+      if (expandedoptionname != NULL) {
+        free(expandedoptionname);
+        expandedsize=0;
+        expandedoptionname=NULL;
+      }
+    }
+    if ((tempstring=(char*)malloc(expandedsize+strlen(k->name)+2)) == NULL) {
+      expandedoptionname=NULL;
+      continue;
+    }
+    tempstring[0]='\0';
+    if ((strlen(k->name) < expandedsize) ||
+        (expandedsize && strncmp(k->name,expandedoptionname,expandedsize))) {
+      tempstring=strncat(tempstring,expandedoptionname,expandedsize);
+      tempstring=strncat(tempstring,"-",1);
+    }
+    tempstring=strncat(tempstring,k->name,strlen(k->name));
+    const PossibleOption * o = find_option(tempstring);
     print_help_line(o->abrv, 
 		    strncmp((o+1)->name, "dont-", 5) == 0 ? (o+1)->abrv : '\0',
-		    k->name, k->type, k->desc);
-    if (strcmp(k->name, "mode") == 0) {
+		    tempstring, k->type, k->desc);
+    if (strcmp(tempstring, "mode") == 0) {
       for (const ModeAbrv * j = mode_abrvs;
            j != mode_abrvs_end;
            ++j)
@@ -1293,6 +1486,13 @@ void print_help () {
         print_help_line(j->abrv, '\0', j->mode, KeyInfoBool, j->desc, true);
       }
     }
+    if (tempstring != NULL) {
+      free(tempstring);
+      tempstring=NULL;
+    }
+  }
+  if (expandedoptionname!=NULL) {
+    free(expandedoptionname);
   }
 
 }

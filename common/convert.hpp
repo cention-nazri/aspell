@@ -36,7 +36,7 @@ namespace acommon {
     virtual bool encode_direct(FilterChar * in, FilterChar * stop) const
       {return false;}
   };
-  struct Conv { // convert directy from in_code to out_code
+  struct Conv { // convert directly from in_code to out_code
     // should not take owenership of decode and encode 
     // decode and encode guaranteed to stick around for the life
     // of the object
@@ -98,10 +98,12 @@ namespace acommon {
     // and I have no intention to make it thus.
 
     void convert(const char * in, int size, CharVector & out) {
-      if (conv_ && filter.empty())
+      if (conv_ && filter.empty()) {
 	conv_->convert(in,size,out);
-      else
+      }
+      else {
 	generic_convert(in,size,out);
+      }
     }
 
     void generic_convert(const char * in, int size, CharVector & out);

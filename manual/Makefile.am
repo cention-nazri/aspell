@@ -1,4 +1,3 @@
-
 pkgdoc_DATA = manual.dvi manual.tex manual2.lyx manual.aux\
               devel.dvi  devel.tex devel2.lyx devel.aux
 noinst_DATA = manual-html manual-text devel-html devel-text
@@ -7,6 +6,10 @@ noinst_DATA = manual-html manual-text devel-html devel-text
 
 MAINTAINERCLEANFILES = manual.*  manual-html manual-text\
                        devel.*  devel-html devel-text
+
+# FIXME
+export TEXT_DUMP=@TEXT_DUMP@
+export DUMP_WIDTH=@DUMP_WIDTH@
 
 fake-manual:
 	touch \
@@ -31,7 +34,7 @@ manual.dvi: @MAINTAINER_MODE_TRUE@ manual.tex
 	latex manual.tex
 
 manual-html: @MAINTAINER_MODE_TRUE@ manual.dvi
-	cd man-html; rm -f *.html *.css *.png; cd ..
+	-rm dev-html/*
 	latex2html \
 	  -split 3 \
           -toc_depth 3 \
@@ -44,8 +47,7 @@ manual-html: @MAINTAINER_MODE_TRUE@ manual.dvi
 	touch manual-html
 
 manual-text: @MAINTAINER_MODE_TRUE@ manual-html html2txt.pl
-	-mkdir man-text
-	cd man-text;  rm -f *.txt; cd ..
+	-rm dev-text/*
 	perl html2txt.pl man
 	touch manual-text
 
@@ -70,7 +72,7 @@ devel.dvi: @MAINTAINER_MODE_TRUE@ devel.tex
 	latex devel.tex
 
 devel-html: @MAINTAINER_MODE_TRUE@ devel.dvi
-	cd dev-html; rm -f *.html *.css *.png; cd ..
+	-rm dev-html/*
 	latex2html \
 	  -split 3 \
           -toc_depth 3 \
@@ -83,21 +85,18 @@ devel-html: @MAINTAINER_MODE_TRUE@ devel.dvi
 	touch devel-html
 
 devel-text: @MAINTAINER_MODE_TRUE@ devel-html html2txt.pl
-	-mkdir dev-text
-	cd dev-text;  rm -f *.txt; cd ..
+	-rm dev-text/*
 	perl html2txt.pl dev
 	touch devel-text
 
 devel.ps: @MAINTAINER_MODE_TRUE@ devel.dvi
 	dvips -o devel.ps -t letter devel.dvi
-#
-#
-#
 
-SUBDIRS = man-html man-text dev-html dev-text
+nobase_pkgdoc_DATA = man-html/* man-text/* dev-html/* dev-text/*
 
-EXTRA_DIST = ${pkgdoc_DATA} \
+MAINTAINERCLEANFILES += ${nobase_pkgdoc_DATA} *.pl WARNINGS
+
+EXTRA_DIST = ${pkgdoc_DATA} ${nobase_pkgdoc_DATA}\
              html.sty html2txt.pl edit-man manual2.per man-proc.pl\
 	     manual-text manual-html devel-html devel-text
-
 

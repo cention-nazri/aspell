@@ -10,6 +10,13 @@
 #include "asc_ctype.hpp"
 #include "itemize.hpp"
 #include "mutable_container.hpp"
+#include <stdio.h>
+#include <cstdio>
+
+//FIXME: it should be possible to escape ',' '+' '-' '!' so that they can
+//       appear in values
+//       If '\' is used than what about when the option file is parsed
+//         as it strips away all '\' escapes.
 
 namespace acommon {
 
@@ -66,7 +73,7 @@ namespace acommon {
     if (*i == '\0' || *i == ',') return next();
     li.name = i;
     while (*i != '\0' && *i != ',') ++i;
-    while (asc_isspace(*(i-1))) --i;
+    while (i != list && asc_isspace(*(i-1))) --i;
     if (*i != '\0') {
       *i = '\0';
       ++i;

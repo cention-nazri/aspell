@@ -1,0 +1,23 @@
+# context filter option file
+
+#This Filter is usable with the following version(s) of Aspell
+ASPELL >=0.51
+
+#This line will be printed when typing `aspell help context'
+DESCRIPTION Filter for hiding delimited contexts from Aspell
+
+STATIC filter
+
+OPTION delimiters
+TYPE list
+DESCRIPTION add/rem delimiter(s) seperated by spaces
+DEFAULT " "
+DEFAULT /* */
+DEFAULT // \\0
+ENDOPTION
+
+OPTION visible-first
+TYPE bool
+DESCRIPTION swaps visible and invisible text;(starts invisible)
+DEFAULT false
+ENDOPTION

@@ -4,6 +4,8 @@
 // license along with this library if you did not you can find
 // it at http://www.gnu.org/.
 
+#include <assert.h>
+
 #include "checker_string.hpp"
 #include "speller.hpp"
 #include "document_checker.hpp"

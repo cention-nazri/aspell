@@ -9,7 +9,7 @@
 
 #include "fstream.hpp"
 
-#if defined(__CYGWIN__) || defined (_WIN32)
+#if defined(__CYGWIN__)
 #define DLLIMPORT __declspec(dllimport)
 #else
 #define DLLIMPORT

@@ -1,0 +1,22 @@
+# email filter option file
+
+#This Filter is usable with the following version(s) of Aspell
+ASPELL >=0.51
+
+#This line will be printed when typing `aspell help email'
+DESCRIPTION Filter for eliminating email quote characters
+
+STATIC filter
+
+OPTION quote
+TYPE list
+DESCRIPTION email quote characters
+DEFAULT >
+DEFAULT |
+ENDOPTION
+
+OPTION margin
+TYPE int
+DESCRIPTION num chars that can appear before the quote char
+DEFAULT 10
+ENDOPTION

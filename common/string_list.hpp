@@ -3,11 +3,15 @@
 // version 2.0 or 2.1.  You should have received a copy of the LGPL
 // license along with this library if you did not you can find
 // it at http://www.gnu.org/.
+#ifndef STRING_LIST_HP_HEADER
+#define STRING_LIST_HP_HEADER
 
 #include "string.hpp"
 #include "string_enumeration.hpp"
 #include "mutable_container.hpp"
 #include "posib_err.hpp"
+#include <stdio.h>
+#include <cstdio>
 
 namespace acommon {
 
@@ -17,7 +21,8 @@ namespace acommon {
     String           data;
     StringListNode * next;
     StringListNode(ParmString str,  StringListNode * n = 0)
-      : data(str), next(n) {}
+      : data(str), next(n) {
+    }
   };
 
   class StringListEnumeration : public StringEnumeration {
@@ -92,3 +97,4 @@ namespace acommon {
   StringList * new_string_list();
 
 }
+#endif

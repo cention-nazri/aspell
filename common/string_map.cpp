@@ -63,20 +63,22 @@ namespace acommon {
 
   StringMapNode * * StringMap::find(ParmString key) {
     StringMapNode * * i = &data[hash_string(key) % *buckets];
-    while (*i != 0 && strcmp((*i)->data.first, key) != 0)
-      i = &(*i)->next;
+    while (*i != 0 && strcmp((*i)->data.first, key) != 0) {
+      i = &((*i)->next);
+    }
     return i;
   }
 
   const char * StringMap::lookup(ParmString key) const 
   {
-    const StringMapNode * i 
-      = *((StringMap *)this)->find(key);
-    if (i == 0) {
+    const StringMapNode * * i = 0;
+
+    (StringMapNode * * )i = ((StringMap * )this)->find(key);
+    if (*i == 0) {
       return 0;
     } else {
-      if (i->data.second == 0) return "";
-      else return (i->data.second);
+      if ((*i)->data.second == 0) return "";
+      else return ((*i)->data.second);
     }
   }
 
@@ -319,3 +321,4 @@ namespace acommon {
     return new StringMap();
   }
 }
+

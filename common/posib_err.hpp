@@ -202,6 +202,9 @@ namespace acommon {
   //
   //
 
+  inline String::String(const PosibErr<String> & other)
+    : std::string(other.data) {}
+
   inline String & String::operator= (const PosibErr<const char *> & s)
   {
     std::string::operator=(s.data);

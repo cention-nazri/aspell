@@ -107,13 +107,13 @@ namespace aspeller {
 
   void DataSet::FileName::clear()
   {
-    const_cast<String &      >(path) = "";
-    const_cast<const char * &>(name) = path.c_str();
+    path  = "";
+    name = path.c_str();
   }
 
   void DataSet::FileName::set(ParmString str) 
   {
-    const_cast<String &>(path) = str;
+    path = str;
     int s = path.size();
     int i = s;
     while (i >= 0) {
@@ -123,7 +123,7 @@ namespace aspeller {
       }
       --i;
     }
-    const_cast<const char * &>(name) = path.c_str() + i;
+    name = path.c_str() + i;
   }
 
   //

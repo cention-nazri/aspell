@@ -35,7 +35,7 @@ namespace acommon {
     //
     // The filter may either modify the string passed in or use its
     // own buffer for the output.  If the string uses its own buffer
-    // start and stop should be set to the beginning and one past the
+    //  start and stop should be set to the beginning and one past the
     // end of its buffer respectfully.
     //
     // The string passed in should only be split on white space

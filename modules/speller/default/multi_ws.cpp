@@ -58,13 +58,15 @@ namespace aspeller {
       } else if (key == "add") {
 	LocalWordSet ws;
 	ws.local_info.set(0, config, strip_accents);
-	ws.word_set = add_data_set(data, *config, speller, &ws.local_info, dir);
-	set_check_lang(ws.word_set->lang()->name(), config);
+        RET_ON_ERR_SET(add_data_set(data, *config, speller, &ws.local_info, dir),LoadableDataSet  *,wstemp);
+        ws.word_set=wstemp;
+        RET_ON_ERR(set_check_lang(ws.word_set->lang()->name(), config));
 	ws.local_info.set_language(ws.word_set->lang());
 	wss.push_back(ws);
 
       } else {
 	
+fprintf(stderr,"File: %s(%i)\n",__FILE__,__LINE__);
 	return make_err(unknown_key, key).with_file(fn);
 
       }

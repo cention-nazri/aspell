@@ -27,6 +27,16 @@
 
 #else
 
+/* Solaris /usr/include/locale.h includes /usr/include/libintl.h, which
+   chokes if dcgettext is defined as a macro.  So include it now, to make
+   later inclusions of <locale.h> a NOP.  We don't include <libintl.h>
+   as well because people using "gettext.h" will not include <libintl.h>,
+   and also including <libintl.h> would fail on SunOS 4, whereas <locale.h>
+   is OK.  */
+#if defined(__sun)
+# include <locale.h>
+#endif
+
 /* Disabled NLS.
    The casts to 'const char *' serve the purpose of producing warnings
    for invalid uses of the value returned from these functions.
@@ -56,11 +66,9 @@
    initializer for static 'char[]' or 'const char[]' variables.  */
 #define gettext_noop(String) String
 
-#ifndef _
-# define _(s) gettext(s)
-#endif
-#ifndef N_
-# define N_(s) gettext_noop(s)
-#endif
+/* short cut macros */
+
+#define _(String) gettext (String)
+#define N_(String) gettext_noop (String)
 
 #endif /* _LIBGETTEXT_H */

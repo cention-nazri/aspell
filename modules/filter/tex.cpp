@@ -14,6 +14,15 @@
 #include "vector.hpp"
 #include "errors.hpp"
 
+#define FILTER_PROGRESS_CONTROL "tex-filter-debug.log"
+#include "loadable-filter-API.hpp"
+#include <stdio.h>
+#include <cstdio>
+#include "filter_char_vector.hpp"
+#include "string_list.hpp"
+#include "string_enumeration.hpp"
+
+
 namespace acommon {
 
 
@@ -75,11 +84,15 @@ namespace acommon {
 
   PosibErr<bool> TexFilter::setup(Config * opts) 
   {
-    name_ = "tex";
+    name_ = "tex-filter";
     order_num_ = 0.35;
+    fprintf(stderr,"name %s \n",name_);
+
     commands.clear();
-    RET_ON_ERR(opts->retrieve_list("tex-command", &commands));
-    check_comments = opts->retrieve_bool("tex-check-comments");
+    opts->retrieve_list("filter-tex-command", &commands);
+    
+    check_comments = opts->retrieve_bool("filter-tex-check-comments");
+
     reset();
     return true;
   }
@@ -208,6 +221,7 @@ namespace acommon {
   void TexFilter::process(FilterChar * & str, FilterChar * & stop)
   {
     FilterChar * cur = str;
+
     while (cur != stop) {
       if (process_char(*cur))
 	*cur = ' ';
@@ -253,100 +267,460 @@ namespace acommon {
   
   //
   //
-  //
+  class Recode {
+    Vector<char *> code;
+    int minlength;
+  public:
+    Recode();
+    Recode(const Recode & recode) {*this=recode;}
+    void reset();
+    bool setExpansion(const char * expander);
+    virtual int encode(FilterChar * & begin,FilterChar * & end,
+                       FilterCharVector * external);
+    virtual int decode(FilterChar * & begin,FilterChar * & end,
+                       FilterCharVector * internal);
+    bool operator == (char test) ;
+    bool operator != (char test) ;
+    Recode & operator = (const Recode & rec);
+    virtual ~Recode();
+  };
 
-  IndividualFilter * new_tex_filter() 
-  {
-    return new TexFilter();
+  Recode::Recode()
+    : code(0)
+  {  
+    minlength=0;
+    reset();
   }
 
-  static const KeyInfo tex_options[] = {
-    {"tex-command", KeyInfoList, 
-       // counters
-       "addtocounter pp,"
-       "addtolength pp,"
-       "alpha p,"
-       "arabic p,"
-       "fnsymbol p,"
-       "roman p,"
-       "stepcounter p,"
-       "setcounter pp,"
-       "usecounter p,"
-       "value p,"
-       "newcounter po,"
-       "refstepcounter p,"
-       // cross ref
-       "label p,"
-       "pageref p,"
-       "ref p,"
-       // Definitions
-       "newcommand poOP,"
-       "renewcommand poOP,"
-       "newenvironment poOPP,"
-       "renewenvironment poOPP,"
-       "newtheorem poPo,"
-       "newfont pp,"
-       // Document Classes
-       "documentclass op,"
-       "usepackage op,"
-       // Environments
-       "begin po,"
-       "end p,"
-       // Lengths
-       "setlength pp,"
-       "addtolength pp,"
-       "settowidth pp,"
-       "settodepth pp,"
-       "settoheight pp,"
-       // Line & Page Breaking
-       "enlargethispage p,"
-       "hyphenation p,"
-       // Page Styles
-       "pagenumbering p,"
-       "pagestyle p,"
-       // Spaces & Boxes
-       "addvspace p,"
-       "framebox ooP,"
-       "hspace p,"
-       "vspace p,"
-       "makebox ooP,"
-       "parbox ooopP,"
-       "raisebox pooP,"
-       "rule opp,"
-       "sbox pO,"
-       "savebox pooP,"
-       "usebox p,"
-       // Splitting the Input
-       "include p,"
-       "includeonly p,"
-       "input p,"
-       // Table of Contents
-       "addcontentsline ppP,"
-       "addtocontents pP,"
-       // Typefaces
-       "fontencoding p,"
-       "fontfamily p,"
-       "fontseries p,"
-       "fontshape p,"
-       "fontsize pp,"
-       "usefont pppp,"
-       // Misc
-       "documentstyle op,"
-       "cite p,"
-       "nocite p,"
-       "psfig p,"
-       "selectlanguage p,"
-       "includegraphics op,"
-       "bibitem op,"
-       // Geometry Package
-       "geometry p,"
-       ,
-     N_("TeX commands")},
-    {"tex-check-comments", KeyInfoBool, "false",
-     N_("check TeX comments")},
-    {"tex-extension", KeyInfoList, "tex",
-     N_("TeX file extensions")}
+  Recode & Recode::operator = (const Recode & rec) {
+    reset();
+    code.resize(rec.code.size());
+    
+    int countrec=0;
+  
+    for (countrec=0;
+         countrec < code.size();
+         countrec++) {
+      code[countrec]=NULL;
+      if (!rec.code[countrec]) {
+        continue;
+      }
+      int length=strlen(rec.code[countrec]);
+
+      code[countrec]= new char[length+1];
+      strncpy(code[countrec],rec.code[countrec],length);
+      code[countrec][length]='\0';
+    }
+    return *this;
+  }
+      
+
+  bool Recode::operator == (char test) {
+    return (code.size() && (code[0][0] == test));
+  }
+
+  bool Recode::operator != (char test) {
+    return (!code.size() || (code[0][0] != test));
+  }
+
+  void Recode::reset() {
+
+    unsigned int countcode=0;
+
+    for (countcode=0;
+         countcode < code.size();
+         countcode++) {
+      if (code[countcode]) {
+        delete[] code[countcode];
+      }
+      code[countcode] = NULL;
+    }
+    code.resize(0);
+    minlength=0;
+  }
+
+  bool Recode::setExpansion(const char * expander) {
+
+    char * begin=(char *)expander;
+    char * end=begin;
+    char * start=begin;
+    int keylen=0;
+
+
+    if (code.size() > 0) {
+      keylen=strlen(code[0]);
+    }
+    while (begin && end && *begin) {
+      while (end && *end && (*end != ':')) {
+        end++;
+      }
+      if (end  && (begin != end)) {
+        
+        char hold = *end;
+  
+        *end='\0';
+
+        int length=strlen(begin);
+
+        if ((begin == start) && (keylen || (length != 1))) {
+          if ((length != 1) || (keylen != length) ||
+              strncmp(code[0],begin,length)) {
+            *end=hold;
+            return false;
+          }
+          *end=hold;
+          if (*end) {
+            end++;
+          }
+          begin=end;
+          continue;
+        }
+        else if (minlength < length) {
+          minlength=0;
+        }
+  
+        code.resize(code.size()+1);
+        code[code.size()-1] = new char[length+1];
+        strncpy(code[code.size()-1],begin,length);
+        code[code.size()-1][length]='\0';
+        *end=hold;
+        if (*end) {
+          end++;
+        }
+        begin=end;
+      }
+    }
+    return true;
+  }
+
+  int Recode::encode(FilterChar * & begin,FilterChar * & end,
+                     FilterCharVector * external) {
+    if ((code.size() < 2) || 
+        (begin == NULL) || 
+        (begin == end) || 
+        (begin->width < (unsigned int) minlength )) {
+      return 0;
+    }
+    
+    if (code[0][0] != (char)*begin) {
+      return 0;
+    }
+    external->append(code[1],1);
+    return strlen(code[0]);
+  }
+
+  int Recode::decode(FilterChar * & begin,FilterChar * & end,
+                     FilterCharVector * internal) {
+  
+    FilterChar * i = begin;
+    char * codepointer = NULL;
+    char * codestart   = NULL; 
+  
+    if (code.size() < 2) {
+      return 0;
+    } 
+    while((i != end) && 
+          ((codepointer == NULL) || (*codepointer))) {
+      if (codepointer == NULL) {
+
+        int countcodes=0;
+
+        for (countcodes=1;
+             countcodes < (int) code.size();
+             countcodes++) {
+          if (*i == code[countcodes][0]) {
+            codestart=codepointer=code[countcodes];
+            break;
+          }
+        }
+        if (codepointer == NULL) {
+          return 0;
+        }
+      }
+      if (*codepointer != *i) {
+        return 0;
+      }
+      i++;
+      codepointer++;
+    }
+    if ((codepointer == NULL) || (*codepointer)) {
+      return 0;
+    }
+
+    int length=strlen(codestart);
+    internal->append(code[0],length);
+    return length;
+  }
+        
+    
+  Recode::~Recode() {
+    reset();
+  }
+
+  class TexEncoder : public IndividualFilter {
+    Vector<Recode> multibytes;
+    FilterCharVector buf;
+     
+  public:
+    TexEncoder();
+    virtual PosibErr<bool> setup(Config * config); 
+    virtual void process(FilterChar * & start, FilterChar * & stop);
+    virtual void reset() ;
+    virtual ~TexEncoder();
   };
-  const KeyInfo * tex_options_begin = tex_options;
-  const KeyInfo * tex_options_end = tex_options + 3;
+
+  TexEncoder::TexEncoder()
+    : multibytes(0),
+      buf()
+  {
+  }
+
+  PosibErr<bool> TexEncoder::setup(Config * config) {
+    name_ = "tex-encoder";
+    order_num_ = 0.4;
+
+    StringList multibytechars;
+    
+    config->retrieve_list("filter-tex-multi-byte", &multibytechars);
+
+    StringEnumeration * multibytelist=multibytechars.elements();
+    const char * multibyte=NULL;
+
+    while ((multibyte=multibytelist->next())) {
+      
+      if (strlen(multibyte) < 3) {
+        fprintf(stderr,"Filter: %s ignoring multi byte encoding `%s'\n",
+                name_,multibyte);
+        continue;
+      }
+
+      int countmulti=0;
+
+      while ((countmulti < multibytes.size()) &&
+             !multibytes[countmulti].setExpansion(multibyte)) {
+        countmulti++;
+      }
+      if (countmulti >= multibytes.size()) {
+        multibytes.resize(multibytes.size()+1);
+        if (!multibytes[multibytes.size()-1].setExpansion(multibyte)) {
+          fprintf(stderr,"Filter: %s ignoring multi byte encoding `%s'\n",name_,multibyte);
+          continue;
+        }
+      }
+    }
+    return true;
+  }
+
+  void TexEncoder::process(FilterChar * & start, FilterChar * & stop) {
+    buf.clear();
+
+    FilterChar * i=start;
+
+    while (i && (i != stop)) {
+
+      FilterChar * old = i;
+      int count=0;
+
+      for (count=0;
+           count < multibytes.size();
+           count++) { 
+
+
+        i+=multibytes[count].encode(i,stop,&buf);
+      }
+      if (i == old) {
+        buf.append(*i);
+        i++;
+      }
+    }
+    buf.append('\0');
+    start = buf.pbegin();
+    stop  = buf.pend() - 1;
+  }
+    
+
+  void TexEncoder::reset() {
+    multibytes.resize(0);
+    buf.clear();
+  }
+
+  TexEncoder::~TexEncoder(){
+  }
+        
+    
+  class TexDecoder : public IndividualFilter {
+    Vector<Recode> multibytes;
+    FilterCharVector buf;
+    Vector<char *>hyphens;
+     
+  public:
+    TexDecoder();
+    virtual PosibErr<bool> setup(Config * config); 
+    virtual void process(FilterChar * & start, FilterChar * & stop);
+    virtual void reset() ;
+    virtual ~TexDecoder();
+  };
+
+  TexDecoder::TexDecoder()
+    : multibytes(0),
+      buf(),
+      hyphens()
+  {
+    FDEBUGNOTOPEN;
+  }
+
+  PosibErr<bool> TexDecoder::setup(Config * config) {
+    name_ = "tex-decoder";
+    order_num_ = 0.3;
+
+    StringList multibytechars;
+    
+    config->retrieve_list("filter-tex-multi-byte", &multibytechars);
+
+    StringEnumeration * multibytelist=multibytechars.elements();
+    const char * multibyte=NULL;
+
+    multibytes.resize(0);
+    
+    while ((multibyte=multibytelist->next())) {
+      
+      if (strlen(multibyte) < 3) {
+        fprintf(stderr,"Filter: %s ignoring multi byte encoding `%s'\n",
+                name_,multibyte);
+        continue;
+      }
+
+      int countmulti=0;
+
+      while ((countmulti < multibytes.size()) &&
+             !multibytes[countmulti].setExpansion(multibyte)) {
+        countmulti++;
+      }
+      if (countmulti >= multibytes.size()) {
+        multibytes.resize(multibytes.size()+1);
+        if (!multibytes[multibytes.size()-1].setExpansion(multibyte)) {
+          fprintf(stderr,"Filter: %s ignoring multi byte encoding `%s'\n",name_,multibyte);
+          continue;
+        }
+      }
+    }
+    StringList hyphenChars;
+    
+    config->retrieve_list("filter-tex-hyphen", &hyphenChars);
+
+    StringEnumeration * hyphenList=hyphenChars.elements();
+    const char * hyphen=NULL;
+
+    hyphens.resize(0);
+    while ((hyphen=hyphenList->next())) {
+      FDEBUGPRINTF("next hyphen char `");
+      FDEBUGPRINTF(hyphen);
+      FDEBUGPRINTF("'\n");
+      hyphens.push_back(strdup(hyphen));
+    }
+    return true;
+  }
+
+  void TexDecoder::process(FilterChar * & start, FilterChar * & stop) {
+    buf.clear();
+
+    FilterChar * i=start;
+
+    FDEBUGPRINTF("filtin `");
+    while (i && (i != stop)) {
+      
+      FilterChar * old = i;
+      int count=0;
+      
+      for (count=0;
+           count < multibytes.size();
+           count++) { 
+        
+        FilterChar * j = i;
+        
+        i+=multibytes[count].decode(i,stop,&buf);
+
+        while (j != i) {
+          char jp[2]={'\0','\0'};
+
+          jp[0]=*j;
+          FDEBUGPRINTF(jp);
+          j++;
+        }
+      }
+      for(count=0;
+          count < hyphens.size();
+          count++) {
+        if (!hyphens[count]) {
+          continue;
+        }
+        char * hp = &hyphens[count][0];
+        char * hpo = hp;
+        FilterChar * j = i;
+        while (*hp && (j != stop) &&
+               (*hp == *j)) {
+          hp++;
+          j++;
+        }
+        if (!*hp) {
+          FDEBUGPRINTF("{");
+          FilterChar * k = i;
+          while (k != j) {
+            char kp[2]={'\0','\0'};
+
+            kp[0]=*k;
+            FDEBUGPRINTF(kp);
+            k++;
+          } 
+          FDEBUGPRINTF("}");
+          if (buf.size()) {
+            buf[buf.size()-1].width+=strlen(hpo);
+//          buf.append(*i,strlen(hpo)+1);
+          }
+          else {
+//FIXME better solution for illegal hyphenation at begin of line
+//      illegal as new line chars are whitespace for latex
+            buf.append(*i,strlen(hpo));
+            char ip[2]={'\0','\0'};
+            ip[0]=*i;
+            FDEBUGPRINTF(ip);
+          }
+          i=j;
+        }
+      }
+      if (i == old) {
+        char ip[2]={'\0','\0'};
+        ip[0]=*i;
+        FDEBUGPRINTF(ip);
+        buf.append(*i);
+        i++;
+      }
+    }
+    buf.append('\0');
+    start = buf.pbegin();
+    stop  = buf.pend() - 1;
+    FDEBUGPRINTF("'\nfiltout `");
+    i = start;
+    while (i != stop) {
+      char ip[2]={'\0','\0'};
+      ip[0]=*i;
+      FDEBUGPRINTF(ip);
+      i++;
+    }
+    FDEBUGPRINTF("'\n");
+  }
+
+
+  void TexDecoder::reset() {
+    multibytes.resize(0);
+    buf.clear();
+  }
+
+  TexDecoder::~TexDecoder(){
+    FDEBUGCLOSE;
+  }
+    
+  ACTIVATE_ENCODER(acommon,TexEncoder,tex);
+  ACTIVATE_FILTER(acommon,TexFilter,tex);
+  ACTIVATE_DECODER(acommon,TexDecoder,tex);
 }

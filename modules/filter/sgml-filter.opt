@@ -1,0 +1,17 @@
+# sgml filter option file
+
+#This Filter is usable with the following version(s) of Aspell
+ASPELL >=0.51
+
+#This line will be printed when typing `aspell help sgml'
+DESCRIPTION Filters for encoding, filtering and decoding sgml characters
+
+STATIC filter
+
+OPTION check
+TYPE list
+DESCRIPTION sgml attributes to always check.
+DEFAULT alt
+ENDOPTION
+
+STATIC decoder

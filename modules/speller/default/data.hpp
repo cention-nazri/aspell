@@ -40,8 +40,8 @@ namespace aspeller {
     class FileName {
       void copy(const FileName & other);
     public:
-      const String       path;
-      const char * const name;
+      String       path;
+      const char * name;
       
       void clear();
       void set(ParmString);

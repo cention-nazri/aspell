@@ -389,7 +389,9 @@ void get_choice(int & c) {
 #endif
   {
 #if   POSIX_TERMIOS
-    read (STDIN_FILENO, &c, 1);
+    int c0 = 0;
+    read (STDIN_FILENO, &c0, 1);
+    c = c0;
     putchar('\n');
 #elif HAVE_GETCH
     c = getch();

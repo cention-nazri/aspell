@@ -7,10 +7,6 @@
 #ifndef ASPELL_ERROR__HPP
 #define ASPELL_ERROR__HPP
 
-#ifndef N_
-# define N_(s) s
-#endif
-
 namespace acommon {
 
 struct ErrorInfo;

@@ -423,8 +423,11 @@ namespace acommon {
     buf.append(0);
     FilterChar * start = buf.pbegin();
     FilterChar * stop = buf.pend();
-    if (!filter.empty())
+    if (!filter.empty()) {
+      filter.decode(start, stop);
       filter.process(start, stop);
+      filter.encode(start, stop);
+    }
     encode_->encode(start, stop, out);
   }
 

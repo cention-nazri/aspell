@@ -8,11 +8,13 @@
 
 #include "config.hpp"
 #include "errors.hpp"
+#include "filter.hpp"
 
 namespace acommon {
   
   extern const ConfigModule * filter_modules_begin;
   extern const ConfigModule * filter_modules_end;
+  extern void activate_dynamic_filteroptions(Config *config);
 
   extern char mode_string[128];
   char mode_error[128] = {"one of "};
@@ -70,6 +72,7 @@ namespace acommon {
     Config * config = new_basic_config();
     config->set_modules(filter_modules_begin, filter_modules_end);
     config->add_notifier(new ModeNotifierImpl(config));
+    activate_dynamic_filteroptions(config);
     return config;
   }
 

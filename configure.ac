@@ -2,7 +2,7 @@ AC_INIT(GNU Aspell, 0.51)
 AC_CONFIG_SRCDIR(prog/aspell.cpp)
 AC_CANONICAL_SYSTEM
 AM_INIT_AUTOMAKE
-AM_CONFIG_HEADER(common/settings.h)
+AM_CONFIG_HEADER(gen/settings.h)
 
 AM_MAINTAINER_MODE
 
@@ -58,12 +58,18 @@ AC_ARG_ENABLE(curses,
 AC_ARG_ENABLE(curses-include,           
 [  --enable-curses-include=DIR])
 
+AC_ARG_ENABLE(compile-in-filters,
+[  --enable-compile-in-filters])
+
 dnl
 
 AC_PROG_CXX
 AC_LANG([C++])
 
+AM_PROG_CC_C_O
+
 AC_DISABLE_STATIC
+AC_LIBTOOL_DLOPEN
 AC_PROG_LIBTOOL
 
 dnl DL stuff
@@ -71,25 +77,42 @@ dnl DL stuff
 AC_CHECK_HEADERS(dlfcn.h)
 AC_CHECK_LIB(dl, dlopen)
 
+dnl
+
+AC_CHECK_PROG(SED,sed,sed)
+AC_CHECK_PROGS(TEXT_DUMP,w3m lynx)
+AC_PATH_PROG(PERLPROG,perl)
+DUMP_WIDTH="cols"
+if test "$TEXT_DUMP" == "lynx" ;then 
+  DUMP_WIDTH="width"
+fi
+AC_SUBST( DUMP_WIDTH )
+
+dnl
+
+if test "$enable_static" == "yes"
+then
+  enable_compile_in_filters=yes
+fi
+
+if test "$enable_compile_in_filters" == "yes"
+then
+  AC_DEFINE(COMPILE_IN_FILTER, 1, [Defined if filters should be compiled in])
+fi
+
+AM_CONDITIONAL(COMPILE_IN_FILTERS, test "$enable_compile_in_filters" == "yes")
+
 dnl GETTEXT
 
 AM_GNU_GETTEXT([external])
-AM_GNU_GETTEXT_VERSION(0.11.5)
-AH_BOTTOM([#include <gettext.h>])
+AM_GNU_GETTEXT_VERSION(0.13)
+AH_BOTTOM([#include "gettext.h"])
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                                                                 #
 #                     Platform Specific Tests                     #
 #                                                                 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
-if test "$GXX" = "yes"
-then
-  case "$host" in
-    *-sun-solaris* ) extra_ldflags="-Wl,-mimpure-text";;
-  esac
-fi
-AC_SUBST(extra_ldflags)
 
 if test "$enable_win32_relocatable" = "yes"
 then
@@ -337,14 +360,12 @@ AC_TRY_COMPILE(
 #                                                                 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-AC_CONFIG_FILES([Makefile common/Makefile lib/Makefile data/Makefile m4/Makefile 
-                 auto/Makefile modules/Makefile 
-                 modules/filter/Makefile modules/tokenizer/Makefile
+AC_CONFIG_FILES([Makefile gen/Makefile common/Makefile lib/Makefile data/Makefile 
+                 m4/Makefile
+                 auto/Makefile modules/Makefile modules/tokenizer/Makefile
                  modules/speller/Makefile modules/speller/default/Makefile
-		 interfaces/Makefile interfaces/cc/Makefile scripts/Makefile
-                 examples/Makefile prog/Makefile manual/Makefile
-		 manual/man-html/Makefile manual/man-text/Makefile
-		 manual/dev-html/Makefile manual/dev-text/Makefile
-		 po/Makefile.in
+		 interfaces/Makefile interfaces/cc/Makefile
+		 scripts/Makefile examples/Makefile
+		 prog/Makefile manual/Makefile po/Makefile.in modules/filter/Makefile
 		 ])
 AC_OUTPUT

@@ -1,15 +1,16 @@
-#LyX 1.1 created this file. For more info see http://www.lyx.org/
-\lyxformat 218
+#LyX 1.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 221
 \textclass article
 \begin_preamble
-
 \usepackage[T1]{fontenc}
 \usepackage{xspace}
 \newcommand{\nach}{$\to$\xspace}
 \newcommand{\hoch}{\texttt{$^\wedge$}}
 
 \usepackage{html}
-
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{enumerate}
 \newcommand{\doubledash}{-\hspace{0.1em}-}
 \newcommand{\doubledashb}{-\/-}
 \newcommand{\dlt}{{\footnotesize$\ll$}}
@@ -46,15 +47,16 @@
 \end{htmlonly}
 \end_preamble
 \language english
-\inputencoding auto
+\inputencoding latin1
 \fontscheme default
 \graphics default
 \paperfontsize 11
-\spacing single 
 \papersize Default
 \paperpackage a4
 \use_geometry 0
 \use_amsmath 0
+\use_natbib 0
+\use_numerical_citations 0
 \paperorientation portrait
 \secnumdepth 3
 \tocdepth 3
@@ -71,11 +73,11 @@
 Aspell Devel Docs
 \layout Author
 
-Copyright (c) 2002
+Copyright (c) 2002,2003
 \newline 
-Kevin Atkinson
+ Kevin Atkinson
 \newline 
-kevina@gnu.org
+ kevina@gnu.org
 \layout Standard
 
 
@@ -97,7 +99,7 @@ This manual is designed for those who which to developer Aspell.
 
 \end_inset 
 
-.
+ .
 \layout Standard
 
 The eventual goal is to convert this manual into Texinfo.
@@ -128,6 +130,17 @@ As far as coding styles go I am really not that picky.
  However, please what ever you do, do not indent with more than 4 characters
  as I find indenting with more than that extremely difficult to read as
  most of the code ends up on the right side of the window.
+\layout Section
+
+Howto submit a patch
+\begin_inset LatexCommand \label{sec:hosto submitt a patch}
+
+\end_inset 
+
+
+\layout Standard
+
+Coming or removed soon.
 \layout Section
 
 C++ Standard Library
@@ -190,35 +203,40 @@ The PosibErr class is used extensively though out Aspell.
 Source Code Layout 
 \layout Description
 
-common/ Common code used by all parts of Aspell
+common/ Common code used by all parts of Aspell 
 \layout Description
 
-lib/ Library code used only by the actual Aspell library
+lib/ Library code used only by the actual Aspell library 
 \layout Description
 
-data/ Data files used by Aspell
+data/ Data files used by Aspell 
 \layout Description
 
 modules/ Aspell modules which are eventually meant to be pluggable
 \begin_deeper 
 \layout Description
 
-speller/ 
+speller/ \SpecialChar ~
+
 \begin_deeper 
 \layout Description
 
 default/ Main speller Module.
+ 
 \end_deeper 
 \layout Description
 
-filter/ 
+filter/ \SpecialChar ~
+
 \layout Description
 
-tokenizer/
+tokenizer/ \SpecialChar ~
+
 \end_deeper 
 \layout Description
 
 auto/ Scripts and data files to automatically generate code used by Aspell
+ 
 \layout Description
 
 interface/ Header files and such that external programs should use when
@@ -235,6 +253,7 @@ C
 \end_inset 
 
  interface that programs should be using when they wish to use Aspell.
+ 
 \end_deeper 
 \layout Description
 
@@ -248,16 +267,18 @@ aspell
 \end_inset 
 
  utility is included here.
+ 
 \layout Description
 
 scripts/ Misc.
- scripts used by Aspell
+ scripts used by Aspell 
 \layout Description
 
-manual/
+manual/ \SpecialChar ~
+
 \layout Description
 
-examples/ Example programs demonstrating the use of the Aspell library
+examples/ Example programs demonstrating the use of the Aspell library 
 \layout Section
 
 Strings
@@ -273,11 +294,15 @@ The String class provided the same functionally of the C++ string except
 \end_inset 
 
 <
-\latex latex 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
 
 \backslash 
 /
-\latex default 
+\end_inset 
+
 <
 \begin_inset Quotes erd
 \end_inset 
@@ -314,29 +339,31 @@ parm_sting.hpp
  Usage example:
 \layout LyX-Code
 
-void foo(ParmString s1, ParmString s2) {
+void foo(ParmString s1, ParmString s2) { 
 \newline 
-   const char * str0 = s1;
+    const char * str0 = s1; 
 \newline 
-   unsigned int size0 = s2.size()
+    unsigned int size0 = s2.size() 
 \newline 
-   if (s1 == s2 || s2 == "bar") {
+    if (s1 == s2 || s2 == "bar") { 
 \newline 
-     ...
+      ...
+ 
 \newline 
-   }
+    } 
 \newline 
-}
+ } 
 \newline 
-...
+ ...
+ 
 \newline 
-String s1 = "...";
+ String s1 = "..."; 
 \newline 
-foo(s1);
+ foo(s1); 
 \newline 
-const char * s2 = "...";
+ const char * s2 = "..."; 
 \newline 
-foo(s2);
+ foo(s2); 
 \layout Standard
 
 This class should be used when a string is being passed in as a parameter.
@@ -372,11 +399,15 @@ A character vector is basically a Vector<char> but it has a few additional
 \end_inset 
 
 <
-\latex latex 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
 
 \backslash 
 /
-\latex default 
+\end_inset 
+
 <
 \begin_inset Quotes erd
 \end_inset 
@@ -587,6 +618,11 @@ Filter Interface
 \layout Subsection
 
 Overview
+\begin_inset LatexCommand \label{sec:filter overview}
+
+\end_inset 
+
+
 \layout Standard
 
 In Aspell there are 5 types of filters:
@@ -598,6 +634,7 @@ Decoders
 \series default 
  which take input in some standard format such as iso8859-1 or UTF-8 and
  convert it into a string of FilterChars.
+ 
 \layout Enumerate
 
 
@@ -616,6 +653,7 @@ True filters
  which manipulates a string of FilterChars to make it more suitable for
  spell checking.
  These filers generally blank out text which should not be spell checked
+ 
 \layout Enumerate
 
 
@@ -624,6 +662,7 @@ Encoding filters
 \series default 
  which manipulates a string of FilterChars by encoding the text is some
  way such as converting certain Unicode characters to SGML characters.
+ 
 \layout Enumerate
 
 
@@ -631,7 +670,7 @@ Encoding filters
 Encoders
 \series default 
  which take a string of FilterChars and convert into a standard format such
- as iso8859-1 or UTF-8
+ as iso8859-1 or UTF-8 
 \layout Standard
 
 Which types of filters are used depends on the situation
@@ -649,21 +688,21 @@ The
 \series bold 
 decoder
 \series default 
- to convert from a standard format
+ to convert from a standard format 
 \layout Itemize
 
 The 
 \series bold 
 decoding filter
 \series default 
- to perform high level decoding if necessary
+ to perform high level decoding if necessary 
 \layout Itemize
 
 The 
 \series bold 
 encoder
 \series default 
- to convert into an internal format used by the speller module
+ to convert into an internal format used by the speller module 
 \end_deeper 
 \layout Itemize
 
@@ -677,28 +716,28 @@ The
 \series bold 
 decoder
 \series default 
- to convert from a standard format
+ to convert from a standard format 
 \layout Itemize
 
 The 
 \series bold 
 decoding filter
 \series default 
- to perform high level decoding if necessary
+ to perform high level decoding if necessary 
 \layout Itemize
 
 A 
 \series bold 
 true filter
 \series default 
- to filter out parts of the document which should not be spell checked
+ to filter out parts of the document which should not be spell checked 
 \layout Itemize
 
 The 
 \series bold 
 encoder
 \series default 
- to convert into an internal format used by the speller module
+ to convert into an internal format used by the speller module 
 \end_deeper 
 \layout Enumerate
 
@@ -714,21 +753,21 @@ The
 \series bold 
 decoder
 \series default 
- to convert from the internal format used by the speller module
+ to convert from the internal format used by the speller module 
 \layout Itemize
 
 The 
 \series bold 
 encoding filter
 \series default 
- to perform high level encodings if necessary
+ to perform high level encodings if necessary 
 \layout Itemize
 
 The 
 \series bold 
 encoder
 \series default 
- to convert into a standard format
+ to convert into a standard format 
 \end_deeper 
 \layout Standard
 
@@ -751,6 +790,7 @@ common/filter_char.hpp
 
 Mr.
  foo said &quot;I hate my namme&quot;.
+ 
 \layout Standard
 
 to this
@@ -758,6 +798,7 @@ to this
 
 Mr.
  foo said "I hate my namme".
+ 
 \layout Standard
 
 without keeping track of the original width of the characters the application
@@ -772,15 +813,16 @@ e my
  as the misspelling because the spell checker will return 25 as the offset
  instead of 30.
  However with keeping track of the width using FilterChar the spell checker
- will now that the real position it 30 since the quote is really 6 characters
+ will know that the real position it 30 since the quote is really 6 characters
  wide.
  In particular the text will be annotated something like the following:
 \layout LyX-Code
 
-1111111111111611111111111111161
+1111111111111611111111111111161 
 \newline 
-Mr.
+ Mr.
  foo said "I hate my namme".
+ 
 \layout Standard
 
 The standard 
@@ -821,8 +863,61 @@ er class.
 Adding a New Filter
 \layout Standard
 
-To add a new filter create a new file in the modules/filter directory, the
- file should be a C++ file and end in 
+A new filter basically is added by placing the corresponding loadable object
+ inside a directory reachable by Aspell via filter-path list.
+ Further it is necessary that the corresponding filter description file
+ is located in one of the directories listed by the option-path list.
+\layout Standard
+
+The name of the loadable object has to confirm the following convention
+ 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+
+\backslash 
+verb#lib<filtername>-filter.so#
+\end_inset 
+
+.
+ Where <filtername> stands for the name of the filter which is passed to
+ Aspell by add-filter option.
+ The same applies to the filter description file which has to confirm the
+ following naming scheme: 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+
+\backslash 
+verb#<filtername>-filter.opt#
+\end_inset 
+
+.
+\layout Standard
+
+Another way to supply a new filter is to reassemble existing filters to
+ a new filter.
+ This is done by placing all necessary add-filter commands and corresponding
+ option settings in a file called 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+
+\backslash 
+verb#<filtername>.flt#
+\end_inset 
+
+.
+ For file placement the same rules apply as for a filter contained in a
+ loadable object.
+ Filters assembled by .flt files do not have a corresponding .opt file.
+\layout Standard
+
+To add a new loadable filter object create a new file.
+ Basically the file should be a C++ file and end in 
 \begin_inset Quotes eld
 \end_inset 
 
@@ -831,12 +926,26 @@ To add a new filter create a new file in the modules/filter directory, the
 \end_inset 
 
 .
- The file should contain a new filter class inherited from IndividualFilter,
- a function to return a new filter, and an optional KeyInfo array for adding
- options to control the behavior of the filter.
- The file then needs to be added to Makefile.am so that the build system
- knows about the filter and lib/new_filter.cpp must be modified so that Aspell
- knows about the filter.
+ The file should contain a new filter class inherited from IndividualFilter
+ and a consturctor function called 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+
+\backslash 
+verb#new_<filtertype>#
+\end_inset 
+
+ (section 
+\begin_inset LatexCommand \ref{sec:contstructor function}
+
+\end_inset 
+
+) returning a new filter object.
+ Further it is necessary to manually generate the filter description file.
+ Finally the resulting object has to be turned into a loadable filter object
+ using libtool.
 \layout Subsection
 
 IndividualFilter class
@@ -856,10 +965,15 @@ indiv_filter.hpp
  of how it is used.
 \layout Subsection
 
-Constructor Function
+Constructor Function 
+\begin_inset LatexCommand \label{sec:contstructor function}
+
+\end_inset 
+
+
 \layout Standard
 
-After the class is created a function must to created which will return
+After the class is created a function must be created which will return
  a new filter allocated with 
 \series bold 
 new
@@ -868,7 +982,7 @@ new
  The function must have the following prototype:
 \layout LyX-Code
 
-IndividualFilter * new_<<filter_name>>
+IndividualFilter * new_<<filtertype>> 
 \layout Standard
 
 Filters are defined in groups where each group contains an 
@@ -883,64 +997,1060 @@ true filter
 \series bold 
 decoding filter
 \series default 
-.
+ (section 
+\begin_inset LatexCommand \ref{sec:filter overview}
+
+\end_inset 
+
+).
  Only one of them is required to be defined, however they all need a separate
  constructor function.
-\layout Subsection
-
-Config Options
 \layout Standard
 
-A filter group may have any number of options associated with it as long
- as they all start with the filter name.
- See the TeX and SGML filter for examples of what to do and 
-\begin_inset Quotes eld
-\end_inset 
+Instead of coding the constructor function(s) manually it is more convenient
+ to use the following macros
+\begin_inset Foot
+collapsed true
 
-config.hpp
-\begin_inset Quotes erd
-\end_inset 
-
- for the definition of the KeyInfo struct.
-\layout Subsection
-
-Makefile Modifications
 \layout Standard
 
-After the new file is created simply add the file to the 
-\begin_inset Quotes eld
+recommended, if filter is added to Aspell standard distribution
 \end_inset 
 
-libaspell_filter_standard_la_SOURCES
-\begin_inset Quotes erd
-\end_inset 
+: 
+\layout LyX-Code
 
- line in 
-\begin_inset Quotes eld
-\end_inset 
-
-modules/filter/Makefile.am
-\begin_inset Quotes erd
-\end_inset 
-
- so that the build system knows about it.
-\layout Subsection
-
-New_filter Modifications
+ACTIVATE_ENCODER(nspace,class_name,filter)
+\newline 
+ACTIVATE_FILTER(nspace,class_name,filter)
+\newline 
+ACTIVATE_DECODER(nspace,class_name,filter) 
 \layout Standard
 
-Finally modify 
+They are provided by 
 \begin_inset Quotes eld
 \end_inset 
 
-lib/new_filter.cpp
+loadable_filteAPI.hpp
 \begin_inset Quotes erd
 \end_inset 
 
- so that Aspell knows about the new filter.
- Follow the example there for the other filter modules.
- The filter_modules array should only be modified if there your filter has
- config options.
+ file (section 
+\begin_inset LatexCommand \ref{sec:programmers interface}
+
+\end_inset 
+
+).
+ These macros hide details about differences concerning the naming of the
+ constructor function when statically linking the filter to Aspell instead
+ of turning it into a loadable object.
+\layout Subsection
+
+Filter Description File
+\begin_inset LatexCommand \label{sec:filter descript}
+
+\end_inset 
+
+
+\layout Standard
+
+This file contains the description of a filter which is loaded by Aspell
+ immediately when add-filter option is invoked.
+ If this file is missing Aspell will complain about it.
+ It consists of lines containing commentaries which must be started by a
+ 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+
+\backslash 
+verb'#'
+\end_inset 
+
+ character and lines containing key value pairs describing the filter.
+ Each file at least has to contain the following to lines in the given order.
+ 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+
+\backslash 
+begin{verbatim}
+\newline 
+ASPELL >=0.51
+\newline 
+DESCRIPTION this
+\backslash 
+ is
+\backslash 
+ short
+\backslash 
+ filter
+\backslash 
+ description
+\newline 
+
+\backslash 
+end{verbatim}
+\end_inset 
+
+ The first non blank, non comment line has to contain the keyword 
+\family typewriter 
+ASPELL
+\family default 
+ followed by the version of Aspell which the filter is usable with.
+ To denote multiple Aspell versions the version number may be prefixed by
+ 
+\series bold 
+<
+\series default 
+, 
+\series bold 
+<=
+\series default 
+, 
+\series bold 
+=
+\series default 
+, 
+\series bold 
+>=
+\series default 
+ or 
+\series bold 
+>
+\series default 
+.
+ If the range prefix is omitted 
+\series bold 
+=
+\series default 
+ is assumed.
+ The line containing the 
+\family typewriter 
+DESCRIPTION
+\family default 
+ of the filter may float freely in the description file unless it occurs
+ inside a description of an option.
+ Whitespaces which occur inside the descriptive text have to escaped by
+ 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+
+\backslash 
+verb#
+\backslash 
+#
+\end_inset 
+
+ character.
+ The keyword 
+\family typewriter 
+DESCRIPTION
+\family default 
+ may be abbreviated by 
+\family typewriter 
+DESC
+\family default 
+.
+\layout Standard
+
+If the filter description contains the following line 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+
+\backslash 
+begin{verbatim}
+\newline 
+ENDFILE
+\newline 
+
+\backslash 
+end{verbatim}
+\end_inset 
+
+ than Aspell will assume end of file and ignore all following line.
+ It is not necessary to specify this explicitly on the final line of the
+ file, as Aspell will assume it implicitly at the end of file.
+\layout Standard
+
+For each filter feature (see section 
+\begin_inset LatexCommand \ref{sec:filter overview}
+
+\end_inset 
+
+) provided by the corresponding loadable object, the option file has to
+ contain the following line: 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+
+\backslash 
+begin{verbatim}
+\newline 
+STATIC <filtertype>
+\newline 
+
+\backslash 
+end{verbatim}
+\end_inset 
+
+ <filtertype> stands for one of 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+
+\backslash 
+verb#encoder#
+\end_inset 
+
+, 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+
+\backslash 
+verb#filter#
+\end_inset 
+
+ or 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+
+\backslash 
+verb#encoder#
+\end_inset 
+
+ denoting the entire filter type.
+ This line allows to statically (see Section
+\begin_inset LatexCommand \ref{sec:link filters static}
+
+\end_inset 
+
+) link the filter into 
+\family typewriter 
+Aspell
+\family default 
+ if requested by user or by system 
+\family typewriter 
+Aspell
+\family default 
+ is built for.
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+
+\backslash 
+begin{verbatim}
+\newline 
+OPTION newoption
+\newline 
+DESCRIPTION this
+\backslash 
+ is
+\backslash 
+ a
+\backslash 
+ short
+\backslash 
+ description
+\backslash 
+ of
+\backslash 
+ newoption
+\newline 
+TYPE bool
+\newline 
+DEFAULT false
+\newline 
+ENDOPTION
+\newline 
+
+\backslash 
+end{verbatim}
+\end_inset 
+
+ An option is added by a line containing the keyword 
+\family typewriter 
+OPTION
+\family default 
+ followed by the name of the option.
+ If this name is not prefixed by the name of the filter 
+\family typewriter 
+Aspell
+\family default 
+ will implicitly do that.
+ For the 
+\family typewriter 
+DESCRIPTION
+\family default 
+ of a filter option the same holds as for the filter description.
+ The 
+\family typewriter 
+TYPE
+\family default 
+ of the option may be one of 
+\series bold 
+bool
+\series default 
+, 
+\series bold 
+int
+\series default 
+, 
+\series bold 
+string
+\series default 
+ or 
+\series bold 
+list
+\series default 
+.
+ If the 
+\family typewriter 
+TYPE
+\family default 
+ is omitted 
+\series bold 
+bool
+\series default 
+ is assumed.
+ The default value(s) for an option is specified via 
+\family typewriter 
+DEFAULT
+\family default 
+ (short 
+\family typewriter 
+DEF
+\family default 
+) followed by the desired 
+\family typewriter 
+TYPE
+\family default 
+ dependent default value.
+ The table 
+\begin_inset LatexCommand \ref{tab:filter default values}
+
+\end_inset 
+
+ shows the possible values for each 
+\family typewriter 
+TYPE
+\family default 
+.
+ 
+\begin_inset Float table
+wide false
+collapsed false
+
+\layout Standard
+\align center 
+
+\begin_inset  Tabular
+<lyxtabular version="3" rows="5" columns="3">
+<features>
+<column alignment="left" valignment="top" rightline="true" width="0pt">
+<column alignment="left" valignment="top" rightline="true" width="0pt">
+<column alignment="left" valignment="top" width="0pt">
+<row bottomline="true">
+<cell alignment="left" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+ Type
+\end_inset 
+</cell>
+<cell alignment="left" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+default
+\end_inset 
+</cell>
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+available
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="left" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+bool
+\end_inset 
+</cell>
+<cell alignment="left" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+true
+\end_inset 
+</cell>
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+true false
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="left" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+int
+\end_inset 
+</cell>
+<cell alignment="left" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+0
+\end_inset 
+</cell>
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+any number value
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="left" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+string
+\end_inset 
+</cell>
+<cell alignment="left" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+any printable string
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="left" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+list
+\end_inset 
+</cell>
+<cell alignment="left" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+any comma separated list of strings 
+\end_inset 
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset 
+
+
+\layout Caption
+
+
+\begin_inset LatexCommand \label{tab:filter default values}
+
+\end_inset 
+
+ The default values Aspell assumes if option description lacks a 
+\family typewriter 
+DEFAULT
+\family default 
+ or 
+\family typewriter 
+DEF
+\family default 
+ line.
+\end_inset 
+
+ The 
+\family typewriter 
+ENDOPTION
+\family default 
+ line may be omitted as it is assumed implicitly if a line containing 
+\family typewriter 
+OPTION
+\family default 
+, 
+\family typewriter 
+STATIC
+\family default 
+ or 
+\family typewriter 
+ENDFILE
+\family default 
+ occurs or the file ends.
+\layout Paragraph
+
+
+\size small 
+Note:
+\layout Standard
+
+
+\size small 
+The keywords in a filter description file are case insensitive.
+ The above examples use the all uppercase for better distinguishing them
+ from values and comments.
+ Further a filter description may contain blank lines to enhance their readabili
+ty.
+ 
+\layout Paragraph
+
+
+\size small 
+Note:
+\layout Standard
+
+
+\size small 
+An option of 
+\series bold 
+list
+\series default 
+ type may contain multiple consecutive lines for default values starting
+ with 
+\family typewriter 
+DEFAULT
+\family default 
+ or 
+\family typewriter 
+DEF
+\family default 
+, to specify numerous default values.
+ 
+\layout Subsection
+
+Retrieve Options by a filter
+\layout Standard
+
+An option always has to be retrieved by a filter using its full qualified
+ name as the following example shows.
+ 
+\layout LyX-Code
+
+config->retrieve_bool("filter-<<filtername>>-newoption"); 
+\layout Standard
+
+The prefix 
+\begin_inset Quotes eld
+\end_inset 
+
+filter-
+\begin_inset Quotes erd
+\end_inset 
+
+ allows user to relate option uniquely to the specific filter when 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+
+\backslash 
+verb#<filtername>-newoption#
+\end_inset 
+
+ ambiguates an existing option of Aspell.
+ The 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+
+\backslash 
+verb#<filtername>#
+\end_inset 
+
+ stands for the name of the filter the option belongs to and 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+
+\backslash 
+verb#-newoption#
+\end_inset 
+
+ is the name of the option as specified in the corresponding .opt file (see
+ section 
+\begin_inset LatexCommand \ref{sec:filter descript}
+
+\end_inset 
+
+).
+\layout Subsection
+
+Compiling and Linking
+\layout Standard
+
+See a good book on Unix programming on how to turn the filter source into
+ a loadable object.
+\layout Subsection
+
+Programmers Interface
+\begin_inset LatexCommand \label{sec:programmers interface}
+
+\end_inset 
+
+
+\layout Standard
+
+A more convenient way
+\begin_inset Foot
+collapsed true
+
+\layout Standard
+
+
+\begin_inset LatexCommand \label{fn:recommended statndard aspell}
+
+\end_inset 
+
+recommended, if filter is added to Aspell standard distribution
+\end_inset 
+
+ to build a new filter is provided by Aspell's programmers interface for
+ filter.
+ It is provided by the 
+\begin_inset Quotes eld
+\end_inset 
+
+loadable-filter-API.hpp
+\begin_inset Quotes erd
+\end_inset 
+
+ file.
+ Including this file gives access to a collection of macros hiding nasty
+ details about runtime construction of a filter and about filter debugging.
+ Table 
+\begin_inset LatexCommand \ref{tab:interface macros}
+
+\end_inset 
+
+ shows the macros provided by the interface.
+ For details upon the entire macros see loadable-filter-API.hpp.
+ An example upon how to use these macros can be found at examples/loadable/ccpp-
+context.hpp and examples/loadable/ccpp-context.cpp.
+\layout LyX-Code
+
+
+\begin_inset Float table
+wide false
+collapsed true
+
+\layout Standard
+
+
+\begin_inset ERT
+status Open
+
+\layout Standard
+
+\backslash 
+begin{tabular}{@{}p{.32
+\backslash 
+textwidth}|p{.02
+\backslash 
+textwidth}|p{.3
+\backslash 
+textwidth}|p{.3
+\backslash 
+textwidth}@{}}
+\newline 
+
+\backslash 
+hline
+\backslash 
+hline
+\newline 
+Macro&
+\backslash 
+rotatebox{90}{Type}&Description&Notes
+\backslash 
+
+\backslash 
+
+\backslash 
+hline
+\backslash 
+hline
+\newline 
+ACTIVATE
+\backslash 
+_ENCODER&
+\backslash 
+multirow{3}{.02
+\backslash 
+textwidth}{
+\backslash 
+vspace{-2.5cm}
+\backslash 
+rotatebox{90}{mandatory}}&makes the entire encoding filter callable by Aspell&
+\backslash 
+multirow{3}{.3
+\backslash 
+textwidth}{do not call inside class declaration; these macros define new
+\backslash 
+_<filtertype> function;}
+\backslash 
+
+\backslash 
+
+\backslash 
+cline{1-1}
+\backslash 
+cline{3-3}
+\newline 
+ACTIVATE
+\backslash 
+_DECODER&&makes the entire decoding filter callable by Aspell&
+\backslash 
+
+\backslash 
+
+\backslash 
+cline{1-1}
+\backslash 
+cline{3-3}
+\newline 
+ACTIVATE
+\backslash 
+_FILTER&&makes the entire filter callable by Aspell&
+\backslash 
+
+\backslash 
+
+\backslash 
+hline
+\backslash 
+hline
+\newline 
+FDEBUGOPEN&
+\backslash 
+multirow{5}{.02
+\backslash 
+textwidth}{
+\backslash 
+vspace{-5.5cm}
+\backslash 
+rotatebox{90}{debugging}}&Initialises the macros for debugging a filter and opens the debug file stream&
+\backslash 
+multirow{5}{.3
+\backslash 
+textwidth}{These macros are only active if the {FILTER
+\backslash 
+_PRO
+\backslash 
+-GRESS
+\backslash 
+_CON
+\backslash 
+-TROL} macro is defined and denotes the name of the file debug messages should be sent to.
+\newline 
+If debugging should go to Aspell standard debugging output (right now stderr) use empty string constant as filename}
+\backslash 
+
+\backslash 
+
+\backslash 
+cline{1-1}
+\backslash 
+cline{3-3}
+\newline 
+FDEBUGNOTOPEN&&Same as ``FDEBUGOPEN'' but only if debug file stream was not opened jet&
+\backslash 
+
+\backslash 
+
+\backslash 
+cline{1-1}
+\backslash 
+cline{3-3}
+\newline 
+FDEBUGCLOSE&&closes the debugging device opened by ``FDEBUGOPEN'' and reverts it to ``stderr'';&
+\backslash 
+
+\backslash 
+
+\backslash 
+cline{1-1}
+\backslash 
+cline{3-3}
+\newline 
+FDEBUG&&prints the filename and the line number it occurs&
+\backslash 
+
+\backslash 
+
+\backslash 
+cline{1-1}
+\backslash 
+cline{3-3}
+\newline 
+FDEBUGPRINTF&&special printf for debugging;&
+\backslash 
+
+\backslash 
+
+\backslash 
+hline
+\backslash 
+hline
+\newline 
+
+\backslash 
+end{tabular}
+\end_inset 
+
+
+\layout Caption
+
+Macros provided by loadable-filter-API.hpp
+\layout Standard
+
+
+\begin_inset LatexCommand \label{tab:interface macros}
+
+\end_inset 
+
+
+\end_inset 
+
+
+\layout Subsection
+
+Adding a filter to Aspell standard distribution
+\begin_inset LatexCommand \label{sec:link filters static}
+
+\end_inset 
+
+
+\layout Standard
+
+Any filter which one day should be added to 
+\family typewriter 
+Aspell
+\family default 
+ has to be built using the developer interface, described in section 
+\begin_inset LatexCommand \ref{sec:programmers interface}
+
+\end_inset 
+
+.
+ To add the filter the following steps have to be performed: 
+\layout Enumerate
+
+Decide whether the filter should be kept loadable if possible, or always
+ be statically linked to 
+\family typewriter 
+Aspell
+\family default 
+.
+ 
+\layout Enumerate
+
+
+\begin_inset LatexCommand \label{itm:place sources}
+
+\end_inset 
+
+ Place the filter sources inside the entire directory of 
+\family typewriter 
+Aspell
+\family default 
+ source tree.
+ Right now use 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+
+\backslash 
+verb#$top_srcdir/modules/filter#
+\end_inset 
+
+.
+ 
+\layout Enumerate
+
+Modify the 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+
+\backslash 
+verb#Makefile.am#
+\end_inset 
+
+ file on the topmost directory of the Aspell distribution.
+ Follow the instructions given by the 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+
+\backslash 
+verb+#Filter Modules+
+\end_inset 
+
+ section.
+ 
+\layout Enumerate
+
+Run 
+\family typewriter 
+autoconf
+\family default 
+, 
+\family typewriter 
+automake
+\family default 
+, 
+\family typewriter 
+...
+\layout Enumerate
+
+Reconfigure sources.
+ 
+\layout Enumerate
+
+
+\begin_inset LatexCommand \label{itm:build sources}
+
+\end_inset 
+
+ clear away any remains of a previous build and rebuild sources.
+ 
+\layout Enumerate
+
+
+\begin_inset LatexCommand \label{itm:reinstall aspell}
+
+\end_inset 
+
+ Reinstall 
+\family typewriter 
+Aspell
+\family default 
+.
+ 
+\layout Enumerate
+
+
+\begin_inset LatexCommand \label{itm:test filter installed}
+
+\end_inset 
+
+ Test if filter has been added properly otherwise return to steps 
+\begin_inset LatexCommand \ref{itm:place sources}
+
+\end_inset 
+
+-
+\begin_inset LatexCommand \ref{itm:reinstall aspell}
+
+\end_inset 
+
+.
+ 
+\layout Enumerate
+
+Reconfigure sources with 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+
+\backslash 
+verb#enable-static#
+\end_inset 
+
+ flag and repeat steps 
+\begin_inset LatexCommand \ref{itm:build sources}
+
+\end_inset 
+
+-
+\begin_inset LatexCommand \ref{itm:test filter installed}
+
+\end_inset 
+
+ until your filter builds and runs properly in case of static linkage.
+ 
+\layout Enumerate
+
+Add your source files to 
+\family typewriter 
+CVS
+\family default 
+, and commit all your changes.
+ Or in case you are not allowed to commit to 
+\family typewriter 
+CVS
+\family default 
+ submit a patch (see section
+\begin_inset LatexCommand \ref{sec:hosto submitt a patch}
+
+\end_inset 
+
+) containing your changes.
+ 
 \layout Section
 
 Data Structures
@@ -1070,5 +2180,5 @@ mk-src.in
 ((MKSRC))
 \layout Standard
 
-((FDL))
+((FDL)) 
 \the_end

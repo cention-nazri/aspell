@@ -8,6 +8,13 @@ perl mk-doc.pl
 touch auto
 cd ..
 
+cd manual
+test -e man-html || mkdir man-html
+test -e man-text || mkdir man-text
+test -e dev-html || mkdir dev-html
+test -e dev-text || mkdir dev-text
+cd ..
+
 autopoint -f || exit 1
 libtoolize --automake || exit 1
 aclocal -I m4 $ACLOCAL_FLAGS || exit 1
