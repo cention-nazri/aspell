@@ -63,6 +63,8 @@ using namespace std;
 
 namespace aspeller {
 
+using namespace acommon;
+
 typedef unsigned char byte;
 static char EMPTY[1] = {0};
 

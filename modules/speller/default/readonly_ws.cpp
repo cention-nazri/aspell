@@ -72,6 +72,8 @@ typedef unsigned char byte;
 #define MAP_FAILED (-1)
 #endif
 
+using namespace acommon;
+
 #ifdef HAVE_MMAP
 
 static inline char * mmap_open(unsigned int block_size, 

@@ -17,7 +17,7 @@ namespace aspeller {
     // implementation at the end of suggest.cc
 
     EditDistanceWeights     edit_distance_weights;
-    CachePtr<const TypoEditDistanceInfo> ti;
+	 acommon::CachePtr<const TypoEditDistanceInfo> ti;
 
     bool try_one_edit_word, try_scan_1, try_scan_2, try_ngram;
 
@@ -40,12 +40,12 @@ namespace aspeller {
     int span;
     int limit;
 
-    String split_chars;
+    acommon::String split_chars;
 
     SuggestParms() {}
     
-    PosibErr<void> set(ParmString mode, SpellerImpl * sp);
-    PosibErr<void> fill_distance_lookup(const Config * c, const Language & l);
+    acommon::PosibErr<void> set(ParmString mode, SpellerImpl * sp);
+    acommon::PosibErr<void> fill_distance_lookup(const acommon::Config * c, const Language & l);
     
     virtual ~SuggestParms() {}
     virtual SuggestParms * clone() const;

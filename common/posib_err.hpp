@@ -200,9 +200,9 @@ namespace acommon {
 //
 //
 #define RET_ON_ERR_SET(command, type, var) \
-  type var;do{PosibErr< type > pe(command);if(pe.has_err())return PosibErrBase(pe);var=pe.data;} while(false)
+  type var;do{acommon::PosibErr< type > pe(command);if(pe.has_err())return acommon::PosibErrBase(pe);var=pe.data;} while(false)
 #define RET_ON_ERR(command) \
-  do{PosibErrBase pe(command);if(pe.has_err())return PosibErrBase(pe);}while(false)
+  do{acommon::PosibErrBase pe(command);if(pe.has_err())return acommon::PosibErrBase(pe);}while(false)
 
   
   //

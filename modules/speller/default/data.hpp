@@ -8,14 +8,13 @@
 #include "copy_ptr.hpp"
 #include "enumeration.hpp"
 #include "language.hpp"
+#include "parm_string.hpp"
 #include "posib_err.hpp"
 #include "string.hpp"
 #include "string_enumeration.hpp"
 #include "word_list.hpp"
 #include "cache.hpp"
 #include "wordinfo.hpp"
-
-using namespace acommon;
 
 namespace acommon {
   class Config;
@@ -25,6 +24,7 @@ namespace acommon {
 }
 
 namespace aspeller {
+  using namespace acommon;
 
   class Dictionary;
   class DictList;

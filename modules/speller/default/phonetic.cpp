@@ -10,6 +10,8 @@
 #include "phonet.hpp"
 
 namespace aspeller {
+
+  using namespace acommon;
   
   class SimpileSoundslike : public Soundslike {
   private:

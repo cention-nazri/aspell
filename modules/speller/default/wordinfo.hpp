@@ -13,6 +13,8 @@ namespace acommon {
 
 namespace aspeller {
 
+  using namespace acommon;
+
   // WordInfo
 
   typedef unsigned int WordInfo; // 4 bits
@@ -28,8 +30,6 @@ namespace aspeller {
   static const WordInfo CASE_PATTERN = 3;
   static const WordInfo ALL_PLAIN    = (1 << 2);
   static const WordInfo ALL_CLEAN    = (1 << 3);
-
-  using namespace acommon;
 
   class Language;
   struct ConvertWord;

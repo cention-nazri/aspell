@@ -5,11 +5,11 @@
 
 #include "string.hpp"
 
-using namespace acommon;
-
 namespace acommon {struct Conv;}
 
 namespace aspeller {
+
+  using namespace acommon;
 
   class Language;
 

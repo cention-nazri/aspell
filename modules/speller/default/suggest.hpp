@@ -7,16 +7,16 @@
 #include "enumeration.hpp"
 #include "parm_string.hpp"
 
-using namespace acommon;
 
 namespace aspeller {
+  using namespace acommon;
 
   class SpellerImpl;
 
   class SuggestionList : public WordList {
   public:
-    typedef StringEnumeration            VirEmul;
-    typedef Enumeration<VirEmul>         Emul;
+    typedef StringEnumeration          VirEmul;
+    typedef Enumeration<VirEmul>       Emul;
     typedef const char *               Value;
     typedef unsigned int               Size;
 

@@ -12,6 +12,8 @@
 #include "asc_ctype.hpp"
 #include "convert.hpp"
 
+using namespace acommon;
+
 extern Conv dconv;
 extern Conv uiconv;
 

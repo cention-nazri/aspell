@@ -18,6 +18,8 @@
 
 #include "gettext.h"
 
+using namespace acommon;
+
 namespace aspeller {
 
   GlobalCache<Dictionary> dict_cache("dictionary");

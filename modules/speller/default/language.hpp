@@ -16,13 +16,13 @@
 
 #include "iostream.hpp"
 
-using namespace acommon;
-
 namespace acommon {
   struct CheckInfo;
 }
 
 namespace aspeller {
+
+  using namespace acommon;
 
   struct SuggestRepl {
     const char * substr;
@@ -338,7 +338,8 @@ namespace aspeller {
     // for cache
     //
 
-    static inline PosibErr<Language *> get_new(const String & lang, const Config * config) {
+    static inline PosibErr<Language *> get_new(const String & lang,
+                                               const Config * config) {
       StackPtr<Language> l(new Language());
       RET_ON_ERR(l->setup(lang, config));
       return l.release();
@@ -465,9 +466,11 @@ namespace aspeller {
 
   bool find_language(Config & c);
 
-  PosibErr<Language *> new_language(const Config &, ParmStr lang = 0);
+  PosibErr<Language *> 
+    new_language(const Config &, ParmStr lang = 0);
 
-  PosibErr<void> open_affix_file(const Config &, FStream & o);
+  PosibErr<void> 
+    open_affix_file(const Config &, FStream & o);
 }
 
 

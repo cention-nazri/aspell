@@ -35,9 +35,9 @@ namespace aspeller {
       return head;
     }
     void * alloc(unsigned s) {return buf.alloc_bottom(s);}
-    char * dup(ParmString str) {return buf.dup(str);}
+    char * dup(acommon::ParmString str) {return buf.dup(str);}
   private:
-    ObjStack buf;
+    acommon::ObjStack buf;
   };
 
 

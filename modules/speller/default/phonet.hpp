@@ -23,11 +23,12 @@
 #include "string.hpp"
 #include "posib_err.hpp"
 
-using namespace acommon;
 
 namespace acommon {struct Conv;}
 
 namespace aspeller {
+
+  using namespace acommon;
 
   class Language;
 

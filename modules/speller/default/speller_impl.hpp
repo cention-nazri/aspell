@@ -4,8 +4,6 @@
 #ifndef __aspeller_speller__
 #define __aspeller_speller__
 
-#include <vector>
-
 #include "clone_ptr.hpp"
 #include "copy_ptr.hpp"
 #include "data.hpp"
@@ -13,7 +11,6 @@
 #include "speller.hpp"
 #include "check_list.hpp"
 
-using namespace acommon;
 
 namespace acommon {
   class StringMap;
@@ -25,6 +22,8 @@ namespace acommon {
 // are NOT meant to be used my multiple threads and/or documents.
 
 namespace aspeller {
+
+  using namespace acommon;
 
   class Language;
   class SensitiveCompare;

@@ -41,7 +41,6 @@ namespace aspeller {
   class Language;
 
   class SpellerImpl;
-  using acommon::CheckInfo;
   struct GuessInfo;
 
   struct LookupInfo;
@@ -88,7 +87,7 @@ namespace aspeller {
     PosibErr<void> setup(ParmString affpath, Conv &);
 
     bool affix_check(const LookupInfo &, ParmString, CheckInfo &, GuessInfo *) const;
-    bool prefix_check(const LookupInfo &, ParmString, CheckInfo &, GuessInfo *, 
+    bool prefix_check(const LookupInfo &, ParmString, CheckInfo &, GuessInfo *,
                       bool cross = true) const;
     bool suffix_check(const LookupInfo &, ParmString, CheckInfo &, GuessInfo *,
                       int sfxopts, AffEntry* ppfx) const;
@@ -107,7 +106,7 @@ namespace aspeller {
     {
       return expand(word,aff,buf,0);
     }
-    WordAff * expand_suffix(ParmString word, const unsigned char * new_aff,
+    WordAff * expand_suffix(ParmString word, const unsigned char * aff,
                             ObjStack &, int limit = INT_MAX,
                             unsigned char * new_aff = 0, WordAff * * * l = 0,
                             ParmString orig_word = 0) const;

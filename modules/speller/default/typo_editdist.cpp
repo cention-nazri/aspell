@@ -20,6 +20,7 @@ typedef unsigned char uchar;
 namespace aspeller {
 
   using namespace std;
+  using namespace acommon;
 
   short typo_edit_distance(ParmString word0, 
 			   ParmString target0,

@@ -22,6 +22,9 @@
 #include "iostream.hpp"
 
 namespace aspeller {
+
+  using namespace acommon;
+
   //
   // data_access functions
   //

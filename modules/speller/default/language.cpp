@@ -28,6 +28,8 @@
 
 namespace aspeller {
 
+  using namespace acommon;
+
   static const char TO_CHAR_TYPE[256] = {
     // 1  2  3  4  5  6  7  8  9  A  B  C  D  E  F 
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 0
@@ -293,7 +295,7 @@ namespace aspeller {
       
       size_t num_repl = 0;
       while (getdata_pair(REPL, d, buf)) {
-        ::to_lower(d.key);
+        acommon::to_lower(d.key);
         if (d.key == "rep") {
           num_repl = atoi(d.value); // FIXME make this more robust
           break;
@@ -306,7 +308,7 @@ namespace aspeller {
       for (size_t i = 0; i != num_repl; ++i) {
         bool res = getdata_pair(REPL, d, buf);
         assert(res); // FIXME
-        ::to_lower(d.key);
+        acommon::to_lower(d.key);
         assert(d.key == "rep"); // FIXME
         split(d);
         SuggestRepl rep;
