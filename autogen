@@ -5,7 +5,7 @@ test -d interfaces/cc || mkdir interfaces/cc
 perl auto/mk-src.pl
 
 libtoolize --automake || exit 1
-aclocal || exit 1
+aclocal $ACLOCAL_FLAGS || exit 1
 autoheader || exit 1
 automake --add-missing --foreign || exit 1
 autoconf || exit 1
