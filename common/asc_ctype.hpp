@@ -29,17 +29,17 @@ namespace acommon {
   {
     return 'A' <= c && c <= 'Z';
   }
-  static inline bool asc_tolower(char c)
-  {
-    return isupper(c) ? c + 0x20 : c;
-  }
   static inline bool asc_isalpha(char c)
   {
     return asc_islower(c) || asc_isupper(c);
   }
-  static inline bool asc_toupper(char c)
+  static inline char asc_tolower(char c)
   {
-    return islower(c) ? c - 0x20 : c;
+    return asc_isupper(c) ? c + 0x20 : c;
+  }
+  static inline char asc_toupper(char c)
+  {
+    return asc_islower(c) ? c - 0x20 : c;
   }
   
 }
