@@ -1,5 +1,5 @@
 \input texinfo   @c -*-texinfo-*-
-@comment $Id: aspell.texi,v 1.13 2004/02/24 15:25:47 kevina Exp $
+@comment $Id: aspell.texi,v 1.14 2004/03/05 04:11:15 kevina Exp $
 @comment %**start of header
 @setfilename aspell.info
 @settitle GNU Aspell 0.51
@@ -2049,6 +2049,14 @@ two words when a word is split.  FIXME
 
 @item use-jump-tables
 
+@item store-as
+
+How the words are indexed in the dictionary.  If "stripped" than the
+word is indexed in a lower case and deaccented form.  If "lower" than
+the word is indexed in a lower case form but with accent info still
+intact.  This just controls how the word is indexed, not how it is
+stored.  The default is "stripped" unless affix compression is used.
+
 @item ignore-accents
 
 @item affix-char
@@ -2163,16 +2171,15 @@ After the replacement the search for transformation rules continues
 with the not replaced @samp{CH}!
 
 If a @samp{<} is appended to the search string, the search for
-replacement rules will continue with the replacement string and not
-with the next character of the word.  The rule @samp{PH< -> F} for example would replace @samp{PH} with @samp{F}
-and then again start to search for a replacement rule for
-@samp{F@dots{}}.  If there would also be rules like @samp{FO }->
-@samp{O} and @samp{F -> _} then words like
-@samp{PHOXYZ} would be transformed to @samp{OXYZ} and any
-occurrences of @samp{PH} that are not followed by an @samp{O}
-will be deleted like @samp{PHIXYZ -> IXYZ}.  The second
-replacement however is not applied if the priority of this rule is
-lower than the priority of the first rule.
+replacement rules will continue with the replacement string and not with
+the next character of the word.  The rule @samp{PH< -> F} for example
+would replace @samp{PH} with @samp{F} and then again start to search for
+a replacement rule for @samp{F@dots{}}.  If there would also be rules
+like @samp{FO }-> @samp{O} and @samp{F -> _} then words like
+@samp{PHOXYZ} would be transformed to @samp{OXYZ} and any occurrences of
+@samp{PH} that are not followed by an @samp{O} will be deleted like
+@samp{PHIXYZ -> IXYZ}.  The second replacement however is not applied if
+the priority of this rule is lower than the priority of the first rule.
 
 Priorities are added to a rule by putting a number between 0 and 9 at
 the end of the search string, for example @samp{ING6 -> N}.
