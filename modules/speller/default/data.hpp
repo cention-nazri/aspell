@@ -66,7 +66,7 @@ namespace aspeller {
     class Id;
   protected:
     CopyPtr<Id> id_;
-    virtual void set_lang_hook(const Config *) {}
+    virtual void set_lang_hook(Config &) {}
     
   public:
     typedef Id CacheKey;
@@ -83,7 +83,7 @@ namespace aspeller {
 
     const Id & id() {return *id_;}
     PosibErr<void> check_lang(ParmString lang);
-    PosibErr<void> set_check_lang(ParmString lang, const Config *);
+    PosibErr<void> set_check_lang(ParmString lang, Config &);
     const LangImpl * lang() const {return lang_;};
     const Language * language() const {return lang_;};
     const char * lang_name() const;
@@ -98,7 +98,7 @@ namespace aspeller {
 
     const char * file_name() const {return file_name_.path.c_str();}
     // returns any additional dictionaries that are also used
-    virtual PosibErr<void> load(ParmString, const Config &, LocalDictList * = 0, 
+    virtual PosibErr<void> load(ParmString, Config &, LocalDictList * = 0, 
                                 SpellerImpl * = 0, const LocalDictInfo * = 0);
 
     virtual PosibErr<void> merge(ParmString);
@@ -210,7 +210,7 @@ namespace aspeller {
   // stores result in LocalDict
   // any new extra dictionaries that were loaded will be ii
   PosibErr<void> add_data_set(ParmString file_name,
-                              const Config &,
+                              Config &,
                               LocalDict &,
                               LocalDictList * other_dicts = 0,
                               SpellerImpl * = 0,

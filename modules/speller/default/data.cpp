@@ -89,12 +89,13 @@ namespace aspeller {
     return no_err;
   }
  
-  PosibErr<void> Dictionary::set_check_lang (ParmString l, const Config * config)
+  PosibErr<void> Dictionary::set_check_lang (ParmString l, Config & config)
   {
     if (lang_ == 0) {
-      PosibErr<Language *> res = new_language(*config, l);
+      PosibErr<Language *> res = new_language(config, l);
       if (res.has_err()) return res;
       lang_.reset(res.data);
+      lang_->set_lang_defaults(config);
       set_lang_hook(config);
     } else {
       if (l != lang_->name())
@@ -200,7 +201,7 @@ namespace aspeller {
   // Default implementation;
   //
 
-  PosibErr<void> Dictionary::load(ParmString, const Config &, 
+  PosibErr<void> Dictionary::load(ParmString, Config &, 
                                   LocalDictList *, 
                                   SpellerImpl *, const LocalDictInfo *) 
   {
@@ -336,7 +337,7 @@ namespace aspeller {
   }
 
   PosibErr<void> add_data_set(ParmString fn,
-                              const Config & config,
+                              Config & config,
                               LocalDict & res,
                               LocalDictList * new_dicts,
                               SpellerImpl * speller,

@@ -36,13 +36,13 @@ protected:
   virtual ~WritableBase() {}
     
   virtual PosibErr<void> save(FStream &, ParmString) = 0;
-  virtual PosibErr<void> merge(FStream &, ParmString, const Config * = 0) = 0;
+  virtual PosibErr<void> merge(FStream &, ParmString, Config * = 0) = 0;
     
   PosibErr<void> save2(FStream &, ParmString);
   PosibErr<void> update(FStream &, ParmString);
   PosibErr<void> save(bool do_update);
   PosibErr<void> update_file_date_info(FStream &);
-  PosibErr<void> load(ParmString, const Config &, LocalDictList *,
+  PosibErr<void> load(ParmString, Config &, LocalDictList *,
                       SpellerImpl *, const LocalDictInfo *);
   PosibErr<void> merge(ParmString);
   PosibErr<void> save_as(ParmString);
@@ -50,7 +50,7 @@ protected:
   String file_encoding;
   ConvObj iconv;
   ConvObj oconv;
-  PosibErr<void> set_file_encoding(ParmString, const Config * c);
+  PosibErr<void> set_file_encoding(ParmString, Config & c);
 
   PosibErr<void> synchronize() {return save(true);}
   PosibErr<void> save_noupdate() {return save(false);}
@@ -62,7 +62,7 @@ PosibErr<void> WritableBase::update_file_date_info(FStream & f) {
   return no_err;
 }
   
-PosibErr<void> WritableBase::load(ParmString f0, const Config & config,
+PosibErr<void> WritableBase::load(ParmString f0, Config & config,
                                   LocalDictList *,
                                   SpellerImpl *, const LocalDictInfo *)
 {
@@ -161,12 +161,12 @@ PosibErr<void> WritableBase::save(bool do_update) {
   return no_err;
 }
 
-PosibErr<void> WritableBase::set_file_encoding(ParmString enc, const Config * c)
+PosibErr<void> WritableBase::set_file_encoding(ParmString enc, Config & c)
 {
   if (enc == file_encoding) return no_err;
   if (enc == "") enc = lang()->charset();
-  RET_ON_ERR(iconv.setup(*c, enc, lang()->charset(), NormFrom));
-  RET_ON_ERR(oconv.setup(*c, lang()->charset(), enc, NormTo));
+  RET_ON_ERR(iconv.setup(c, enc, lang()->charset(), NormFrom));
+  RET_ON_ERR(oconv.setup(c, lang()->charset(), enc, NormTo));
   if (iconv || oconv) 
     file_encoding = enc;
   else
@@ -297,10 +297,10 @@ public: //but don't use
   ObjStack             buffer;
 
   PosibErr<void> save(FStream &, ParmString);
-  PosibErr<void> merge(FStream &, ParmString, const Config * config);
+  PosibErr<void> merge(FStream &, ParmString, Config * config);
 
 protected:
-  void set_lang_hook(const Config * c) {
+  void set_lang_hook(Config & c) {
     set_file_encoding(lang()->data_encoding(), c);
     word_lookup.reset(new WordLookup(10, Hash(lang()), Equal(lang())));
   }
@@ -437,8 +437,8 @@ PosibErr<void> WritableDict::add(ParmString w, ParmString s) {
 }
 
 PosibErr<void> WritableDict::merge(FStream & in, 
-                                 ParmString file_name, 
-                                 const Config * config)
+                                   ParmString file_name, 
+                                   Config * config)
 {
   typedef PosibErr<void> Ret;
   unsigned int ver;
@@ -459,7 +459,7 @@ PosibErr<void> WritableDict::merge(FStream & in,
 
   split(dp);
   {
-    Ret pe = set_check_lang(dp.key, config);
+    Ret pe = set_check_lang(dp.key, *config);
     if (pe.has_err())
       return pe.with_file(file_name);
   }
@@ -468,9 +468,9 @@ PosibErr<void> WritableDict::merge(FStream & in,
 
   split(dp);
   if (dp.key.size > 0)
-    set_file_encoding(dp.key, config);
+    set_file_encoding(dp.key, *config);
   else
-    set_file_encoding("", config);
+    set_file_encoding("", *config);
   
   ConvP conv(iconv);
   while (getline(in, dp, buf)) {
@@ -527,7 +527,7 @@ private:
   WritableReplDict& operator=(const WritableReplDict&);
 
 protected:
-  void set_lang_hook(const Config * c) {
+  void set_lang_hook(Config & c) {
     set_file_encoding(lang()->data_encoding(), c);
     word_lookup.reset(new WordLookup(10, Hash(lang()), Equal(lang())));
   }
@@ -562,7 +562,7 @@ public:
 
 private:
   PosibErr<void> save(FStream &, ParmString );
-  PosibErr<void> merge(FStream &, ParmString , const Config * config);
+  PosibErr<void> merge(FStream &, ParmString , Config * config);
 };
 
 WritableReplDict::Size WritableReplDict::size() const 
@@ -759,8 +759,8 @@ PosibErr<void> WritableReplDict::save (FStream & out, ParmString file_name)
 }
 
 PosibErr<void> WritableReplDict::merge(FStream & in,
-                                    ParmString file_name, 
-                                    const Config * config)
+                                       ParmString file_name, 
+                                       Config * config)
 {
   typedef PosibErr<void> Ret;
   unsigned int version;
@@ -783,7 +783,7 @@ PosibErr<void> WritableReplDict::merge(FStream & in,
 
   split(dp);
   {
-    Ret pe = set_check_lang(dp.key, config);
+    Ret pe = set_check_lang(dp.key, *config);
     if (pe.has_err())
       return pe.with_file(file_name);
   }
@@ -798,9 +798,9 @@ PosibErr<void> WritableReplDict::merge(FStream & in,
 
   split(dp);
   if (dp.key.size > 0)
-    set_file_encoding(dp.key, config);
+    set_file_encoding(dp.key, *config);
   else
-    set_file_encoding("", config);
+    set_file_encoding("", *config);
 
   if (version == 11) {
 

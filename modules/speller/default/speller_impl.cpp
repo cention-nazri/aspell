@@ -461,7 +461,7 @@ namespace aspeller {
       temp->have_soundslike = use_soundslike;
       PosibErrBase pe = temp->load(config_->retrieve("personal-path"),*config_);
       if (pe.has_err(cant_read_file))
-	temp->set_check_lang(lang_name(), config_);
+	temp->set_check_lang(lang_name(), *config_);
       else if (pe.has_err())
 	return pe;
       add_dict(new SpellerDict(temp, lang_, *config_, personal_id));
@@ -472,7 +472,7 @@ namespace aspeller {
       Dictionary * temp;
       temp = new_default_writable_dict();
       temp->have_soundslike = use_soundslike;
-      temp->set_check_lang(lang_name(), config_);
+      temp->set_check_lang(lang_name(), *config_);
       add_dict(new SpellerDict(temp, lang_, *config_, session_id));
     }
      
@@ -482,7 +482,7 @@ namespace aspeller {
       temp->have_soundslike = use_soundslike;
       PosibErrBase pe = temp->load(config_->retrieve("repl-path"),*config_);
       if (pe.has_err(cant_read_file))
-	temp->set_check_lang(lang_name(), config_);
+	temp->set_check_lang(lang_name(), *config_);
       else if (pe.has_err())
 	return pe;
       add_dict(new SpellerDict(temp, lang_, *config_, personal_repl_id));

@@ -21,7 +21,7 @@ namespace {
   {
   public:
     MultiDictImpl() : Dictionary(multi_dict, "MultiDictImpl") {}
-    PosibErr<void> load(ParmString, const Config &, LocalDictList *, 
+    PosibErr<void> load(ParmString, Config &, LocalDictList *, 
                         SpellerImpl *, const LocalDictInfo *);
     DictsEnumeration * dictionaries() const;
   private:
@@ -29,7 +29,7 @@ namespace {
   };
 
   PosibErr<void> MultiDictImpl::load(ParmString fn, 
-                                     const Config & config, 
+                                     Config & config, 
                                      LocalDictList * new_dicts,
                                      SpellerImpl * speller,
                                      const LocalDictInfo * li)
@@ -63,7 +63,7 @@ namespace {
 	LocalDict res;
 	res.set(0, config, strip_accents);
         RET_ON_ERR(add_data_set(d.value, config, res, new_dicts, speller, &res, dir));
-        RET_ON_ERR(set_check_lang(res.dict->lang()->name(), &config));
+        RET_ON_ERR(set_check_lang(res.dict->lang()->name(), config));
 	wss.push_back(res);
 
       } else {

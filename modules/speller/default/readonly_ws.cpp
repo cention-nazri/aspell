@@ -244,7 +244,7 @@ namespace {
       }
     }
     
-    PosibErr<void> load(ParmString, const Config &, LocalDictList *, 
+    PosibErr<void> load(ParmString, Config &, LocalDictList *, 
                         SpellerImpl *, const LocalDictInfo *);
 
     bool lookup(ParmString word, WordEntry &, const SensitiveCompare &) const;
@@ -315,7 +315,7 @@ namespace {
     u32int affix_info; // none zero if affix information is encoded in table
   };
 
-  PosibErr<void> ReadOnlyDict::load(ParmString f0, const Config & config, 
+  PosibErr<void> ReadOnlyDict::load(ParmString f0, Config & config, 
                                     LocalDictList *, 
                                     SpellerImpl *, const LocalDictInfo *)
   {
@@ -350,7 +350,7 @@ namespace {
     word.resize(data_head.lang_name_size);
     f.read(word.data(), data_head.lang_name_size);
 
-    PosibErr<void> pe = set_check_lang(word.data(),&config);
+    PosibErr<void> pe = set_check_lang(word.data(),config);
     if (pe.has_err()) {
       if (pe.prvw_err()->is_a(language_related_error))
         return pe.with_file(fn);

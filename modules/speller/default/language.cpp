@@ -299,7 +299,7 @@ namespace aspeller {
     return no_err;
   }
 
-  void Language::set_lang_defaults(Config & config)
+  void Language::set_lang_defaults(Config & config) const
   {
     config.replace_internal("actual-lang", name());
     StackPtr<KeyInfoEnumeration> els(lang_config_->possible_elements(false));
