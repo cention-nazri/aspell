@@ -564,18 +564,32 @@ void print_elements(const AspellWordList * wl) {
   COUT.printf("%u: %s\n", count, line.c_str());
 }
 
+struct StatusFunInf 
+{
+  aspeller::SpellerImpl * real_speller;
+  bool verbose;
+};
+
 void status_fun(void * d, Token, int correct)
 {
-  if (*static_cast<bool *>(d) && correct)
-    COUT.put("*\n");
+  StatusFunInf * p = static_cast<StatusFunInf *>(d);
+  if (p->verbose && correct) {
+    const CheckInfo * ci = p->real_speller->check_info();
+    if (ci->compound)
+      COUT.put("-\n");
+    else if (ci->pre_flag || ci->suf_flag)
+      COUT.printf("+ %s\n", ci->word.str());
+    else
+      COUT.put("*\n");
+  }
 }
 
 DocumentChecker * new_checker(AspellSpeller * speller, 
-			      bool & print_star) 
+			      StatusFunInf & status_fun_inf) 
 {
   EXIT_ON_ERR_SET(new_document_checker(reinterpret_cast<Speller *>(speller)),
 		  StackPtr<DocumentChecker>, checker);
-  checker->set_status_fun(status_fun, &print_star);
+  checker->set_status_fun(status_fun, &status_fun_inf);
   return checker.release();
 }
 
@@ -616,8 +630,11 @@ void pipe()
   if (do_time)
     COUT << _("Time to load word list: ")
          << (clock() - start)/(double)CLOCKS_PER_SEC << "\n";
-  bool print_star = true;
-  StackPtr<DocumentChecker> checker(new_checker(speller, print_star));
+  StatusFunInf status_fun_inf;
+  status_fun_inf.real_speller = real_speller;
+  bool & print_star = status_fun_inf.verbose;
+  print_star = true;
+  StackPtr<DocumentChecker> checker(new_checker(speller, status_fun_inf));
   int c;
   const char * w;
   CharVector buf;
@@ -671,13 +688,13 @@ void pipe()
 	config->replace("mode", "tex");
       reload_filters(real_speller);
       checker.del();
-      checker = new_checker(speller, print_star);
+      checker = new_checker(speller, status_fun_inf);
       break;
     case '-':
       config->remove("filter");
       reload_filters(real_speller);
       checker.del();
-      checker = new_checker(speller, print_star);
+      checker = new_checker(speller, status_fun_inf);
       break;
     case '~':
       break;

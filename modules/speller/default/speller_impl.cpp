@@ -195,6 +195,7 @@ namespace aspeller {
         is_title = lang_->case_pattern(word) == FirstUpper ? Yes : No;
       *i = t;
       if (check(i, word_end, is_title == Yes, run_together_limit - 1, ci + 1, 0)) {
+        ci->compound = true;
         ci->next = ci + 1;
         return true;
       }
