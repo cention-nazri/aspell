@@ -787,10 +787,16 @@ Aspell has undergone an extremely large number of changes since the previous
 
 The way dictionaries are handled has also changed.
  For one thing the language names have changed to the two letter iso code.
- This means that your old personal word lists won't work without some minor
- changes.
- [FIXME A Script should be written to automate the change and it should
- be documented here.]
+ These means that the your old personal dictionaries will not be recognized.
+ However, you can import the old dictionaries by running the 
+\begin_inset Quotes eld
+\end_inset 
+
+aspell-import
+\begin_inset Quotes erd
+\end_inset 
+
+ script.
 \layout Standard
 
 The Pspell ABI is now part of Asepll except that the name of everything
@@ -828,6 +834,43 @@ The format of the complied dictionaries has almost certainly changed.
 \layout Standard
 
 [FIXME Add now about missing .pwli files]
+\layout Section
+
+Using aspell-import
+\layout Standard
+
+The aspell-import Perl script will look for old personal dictionaries and
+ will import them into GNU Aspell.
+ It will look for both Ispell and Aspell ones.
+ To use it just run it from the command prompt.
+ If you get an error about /usr/bin/perl not being found than instead try
+ 
+\begin_inset Quotes eld
+\end_inset 
+
+perl <<bindir>>/aspell-import
+\begin_inset Quotes erd
+\end_inset 
+
+.
+ When running the script if you get a message like:
+\layout LyX-Code
+
+Error: No word lists can be found for the language "de".
+\layout Standard
+
+This means that you have not installed support for the given language, in
+ this case 
+\begin_inset Quotes eld
+\end_inset 
+
+de
+\begin_inset Quotes erd
+\end_inset 
+
+ for German.
+ To rectify the situation download and install a dictionary designed to
+ work with GNU Aspell 0.50 or better.
 \layout Chapter
 
 Basic Usage

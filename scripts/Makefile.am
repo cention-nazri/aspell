@@ -1,7 +1,7 @@
 
 pkgadatadir = ${pkgdatadir}
 
-bin_SCRIPTS = pspell-config run-with-aspell
+bin_SCRIPTS = pspell-config run-with-aspell aspell-import
 pkgadata_SCRIPTS = spell ispell
 
 run-with-aspell: run-with-aspell.create
@@ -13,5 +13,5 @@ pspell-config: mkconfig
 
 CLEANFILES = pspell-config run-with-aspell
 
-EXTRA_DIST = mkconfig spell ispell run-with-aspell.create
+EXTRA_DIST = mkconfig spell ispell run-with-aspell.create aspell-import
 

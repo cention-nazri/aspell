@@ -349,10 +349,10 @@ with Aspell so there in no longer two separate libraries you have
 to worry about.
 
 The way dictionaries are handled has also changed. For one thing the
-language names have changed to the two letter iso code. This means
-that your old personal word lists won't work without some minor changes.
-{[}FIXME A Script should be written to automate the change and it
-should be documented here.{]}
+language names have changed to the two letter iso code. These means
+that the your old personal dictionaries will not be recognized. However,
+you can import the old dictionaries by running the {}``aspell-import''
+script.
 
 The Pspell ABI is now part of Asepll except that the name of everything
 has changed due to the renaming of Pspell to Aspell. In particuler
@@ -376,6 +376,24 @@ The format of the complied dictionaries has almost certainly changed.
 So you will need to recompile them for the new Aspell.
 
 {[}FIXME Add now about missing .pwli files{]}
+
+
+\section{Using aspell-import}
+
+The aspell-import Perl script will look for old personal dictionaries
+and will import them into GNU Aspell. It will look for both Ispell
+and Aspell ones. To use it just run it from the command prompt. If
+you get an error about /usr/bin/perl not being found than instead
+try {}``perl <\,{}<bindir>\,{}>/aspell-import''.
+When running the script if you get a message like:
+
+\begin{lyxcode}
+Error:~No~word~lists~can~be~found~for~the~language~\char`\"{}de\char`\"{}.
+\end{lyxcode}
+This means that you have not installed support for the given language,
+in this case {}``de'' for German. To rectify the situation download
+and install a dictionary designed to work with GNU Aspell 0.50 or
+better.
 
 
 \chapter{Basic Usage}
