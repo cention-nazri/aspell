@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005
+ * Copyright (c) 2004
  * Kevin Atkinson
  *
  * Permission to use, copy, modify, distribute and sell this software
@@ -13,9 +13,26 @@
  *
  */
 
+/*
+ * Format:
+ *   <data> ::= 0x02 <line>+ 0x1F 0xFF
+ *   <line> ::= <prefix> <rest>*
+ *   <prefix> ::= 0x00..0x1D | 0x1E 0xFF* 0x00..0xFE
+ *   <rest> ::= 0x20..0xFF | <escape>
+ *   <escape> ::= 0x1F 0x20..0x3F
+ *
+ * To decompress:
+ *   Take the first PREFIX_LEN characters from the previous line
+ *   and concatenate that with the rest, unescaping as necessary.
+ *   The PREFIX_LEN is the sum of the characters in <prefix>.
+ *   To unescape take the second character of <escape> and subtract 0x20.
+ *   If the prefix length is computed before unescaping characters.
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <assert.h>
 
 #if defined(__CYGWIN__) || defined (_WIN32)
 
@@ -30,6 +47,8 @@
 
 #endif
 
+#define HEAD "prezip, a prefix delta compressor. Version 0.1, 2004-04-23"
+
 typedef struct Word {
   char * str;
   size_t alloc;
@@ -43,10 +62,15 @@ typedef struct Word {
     (cur)->str = (char *)realloc((cur)->str, (cur)->alloc);\
     p = (cur)->str + pos;\
   } while (0)
-    
+
+#define ADV(w, c) do {char * s = w + c;\
+                      while(w != s) {\
+                        if (*w == 0) ret = 3;\
+                        ++w;}} while (0)
+
 int main (int argc, const char *argv[]) {
 
-  if (argc != 2) {
+  if (argc < 2) {
 
     goto usage;
     
@@ -83,6 +107,7 @@ int main (int argc, const char *argv[]) {
           *w++ = c + 32;
         }
       }
+
       *w = 0;
       p = prev->str;
       w = cur->str;
@@ -110,11 +135,16 @@ int main (int argc, const char *argv[]) {
       }
     }
     
+    putc(31, stdout);
+    putc(255, stdout);
+
     free(w1.str);
     free(w2.str);
 
   } else if (strcmp(argv[1], "-d") == 0) {
     
+    int ret = 0;
+
     Word cur;
     int c;
     char * w;
@@ -126,36 +156,54 @@ int main (int argc, const char *argv[]) {
     SETBIN (stdin);
 
     c = getc(stdin);
-    
+
     if (c == 2) 
     {
-      c = getc(stdin);
-      for (;;) {
-        w = cur.str + c;
-        if (c == 30) {
-          while (c = getc(stdin), c == 255) w += 255;
-          w += c;
+      while (c != EOF && ret <= 0) {
+        ret = -1;
+        if (c != 2) {ret = 3; break;}
+        c = getc(stdin);
+        while (ret < 0) {
+          w = cur.str;
+          ADV(w, c);
+          if (c == 30) {
+            while (c = getc(stdin), c == 255) ADV(w, 255);
+            ADV(w, c);
+          }
+          while (c = getc(stdin), c > 30) {
+            INSURE_SPACE(&cur,w,1);
+            *w++ = (char)c;
+          }
+          *w = '\0';
+          for (w = cur.str; *w; w++) {
+            if (*w != 31) {
+              putc(*w, stdout);
+            } else {
+              ++w;
+              unsigned char ch = *w;
+              if (32 <= ch && ch < 64) {
+                putc(ch - 32, stdout);
+              } else if (ch == 255) {
+                if (w[1] != '\0') ret = 3;
+                else              ret = 0;
+              } else {
+                ret = 3;
+              }
+            }
+          }
+          if (ret < 0 && c == EOF) ret = 4;
+          if (ret != 0)
+            putc('\n', stdout);
         }
-        while (c = getc(stdin), c > 30) {
-          INSURE_SPACE(&cur,w,1);
-          *w++ = (char)c;
-        }
-        if (c == EOF && !cur.str[0]) break;
-        *w = '\0';
-        for (w = cur.str; *w; w++) {
-          if (*w != 31) putc(*w, stdout);
-          else          putc(*++w - 32, stdout);
-        }
-        putc('\n', stdout);
       }
-    } 
+    }
     else if (c == 1) 
     {
       while (c != -1) {
         if (c == 0)
           c = getc(stdin);
         --c;
-        w = cur.str + 1;
+        w = cur.str + c;
         while (c = getc(stdin), c > 32) {
           INSURE_SPACE(&cur,w,1);
           *w++ = (char)c;
@@ -164,14 +212,29 @@ int main (int argc, const char *argv[]) {
         fputs(cur.str, stdout);
         putc('\n', stdout);
       }
-
-      free (cur.str);
     }
     else
     {
-      fprintf(stderr, "Unknown format.\n");
-      return 1;
+      ret = 2;
     }
+
+    assert(ret >= 0);
+    if (ret > 0 && argc > 2)
+      fputs(argv[2], stderr);
+    if (ret == 2)
+      fputs("unknown format\n", stderr);
+    else if (ret == 3)
+      fputs("corrupt input\n", stderr);
+    else if (ret == 4)
+      fputs("unexpected EOF\n", stderr);
+
+    free (cur.str);
+
+    return ret;
+
+  } else if (strcmp(argv[1], "-V") == 0) {
+
+    printf("%s\n", HEAD);
 
   } else {
 
@@ -183,12 +246,9 @@ int main (int argc, const char *argv[]) {
 
   usage:
 
-  fprintf(stderr,
-          "Compresses or decompresses sorted word lists.\n"
-          "For best result the the environmental variable\n"
-          "LC_COLLATE should be set to \"C\" before sorting.\n"
-          "Usgae:\n"
-          "  To Compress:   %s -z\n"
-          "  To Decompress: %s -d\n", argv[0], argv[0]);
+  printf("%s\n"
+         "Usgae:\n"
+         "  To Compress:   %s -z\n"
+         "  To Decompress: %s -d\n", HEAD, argv[0], argv[0]);
   return 1;
 }

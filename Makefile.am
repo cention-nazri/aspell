@@ -114,7 +114,7 @@ EXTRA_DIST += common/*.hpp common/*.h\
 
 AM_CPPFLAGS += -DLOCALEDIR=\"$(localedir)\"
 
-bin_PROGRAMS = word-list-compress aspell wlzip-bin
+bin_PROGRAMS = word-list-compress aspell prezip-bin
 
 word_list_compress_SOURCES = prog/compress.c
 
@@ -122,7 +122,7 @@ aspell_SOURCES = prog/aspell.cpp prog/check_funs.cpp prog/checker_string.cpp
 
 aspell_LDADD = libaspell.la $(CURSES_LIB)
 
-wlzip_bin_SOURCES = prog/wlzip.c
+prezip_bin_SOURCES = prog/prezip.c
 
 EXTRA_DIST += prog/*.hpp
 
@@ -239,7 +239,9 @@ CLEANFILES += gen/dirs.h
 # Scripts
 #
 
-bin_SCRIPTS = scripts/run-with-aspell scripts/aspell-import
+bin_SCRIPTS = scripts/run-with-aspell scripts/aspell-import \
+              scripts/prezip scripts/preunzip scripts/precat 
+
 pkgdata_SCRIPTS = scripts/spell scripts/ispell
 
 scripts/run-with-aspell: scripts/run-with-aspell.create
@@ -259,8 +261,8 @@ endif
 CLEANFILES += scripts/run-with-aspell
 
 EXTRA_DIST += scripts/mkconfig scripts/spell scripts/ispell \
-              scripts/run-with-aspell.create scripts/aspell-import
-
+              scripts/run-with-aspell.create scripts/aspell-import\
+              scripts/prezip scripts/preunzip scripts/precat
 
 ########################################################################
 #
