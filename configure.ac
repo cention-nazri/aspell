@@ -58,6 +58,9 @@ AC_ARG_ENABLE(curses,
 AC_ARG_ENABLE(curses-include,           
 [  --enable-curses-include=DIR])
 
+AC_ARG_ENABLE(wide-curses,
+[  --disable-wide-curses])
+
 AC_ARG_ENABLE(regex,
 [  --disable-regex])
 
@@ -321,37 +324,43 @@ then
   then
 
     AC_MSG_CHECKING(for working curses library)
-  
-    LIBS="-lncursesw $ORIG_LIBS"
-    AC_TRY_LINK(
-      [#include <ncursesw/curses.h>], [initscr()],
-      [CURSES_LIB=-lncursesw
-       AC_DEFINE(CURSES_HEADER, <ncursesw/curses.h>, [Defined to curses header file])],
-      [
-    LIBS="-lncurses $ORIG_LIBS"
-    AC_TRY_LINK(
-      [#include <ncurses/curses.h>], [initscr()],
-      [CURSES_LIB=-lncurses
-       AC_DEFINE(CURSES_HEADER, <ncurses/curses.h>, [Defined to curses header file])],
-      [
-    LIBS="-lncurses $ORIG_LIBS"
-    AC_TRY_LINK(
-      [#include <ncurses.h>], [initscr()],
-      [CURSES_LIB=-lncurses
-       AC_DEFINE(CURSES_HEADER, <ncurses.h>, [Defined to curses header file])],
-      [
-    LIBS="-lcurses $ORIG_LIBS"
-    AC_TRY_LINK(
-      [#include <curses.h>], [initscr()],
-      [CURSES_LIB=-lcurses
-       AC_DEFINE(CURSES_HEADER, <curses.h>, [Defined to curses header file])],
-      [
-    LIBS="-lncurses $ORIG_LIBS"
-    AC_TRY_LINK(
-      [#include <curses.h>], [initscr()],
-      [CURSES_LIB=-lcurses
-       AC_DEFINE(CURSES_HEADER, <curses.h>, [Defined to curses header file])],
-    ) ]) ]) ]) ])
+
+    if test "$enable_wide_curses" != "no" -a -n "$have_mblen"
+    then
+      LIBS="-lncursesw $ORIG_LIBS"
+      AC_TRY_LINK(
+        [#include <ncursesw/curses.h>], [initscr()],
+        [CURSES_LIB=-lncursesw
+         AC_DEFINE(CURSES_HEADER, <ncursesw/curses.h>, [Defined to curses header file])])
+    fi
+
+    if test -z "$CURSES_LIB"
+    then
+      LIBS="-lncurses $ORIG_LIBS"
+      AC_TRY_LINK(
+        [#include <ncurses/curses.h>], [initscr()],
+        [CURSES_LIB=-lncurses
+         AC_DEFINE(CURSES_HEADER, <ncurses/curses.h>, [Defined to curses header file])],
+        [
+      LIBS="-lncurses $ORIG_LIBS"
+      AC_TRY_LINK(
+        [#include <ncurses.h>], [initscr()],
+        [CURSES_LIB=-lncurses
+         AC_DEFINE(CURSES_HEADER, <ncurses.h>, [Defined to curses header file])],
+        [
+      LIBS="-lcurses $ORIG_LIBS"
+      AC_TRY_LINK(
+        [#include <curses.h>], [initscr()],
+        [CURSES_LIB=-lcurses
+         AC_DEFINE(CURSES_HEADER, <curses.h>, [Defined to curses header file])],
+        [
+      LIBS="-lncurses $ORIG_LIBS"
+      AC_TRY_LINK(
+        [#include <curses.h>], [initscr()],
+        [CURSES_LIB=-lcurses
+         AC_DEFINE(CURSES_HEADER, <curses.h>, [Defined to curses header file])],
+      ) ]) ]) ])
+    fi
 
     if test -n "$CURSES_LIB"
     then
@@ -370,37 +379,42 @@ then
   then
      LIBS="$CURSES_LIB $ORIG_LIBS"
 
-     AC_MSG_CHECKING(for wide character support in curses libraray)
-     if test -n "$have_mblen"
+     if test "$enable_wide_curses" != "no"
      then
-       AC_TRY_LINK(
-         [#include <wchar.h>
-          #include CURSES_HEADER
-         ],
-         [wchar_t wch = 0;
-          addnwstr(&wch, 1);],
-         [AC_MSG_RESULT(yes)
-          AC_DEFINE(HAVE_WIDE_CURSES, 1, [Defined if curses libraray includes wide character support])],
-         [
-       dnl ELSE IF
-       AC_TRY_LINK(
-         [#define _XOPEN_SOURCE_EXTENDED 1
-          #include <wchar.h>
-          #include CURSES_HEADER
-         ],
-         [wchar_t wch = 0;
-          addnwstr(&wch, 1);],
-         [AC_MSG_RESULT(yes)
-          AC_DEFINE(HAVE_WIDE_CURSES, 1)
-          AC_DEFINE(DEFINE_XOPEN_SOURCE_EXTENDED, 1, 
-                    [Defined if _XOPEN_SOURCE_EXTENDED needs to be defined. 
-                     (Can't define globally as that will cause problems with some systems)])
-         ],
-         [AC_MSG_RESULT(no)
-          AC_MSG_WARN([Aspell will not be able to Display UTF-8 characters correctly.])])])
-     else
-       AC_MSG_RESULT([no, because "mblen" is not supported])
-       AC_MSG_WARN([Aspell will not be able to Display UTF-8 characters correctly.])
+
+       AC_MSG_CHECKING(for wide character support in curses libraray)
+       if test -n "$have_mblen"
+       then
+         AC_TRY_LINK(
+           [#include <wchar.h>
+            #include CURSES_HEADER
+           ],
+           [wchar_t wch = 0;
+            addnwstr(&wch, 1);],
+           [AC_MSG_RESULT(yes)
+            AC_DEFINE(HAVE_WIDE_CURSES, 1, [Defined if curses libraray includes wide character support])],
+           [
+
+         AC_TRY_LINK(
+           [#define _XOPEN_SOURCE_EXTENDED 1
+            #include <wchar.h>
+            #include CURSES_HEADER
+           ],
+           [wchar_t wch = 0;
+            addnwstr(&wch, 1);],
+           [AC_MSG_RESULT(yes)
+            AC_DEFINE(HAVE_WIDE_CURSES, 1)
+            AC_DEFINE(DEFINE_XOPEN_SOURCE_EXTENDED, 1, 
+                      [Defined if _XOPEN_SOURCE_EXTENDED needs to be defined. 
+                       (Can't define globally as that will cause problems with some systems)])
+           ],
+           [AC_MSG_RESULT(no)
+            AC_MSG_WARN([Aspell will not be able to Display UTF-8 characters correctly.])])])
+       else
+         AC_MSG_RESULT([no, because "mblen" is not supported])
+         AC_MSG_WARN([Aspell will not be able to Display UTF-8 characters correctly.])
+       fi
+
      fi
  
      AC_MSG_CHECKING(if standard curses include sequence will work)

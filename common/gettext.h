@@ -16,6 +16,9 @@
    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
    USA.  */
 
+// NOTE: This file MUST be the last file included to avoid problems
+//       with system header files that might include libintl.h
+
 #ifndef _LIBGETTEXT_H
 #define _LIBGETTEXT_H 1
 
@@ -42,17 +45,26 @@
    for invalid uses of the value returned from these functions.
    On pre-ANSI systems without 'const', the config.h file is supposed to
    contain "#define const".  */
+# undef  gettext
 # define gettext(Msgid) ((const char *) (Msgid))
+# undef  dgettext
 # define dgettext(Domainname, Msgid) ((const char *) (Msgid))
+# undef  dcgettext
 # define dcgettext(Domainname, Msgid, Category) ((const char *) (Msgid))
+# undef  ngettext
 # define ngettext(Msgid1, Msgid2, N) \
     ((N) == 1 ? (const char *) (Msgid1) : (const char *) (Msgid2))
+# undef  dngettext
 # define dngettext(Domainname, Msgid1, Msgid2, N) \
     ((N) == 1 ? (const char *) (Msgid1) : (const char *) (Msgid2))
+# undef  dcngettext
 # define dcngettext(Domainname, Msgid1, Msgid2, N, Category) \
     ((N) == 1 ? (const char *) (Msgid1) : (const char *) (Msgid2))
+# undef  textdomain
 # define textdomain(Domainname) ((const char *) (Domainname))
+# undef  bindtextdomain
 # define bindtextdomain(Domainname, Dirname) ((const char *) (Dirname))
+# undef  bind_textdomain_codeset
 # define bind_textdomain_codeset(Domainname, Codeset) ((const char *) (Codeset))
 
 #endif

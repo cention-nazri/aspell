@@ -1,7 +1,7 @@
 \input texinfo   @c -*-texinfo-*-
 
 @setfilename aspell.info
-@settitle GNU Aspell 0.60.1
+@settitle GNU Aspell 0.60.1.1
 @syncodeindex pg cp
 @documentencoding ISO-8859-1
 
@@ -26,7 +26,7 @@ Documentation License".
 @end direntry
 
 @titlepage
-@title GNU Aspell 0.60.1
+@title GNU Aspell 0.60.1.1
 @author Kevin Atkinson (@email{kevina@@gnu.org})
 @page
 @vskip 0pt plus 1filll
@@ -4099,6 +4099,23 @@ a C++ program.
 
 @node ChangeLog
 @appendix ChangeLog
+
+@heading Changes from 0.60.1 to 0.60.1.1 (November 20, 2004)
+
+@itemize @bullet
+@item
+Fix bug involving checking of capitalized word when affix compression
+is used.
+@item
+Compile fixes.
+@item
+Added an option to disable using the ``wide'' curses version in case it
+causes compile problems.
+@item
+Minor manual updates
+@item
+Avoided including some unnecessary files in the distribution.
+@end itemize
 
 @heading Changes from 0.60 to 0.60.1 (November 7, 2004)
 

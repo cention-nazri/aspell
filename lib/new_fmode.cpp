@@ -11,7 +11,6 @@
 #  include <regex.h>
 #endif
 
-#include "gettext.h"
 #include "stack_ptr.hpp"
 #include "cache-t.hpp"
 #include "string.hpp"
@@ -28,6 +27,8 @@
 #include "strtonum.hpp"
 #include "asc_ctype.hpp"
 #include "iostream.hpp"
+
+#include "gettext.h"
 
 namespace acommon {
 

@@ -34,7 +34,6 @@
 # include <fcntl.h>
 #endif
 
-#include "gettext.h"
 #include "asc_ctype.hpp"
 #include "check_funs.hpp"
 #include "config.hpp"
@@ -56,6 +55,8 @@
 #include "string_list.hpp"
 #include "speller_impl.hpp"
 #include "data.hpp"
+
+#include "gettext.h"
 
 using namespace acommon;
 

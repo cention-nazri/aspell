@@ -10,10 +10,10 @@
 
 //#include "iostream.hpp"
 
-#include "settings.h" // needed for NLS support
+#include "posib_err.hpp"
 
 #include "gettext.h"
-#include "posib_err.hpp"
+
 
 namespace acommon {
 

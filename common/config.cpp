@@ -12,7 +12,6 @@
 
 #include "dirs.h"
 #include "settings.h"
-#include "gettext.h"
 
 #ifdef USE_LOCALE
 # include <locale.h>
@@ -38,6 +37,8 @@
 #include "convert.hpp"
 #include "vararray.hpp"
 #include "string_list.hpp"
+
+#include "gettext.h"
 
 //#include "iostream.hpp"
 

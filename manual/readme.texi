@@ -3,7 +3,7 @@
 
 Aspell requires gcc 2.95 (or better) as the C++ compiler.  Other C++
 compilers should work with some effort.  Other C++ compilers for mostly
-POSIX compliant (Unix, Linux, BeOS, CygWin) systems should work without
+POSIX compliant (Unix, Linux, BeOS, Cygwin) systems should work without
 any major problems provided that the compile can handle all of the
 advanced C++ features Aspell uses.  C++ compilers for non-Unix systems
 might work but it will take some work.  Aspell at very least requires a
@@ -67,12 +67,16 @@ directory into your binary directory which is usually
 @node Curses Notes
 @appendixsec Curses Notes
 
-If you are having problems compiling @file{check_funs.cpp} then the most
-likely reason is due to incompatibilities with the curses implementation
-on your system.  If this is the case then you can explicitly disable the
-curses library with @option{--disable-curses}.  By doing this you will
-lose the nice full screen interface but hopefully you will be able to at
-least get Aspell to compile correctly.
+If you are having problems compiling @file{check_funs.cpp} then the
+most likely reason is due to incompatibilities with the curses
+implementation on your system.  You should first try disabling the
+``wide'' curses library by with the @option{--disable-wide-curses}
+configure option..  By doing so you will lose support for properly
+displaying UTF-8 characters but you may still be able to get the full
+screen interface.  If this fails than you can disable curses support
+altogether with the @option{--disable-curses} configure option.  By
+doing this you will lose the nice full screen interface but hopefully
+you will be able to at least get Aspell to compile correctly.
 
 If the curses library is installed in a non-standard location than you
 can specify the library and include directory with

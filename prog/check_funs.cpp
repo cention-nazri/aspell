@@ -28,11 +28,12 @@
 
 #include <signal.h>
 
-#include "gettext.h"
 #include "asc_ctype.hpp"
 #include "check_funs.hpp"
 #include "convert.hpp"
 #include "config.hpp"
+
+#include "gettext.h"
 
 using namespace acommon;
 
