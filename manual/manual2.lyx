@@ -75,9 +75,6 @@
 \layout Title
 
 GNU Aspell 0.51
-\layout Date
-
-???
 \layout Author
 
 Copyright (c) 2000-2003
@@ -1770,6 +1767,19 @@ Values set in the personal configuration file override those in the global
  file.
  Options specified at either the command line or via an environmental variable
  override those specified by either configuration file.
+\layout Paragraph
+
+Note:
+\layout Standard
+
+Filters and corresponding options also may be assembled inside a special
+ meta filter file named "<metafilter>.flt".
+ A filter has to be loaded via adding a "add-filter <filtername>" line to
+ the meta filter file before it's options may be specified.
+\layout Standard
+
+On command line than "add<metafilter>" is specified instead of the filters
+ and options assembling it.
 \layout Subsubsection
 
 Boolean
@@ -1993,7 +2003,7 @@ master,-d
 (string)
 \shape default 
  base name of the dictionary to use.
- If this option is specifed than Aspell with either use this dictionary
+ If this option is specified than Aspell with either use this dictionary
  or die.
 \layout Description
 
@@ -2077,7 +2087,7 @@ strip-accents
 Checker Options
 \layout Standard
 
-These options control the beahvior of Aspell when checking documents.
+These options control the behavior of Aspell when checking documents.
 \layout Description
 
 ignore,-W (
@@ -2139,7 +2149,8 @@ sug-mode
 Filter Options
 \layout Standard
 
-These options modify the behavior of the various filters (see section 
+These options modify the behavior of Aspell filter interface in general
+ (see section 
 \begin_inset LatexCommand \ref{filter}
 
 \end_inset 
@@ -2147,11 +2158,35 @@ These options modify the behavior of the various filters (see section
  for more information):
 \layout Description
 
-filter
+add|rem-filter 
 \shape italic 
- (list)
+(list)
 \shape default 
- add or removes a filter
+ add or removes a filter 
+\layout Description
+
+add|rem-filter-path 
+\shape italic 
+(list)
+\shape default 
+ add or removes a path where Aspell should look for filter objects being
+ loadable during runtime.
+ If the object library of a filter can not be found, Aspell will refuse
+ to load the filter.
+ This path is also searched when trying to load a meta filter.
+ 
+\layout Description
+
+add|rem-option-path 
+\shape italic 
+(list)
+\shape default 
+add or removes a path where the files containing the description of a filter
+ (recognized options, version of Aspell the filter is designed for, ...) is
+ located.
+ If this information can not be found or is corrupt Aspell will refuse to
+ load the entire filter.
+ 
 \layout Description
 
 mode 
@@ -2161,7 +2196,7 @@ mode
  sets the filter mode.
  Mode is one if none, url, email, sgml, or tex.
  (The short cut options '-e' may be used for email, '-H' for Html/Sgml,
- or '-t' for Tex)
+ or '-t' for Tex) 
 \layout Description
 
 encoding 
@@ -2226,7 +2261,7 @@ machine unsigned 32
 \end_inset 
 
 .
- However, the aspell utility will currently only function correctly with
+ However, the Aspell utility will currently only function correctly with
  8-bit encodings.
  I hope to provide utf-8 support in the future.
  The two 
@@ -2237,22 +2272,46 @@ machine unsigned
 \begin_inset Quotes erd
 \end_inset 
 
- encodings are entended to be used by other programs using the Aspell librarary
- and it is unlikly the Aspell utility will ever support these encodings.
+ encodings are intended to be used by other programs using the Aspell library
+ and it is unlikely the Aspell utility will ever support these encodings.
+ 
+\layout Standard
+
+These Options belong to filters packaged along with Aspell standard distribution.
+ These options may be prefixed by the keyword 
+\family typewriter 
+filter-
+\family default 
+ in order to explicitly indicate that they are options recognized by a filter
+ and not by Aspell itself.
+ 
+\layout Description
+
+email This filter hides quoting characters and email preamble and other
+ parts of an email which need not to be spell checked.
+ 
+\begin_deeper 
 \layout Description
 
 add|rem-email-quote 
 \shape italic 
-(list) 
+(list)
 \shape default 
-email quote characters
+ email quote characters 
 \layout Description
 
 email-margin 
 \shape italic 
 (integer)
 \shape default 
- num chars that can appear before the quote char
+ num chars that can appear before the quote char 
+\end_deeper 
+\layout Description
+
+sgml This filter converts an sgml source file into a format which eases
+ spell checking of sgml texts by Aspell.
+ 
+\begin_deeper 
 \layout Description
 
 sgml-check 
@@ -2260,6 +2319,7 @@ sgml-check
 (list)
 \shape default 
  sgml attributes to always check.
+ 
 \layout Description
 
 sgml-extension 
@@ -2267,20 +2327,97 @@ sgml-extension
 (list)
 \shape default 
  sgml file extensions.
+ 
+\end_deeper 
+\layout Description
+
+tex|latex This filter hides all latex commands and corresponding parameters
+ not being readable text in latex output from Aspell.
+ 
+\begin_deeper 
 \layout Description
 
 tex-command 
 \shape italic 
 (list)
 \shape default 
- TeX commands
+ TeX commands 
 \layout Description
 
 tex-check-comments 
 \shape italic 
 (boolean)
 \shape default 
- check TeX comments
+ check TeX comments 
+\layout Description
+
+tex-multi-byte 
+\shape italic 
+(list)
+\shape default 
+ TeX multi byte letter en|decoding 
+\end_deeper 
+\layout Description
+
+context 
+\emph on 
+[FIXME: Shorten]
+\emph default 
+ This filter can be used to spell check source codes, html sources and other
+ texts which consist of different contexts.
+ These contexts must be separated by pairs of unique delimiters.
+ The different contexts may not be dependent upon each other except for
+ initial context which is assumed if not any other context applies.
+ 
+\begin_deeper 
+\layout Description
+
+context-visible-first 
+\shape italic 
+(boolean)
+\shape default 
+ Switches the context which should be visible to Aspell.
+ Per default the initial context is assumed to be invisible as one would
+ expect when spell checking source files of programs where relevant parts
+ are contained in string constants and comments but not in the remaining
+ code.
+ If set to true the initial context is visible while the delimited ones
+ are hidden.
+ 
+\layout Description
+
+add|rem-context-delimiters 
+\shape italic 
+(list)
+\shape default 
+ Add or remove pairs of delimiters.
+ This allows to specify the character, or sequences of chars, which should
+ be used to switch contexts and and therefore have to be escaped by '
+\backslash 
+'  if they should appear literally.
+ The two delimiting chars belonging to one pair have to be separated by
+ a space character.
+ If multiple pairs are specified by one add|rem-context-delimiters call
+ the different pairs have to be separated by a literal comma.
+ Per default the delimiters are set to 
+\family typewriter 
+C/C++
+\family default 
+ comment and string constant delimiters.
+ If the end of line delimits a context than this has to be indicated by
+ the literal 
+\begin_inset Quotes eld
+\end_inset 
+
+
+\backslash 
+0
+\begin_inset Quotes erd
+\end_inset 
+
+ string.
+ 
+\end_deeper 
 \layout Subsection
 
 Run-together Word Options
@@ -2447,7 +2584,7 @@ To find out the current value of all the options use the command
 \begin_inset Quotes eld
 \end_inset 
 
-aspell dump config
+Aspell dump config
 \begin_inset Quotes erd
 \end_inset 
 
@@ -2467,6 +2604,104 @@ aspell config <<option>>
 
 .
  This will print out the value of <<option>> to stdout and nothing else.
+\layout Standard
+
+The default configuration of a particular filter may be quested by passing
+ the name of the filter or a corresponding regular expression to the config
+ command.
+ This is done by passing 
+\begin_inset Quotes eld
+\end_inset 
+
++e <<expr>>
+\begin_inset Quotes erd
+\end_inset 
+
+ to dump config command of Aspell.
+ If 
+\begin_inset Quotes eld
+\end_inset 
+
++e
+\begin_inset Quotes erd
+\end_inset 
+
+ is the only argument to dump config Aspell assumes 
+\begin_inset Quotes eld
+\end_inset 
+
++e all
+\begin_inset Quotes erd
+\end_inset 
+
+ which lists the configuration of all installed and reachable filters.
+ In any other case or in case of questing the configuration of a specific
+ option 
+\begin_inset Quotes eld
+\end_inset 
+
++e
+\begin_inset Quotes erd
+\end_inset 
+
+ always has to be followed by 
+\begin_inset Quotes eld
+\end_inset 
+
+<<filtername>>
+\begin_inset Quotes erd
+\end_inset 
+
+, 
+\begin_inset Quotes eld
+\end_inset 
+
+<<regex>>
+\begin_inset Quotes erd
+\end_inset 
+
+ or a literal 
+\begin_inset Quotes eld
+\end_inset 
+
+all
+\begin_inset Quotes erd
+\end_inset 
+
+.
+ The parameter +e and its argument always must be specified immediately
+ after config command and before specifying name of option in order to be
+ recognized by Aspell.
+ 
+\layout Section
+
+Printing Help screen
+\layout Standard
+
+To print the help screen of Aspell simply invoke Aspell with help command
+ or by -? parameter.
+ This will list all basic options and commands of Aspell but not the available
+ filters and their options.
+\layout Standard
+
+In order to quest available filter(s) and/or the corresponding options call
+ Aspell's help command with the name of the entire filter or a regular expressio
+n.
+ If corresponding filter(s) are installed and reachable via filter-path
+ and option-path setting Aspell will in addition to it's default help screen
+ print a short description of the filter and its options.
+\layout Standard
+
+If Aspell help command is called with keyword 
+\begin_inset Quotes eld
+\end_inset 
+
+all
+\begin_inset Quotes erd
+\end_inset 
+
+, all installed and available filters and the corresponding options are
+ listed.
 \layout Section
 
 Notes on various Options
@@ -2486,7 +2721,8 @@ Aspell now has rudimentary filter support.
 \series bold 
 mode
 \series default 
- option.
+ option (please note this may be removed in future as right now it is possible
+ to define meta filters).
  You may chose from 
 \series bold 
 none
@@ -2503,9 +2739,9 @@ email
 \series bold 
 sgml
 \series default 
-, and
+, and 
 \series bold 
- tex
+tex
 \series default 
 .
  The default mode is 
@@ -2538,9 +2774,20 @@ sgml
 \series bold 
 tex
 \series default 
+, 
+\series bold 
+latex
+\series default 
+(alias for 
+\series bold 
+tex
+\series default 
+), 
+\series bold 
+context
+\series default 
  as well as a bunch of filters which translate the text from one format
  to another.
- 
 \layout Subsubsection
 
 None Mode
@@ -2691,7 +2938,7 @@ add|rem-sgml-extension
  recognized.
 \layout Subsubsection
 
-TeX Filter/Mode
+TeX/LaTeX Filter/Mode
 \layout Standard
 
 The 
@@ -2789,6 +3036,195 @@ rem-tex-command foo
 \layout Standard
 
 will remove the command foo, if present, from the list of TeX commands.
+\layout Paragraph
+
+Note:
+\layout Standard
+
+The TeXfilter mode is also available via 
+\series bold 
+latex
+\series default 
+ alias name.
+\layout Standard
+
+The TeXfilter mode also contains a decoding and a encoding filter for 
+\series bold 
+babel
+\series default 
+ character codes like the German Umlauts: 
+\layout Itemize
+
+
+\series bold 
+\i \"{a}
+
+\series default 
+ -> 
+\series bold 
+
+\backslash 
+"a
+\series default 
+ -> 
+\series bold 
+"a
+\layout Itemize
+
+
+\series bold 
+\i \"{o}
+
+\series default 
+ -> 
+\series bold 
+
+\backslash 
+"o
+\series default 
+ -> 
+\series bold 
+"o
+\layout Itemize
+
+
+\series bold 
+\i \"{u}
+
+\series default 
+ -> 
+\series bold 
+
+\backslash 
+"u
+\series default 
+ -> 
+\series bold 
+"u
+\layout Itemize
+
+
+\series bold 
+\i \"{s}
+
+\series default 
+ -> 
+\series bold 
+
+\backslash 
+"s
+\series default 
+ -> 
+\series bold 
+"s
+\layout Quote
+
+add|rem-tex-multi-byte conversion 
+\layout Standard
+
+Changes list of multi character coded TeX(babel) characters recognized by
+ Aspell.
+ In case of German umlauts mentioned above this would mean that Aspell would
+ decode from their multi character representation to their proper single
+ char representation.
+ Given the German word 
+\family typewriter 
+St\i \"{a}
+rke(strength)
+\family default 
+ which within TeX/LaTeXdocument has to be written as 
+\family typewriter 
+St"arke
+\family default 
+ or as 
+\family typewriter 
+St
+\backslash 
+"a
+\family default 
+ would split it into the two words 
+\family typewriter 
+St
+\family default 
+ and 
+\family typewriter 
+arke
+\family default 
+ if it does not know anything about the multi char encoding 
+\series bold 
+"a
+\series default 
+ or 
+\series bold 
+
+\backslash 
+"a
+\series default 
+ of 
+\series bold 
+"a
+\series default 
+.
+ On the other hand if it knows about it than Aspell will recognize the word
+ properly and will not try to make any strange suggestion.
+\layout Standard
+
+Each multi character coding conversion has to be specified the following
+ way:
+\layout LyX-Code
+
+<char>:<rep>[:<rep>[...]]
+\layout Standard
+
+Where char is the character encoded by multiple characters and rep stands
+ for a specific representation of that character.
+ For each character may be specified as many representations as available
+ for it.
+\layout Subsubsection
+
+Context Filter/Mode
+\layout Standard
+
+The 
+\series bold 
+context
+\series default 
+ filter allows Aspell to distinguish between visible and invisible contexts.
+ The visible ones will be spell checked and the invisible ones will be ignored.
+ The contexts are distinguished by the fact that the visible/invisible ones
+ are delimited by specific and unique delimiter characters or character
+ sequences.
+ Whether the delimited contexts should be visible or invisible only stated
+ by the value of the 
+\series bold 
+[dont-]context-visible-first
+\series default 
+ option and not by the delimiters.
+\layout Standard
+
+The context delimiters are specified as pairs of delimiters via the 
+\series bold 
+add|rem-context-delimiters
+\series default 
+ option.
+ The delimiters enclosing a specific context are specified as a space separated
+ pair.
+ If more than one delimiter pair is specified by one call of 
+\series bold 
+add|rem-context-delimiters
+\series default 
+ they have to be combined to a comma separated list.
+ To indicate that a context is always closed by end of line use 
+\begin_inset Quotes eld
+\end_inset 
+
+
+\backslash 
+0
+\begin_inset Quotes erd
+\end_inset 
+
+ sequence as closing delimiter.
 \layout Subsection
 
 Notes on the Prefix Option
