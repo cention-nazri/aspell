@@ -738,62 +738,6 @@ namespace acommon {
     config->add_notifier(new ModeNotifierImpl(config));
   }
 
-  PosibErr<void> print_mode_help(const Config * config, OStream & out) {
-
-    RET_ON_ERR_SET(static_cast<ModeNotifierImpl *>(config->filter_mode_notifier)
-                   ->get_filter_modes(), FilterModeList *, fm);
-    out.write("\n\n");
-    out.printl(  
-      /* TRANSLATORS: This should be formated to fit in 80 column or less */
-      _("Available Filter Modes:\n"
-        "    Filter Modes are reconfigured combinations of filters optimized for\n"
-        "    files of a specific type. A mode is selected via the \"mode\" option.\n"
-        "    This will happen implicitly if Aspell is able to identify the file\n"
-        "    type from the extension, and possibility the contents, of the file.\n"));
-    for (Vector<FilterMode>::iterator it = fm->begin(); it != fm->end(); it++)
-    {
-      out.printf("  %-10s ",(*it).modeName().str());
-
-      String desc = (*it).getDescription();
-      int preLength = (*it).modeName().size() + 4;
-
-      if ( preLength < 13 ) {
-        preLength = 13;
-      }
-      while ( (int)desc.size() > 74 - preLength ) {
-
-        int locate = 74 - preLength;
-
-        while (    ( locate > 0 )
-                && ( desc[locate - 1] != ' ' ) 
-                && ( desc[locate - 1] != '\t' )
-                && ( desc[locate - 1] != '\n' ) ) {
-          locate--;
-        }
-        if ( locate == 0 ) {
-          locate = 74 - preLength;
-        }
-        
-        String prDesc(gt_(desc.str()));
-
-        prDesc.erase(locate,prDesc.size() - locate);
-        out.printf("%s\n             ",prDesc.str());
-        desc.erase(0,locate);
-        if (    ( desc.size() > 0 )
-             && (    ( desc[0] == ' ' )
-                  || ( desc[0] == '\t' )
-                  || ( desc[0] == '\n' ) ) ) {
-          desc.erase(0,1);
-        }
-        preLength = 13;
-      }
-      out.write(desc);
-      out.write('\n');
-    }
-    out.write('\n');
-    return no_err;
-  }
-
   class FilterModesEnumeration : public StringPairEnumeration
   {
   public:

@@ -71,7 +71,6 @@ Customizing Aspell
 * Specifying Options::          
 * The Options::                 
 * Dumping Configuration Values::  
-* Printing Help screen::        
 * Notes on Various Options::    
 
 Notes on Various Options
@@ -126,11 +125,11 @@ Languages Which Aspell can Support
 
 Language Related Issues
 
-* German Sharp S ::             
 * Compound Words::              
-* Context Sensitive Spelling::  
+* Words With Symbols in Them::  
 * Unicode Normalization::       
-* Words With Symbols in Them::   
+* German Sharp S ::             
+* Context Sensitive Spelling::  
 
 To Do
 
@@ -506,7 +505,6 @@ entries added or removed from the list.
 * Specifying Options::          
 * The Options::                 
 * Dumping Configuration Values::  
-* Printing Help screen::        
 * Notes on Various Options::    
 @end menu
 
@@ -530,43 +528,55 @@ However some options also have single letter abbreviations of the form:
 @var{letter} [@var{optional_whitespace} @var{value}]
 @end example
 
-Any non-@acronym{ASCII} characters are expected to be in the encoding
+Any non-ASCII characters are expected to be in the encoding
 specified by the current locale.
 
-@subsubsection Boolean options
-
-To enable a boolean option simply specify the option without any
-corresponding value.  For example to ignore accents when checking
-words use @option{--ignore-accents}.  To disable a boolean option
-prefix the option name with a @option{dont-}.  For example to not
-ignore accents when checking words use @option{--dont-ignore-accents}.
-
-If a boolean option has a single letter abbreviation simply give the
-letter corresponding to either enabling or disabling the option
-without any corresponding value.  For example to consider run-together
-words legal use @option{-C} or to consider them illegal use
-@option{-B}
+To reset an option to the default value prefix the option with a
+@samp{reset-} and don't specify a value.
 
 @subsubsection Value options
 
 To specify a value option simply specify the option with its
-corresponding value.  For example to set the filter mode to Tex use
-@option{--mode=tex}.
+corresponding value.  For example to set the filter mode to TeX use
+@samp{--mode=tex}.
 
 If a value option has a single letter shortcut simply specify the
 single letter shortcut with its corresponding value.  For example to
-use a large American dictionary use @option{-d american-lrg}.
+use a large American dictionary use @samp{-d en_US-w_accents}.
+
+@subsubsection Boolean options
+
+To enable a boolean option simply specify the option without any
+corresponding value, or prefix it with an @samp{enable-}.  For example
+to create a backup file use @samp{--backup}.  To disable a boolean
+option prefix the option name with a @samp{dont-} or @samp{disable-}.
+For avoid creating a backup file use @samp{--dont-backup}.  Boolean options
+can also be set directly like a value option where the value is either
+"true" or "false", for example @samp{--backup=true}.
+
+If a boolean option has a single letter abbreviation simply give the
+letter corresponding to either enabling or disabling the option
+without any corresponding value.  For example to consider run-together
+words legal use @samp{-C} or to consider them illegal use
+@samp{-B}
 
 @subsubsection List options
 
 To add a value to the list, prefix the option name with a
-@option{add-} and then specify the value to add.  For example to add
-the URL filter use @option{--add-filter url}.  To remove a value from
-a list option prefix the option name with a @option{rem-} and then
+@samp{add-} and then specify the value to add.  For example to add
+the URL filter use @samp{--add-filter url}.  To remove a value from
+a list option prefix the option name with a @samp{rem-} and then
 specify the value to remove.  For example to remove the URL filter use
-@option{--rem-filter url}.  To remove all items from a list prefix the
-option name with a @option{rem-all} without specify any value.  For
-example to remove all filters use @option{--rem-all-filter}.
+@samp{--rem-filter url}.  To remove all items from a list prefix the
+option name with a @samp{clear-} without specify any value.  For
+example to remove all filters use @samp{--clear-filter}.
+
+A list option can also be set directly, in which case it will be set to
+a single value.  To directly set a list option to multiple values prefix
+the option name with a @samp{lset-} and seperate each value with a
+@samp{:}.  For example to use the URL and TeX filter use
+@samp{--lset-filter url:tex}.
+
 
 @subsection Via a Configuration File
 
@@ -591,9 +601,16 @@ option name and the value.
 
 Comments may also be included by preceding them with a @samp{#} as
 anything from a @samp{#} to a newline is ignored.  Blank lines are also
-allowed.
+allowed.  
 
-Any non-@acronym{ASCII} characters are expected to be in @acronym{UTF-8}.
+To include a literal @samp{#} use @samp{\#}.  To include a literal
+@samp{\} use @samp{\\}.  Any other non-alpha character can also be
+protected by a @samp{\} if necessary.
+
+Any non-ASCII characters are expected to be in UTF-8.
+
+To reset an option to the default value prefix the option with a
+@samp{reset-} and don't specify a value.
 
 Values set in the personal configuration file override those in the
 global file.  Options specified at either the command line or via an
@@ -607,35 +624,42 @@ filter has to be loaded via adding a @code{add-filter @var{filtername}}
 line to the meta filter file before its options may be specified.
 @end quotation
 
-@subsubsection Boolean options
-
-To specify a boolean option simply include the option followed by a
-@code{true} to enable it or a @code{false} to disable it.  For example
-to allow run-together words use @option{run-together true}.
-
 @subsubsection Value options
 
 To specify a value option simply include the option followed by the
 corresponding option.  For example to set the default language to
 German use @option{lang german}.
 
+@subsubsection Boolean options
+
+To specify a boolean option simply include the option followed by a
+@samp{true} to enable it or a @samp{false} to disable it.  For example
+to allow run-together words use @samp{run-together true}.
+
 @subsubsection List options
 
 To add a value to the list, prefix the option name with a
-@option{add-} and then specify the value to add.  For example to add
-the URL filter use @option{add-filter url}.  To remove a value from a
-list option prefix the option name with a @option{rem-} and then
+@samp{add-} and then specify the value to add.  For example to add
+the URL filter use @samp{add-filter url}.  To remove a value from
+a list option prefix the option name with a @samp{rem-} and then
 specify the value to remove.  For example to remove the URL filter use
-@option{rem-filter url}.  To remove all items from a list prefix the
-option name with a @option{rem-all} without specify any value.  For
-example to remove all filters use @option{rem-all-filter}.
+@samp{rem-filter url}.  To remove all items from a list prefix the
+option name with a @samp{clear-} without specifying any value.  For
+example to remove all filters use @samp{clear-filter}.
+
+A list option can also be set directly, in which case it will be set to
+a single value.  To directly set a list option to multiple values prefix
+the option name with a @samp{lset-} and seperate each value with a
+@samp{:}.  For example to use the URL and TeX filter use
+@samp{lset-filter url:tex}.  To include a literal @samp{:} use
+@samp{\:}.
 
 @subsection Setting Options via an Environment Variable
 
 The environment variable @env{ASPELL_CONF} may also be used and it
 overrides any options set in the configuration file.  The format of
 the string is exactly the same as the configuration file except that
-semicolons (@kbd{;}) are used instead of newlines.
+semicolons (@samp{;}) are used instead of newlines.
 
 @node The Options
 @section The Options
@@ -671,44 +695,46 @@ an Appropriate Dictionary}):
 @table @option
 
 @item master,-d (@i{string})
-base name of the dictionary to use.  If this option is specifed than
+Base name of the dictionary to use.  If this option is specifed than
 Aspell will either use this dictionary or die.
 
 @item dict-dir (@i{dir})
-location of the main word list
+Location of the main word list.
 
 @item lang (@i{string})
-language to use, it follows the same format of the @env{LANG}
+Language to use, it follows the same format of the @env{LANG}
 environment variable on most systems.  It consists of the two letter
 @acronym{ISO 639} language code and an optional two letter
 @acronym{ISO 3166} country code after a dash or underscore.  The
 default value is based on the value of the @env{LC_MESSAGES} locale.
 
 @item size (@i{string})
-the preferred size of the word list
+The preferred size of the word list.
 
 @item variety (@i{list})
-any extra information to distinguish two different words lists that
+Any extra information to distinguish two different words lists that
 have the same lang and size.
 
 @item word-list-path (@i{list})
-search path for word list information files
+Search path for word list information files.
 
-@item module-search-order (@i{list})
-list of available modules, modules that come first on this list have a
-higher priority. Currently there is only one speller module.
+@c @item module-search-order (@i{list})
+@c list of available modules, modules that come first on this list have a
+@c higher priority. Currently there is only one speller module.
 
 @item personal,-p (@i{file})
-personal word list file name
+Personal word list file name.
 
 @item repl (@i{file})
-replacements list file name
+Replacements list file name.
 
 @item extra-dicts (@i{list})
-extra dictionaries to use.
+Extra dictionaries to use.
 
 @item dict-alias (@i{list})
-@dots{}
+create dictionarie aliases.  Each entry has the form @samp{@var{from}
+@var{to}}.  Will override any system dictionaries that are present.
+
 @end table
 
 @subsection Checker Options
@@ -718,27 +744,28 @@ documents.
 
 @table @option
 @item ignore,-W (@i{integer})
-ignore words with @i{integer} characters or less
-
-@item ignore-case (@i{boolean})
-ignore case when checking words
-
-@item ignore-accents (@i{boolean})
-ignore accents when checking words
+Ignore words with N characters or less
 
 @item ignore-repl (@i{boolean})
-ignore commands to store replacement pairs
+Ignore commands to store replacement pairs.
 
 @item save-repl (@i{boolean})
-save the replacement word list on save all.
+Save the replacement word list on save all.
 
 @item keyboard (@i{file})
-the base name of the keyboard definition file to use (@pxref{Notes on
+The base name of the keyboard definition file to use (@pxref{Notes on
 Typo-Analysis})
 
 @item sug-mode (@i{mode})
-suggestion mode = @samp{ultra} | @samp{fast} | @samp{normal} | @samp{slow} |
+Suggestion mode = @samp{ultra} | @samp{fast} | @samp{normal} | @samp{slow} |
 @samp{bad-spellers} (@pxref{Notes on the Different Suggestion Modes})
+
+@item ignore-case (@i{boolean})
+Ignore case when checking words -- @emph{currently ignored}.
+
+@item ignore-accents (@i{boolean})
+Ignore accents when checking words -- @emph{currently ignored}.
+
 @end table
 
 @subsection Filter Options
@@ -749,31 +776,21 @@ Filter Modes}).
 
 @table @option
 
-@item add|rem-filter (@i{list})
-add or removes a filter
+@item filter (@i{list})
+filters to use
 
-@item add|rem-filter-path 
-(@i{list}) add or removes a path where Aspell should look for filter
-objects being loadable during runtime.  If the object library of a
-filter can not be found, Aspell will refuse to load the filter.  This
-path is also searched when trying to load a meta filter.
- 
-@item add|rem-option-path 
-(@i{list}) add or removes a path where the files containing the
-description of a filter (recognized options, version of Aspell the
-filter is designed for, @dots{}) is located.  If this information
-cannot be found or is corrupt Aspell will refuse to load the entire
-filter.
+@item filter-path (@i{list}) 
+Where to look when loading filter and filter modes.
 
 @item mode (@i{string})
-sets the filter mode.  Mode is one of @samp{none}, @samp{url},
-@samp{email}, @samp{sgml}, or @samp{tex}.  (The shortcut options
-@option{-e} may be used for email, @option{-H} for HTML/SGML, or
-@option{-t} for @TeX{})
+Sets the filter mode.  Possible values include, but not limited to,
+@samp{none}, @samp{url}, @samp{email}, @samp{sgml}, or @samp{tex}.  (The
+shortcut options @option{-e} may be used for email, @option{-H} for
+HTML/SGML, or @option{-t} for @TeX{}).
 
 @item encoding (@i{string})
-The encoding the input text is in.  Valid values include, but are not
-limited not, @samp{iso-8859-*}, @samp{utf-8}, @samp{ucs-2},
+The encoding the input text is in.  Valid values include, but not
+limited to, @samp{iso-8859-*}, @samp{utf-8}, @samp{ucs-2},
 @samp{ucs-4}.  When using the aspell utility the default encoding is
 based on the current locale.  Thus if your locale currently uses the
 @samp{utf-8} encoding than everything will be in @acronym{UTF-8}.  The
@@ -814,7 +831,7 @@ full composition.
 
 These options belong to filters packaged along with Aspell standard
 distribution.  These options may be prefixed by the keyword
-@code{filter-} in order to explicitly indicate that they are options
+@code{f-} in order to explicitly indicate that they are options
 recognized by a filter and not by Aspell itself.
  
 @table @option
@@ -823,27 +840,28 @@ This filter hides quoting characters and email preamble and other
 parts of an email which need not to be spell checked.
  
 @table @option
-@item add|rem-email-quote (@i{list})
-email quote characters
+@item email-quote (@i{list})
+Email quote characters.
 
 @item email-margin (@i{integer})
-the number of chararacters that can appear before the quote character
+The number of chararacters that can appear before the quote character
 @end table
 
 @item sgml
-This filter converts an SGML source file into a format which eases
- spell checking of SGML texts by Aspell.
+This filter converts an HTML source file into a format which eases
+spell checking of HTML texts by Aspell.
 
 @table @option
-@item sgml-check (@i{list})
+@item html-check (@i{list})
 SGML attributes to always check, such as alt= (alternate text).
 
-@item sgml-skip (@i{list})
+@item html-skip (@i{list})
 SGML tags to always skip the contents of, such as <script>.
-
-@item sgml-extension (@i{list})
-SGML file extensions.
 @end table
+
+@item sgml
+This filter is identical to the HTML filter except that it options has
+different default values which are currently the empty list.
 
 @item tex|latex
 This filter hides all LaTeX commands and corresponding parameters not
@@ -856,12 +874,14 @@ being readable text in LaTeX output from Aspell.
 @item tex-check-comments (@i{boolean})
 check @TeX{} comments
 
-@item tex-multi-byte 
-(@i{list}) TeX multi byte letter en|decoding
+@c @item tex-multi-byte 
+@c (@i{list}) TeX multi byte letter en|decoding
+
 @end table
 
 @item context 
-@emph{[FIXME: Shorten]} This filter can be used to spell check source
+@c FIXME: Shorten
+This filter can be used to spell check source
 codes, HTML sources and other texts which consist of different
 contexts.  These contexts must be separated by pairs of unique
 delimiters.  The different contexts may not be dependent upon each
@@ -948,14 +968,17 @@ when compiled with @option{--enable-win32-relocatable})
 @table @option
 
 @item backup,-b|-x (@i{boolean})
-create a backup file by appending @file{.bak} to the file name.  (Only
-applies when the command is @command{check})
+Create a backup file by appending @file{.bak} to the file name.  (Only
+applies when the command is @command{check}).
 
 @item time (@i{boolean})
-time load time and suggest time in pipe mode.
+Time load time and suggest time in @command{pipe} mode.
+
+@item byte-offsets (@i{boolean})
+Use byte offsets instead of character offsets in @command{pipe} mode.
 
 @item reverse (@i{boolean})
-reverse the order of the suggestions list.
+Reverse the order of the suggestions list in @command{pipe} mode.
 
 @item keymapping (@i{string})
 the keymapping to use.  Either @option{aspell} for the default mapping
@@ -967,7 +990,7 @@ make possible root/affix combinations not in the dictionary in
 @command{pipe} mode.
 
 @item suggest (@i{boolean})
-suggest possible replacements in @command{pipe} mode.  If false Aspell
+Suggest possible replacements in @command{pipe} mode.  If false Aspell
 will simply report the misspelling and make no attempt at suggestions
 possible corrections.
 @end table
@@ -985,39 +1008,6 @@ configuration file.
 To find out the current value of a particular option use
 @command{aspell config @var{option}}.  This will print out the value of
 @var{option} to @code{stdout} and nothing else.
-
-The default configuration of a particular filter may be requested by
-passing the name of the filter or a corresponding regular expression
-to the @command{config} command.  This is done by passing @option{+e
-@var{expr}} to @command{dump config} command of Aspell.  If @option{+e} is
-the only argument to @command{dump config} Aspell assumes @option{+e
-all} which lists the configuration of all installed and reachable
-filters.  In any other case or in case of requesting the configuration
-of a specific option @code{+e} always has to be followed by
-@var{filtername}, @var{regex} or a literal @samp{all}.  The
-parameter @code{+e} and its argument always must be specified
-immediately after @command{config} command and before specifying name
-of option in order to be recognized by Aspell.
- 
-@node Printing Help screen
-@section Printing Help screen
-
-To print the help screen of Aspell simply invoke @command{aspell} with
-@option{help} command or by @samp{-?} parameter.  This will list all
-basic options and commands of Aspell but not the available filters and
-their options.
-
-In order to request available filter(s) and/or the corresponding
-options call Aspell's help command with the name of the entire filter
-or a regular expression.  If corresponding filter(s) are installed and
-reachable via @option{filter-path} and @option{option-path} setting
-Aspell will, in addition to its default help screen, print a short
-description of the filter and its options.
-
-If Aspell help command is called with keyword @code{all}, all
-installed and available filters and the corresponding options are
-listed.
-
 
 @node Notes on Various Options
 @section Notes on Various Options
@@ -1043,18 +1033,16 @@ added with the option @option{add-filter} and removed with the
 @samp{latex} (alias for @samp{tex}), @samp{context} as well as a
 bunch of filters which translate the text from one format to another.
 
-To check which filter modes are available type one of
-@verbatim
-  aspell help
-  aspell help all 
-@end verbatim
-The later displays all available filters too.
- 
-@subsubsection @option{none} Filter Mode
+To check which filters are available use @command{aspell dump filters}.
+To check which filter modea are available use @command{aspell dump
+modes}.  The @command{aspell help} command will also list all available
+filter and filter modes.
+
+@subsubsection @option{none} Filter
 
 This mode is exactly what it says.  It turns off all filters.
 
-@subsubsection @option{url} Filter Mode
+@subsubsection @option{url} Filter 
 
 The @option{url} filter/mode skips over URLs, host names, and email
 addresses.  Because this filter is almost always useful and rarely
@@ -1062,7 +1050,7 @@ does any harm it is enabled in all modes except @option{none}.  To
 turn it off either select the @option{none} mode or use
 @option{rem-filter} option @emph{after} the desired mode is selected.
 
-@subsubsection @option{email} Filter Mode
+@subsubsection @option{email} Filter
 
 The @option{email} filter mode skips over quoted text.  It currently
 does not support skipping over headers however a future version
@@ -1073,8 +1061,7 @@ can appear before the email quote character, the default is 10.  The
 option @option{add|rem-email-quote} controls the characters that are
 considered quote characters, the defaults are @samp{>} and @samp{|}.
 
-@subsubsection @option{sgml} Filter Mode
-@anchor{SGML Filter Mode}
+@subsubsection @option{sgml} Filter
 
 The SGML filter allows you to spell check SGML, HTML, XHTML, and XML
 files. In most cases everything within a tag @samp{<tag attrib=value
@@ -1083,9 +1070,9 @@ SGML/HTML/XML that Aspell supports is a slight superset of most DTDs
 (Document Type Definitions) and can spell check the often non-conforming
 HTML found on the web.
 
-Two configuration options, skip and check, allow you to control what is
-spell checked. The tag and attribute names specified are case
-insensitive.
+Two configuration options, @option{skip} and @option{check}, allow you
+to control what is spell checked. The tag and attribute names specified
+are case insensitive.
 
 @table @option
 @item sgml-skip
@@ -1102,8 +1089,6 @@ And put that word in the skip config directive:
 @example
 add-sgml-skip nospellcheck
 @end example
-
-By default, 'script' and 'style' are members of the skip list.
 
 @item sgml-check 
 
@@ -1125,13 +1110,13 @@ be skipped over so that the word @samp{amp}, for example, will not be
 spell checked.  Eventually full support for properly translating SGML
 characters will be added.
 
-The option @option{add|rem-sgml-extension} controls which file
-extensions are recognized as SGML/HTML files.  The default is
-@file{html}, @file{htm}, @file{php}, and @file{sgml}.  The extensions
-are not case sensitive so extensions like @file{.HTM} will also be
-recognized.
+@subsubsection @option{html} Filter
 
-@subsubsection @TeX{}/LaTeX Filter Mode
+Like the SGML Filter Mode but specilized for HTML.  By default, 'script'
+and 'style' are members of the skip list in HTML mode.
+
+
+@subsubsection @TeX{}/LaTeX Filter
 
 The @option{tex} (all lowercase) filter mode skips over @TeX{}
 commands and parameters and/or options to certain commands.  It also
@@ -1195,63 +1180,54 @@ rem-tex-command foo
 will remove the command foo, if present, from the list of @TeX{}
 commands.
 
-@quotation Note
-The TeXfilter mode is also available via @option{latex} alias name.
+The TeX filter mode is also available via @option{latex} alias name.
 
-The TeXfilter mode also contains a decoding and a encoding filter for
-@emph{babel} character codes like the German Umlauts:
+@c The TeXfilter mode also contains a decoding and a encoding filter for
+@c @emph{babel} character codes like the German Umlauts:
 
-@itemize @bullet
-@item
-@code{@"a} -> @code{\"a} -> @code{"a}
+@c @itemize @bullet
+@c @item
+@c @code{@"a} -> @code{\"a} -> @code{"a}
 
-@item
-@code{@"o} -> @code{\"o} -> @code{"o}
+@c @item
+@c @code{@"o} -> @code{\"o} -> @code{"o}
 
-@item
-@code{@"u} -> @code{\"u} -> @code{"u}
+@c @item
+@c @code{@"u} -> @code{\"u} -> @code{"u}
 
-@item
-@code{@"s} -> @code{\"s} -> @code{"s}
-@end itemize
-@end quotation
-
-
-@quotation
-@option{add|rem-tex-multi-byte} conversion 
-
-Changes list of multi character coded TeX(babel) characters recognized
-by Aspell.  In case of German umlauts mentioned above this would mean
-that Aspell would decode from their multi character representation to
-their proper single char representation.  Given the German word
-@code{St@"arke} (strength) which within TeX/LaTeXdocument has to be
-written as @code{St"arke} or as @code{St\"arke} would split it into
-the two words @code{St} and @code{arke} if it does not know anything
-about the multi character encoding @code{"a} or @code{\"a} of
-@code{@"a}.  On the other hand if it knows about it than Aspell will
-recognize the word properly and will not try to make any strange
-suggestion.
-
-Each multi character coding conversion has to be specified the
-following way:
-@example
-@i{char}:@i{rep}[:@i{rep}[@dots{}]]
-@end example
-where @code{@i{char}} is the character encoded by multiple characters
-and rep stands for a specific representation of that character.  For
-each character may be specified as many representations as available
-for it.
-@end quotation
+@c @item
+@c @code{@"s} -> @code{\"s} -> @code{"s}
+@c @end itemize
+@c @end quotation
 
 
-@subsubsection @option{ccpp} Filter Mode
-@anchor{ccpp Filter Mode}
+@c @quotation
+@c @option{add|rem-tex-multi-byte} conversion 
 
-The @option{ccpp} filter mode will limit spell checking to C/C++ comments
-and string literals. Any code inbetween will be left alone. 
+@c Changes list of multi character coded TeX(babel) characters recognized
+@c by Aspell.  In case of German umlauts mentioned above this would mean
+@c that Aspell would decode from their multi character representation to
+@c their proper single char representation.  Given the German word
+@c @code{St@"arke} (strength) which within TeX/LaTeXdocument has to be
+@c written as @code{St"arke} or as @code{St\"arke} would split it into
+@c the two words @code{St} and @code{arke} if it does not know anything
+@c about the multi character encoding @code{"a} or @code{\"a} of
+@c @code{@"a}.  On the other hand if it knows about it than Aspell will
+@c recognize the word properly and will not try to make any strange
+@c suggestion.
 
+@c Each multi character coding conversion has to be specified the
+@c following way:
+@c @example
+@c @i{char}:@i{rep}[:@i{rep}[@dots{}]]
+@c @end example
+@c where @code{@i{char}} is the character encoded by multiple characters
+@c and rep stands for a specific representation of that character.  For
+@c each character may be specified as many representations as available
+@c for it.
+@c @end quotation
 
-@subsubsection Context Filter Mode
+@subsubsection Context Filter
 
 The @emph{context} filter allows Aspell to distinguish between visible
 and invisible contexts.  The visible ones will be spell checked and
@@ -1269,6 +1245,12 @@ than one delimiter pair is specified by one call of
 @option{add|rem-@/context-delimiters} they have to be combined to a
 comma separated list.  To indicate that a context is always closed by
 end of line use @code{\0} sequence as closing delimiter.
+
+@subsubsection @option{ccpp} Filter Mode
+@anchor{ccpp Filter Mode}
+
+The @option{ccpp} filter mode will limit spell checking to C/C++ comments
+and string literals. Any code inbetween will be left alone. 
 
 @node Notes on the Prefix Option
 @subsection Notes on the Prefix Option
@@ -1555,15 +1537,15 @@ errors.
 The compiled dictionary file are endian order dependent.  When a
 dictionary is loaded the endian order is checked.  Please do not
 distribute the compiled dictionaries unless you are only distributing
-them for a particular platform such as you would a binary.  
+them for a particular platform such as you would a binary.
 
 Aspell is now also able to use special @code{multi} dictionaries.  for
 more information @ref{How Aspell Selects an Appropriate Dictionary}.
 
 A personal and replacement word list can be created in a similar fashion.
 
-FIXME: add notes about how affix compression works when creating
-dictionaries.
+@c FIXME: add notes about how affix compression works when creating
+@c dictionaries.
 
 @subsection Format of the Replacement Word List
 
@@ -1987,7 +1969,7 @@ have the following format
 @i{num of items}: @i{item1}, @i{item2}, @i{etc}
 @end example
 
-FIXME: Add note about byte-offset option.
+@c FIXME: Add note about byte-offset option.
 
 @emph{(Part of the preceding section was directly copied out of
  the Ispell manual)}
@@ -2189,8 +2171,8 @@ information see @ref{Notes on Typo-Analysis}.
 
 @item sug-split-char
 
-A list of characters which specifies characters to insert between
-two words when a word is split.  FIXME
+A list of characters which specifies which characters to insert between
+two words when a word is split.  This is a list option.
 
 @item affix
 @itemx affix-compress
@@ -2206,15 +2188,15 @@ the word is indexed in a lower case form but with accent info still
 intact.  This just controls how the word is indexed, not how it is
 stored.  The default is "stripped" unless affix compression is used.
 
-@item ignore-accents
+@c @item ignore-accents
 
-@item affix-char
+@c @item affix-char
 
-Unimplemented
+@c Unimplemented
 
-@item flag-char
+@c @item flag-char
 
-Unimplemented
+@c Unimplemented
 
 @item norm-required
 
@@ -2244,8 +2226,8 @@ includes instructions for creating the AWLI file.
 @node Phonetic Code
 @section Phonetic Code
 
-@emph{(The following section was origanlly written by Bj@"orn Jacke,
-bjoern.jacke at gmx de)}
+@c @emph{(The following section was origanlly written by Bj@"orn Jacke,
+@c bjoern.jacke at gmx de)}
 
 Aspell is in fact the spell checker that comes up with the best
 suggestions if it finds an unknown word.  One reason is that it does
@@ -2690,7 +2672,7 @@ using using the @command{munch} program found in the myspell/ directory.
 
 @subsection Format of the Affix File
 
-(as written in affix.readme)
+@c (as written in affix.readme)
 
 An affix is either a  prefix or a suffix attached to root words to make 
 other words.  For example supply -> supplied by dropping the "y" and
@@ -2832,7 +2814,7 @@ together word, the default is normally 3.  Both the
 @option{run-together-limit} and @option{run-together-min} option may
 be specified in both the language data file or as a normal option.
 
-FIXME: Add note about compound word support when suggesting.
+@c FIXME: Add note about compound word support when suggesting.
 
 @node Creating A New Character Set
 @section Creating A New Character Set
@@ -3119,29 +3101,27 @@ symbols Aspell can still support them by breaking them up.
 @appendixsubsubsec The Ethiopic Syllabary
 
 Even though the Ethiopic script has more than 210 distinct characters
-with a little work Aspell can still handle it.  The idea is to split
-each character into two parts based on the matrix representation.  The
-first 3 bits will be the first part and could be mapped to
-@samp{10110???}.  The next 6 bits will be the second part and could be
-mapped to @samp{11??????}.  The combined character will then be mapped
-with the upper bits coming first.  Thus each Ethiopic syllabary will
-have the form @samp{11?????? 10110???}.  By mapping the first and second
-parts to separate 8-bit characters it is easy to tell which part
-represents the consonant and which part represents the vowel of the
-syllabary.  This encoding of the syllabary is far more useful to Aspell
-than if they were stored in UTF-8 or UTF-16.  In fact, the exiting
-suggestion strategy of Aspell will work well with this encoding with out
-any additional modifications.  However, additional improvements may be
-possible by taking advantage of the consonant-vowel structure of this
-encoding.
+Aspell can still handle it.  The idea is to split each character into
+two parts based on the matrix representation.  The first 3 bits will be
+the first part and could be mapped to @samp{10110???}.  The next 6 bits
+will be the second part and could be mapped to @samp{11??????}.  The
+combined character will then be mapped with the upper bits coming first.
+Thus each Ethiopic syllabary will have the form @samp{11??????
+10110???}.  By mapping the first and second parts to separate 8-bit
+characters it is easy to tell which part represents the consonant and
+which part represents the vowel of the syllabary.  This encoding of the
+syllabary is far more useful to Aspell than if they were stored in UTF-8
+or UTF-16.  In fact, the exiting suggestion strategy of Aspell will work
+well with this encoding with out any additional modifications.  However,
+additional improvements may be possible by taking advantage of the
+consonant-vowel structure of this encoding.
 
 In fact, the split consonant-vowel representation may prove to be so
 useful that it may be beneficial to encode other syllabary in this
 fashion, even if they are less than 210 of them.
 
-The code to break up a syllabary into the consonant-vowel parts does
-not exists as of Aspell 0.60.  However, it will be fairly easy to add
-it as part of the Unicode normalization process once that is written.
+The code to break up a syllabary into the consonant-vowel part is part
+of the Unicode normalization process.
 
 @appendixsubsubsec The Yi Syllabary 
 
@@ -3313,24 +3293,12 @@ of a new issue not discussed here, please email me at
 @email{kevina@@gnu.org}.
 
 @menu
-* German Sharp S ::             
 * Compound Words::              
-* Context Sensitive Spelling::  
+* Words With Symbols in Them::  
 * Unicode Normalization::       
-* Words With Symbols in Them::   
+* German Sharp S ::             
+* Context Sensitive Spelling::  
 @end menu
-
-@node German Sharp S 
-@appendixsec German Sharp S 
-
-The German Sharp S or Eszett does not have an uppercase equivalent.
-Instead when @samp{@ss{}} is converted to @samp{SS}.  The conversion of
-@samp{@ss{}} to @samp{SS} requires a special rule, and increases the
-length of a word, thus disallowing inplace case conversion.
-Furthermore, my general rule of converting all words to lowercase before
-looking them up in the dictionary won't work because the conversion of
-@samp{SS} to lowercase is ambiguous; it can be @samp{ss} or
-@samp{@ss{}}.  I do plan on dealing with this eventually, however.
 
 @node Compound Words
 @appendixsec Compound Words
@@ -3430,45 +3398,6 @@ However, if you would like to try to implementing this let me know.  If
 you can get it done by the end of June or so it will probably make it
 into Aspell 0.60.
 
-@node Context Sensitive Spelling
-@appendixsec Context Sensitive Spelling
-
-In some language, such as Luxembourgish, the spelling of a word depends
-on which words surround it.  For example the the letter @samp{n} at the
-end of a word will disappear if it is followed by another word starting
-with a certain letter such as an @samp{s}.  However, it can probably get
-more complicated than that.  I would like to know how complicated before
-I attempt to implement support for context sensitive spelling.
-
-@node Unicode Normalization
-@appendixsec Unicode Normalization
-
-Because Unicode contains a large number of precomposed characters there
-are multiple ways a character can be represented.  For example letter
-@ringaccent{a} can either be represented as
-
-@example
-U+00E5 LATIN SMALL LETTER A WITH RING ABOVE
-@exdent or
-U+0061 LATIN SMALL LETTER A + U+030A COMBINING RING ABOVE
-@end example
-
-By performing normalization first Aspell will only see one of these
-representations.  The exact form of normalization depends on the
-language.  Give the choice of 
-
-@enumerate
-@item Precomposed character
-@item Base letter + combining character(s)
-@item Base letter only
-@end enumerate
-
-@noindent
-if the precomposed charter is in the target character set then (1), if
-both the base and combing character is present than (2), otherwise (3).
-
-Unicode Normalization is now implemented in Aspell 0.60.
-
 @node Words With Symbols in Them
 @appendixsec Words With Spaces or Other Symbols in Them
 
@@ -3530,6 +3459,58 @@ To further complicate things, most applications that use spell checkers
 are accustom to parsing the document themselves and sending it to the
 spell checker a word at a time.  In order to support word with spaces in
 them a more complicated interface will be required.
+
+@node Unicode Normalization
+@appendixsec Unicode Normalization
+
+Because Unicode contains a large number of precomposed characters there
+are multiple ways a character can be represented.  For example letter
+@"o can either be represented as
+
+@example
+U+00F6 LATIN SMALL LETTER O WITH DIAERESIS
+@exdent or
+U+0061 LATIN SMALL LETTER O + U+0308 COMBINING DIAERESIS
+@end example
+
+By performing normalization first Aspell will only see one of these
+representations.  The exact form of normalization depends on the
+language.  Give the choice of 
+
+@enumerate
+@item Precomposed character
+@item Base letter + combining character(s)
+@item Base letter only
+@end enumerate
+
+@noindent
+if the precomposed charter is in the target character set then (1), if
+both the base and combing character is present than (2), otherwise (3).
+
+Unicode Normalization is now implemented in Aspell 0.60.
+
+@node German Sharp S 
+@appendixsec German Sharp S 
+
+The German Sharp S or Eszett does not have an uppercase equivalent.
+Instead when @samp{@ss{}} is converted to @samp{SS}.  The conversion of
+@samp{@ss{}} to @samp{SS} requires a special rule, and increases the
+length of a word, thus disallowing inplace case conversion.
+Furthermore, my general rule of converting all words to lowercase before
+looking them up in the dictionary won't work because the conversion of
+@samp{SS} to lowercase is ambiguous; it can be @samp{ss} or
+@samp{@ss{}}.  I do plan on dealing with this eventually, however.
+
+@node Context Sensitive Spelling
+@appendixsec Context Sensitive Spelling
+
+In some language, such as Luxembourgish, the spelling of a word depends
+on which words surround it.  For example the the letter @samp{n} at the
+end of a word will disappear if it is followed by another word starting
+with a certain letter such as an @samp{s}.  However, it can probably get
+more complicated than that.  I would like to know how complicated before
+I attempt to implement support for context sensitive spelling.
+
 
 @node To Do
 @appendix To Do
@@ -3842,32 +3823,28 @@ a C++ program.
 
 @itemize @bullet
 @item
-Added support for loadable filters thanks to Christoph Hintermüller
-@item
-Enhanced TEX filter to support recognizing accent commands, such as
-the German umlaute, and to treat words with hyphenation characters in
-them as one word, also thanks to Christoph Hintermüller
+Added support for loadable filters thanks to Christoph Hinterm@"uller.
 @item
 Enhanced SGML filter to also support skipping sgml tags such as "script"
-blocks.
+blocks thanks to Tom Snyder.
 @item
 Added gettext support thanks to Sergey Poznyakoff
 @item
 Reworked how the dictionary is stored to take up less space (around
 80% for the English language) and be faster in some cases.
+@c FIXME: ^^ double check size.  Expand
 @item
 Reworked the build system so that a single Makefile is used for most
 of the code.
 @item
-Support for Affix Compression.  Affix compression stores the root word
-and then a list of prefixes and suffixes that the word can take, and
-thus saves a lot of space.  The codebase comes from MySpell found in
+Added support for Affix Compression.  Affix compression stores the root
+word and then a list of prefixes and suffixes that the word can take,
+and thus saves a lot of space.  The codebase comes from MySpell found in
 OpenOffice.  It uses the same affix file OpenOffice (and Mozilla) use.
 @item
-Added support for MySpell Replacement Tables for better suggestions
-when phonet information is not available.
-@item
-Additional suggestion improvments...
+Reworked suggestion code.  It is significantly faster when dealing with
+short words.  Added support for MySpell Replacement Tables, n-gram
+lookup.  Also added basic support for compound words.
 @item
 Added support for accepting all input and printing all output in
 @acronym{UTF-8} or some other encoding different from the one Aspell
@@ -3878,6 +3855,7 @@ the language.
 @item
 Manual has has been converted to texinfo format thanks to the work of
 Chris Martin.
+
 @end itemize
 
 @heading Changes from 0.50.4.1 to 0.50.5 (Feb 10, 2003)

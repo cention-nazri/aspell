@@ -1,15 +1,22 @@
 
 #include "settings.h"
 
-#include <stdio.h>
+#include "lock.hpp"
 
 #if ENABLE_NLS
 
-struct GettextInit
-{
-  GettextInit() {bindtextdomain(PACKAGE, LOCALEDIR);}
-};
+static acommon::Mutex lock;
 
-static GettextInit dummy;
+static bool did_init = false;
+
+extern "C" void aspell_gettext_init()
+{
+  {
+    acommon::Lock l(&lock);
+    if (did_init) return;
+    did_init = true;
+  }
+  bindtextdomain("aspell", LOCALEDIR);
+}
 
 #endif

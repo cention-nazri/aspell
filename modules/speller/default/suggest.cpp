@@ -933,10 +933,10 @@ namespace {
         
         if (already_have.have(sl)) continue;
 
-        int ng = ngram(3, original_soundslike.data(),  original_soundslike.size(),
+        int ng = ngram(3, original_soundslike.data(), original_soundslike.size(),
                        sl, strlen(sl));
 
-        if (ng >= min_score) {
+        if (ng > 0 && ng >= min_score) {
           commit_temp(sl);
           candidates.push_back(NGramScore(i, *sw, sl, ng));
           if (ng > min_score) count++;

@@ -1372,9 +1372,11 @@ namespace acommon {
     , {"ignore",   KeyInfoInt   , "1",
        N_("ignore words <= n chars"), KEYINFO_MAY_CHANGE}
     , {"ignore-accents" , KeyInfoBool, "false",
-       N_("ignore accents when checking words"), KEYINFO_MAY_CHANGE}
+       /* TRANSLATORS: It is OK if this is longer than 50 chars */
+       N_("ignore accents when checking words -- CURRENTLY IGNORED"), KEYINFO_MAY_CHANGE | KEYINFO_HIDDEN}
     , {"ignore-case", KeyInfoBool  , "false",
-       N_("ignore case when checking words"), KEYINFO_MAY_CHANGE}
+       /* TRANSLATORS: It is OK if this is longer than 50 chars */
+       N_("ignore case when checking words -- CURRENTLY IGNORED"), KEYINFO_MAY_CHANGE | KEYINFO_HIDDEN}
     , {"ignore-repl", KeyInfoBool  , "false",
        N_("ignore commands to store replacement pairs"), KEYINFO_MAY_CHANGE}
     , {"jargon",     KeyInfoString, "",
@@ -1458,7 +1460,8 @@ namespace acommon {
     //
 
     , {"affix-char",          KeyInfoString, "/", // FIXME: Implement
-       N_("indicator for affix flags in word lists"), KEYINFO_UTF8 | KEYINFO_HIDDEN}
+       /* TRANSLATORS: It is OK if this is longer than 50 chars */
+       N_("indicator for affix flags in word lists -- CURRENTLY IGNORED"), KEYINFO_UTF8 | KEYINFO_HIDDEN}
     , {"affix-compress", KeyInfoBool, "false",
        N_("use affix compression when creating dictionaries")}
     , {"clean-affixes", KeyInfoBool, "true",
@@ -1500,7 +1503,8 @@ namespace acommon {
   const KeyInfo * config_impl_keys_end   
   = config_keys + sizeof(config_keys)/sizeof(KeyInfo);
 
-  Config * new_basic_config() {
+  Config * new_basic_config() { 
+    aspell_gettext_init();
     return new Config("aspell",
 		      config_impl_keys_begin,
 		      config_impl_keys_end);

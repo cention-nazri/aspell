@@ -234,6 +234,7 @@ int main (int argc, const char *argv[])
 #ifdef USE_LOCALE
   setlocale (LC_ALL, "");
 #endif
+  aspell_gettext_init();
 
   options->set_committed_state(false);
 
@@ -1027,7 +1028,7 @@ void check()
     case Exit:
       goto exit_loop;
     case Abort:
-      prompt(_("Are you sure you want to abort? "));
+      prompt(_("Are you sure you want to abort (y/n)? "));
       get_choice(choice);
       if (choice == 'y' || choice == 'Y')
         goto abort_loop;
@@ -1845,6 +1846,8 @@ static const char * help_text[] =
   N_("  dump|create|merge master|personal|repl [word list]"),
   N_("    dumps, creates or merges a master, personal, or replacement word list."),
   "",
+  /* TRANSLATORS: "none", "internal" and "strict" are literal values
+     and should not be translated. */
   N_("  <norm-form>      normalization form to use, either none, internal, or strict"),
   "",
   usage_text[10],
@@ -1890,7 +1893,7 @@ void print_help (bool verbose) {
     putchar('\n');
     puts(
       _("Available Dictionaries:\n"
-        "    Dictionaries can be selected directory via the \"-d\" or \"master\"\n"
+        "    Dictionaries can be selected directly via the \"-d\" or \"master\"\n"
         "    option.  They can also be selected indirectly via the \"lang\",\n"
         "    \"variety\", and \"size\" options.\n"));
     
@@ -1930,8 +1933,23 @@ void print_help (bool verbose) {
     }
 
     //
-    EXIT_ON_ERR(print_mode_help(options,COUT));
-
+    putchar('\n');
+    putchar('\n');
+    puts(  
+      /* TRANSLATORS: This should be formated to fit in 80 column or less */
+      _("Available Filter Modes:\n"
+        "    Filter Modes are reconfigured combinations of filters optimized for\n"
+        "    files of a specific type. A mode is selected via the \"mode\" option.\n"
+        "    This will happen implicitly if Aspell is able to identify the file\n"
+        "    type from the extension, and possibility the contents, of the file.\n"));
+    
+    EXIT_ON_ERR_SET(available_filter_modes(options), StringPairEnumeration *, els);
+    StringPair sp;
+    while (!els->at_end()) {
+      sp = els->next();
+      printf("  %-14s %s\n", sp.first, gt_(sp.second));
+    }
+    delete els;
   }
 }
 

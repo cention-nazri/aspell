@@ -52,7 +52,6 @@ namespace acommon {
 			      bool use_encoder);
   void activate_dynamic_filteroptions(Config *c);
   void activate_filter_modes(Config * config);
-  PosibErr<void> print_mode_help(const Config *, OStream &);
 
   void load_all_filters(Config * config);
 

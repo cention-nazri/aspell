@@ -80,6 +80,8 @@ static inline const char * gt_(const char * str) {
   return str[0] == '\0' ? str : _(str);
 }
 
+extern "C" void aspell_gettext_init();
+
 /* NOTE: DO NOT USE "gettext", ALWAYS USE "_" BECAUSE WHEN ASPELL IS USED
    AS A LIBRARY THE DOMAIN IS NOT GUARANTEED TO BE ASPELL */
 

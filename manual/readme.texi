@@ -2,13 +2,13 @@
 @appendix Installing
 
 Aspell requires gcc 2.95 (or better) as the C++ compiler.  Other C++
-compilers should work with some effort.  Other C++ compilers for
-mostly POSIX compliant (Unix, Linux, BeOS, CygWin) systems should work
-without any major problems provided that the compile can handle all of
-the advanced C++ features Aspell uses.  C++ compilers for non-Unix
-systems might work but it will take some work.  Aspell at very least
-requires a Unix-like environment (@file{sh}, @file{grep}, @file{sed},
-@file{tr}, &c@dots{}) in order to build.  Aspell also uses a few POSIX
+compilers should work with some effort.  Other C++ compilers for mostly
+POSIX compliant (Unix, Linux, BeOS, CygWin) systems should work without
+any major problems provided that the compile can handle all of the
+advanced C++ features Aspell uses.  C++ compilers for non-Unix systems
+might work but it will take some work.  Aspell at very least requires a
+Unix-like environment (@file{sh}, @file{grep}, @file{sed}, @file{tr},
+&c@dots{}), and perl in order to build.  Aspell also uses a few POSIX
 functions when necessary.
 
 The latest version can always be found at GNU Aspell's home page at 
@@ -17,13 +17,14 @@ The latest version can always be found at GNU Aspell's home page at
 @menu
 * Generic Install Instructions::  
 * Curses Notes::                
+* Upgrading from Aspell 0.60.::  
 * Upgrading from Aspell 0.50::  
 * Upgrading from Aspell .33/Pspell .12::  
 * Upgrading from a pre-release snapshot::  
 * WIN32 Notes::                 
 @end menu
 
-@node Generic Install Instructions, Curses Notes, Installing, Installing
+@node Generic Install Instructions
 @appendixsec Generic Install Instructions
 
 @example
@@ -63,7 +64,7 @@ directory into your binary directory which is usually
 @file{/usr/local/bin} so that programs that expect the
 @command{ispell} or @command{spell} command will work correctly.
 
-@node Curses Notes, Upgrading from Aspell 0.50, Generic Install Instructions, Installing
+@node Curses Notes
 @appendixsec Curses Notes
 
 If you are having problems compiling @file{termios.cc} than the most
@@ -94,8 +95,13 @@ or the name of the library (for example
  
 @var{dir} is the location of the curses header files (for example
 @file{/usr/local/@/ncurses/include}).
+
+@node Upgrading from Aspell 0.60.
+@appendixsec Upgrading from Aspell 0.60
+
+@c FIXME: WRITE ME.
  
-@node Upgrading from Aspell 0.50, Upgrading from Aspell .33/Pspell .12, Curses Notes, Installing
+@node Upgrading from Aspell 0.50
 @appendixsec Upgrading from Aspell 0.50
 
 The dictionary format has changed so dictionaries will need to be

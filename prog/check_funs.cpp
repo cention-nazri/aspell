@@ -631,18 +631,20 @@ static inline void put (WINDOW * w, const char * c, int size)
 static void print_truncate(WINDOW * out, const char * word, int width) {
   int len = 0;
   int y,x;
+  int y0;
   getyx(out, y, x);
   int stop = x + width - 1;
-  for (; x <= stop && *word; word += len) {
+  while (x <= stop && *word) {
     len = mbrlen(word, MB_CUR_MAX, NULL);
-    if (len > 0) {
-      put(out, word, len);
-    } else {
-      put(out, ' ');
-      len = 1;
-    }
+    assert(len > 0);
+    put(out, word, len);
+    word += len;
+    y0 = y;
     getyx(out, y, x);
+    if (y != y0) {y = y0; x = stop + 1; break;}
   }
+  for (; x <= stop; ++x)
+    put(out, ' ');
   if (x > stop && *word) {
     wmove(out, y, stop);
     put(out,'$');
@@ -699,76 +701,86 @@ void display_menu() {
       };
       static MenuLine menu_items[9] = {
 	{0, 
-         /* TRANSLATORS: This is a literal Key.  Keep the width under 12 characters.*/
+         /* TRANSLATORS: This is a literal Key.*/
          N_("Enter"), 
          "", 
          N_("Accept Changes")},
         {0,
-         /* TRANSLATORS: This is a literal Key.  Keep the width under 12 characters.*/
+         /* TRANSLATORS: This is a literal Key. */
          N_("Backspace"), 
-         /* TRANSLATORS: This is a literal Key.  Keep the width under 12 characters.*/
+         /* TRANSLATORS: This is a literal Key. */
          N_("Control-H"), 
          N_("Delete the previous character")},
 	{"kcub1", 
-         /* TRANSLATORS: This is a literal Key.  Keep the width under 12 characters.*/
+         /* TRANSLATORS: This is a literal Key. */
          N_("Left"), 
-         /* TRANSLATORS: This is a literal Key.  Keep the width under 12 characters.*/
+         /* TRANSLATORS: This is a literal Key. */
          N_("Control-B"), 
          N_("Move Back one space")},
 	{"kcuf1", 
-         /* TRANSLATORS: This is a literal Key.  Keep the width under 12 characters.*/
+         /* TRANSLATORS: This is a literal Key. */
          N_("Right"), 
-         /* TRANSLATORS: This is a literal Key.  Keep the width under 12 characters.*/
+         /* TRANSLATORS: This is a literal Key. */
          N_("Control-F"), 
          N_("Move Forward one space")},
 	{"khome", 
-         /* TRANSLATORS: This is a literal Key.  Keep the width under 12 characters.*/
+         /* TRANSLATORS: This is a literal Key. */
          N_("Home"), 
-         /* TRANSLATORS: This is a literal Key.  Keep the width under 12 characters.*/
+         /* TRANSLATORS: This is a literal Key. */
          N_("Control-A"), 
          N_("Move to the beginning of the line")},
 	{"kend" , 
-         /* TRANSLATORS: This is a literal Key.  Keep the width under 12 characters.*/
+         /* TRANSLATORS: This is a literal Key. */
          N_("End"), 
-         /* TRANSLATORS: This is a literal Key.  Keep the width under 12 characters.*/
+         /* TRANSLATORS: This is a literal Key. */
          N_("Control-E"), 
          N_("Move to the end of the line")},
 	{"kdch1", 
-         /* TRANSLATORS: This is a literal Key.  Keep the width under 12 characters.*/
+         /* TRANSLATORS: This is a literal Key. */
          N_("Delete"), 
-         /* TRANSLATORS: This is a literal Key.  Keep the width under 12 characters.*/
+         /* TRANSLATORS: This is a literal Key. */
          N_("Control-D"), 
          N_("Delete the next charcter")},
 	{0, 
          "", 
-         /* TRANSLATORS: This is a literal Key.  Keep the width under 12 characters.*/
+         /* TRANSLATORS: This is a literal Key. */
          N_("Control-K"), 
          N_("Kill all characters to the EOL")},
 	{0, 
          "", 
-         /* TRANSLATORS: This is a literal Key.  Keep the width under 12 characters.*/
+         /* TRANSLATORS: This is a literal Key. */
          N_("Control-C"), 
          N_("Abort This Operation")},
       };
       scrollok(menu_w,false);
       werase(menu_w);
+      int beg = 0,end = 0;
+      int y,x,x0;
       for (int i = 0; i != 9; ++i) {
-	wmove(menu_w, i, 0);
-	int w = width;
-	int fun_key_desc_width = 12;
-	int control_key_desc_width = 12;
-	if (w < fun_key_desc_width) fun_key_desc_width = w;
+        wmove(menu_w, i, beg);
 	if (menu_items[i].capname == 0 
-	    || tigetstr(const_cast<char *>(menu_items[i].capname)) != 0) 
-	  print_truncate(menu_w, gt_(menu_items[i].fun_key), fun_key_desc_width);
-	else
-	  print_truncate(menu_w, "", fun_key_desc_width);
-	w -= fun_key_desc_width;
-	if (w < control_key_desc_width) control_key_desc_width = w;
-	print_truncate(menu_w, gt_(menu_items[i].control_key), 
-		       control_key_desc_width);
-	w -= control_key_desc_width;
-	print_truncate(menu_w, gt_(menu_items[i].desc), w);
+            || tigetstr(const_cast<char *>(menu_items[i].capname)) != 0)
+        {
+          getyx(menu_w, y, x0);
+          put(menu_w, gt_(menu_items[i].fun_key));
+          getyx(menu_w, y, x);
+          if (x < beg || y != i) end = width;
+          else if (x > end) end = x;
+        }
+      }
+      beg = end + 2;
+      if (beg < width) for (int i = 0; i != 9; ++i) {
+        wmove(menu_w, i, beg);
+        put(menu_w, gt_(menu_items[i].control_key));
+        getyx(menu_w, y, x);
+        if (x < beg || y != i) end = width;
+        else if (x > end) end = x;
+      }
+      beg = end + 2;
+      int w = width - beg;
+      if (w > 1) for (int i = 0; i != 9; ++i) {
+        wmove(menu_w, i, beg);
+        print_truncate(menu_w, gt_(menu_items[i].desc), w);
       }
       wnoutrefresh(menu_w);
     }

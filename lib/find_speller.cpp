@@ -473,6 +473,8 @@ namespace acommon {
 
   PosibErr<Speller *> new_speller(Config * c0) 
   {
+    aspell_gettext_init();
+
     RET_ON_ERR_SET(find_word_list(c0), Config *, c);
     StackPtr<Speller> m(get_speller_class(c));
     RET_ON_ERR(m->setup(c));
