@@ -950,12 +950,12 @@ namespace acommon {
     if (slash) layers = slash + 1;
        
     if (enc.norm_form.empty()) {
-      if (c.retrieve_bool("normalize") || c.retrieve_bool("norm-required"))
+      if (c.retrieve_bool("normalize").data || c.retrieve_bool("norm-required").data)
         enc.norm_form = c.retrieve("norm-form");
       else
         enc.norm_form = "none";
     }
-    if (enc.norm_form == "none" && c.retrieve_bool("norm-required"))
+    if (enc.norm_form == "none" && c.retrieve_bool("norm-required").data)
       enc.norm_form = "nfc";
 
     // push "layers" encoding on extra list

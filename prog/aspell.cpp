@@ -708,7 +708,7 @@ void pipe()
   FullConv iconv(real_speller->to_internal_);
   FullConv oconv(real_speller->from_internal_);
   MBLen mb_len;
-  if (!config->retrieve_bool("byte-offsets")) 
+  if (!config->retrieve_bool("byte-offsets").data) 
     mb_len.setup(*config, config->retrieve("encoding"));
   if (do_time)
     COUT << _("Time to load word list: ")

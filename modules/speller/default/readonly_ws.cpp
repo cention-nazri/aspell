@@ -729,11 +729,11 @@ namespace {
                              strcmp(lang.soundslike_name(), "simple") == 0);
 
     bool affix_compress = (lang.affix() && 
-                           config.retrieve_bool("affix-compress"));
+                           config.retrieve_bool("affix-compress").data);
 
     bool partially_expand = (affix_compress &&
                              !full_soundslike &&
-                             config.retrieve_bool("partially-expand"));
+                             config.retrieve_bool("partially-expand").data);
 
     bool invisible_soundslike = false;
     if (partially_expand)

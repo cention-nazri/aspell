@@ -571,7 +571,7 @@ namespace {
       new_word[i+1] = new_word[i];
       new_word[i] = '\0';
       
-      if (sp->check(new_word) && sp->check(new_word + i + 1)) {
+      if (sp->check(new_word).data && sp->check(new_word + i + 1).data) {
         for (size_t j = 0; j != parms->split_chars.size(); ++j)
         {
           new_word[i] = parms->split_chars[j];

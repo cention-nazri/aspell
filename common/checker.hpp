@@ -77,7 +77,7 @@ namespace acommon {
   };
 
   class Checker : public CanHaveError {
-    friend class SegmentIterator;
+    friend struct SegmentIterator;
   protected:
     struct IToken : public CheckerToken
     {

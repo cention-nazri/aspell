@@ -107,7 +107,7 @@ namespace acommon {
   template <class P>
   void HashTable<P>::erase(iterator to_erase) 
   {
-    (*to_erase.n)->data.~Value();
+    NodePool::del_node((*to_erase.n)->data);
     Node * tmp = *to_erase.n;
     *to_erase.n = (*to_erase.n)->next;
     node_pool_.remove_node(tmp);
@@ -123,7 +123,7 @@ namespace acommon {
     Node * n = *first;
     while (n != 0 && parms_.equal(parms_.key(n->data), k)) {
       Node * tmp = n;
-      n->data.~Value();
+      NodePool::del_node(n);
       n = n->next;
       node_pool_.remove_node(tmp);
       ++num_erased;
@@ -177,7 +177,7 @@ namespace acommon {
     for (Node * * i = table_; i != table_end_; ++i) {
       Node * n = *i;
       while (n != 0) {
-	n->data.~Value();
+        NodePool::del_node(n);
 	n = n->next;
       }
     }

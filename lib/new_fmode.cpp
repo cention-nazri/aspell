@@ -243,7 +243,7 @@ namespace acommon {
       for ( Vector<MagicString>::iterator it = magicKeys.begin() ;
             it != magicKeys.end() ; it++ ) {
         PosibErr<bool> magicMatch = it->matchFile(in,ext);
-        if (    magicMatch 
+        if (    magicMatch.data 
              || magicMatch.has_err() ) {
           if ( closeFile ) {
             fclose ( in );
