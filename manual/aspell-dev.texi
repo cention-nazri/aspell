@@ -1,11 +1,10 @@
 \input texinfo   @c -*-texinfo-*-
-@comment $Id: aspell-dev.texi,v 1.7 2004/06/02 15:07:34 kevina Exp $
-@comment %**start of header
+
 @setfilename aspell-dev.info
 @settitle Aspell Developer's Manual
 @setchapternewpage off
 @syncodeindex pg cp
-@comment %**end of header
+
 @copying
 This is the developer's manual for Aspell
 
