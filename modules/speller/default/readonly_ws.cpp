@@ -52,6 +52,8 @@ using std::pair;
 #include "check_list.hpp"
 #include "lsort.hpp"
 
+#include "iostream.hpp"
+
 #include "gettext.h"
 
 typedef unsigned int   u32int;
@@ -492,7 +494,7 @@ namespace {
   WordEntry * ReadOnlyDict::SoundslikeElements::next(int stopped_at) {
 
     //CERR << level << ":" << stopped_at << "  :";
-    //CERR << jump1->data << ":" << jump2->sl << "\n";
+    //CERR << jump1->sl << ":" << jump2->sl << "\n";
 
     const char * tmp = cur;
 
