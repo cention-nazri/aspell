@@ -19,7 +19,8 @@
 #include "asc_ctype.hpp"
 
 namespace acommon {
-
+  
+  // reserve space for at least s+1 characters
   void String::reserve_i(size_t s)
   {
     size_t old_size = end_ - begin_;
@@ -39,11 +40,14 @@ namespace acommon {
   int String::vprintf(const char * format, va_list ap0)
   {
     reserve(size() + 64);
-    int res;
+    int res = 0;
     va_list ap;
   loop: {
       int avail = storage_end_ - end_;
-      if (avail > 1024) return -1;
+      if (res < 0 && avail > 1024*1024) 
+        return -1; // to avoid an infinite loop in case a neg result
+                   // really means an error and not just "not enough
+                   // space"
       va_copy(ap,ap0);
       res = vsnprintf(end_, avail, format, ap);
       va_end(ap);
