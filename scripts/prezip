@@ -40,7 +40,7 @@ zipnow ()
     then
       if test "$sort"
       then
-	LC_COLLATE=C sort -u | prezip-bin -c
+	tr "\000-\040" "\012" | LC_COLLATE=C sort -u | prezip-bin -c
       else
 	prezip-bin -c
       fi
@@ -203,12 +203,12 @@ h )
   sorted word lists or other similar text files.  It may likely _increase_
   the size of binary data.
 
-  If "-w" is used that the file will be able to be decompressed using
+  If "-w" is used than the file will be able to be decompressed using
   "word-list-compress" which is used by Aspell 0.50 and earlier.
-  However, this format will lose characters within {0x00...0x20}, which
-  includes the space.  The newer "prezip-bin" format does not have
-  this problem and can be used with any text file, not just
-  word lists.
+  However, this format will lose all characters within {0x00...0x20},
+  which includes the space, as they are treated as word separators.
+  The newer "prezip-bin" format does not have this problem and can be
+  used with any text file, not just word lists.
 
 EOF
   ;;
