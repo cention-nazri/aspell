@@ -32,6 +32,7 @@
 @item chk @tab Chuukese @tab Latin @tab Maybe @tab -
 @item co @tab Corsican @tab Latin @tab Maybe @tab -
 @item cs @tab Czech @tab Latin @tab 0.50 @tab Yes
+@item csb @tab Kashubian @tab Latin @tab 0.60 @tab -
 @item cv @tab Chuvash @tab Cyrillic @tab - @tab -
 @item cy @tab Welsh @tab Latin @tab 0.50 @tab -
 @item
