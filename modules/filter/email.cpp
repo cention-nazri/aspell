@@ -14,7 +14,7 @@
 
 namespace {
 
-  using namespace acommon;
+  using namespace aspell;
 
   class EmailFilter : public NormalFilter 
   {

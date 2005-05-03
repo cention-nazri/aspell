@@ -15,7 +15,7 @@
 #include "objstack.hpp"
 
 
-namespace acommon {
+namespace aspell {
 
 class StringPairEnumeration;
 
@@ -28,7 +28,7 @@ public: // but don't use
     typedef const char * Key;
     const char * key(const Value & v) {return v.first;}
     static const bool is_multi = false;
-    acommon::hash<const char *>  hash;
+    aspell::hash<const char *>  hash;
     bool equal(const char * x, const char * y) {return strcmp(x,y) == 0;}
   };
   typedef StringPair Value_;

@@ -16,7 +16,7 @@
 #include <typeinfo>
 #include "generic_copy_ptr.hpp"
 
-namespace acommon {
+namespace aspell {
 
   template <typename T>
   class ClonePtr 

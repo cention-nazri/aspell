@@ -2,7 +2,7 @@
 #include "lang_impl.hpp"
 #include "checker.hpp"
 
-namespace aspeller {
+namespace aspell { namespace sp {
 
   class CheckerImpl : public Checker 
   {
@@ -121,4 +121,4 @@ namespace aspeller {
     return new CheckerImpl(this);
   }
 
-}
+} }

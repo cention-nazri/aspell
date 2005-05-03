@@ -10,7 +10,7 @@
 #include "error.hpp"
 #include "posib_err.hpp"
 
-namespace acommon {
+namespace aspell {
 
 class Config;
 

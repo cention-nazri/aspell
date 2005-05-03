@@ -6,14 +6,12 @@
 #include <assert.h>
 #include "string.hpp"
 
-namespace acommon {
+namespace aspell {
   class OStream;
   class Convert;
 }
 
-namespace aspeller {
-
-  using namespace acommon;
+namespace aspell { namespace sp {
 
   // WordInfo
 
@@ -55,6 +53,6 @@ namespace aspeller {
     void clear() {memset(this, 0, sizeof(WordEntry));}
     ~WordEntry() {}
   };
-}
+} }
 
 #endif

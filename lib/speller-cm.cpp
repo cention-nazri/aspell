@@ -7,7 +7,7 @@
 #include "convert.hpp"
 #include "speller.hpp"
 
-namespace acommon {
+namespace aspell {
 
 extern "C" const CheckInfo * aspell_speller_check_info(Speller * ths)
 {

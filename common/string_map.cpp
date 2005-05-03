@@ -1,3 +1,4 @@
+
 #include <string.h>
 #include <assert.h>
 
@@ -14,7 +15,7 @@
 // license along with this library if you did not you can find
 // it at http://www.gnu.org/.
 
-namespace acommon {
+namespace aspell {
 
   // These template instantiations are needed for darwin but VC6 has
   // problems with them

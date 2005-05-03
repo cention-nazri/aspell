@@ -10,7 +10,7 @@
 #include "parm_string.hpp"
 #include "char_vector.hpp"
 
-namespace acommon {
+namespace aspell {
 
   class StringEnumeration;
   class FullConvert;

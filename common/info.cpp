@@ -40,7 +40,7 @@
 
 #include "gettext.h"
 
-namespace acommon {
+namespace aspell {
 
 #if ! defined(WIN32) && ! defined(_WIN32)
   class Dir {

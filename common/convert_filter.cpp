@@ -17,7 +17,7 @@
 
 namespace {
 
-  using namespace acommon;
+  using namespace aspell;
 
   //////////////////////////////////////////////////////////////////////
   //
@@ -280,7 +280,7 @@ namespace {
       String key = "f-"; key += parms.name; key += "-form";
       parms.form = c->retrieve(key);
     }
-    RET_ON_ERR(acommon::setup(tables, &gen_conv_tables_cache, c, parms.file.str()));
+    RET_ON_ERR(aspell::setup(tables, &gen_conv_tables_cache, c, parms.file.str()));
     if (decoder) {
       data = tables->to_single;
     } else {
@@ -328,7 +328,7 @@ namespace {
   }
 }
 
-namespace acommon {
+namespace aspell {
 
   IndividualFilter * new_convert_filter(bool d, const GenConvFilterParms & p)
   {

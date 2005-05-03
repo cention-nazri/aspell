@@ -9,7 +9,7 @@
 #include "stack_ptr.hpp"
 #include "convert.hpp"
 
-namespace acommon {
+namespace aspell {
 
   PosibErr<Checker *> 
   new_checker(Speller * speller)

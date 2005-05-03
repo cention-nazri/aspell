@@ -17,10 +17,9 @@
 
 typedef unsigned char uchar;
 
-namespace aspeller {
+namespace aspell { namespace sp {
 
   using namespace std;
-  using namespace acommon;
 
   short typo_edit_distance(ParmString word0, 
 			   ParmString target0,
@@ -195,4 +194,4 @@ namespace aspeller {
   }
   
 
-}
+} }

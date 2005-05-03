@@ -16,7 +16,7 @@
 #include "filter.hpp"
 #include "cache.hpp"
 
-namespace acommon {
+namespace aspell {
 
   class OStream;
   class Config;

@@ -9,7 +9,7 @@
 #include "key_info.hpp"
 
 namespace {
-  using namespace acommon;
+  using namespace aspell;
 
   class UrlFilter : public NormalFilter {
   public:

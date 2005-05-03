@@ -39,9 +39,7 @@
 #include "objstack.hpp"
 #include "vararray.hpp"
 
-using namespace acommon;
-
-namespace aspeller {
+namespace aspell { namespace sp {
 
   const char * const PhonetParms::rules_end = "";
   
@@ -445,7 +443,7 @@ namespace aspeller {
     return (j);
 
   }  /**  end of function "phonet"  **/
-}
+} }
 
 #if 0
 

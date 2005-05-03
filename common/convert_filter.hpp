@@ -10,7 +10,7 @@
 #include "indiv_filter.hpp"
 #include "parm_string.hpp"
 
-namespace acommon {
+namespace aspell {
 
   struct GenConvFilterParms {
     String name;

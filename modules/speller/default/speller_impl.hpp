@@ -11,7 +11,7 @@
 #include "speller.hpp"
 #include "check_list.hpp"
 
-namespace acommon {
+namespace aspell {
   class StringMap;
   class Config;
   class WordList;
@@ -20,9 +20,7 @@ namespace acommon {
 // dictionaries coming up with suggestions and the like. Its methods
 // are NOT meant to be used my multiple threads and/or documents.
 
-namespace aspeller {
-
-  using namespace acommon;
+namespace aspell { namespace sp {
 
   class LangImpl;
   struct SensitiveCompare;
@@ -258,6 +256,6 @@ namespace aspeller {
       return; 
     }
   }
-}
+} }
 
 #endif

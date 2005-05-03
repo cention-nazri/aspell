@@ -9,9 +9,7 @@
 #include "phonetic.hpp"
 #include "phonet.hpp"
 
-namespace aspeller {
-
-  using namespace acommon;
+namespace aspell { namespace sp {
   
   class SimpileSoundslike : public Soundslike {
   private:
@@ -207,5 +205,5 @@ namespace aspeller {
       return sl;
     }
   }
-}
+} }
 

@@ -68,8 +68,8 @@
 //#include "iostream.hpp"
 //#define DEBUG_SUGGEST
 
-using namespace aspeller;
-using namespace acommon;
+using namespace aspell::sp;
+using namespace aspell;
 using namespace std;
 
 namespace {
@@ -796,7 +796,7 @@ namespace {
 #ifdef DEBUG_SUGGEST
     COUT.printf("will try soundslike: %s\n", sls.back());
 #endif
-    for (const aspeller::IntrCheckInfo * ci = gi.head;
+    for (const IntrCheckInfo * ci = gi.head;
          ci; 
          ci = ci->next) 
     {
@@ -1308,7 +1308,7 @@ namespace {
     if (keyboard == "none")
       parms_.use_typo_analysis = false;
     else
-      RET_ON_ERR(aspeller::setup(parms_.ti, m->config(), &m->lang(), keyboard));
+      RET_ON_ERR(aspell::sp::setup(parms_.ti, m->config(), &m->lang(), keyboard));
 
     return no_err;
   }
@@ -1329,7 +1329,7 @@ namespace {
   
 }
 
-namespace aspeller {
+namespace aspell { namespace sp {
   PosibErr<Suggest *> new_default_suggest(SpellerImpl * m) {
     StackPtr<SuggestImpl> s(new SuggestImpl);
     RET_ON_ERR(s->setup(m));
@@ -1420,4 +1420,4 @@ namespace aspeller {
     }
     word_weight = 100 - soundslike_weight;
   }
-}
+} }

@@ -12,8 +12,8 @@
 
 namespace {
 
-  using namespace acommon;
-  using namespace aspeller;
+  using namespace aspell;
+  using namespace aspell::sp;
 
   typedef Vector<Dict *> Wss;
 
@@ -150,11 +150,11 @@ namespace {
 
 }
 
-namespace aspeller {
+namespace aspell { namespace sp {
 
   MultiDict * new_default_multi_dict() 
   {
     return new MultiDictImpl();
   }
 
-}
+} }

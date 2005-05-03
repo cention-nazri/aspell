@@ -34,7 +34,7 @@
     ++a0; ++b0;             \
   }
 
-namespace aspeller {
+namespace aspell { namespace sp {
 
   int limit_edit_distance(const char * a, const char * b, 
 			  int limit, const EditDistanceWeights & w)
@@ -303,6 +303,6 @@ namespace aspeller {
     }
     return EditDist(min, amax);
   }
-}
+} }
 
 

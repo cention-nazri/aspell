@@ -39,7 +39,7 @@
 #  define ACCESS access
 #endif
 
-namespace acommon {
+namespace aspell {
 
   // Return false if file is already an absolute path and does not need
   // a directory prepended.

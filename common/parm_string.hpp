@@ -34,7 +34,7 @@
 // during construction.
 //
 
-namespace acommon {
+namespace aspell {
 
   template<typename Ret> class PosibErr;
 

@@ -10,7 +10,7 @@
 #include "objstack.hpp"
 #include "speller.hpp"
 
-namespace acommon {
+namespace aspell {
 
   static inline void clear_check_info(IntrCheckInfo & ci)
   {

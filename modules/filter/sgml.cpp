@@ -39,7 +39,7 @@
 
 namespace {
 
-  using namespace acommon;
+  using namespace aspell;
 
   class ToLowerMap : public StringMap
   {
@@ -103,6 +103,7 @@ namespace {
     
     ScanState in_what;
 	     // which quote char is quoting this attrib value.	
+	
     FilterChar::Chr  quote_val;   
 	    // one char prior to this one. For escape handling and such.
     FilterChar::Chr  lookbehind;   

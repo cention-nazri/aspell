@@ -28,7 +28,7 @@
 //   it is available (slist is part of the SGI STL but not the C++
 //   standard) for better performance.
 
-namespace acommon {
+namespace aspell {
 
   template <typename T>
   class BasicList {

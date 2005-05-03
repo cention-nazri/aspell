@@ -12,7 +12,7 @@
 #include "asc_ctype.hpp"
 #include "convert.hpp"
 
-using namespace acommon;
+using namespace aspell;
 
 extern Conv dconv;
 extern Conv uiconv;

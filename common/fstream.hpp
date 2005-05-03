@@ -17,7 +17,7 @@
 // NOTE: See iostream.hpp for the standard stream (ie standard input,
 //       output, error)
 
-namespace acommon {
+namespace aspell {
 
   class String;
 

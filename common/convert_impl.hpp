@@ -13,7 +13,7 @@
 #include "objstack.hpp"
 #include "vararray.hpp"
 
-namespace acommon {
+namespace aspell {
 
   typedef unsigned char  byte;
   typedef unsigned char  Uni8;

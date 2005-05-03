@@ -71,7 +71,7 @@ extern void * get_module_handle();
 // the case of a "lset-*" this will happen in multiple config
 // "Entry"s, so care is taken to only add the arg position once.
 
-namespace acommon {
+namespace aspell {
 
   const char * const keyinfo_type_name[4] = {
     N_("string"), N_("integer"), N_("boolean"), N_("list")
@@ -478,10 +478,10 @@ namespace acommon {
     typedef PosibErr<const KeyInfo *> Ret;
     {
       const KeyInfo * i;
-      i = acommon::find(key, keyinfo_begin, keyinfo_end);
+      i = aspell::find(key, keyinfo_begin, keyinfo_end);
       if (i != keyinfo_end) return Ret(i);
       
-      i = acommon::find(key, extra_begin, extra_end);
+      i = aspell::find(key, extra_begin, extra_end);
       if (i != extra_end) return Ret(i);
       
       const char * s = strncmp(key, "f-", 2) == 0 ? key + 2 : key.str();
@@ -489,7 +489,7 @@ namespace acommon {
       if (h == 0) goto err;
 
       String k(s, h - s);
-      const ConfigModule * j = acommon::find(k,
+      const ConfigModule * j = aspell::find(k,
                                              filter_modules.pbegin(),
                                              filter_modules.pend());
       
@@ -497,20 +497,20 @@ namespace acommon {
         // FIXME: This isn't quite right
         PosibErrBase pe = load_filter_hook(const_cast<Config *>(this), k);
         pe.ignore_err();
-        j = acommon::find(k,
+        j = aspell::find(k,
                           filter_modules.pbegin(),
                           filter_modules.pend());
       }
 
       if (j == filter_modules.pend()) goto err;
 
-      i = acommon::find(key, j->begin, j->end);
+      i = aspell::find(key, j->begin, j->end);
       if (i != j->end) return Ret(i);
       
       if (strncmp(key, "f-", 2) != 0) k = "f-";
       else                            k = "";
       k += key;
-      i = acommon::find(k, j->begin, j->end);
+      i = aspell::find(k, j->begin, j->end);
       if (i != j->end) return Ret(i);
     }
   err:  

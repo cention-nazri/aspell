@@ -36,9 +36,9 @@
 #endif
 #endif
 
-using namespace acommon;
+using namespace aspell;
 
-namespace acommon {
+namespace aspell {
 
   static void free_lt_handle(SpellerLtHandle h) 
   {

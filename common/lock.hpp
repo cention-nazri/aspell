@@ -26,7 +26,7 @@
 # include "minwin.h" //minimum windows declarations.
 #endif
 
-namespace acommon {
+namespace aspell {
 
 #define LOCK(l) const Lock the_lock(l);
 

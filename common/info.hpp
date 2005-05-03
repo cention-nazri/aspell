@@ -10,7 +10,7 @@
 #include "info_types.hpp"
 #include "posib_err.hpp"
 
-namespace acommon {
+namespace aspell {
 
   typedef int c_boolean;
 

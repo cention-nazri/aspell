@@ -34,7 +34,7 @@ $info{group}{proc}{native} = sub {
   return if exists $data->{'no native'};
   create_cc_file (type => 'native',
 		  cxx => true,
-		  namespace => 'acommon',
+		  namespace => 'aspell',
 		  dir => "common",
 		  header => true,
 		  data => $data);

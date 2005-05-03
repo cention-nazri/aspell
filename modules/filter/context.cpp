@@ -21,7 +21,7 @@
 #include "string_list.hpp"
 #include "vector.hpp"
 
-using namespace acommon;
+using namespace aspell;
 
 namespace {
 

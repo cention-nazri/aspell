@@ -14,7 +14,7 @@
 #include "fstream.hpp"
 #include "errors.hpp"
 
-namespace acommon {
+namespace aspell {
 
   PosibErr<void> FStream::open(ParmStr name, const char * mode)
   {

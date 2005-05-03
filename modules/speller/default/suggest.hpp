@@ -8,8 +8,7 @@
 #include "parm_string.hpp"
 
 
-namespace aspeller {
-  using namespace acommon;
+namespace aspell { namespace sp {
 
   class SpellerImpl;
 
@@ -38,7 +37,7 @@ namespace aspeller {
   };
   
   PosibErr<Suggest *> new_default_suggest(SpellerImpl *);
-}
+} }
 
 
 #endif

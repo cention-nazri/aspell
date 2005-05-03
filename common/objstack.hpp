@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <assert.h>
 
-namespace acommon {
+namespace aspell {
 
 class ObjStack
 {

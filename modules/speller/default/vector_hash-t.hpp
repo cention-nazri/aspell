@@ -19,7 +19,7 @@
 #include "vector_hash.hpp"
 #include "primes.hpp"
 
-namespace aspeller {
+namespace aspell { namespace sp {
 
 
 
@@ -148,6 +148,6 @@ namespace aspeller {
     for (iterator i = begin(); i != this->e; ++i, ++this->_size);
   }
 
-}
+} }
 
 #endif

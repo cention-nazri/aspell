@@ -14,7 +14,7 @@
 #include "string.hpp"
 #include "posib_err.hpp"
 
-namespace acommon {
+namespace aspell {
 
   class FStream;
   class Config;

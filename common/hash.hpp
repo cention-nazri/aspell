@@ -31,7 +31,7 @@
 
 // All of the hash_* implementations are derived from the HashTable class
 
-namespace acommon {
+namespace aspell {
 
   // Parms is expected to have the following methods
   //   typename Value

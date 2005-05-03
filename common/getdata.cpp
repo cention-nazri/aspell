@@ -12,7 +12,7 @@
 
 #include "iostream.hpp"
 
-namespace acommon {
+namespace aspell {
   unsigned int linenumber = 0 ;
 
   bool getdata_pair(IStream & in, DataPair & d, String & buf)

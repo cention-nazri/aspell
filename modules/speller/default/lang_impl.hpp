@@ -17,13 +17,11 @@
 #include "string_enumeration.hpp"
 #include "iostream.hpp"
 
-namespace acommon {
+namespace aspell { 
+
   struct CheckInfo;
-}
 
-namespace aspeller {
-
-  using namespace acommon;
+namespace sp {
 
   struct SuggestRepl {
     const char * substr;
@@ -478,6 +476,6 @@ namespace aspeller {
   PosibErr<LangImpl *> new_lang_impl(const Config &, ParmStr lang = 0);
 
   PosibErr<void> open_affix_file(const Config &, FStream & o);
-}
+}}
 
 #endif

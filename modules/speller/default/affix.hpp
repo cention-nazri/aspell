@@ -28,17 +28,15 @@
 
 #define TESTAFF( a , b) strchr(a, b)
 
-namespace acommon {
+namespace aspell {
+
   class Config;
   struct IntrCheckInfo;
   struct Conv;
   struct GuessInfo;
   struct WordAff;
-}
 
-namespace aspeller {
-
-  using namespace acommon;
+namespace sp {
 
   class LangImpl;
 
@@ -117,7 +115,7 @@ namespace aspeller {
   PosibErr<AffixMgr *> new_affix_mgr(ParmString name, 
                                      Conv &,
                                      const LangImpl * lang);
-}
+}}
 
 #endif
 

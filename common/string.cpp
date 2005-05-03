@@ -19,7 +19,7 @@
 #include "string.hpp"
 #include "asc_ctype.hpp"
 
-namespace acommon {
+namespace aspell {
 
   void String::reserve_i(size_t s)
   {

@@ -47,7 +47,7 @@
 #include "hash.hpp"
 #include "block_slist-t.hpp"
 
-namespace acommon {
+namespace aspell {
   
   static const unsigned int primes[] =
   {

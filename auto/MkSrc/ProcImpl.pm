@@ -31,7 +31,7 @@ $info{group}{proc}{impl} = sub {
   return if exists $data->{'no impl'};
   create_cc_file (type => 'impl',
 		  cxx => true,
-		  namespace => 'acommon',
+		  namespace => 'aspell',
 		  dir => "lib",
 		  pre_ext => "-c",
 		  header => false,

@@ -14,22 +14,22 @@
 
 #define MENU_HEIGHT 9
 
-extern acommon::StackPtr<CheckerString> state;
+extern aspell::StackPtr<CheckerString> state;
 
 extern const char * last_prompt;
 struct Choice {
   char choice; 
   const char * desc;
   Choice() {}
-  Choice(char c, acommon::ParmString d) : choice(c), desc(d) {}
+  Choice(char c, aspell::ParmString d) : choice(c), desc(d) {}
 };
 
-typedef acommon::Vector<Choice> Choices;
-extern acommon::StackPtr<Choices> word_choices;
-extern acommon::StackPtr<Choices> menu_choices;
+typedef aspell::Vector<Choice> Choices;
+extern aspell::StackPtr<Choices> word_choices;
+extern aspell::StackPtr<Choices> menu_choices;
 
 void get_choice(int & choice);
-void get_line(acommon::String & line);
+void get_line(aspell::String & line);
 void begin_check();
 void display_misspelled_word();
 void display_menu();

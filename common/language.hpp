@@ -14,7 +14,7 @@
 #include "convert.hpp"
 #include "check_list.hpp"
 
-namespace acommon {
+namespace aspell {
 
 struct MunchListParms;
 class StringEnumeration;

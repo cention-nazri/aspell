@@ -12,7 +12,7 @@
 #include "string.hpp"
 #include "simple_string.hpp"
 
-using namespace acommon;
+using namespace aspell;
 
 class CheckerString {
 public:

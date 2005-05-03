@@ -18,9 +18,7 @@
 
 #include "gettext.h"
 
-using namespace acommon;
-
-namespace aspeller {
+namespace aspell { namespace sp {
 
   GlobalCache<Dictionary> dict_cache("dictionary");
 
@@ -465,5 +463,5 @@ namespace aspeller {
     return res;
   }
 
-}
+} }
 

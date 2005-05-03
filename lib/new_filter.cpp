@@ -37,7 +37,7 @@
 #  include <dlfcn.h>
 #endif
 
-namespace acommon
+namespace aspell
 {
 #include "static_filters.src.cpp"
 

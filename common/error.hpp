@@ -7,7 +7,7 @@
 #ifndef ASPELL_ERROR__HPP
 #define ASPELL_ERROR__HPP
 
-namespace acommon {
+namespace aspell {
 
 struct ErrorInfo;
 

@@ -13,7 +13,7 @@
 #include "posib_err.hpp"
 #include "filter_char.hpp"
 
-namespace acommon {
+namespace aspell {
 
   class Config;
 

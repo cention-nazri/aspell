@@ -24,11 +24,9 @@
 #include "posib_err.hpp"
 
 
-namespace acommon {struct Conv;}
+namespace aspell {struct Conv;}
 
-namespace aspeller {
-
-  using namespace acommon;
+namespace aspell { namespace sp {
 
   class LangImpl;
 
@@ -66,6 +64,6 @@ namespace aspeller {
                                      Conv & iconv,
                                      const LangImpl * lang);
 
-}
+} }
 
 #endif

@@ -9,7 +9,7 @@
 #include "speller.hpp"
 #include "config.hpp"
 
-namespace acommon {
+namespace aspell {
 
   Checker::Checker() 
     : more_data_callback_(0), string_freed_callback_(0), 

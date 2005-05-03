@@ -1184,7 +1184,7 @@ struct: token
 class: document checker
 	c impl headers => error
 	/
-	posib err constructor: 
+	posib err constructor
 		desc => Creates a new document checker.
 			The speller class is expected to last until this
 			class is destroyed.

@@ -74,7 +74,7 @@ typedef unsigned char byte;
 #define MAP_FAILED (-1)
 #endif
 
-using namespace acommon;
+using namespace aspell;
 
 #ifdef HAVE_MMAP
 
@@ -176,7 +176,7 @@ static inline bool duplicate_flag(const char * d) {
 
 namespace {
 
-  using namespace aspeller;
+  using namespace aspell::sp;
 
   /////////////////////////////////////////////////////////////////////
   // 
@@ -640,13 +640,13 @@ namespace {
 
 }  
 
-namespace aspeller {
+namespace aspell { namespace sp {
 
   Dictionary * new_default_readonly_dict() {
     return new ReadOnlyDict();
   }
   
-}
+} }
 
 namespace {
 
@@ -664,7 +664,7 @@ namespace {
   //       no soundslike
   //       invisible soundslike
 
-  using namespace aspeller;
+  using namespace aspell::sp;
 
   struct WordData {
     static const unsigned struct_size;
@@ -1141,7 +1141,7 @@ namespace {
 
 }
 
-namespace aspeller {
+namespace aspell { namespace sp {
   PosibErr<void> create_default_readonly_dict(StringEnumeration * els,
                                               Config & config)
   {
@@ -1153,5 +1153,5 @@ namespace aspeller {
     RET_ON_ERR(create(els,*lang,config));
     return no_err;
   }
-}
+} }
 

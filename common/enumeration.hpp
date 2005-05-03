@@ -41,7 +41,7 @@
 // If you really love iterators you can very easily wrap an enumeration 
 // in a forward iterator.  
 
-namespace acommon {
+namespace aspell {
 
   template <typename Val>
   class Enumeration {

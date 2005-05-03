@@ -4,7 +4,7 @@
 
 #include "weights.hpp"
 
-namespace aspeller {
+namespace aspell { namespace sp {
 
   // limit_edit_distance finds the shortest edit distance but will
   // stop and return a number at least as large as LARGE_NUM if it has
@@ -63,6 +63,6 @@ namespace aspeller {
 				const EditDistanceWeights & w 
 				= EditDistanceWeights());
   
-}
+} }
 
 #endif

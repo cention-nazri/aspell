@@ -8,9 +8,7 @@
 
 #include "parm_string.hpp"
 
-//using namespace acommon;
-
-namespace aspeller {
+namespace aspell { namespace sp {
 
   template <class Itr>
   struct CharStrParms {
@@ -34,13 +32,13 @@ namespace aspeller {
     Value end_state() const {return 0;}
   };
   
-  inline time_t modification_date(acommon::ParmString file) {
+  inline time_t modification_date(ParmString file) {
     struct stat file_stat;
     if (stat(file, &file_stat) == 0)
       return file_stat.st_mtime;
     else 
       return 0;
   }
-}
+} }
 
 #endif

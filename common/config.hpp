@@ -13,7 +13,7 @@
 #include "string.hpp"
 #include "vector.hpp"
 
-namespace acommon {
+namespace aspell {
 
   class OStream;
   class KeyInfoEnumeration;

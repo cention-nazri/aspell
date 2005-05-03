@@ -8,7 +8,7 @@
 
 #include "convert_filter.hpp"
 
-using namespace acommon;
+using namespace aspell;
 
 C_EXPORT IndividualFilter * new_aspell_genconv_decoder() 
 {

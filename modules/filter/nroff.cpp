@@ -29,7 +29,7 @@
 #include "filter_char_vector.hpp"
 
 namespace {
-  using namespace acommon;
+  using namespace aspell;
 
   class NroffFilter : public NormalFilter
   {

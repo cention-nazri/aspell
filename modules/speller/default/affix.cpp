@@ -59,9 +59,7 @@
 
 #include "gettext.h"
 
-namespace aspeller {
-
-using namespace acommon;
+namespace aspell { namespace sp {
 
 typedef unsigned char byte;
 static char EMPTY[1] = {0};
@@ -1308,7 +1306,7 @@ PosibErr<AffixMgr *> new_affix_mgr(ParmString name,
     return affix;
   }
 }
-}
+} }
 
 /**************************************************************************
 

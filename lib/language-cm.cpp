@@ -15,7 +15,7 @@
 #include "word_list.hpp"
 #include "lang_impl.hpp"
 
-namespace acommon {
+namespace aspell {
 
 class CanHaveError;
 class Config;

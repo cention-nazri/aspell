@@ -12,7 +12,7 @@
 #include "string.hpp"
 #include "mutable_string.hpp"
 
-namespace acommon {
+namespace aspell {
 
   class IStream;
   class String;

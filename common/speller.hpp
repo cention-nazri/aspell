@@ -24,7 +24,7 @@
 #include "char_vector.hpp"
 #include "check_info.hpp"
 
-namespace acommon {
+namespace aspell {
 
   typedef void * SpellerLtHandle;
 

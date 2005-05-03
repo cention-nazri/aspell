@@ -9,7 +9,7 @@
 
 #include "language.hpp"
 
-namespace acommon {
+namespace aspell {
 
 class Language : public CanHaveError 
 {

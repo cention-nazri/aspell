@@ -19,7 +19,7 @@
 #  include <dlfcn.h>
 #endif
 
-namespace acommon {
+namespace aspell {
 
   FilterHandle::~FilterHandle() 
   {

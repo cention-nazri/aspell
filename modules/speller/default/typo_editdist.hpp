@@ -4,15 +4,13 @@
 #include "cache.hpp"
 #include "matrix.hpp"
 
-namespace acommon {
-  class Config;
-}
+namespace aspell {
 
-namespace aspeller {
+  class Config;
+
+namespace sp {
 
   class LangImpl;
-
-  using namespace acommon;
 
   struct TypoEditDistanceInfo : public Cacheable {
     int missing; // the cost of having to insert a character
@@ -73,6 +71,6 @@ namespace aspeller {
   short typo_edit_distance(ParmString word, 
 			   ParmString target,
 			   const TypoEditDistanceInfo & w);
-}
+}}
 
 #endif

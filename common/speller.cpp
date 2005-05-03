@@ -9,7 +9,7 @@
 #include "clone_ptr.hpp"
 #include "config.hpp"
 
-namespace acommon {
+namespace aspell {
 
   Speller::Speller(SpellerLtHandle h) : lt_handle_(h) {}
 

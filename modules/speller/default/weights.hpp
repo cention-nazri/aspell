@@ -2,7 +2,7 @@
 #ifndef __aspeller_weights_hh__
 #define __aspeller_weights_hh__
 
-namespace aspeller {
+namespace aspell { namespace sp {
 
   struct EditDistanceWeights {
     int del1;    // the cost of deleting a char in the first string
@@ -18,6 +18,6 @@ namespace aspeller {
       : del1(1), del2(1), swap(1), sub(1), similar(0), min(1), max(1) {}
   };
   
-}
+} }
 
 #endif

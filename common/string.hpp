@@ -19,7 +19,7 @@
 #include "istream.hpp"
 
 //
-// acommon::String is similar to std::string, but without many of the
+// aspell::String is similar to std::string, but without many of the
 // extra non-stl like methods.  The string is guaranteed to be stored
 // in a continues areas of memory but is not guaranteed to be null
 // terminated.  However, space is always allocated for the null
@@ -31,7 +31,7 @@
 // string changes.
 //
 
-namespace acommon {
+namespace aspell {
 
   template <typename Ret> class PosibErr;
   
@@ -496,7 +496,7 @@ namespace acommon {
 
 namespace std
 {
-  template<> static inline void swap(acommon::String & x, acommon::String & y) {x.swap(y);}
+  template<> static inline void swap(aspell::String & x, aspell::String & y) {x.swap(y);}
 }
 
 #endif

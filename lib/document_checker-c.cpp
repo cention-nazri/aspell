@@ -7,7 +7,7 @@
 #include "checker.hpp"
 #include "error.hpp"
 
-namespace acommon {
+namespace aspell {
 
 class CanHaveError;
 struct Error;

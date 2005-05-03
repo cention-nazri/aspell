@@ -61,9 +61,7 @@
 
 #include "gettext.h"
 
-using namespace acommon;
-
-using aspeller::Conv;
+using namespace aspell;
 
 // action functions declarations
 
@@ -482,7 +480,7 @@ int main (int argc, const char *argv[])
 //
 
   
-static SimpleConvert * setup_conv(const aspeller::LangImpl * lang,
+static SimpleConvert * setup_conv(const sp::LangImpl * lang,
                                   Config * config)
 {
   if (config->retrieve("encoding") != "none") {
@@ -499,7 +497,7 @@ static SimpleConvert * setup_conv(const aspeller::LangImpl * lang,
 }
  
 static SimpleConvert * setup_conv(Config * config,
-                                  const aspeller::LangImpl * lang)
+                                  const sp::LangImpl * lang)
 {
   if (config->retrieve("encoding") != "none") {
     PosibErr<SimpleConvert *> pe 
@@ -715,7 +713,7 @@ void pipe()
   start = clock();
   
   AspellSpeller * speller = new_speller();
-  aspeller::SpellerImpl * real_speller = reinterpret_cast<aspeller::SpellerImpl *>(speller);
+  aspell::sp::SpellerImpl * real_speller = reinterpret_cast<aspell::sp::SpellerImpl *>(speller);
   Config * config = real_speller->config();
   MBLen mb_len;
   if (!config->retrieve_bool("byte-offsets").data) 
@@ -1390,7 +1388,7 @@ public:
 
 void clean()
 {
-  using namespace aspeller;
+  using namespace aspell::sp;
 
   bool strict = args.size() != 0 && args[0] == "strict";
   
@@ -1431,9 +1429,9 @@ void clean()
 // master
 //
 
-void dump (aspeller::Dict * lws, Convert * conv) 
+void dump (aspell::sp::Dict * lws, Convert * conv) 
 {
-  using namespace aspeller;
+  using namespace aspell::sp;
 
   switch (lws->basic_type) {
   case Dict::basic_dict:
@@ -1473,7 +1471,7 @@ void dump (AspellSpeller * speller,
 }
 
 void master () {
-  using namespace aspeller;
+  using namespace aspell::sp;
 
   if (args.size() != 0) {
     options->replace("master", args[0].c_str());
@@ -1507,7 +1505,7 @@ void master () {
 //
 
 void personal () {
-  using namespace aspeller;
+  using namespace aspell::sp;
 
   if (args.size() != 0) {
     EXIT_ON_ERR(options->replace("personal", args[0]));
@@ -1552,7 +1550,7 @@ void personal () {
 //
 
 void repl() {
-  using namespace aspeller;
+  using namespace aspell::sp;
 
   if (args.size() != 0) {
     options->replace("repl", args[0].c_str());
@@ -1720,7 +1718,7 @@ static void print_wordaff(const String & base, const String & affs, Conv & oconv
     COUT.printf("/%s\n", oconv(affs));
 }
 
-static bool lower_equal(aspeller::LangImpl * l, ParmString a, ParmString b)
+static bool lower_equal(sp::LangImpl * l, ParmString a, ParmString b)
 {
   if (a.size() != b.size()) return false;
   if (l->to_lower(a[0]) != l->to_lower(b[0])) return false;
@@ -1729,7 +1727,7 @@ static bool lower_equal(aspeller::LangImpl * l, ParmString a, ParmString b)
 
 void combine()
 {
-  using namespace aspeller;
+  using namespace sp;
   CachePtr<LangImpl> lang;
   find_language(*options);
   PosibErr<LangImpl *> res = new_lang_impl(*options);
@@ -1826,7 +1824,7 @@ void munch_list()
 void dump_affix()
 {
   FStream in;
-  EXIT_ON_ERR(aspeller::open_affix_file(*options, in));
+  EXIT_ON_ERR(aspell::sp::open_affix_file(*options, in));
   
   String line;
   while (in.getline(line))
@@ -1869,7 +1867,7 @@ void print_help_line(char abrv, char dont_abrv, const char * name,
   printf("  %-27s %s\n", command.c_str(), tdesc); // FIXME: consider word wrapping
 }
 
-namespace acommon {
+namespace aspell {
   PosibErr<ConfigModule *> get_dynamic_filter(Config * config, ParmStr value);
 }
 

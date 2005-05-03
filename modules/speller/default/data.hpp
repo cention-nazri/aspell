@@ -16,15 +16,14 @@
 #include "cache.hpp"
 #include "wordinfo.hpp"
 
-namespace acommon {
+namespace aspell {
   class Config;
   class FStream;
   class OStream;
   class Convert;
 }
 
-namespace aspeller {
-  using namespace acommon;
+namespace aspell { namespace sp {
 
   class Dictionary;
   class DictList;
@@ -220,7 +219,7 @@ namespace aspeller {
 
   // implemented in writable.cpp
   ReplacementDict * new_default_replacement_dict();
-}
+} }
 
 #endif
 

@@ -5,9 +5,7 @@
 
 namespace {
 
-using namespace acommon;
-
-
+using namespace aspell;
 
 //
 // munch list (complete version)

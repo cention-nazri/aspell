@@ -27,7 +27,7 @@
 
 namespace {
 
-  using namespace acommon;
+  using namespace aspell;
 
   class TexFilter : public NormalFilter 
   {

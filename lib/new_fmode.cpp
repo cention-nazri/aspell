@@ -33,7 +33,7 @@
 
 #include "gettext.h"
 
-namespace acommon {
+namespace aspell {
 
   class FilterMode {
   public:

@@ -2,7 +2,7 @@
 #include "file_util.hpp"
 #include "file_data_util.hpp"
 
-namespace acommon {
+namespace aspell {
   
   void fill_data_dir(const Config * config, String & dir1, String & dir2) {
     if (config->have("local-data-dir")) {

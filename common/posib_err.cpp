@@ -16,7 +16,7 @@
 #include "gettext.h"
 
 
-namespace acommon {
+namespace aspell {
 
   String & String::operator= (const PosibErr<String> & s)
   {

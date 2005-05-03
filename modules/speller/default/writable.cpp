@@ -18,8 +18,8 @@ namespace {
 //
 
 using namespace std;
-using namespace aspeller;
-using namespace acommon;
+using namespace aspell::sp;
+using namespace aspell;
 
 typedef const char * Str;
 typedef unsigned char byte;
@@ -1002,7 +1002,7 @@ WritableReplDict::~WritableReplDict()
 
 }
 
-namespace aspeller {
+namespace aspell { namespace sp {
 
   Dictionary * new_default_writable_dict() {
     return new WritableDict();
@@ -1012,4 +1012,4 @@ namespace aspeller {
     return new WritableReplDict();
   }
 
-}
+} }

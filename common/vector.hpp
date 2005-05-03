@@ -9,7 +9,7 @@
 
 #include <vector>
 
-namespace acommon
+namespace aspell
 {
   template <typename T>
   class Vector : public std::vector<T>
@@ -17,7 +17,7 @@ namespace acommon
   public:
 
 #if defined _MSC_VER && _MSC_VER < 1300
-    // Bring type definitions from the std::vector class to acommon::Vector
+    // Bring type definitions from the std::vector class to aspell::Vector
     typedef T value_type;
     typedef std::vector<T>::size_type size_type;
     typedef std::vector<T>::difference_type difference_type;

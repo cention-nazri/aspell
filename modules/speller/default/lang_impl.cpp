@@ -26,10 +26,8 @@
 
 #include "gettext.h"
 
-namespace aspeller {
+namespace aspell { namespace sp {
 
-  using namespace acommon;
-  
   LangImpl::~LangImpl() {}
 
   static const char TO_CHAR_TYPE[256] = {
@@ -297,7 +295,7 @@ namespace aspeller {
       
       size_t num_repl = 0;
       while (getdata_pair(REPL, d, buf)) {
-        acommon::to_lower(d.key);
+        aspell::to_lower(d.key);
         if (d.key == "rep") {
           num_repl = atoi(d.value); // FIXME make this more robust
           break;
@@ -310,7 +308,7 @@ namespace aspeller {
       for ( i = 0; i != num_repl; ++i) {
         bool res = getdata_pair(REPL, d, buf);
         assert(res); // FIXME
-        acommon::to_lower(d.key);
+        aspell::to_lower(d.key);
         assert(d.key == "rep"); // FIXME
         split(d);
         SuggestRepl rep;
@@ -745,14 +743,14 @@ namespace aspeller {
     str = 0;
     goto loop;
   }
-}
+}}
 
-namespace acommon 
+namespace aspell
 {
   PosibErr<LangBase *> new_language(Config * c)
   {
-    aspeller::find_language(*c); // FIXME: Why?
-    return aspeller::new_lang_impl(*c);
+    sp::find_language(*c); // FIXME: Why?
+    return sp::new_lang_impl(*c);
   }
 
 }

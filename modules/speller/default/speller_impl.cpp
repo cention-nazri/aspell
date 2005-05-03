@@ -23,9 +23,7 @@
 
 #include "gettext.h"
 
-namespace aspeller {
-
-  using namespace acommon;
+namespace aspell { namespace sp {
 
   //
   // data_access functions
@@ -705,5 +703,5 @@ namespace aspeller {
   {
     return new SpellerImpl();
   }
-}
+} }
 

@@ -12,7 +12,7 @@
 
 #include "errors.hpp"
 
-namespace acommon {
+namespace aspell {
 
   // PosibErr<type> is a special Error handling device that will make
   // sure that an error is properly handled.  It is expected to be
@@ -200,9 +200,9 @@ namespace acommon {
 //
 //
 #define RET_ON_ERR_SET(command, type, var) \
-  type var;do{acommon::PosibErr< type > pe(command);if(pe.has_err())return acommon::PosibErrBase(pe);var=pe.data;} while(false)
+  type var;do{aspell::PosibErr< type > pe(command);if(pe.has_err())return aspell::PosibErrBase(pe);var=pe.data;} while(false)
 #define RET_ON_ERR(command) \
-  do{acommon::PosibErrBase pe(command);if(pe.has_err())return acommon::PosibErrBase(pe);}while(false)
+  do{aspell::PosibErrBase pe(command);if(pe.has_err())return aspell::PosibErrBase(pe);}while(false)
 
   
   //

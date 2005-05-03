@@ -14,7 +14,7 @@
 //   must be used to construct the the data member and the destructor
 //   must explicitly be called.
 
-namespace acommon {
+namespace aspell {
 
   template <typename T>
   class BlockSList {

@@ -19,7 +19,7 @@
 #include "settings.h"
 #undef REL_OPS_POLLUTION  // FIXME
 
-namespace aspeller {
+namespace aspell { namespace sp {
 
   //
   // This hash table is implemnted as a Open Address Hash Table
@@ -314,6 +314,6 @@ namespace aspeller {
     }
     
   };
-}
+} }
 
 #endif

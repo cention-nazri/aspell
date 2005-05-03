@@ -15,7 +15,7 @@
 #include "filter_char.hpp"
 #include "filter_char_vector.hpp"
 
-namespace acommon {
+namespace aspell {
 
   class Config;
   class Speller;

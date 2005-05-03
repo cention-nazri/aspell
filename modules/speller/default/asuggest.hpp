@@ -8,7 +8,8 @@
 #include "typo_editdist.hpp"
 #include "cache.hpp"
 
-namespace aspeller {
+namespace aspell { namespace sp {
+
   class Speller;
   class SpellerImpl;
   class Suggest;
@@ -17,7 +18,7 @@ namespace aspeller {
     // implementation at the end of suggest.cc
 
     EditDistanceWeights     edit_distance_weights;
-	 acommon::CachePtr<const TypoEditDistanceInfo> ti;
+    CachePtr<const TypoEditDistanceInfo> ti;
 
     bool try_one_edit_word, try_scan_1, try_scan_2, try_ngram;
 
@@ -40,12 +41,12 @@ namespace aspeller {
     int span;
     int limit;
 
-    acommon::String split_chars;
+    aspell::String split_chars;
 
     SuggestParms() {}
     
-    acommon::PosibErr<void> set(ParmString mode, SpellerImpl * sp);
-    acommon::PosibErr<void> fill_distance_lookup(const acommon::Config * c, const LangImpl & l);
+    aspell::PosibErr<void> set(ParmString mode, SpellerImpl * sp);
+    aspell::PosibErr<void> fill_distance_lookup(const aspell::Config * c, const LangImpl & l);
     
     virtual ~SuggestParms() {}
     virtual SuggestParms * clone() const;
@@ -53,6 +54,7 @@ namespace aspeller {
   };
   
   Suggest * new_default_suggest(const Speller *, const SuggestParms &);
-}
+
+} }
 
 #endif

@@ -16,7 +16,7 @@
 
 #include <stdio.h>
 
-namespace acommon {
+namespace aspell {
 
   class Config;
   class Speller;

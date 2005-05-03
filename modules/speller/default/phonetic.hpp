@@ -5,11 +5,11 @@
 
 #include "string.hpp"
 
-namespace acommon {struct Conv;}
+namespace aspell { 
 
-namespace aspeller {
+  struct Conv;
 
-  using namespace acommon;
+namespace sp {
 
   class LangImpl;
 
@@ -27,6 +27,6 @@ namespace aspeller {
   PosibErr<Soundslike *> new_soundslike(ParmString name,
                                         Conv & conv,
                                         const LangImpl * lang);
-};
+}}
 
 #endif
