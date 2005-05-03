@@ -132,9 +132,7 @@ EXTRA_DIST += common/*.hpp common/*.h\
 
 AM_CPPFLAGS += -DLOCALEDIR=\"$(localedir)\"
 
-bin_PROGRAMS = word-list-compress aspell prezip-bin
-
-word_list_compress_SOURCES = prog/compress.c
+bin_PROGRAMS = aspell prezip-bin
 
 aspell_SOURCES = prog/aspell.cpp prog/check_funs.cpp prog/checker_string.cpp
 
@@ -304,7 +302,7 @@ CLEANFILES += gen/dirs.h
 #
 
 bin_SCRIPTS = scripts/run-with-aspell scripts/aspell-import \
-              scripts/prezip scripts/preunzip scripts/precat 
+              scripts/prezip
 
 pkgdata_SCRIPTS = scripts/spell scripts/ispell
 
@@ -326,7 +324,7 @@ CLEANFILES += scripts/run-with-aspell
 
 EXTRA_DIST += scripts/mkconfig scripts/spell scripts/ispell \
               scripts/run-with-aspell.create scripts/aspell-import\
-              scripts/prezip scripts/preunzip scripts/precat
+              scripts/prezip 
 
 ########################################################################
 #
@@ -413,6 +411,11 @@ maintainer-clean-local:
 	@find . \( -name '*.?pp' -o -name '*.h' -o -name '*.info' \) -print |\
 	    xargs grep -l "Automatically generated file." |\
 	    xargs rm
+
+install-exec-hook:
+	cd $(DESTDIR)$(bindir) && \
+	  rm -f precat preunzip && $(LN_S) prezip precat && $(LN_S) prezip preunzip &&\
+	  rm -f word-list-compress$(EXEEXT) && $(LN_S) prezip-bin$(EXEEXT) word-list-compress$(EXEEXT)
 
 dist-hook:
 	mkdir $(distdir)/maintainer
