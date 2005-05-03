@@ -124,8 +124,8 @@ int main(int argc, const char *argv[])
 	"  r <option>         retrieves a config option\n"
         "  l <option>         retrieves a config option as a list\n"
 	"  S           saves all word lists\n"
-	"  C           clear the curent sesstion word list\n"
-	"  x           quite\n"	);
+	"  C           clear the current session word list\n"
+	"  x           quit\n"	);
       break;
     case 'p':
       print_word_list(speller, 
@@ -249,7 +249,7 @@ static void check_document(AspellSpeller * speller, const char * filename)
 {
   /* For readablity this function does not worry about buffer overrun.
      This is meant as an illustrative example only.  Please do not
-     attent to spell check your docuemnts with this function. */
+     attempt to spell check your documents with this function. */
 
   AspellCanHaveError * ret;
   AspellDocumentChecker * checker;
@@ -262,7 +262,7 @@ static void check_document(AspellSpeller * speller, const char * filename)
 
   /* Open the file */
   doc = fopen(filename, "r");
-  if (doc == 0) {
+  if (doc <= 0) {
     printf("Error: Unable to open the file \"%s\" for reading.", filename);
     return;
   }
@@ -271,9 +271,10 @@ static void check_document(AspellSpeller * speller, const char * filename)
   strcpy(checked_filename, filename);
   strcat(checked_filename, ".checked");
   out = fopen(checked_filename, "w");
-  if (out == 0) {
+  if (out <= 0) {
     printf("Error: Unable to open the file \"%s\" for writing.", 
 	   checked_filename);
+    fclose(doc);
     return;
   }
 
@@ -281,6 +282,8 @@ static void check_document(AspellSpeller * speller, const char * filename)
   ret = new_aspell_document_checker(speller);
   if (aspell_error(ret) != 0) {
     printf("Error: %s\n",aspell_error_message(ret));
+    fclose(out);
+    fclose(doc);
     return;
   }
   checker = to_aspell_document_checker(ret);
@@ -296,7 +299,7 @@ static void check_document(AspellSpeller * speller, const char * filename)
     while (token = aspell_document_checker_next_misspelling(checker),
 	   token.len != 0)
     {
-      /* Print out the misspelling and get a replasment from the user */
+      /* Print out the misspelling and get a replacement from the user */
 
       /* Pay particular attention to how token.offset and diff is used */
 	 
@@ -328,10 +331,12 @@ static void check_document(AspellSpeller * speller, const char * filename)
 
     /* print the line to filename.checked */
     fputs(line, out);
-
   }
 
   delete_aspell_document_checker(checker);
+
+  fclose(out);
+  fclose(doc);
 
   printf("Done.  Results saved to \"%s\".", checked_filename);
 }

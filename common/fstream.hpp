@@ -18,6 +18,7 @@
 //       output, error)
 
 namespace acommon {
+
   class String;
 
   class FStream : public IStream, public OStream

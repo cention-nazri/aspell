@@ -1153,6 +1153,7 @@ namespace {
 #  ifdef DEBUG_SUGGEST
     COUT << "Size of scored: " << scored_near_misses.size() << "\n";
     COUT << "Size of ! scored: " << near_misses.size() << "\n";
+    COUT << "Try Harder: " << try_harder << "\n";
 #  endif
   }
 
@@ -1398,7 +1399,7 @@ namespace aspeller {
         try_scan_1 = false;
       } else if (try_scan_1) {
         try_one_edit_word = true;
-        //check_after_one_edit_word = true;
+        check_after_one_edit_word = true;
         try_scan_1 = false;
       }
     }

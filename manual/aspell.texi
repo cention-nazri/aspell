@@ -4256,11 +4256,14 @@ non-ASCII letters as well as support for skipping over Tex hyphens.
 Bug fixes.
 @end itemize
 
-@heading Changes from 0.60.1 to 0.60.3
+@heading Changes from 0.60.2 to 0.60.3 
 
 @itemize @bullet
 @item
 Fixed bugs involving several of the C API functions.
+@item
+Fixed bug where @samp{ultra} or @samp{fast} mode will not return any
+suggestions when soundslike lookup is not used.
 @item
 Fixed the @command{spell} compatibility script.
 @item
