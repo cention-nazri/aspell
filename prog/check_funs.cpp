@@ -537,7 +537,13 @@ void display_misspelled_word() {
       //   do not know how to avoid it as they is no portable way to
       //   find out if the next character will combine with the
       //   previous.
-      while (j < i->end() && x0 <= x && *j != '\n')
+
+      // We check that:
+      // - we haven't reached the end of the text
+      // - we haven't reached the end of the line
+      // - curse haven't jumped to the next screen line
+      // - curse haven't reached the end of the screen
+      while (j < i->end() && *j != '\n' && y0 == y && x0 < width - 1)
       {
         if (asc_isspace(*j)) {
           last_space_pos = x;
@@ -565,7 +571,7 @@ void display_misspelled_word() {
         ++i;
         j = i->begin();
       } else {
-        if (x - last_space_pos < width/3) {
+        if (x0 - last_space_pos < width/3) {
           wmove(text_w, y, last_space_pos);
           wclrtoeol(text_w);
           j = last_space + 1;
