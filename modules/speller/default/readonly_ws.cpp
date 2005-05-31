@@ -160,7 +160,7 @@ static inline const char * get_affix(const char * d) {
 
 static inline const char * get_category(const char * d) {
   int word_size = get_word_size(d);
-  if (get_flags(d) & HAVE_AFFIX_FLAG & HAVE_CATEGORY_FLAG) 
+  if (get_flags(d) & (HAVE_AFFIX_FLAG | HAVE_CATEGORY_FLAG)) 
     return d + strlen(d + word_size +  1) + 1;
   else if (get_flags(d) & HAVE_CATEGORY_FLAG)
     return d + word_size +  1;
