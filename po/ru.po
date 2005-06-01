@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell-0.60.2-b20041203\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2005-01-21 19:14-0700\n"
+"POT-Creation-Date: 2005-06-01 03:08-0600\n"
 "PO-Revision-Date: 2004-12-06 13:16+0200\n"
 "Last-Translator: Pavel Maryanov <acid_jack@ukr.net>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -1023,113 +1023,113 @@ msgid "Error: Stdin not a terminal."
 msgstr "Ошибка: Stdin не является терминалом."
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:745
+#: prog/check_funs.cpp:769
 msgid "Enter"
 msgstr "Enter"
 
-#: prog/check_funs.cpp:747
+#: prog/check_funs.cpp:771
 msgid "Accept Changes"
 msgstr "Принять изменения"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:750
+#: prog/check_funs.cpp:774
 msgid "Backspace"
 msgstr "Backspace"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:752
+#: prog/check_funs.cpp:776
 msgid "Control-H"
 msgstr "Control-H"
 
-#: prog/check_funs.cpp:753
+#: prog/check_funs.cpp:777
 msgid "Delete the previous character"
 msgstr "Удаление предыдущего символа"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:756
+#: prog/check_funs.cpp:780
 msgid "Left"
 msgstr "Стрелка влево"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:758
+#: prog/check_funs.cpp:782
 msgid "Control-B"
 msgstr "Control-B"
 
-#: prog/check_funs.cpp:759
+#: prog/check_funs.cpp:783
 msgid "Move Back one space"
 msgstr "Перемещение назад на одну позицию"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:762
+#: prog/check_funs.cpp:786
 msgid "Right"
 msgstr "Стрелка вправо"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:764
+#: prog/check_funs.cpp:788
 msgid "Control-F"
 msgstr "Control-F"
 
-#: prog/check_funs.cpp:765
+#: prog/check_funs.cpp:789
 msgid "Move Forward one space"
 msgstr "Перемещение вперед на одну позицию"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:768
+#: prog/check_funs.cpp:792
 msgid "Home"
 msgstr "Home"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:770
+#: prog/check_funs.cpp:794
 msgid "Control-A"
 msgstr "Control-A"
 
-#: prog/check_funs.cpp:771
+#: prog/check_funs.cpp:795
 msgid "Move to the beginning of the line"
 msgstr "Перемещение в начало строки"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:774
+#: prog/check_funs.cpp:798
 msgid "End"
 msgstr "End"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:776
+#: prog/check_funs.cpp:800
 msgid "Control-E"
 msgstr "Control-E"
 
-#: prog/check_funs.cpp:777
+#: prog/check_funs.cpp:801
 msgid "Move to the end of the line"
 msgstr "Перемещение в конец строки"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:780
+#: prog/check_funs.cpp:804
 msgid "Delete"
 msgstr "Delete"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:782
+#: prog/check_funs.cpp:806
 msgid "Control-D"
 msgstr "Control-D"
 
-#: prog/check_funs.cpp:783
+#: prog/check_funs.cpp:807
 msgid "Delete the next character"
 msgstr "Удаление следующего символа"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:787
+#: prog/check_funs.cpp:811
 msgid "Control-K"
 msgstr "Control-K"
 
-#: prog/check_funs.cpp:788
+#: prog/check_funs.cpp:812
 msgid "Kill all characters to the EOL"
 msgstr "Удаление всех символов до конца строки"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:792
+#: prog/check_funs.cpp:816
 msgid "Control-C"
 msgstr "Control-C"
 
-#: prog/check_funs.cpp:793
+#: prog/check_funs.cpp:817
 msgid "Abort This Operation"
 msgstr "Прерывание этой операции"
 
@@ -1207,28 +1207,28 @@ msgstr "Предупреждение: %s Пропускается слово.\n"
 msgid "Possibly incorrect count."
 msgstr "Возможно неверный счет."
 
-#: modules/speller/default/readonly_ws.cpp:359
+#: modules/speller/default/readonly_ws.cpp:361
 msgid "Wrong endian order."
 msgstr "Неверный порядок endian."
 
-#: modules/speller/default/readonly_ws.cpp:382
+#: modules/speller/default/readonly_ws.cpp:384
 msgid "Wrong soundslike."
 msgstr "Неверный soundslike."
 
-#: modules/speller/default/readonly_ws.cpp:388
+#: modules/speller/default/readonly_ws.cpp:390
 msgid "Wrong soundslike version."
 msgstr "Неверная версия soundslike."
 
-#: modules/speller/default/readonly_ws.cpp:821
+#: modules/speller/default/readonly_ws.cpp:823
 msgid "Affix flags found in word but no affix file given."
 msgstr "В слове найдены флаги аффикса, не указан файл аффикса."
 
-#: modules/speller/default/readonly_ws.cpp:859
+#: modules/speller/default/readonly_ws.cpp:861
 msgid ""
 "The total word length, with soundslike data, is larger than 240 characters."
 msgstr "Общая длина слов с данными soundslike превышает 240 символов."
 
-#: modules/speller/default/suggest.cpp:1394
+#: modules/speller/default/suggest.cpp:1395
 msgid "one of ultra, fast, normal, slow, or bad-spellers"
 msgstr "один из: ultra, fast, normal, slow или bad-spellers"
 

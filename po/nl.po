@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60.1-b20041017\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2005-01-21 19:14-0700\n"
+"POT-Creation-Date: 2005-06-01 03:08-0600\n"
 "PO-Revision-Date: 2004-11-06 18:22-0700\n"
 "Last-Translator: Elros Cyriatan <cyriatan@fastmail.fm>\n"
 "Language-Team: Dutch <vertaling@vrijschrift.org>\n"
@@ -1044,113 +1044,113 @@ msgid "Error: Stdin not a terminal."
 msgstr "Fout: standaard invoer is geen terminal."
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:745
+#: prog/check_funs.cpp:769
 msgid "Enter"
 msgstr "Enter"
 
-#: prog/check_funs.cpp:747
+#: prog/check_funs.cpp:771
 msgid "Accept Changes"
 msgstr "WIjzigingen accepteren"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:750
+#: prog/check_funs.cpp:774
 msgid "Backspace"
 msgstr "Backspace"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:752
+#: prog/check_funs.cpp:776
 msgid "Control-H"
 msgstr "Control-H"
 
-#: prog/check_funs.cpp:753
+#: prog/check_funs.cpp:777
 msgid "Delete the previous character"
 msgstr "Het vorige teken verwijderen"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:756
+#: prog/check_funs.cpp:780
 msgid "Left"
 msgstr "Links"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:758
+#: prog/check_funs.cpp:782
 msgid "Control-B"
 msgstr "Control-B"
 
-#: prog/check_funs.cpp:759
+#: prog/check_funs.cpp:783
 msgid "Move Back one space"
 msgstr "Een positie terug verplaatsen"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:762
+#: prog/check_funs.cpp:786
 msgid "Right"
 msgstr "Rechts"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:764
+#: prog/check_funs.cpp:788
 msgid "Control-F"
 msgstr "Control-F"
 
-#: prog/check_funs.cpp:765
+#: prog/check_funs.cpp:789
 msgid "Move Forward one space"
 msgstr "Een positie vooruit verplaatsen"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:768
+#: prog/check_funs.cpp:792
 msgid "Home"
 msgstr "Home"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:770
+#: prog/check_funs.cpp:794
 msgid "Control-A"
 msgstr "Control-A"
 
-#: prog/check_funs.cpp:771
+#: prog/check_funs.cpp:795
 msgid "Move to the beginning of the line"
 msgstr "Naar het begin van de regel verplaatsen"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:774
+#: prog/check_funs.cpp:798
 msgid "End"
 msgstr "End"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:776
+#: prog/check_funs.cpp:800
 msgid "Control-E"
 msgstr "Control-E"
 
-#: prog/check_funs.cpp:777
+#: prog/check_funs.cpp:801
 msgid "Move to the end of the line"
 msgstr "Naar het einde van de regel verplaatsen"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:780
+#: prog/check_funs.cpp:804
 msgid "Delete"
 msgstr "Delete"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:782
+#: prog/check_funs.cpp:806
 msgid "Control-D"
 msgstr "Control-D"
 
-#: prog/check_funs.cpp:783
+#: prog/check_funs.cpp:807
 msgid "Delete the next character"
 msgstr "Het volgende teken verwijderen"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:787
+#: prog/check_funs.cpp:811
 msgid "Control-K"
 msgstr "Control-K"
 
-#: prog/check_funs.cpp:788
+#: prog/check_funs.cpp:812
 msgid "Kill all characters to the EOL"
 msgstr "Alle tekens tot einde-regel verwijderen"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:792
+#: prog/check_funs.cpp:816
 msgid "Control-C"
 msgstr "Control-C"
 
-#: prog/check_funs.cpp:793
+#: prog/check_funs.cpp:817
 msgid "Abort This Operation"
 msgstr "Deze bewerking afbreken"
 
@@ -1236,31 +1236,31 @@ msgstr "Waarschuwing: Woord %s overgeslagen.\n"
 msgid "Possibly incorrect count."
 msgstr "Mogelijk onjuist aantal."
 
-#: modules/speller/default/readonly_ws.cpp:359
+#: modules/speller/default/readonly_ws.cpp:361
 msgid "Wrong endian order."
 msgstr "Verkeerde endiaanse volgorde."
 
-#: modules/speller/default/readonly_ws.cpp:382
+#: modules/speller/default/readonly_ws.cpp:384
 msgid "Wrong soundslike."
 msgstr "Verkeerde klinkt-als."
 
-#: modules/speller/default/readonly_ws.cpp:388
+#: modules/speller/default/readonly_ws.cpp:390
 msgid "Wrong soundslike version."
 msgstr "Verkeerde klinkt-als versie."
 
-#: modules/speller/default/readonly_ws.cpp:821
+#: modules/speller/default/readonly_ws.cpp:823
 msgid "Affix flags found in word but no affix file given."
 msgstr ""
 "Achtervoegsel opties gevonden in woord, maar er is geen achtervoegsel "
 "gegeven."
 
-#: modules/speller/default/readonly_ws.cpp:859
+#: modules/speller/default/readonly_ws.cpp:861
 msgid ""
 "The total word length, with soundslike data, is larger than 240 characters."
 msgstr ""
 "De totale woordlengte, met klinkt-als gegevens, is groter dan 240 tekens."
 
-#: modules/speller/default/suggest.cpp:1394
+#: modules/speller/default/suggest.cpp:1395
 msgid "one of ultra, fast, normal, slow, or bad-spellers"
 msgstr ""
 

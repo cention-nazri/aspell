@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60-pre1\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2005-01-21 19:14-0700\n"
+"POT-Creation-Date: 2005-06-01 03:08-0600\n"
 "PO-Revision-Date: 2004-11-06 18:26-0700\n"
 "Last-Translator: Sanlig Badral <badral@users.sourceforge.net>\n"
 "Language-Team: Mongolian <openmn-translation@lists.sourceforge.net>\n"
@@ -1028,113 +1028,113 @@ msgid "Error: Stdin not a terminal."
 msgstr "Алдаа: Стандарт оролт терминал биш байна."
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:745
+#: prog/check_funs.cpp:769
 msgid "Enter"
 msgstr "Энтэр"
 
-#: prog/check_funs.cpp:747
+#: prog/check_funs.cpp:771
 msgid "Accept Changes"
 msgstr "Зөвшөөрөгдсөн өөрчилөлтүүд"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:750
+#: prog/check_funs.cpp:774
 msgid "Backspace"
 msgstr "Бакспейс"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:752
+#: prog/check_funs.cpp:776
 msgid "Control-H"
 msgstr "Контрол-H"
 
-#: prog/check_funs.cpp:753
+#: prog/check_funs.cpp:777
 msgid "Delete the previous character"
 msgstr "Өмнөх тэмдэгтийг устгах"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:756
+#: prog/check_funs.cpp:780
 msgid "Left"
 msgstr "Зүүн"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:758
+#: prog/check_funs.cpp:782
 msgid "Control-B"
 msgstr "Контол-B"
 
-#: prog/check_funs.cpp:759
+#: prog/check_funs.cpp:783
 msgid "Move Back one space"
 msgstr "Нэг зай хойш шилжих"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:762
+#: prog/check_funs.cpp:786
 msgid "Right"
 msgstr "Баруун"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:764
+#: prog/check_funs.cpp:788
 msgid "Control-F"
 msgstr "Контрол-F"
 
-#: prog/check_funs.cpp:765
+#: prog/check_funs.cpp:789
 msgid "Move Forward one space"
 msgstr "Нэг зай урагш шилжих"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:768
+#: prog/check_funs.cpp:792
 msgid "Home"
 msgstr "Гэр"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:770
+#: prog/check_funs.cpp:794
 msgid "Control-A"
 msgstr "Контрол-A"
 
-#: prog/check_funs.cpp:771
+#: prog/check_funs.cpp:795
 msgid "Move to the beginning of the line"
 msgstr "Мөрийн эхлэлд шилжих"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:774
+#: prog/check_funs.cpp:798
 msgid "End"
 msgstr "Төгсгөл"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:776
+#: prog/check_funs.cpp:800
 msgid "Control-E"
 msgstr "Контрол-E"
 
-#: prog/check_funs.cpp:777
+#: prog/check_funs.cpp:801
 msgid "Move to the end of the line"
 msgstr "Мөрийн төгсгөлд шилжих"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:780
+#: prog/check_funs.cpp:804
 msgid "Delete"
 msgstr "Устгах"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:782
+#: prog/check_funs.cpp:806
 msgid "Control-D"
 msgstr "Контрол-D"
 
-#: prog/check_funs.cpp:783
+#: prog/check_funs.cpp:807
 msgid "Delete the next character"
 msgstr "Дараагийн тэмдэгтийг устгах"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:787
+#: prog/check_funs.cpp:811
 msgid "Control-K"
 msgstr "Контрол-K"
 
-#: prog/check_funs.cpp:788
+#: prog/check_funs.cpp:812
 msgid "Kill all characters to the EOL"
 msgstr "EOL дахь бүх тэмдэгтийг устгах"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:792
+#: prog/check_funs.cpp:816
 msgid "Control-C"
 msgstr "Контрол-C"
 
-#: prog/check_funs.cpp:793
+#: prog/check_funs.cpp:817
 msgid "Abort This Operation"
 msgstr "Энэ Үйлдлийг Таслах"
 
@@ -1212,28 +1212,28 @@ msgstr "Сануулга: %s үгийг алгасав.\n"
 msgid "Possibly incorrect count."
 msgstr "Магад буруу тоо."
 
-#: modules/speller/default/readonly_ws.cpp:359
+#: modules/speller/default/readonly_ws.cpp:361
 msgid "Wrong endian order."
 msgstr "Буруу төгсгөлийн дараалал."
 
-#: modules/speller/default/readonly_ws.cpp:382
+#: modules/speller/default/readonly_ws.cpp:384
 msgid "Wrong soundslike."
 msgstr "Буруу авиа."
 
-#: modules/speller/default/readonly_ws.cpp:388
+#: modules/speller/default/readonly_ws.cpp:390
 msgid "Wrong soundslike version."
 msgstr "Буруу авианы хувилбар."
 
-#: modules/speller/default/readonly_ws.cpp:821
+#: modules/speller/default/readonly_ws.cpp:823
 msgid "Affix flags found in word but no affix file given."
 msgstr "Үгэнд аффикс флаг олдсон боловч аффикс файл өгөгдөөгүй байна."
 
-#: modules/speller/default/readonly_ws.cpp:859
+#: modules/speller/default/readonly_ws.cpp:861
 msgid ""
 "The total word length, with soundslike data, is larger than 240 characters."
 msgstr "Үгийн нийт урт авианы өгөгдлийн хамт 240 тэмдэгтээс их байна."
 
-#: modules/speller/default/suggest.cpp:1394
+#: modules/speller/default/suggest.cpp:1395
 msgid "one of ultra, fast, normal, slow, or bad-spellers"
 msgstr ""
 
