@@ -915,7 +915,7 @@ void pipe()
           if (guesses.empty())
             COUT.printf("# %s %u\n", word, offset);
           else
-            COUT.printf("? %s 0 %u: %s", word, offset,
+            COUT.printf("? %s 0 %u: %s\n", word, offset,
                         guesses.c_str() + 2);
 	}
 	if (do_time)
