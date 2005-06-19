@@ -67,7 +67,7 @@
 @item haw @tab Hawaiian @tab Latin @tab Maybe @tab -
 @item he @tab Hebrew @tab Hebrew @tab 0.60 @tab -
 @item hi @tab Hindi @tab Devanagari @tab 0.60 @tab -
-@item hil @tab Hiligaynon @tab Latin @tab Maybe @tab -
+@item hil @tab Hiligaynon @tab Latin @tab 0.50 @tab -
 @item ho @tab Hiri Motu @tab Latin @tab - @tab -
 @item hr @tab Croatian @tab Latin @tab 0.50 @tab -
 @item hsb @tab Upper Sorbian @tab Latin @tab 0.60 @tab -

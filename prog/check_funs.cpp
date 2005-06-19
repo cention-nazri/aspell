@@ -530,14 +530,25 @@ void display_misspelled_word() {
 
       wattrset(text_w,A_NORMAL);
       int last_space_pos = 0;
-      const char * last_space = i->begin();
+      const char * last_space = j;
+      int prev_glyph_pos = 0;
+      const char * prev_glyph = j;
 
       // NOTE: Combining characters after a character at the very end of
       //   a line will cause an unnecessary word wrap.  Unfortunately I
       //   do not know how to avoid it as they is no portable way to
       //   find out if the next character will combine with the
       //   previous.
-      while (j < i->end() && x0 <= x && *j != '\n')
+
+      // We check that:
+      // - we haven't reached the end of the text
+      // - we haven't reached the end of the line
+      // - curse haven't jumped to the next screen line
+      // - curse haven't reached the end of the screen
+      while (j < i->end()
+             && *j != '\n' 
+             && (y0 == y && x >= x0) 
+             && x0 < width - 1)
       {
         if (asc_isspace(*j)) {
           last_space_pos = x;
@@ -549,26 +560,39 @@ void display_misspelled_word() {
         } else if (j == word_end) {
           wattrset(text_w,A_NORMAL);
         }
+        
         int len = mblen(j, MB_CUR_MAX);
+        int res = OK;
         if (len > 0) {
-          waddnstr(text_w, const_cast<char *>(j), len);
+          res = waddnstr(text_w, const_cast<char *>(j), len);
         } else {
           waddch(text_w, ' ');
           len = 1;
         }
+
         j += len;
         x0 = x;
         getyx(text_w, y, x);
+
+        if (x != x0 || res == ERR) {
+          prev_glyph_pos = x0;
+          prev_glyph = j - len;
+        }
+        
       }
       y = y0;
       if (j == i->end() || *j == '\n') {
         ++i;
         j = i->begin();
       } else {
-        if (x - last_space_pos < width/3) {
+        if (width - last_space_pos < width/3) {
           wmove(text_w, y, last_space_pos);
           wclrtoeol(text_w);
           j = last_space + 1;
+        } else {
+          wmove(text_w, y, prev_glyph_pos);
+          wclrtoeol(text_w);
+          j = prev_glyph;
         }
         wmove(text_w, y, width-1);
         wattrset(text_w,A_NORMAL);

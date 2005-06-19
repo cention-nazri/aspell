@@ -119,7 +119,7 @@ errors when trying to use a filter, then it is likely that loadable
 filter support is not working yet on your platform.  Thus, in order to
 get Aspell to work correctly you will need to avoid compiling the
 filters as individual modules by using the
-@option{--disable-compile-in-filters} when configuring Aspell with
+@option{--enable-compile-in-filters} when configuring Aspell with
 @command{./configure}.
 
 @node Upgrading from Aspell 0.60
