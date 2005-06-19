@@ -32,6 +32,7 @@
 @item chk @tab Chuukese @tab Latin @tab Maybe @tab -
 @item co @tab Corsican @tab Latin @tab Maybe @tab -
 @item cs @tab Czech @tab Latin @tab 0.50 @tab Yes
+@item csb @tab Kashubian @tab Latin @tab 0.60 @tab -
 @item cv @tab Chuvash @tab Cyrillic @tab - @tab -
 @item cy @tab Welsh @tab Latin @tab 0.50 @tab -
 @item
@@ -65,8 +66,8 @@
 @item ha @tab Hausa @tab Latin @tab Maybe @tab -
 @item haw @tab Hawaiian @tab Latin @tab Maybe @tab -
 @item he @tab Hebrew @tab Hebrew @tab 0.60 @tab -
-@item hi @tab Hindi @tab Devanagari @tab Maybe @tab -
-@item hil @tab Hiligaynon @tab Latin @tab Maybe @tab -
+@item hi @tab Hindi @tab Devanagari @tab 0.60 @tab -
+@item hil @tab Hiligaynon @tab Latin @tab 0.50 @tab -
 @item ho @tab Hiri Motu @tab Latin @tab - @tab -
 @item hr @tab Croatian @tab Latin @tab 0.50 @tab -
 @item hsb @tab Upper Sorbian @tab Latin @tab 0.60 @tab -
@@ -123,14 +124,14 @@
 @item ml @tab Malayalam @tab Malayalam @tab Maybe @tab -
 @item mn @tab Mongolian @tab Cyrillic @tab 0.60 @tab Yes
 @item mo @tab Moldavian @tab Cyrillic @tab - @tab -
-@item mr @tab Marathi @tab Devanagari @tab Maybe @tab -
+@item mr @tab Marathi @tab Devanagari @tab 0.60 @tab -
 @item ms @tab Malay @tab Latin @tab 0.50 @tab -
 @item mt @tab Maltese @tab Latin @tab 0.50 @tab -
 @item my @tab Burmese @tab Myanmar @tab - @tab -
 @item
 @item nb @tab Norwegian Bokmal @tab Latin @tab 0.50 @tab -
 @item nd @tab North Ndebele @tab Latin @tab Maybe @tab -
-@item nds @tab Low Saxon @tab Latin @tab Maybe @tab -
+@item nds @tab Low Saxon @tab Latin @tab 0.60 @tab -
 @item ne @tab Nepali @tab Devanagari @tab Maybe @tab -
 @item ng @tab Ndonga @tab Latin @tab Maybe @tab -
 @item niu @tab Niuean @tab Latin @tab Maybe @tab -
@@ -143,10 +144,10 @@
 @item
 @item oc @tab Occitan / Provencal @tab Latin @tab Maybe @tab -
 @item om @tab Oromo @tab Latin @tab - @tab -
-@item or @tab Oriya @tab Oriya @tab - @tab -
+@item or @tab Oriya @tab Oriya @tab 0.60 @tab -
 @item os @tab Ossetic @tab Cyrillic @tab - @tab -
 @item
-@item pa @tab Punjabi @tab Gurmukhi @tab - @tab -
+@item pa @tab Punjabi @tab Gurmukhi @tab 0.60 @tab -
 @item pam @tab Pampanga @tab Latin @tab Maybe @tab -
 @item pap @tab Papiamento @tab Latin @tab Maybe @tab -
 @item pl @tab Polish @tab Latin @tab 0.50 @tab -
