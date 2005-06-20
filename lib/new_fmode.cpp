@@ -603,8 +603,10 @@ namespace acommon {
            || ( *(dp.value) == '\0' ) )
         return make_err(mode_version_requirement).with_file(possModeFile, dp.line_num);
 
+#ifdef FILTER_VERSION_CONTROL
       PosibErr<void> peb = check_version(dp.value.str);
       if (peb.has_err()) return peb.with_file(possModeFile, dp.line_num);
+#endif
       
       FilterMode collect(possMode);
       
