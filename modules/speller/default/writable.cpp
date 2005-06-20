@@ -42,7 +42,7 @@ struct Equal {
 
 typedef Vector<Str> StrVector;
 
-typedef hash_set<Str,Hash,Equal> WordLookup;
+typedef hash_multiset<Str,Hash,Equal> WordLookup;
 typedef hash_map<Str,StrVector>  SoundslikeLookup;
 
 class WritableBase : public Dictionary {
@@ -51,7 +51,7 @@ protected:
   String compatibility_suffix;
     
   time_t cur_file_date;
-    
+  
   String compatibility_file_name;
     
   WritableBase(BasicType t, const char * n, const char * s, const char * cs)
