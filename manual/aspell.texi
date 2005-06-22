@@ -26,7 +26,7 @@ Documentation License".
 @end direntry
 
 @titlepage
-@title GNU Aspell 0.60.2
+@title GNU Aspell 0.60.3
 @author Kevin Atkinson (@email{kevina@@gnu.org})
 @page
 @vskip 0pt plus 1filll
@@ -1581,41 +1581,45 @@ The suggestion modes are as follows.
 @item ultra
 This method will use the fastest method available to come up with
 decent suggestions.  This currently means that it will look for
-soundslikes within one edit distance apart without doing any
-typo-analysis or using replacement tables.
-In this mode Aspell gets about 87% of
-the words from my small test kernel of misspelled words.  (Go to
-@uref{http://aspell.net/test} for more info on the test kernel as well
-as comparisons of this version of Aspell with previous versions and
-other spell checkers.)
+soundslikes within one edit distance but without using a replacement
+table.  In this mode Aspell gets about 87% of the words from my small
+test kernel of misspelled words.  (Go to @uref{http://aspell.net/test}
+for more info on the test kernel as well as comparisons of this
+version of Aspell with previous versions and other spell checkers.)
 
 @item fast
-This method is like @option{ultra} except that it also performs
-typo-analysis and uses replacement tables.  The typo-analysis brings
+This method is like @option{ultra} except that it also uses
+the replacement table if one is available.
+
+
+The typo-analysis brings
 words which are likely to be due to typos to the beginning of the
 list.  This mode should get around the same number of words that the
 @option{ultra} method does.
 
 @item normal
-This method normally looks for soundslikes within two edit distance
-apart and performs typo-analysis unless it is turned off.  Is is
-much slower than fast mode but it returns better suggestions. This
-mode gets 93% of the words.
+This mode will use what ever method is necessary to return good
+suggestions in most cases in a reasonable amount of time.  This
+currently means it will looks for soundslikes within two edit distance
+apart.  This mode gets 93% of the words.
 
 @item slow
-
-Normally identical to @option{normal}.
+Like @option{normal} except that ``reasonable amount of time'' is not
+a consideration.  In most cases it will return the same results as
+@option{normal}.  The biggest difference is that it will try an ngram
+scan if the normal methods of finding a suggestion fail.  
+@c FIXME: Explain what this means.
 
 @item bad-spellers
-This method also looks for soundslikes within two edit distances apart
-but is tailored more for the bad speller, where as @option{fast} or
-@option{normal} are tailored more to strike a good balance between
-typos and true misspellings.  This mode never performs typo-analysis
-and returns a @emph{huge} number of words for the really bad spellers
-who can't seem to get the spelling anything close to what it should
-be.  If the misspelled word looks anything like the correct spelling
-it is bound to be found @emph{somewhere} on the list of 100 or more
-suggestions.  This mode gets 98% of the words.
+This method is like @option{slow} but is tailored more for the bad
+speller, where as the other modes are tailored more
+to strike a good balance between typos and true misspellings.  This
+mode never performs typo-analysis and returns a @emph{huge} number of
+words for the really bad spellers who can't seem to get the spelling
+anything close to what it should be.  If the misspelled word looks
+anything like the correct spelling it is bound to be found
+@emph{somewhere} on the list of 100 or more suggestions.  This mode
+gets 98% of the words.
 @end table
 
 If jump tables were not used then the @option{normal} option is
@@ -4201,9 +4205,20 @@ Fixed bugs involving several of the C API functions.
 Fixed bug where @samp{ultra} or @samp{fast} mode will not return any
 suggestions when soundslike lookup is not used.
 @item
+Made a minor, yet significant, optimization to the suggestion code.
+This speed things up by an order of magnitude in some cases.
+@item
+Avoid using the slow ngram scan except when the @option{sug-mode} is 
+@samp{slow} or @samp{bad-speller}.
+@item
+Fixed a bug in curses mode which causes word-wrap to not work
+correctly in some cases.
+@item
+Fixed a bug in pipe mode with a missing newline.
+@item
 Fixed the @command{spell} compatibility script.
 @item
-Several other bug fixed.
+Several other minor bugs fixed.
 @end itemize
 
 @heading Changes from 0.60.1 to 0.60.2 (December 18, 2004)

@@ -142,6 +142,9 @@ work.  A new English dictionary is now available which avoids using
 this option.  In addition the @option{ignore-accents} option is
 currently unimplemented.
 
+The flag @option{-l} is now a shortcut for @option{--lang}, instead of
+@option{--list} as it was in Aspell 0.50.
+
 @anchor{Binary Compatibility}
 @appendixsubsec Binary Compatibility
 
