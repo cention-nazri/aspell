@@ -480,6 +480,7 @@ namespace {
     const Jump * jump1;
     const Jump * jump2;
     const char * cur;
+    const char * prev;
     int level;
     bool invisible_soundslike;
 
@@ -496,7 +497,10 @@ namespace {
     //CERR << level << ":" << stopped_at << "  :";
     //CERR << jump1->sl << ":" << jump2->sl << "\n";
 
+  loop:
+
     const char * tmp = cur;
+    const char * p;
 
     if (level == 1 && stopped_at < 2) {
 
@@ -525,7 +529,7 @@ namespace {
 
     } else if (level == 2) {
 
-      cur = tmp = obj->word_block + jump2->loc;
+      tmp = cur = obj->word_block + jump2->loc;
       level = 3;
 
     } else if (get_offset(cur) == 0) {
@@ -545,6 +549,27 @@ namespace {
 
     cur = get_next(cur); // this will be the NEXT item looked at
 
+    p = prev;
+    prev = tmp;
+    if (p) {
+      // PRECOND:
+      // unless stopped_at >= LARGE_NUM
+      //     strlen(p) >= stopped_at
+      //     (stopped_at >= 3) implies 
+      //         strncmp(p, tmp, 3) == 0 if !invisible_soundslike
+      //         strncmp(to_sl(p), to_sl(tmp), 3) == 0 if invisible_soundslike
+      if (stopped_at == 3) {
+        if (p[3] == tmp[3]) goto loop;
+      } else if (stopped_at == 4) {
+        if (p[3] == tmp[3] && tmp[3] &&
+            p[4] == tmp[4]) goto loop;
+      } else if (stopped_at == 5) {
+        if (p[3] == tmp[3] && tmp[3] &&
+            p[4] == tmp[4] && tmp[4] &&
+            p[5] == tmp[5]) goto loop;
+      }
+    }
+    
     data.word = tmp;
     data.word_size = get_word_size(tmp);
     if (invisible_soundslike) {
@@ -552,9 +577,11 @@ namespace {
       data.what = WordEntry::Word;
     } 
     data.intr[0] = (void *)tmp;
+    
     return &data;
 
   jquit:
+    prev = 0;
     if (!*tmp) return 0;
     data.word = tmp;
     data.word_size = !tmp[1] ? 1 : !tmp[2] ? 2 : 3;

@@ -702,7 +702,7 @@ namespace {
       while ( (sw = els->next(stopped_at)) ) {
 
         //CERR.printf("[%s (%d) %d]\n", sw->word, sw->word_size, sw->what);
-        assert(strlen(sw->word) == sw->word_size);
+        //assert(strlen(sw->word) == sw->word_size);
           
         if (sw->what != WordEntry::Word) {
           sl = sw->word;
@@ -1368,14 +1368,19 @@ namespace aspeller {
     try_one_edit_word = sp->soundslike_root_only || sp->unconditional_run_together_;
     check_after_one_edit_word = false;
     ngram_threshold = 2;
-    if (mode == "ultra" || mode == "fast") {
+    if (mode == "ultra") {
+      try_scan_1 = true;
+      try_scan_2 = false;
+      try_ngram = false;
+      use_repl_table = false;
+    } else if (mode == "fast") {
       try_scan_1 = true;
       try_scan_2 = false;
       try_ngram = false;
     } else if (mode == "normal") {
       try_scan_1 = true;
       try_scan_2 = true;
-      try_ngram = true;
+      try_ngram = false;
     } else if (mode == "slow") {
       try_scan_1 = false;
       try_scan_2 = true;
