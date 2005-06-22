@@ -1581,21 +1581,15 @@ The suggestion modes are as follows.
 @item ultra
 This method will use the fastest method available to come up with
 decent suggestions.  This currently means that it will look for
-soundslikes within one edit distance but without using a replacement
-table.  In this mode Aspell gets about 87% of the words from my small
-test kernel of misspelled words.  (Go to @uref{http://aspell.net/test}
-for more info on the test kernel as well as comparisons of this
-version of Aspell with previous versions and other spell checkers.)
+soundslikes within one edit distance.  This method will also use the
+replacement table if one is available.  In this mode Aspell gets about
+87% of the words from my small test kernel of misspelled words.  (Go
+to @uref{http://aspell.net/test} for more info on the test kernel as
+well as comparisons of this version of Aspell with previous versions
+and other spell checkers.)
 
 @item fast
-This method is like @option{ultra} except that it also uses
-the replacement table if one is available.
-
-
-The typo-analysis brings
-words which are likely to be due to typos to the beginning of the
-list.  This mode should get around the same number of words that the
-@option{ultra} method does.
+This method is currently identical to @option{ultra}.
 
 @item normal
 This mode will use what ever method is necessary to return good

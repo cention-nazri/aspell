@@ -1372,7 +1372,6 @@ namespace aspeller {
       try_scan_1 = true;
       try_scan_2 = false;
       try_ngram = false;
-      use_repl_table = false;
     } else if (mode == "fast") {
       try_scan_1 = true;
       try_scan_2 = false;
