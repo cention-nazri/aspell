@@ -269,6 +269,7 @@ namespace acommon {
           ++num;
           p = strcspn(c, "-");
           if (p == s && memcmp(m, c, s) == 0) {match = true; break;}
+          if (c[p] == '-') p++;
         }
         if (!match) goto fail;
         cur_rank = 0;
