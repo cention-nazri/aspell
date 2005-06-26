@@ -950,7 +950,7 @@ namespace {
           prev->aff = aff;
           aff += l1;
           for (const char * p = cur->aff; *p; ++p) {
-            if (memchr(prev->aff, l1, *p)) continue;
+            if (memchr(prev->aff, *p, l1)) continue;
             *aff = *p;
             ++aff;
           }
