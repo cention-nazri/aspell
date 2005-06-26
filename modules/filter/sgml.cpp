@@ -1,6 +1,6 @@
 // This file is part of The New Aspell
 // Copyright (C) 2004 by Tom Snyder
-// Copyright (C) 2004-2001 by Kevin Atkinson under the GNU LGPL license
+// Copyright (C) 2001-2004 by Kevin Atkinson under the GNU LGPL license
 // version 2.0 or 2.1.  You should have received a copy of the LGPL
 // license along with this library if you did not you can find
 // it at http://www.gnu.org/.
@@ -437,21 +437,21 @@ namespace {
 	FilterChar * i0 = i;
 	FilterChar::Chr chr;
 	++i;
-	if (*i == '#') {
+	if (i != stop && *i == '#') {
 	  chr = 0;
 	  ++i;
-	  while (asc_isdigit(*i)) {
+	  while (i != stop && asc_isdigit(*i)) {
 	    chr *= 10;
 	    chr += *i - '0';
 	    ++i;
 	  }
 	} else {
-	  while (asc_isalpha(*i) || asc_isdigit(*i)) {
+	  while (i != stop && (asc_isalpha(*i) || asc_isdigit(*i))) {
 	    ++i;
 	  }
 	  chr = '?';
 	}
-	if (*i == ';')
+	if (i != stop && *i == ';')
 	  ++i;
 	buf.append(FilterChar(chr, i0, i));
       } else {
