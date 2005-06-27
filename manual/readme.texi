@@ -98,12 +98,12 @@ or the name of the library (for example
 
 @appendixsubsec Unicode Support
 
-In order for Aspell to correctly spell check UTF-8 documents the "wide"
-version of the curses library must be installed.  This is different from
-the normal version of curses library, and is normally named
-@file{libcursesw} (with a @samp{w} at the end) or @file{libncursesw}.
-UTF-8 documents will not display correctly without the right curses
-version installed.
+In order for Aspell to correctly spell check UTF-8 documents in full
+screen mode the "wide" version of the curses library must be
+installed.  This is different from the normal version of curses
+library, and is normally named @file{libcursesw} (with a @samp{w} at
+the end) or @file{libncursesw}.  UTF-8 documents will not display
+correctly without the right curses version installed.
 
 In addition your system must also support the @code{mblen} function.
 Although this function was defined in the ISO C89 standard (ANSI

@@ -3,7 +3,7 @@
 @item
 @item aa @tab Afar @tab Latin @tab - @tab -
 @item af @tab Afrikaans @tab Latin @tab 0.50 @tab -
-@item ak @tab Akan @tab Latin @tab - @tab -
+@item ak @tab Akan @tab Latin @tab Planned @tab -
 @item am @tab Amharic @tab Ethiopic @tab 0.60 @tab -
 @item ar @tab Arabic @tab Arabic @tab Planned @tab -
 @item as @tab Assamese @tab Bengali @tab - @tab -

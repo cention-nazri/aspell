@@ -1,14 +1,14 @@
 \input texinfo   @c -*-texinfo-*-
 
 @setfilename aspell.info
-@settitle GNU Aspell 0.60.2
+@settitle GNU Aspell 0.60.3
 @syncodeindex pg cp
 @documentencoding ISO-8859-1
 
 @copying
 This is the user's manual for Aspell
 
-Copyright @copyright{} 2000--2004 Kevin Atkinson.
+Copyright @copyright{} 2000--2005 Kevin Atkinson.
 
 @quotation
 Permission is granted to copy, distribute and/or modify this document
@@ -263,7 +263,12 @@ From Ispell}.
 
 Support for Aspell can be found on the Aspell mailing lists.
 Instructions for joining the various mailing lists (and an archive of
-them) can be found off the Aspell home page at @uref{http://aspell.net}.
+them) can be found off the Aspell home page at
+@uref{http://aspell.net}.
+
+Bug reports should be submitted via the Sourceforge Tracker at
+@uref{http://sourceforge.net/@/tracker/?group_id=245} rather than
+being posted to the mailing lists.
 
 @node Basic Usage
 @chapter Basic Usage
@@ -1433,7 +1438,7 @@ controls which commands to ignore the parameters of and the list option
 environments to ignore.
 
 The Texinfo filter has special code to deal with the @command{@@table}
-and related commands.  It will apply the formating command to each of
+and related commands.  It will apply the formatting command to each of
 the @command{@@item} or @command{@@itemx} commands just like Texinfo
 will.  This means that if the formatting command is @command{@@code}
 and and the @command{@@code} command is a member of the
@@ -1891,7 +1896,7 @@ include one of them.
 
 The @option{simple} flag will select an alternate faster algorithm.
 This algorithm is very similar to the @command{munch} command
-distributed with Myspell (the Open Office spell checker), however, it
+distributed with MySpell (the Open Office spell checker), however, it
 doesn't give nearly as good results.  It does okay for the English
 word list but not for some other languages such as German; the normal
 algorithm reduced a list of 312,002 German words to 79,420 base words
@@ -1904,40 +1909,52 @@ algorithm may disappear in a future version of Aspell.
 @anchor{Format of the Personal Dictionary}
 @subsection Format of the Personal Dictionary
                                    
-The personal dictionary generally has a name of the form:
+The personal dictionary generally has a filename of the form:
+
 @example
 .aspell.@var{lang}.pws
 @end example
 
-The file has a header line of the
-form:
+@noindent
+And the file itself contains two parts.  The first part is a
+header line of the form:
+
 @example
-personal_ws-1.1 @var{lang} @var{num}
+personal_ws-1.1 @var{lang} @var{num} @i{[}@var{encoding}@i{]}
 @end example  
+
 @noindent
 where @var{num} is the number of words in the list.  This number is
 only used as a hint, and thus does not have to be accurate.  When
 creating a new dictionary it is perfectly acceptable for @var{num} to
-be 0.
+be 0.  The @var{encoding} is optional and specifies the encoding of
+the word list.  If it is left out the encoding is expected to be in
+the default encoding for the language as specified by the
+@option{data-encoding} option.  @xref{data-encoding}.
 
-The rest of the file is simply a word list with one line per word.
+The second part of simply a word list with one word per line.
 
 @subsection Format of the Personal Replacement Dictionary
 
-The personal replacement dictionary generally has a name of the form:
+The personal replacement dictionary generally has a filename of the form:
+
 @example
 .aspell.@var{lang}.prepl
 @end example
 
-The file has a header line of the
-form:
-@example
-personal_repl-1.1 @var{lang} @var{num}
-@end example  
 @noindent
-where @var{num} is currently unused and thus always 0.
+And the file itself contains two parts.  The first part is a
+header line of the form:
 
-The rest of the file is simply of replacements with one replacement
+@example
+personal_repl-1.1 @var{lang} @var{num} @i{[}@var{encoding}@i{]}
+@end example  
+
+@noindent
+where @var{num} is currently unused and thus always 0.  As with the
+personal dictionary the @var{encoding} is optional.
+
+The second part simply a list of replacements with one replacement
 per line with each replacement pair has the following format:
 
 @example
@@ -2483,6 +2500,7 @@ The optional fields are as follows:
 
 @table @option
 
+@anchor{data-encoding}
 @item data-encoding
 
 The encoding the language data files are expected to be in as well as
@@ -3231,8 +3249,8 @@ this is done, that character set file should be renamed to
 @file{@var{lang}.cset}.
 
 The line(s) starting with @samp{=} do not specify the exact name of the
-file, but rather the name of the unicode mapping that is used.  Unless
-you change the unicode mapping, this line should not be changed.
+file, but rather the name of the Unicode mapping that is used.  Unless
+you change the Unicode mapping, this line should not be changed.
 
 @node Creating An Official Dictionary Package
 @section Creating An Official Dictionary Package
@@ -3472,7 +3490,7 @@ Any letter in the Unicode range U+0000 - U+0249, U+1E00 - U+1EFF (Basic
 Latin, Latin-1 Supplement, Latin Extended-A, Latin Extended-B, and Latin
 Extended Additional) can be represented using around 175 basic letters,
 and 25 modifiers which is less than 210 and can thus fit in an Aspell
-8-bit character set.  Since this unicode range covers any possible Latin
+8-bit character set.  Since this Unicode range covers any possible Latin
 language this special character set can be used to represent any word
 written using the Latin script if so desired.
 
@@ -3638,7 +3656,7 @@ ISO 639-2 Registration Authority,
 @uref{http://www.loc.gov/@/standards/iso639-2/}
 
 @item
-Languages and Scripts (Offical Unicode Site),
+Languages and Scripts (Official Unicode Site),
 @uref{http://www.unicode.org/@/onlinedat/languages-scripts.html}
 
 @item
@@ -3991,7 +4009,7 @@ Write a @strong{GUI} for the Aspell utility. Ideally it should be able to do
 everything the Aspell utility can do and not just be able spell check
 a document.
 @item
-Develop a @strong{more powerfull C API} for Aspell.  Ideally this API should
+Develop a @strong{more powerful C API} for Aspell.  Ideally this API should
 allow one to perform all the tasks the Aspell utility can do.  This
 included the ability to check whole documents, and create
 dictionaries, among other things.  
@@ -4190,7 +4208,7 @@ a C++ program.
 @node ChangeLog
 @appendix ChangeLog
 
-@heading Changes from 0.60.2 to 0.60.3 
+@heading Changes from 0.60.2 to 0.60.3 (June 27, 2005)
 
 @itemize @bullet
 @item
@@ -4213,6 +4231,13 @@ Fixed a bug in pipe mode with a missing newline.
 Fixed the @command{spell} compatibility script.
 @item
 Several other minor bugs fixed.
+@item
+Made note about the change in behavior of the @option{-l} command line
+switch.
+@item
+Other manual update/fixes.
+@item
+Updated to Libtool 1.5.18 and Automake 1.9.6.
 @end itemize
 
 @heading Changes from 0.60.1 to 0.60.2 (December 18, 2004)
