@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60-pre1\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2005-06-01 03:08-0600\n"
+"POT-Creation-Date: 2005-06-27 03:49-0600\n"
 "PO-Revision-Date: 2004-11-06 18:26-0700\n"
 "Last-Translator: Sanlig Badral <badral@users.sourceforge.net>\n"
 "Language-Team: Mongolian <openmn-translation@lists.sourceforge.net>\n"
@@ -348,12 +348,12 @@ msgid ""
 msgstr ""
 "Энэ нь »%s« файл уншигдахаар нээгдээгүй эсвэл байхгүй байхыг зааж байж болно."
 
-#: common/convert.cpp:552 common/convert.cpp:658 common/convert.cpp:704
+#: common/convert.cpp:552 common/convert.cpp:659 common/convert.cpp:705
 #, c-format
 msgid "The Unicode code point U+%04X is unsupported."
 msgstr "Юникодын U+%04X муж дэмжигдээгүй."
 
-#: common/convert.cpp:828
+#: common/convert.cpp:829
 #, c-format
 msgid "Invalid UTF-8 sequence at position %d."
 msgstr "%d байрлалт хүчингүй UTF-8 дараалал."
@@ -1224,16 +1224,16 @@ msgstr "Буруу авиа."
 msgid "Wrong soundslike version."
 msgstr "Буруу авианы хувилбар."
 
-#: modules/speller/default/readonly_ws.cpp:823
+#: modules/speller/default/readonly_ws.cpp:850
 msgid "Affix flags found in word but no affix file given."
 msgstr "Үгэнд аффикс флаг олдсон боловч аффикс файл өгөгдөөгүй байна."
 
-#: modules/speller/default/readonly_ws.cpp:861
+#: modules/speller/default/readonly_ws.cpp:888
 msgid ""
 "The total word length, with soundslike data, is larger than 240 characters."
 msgstr "Үгийн нийт урт авианы өгөгдлийн хамт 240 тэмдэгтээс их байна."
 
-#: modules/speller/default/suggest.cpp:1395
+#: modules/speller/default/suggest.cpp:1399
 msgid "one of ultra, fast, normal, slow, or bad-spellers"
 msgstr ""
 

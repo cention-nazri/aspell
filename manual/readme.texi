@@ -143,7 +143,7 @@ this option.  In addition the @option{ignore-accents} option is
 currently unimplemented.
 
 The flag @option{-l} is now a shortcut for @option{--lang}, instead of
-@option{--list} as it was in Aspell 0.50.
+@option{--list} as it was with Aspell 0.50.
 
 @anchor{Binary Compatibility}
 @appendixsubsec Binary Compatibility

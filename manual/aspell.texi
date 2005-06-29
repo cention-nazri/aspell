@@ -4208,7 +4208,7 @@ a C++ program.
 @node ChangeLog
 @appendix ChangeLog
 
-@heading Changes from 0.60.2 to 0.60.3 (June 27, 2005)
+@heading Changes from 0.60.2 to 0.60.3 (June 28, 2005)
 
 @itemize @bullet
 @item
@@ -4237,7 +4237,7 @@ switch.
 @item
 Other manual update/fixes.
 @item
-Updated to Libtool 1.5.18 and Automake 1.9.6.
+Updated to Libtool 1.5.18, Automake 1.9.6, and Makeinfo 4.8.
 @end itemize
 
 @heading Changes from 0.60.1 to 0.60.2 (December 18, 2004)

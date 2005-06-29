@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60.2-b20041203\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2005-06-01 03:08-0600\n"
+"POT-Creation-Date: 2005-06-27 03:49-0600\n"
 "PO-Revision-Date: 2004-12-27 17:24+0100\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
@@ -345,12 +345,12 @@ msgstr ""
 "To by také mohlo znamenat, že soubor \"%s\" nelze otevřít pro čtení nebo "
 "soubor neexistuje."
 
-#: common/convert.cpp:552 common/convert.cpp:658 common/convert.cpp:704
+#: common/convert.cpp:552 common/convert.cpp:659 common/convert.cpp:705
 #, c-format
 msgid "The Unicode code point U+%04X is unsupported."
 msgstr "Kód Unicode U+%04X není podporován."
 
-#: common/convert.cpp:828
+#: common/convert.cpp:829
 #, c-format
 msgid "Invalid UTF-8 sequence at position %d."
 msgstr "Neplatná sekvence UTF-8 na pozici %d."
@@ -1208,16 +1208,16 @@ msgstr "Špatná podobnost zvuku."
 msgid "Wrong soundslike version."
 msgstr "Špatná verze podobnosti zvuku."
 
-#: modules/speller/default/readonly_ws.cpp:823
+#: modules/speller/default/readonly_ws.cpp:850
 msgid "Affix flags found in word but no affix file given."
 msgstr "Příznaky přípon nalezeny ve slově, ale nezadán soubor přípon."
 
-#: modules/speller/default/readonly_ws.cpp:861
+#: modules/speller/default/readonly_ws.cpp:888
 msgid ""
 "The total word length, with soundslike data, is larger than 240 characters."
 msgstr "Celková délka slova s daty o podobnosti zvuku je větší než 240 znaků."
 
-#: modules/speller/default/suggest.cpp:1395
+#: modules/speller/default/suggest.cpp:1399
 msgid "one of ultra, fast, normal, slow, or bad-spellers"
 msgstr "jedno z ultra, fast, normal, slow nebo bad-spellers"
 

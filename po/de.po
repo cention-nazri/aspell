@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60.2-b20041203\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2005-06-01 03:08-0600\n"
+"POT-Creation-Date: 2005-06-27 03:49-0600\n"
 "PO-Revision-Date: 2004-12-06 23:27+0100\n"
 "Last-Translator: Roland Illig <roland.illig@gmx.de>\n"
 "Language-Team: German <de@li.org>\n"
@@ -344,12 +344,12 @@ msgstr ""
 "Das könnte auch heißen, dass die Datei »%s« nicht zum Lesen geöffnet werden "
 "konnte oder nicht existiert."
 
-#: common/convert.cpp:552 common/convert.cpp:658 common/convert.cpp:704
+#: common/convert.cpp:552 common/convert.cpp:659 common/convert.cpp:705
 #, c-format
 msgid "The Unicode code point U+%04X is unsupported."
 msgstr "Das Unicodezeichen an der Stelle U+%04X wird nicht unterstützt."
 
-#: common/convert.cpp:828
+#: common/convert.cpp:829
 #, c-format
 msgid "Invalid UTF-8 sequence at position %d."
 msgstr "Falsche UTF-8-Folge an Position %d."
@@ -1227,18 +1227,18 @@ msgstr "Falscher Wortklang."
 msgid "Wrong soundslike version."
 msgstr "Falsche Wortklangversion."
 
-#: modules/speller/default/readonly_ws.cpp:823
+#: modules/speller/default/readonly_ws.cpp:850
 msgid "Affix flags found in word but no affix file given."
 msgstr "Endungsflags im Wort gefunden, aber keine Endungsdatei angegeben."
 
-#: modules/speller/default/readonly_ws.cpp:861
+#: modules/speller/default/readonly_ws.cpp:888
 msgid ""
 "The total word length, with soundslike data, is larger than 240 characters."
 msgstr ""
 "Die Gesamtlänge des Wortes, inclusive Wortklangdaten, ist größer als 240 "
 "Zeichen."
 
-#: modules/speller/default/suggest.cpp:1395
+#: modules/speller/default/suggest.cpp:1399
 msgid "one of ultra, fast, normal, slow, or bad-spellers"
 msgstr ""
 "eins von »ultra«, »fast«, »normal«, »slow« (langsam), oder »bad-spellers«"
