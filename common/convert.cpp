@@ -521,7 +521,7 @@ namespace acommon {
           out.append(*in);
       } else {
         const Chr * stop = reinterpret_cast<const Chr *>(in0 +size);
-        for (;in != stop; ++in)
+        for (;in < stop; ++in) // needs to be '<' not '!=', bug 1274670
           out.append(*in);
       }
     }
