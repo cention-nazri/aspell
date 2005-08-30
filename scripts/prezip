@@ -12,7 +12,7 @@
 # purpose.  It is provided "as is" without express or implied
 # warranty.
 
-cmd=`basename $0`
+cmd=`basename "$0"`
 
 # Output warning to stderr unless quiet mode enabled
 warn ()
@@ -203,7 +203,7 @@ h )
   sorted word lists or other similar text files.  It may likely _increase_
   the size of binary data.
 
-  If "-w" is used than the file will be able to be decompressed using
+  If "-w" is used then the file will be able to be decompressed using
   "word-list-compress" which is used by Aspell 0.50 and earlier.
   However, this format will lose all characters within {0x00...0x20},
   which includes the space, as they are treated as word separators.
