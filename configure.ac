@@ -74,7 +74,7 @@ AC_ARG_ENABLE(pspell-compatibility,
 [  --disable-pspell-compatibility  don't install pspell compatibility libraries])
 
 AC_ARG_ENABLE(incremented-soname,
-[  --incremented-soname            break aspell 0.50 binary compatibility])
+[  --enable-incremented-soname     break aspell 0.50 binary compatibility])
 
 dnl AC_ARG_ENABLE(aspell5-compatibility,
 dnl [  --enable-aspell5-compatibility  install aspell 0.50 compatibility libraries])
