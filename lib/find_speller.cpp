@@ -284,7 +284,7 @@ namespace acommon {
   PosibErr<Config *> find_word_list(Config * c) 
   {
     Config * config = new_config();
-    config->read_in_settings(c);
+    RET_ON_ERR(config->read_in_settings(c));
     String dict_name;
 
     if (config->have("master")) {
