@@ -98,7 +98,8 @@ AC_PROG_LIBTOOL
 dnl DL stuff
 
 AC_CHECK_HEADERS(dlfcn.h,,[enable_compile_in_filters=yes])
-AC_CHECK_LIB(dl, dlopen,,[enable_compile_in_filters=yes])
+AC_CHECK_FUNC(dlopen,,
+              AC_CHECK_LIB(dl, dlopen,,[enable_compile_in_filters=yes]))
 
 dnl
 
