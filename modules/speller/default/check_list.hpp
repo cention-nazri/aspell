@@ -27,7 +27,8 @@ namespace aspeller {
     void reset() { buf.reset(); num = 0; head = 0; }
     CheckInfo * add() {
       num++;
-      CheckInfo * tmp = (CheckInfo *)buf.alloc_top(sizeof(CheckInfo));
+      CheckInfo * tmp = (CheckInfo *)buf.alloc_top(sizeof(CheckInfo), 
+                                                   sizeof(void*));
       clear_check_info(*tmp);
       tmp->next = head;
       head = tmp;
