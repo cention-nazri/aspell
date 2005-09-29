@@ -379,7 +379,9 @@ namespace {
   }
 
   // Forms a word by combining CheckInfo fields.
-  // It returns a MutableString of what was appended to buffer.
+  // Will grow the grow the temp in the buffer.  The final
+  // word must be null terminated and commited.
+  // It returns a MutableString of what was appended to the buffer.
   MutableString Working::form_word(CheckInfo & ci) 
   {
     size_t slen = ci.word.size() - ci.pre_strip_len - ci.suf_strip_len;
@@ -413,6 +415,7 @@ namespace {
       form_word(ci);
       char * end = (char *)buffer.grow_temp(1);
       char * tmp = (char *)buffer.temp_ptr();
+      buffer.commit_temp();
       *end = '\0';
       add_nearmiss(tmp, end - tmp, 0, 0, score, -1, do_count);
     }
