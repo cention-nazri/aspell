@@ -84,7 +84,7 @@
 @item ilo @tab Iloko @tab Latin @tab Maybe @tab -
 @item io @tab Ido @tab Latin @tab - @tab -
 @item is @tab Icelandic @tab Latin @tab 0.50 @tab -
-@item it @tab Italian @tab Latin @tab 0.50 @tab -
+@item it @tab Italian @tab Latin @tab 0.50 @tab Yes
 @item
 @item jv @tab Javanese @tab Javanese, Latin @tab Maybe @tab -
 @item
@@ -203,7 +203,7 @@
 @item uz @tab Uzbek @tab Cyrillic @tab 0.60 @tab -
 @item
 @item ve @tab Venda @tab Latin @tab Maybe @tab -
-@item vi @tab Vietnamese @tab Latin @tab 0.60 @tab -
+@item vi @tab Vietnamese @tab Latin @tab 0.60 @tab Yes
 @item
 @item wa @tab Walloon @tab Latin @tab 0.50 @tab Incomplete
 @item wo @tab Wolof @tab Latin @tab Maybe @tab -
