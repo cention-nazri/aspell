@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60.2-b20041203\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2005-06-27 03:49-0600\n"
+"POT-Creation-Date: 2005-10-03 16:17-0600\n"
 "PO-Revision-Date: 2004-12-06 23:27+0100\n"
 "Last-Translator: Roland Illig <roland.illig@gmx.de>\n"
 "Language-Team: German <de@li.org>\n"
@@ -442,8 +442,9 @@ msgstr ""
 "vorangestellt ist."
 
 #: common/errors.cpp:203
+#, fuzzy
 msgid ""
-"The key \"%key:1\" does not take any parameters when prefixed by a \"enable-"
+"The key \"%key:1\" does not take any parameters when prefixed by an \"enable-"
 "\"."
 msgstr ""
 "Der Schlüssel »%key:1« kann keine Parameter haben, wenn ein »enable-« "
@@ -1238,7 +1239,7 @@ msgstr ""
 "Die Gesamtlänge des Wortes, inclusive Wortklangdaten, ist größer als 240 "
 "Zeichen."
 
-#: modules/speller/default/suggest.cpp:1399
+#: modules/speller/default/suggest.cpp:1402
 msgid "one of ultra, fast, normal, slow, or bad-spellers"
 msgstr ""
 "eins von »ultra«, »fast«, »normal«, »slow« (langsam), oder »bad-spellers«"
