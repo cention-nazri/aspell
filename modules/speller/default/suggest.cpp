@@ -1,6 +1,6 @@
-// Copyright 2000 by Kevin Atkinson under the terms of the LGPL
+// Copyright 2000-2005 by Kevin Atkinson under the terms of the LGPL
 
-// suggest.cc Suggestion code for Aspell
+// suggest.cpp Suggestion code for Aspell
 
 // The magic behind my spell checker comes from merging Lawrence
 // Philips excellent metaphone algorithm and Ispell's near miss
