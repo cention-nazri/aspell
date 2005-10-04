@@ -4208,6 +4208,18 @@ a C++ program.
 @node ChangeLog
 @appendix ChangeLog
 
+@heading Changes from 0.60.3 to 0.60.4 (October 4, 2005)
+@itemize @bullet
+@item
+Fixed a bug that cuased aspell to crash when checking certain Russion
+words, this bug likely affected other lnaguages as well.
+@item
+Updated to Gettext 0.14.5 which is requred for AMD64, also updated to
+to Libtool 1.5.20.
+@item
+Other bug fixes.
+@end itemize
+
 @heading Changes from 0.60.2 to 0.60.3 (June 28, 2005)
 
 @itemize @bullet
