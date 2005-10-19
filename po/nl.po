@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60.3\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2005-10-03 16:17-0600\n"
-"PO-Revision-Date: 2005-07-29 21:47+0200\n"
+"POT-Creation-Date: 2005-10-19 02:25-0600\n"
+"PO-Revision-Date: 2005-10-19 02:15-0600\n"
 "Last-Translator: Benno Schulenberg <benno@nietvergeten.nl>\n"
 "Language-Team: Dutch <vertaling@vrijschrift.org>\n"
 "MIME-Version: 1.0\n"
@@ -443,7 +443,6 @@ msgstr ""
 "Sleutel \"%key:1\" neemt geen parameters als deze begint met \"reset-\"."
 
 #: common/errors.cpp:203
-#, fuzzy
 msgid ""
 "The key \"%key:1\" does not take any parameters when prefixed by an \"enable-"
 "\"."
@@ -1224,23 +1223,23 @@ msgstr "Waarschuwing: %s -- woord wordt overgeslagen.\n"
 msgid "Possibly incorrect count."
 msgstr "Misschien een onjuist aantal."
 
-#: modules/speller/default/readonly_ws.cpp:361
+#: modules/speller/default/readonly_ws.cpp:362
 msgid "Wrong endian order."
 msgstr "Verkeerde bytevolgorde ('endianness')."
 
-#: modules/speller/default/readonly_ws.cpp:384
+#: modules/speller/default/readonly_ws.cpp:385
 msgid "Wrong soundslike."
 msgstr "Onjuiste klinkt-als."
 
-#: modules/speller/default/readonly_ws.cpp:390
+#: modules/speller/default/readonly_ws.cpp:391
 msgid "Wrong soundslike version."
 msgstr "Onjuiste versie van klinkt-als."
 
-#: modules/speller/default/readonly_ws.cpp:850
+#: modules/speller/default/readonly_ws.cpp:855
 msgid "Affix flags found in word but no affix file given."
 msgstr "Affixopties gevonden in woord, maar er is geen affixbestand opgegeven."
 
-#: modules/speller/default/readonly_ws.cpp:888
+#: modules/speller/default/readonly_ws.cpp:893
 msgid ""
 "The total word length, with soundslike data, is larger than 240 characters."
 msgstr ""

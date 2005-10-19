@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60-pre1\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2005-10-03 16:17-0600\n"
+"POT-Creation-Date: 2005-10-19 02:25-0600\n"
 "PO-Revision-Date: 2004-08-22 20:15-0400\n"
 "Last-Translator: Gareth Owen <gowen72@yahoo.com>\n"
 "Language-Team: English (British) <en_gb@li.org>\n"
@@ -1208,23 +1208,23 @@ msgstr "Warning: %s Skipping word.\n"
 msgid "Possibly incorrect count."
 msgstr "Possibly incorrect count."
 
-#: modules/speller/default/readonly_ws.cpp:361
+#: modules/speller/default/readonly_ws.cpp:362
 msgid "Wrong endian order."
 msgstr "Wrong endian order."
 
-#: modules/speller/default/readonly_ws.cpp:384
+#: modules/speller/default/readonly_ws.cpp:385
 msgid "Wrong soundslike."
 msgstr "Wrong soundslike."
 
-#: modules/speller/default/readonly_ws.cpp:390
+#: modules/speller/default/readonly_ws.cpp:391
 msgid "Wrong soundslike version."
 msgstr "Wrong soundslike version."
 
-#: modules/speller/default/readonly_ws.cpp:850
+#: modules/speller/default/readonly_ws.cpp:855
 msgid "Affix flags found in word but no affix file given."
 msgstr "Affix flags found in word but no affix file given."
 
-#: modules/speller/default/readonly_ws.cpp:888
+#: modules/speller/default/readonly_ws.cpp:893
 msgid ""
 "The total word length, with soundslike data, is larger than 240 characters."
 msgstr ""

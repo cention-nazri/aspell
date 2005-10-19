@@ -1,61 +1,82 @@
-# Czech translation of aspell
-# Copyright (C) 2004 Kevin Atkinson
-# Copyright (C) 2004 Miloslav Trmac <mitr@volny.cz>
+# Kinyarwanda translations for aspell package.
+# Copyright (C) 2005 Kevin Atkinson
 # This file is distributed under the same license as the aspell package.
-# Miloslav Trmac <mitr@volny.cz>, 2004.
+# Steve Murphy <murf@e-tools.com>, 2005.
+# Steve performed initial rough translation from compendium built from translations provided by the following translators:
+# Philibert Ndandali  <ndandali@yahoo.fr>, 2005.
+# Viateur MUGENZI <muvia1@yahoo.fr>, 2005.
+# Noëlla Mupole <s24211045@tuks.co.za>, 2005.
+# Carole Karema <karemacarole@hotmail.com>, 2005.
+# JEAN BAPTISTE NGENDAHAYO <ngenda_denis@yahoo.co.uk>, 2005.
+# Augustin KIBERWA  <akiberwa@yahoo.co.uk>, 2005.
+# Donatien NSENGIYUMVA <ndonatienuk@yahoo.co.uk>, 2005.
+# Antoine Bigirimana <antoine@e-tools.com>, 2005.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: aspell 0.60.2-b20041203\n"
+"Project-Id-Version: aspell 0.60\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
 "POT-Creation-Date: 2005-10-19 02:25-0600\n"
-"PO-Revision-Date: 2005-10-19 02:13-0600\n"
-"Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
-"Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
+"PO-Revision-Date: 2005-04-04 10:55-0700\n"
+"Last-Translator: Steven Michael Murphy <murf@e-tools.com>\n"
+"Language-Team: Kinyarwanda <translation-team-rw@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: common/info.cpp:232
+#, fuzzy
 msgid "a number between 0 and 1"
-msgstr "číslo mezi 0 a 1"
+msgstr "a Umubare hagati 0 Na 1."
 
 #: common/info.cpp:569
+#, fuzzy
 msgid "in the form \"<name> <value>\""
-msgstr "ve tvaru \"<název> <hodnota>\""
+msgstr "in i Ifishi Izina: Agaciro"
 
+# Type column values
 #: common/config.cpp:73
 msgid "string"
-msgstr "řetězec"
+msgstr "Ikurikiranyanyuguti"
 
 #: common/config.cpp:73
 msgid "integer"
-msgstr "celé číslo"
+msgstr "Umubare wuzuye"
 
 #: common/config.cpp:73
 msgid "boolean"
-msgstr "booleovská hodnota"
+msgstr "nyabule"
 
+# #-#-#-#-#  officecfg.pot (PACKAGE VERSION)  #-#-#-#-#
+# officecfg/registry\schema\org\openoffice\Office\Writer.xcs:....DefaultFont.List.text
+# #-#-#-#-#  officecfg.pot (PACKAGE VERSION)  #-#-#-#-#
+# officecfg/registry\schema\org\openoffice\Office\Writer.xcs:....DefaultFontCJK.List.text
+# #-#-#-#-#  officecfg.pot (PACKAGE VERSION)  #-#-#-#-#
+# officecfg/registry\schema\org\openoffice\Office\Writer.xcs:....DefaultFontCTL.List.text
 #: common/config.cpp:73
+#, fuzzy
 msgid "list"
-msgstr "seznam"
+msgstr "Urutonde"
 
 #. TRANSLATORS: "true" and "false" are literal
 #. * values and should not be translated.
 #: common/config.cpp:977
+#, fuzzy
 msgid "either \"true\" or \"false\""
-msgstr "buď \"true\" nebo \"false\""
+msgstr "NIBYO Cyangwa SIBYO"
 
 #: common/config.cpp:996
+#, fuzzy
 msgid "a positive integer"
-msgstr "kladné celé číslo"
+msgstr "a Umubare wuzuye"
 
 #: common/config.cpp:1124
+#, fuzzy
 msgid "# default: "
-msgstr "# implicitní: "
+msgstr "#Ibisanzwemo>"
 
 #: common/config.cpp:1187
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "\n"
 "#######################################################################\n"
@@ -65,935 +86,1053 @@ msgid ""
 "#\n"
 "# configured as follows:\n"
 "\n"
-msgstr ""
-"\n"
-"#######################################################################\n"
-"#\n"
-"# Filtr: %s\n"
-"#   %s\n"
-"#\n"
-"# nastaven následovně:\n"
-"\n"
+msgstr "#########################################################################Nka"
 
 #: common/config.cpp:1285
+#, fuzzy
 msgid "ASPELL_CONF env var"
-msgstr "proměnná prostředí ASPELL_CONF"
+msgstr "VAR"
 
 #. TRANSLATORS: The remaing strings in config.cpp should be kept
 #. under 50 characters, begin with a lower case character and not
 #. include any trailing punctuation marks.
 #: common/config.cpp:1359
+#, fuzzy
 msgid "main configuration file"
-msgstr "hlavní soubor nastavení"
+msgstr "Iboneza IDOSIYE"
 
 #: common/config.cpp:1361
+#, fuzzy
 msgid "location of main configuration file"
-msgstr "umístění hlavního souboru nastavení"
+msgstr "Ahantu Bya Iboneza IDOSIYE"
 
 #: common/config.cpp:1364
+#, fuzzy
 msgid "location of language data files"
-msgstr "umístění souboru dat o jazycích"
+msgstr "Ahantu Bya Ururimi Ibyatanzwe Idosiye"
 
 #: common/config.cpp:1366
+#, fuzzy
 msgid "create dictionary aliases"
-msgstr "vytvořit aliasy slovníků"
+msgstr "Kurema Inkoranyamagambo Irihimbano"
 
 #: common/config.cpp:1368
+#, fuzzy
 msgid "location of the main word list"
-msgstr "umístění hlavního seznamu slov"
+msgstr "Ahantu Bya i ijambo Urutonde"
 
 #: common/config.cpp:1370
+#, fuzzy
 msgid "encoding to expect data to be in"
-msgstr "kódování, ve kterém očekávat data"
+msgstr "Imisobekere: Kuri Ibyatanzwe Kuri in"
 
 #: common/config.cpp:1372
+#, fuzzy
 msgid "add or removes a filter"
-msgstr "přidat nebo odstranit filtr"
+msgstr "Kongeramo Cyangwa a Muyunguruzi..."
 
 #: common/config.cpp:1374
+#, fuzzy
 msgid "path(s) aspell looks for filters"
-msgstr "cesty, kde aspell hledá filtry"
+msgstr "Inzira S kugirango Muyunguruzi"
 
 #: common/config.cpp:1378
+#, fuzzy
 msgid "filter mode"
-msgstr "režim filtru"
+msgstr "Muyunguruzi... Ubwoko"
 
 #: common/config.cpp:1380
+#, fuzzy
 msgid "extra dictionaries to use"
-msgstr "další slovníky, které používat"
+msgstr "Birenga Inkoranyamagambo Kuri Gukoresha"
 
 #: common/config.cpp:1382
+#, fuzzy
 msgid "location for personal files"
-msgstr "umístění osobních souborů"
+msgstr "Ahantu kugirango Bwite Idosiye"
 
 #: common/config.cpp:1384
+#, fuzzy
 msgid "ignore words <= n chars"
-msgstr "ignorovat slova s <= n znaky"
+msgstr "Kwirengagiza Amagambo N"
 
 #. TRANSLATORS: It is OK if this is longer than 50 chars
 #: common/config.cpp:1387
+#, fuzzy
 msgid "ignore accents when checking words -- CURRENTLY IGNORED"
-msgstr "při kontrole slov ignorovat diakritiku -- MOMENTÁLNĚ IGNOROVÁNO"
+msgstr "Kwirengagiza Ryari: Amagambo"
 
 #: common/config.cpp:1389
+#, fuzzy
 msgid "ignore case when checking words"
-msgstr "při kontrole slov nerozlišovat velikost písmen"
+msgstr "Kwirengagiza Ryari: Amagambo"
 
 #: common/config.cpp:1391
+#, fuzzy
 msgid "ignore commands to store replacement pairs"
-msgstr "ignorovat příkazy pro uložení dvojic nahrazení"
+msgstr "Kwirengagiza Amabwiriza Kuri"
 
 #: common/config.cpp:1393 common/config.cpp:1460
+#, fuzzy
 msgid "extra information for the word list"
-msgstr "informace navíc pro seznam slov"
+msgstr "Birenga Ibisobanuro kugirango i ijambo Urutonde"
 
 #: common/config.cpp:1395
+#, fuzzy
 msgid "keyboard definition to use for typo analysis"
-msgstr "definice klávesnice pro analýzu překlepů"
+msgstr "Mwandikisho Insobanuro Kuri Gukoresha kugirango"
 
 #: common/config.cpp:1397
+#, fuzzy
 msgid "language code"
-msgstr "kód jazyka"
+msgstr "Ururimi ITEGEKONGENGA"
 
 #: common/config.cpp:1399
+#, fuzzy
 msgid "deprecated, use lang instead"
-msgstr "zastaralé, použijte místo toho lang"
+msgstr "Bitemewe. Gukoresha"
 
 #: common/config.cpp:1401
+#, fuzzy
 msgid "location of local language data files"
-msgstr "umístění místních souborů dat o jazycích"
+msgstr "Ahantu Bya Ururimi Ibyatanzwe Idosiye"
 
 #: common/config.cpp:1403
+#, fuzzy
 msgid "base name of the main dictionary to use"
-msgstr "základní jméno hlavního slovníku, který používat"
+msgstr "SHINGIRO Izina: Bya i Inkoranyamagambo Kuri Gukoresha"
 
 #: common/config.cpp:1407
+#, fuzzy
 msgid "set module name"
-msgstr "nastavit název modulu"
+msgstr "Gushyiraho Modire Izina:"
 
 #: common/config.cpp:1409
+#, fuzzy
 msgid "search order for modules"
-msgstr "pořadí hledání modulů"
+msgstr "Gushaka Itondekanya kugirango Modire"
 
 #: common/config.cpp:1411
+#, fuzzy
 msgid "enable Unicode normalization"
-msgstr "povolit normalizaci Unicode"
+msgstr "Gushoboza"
 
 #: common/config.cpp:1413
+#, fuzzy
 msgid "Unicode normalization required for current lang"
-msgstr "Normalizace Unicode vyžadovaná pro aktuální jazyk"
+msgstr "Bya ngombwa kugirango KIGEZWEHO"
 
 #. TRANSLATORS: the values after the ':' are literal
 #. values and should not be translated.
 #: common/config.cpp:1417
+#, fuzzy
 msgid "Unicode normalization form: none, nfd, nfc, comp"
-msgstr "forma normalizace Unicode: none, nfd, nfc, comp"
+msgstr "Ifishi Ntacyo"
 
 #: common/config.cpp:1419
+#, fuzzy
 msgid "avoid lossy conversions when normalization"
-msgstr "nepoužívat při normalizaci ztrátové konverze"
+msgstr "Ryari:"
 
 #: common/config.cpp:1421
+#, fuzzy
 msgid "personal configuration file"
-msgstr "soubor s osobním nastavením"
+msgstr "Bwite Iboneza IDOSIYE"
 
 #: common/config.cpp:1424
+#, fuzzy
 msgid "personal dictionary file name"
-msgstr "název souboru s osobním slovníkem"
+msgstr "Bwite Inkoranyamagambo IDOSIYE Izina:"
 
 #: common/config.cpp:1427
+#, fuzzy
 msgid "prefix directory"
-msgstr "adresář prefixu"
+msgstr "Imbanziriza bushyinguro"
 
 #: common/config.cpp:1429
+#, fuzzy
 msgid "replacements list file name"
-msgstr "název souboru se seznamem náhrad"
+msgstr "Urutonde IDOSIYE Izina:"
 
 #: common/config.cpp:1432
+#, fuzzy
 msgid "consider run-together words legal"
-msgstr "považovat slova spojená dohromady za platná"
+msgstr "Gukoresha Amagambo By'amategeko"
 
 #: common/config.cpp:1434
+#, fuzzy
 msgid "maximum number that can be strung together"
-msgstr "maximální počet, který může být spojen dohromady"
+msgstr "Kinini Umubare"
 
 #: common/config.cpp:1436
+#, fuzzy
 msgid "minimal length of interior words"
-msgstr "minimální délka vnitřních slov"
+msgstr "Uburebure Bya Amagambo"
 
 #: common/config.cpp:1438
+#, fuzzy
 msgid "save replacement pairs on save all"
-msgstr "uložit dvojice nahrazení při uložení všeho"
+msgstr "Kubika ku Kubika Byose"
 
 #: common/config.cpp:1440
+#, fuzzy
 msgid "set the prefix based on executable location"
-msgstr "nastavit prefix podle umístění programu"
+msgstr "Gushyiraho i Imbanziriza ku Ahantu"
 
 #: common/config.cpp:1442
+#, fuzzy
 msgid "size of the word list"
-msgstr "velikost seznamu slov"
+msgstr "Ingano Bya i ijambo Urutonde"
 
 #: common/config.cpp:1444
+#, fuzzy
 msgid "no longer used"
-msgstr "už se nepoužívá"
+msgstr "Oya"
 
 #: common/config.cpp:1446
+#, fuzzy
 msgid "suggestion mode"
-msgstr "režim navrhování"
+msgstr "Ubwoko"
 
 #. TRANSLATORS: "sug-mode" is a literal value and should not be
 #. translated.
 #: common/config.cpp:1450
+#, fuzzy
 msgid "edit distance to use, override sug-mode default"
-msgstr "nahradit vzdálenost implicitní ze sug-mode"
+msgstr "Guhindura Intera Kuri Gukoresha Ubwoko Mburabuzi"
 
 #: common/config.cpp:1452
+#, fuzzy
 msgid "use typo analysis, override sug-mode default"
-msgstr "používat analýzu překlepů bez ohledu na sug-mode"
+msgstr "Gukoresha Ubwoko Mburabuzi"
 
 #: common/config.cpp:1454
+#, fuzzy
 msgid "use replacement tables, override sug-mode default"
-msgstr "používat tabulky nahrazení bez ohledu na sug-mode"
+msgstr "Gukoresha Imbonerahamwe Ubwoko Mburabuzi"
 
 #: common/config.cpp:1456
+#, fuzzy
 msgid "characters to insert when a word is split"
-msgstr "znaky, které vložit při rozdělení slova"
+msgstr "Inyuguti Kuri Kongeramo Ryari: a ijambo ni Gutandukanya"
 
 #: common/config.cpp:1458
+#, fuzzy
 msgid "use personal, replacement & session dictionaries"
-msgstr "používat osobní slovník, slovník náhrad a sezení"
+msgstr "Gukoresha Bwite Umukoro Inkoranyamagambo"
 
 #: common/config.cpp:1462
+#, fuzzy
 msgid "search path for word list information files"
-msgstr "cesta pro soubory s informacemi o seznamech slov"
+msgstr "Gushaka Inzira kugirango ijambo Urutonde Ibisobanuro Idosiye"
 
 #: common/config.cpp:1464
+#, fuzzy
 msgid "enable warnings"
-msgstr "povolit varování"
+msgstr "Gushoboza Iburira"
 
 #. TRANSLATORS: It is OK if this is longer than 50 chars
 #: common/config.cpp:1474
+#, fuzzy
 msgid "indicator for affix flags in word lists -- CURRENTLY IGNORED"
-msgstr "indikátor příznaků přípon v seznamech slov -- MOMENTÁLNĚ IGNOROVÁNO"
+msgstr "kugirango Amabendera in ijambo Intonde"
 
 #: common/config.cpp:1476
+#, fuzzy
 msgid "use affix compression when creating dictionaries"
-msgstr "při tvorbě slovníků používat kompresi přípon"
+msgstr "Gukoresha igabanyangano Ryari: Inkoranyamagambo"
 
 #: common/config.cpp:1478
+#, fuzzy
 msgid "remove invalid affix flags"
-msgstr "odstraňovat neplatné příznaky přípon"
+msgstr "Gukuraho... Sibyo Amabendera"
 
 #: common/config.cpp:1480
+#, fuzzy
 msgid "attempts to clean words so that they are valid"
-msgstr "pokusí se vyčistit slova, aby byla platná"
+msgstr "Kuri GUSUKURA Amagambo Byemewe"
 
 #: common/config.cpp:1482
+#, fuzzy
 msgid "compute soundslike on demand rather than storing"
-msgstr "počítat podobnost zvuku na požádání místo ukládání"
+msgstr "ku"
 
 #: common/config.cpp:1484
+#, fuzzy
 msgid "partially expand affixes for better suggestions"
-msgstr "částečně rozbalovat přípony pro lepší návrhy"
+msgstr "Kwagura kugirango Ibyifuzo"
 
 #: common/config.cpp:1486
+#, fuzzy
 msgid "skip invalid words"
-msgstr "přeskakovat neplatná slova"
+msgstr "Sibyo Amagambo"
 
 #: common/config.cpp:1488
+#, fuzzy
 msgid "check if affix flags are valid"
-msgstr "kontrolovat, jestli jsou příznaky přípon platné"
+msgstr "Kugenzura... NIBA Amabendera Byemewe"
 
 #: common/config.cpp:1490
+#, fuzzy
 msgid "check if words are valid"
-msgstr "kontrolovat, jestli jsou slova platná"
+msgstr "Kugenzura... NIBA Amagambo Byemewe"
 
 #: common/config.cpp:1497
+#, fuzzy
 msgid "create a backup file by appending \".bak\""
-msgstr "vytvořit záložní soubor připojením \".bak\""
+msgstr "Kurema a Inyibutsa IDOSIYE ku"
 
 #: common/config.cpp:1499
+#, fuzzy
 msgid "use byte offsets instead of character offsets"
-msgstr "používat posuny v bajtech místo ve znacích"
+msgstr "Gukoresha Bayite Bya Inyuguti"
 
 #: common/config.cpp:1501
+#, fuzzy
 msgid "create missing root/affix combinations"
-msgstr "vytvořit chybějící kombinace kořen/přípona"
+msgstr "Kurema Ibuze Imizi"
 
 #: common/config.cpp:1503
+#, fuzzy
 msgid "keymapping for check mode: \"aspell\" or \"ispell\""
-msgstr "mapování kláves pro režim kontroly: \"aspell\" nebo \"ispell\""
+msgstr "kugirango Kugenzura... Ubwoko Cyangwa"
 
 #: common/config.cpp:1505
+#, fuzzy
 msgid "reverse the order of the suggest list"
-msgstr "obrátit pořadí seznamu návrhů"
+msgstr "Ihindurakerekezo i Itondekanya Bya i Urutonde"
 
 #: common/config.cpp:1507
 msgid "suggest possible replacements"
-msgstr "navrhovat možné náhrady"
+msgstr ""
 
 #: common/config.cpp:1509
+#, fuzzy
 msgid "time load time and suggest time in pipe mode"
-msgstr "měřit čas načítání a návrhů v režimu pipe"
+msgstr "Igihe Ibirimo Igihe Na Igihe in Ubwoko"
 
 #: common/convert.cpp:303 common/convert.cpp:429
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "This could also mean that the file \"%s\" could not be opened for reading or "
 "does not exist."
-msgstr ""
-"To by také mohlo znamenat, že soubor \"%s\" nelze otevřít pro čtení nebo "
-"soubor neexistuje."
+msgstr "Impuzandengo- i IDOSIYE OYA kugirango Cyangwa OYA"
 
 #: common/convert.cpp:552 common/convert.cpp:659 common/convert.cpp:705
-#, c-format
+#, fuzzy, c-format
 msgid "The Unicode code point U+%04X is unsupported."
-msgstr "Kód Unicode U+%04X není podporován."
+msgstr "ITEGEKONGENGA Akadomo U ni"
 
 #: common/convert.cpp:829
-#, c-format
+#, fuzzy, c-format
 msgid "Invalid UTF-8 sequence at position %d."
-msgstr "Neplatná sekvence UTF-8 na pozici %d."
+msgstr "8 ku Ibirindiro"
 
 #: common/errors.cpp:27
+#, fuzzy
 msgid "Operation Not Supported: %what:1"
-msgstr "Operace není podporována: %what:1"
+msgstr "1."
 
 #: common/errors.cpp:43
+#, fuzzy
 msgid "The method \"%what:1\" is unimplemented in \"%where:2\"."
-msgstr "Metoda \"%what:1\" není v \"%where:2\" implementována."
+msgstr "Uburyo 1. ni in 2."
 
 #: common/errors.cpp:51
-#, c-format
+#, fuzzy, c-format
 msgid "%file:1:"
-msgstr "%file:1:"
+msgstr "%file:1."
 
 #: common/errors.cpp:59
-#, c-format
+#, fuzzy, c-format
 msgid "The file \"%file:1\" can not be opened"
-msgstr "Soubor \"%file:1\" nelze otevřít"
+msgstr "IDOSIYE 1. OYA"
 
 #: common/errors.cpp:67
-#, c-format
+#, fuzzy, c-format
 msgid "The file \"%file:1\" can not be opened for reading."
-msgstr "Soubor \"%file:1\" nelze otevřít pro čtení."
+msgstr "IDOSIYE 1. OYA kugirango"
 
 #: common/errors.cpp:75
-#, c-format
+#, fuzzy, c-format
 msgid "The file \"%file:1\" can not be opened for writing."
-msgstr "Soubor \"%file:1\" nelze otevřít pro zápis."
+msgstr "IDOSIYE 1. OYA kugirango"
 
 #: common/errors.cpp:83
-#, c-format
+#, fuzzy, c-format
 msgid "The file name \"%file:1\" is invalid."
-msgstr "Název souboru \"%file:1\" není platný."
+msgstr "IDOSIYE Izina: 1. ni Sibyo"
 
 #: common/errors.cpp:91
-#, c-format
+#, fuzzy, c-format
 msgid "The file \"%file:1\" is not in the proper format."
-msgstr "Soubor \"%file:1\" není ve správném formátu."
+msgstr "IDOSIYE 1. ni OYA in i NYACYO Imiterere"
 
 #: common/errors.cpp:107
-#, c-format
+#, fuzzy, c-format
 msgid "The directory \"%dir:1\" can not be opened for reading."
-msgstr "Adresář \"%dir:1\" nelze otevřít pro čtení."
+msgstr "bushyinguro 1. OYA kugirango"
 
 #: common/errors.cpp:123
+#, fuzzy
 msgid "The key \"%key:1\" is unknown."
-msgstr "Klíč \"%key:1\" není znám."
+msgstr "Urufunguzo 1. ni Kitazwi"
 
 #: common/errors.cpp:131
+#, fuzzy
 msgid "The value for option \"%key:1\" can not be changed."
-msgstr "Hodnota přepínače \"%key:1\" nemůže být změněna."
+msgstr "Agaciro kugirango Ihitamo 1. OYA Byahinduwe"
 
 #: common/errors.cpp:139
+#, fuzzy
 msgid "The key \"%key:1\" is not %accepted:2 and is thus invalid."
-msgstr "Klíč \"%key:1\" není %accepted:2 a je tedy neplatný."
+msgstr "Urufunguzo 1. ni OYA 2. Na ni Sibyo"
 
 #: common/errors.cpp:147
+#, fuzzy
 msgid ""
 "The value \"%value:2\" is not %accepted:3 and is thus invalid for the key \"%"
 "key:1\"."
-msgstr ""
-"Hodnota \"%value:2\" není %accepted:3 a je tedy neplatná pro klíč \"%key:1\"."
+msgstr "Agaciro 2. ni OYA 3. Na ni Sibyo kugirango i Urufunguzo 1."
 
 #: common/errors.cpp:163
+#, fuzzy
 msgid "The key \"%key:1\" is not a string."
-msgstr "Klíč \"%key:1\" není řetězec."
+msgstr "Urufunguzo 1. ni OYA a Ikurikiranyanyuguti"
 
 #: common/errors.cpp:171
+#, fuzzy
 msgid "The key \"%key:1\" is not an integer."
-msgstr "Klíč \"%key:1\" není celé číslo."
+msgstr "Urufunguzo 1. ni OYA Umubare wuzuye"
 
 #: common/errors.cpp:179
+#, fuzzy
 msgid "The key \"%key:1\" is not a boolean."
-msgstr "Klíč \"%key:1\" není booleovská hodnota."
+msgstr "Urufunguzo 1. ni OYA a Icyungo"
 
 #: common/errors.cpp:187
+#, fuzzy
 msgid "The key \"%key:1\" is not a list."
-msgstr "Klíč \"%key:1\" není seznam."
+msgstr "Urufunguzo 1. ni OYA a Urutonde"
 
 #: common/errors.cpp:195
+#, fuzzy
 msgid ""
 "The key \"%key:1\" does not take any parameters when prefixed by a \"reset-"
 "\"."
-msgstr "Klíč \"%key:1\" nemá žádné parametry, když má předponu \"reset-\"."
+msgstr "Urufunguzo 1. OYA Ibigenga Ryari: ku a Kugarura"
 
 #: common/errors.cpp:203
+#, fuzzy
 msgid ""
 "The key \"%key:1\" does not take any parameters when prefixed by an \"enable-"
 "\"."
-msgstr "Klíč \"%key:1\" nemá žádné parametry, když má předponu \"enable-\"."
+msgstr "Urufunguzo 1. OYA Ibigenga Ryari: ku a Gushoboza"
 
 #: common/errors.cpp:211
+#, fuzzy
 msgid ""
 "The key \"%key:1\" does not take any parameters when prefixed by a \"dont-\" "
 "or \"disable-\"."
-msgstr "Klíč \"%key:1\" nemá žádné parametry, když má předponu \"dont-\"."
+msgstr "Urufunguzo 1. OYA Ibigenga Ryari: ku a Cyangwa"
 
 #: common/errors.cpp:219
+#, fuzzy
 msgid ""
 "The key \"%key:1\" does not take any parameters when prefixed by a \"clear-"
 "\"."
-msgstr "Klíč \"%key:1\" nemá žádné parametry, když má předponu \"clear-\"."
+msgstr "Urufunguzo 1. OYA Ibigenga Ryari: ku a Gusiba"
 
 #: common/errors.cpp:235
-#, c-format
+#, fuzzy, c-format
 msgid "The language \"%lang:1\" is not known."
-msgstr "Jazyk \"%lang:1\" není znám."
+msgstr "Ururimi 1. ni OYA"
 
 #: common/errors.cpp:243
-#, c-format
+#, fuzzy, c-format
 msgid "The soundslike \"%sl:2\" is not known."
-msgstr "Podobnost zvuku \"%sl:2\" není známa"
+msgstr "2. ni OYA"
 
 #: common/errors.cpp:251
-#, c-format
+#, fuzzy, c-format
 msgid "The language \"%lang:1\" is not supported."
-msgstr "Jazyk \"%lang:1\" není znám."
+msgstr "Ururimi 1. ni OYA"
 
 #: common/errors.cpp:259
-#, c-format
+#, fuzzy, c-format
 msgid "No word lists can be found for the language \"%lang:1\"."
-msgstr "Pro jazyk \"%lang:1\" nelze najít seznam slov."
+msgstr "ijambo Intonde Byabonetse kugirango i Ururimi 1."
 
 #: common/errors.cpp:267
-#, c-format
+#, fuzzy, c-format
 msgid "Expected language \"%lang:1\" but got \"%prev:2\"."
-msgstr "Očekával jsem jazyk \"%lang:1\", ale dostal jsem \"%prev:2\"."
+msgstr "Itegerejwe Ururimi 1. 2."
 
 #: common/errors.cpp:283
-#, c-format
+#, fuzzy, c-format
 msgid "Affix '%aff:1' is corrupt."
-msgstr "Přípona '%aff:1' je poškozena."
+msgstr "ni"
 
 #: common/errors.cpp:291
-#, c-format
+#, fuzzy, c-format
 msgid "The condition \"%cond:1\" is invalid."
-msgstr "Podmínka \"%cond:1\" není platná."
+msgstr "Ibisabwa 1. ni Sibyo"
 
 #: common/errors.cpp:299
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "The condition \"%cond:1\" does not guarantee that \"%strip:2\" can always be "
 "stripped."
-msgstr "Podmínka \"%cond:1\" nezaručuje, že \"%strip:2\" lze vždy odstranit."
+msgstr "Ibisabwa 1. OYA 2. Buri gihe"
 
 #: common/errors.cpp:307
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "The file \"%file:1\" is not in the proper format. Expected the file to be in "
 "\"%exp:2\" not \"%got:3\"."
 msgstr ""
-"Soubor \"%file:1\" není ve správném formátu. Očekávaný formát souboru je \"%"
-"exp:2\", ne \"%got:3\"."
+"IDOSIYE 1. ni OYA in i NYACYO Imiterere Itegerejwe i IDOSIYE Kuri in 2. OYA "
+"3."
 
 #: common/errors.cpp:323
-#, c-format
+#, fuzzy, c-format
 msgid "The encoding \"%encod:1\" is not known."
-msgstr "Kódování \"%encod:1\" není známo."
+msgstr "Imisobekere: 1. ni OYA"
 
 #: common/errors.cpp:331
-#, c-format
+#, fuzzy, c-format
 msgid "The encoding \"%encod:1\" is not supported."
-msgstr "Kódování \"%encod:1\" není podporováno."
+msgstr "Imisobekere: 1. ni OYA"
 
 #: common/errors.cpp:339
-#, c-format
+#, fuzzy, c-format
 msgid "The conversion from \"%encod:1\" to \"%encod2:2\" is not supported."
-msgstr "Převod z \"%encod:1\" do \"%encod2:2\" není podporován."
+msgstr "Ihindurangero Bivuye 1. Kuri 2. ni OYA"
 
 #: common/errors.cpp:379
-#, c-format
+#, fuzzy, c-format
 msgid "The string \"%str:1\" is invalid."
-msgstr "Řetězec \"%str:1\" není platný."
+msgstr "Ikurikiranyanyuguti 1. ni Sibyo"
 
 #: common/errors.cpp:387
+#, fuzzy
 msgid "The word \"%word:1\" is invalid."
-msgstr "Slovo \"%word:1\" není platné."
+msgstr "ijambo 1. ni Sibyo"
 
 #: common/errors.cpp:395
+#, fuzzy
 msgid "The affix flag '%aff:1' is invalid for word \"%word:2\"."
-msgstr "Příznak přípony '%aff:1' není pro slovo \"%word:2\" platný."
+msgstr "Ibendera ni Sibyo kugirango ijambo 2."
 
 #: common/errors.cpp:403
+#, fuzzy
 msgid "The affix flag '%aff:1' can not be applied to word \"%word:2\"."
-msgstr "Příznak přípony '%aff:1' nelze použít na slovo \"%word:2\"."
+msgstr "Ibendera OYA Byashyizweho Kuri ijambo 2."
 
 #: common/errors.cpp:451
+#, fuzzy
 msgid "not a version number"
-msgstr "není číslo verze"
+msgstr "OYA a Verisiyo Umubare"
 
 #: common/errors.cpp:467
+#, fuzzy
 msgid "dlopen returned \"%return:1\"."
-msgstr "dlopen vrátilo \"%return:1\"."
+msgstr "1."
 
 #: common/errors.cpp:475
-#, c-format
+#, fuzzy, c-format
 msgid "The file \"%filter:1\" does not contain any filters."
-msgstr "Soubor \"%filter:1\" neobsahuje žádné filtry."
+msgstr "IDOSIYE 1. OYA Muyunguruzi"
 
 #: common/errors.cpp:483
-#, c-format
+#, fuzzy, c-format
 msgid "The filter \"%filter:1\" does not exist."
-msgstr "Filtr \"%filter:1\" neexistuje."
+msgstr "Muyunguruzi... 1. OYA"
 
 #: common/errors.cpp:491 common/errors.cpp:587
+#, fuzzy
 msgid "Confused by version control."
-msgstr "Zmaten správou verzí."
+msgstr "ku Verisiyo Igenzura"
 
 #: common/errors.cpp:499
+#, fuzzy
 msgid "Aspell version does not match filter's requirement."
-msgstr "Verze Aspellu neodpovídá požadavku filtru."
+msgstr "Verisiyo OYA BIHUYE"
 
 #: common/errors.cpp:507
+#, fuzzy
 msgid "Filter option already exists."
-msgstr "Přepínač filtru již existuje."
+msgstr "Ihitamo"
 
 #: common/errors.cpp:515
+#, fuzzy
 msgid "Use option modifiers only within named option."
-msgstr "Modifikátory přepínače používejte jen s pojmenovanými přepínači."
+msgstr "Ihitamo muri Ihitamo"
 
 #: common/errors.cpp:523
+#, fuzzy
 msgid "Option modifier unknown."
-msgstr "Modifikátor přepínače není znám."
+msgstr "Kitazwi"
 
 #: common/errors.cpp:531
+#, fuzzy
 msgid "Error setting filter description."
-msgstr "Chyba při nastavování popisu filtru."
+msgstr "Igenamiterere Muyunguruzi... Isobanuramiterere"
 
 #: common/errors.cpp:547
+#, fuzzy
 msgid "Empty option specifier."
-msgstr "Prázdný specifikátor přepínače."
+msgstr "Ihitamo"
 
 #: common/errors.cpp:555
-#, c-format
+#, fuzzy, c-format
 msgid "Option \"%option:1\" possibly specified prior to filter."
-msgstr "Přepínač \"%option:1\" bylo možná zadán před filtrem."
+msgstr "1. Kuri Muyunguruzi..."
 
 #: common/errors.cpp:563
+#, fuzzy
 msgid "Unknown mode description key \"%key:1\"."
-msgstr "Neznámý klíč popisu režimu \"%key:1\"."
+msgstr "Ubwoko Isobanuramiterere Urufunguzo 1."
 
 #: common/errors.cpp:571
-#, c-format
+#, fuzzy, c-format
 msgid "Expecting \"%modekey:1\" key."
-msgstr "Očekávám klíč \"%modekey:1\"."
+msgstr "1. Urufunguzo"
 
 #: common/errors.cpp:579
+#, fuzzy
 msgid "Version specifier missing key: \"aspell\"."
-msgstr "Ve specifikátoru verze chybí klíč: \"aspell\"."
+msgstr "Ibuze Urufunguzo"
 
 #: common/errors.cpp:595
+#, fuzzy
 msgid "Aspell version does not match mode's requirement."
-msgstr "Verze Aspellu neodpovídá požadavku filtru."
+msgstr "Verisiyo OYA BIHUYE"
 
 #: common/errors.cpp:603
+#, fuzzy
 msgid "Missing magic mode expression."
-msgstr "Chybí výraz režimu magic."
+msgstr "Ubwoko imvugo"
 
 #: common/errors.cpp:611
-#, c-format
+#, fuzzy, c-format
 msgid "Empty extension at char %char:1."
-msgstr "Prázdná přípona u znaku %char:1."
+msgstr "Umugereka ku INYUGUTI 1."
 
 #: common/errors.cpp:619
-#, c-format
+#, fuzzy, c-format
 msgid "\"%mode:1\" error"
-msgstr "chyba \"%mode:1\""
+msgstr "\"%mode:1. Ikosa"
 
 #: common/errors.cpp:627
-#, c-format
+#, fuzzy, c-format
 msgid "Unknown mode: \"%mode:1\"."
-msgstr "Neznámý mód: \"%mode:1\"."
+msgstr "Ubwoko 1."
 
 #: common/errors.cpp:635
-#, c-format
+#, fuzzy, c-format
 msgid "\"%mode:1\" error while extend Aspell modes. (out of memory?)"
-msgstr "Chyba \"%mode:1\" při rozšiřování režimů Aspellu. (nedostatek paměti?)"
+msgstr "\"%mode:1. Ikosa Inyuma Bya Ububiko"
 
 #: common/errors.cpp:651
-#, c-format
+#, fuzzy, c-format
 msgid "\"%mode:1\": no start for magic search given for magic \"%magic:2\"."
-msgstr "\"%mode:1\": pro magic \"%magic:2\" nebyl zadán začátek hledání."
+msgstr "\"%mode:1. Oya Gutangira kugirango Gushaka kugirango 2."
 
 #: common/errors.cpp:659
-#, c-format
+#, fuzzy, c-format
 msgid "\"%mode:1\": no range for magic search given for magic \"%magic:2\"."
-msgstr "\"%mode:1\": pro magic \"%magic:2\" nebyl zadán rozsah hledání."
+msgstr "\"%mode:1. Oya Urutonde kugirango Gushaka kugirango 2."
 
 #: common/errors.cpp:667
-#, c-format
+#, fuzzy, c-format
 msgid "\"%mode:1\": no magic expression available for magic \"%magic:2\"."
-msgstr "\"%mode:1\": pro magic \"%magic:2\" není k dispozici výraz magic."
+msgstr "\"%mode:1. Oya imvugo Bihari kugirango 2."
 
 #: common/errors.cpp:675
+#, fuzzy
 msgid ""
 "\"%mode:1\": Magic \"%magic:2\": bad regular expression after location "
 "specifier; regexp reports: \"%regerr:3\"."
-msgstr ""
-"\"%mode:1\": Magic \"%magic:2\": špatný regulární výraz po určení umístění; "
-"regexp hlásí: \"%regerr:3\"."
+msgstr "\"%mode:1. 2. Ibisanzwe imvugo Nyuma Ahantu Raporo 3."
 
 #: common/errors.cpp:691
-#, c-format
+#, fuzzy, c-format
 msgid "\"%expression:1\" is not a valid regular expression."
-msgstr "\"%expression:1\" není platný regulární výraz."
+msgstr "\"%expression:1. ni OYA a Byemewe Ibisanzwe imvugo"
 
 #: common/posib_err.cpp:100
 msgid "Unhandled Error: "
-msgstr "Neobsloužená chyba: "
+msgstr ""
 
 #: prog/aspell.cpp:97
-#, c-format
+#, fuzzy, c-format
 msgid "Error: %s\n"
-msgstr "Chyba: %s\n"
+msgstr "Ikosa"
 
 #: prog/aspell.cpp:102
 msgid "Error: "
-msgstr "Chyba: "
+msgstr "Ikosa"
 
 #: prog/aspell.cpp:203
+#, fuzzy
 msgid "enter Email mode."
-msgstr "přejít do režimu E-mail."
+msgstr "Injiza Ubwoko"
 
 #: prog/aspell.cpp:204
+#, fuzzy
 msgid "enter HTML mode."
-msgstr "přejít do režimu HTML."
+msgstr "Injiza Ubwoko"
 
 #: prog/aspell.cpp:205
+#, fuzzy
 msgid "enter TeX mode."
-msgstr "přejít do režimu TeX."
+msgstr "Injiza Ubwoko"
 
 #: prog/aspell.cpp:206
+#, fuzzy
 msgid "enter Nroff mode."
-msgstr "přejít do režimu Nroff."
+msgstr "Injiza Ubwoko"
 
 #: prog/aspell.cpp:304
 #, c-format
 msgid "Invalid Option: %s"
-msgstr "Neplatný přepínač: %s"
+msgstr ""
 
 #: prog/aspell.cpp:311
+#, fuzzy
 msgid " does not take any parameters."
-msgstr " nemá žádné parametry."
+msgstr "OYA Ibigenga"
 
 #: prog/aspell.cpp:324 prog/aspell.cpp:384
-#, c-format
+#, fuzzy, c-format
 msgid "You must specify a parameter for \"%s\"."
-msgstr "Musíte zadat parametr pro \"%s\"."
+msgstr "a kugirango"
 
 #: prog/aspell.cpp:373
+#, fuzzy
 msgid "You must specify an action"
-msgstr "Musíte určit akci"
+msgstr "Igikorwa"
 
 #: prog/aspell.cpp:381 prog/aspell.cpp:444 prog/aspell.cpp:466
 #, c-format
 msgid "Unknown Action: %s"
-msgstr "Neznámá akce: %s"
+msgstr ""
 
 #: prog/aspell.cpp:387
-#, c-format
+#, fuzzy, c-format
 msgid "Error: You must specify at least %d parameters for \"%s\".\n"
-msgstr "Chyba: Musíte zadat alespoň %d parametrů pro \"%s\".\n"
+msgstr "a kugirango"
 
 #: prog/aspell.cpp:629
+#, fuzzy
 msgid "Invalid Input"
-msgstr "Neplatný vstup"
+msgstr "ibinjizwa bitemewe"
 
 #: prog/aspell.cpp:704
 #, c-format
 msgid "WARNING: Unable to enter Nroff mode: %s\n"
-msgstr "VAROVÁNÍ: Nemohu přejít do režimu Nroff: %s\n"
+msgstr ""
 
 #: prog/aspell.cpp:725
+#, fuzzy
 msgid "Time to load word list: "
-msgstr "Čas načítání seznamu slov: "
+msgstr "Kuri Ibirimo ijambo Urutonde"
 
 #: prog/aspell.cpp:922
 #, c-format
 msgid "Suggestion Time: %f\n"
-msgstr "Čas návrhu: %f\n"
+msgstr ""
 
 #: prog/aspell.cpp:965
+#, fuzzy
 msgid "You must specify a file name."
-msgstr "Musíte určit název souboru."
+msgstr "a IDOSIYE Izina:"
 
 #: prog/aspell.cpp:975
-#, c-format
+#, fuzzy, c-format
 msgid "Could not open the file \"%s\" for reading"
-msgstr "Nemohu otevřít soubor \"%s\" pro čtení"
+msgstr "OYA Gufungura i IDOSIYE kugirango"
 
 #: prog/aspell.cpp:990
-#, c-format
+#, fuzzy, c-format
 msgid "Could not open the file \"%s\" for writing. File not saved."
-msgstr "Nemohu otevřít soubor \"%s\" pro zápis. Soubor nebyl uložen."
+msgstr "OYA Gufungura i IDOSIYE kugirango Idosiye OYA"
 
 #: prog/aspell.cpp:1003
 #, c-format
 msgid "Invalid keymapping: %s"
-msgstr "Neplatné mapování kláves: %s"
+msgstr ""
 
 #: prog/aspell.cpp:1023
 msgid "Ignore"
-msgstr "Ignorovat"
+msgstr "Kureka"
 
+# svx/source\editeng\editeng.src:RID_MENU_SPELL.MN_IGNORE.text
 #: prog/aspell.cpp:1024
+#, fuzzy
 msgid "Ignore all"
-msgstr "Ignorovat vše"
+msgstr "Kwirengagiza Byose"
 
 #: prog/aspell.cpp:1025
 msgid "Replace"
-msgstr "Nahradit"
+msgstr "Gusimbura"
 
 #: prog/aspell.cpp:1026
 msgid "Replace all"
-msgstr "Nahradit vše"
+msgstr "Gusimbura Byose"
 
 #: prog/aspell.cpp:1027
 msgid "Add"
-msgstr "Přidat"
+msgstr "Kongera"
 
 #: prog/aspell.cpp:1028
 msgid "Add Lower"
-msgstr "Přidat malá"
+msgstr ""
 
 #: prog/aspell.cpp:1029
 msgid "Abort"
-msgstr "Přerušit"
+msgstr "Ntibyakunze"
 
 #: prog/aspell.cpp:1030
 msgid "Exit"
-msgstr "Ukončit"
+msgstr "Gusohoka"
 
-# FIXME: "to abort"
 #: prog/aspell.cpp:1106
+#, fuzzy
 msgid "Are you sure you want to abort (y/n)? "
-msgstr "Jste si jisti, že chcete přerušit (a/n)? "
+msgstr "Kuri Kureka Y N"
 
 #. TRANSLATORS: The user may input any of these characters to say "yes".
 #. MUST ONLY CONSIST OF ASCII CHARACTERS.
 #: prog/aspell.cpp:1110
 msgid "Yy"
-msgstr "Aa"
+msgstr ""
 
+# offmgr/source\offapp\dialog\autocdlg.src:RID_OFAPAGE_AUTOCORR_REPLACE.FT_REPLACE.text
 #: prog/aspell.cpp:1131
+#, fuzzy
 msgid "With: "
-msgstr "S: "
+msgstr "Na:"
 
 #: prog/aspell.cpp:1148
+#, fuzzy
 msgid "Sorry that is an invalid choice!"
-msgstr "Lituji, to je neplatná volba!"
+msgstr "ni Sibyo"
 
 #: prog/aspell.cpp:1369
+#, fuzzy
 msgid "Sorry \"filter\" is currently unimplemented.\n"
-msgstr "Lituji, \"filter\" momentálně není implementováno.\n"
+msgstr "Muyunguruzi... ni"
 
 #: prog/aspell.cpp:1503
+#, fuzzy
 msgid "Can't merge a master word list yet. Sorry."
-msgstr "Zatím neumím sloučit hlavní seznam slov. Lituji."
+msgstr "Gukomatanya a Mugenga ijambo Urutonde"
 
 #: prog/aspell.cpp:1527
+#, fuzzy
 msgid "Sorry \"create/merge personal\" is currently unimplemented.\n"
-msgstr "Lituji, \"vytvořit/sloučit osobní\" momentálně není implementováno.\n"
+msgstr "Kurema Gukomatanya Bwite ni"
 
 #: prog/aspell.cpp:1536 prog/aspell.cpp:1592
-#, c-format
+#, fuzzy, c-format
 msgid "Sorry I won't overwrite \"%s\""
-msgstr "Lituji, nepřepíšu \"%s\""
+msgstr "Guhindura"
 
 #: prog/aspell.cpp:1583
+#, fuzzy
 msgid "Sorry \"create/merge repl\" is currently unimplemented.\n"
-msgstr "Lituji, \"vytvořit/sloučit náhr\" momentálně není implementováno.\n"
+msgstr "Kurema Gukomatanya ni"
 
 #: prog/aspell.cpp:1851
 #, c-format
 msgid "\"%s\" is not a valid flag for the \"munch-list\" command."
-msgstr "\"%s\" není platný přepínač pro příkaz \"munch-list\"."
+msgstr ""
 
 #. TRANSLATORS: These should all be formated to fit in 80 column or
 #. less
 #: prog/aspell.cpp:2770
+#, fuzzy
 msgid "Usage: aspell [options] <command>"
-msgstr "Použití: aspell [přepínače] <příkaz>"
+msgstr "Amahitamo Komandi:"
 
 #: prog/aspell.cpp:2771
+#, fuzzy
 msgid "<command> is one of:"
-msgstr "<příkaz> je jedno z:"
+msgstr "<Komandi: ni Bya"
 
 #: prog/aspell.cpp:2772
+#, fuzzy
 msgid "  -?|usage         display a brief usage message"
-msgstr "  -?|usage         zobrazit krátkou zprávu o použití"
+msgstr ""
+"-|Project- Id- Version: basctl\n"
+"POT- Creation- Date: 2003- 12- 07 17: 13+ 02\n"
+"PO- Revision- Date: 2004- 11- 04 10: 13- 0700\n"
+"Last- Translator: Language- Team:< en@ li. org> MIME- Version: 1. 0\n"
+"Content- Type: text/ plain; charset= UTF- 8\n"
+"Content- Transfer- Encoding: 8bit\n"
+"X- Generator: KBabel 1. 0\n"
+"."
 
 #: prog/aspell.cpp:2773
+#, fuzzy
 msgid "  help             display a detailed help message"
-msgstr "  help             zobrazit podrobnou zprávu s nápovědou"
+msgstr "Ifashayobora Kugaragaza a Ifashayobora Ubutumwa"
 
 #: prog/aspell.cpp:2774
+#, fuzzy
 msgid "  -c|check <file>  to check a file"
-msgstr "  -c|check <soubor> zkontrolovat soubor"
+msgstr "-C Kugenzura... IDOSIYE Kuri Kugenzura... a IDOSIYE"
 
 #: prog/aspell.cpp:2775
+#, fuzzy
 msgid "  -a|pipe          \"ispell -a\" compatibility mode"
-msgstr "  -a|pipe          režim pro kompatibilitu s \"ispell -a\""
+msgstr "-a a Bihuye neza Ubwoko"
 
 #: prog/aspell.cpp:2776
+#, fuzzy
 msgid "  [dump] config    dumps the current configuration to stdout"
-msgstr "  [dump] config    vypíše aktuální nastavení na stdout"
+msgstr "[i KIGEZWEHO Iboneza Kuri"
 
 #: prog/aspell.cpp:2777
+#, fuzzy
 msgid "  config <key>     prints the current value of an option"
-msgstr "  config <klíč>    vypíše aktuální hodnotu přepínače"
+msgstr "Urufunguzo i KIGEZWEHO Agaciro Bya Ihitamo"
 
 #: prog/aspell.cpp:2778
+#, fuzzy
 msgid "  [dump] dicts | filters | modes"
-msgstr "  [dump] dicts | filters | modes"
+msgstr "[Muyunguruzi"
 
 #: prog/aspell.cpp:2779
+#, fuzzy
 msgid "    lists available dictionaries / filters / filter modes"
-msgstr "    vypíše dostupné slovníky / filtry / režimy filtrů"
+msgstr "Intonde Bihari Inkoranyamagambo Muyunguruzi Muyunguruzi..."
 
 #: prog/aspell.cpp:2780
+#, fuzzy
 msgid "[options] is any of the following:"
-msgstr "[přepínač] je libovolný z následujících:"
+msgstr "[Amahitamo ni Bya i"
 
 #: prog/aspell.cpp:2793
+#, fuzzy
 msgid ""
 "  list             produce a list of misspelled words from standard input"
-msgstr ""
-"  list             vypsat seznam slov s překlepy ze standardního vstupu"
+msgstr "Urutonde a Urutonde Bya Amagambo Bivuye Bisanzwe Iyinjiza"
 
 #: prog/aspell.cpp:2796
+#, fuzzy
 msgid ""
 "  soundslike       returns the sounds like equivalent for each word entered"
-msgstr ""
-"  soundslike       vrátí ekvivalent pro podobnost zvuku každého zadaného "
-"slova"
+msgstr "i Amajwi nka kugirango ijambo"
 
 #: prog/aspell.cpp:2797
+#, fuzzy
 msgid "  munch            generate possible root words and affixes"
-msgstr "  munch            vygenerovat možné kořeny slov a přípony"
+msgstr "Imizi Amagambo Na"
 
 #: prog/aspell.cpp:2798
+#, fuzzy
 msgid "  expand [1-4]     expands affix flags"
-msgstr "  expand [1-4]     rozbaluje příznaky přípon"
+msgstr "Kwagura 1. 4. Amabendera"
 
 #: prog/aspell.cpp:2799
+#, fuzzy
 msgid ""
 "  clean [strict]   cleans a word list so that every line is a valid word"
-msgstr ""
-"  clean [strict]   vyčistí seznam slov, aby každý řádek bylo platné slovo"
+msgstr "GUSUKURA a ijambo Urutonde buri Umurongo ni a Byemewe ijambo"
 
 #: prog/aspell.cpp:2801
+#, fuzzy
 msgid "  -v|version       prints a version line"
-msgstr "  -v|version       vypíše řádek o verzi"
+msgstr "-v Verisiyo a Verisiyo Umurongo"
 
 #: prog/aspell.cpp:2802
 msgid "  munch-list [simple] [single|multi] [keep]\n"
-msgstr "  munch-list [simple] [single|multi] [keep]\n"
+msgstr ""
 
 #: prog/aspell.cpp:2803
 msgid "    reduce the size of a word list via affix compression"
-msgstr "    zmenšit seznam slov kompresí přípon"
+msgstr ""
 
 #: prog/aspell.cpp:2804
+#, fuzzy
 msgid "  conv <from> <to> [<norm-form>]"
-msgstr "  conv <z> <do> [<norm-forma>]"
+msgstr "Bivuye Kuri Ifishi"
 
 #: prog/aspell.cpp:2805
+#, fuzzy
 msgid "    converts from one encoding to another"
-msgstr "    převede z jednoho kódování do jiného"
+msgstr "Bivuye Imisobekere: Kuri"
 
 #: prog/aspell.cpp:2806
+#, fuzzy
 msgid "  norm (<norm-map> | <from> <norm-map> <to>) [<norm-form>]"
-msgstr "  norm (<norm-map> | <z> <norm-map> <do>) [<norm-forma>]"
+msgstr "Bivuye Kuri Ifishi"
 
 #: prog/aspell.cpp:2807
 msgid "    perform Unicode normalization"
-msgstr "   provést normalizaci Unicode"
+msgstr ""
 
 #: prog/aspell.cpp:2810
+#, fuzzy
 msgid "  dump|create|merge master|personal|repl [<name>]"
-msgstr "  dump|create|merge master|personal|repl [<název>]"
+msgstr "Kurema Gukomatanya Mugenga Bwite ijambo Urutonde"
 
 #: prog/aspell.cpp:2811
+#, fuzzy
 msgid ""
 "    dumps, creates or merges a master, personal, or replacement dictionary."
-msgstr ""
-"    vypíše, vytvoří nebo sloučí hlavní, osobní seznam slov nebo seznam "
-"náhrad."
+msgstr "Cyangwa a Mugenga Bwite Cyangwa ijambo Urutonde"
 
 #. TRANSLATORS: "none", "internal" and "strict" are literal values
 #. and should not be translated.
 #: prog/aspell.cpp:2815
+#, fuzzy
 msgid ""
 "  <norm-form>      normalization form to use, either none, internal, or "
 "strict"
-msgstr "  <norm-forma>     normalizační forma, buď none, internal nebo strict"
+msgstr "<Ifishi Ifishi Kuri Gukoresha Ntacyo By'imbere Cyangwa"
 
 #: prog/aspell.cpp:2825
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "\n"
 "Aspell %s.  Copyright 2000-2004 by Kevin Atkinson.\n"
 "\n"
-msgstr ""
-"\n"
-"Aspell %s.  Copyright 2000-2004 Kevin Atkinson.\n"
-"\n"
+msgstr "ku"
 
 #: prog/aspell.cpp:2859
+#, fuzzy
 msgid ""
 "Available Dictionaries:\n"
 "    Dictionaries can be selected directly via the \"-d\" or \"master\"\n"
 "    option.  They can also be selected indirectly via the \"lang\",\n"
 "    \"variety\", and \"size\" options.\n"
 msgstr ""
-"Dostupné slovníky:\n"
-"    Slovníky lze vybrat přímo pomocí přepínače \"-d\" nebo \"master\".\n"
-"    Mohou také být vybrány nepřímo pomocí přepínače \"lang\", \"variety\"\n"
-"    a \"size\".\n"
+"Byahiswemo Biturutse i D Cyangwa Mugenga Ihitamo Byahiswemo Biturutse i Na "
+"Ingano Amahitamo"
 
 #: prog/aspell.cpp:2880
+#, fuzzy
 msgid ""
 "Available Filters (and associated options):\n"
 "    Filters can be added or removed via the \"filter\" option.\n"
 msgstr ""
-"Dostupné filtry (a asociované přepínače):\n"
-"    Filtry mohou být přidány nebo odebrány pomocí přepínače \"filter\".\n"
+"Na Amahitamo Kyongewe Cyangwa Cyavanyweho Biturutse i Muyunguruzi... Ihitamo"
 
+# wizards/source\formwizard\dbwizres.src:RID_DB_QUERY_WIZARD_START_+_16.text
 #: prog/aspell.cpp:2887
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "\n"
 "  %s filter: %s\n"
-msgstr ""
-"\n"
-"  Filtr %s: %s\n"
+msgstr "%sMuyunguruzi"
 
-# FIXME: s/reconfigured/preconfigured/
 #. TRANSLATORS: This should be formated to fit in 80 column or less
 #: prog/aspell.cpp:2904
+#, fuzzy
 msgid ""
 "Available Filter Modes:\n"
 "    Filter Modes are reconfigured combinations of filters optimized for\n"
@@ -1001,66 +1140,77 @@ msgid ""
 "    This will happen implicitly if Aspell is able to identify the file\n"
 "    type from the extension, and possibility the contents, of the file.\n"
 msgstr ""
-"Dostupné režimy filtrů:\n"
-"    Režimy filtrů jsou přednastavené kombinace filtrů optimalizované pro\n"
-"    soubory určitého typu. Režim se volí přepínačem \"mode\". Režim je\n"
-"    zvolen implciitně, pokud Aspell může identifikovat typ souboru\n"
-"    z přípony a popřípadě obsahu souboru.\n"
+"Bya Muyunguruzi Cyuzuye Idosiye Bya a Ubwoko A Ubwoko ni Byahiswemo "
+"Biturutse i Ubwoko Ihitamo NIBA ni Kuri i Ubwoko Bivuye i Umugereka Na i "
+"Ibigize Bya i IDOSIYE"
 
 #: prog/check_funs.cpp:287
+#, fuzzy
 msgid "Error: Stdin not a terminal."
-msgstr "Chyba: stdin není terminál."
+msgstr "OYA a"
 
+# LOCALIZATION NOTE : BLOCK end GLYPHS
+# Enter, backspace, and Tab might have both glyphs and text
+# if the keyboards usually have a glyph,
+# if there is a meaningful translation,
+# or if keyboards are localized
+# then translate them or insert the appropriate glyph
+# otherwise you should probably just translate the glyph regions
+# LOCALIZATION NOTE : BLOCK maybe GLYPHS
 #. TRANSLATORS: This is a literal Key.
 #: prog/check_funs.cpp:769
 msgid "Enter"
-msgstr "Enter"
+msgstr "Injiza"
 
 #: prog/check_funs.cpp:771
 msgid "Accept Changes"
-msgstr "Přijmout změny"
+msgstr "emera ibihindutse/ibyahindutse"
 
 #. TRANSLATORS: This is a literal Key.
 #: prog/check_funs.cpp:774
 msgid "Backspace"
-msgstr "Backspace"
+msgstr "Gusiba usubira inyuma"
 
 #. TRANSLATORS: This is a literal Key.
 #: prog/check_funs.cpp:776
+#, fuzzy
 msgid "Control-H"
-msgstr "Ctrl-H"
+msgstr "H"
 
 #: prog/check_funs.cpp:777
+#, fuzzy
 msgid "Delete the previous character"
-msgstr "Odstranit předchozí znak"
+msgstr "i Ibanjirije Inyuguti"
 
 #. TRANSLATORS: This is a literal Key.
 #: prog/check_funs.cpp:780
 msgid "Left"
-msgstr "Vlevo"
+msgstr "Ibumoso"
 
 #. TRANSLATORS: This is a literal Key.
 #: prog/check_funs.cpp:782
 msgid "Control-B"
-msgstr "Ctrl-B"
+msgstr ""
 
 #: prog/check_funs.cpp:783
+#, fuzzy
 msgid "Move Back one space"
-msgstr "Přejít o místo zpět"
+msgstr "Umwanya"
 
 #. TRANSLATORS: This is a literal Key.
 #: prog/check_funs.cpp:786
 msgid "Right"
-msgstr "Vpravo"
+msgstr "Iburyo"
 
 #. TRANSLATORS: This is a literal Key.
 #: prog/check_funs.cpp:788
 msgid "Control-F"
-msgstr "Ctrl-F"
+msgstr ""
 
 #: prog/check_funs.cpp:789
+#, fuzzy
 msgid "Move Forward one space"
-msgstr "Přejít o místo vpřed"
+msgstr "Umwanya"
 
 #. TRANSLATORS: This is a literal Key.
 #: prog/check_funs.cpp:792
@@ -1069,161 +1219,179 @@ msgstr "Home"
 
 #. TRANSLATORS: This is a literal Key.
 #: prog/check_funs.cpp:794
+#, fuzzy
 msgid "Control-A"
-msgstr "Ctrl-A"
+msgstr "A"
 
 #: prog/check_funs.cpp:795
+#, fuzzy
 msgid "Move to the beginning of the line"
-msgstr "Přejít na začátek řádku"
+msgstr "Kuri i Itangiriro Bya i Umurongo"
 
 #. TRANSLATORS: This is a literal Key.
 #: prog/check_funs.cpp:798
 msgid "End"
-msgstr "End"
+msgstr "Impera"
 
 #. TRANSLATORS: This is a literal Key.
 #: prog/check_funs.cpp:800
+#, fuzzy
 msgid "Control-E"
-msgstr "Ctrl-E"
+msgstr "E"
 
 #: prog/check_funs.cpp:801
+#, fuzzy
 msgid "Move to the end of the line"
-msgstr "Přejít na konec řádku"
+msgstr "Kuri i Impera Bya i Umurongo"
 
 #. TRANSLATORS: This is a literal Key.
 #: prog/check_funs.cpp:804
 msgid "Delete"
-msgstr "Delete"
+msgstr "Gusiba"
 
 #. TRANSLATORS: This is a literal Key.
 #: prog/check_funs.cpp:806
 msgid "Control-D"
-msgstr "Ctrl-D"
+msgstr ""
 
 #: prog/check_funs.cpp:807
+#, fuzzy
 msgid "Delete the next character"
-msgstr "Odstranit následující znak"
+msgstr "i Komeza>> Inyuguti"
 
 #. TRANSLATORS: This is a literal Key.
 #: prog/check_funs.cpp:811
 msgid "Control-K"
-msgstr "Ctrl-K"
+msgstr ""
 
 #: prog/check_funs.cpp:812
+#, fuzzy
 msgid "Kill all characters to the EOL"
-msgstr "Zabít všechny znaky do konce řádku"
+msgstr "Byose Inyuguti Kuri i"
 
 #. TRANSLATORS: This is a literal Key.
 #: prog/check_funs.cpp:816
+#, fuzzy
 msgid "Control-C"
-msgstr "Ctrl-C"
+msgstr "C"
 
 #: prog/check_funs.cpp:817
 msgid "Abort This Operation"
-msgstr "Přerušit tuto operaci"
+msgstr ""
 
 #: modules/speller/default/language.cpp:103
+#, fuzzy
 msgid "This is probably because: "
-msgstr "To je pravděpodobně protože: "
+msgstr "ni"
 
 #: modules/speller/default/language.cpp:110
+#, fuzzy
 msgid "The required field \"name\" is missing."
-msgstr "Vyžadované pole \"name\" chybí."
+msgstr "Bya ngombwa Umwanya Izina: ni Ibuze"
 
 #: modules/speller/default/language.cpp:488
+#, fuzzy
 msgid "Empty string."
-msgstr "Prázdný řetězec."
+msgstr "Injishi irimo ubusa"
 
 #: modules/speller/default/language.cpp:492
-#, c-format
+#, fuzzy, c-format
 msgid "The character '%s' (U+%02X) may not appear at the beginning of a word."
-msgstr "Znak '%s' (U+%02X) nesmí být na začátku slova."
+msgstr "Inyuguti U Gicurasi OYA Kugaragara ku i Itangiriro Bya a ijambo"
 
 #: modules/speller/default/language.cpp:494
 #: modules/speller/default/language.cpp:503
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "The character '%s' (U+%02X) must be followed by an alphabetic character."
-msgstr "Znak '%s' (U+%02X) musí být následován písmenem."
+msgstr "Inyuguti U ku Inyuguti"
 
 #: modules/speller/default/language.cpp:496
+#, fuzzy
 msgid "Does not contain any alphabetic characters."
-msgstr "Neobsahuje žádná písmena."
+msgstr "OYA Inyuguti"
 
 #: modules/speller/default/language.cpp:501
-#, c-format
+#, fuzzy, c-format
 msgid "The character '%s' (U+%02X) may not appear in the middle of a word."
-msgstr "Znak '%s' (U+%02X) nesmí být uprostřed slova."
+msgstr "Inyuguti U Gicurasi OYA Kugaragara in i Hagati Bya a ijambo"
 
 #: modules/speller/default/language.cpp:508
+#, fuzzy
 msgid ""
 "The character '\\r' (U+0D) may not appear at the end of a word. This "
 "probably means means that the file is using MS-DOS EOL instead of Unix EOL."
 msgstr ""
-"Znak '\\r' (U+0D) nesmí být na konci slova. Toto pravděpodobně znamená, že "
-"soubor používá konce řádků MS-DOS místo unixových."
+"Inyuguti U Gicurasi OYA Kugaragara ku i Impera Bya a ijambo i IDOSIYE ni "
+"ikoresha Bya"
 
 #: modules/speller/default/language.cpp:511
-#, c-format
+#, fuzzy, c-format
 msgid "The character '%s' (U+%02X) may not appear at the end of a word."
-msgstr "Znak '%s' (U+%02X) nesmí být na konci slova."
+msgstr "Inyuguti U Gicurasi OYA Kugaragara ku i Impera Bya a ijambo"
 
 #: modules/speller/default/language.cpp:543
-#, c-format
+#, fuzzy, c-format
 msgid "Warning: Removing invalid affix '%s' from word %s.\n"
-msgstr "Varování: Odstraňuji neplatnou příponu '%s' ze slova %s.\n"
+msgstr "Sibyo Bivuye ijambo"
 
 #: modules/speller/default/language.cpp:544
-#, c-format
+#, fuzzy, c-format
 msgid "Warning: Removing inapplicable affix '%s' from word %s.\n"
-msgstr "Varování: Odstraňuji nepoužitelnou příponu '%s' ze slova %s.\n"
+msgstr "Bivuye ijambo"
 
 #: modules/speller/default/language.cpp:674
-#, c-format
+#, fuzzy, c-format
 msgid "Warning: %s Skipping string.\n"
-msgstr "Varování: %s Přeskakuji řetězec.\n"
+msgstr "Ikurikiranyanyuguti"
 
 #: modules/speller/default/language.cpp:732
+#, fuzzy
 msgid "The total length is larger than 240 characters."
-msgstr "Celková délka je větší než 240 znaků."
+msgstr "Igiteranyo Uburebure ni Kinini Inyuguti"
 
 #: modules/speller/default/language.cpp:736
-#, c-format
+#, fuzzy, c-format
 msgid "Warning: %s Skipping word.\n"
-msgstr "Varování: %s Přeskakuji slovo.\n"
+msgstr "ijambo"
 
 #: modules/speller/default/affix.cpp:426
+#, fuzzy
 msgid "Possibly incorrect count."
-msgstr "Možná nesprávný počet."
+msgstr "IBARA"
 
 #: modules/speller/default/readonly_ws.cpp:362
+#, fuzzy
 msgid "Wrong endian order."
-msgstr "Špatné pořadí bajtů."
+msgstr "Itondekanya"
 
 #: modules/speller/default/readonly_ws.cpp:385
 msgid "Wrong soundslike."
-msgstr "Špatná podobnost zvuku."
+msgstr ""
 
 #: modules/speller/default/readonly_ws.cpp:391
+#, fuzzy
 msgid "Wrong soundslike version."
-msgstr "Špatná verze podobnosti zvuku."
+msgstr "Verisiyo"
 
 #: modules/speller/default/readonly_ws.cpp:855
+#, fuzzy
 msgid "Affix flags found in word but no affix file given."
-msgstr "Příznaky přípon nalezeny ve slově, ale nezadán soubor přípon."
+msgstr "Amabendera Byabonetse in ijambo Oya IDOSIYE"
 
 #: modules/speller/default/readonly_ws.cpp:893
+#, fuzzy
 msgid ""
 "The total word length, with soundslike data, is larger than 240 characters."
-msgstr "Celková délka slova s daty o podobnosti zvuku je větší než 240 znaků."
+msgstr "Igiteranyo ijambo Uburebure Na: Ibyatanzwe ni Kinini Inyuguti"
 
 #: modules/speller/default/suggest.cpp:1402
 msgid "one of ultra, fast, normal, slow, or bad-spellers"
-msgstr "jedno z ultra, fast, normal, slow nebo bad-spellers"
+msgstr ""
 
 #: modules/speller/default/data.cpp:405
 msgid "is not one of the allowed types"
-msgstr "není jeden z povolených typů"
+msgstr ""
 
 #: modules/speller/default/speller_impl.cpp:233
 msgid "The personal word list is unavailable."
@@ -1238,171 +1406,163 @@ msgid "The main word list is unavailable."
 msgstr ""
 
 #: modules/filter/tex.cpp:251 modules/filter/tex.cpp:258
+#, fuzzy
 msgid "a string of 'o','O','p',or 'P'"
-msgstr "řetězec 'o','O','p' nebo 'P'"
+msgstr "a Ikurikiranyanyuguti Bya Cyangwa"
 
 #. TRANSLATORS: Like the strings in config.cpp, all strings in *-filter.opt
 #. should be under 50 characters, begin with a lower case character and 
 #. not include any trailing punctuation marks.
 #: modules/filter/context-filter.info:7
+#, fuzzy
 msgid "experimental filter for hiding delimited contexts"
-msgstr "experimentální filtr pro skrývání daných kontextů"
+msgstr "Ifite uburambe Muyunguruzi... kugirango"
 
 #: modules/filter/context-filter.info:13
+#, fuzzy
 msgid "context delimiters (separated by spaces)"
-msgstr "oddělovače kontextu (oddělené mezerami)"
+msgstr "Imvugiro ku Imyanya"
 
 #: modules/filter/context-filter.info:21
+#, fuzzy
 msgid "swaps visible and invisible text"
-msgstr "prohazuje viditelný a neviditelný text"
+msgstr "Kigaragara Na Kitagaragara Umwandiko"
 
 #: modules/filter/email-filter.info:7
+#, fuzzy
 msgid "filter for skipping quoted text in email messages"
-msgstr "filtr pro přeskakování citovaného textu v e-mailu"
+msgstr "Muyunguruzi... kugirango Gusimbuka:%s Umwandiko in imeli Ubutumwa"
 
 #: modules/filter/email-filter.info:13
+#, fuzzy
 msgid "email quote characters"
-msgstr "znaky citací z e-mailu"
+msgstr "imeli Gushyiraho akugarizo Inyuguti"
 
 #: modules/filter/email-filter.info:21
+#, fuzzy
 msgid "num chars that can appear before the quote char"
-msgstr "počet znaků, které mohou být před znakem citace"
+msgstr "Kugaragara Mbere i Gushyiraho akugarizo INYUGUTI"
 
 #: modules/filter/html-filter.info:9
+#, fuzzy
 msgid "filter for dealing with HTML documents"
-msgstr "filtr pro práci s dokumenty HTML"
+msgstr "Muyunguruzi... kugirango Na: Inyandiko"
 
 #: modules/filter/html-filter.info:15
+#, fuzzy
 msgid "HTML attributes to always check"
-msgstr "atributy HTML, které vždy kontrolovat"
+msgstr "Ibiranga Kuri Buri gihe Kugenzura..."
 
 #: modules/filter/html-filter.info:21
+#, fuzzy
 msgid "HTML tags to always skip the contents of"
-msgstr "tagy HTML, jejichž obsah vždy přeskakovat"
+msgstr "Kuri Buri gihe i Ibigize Bya"
 
 #: modules/filter/nroff-filter.info:7
+#, fuzzy
 msgid "filter for dealing with Nroff documents"
-msgstr "filtr pro práci s dokumenty Nroff"
+msgstr "Muyunguruzi... kugirango Na: Inyandiko"
 
 #: modules/filter/sgml-filter.info:9
+#, fuzzy
 msgid "filter for dealing with generic SGML/XML documents"
-msgstr "filtr pro práci s obecnými dokumenty SGML/XML"
+msgstr "Muyunguruzi... kugirango Na: Gifitanye isano Inyandiko"
 
 #: modules/filter/sgml-filter.info:15
+#, fuzzy
 msgid "SGML attributes to always check"
-msgstr "atributy SGML, které vždy kontrolovat"
+msgstr "Ibiranga Kuri Buri gihe Kugenzura..."
 
 #: modules/filter/sgml-filter.info:20
+#, fuzzy
 msgid "SGML tags to always skip the contents of"
-msgstr "tagy SGML, jejichž obsah vždy přeskakovat"
+msgstr "Kuri Buri gihe i Ibigize Bya"
 
 #: modules/filter/tex-filter.info:7
+#, fuzzy
 msgid "filter for dealing with TeX/LaTeX documents"
-msgstr "filtr pro práci s dokumenty v TeXu/LaTeXu"
+msgstr "Muyunguruzi... kugirango Na: Inyandiko"
 
 #: modules/filter/tex-filter.info:15
+#, fuzzy
 msgid "check TeX comments"
-msgstr "kontrolovat poznámky v TeXu"
+msgstr "Kugenzura... Ibisobanuro"
 
 #: modules/filter/tex-filter.info:21
+#, fuzzy
 msgid "TeX commands"
-msgstr "příkazy TeXu"
+msgstr "Amabwiriza"
 
 #: modules/filter/texinfo-filter.info:7
+#, fuzzy
 msgid "filter for dealing with Texinfo documents"
-msgstr "filtr pro práci s dokumenty Texinfo"
+msgstr "Muyunguruzi... kugirango Na: Inyandiko"
 
 #: modules/filter/texinfo-filter.info:13
+#, fuzzy
 msgid "Texinfo commands to ignore the parameters of"
-msgstr "Příkazy Texhinfo, jejichž parametry ignorovat"
+msgstr "Kwirengagiza Amabwiriza Kuri"
 
 #: modules/filter/texinfo-filter.info:41
 msgid "Texinfo environments to ignore"
-msgstr "Prostředí texinfo, která ignorovat"
+msgstr ""
 
 #: modules/filter/url-filter.info:7
+#, fuzzy
 msgid "filter to skip URL like constructs"
-msgstr "filtr pro přeskakování konstrukcí podobných URL"
+msgstr "Muyunguruzi... Kuri nka"
 
 #: modules/filter/modes/ccpp.amf:8
+#, fuzzy
 msgid "mode for checking C++ comments and string literals"
-msgstr "režim pro kontrolu komentářů a řetězcových literálů v C++"
+msgstr "Ubwoko kugirango C Ibisobanuro Na Ikurikiranyanyuguti"
 
 #: modules/filter/modes/comment.amf:5
+#, fuzzy
 msgid "mode to check any lines starting with a #"
-msgstr "režim pro kontrolu všech řádků začínajících na #"
+msgstr "Ubwoko Kuri Kugenzura... Imirongo Na: a"
 
 #: modules/filter/modes/email.amf:5
+#, fuzzy
 msgid "mode for skipping quoted text in email messages"
-msgstr "režim pro přeskakování citovaného textu v e-mailech"
+msgstr "Ubwoko kugirango Gusimbuka:%s Umwandiko in imeli Ubutumwa"
 
 #: modules/filter/modes/html.amf:10
+#, fuzzy
 msgid "mode for checking HTML documents"
-msgstr "režim pro kontrolu dokumentů HTML"
+msgstr "Ubwoko kugirango Inyandiko"
 
 #: modules/filter/modes/none.amf:5
+#, fuzzy
 msgid "mode to disable all filters"
-msgstr "režim pro zakázání všech filtrů"
+msgstr "Ubwoko Kuri Byose Muyunguruzi"
 
 #: modules/filter/modes/nroff.amf:7
+#, fuzzy
 msgid "mode for checking Nroff documents"
-msgstr "režim pro kontrolu dokumentů Nroff"
+msgstr "Ubwoko kugirango Inyandiko"
 
 #: modules/filter/modes/perl.amf:8
+#, fuzzy
 msgid "mode for checking Perl comments and string literals"
-msgstr "režim pro kontrolu komentářů a řetězcových literálů v Perlu"
+msgstr "Ubwoko kugirango Ibisobanuro Na Ikurikiranyanyuguti"
 
 #: modules/filter/modes/sgml.amf:8
+#, fuzzy
 msgid "mode for checking generic SGML/XML documents"
-msgstr "režim pro kontrolu obecných dokumentů SGML/XML"
+msgstr "Ubwoko kugirango Gifitanye isano Inyandiko"
 
 #: modules/filter/modes/tex.amf:7
+#, fuzzy
 msgid "mode for checking TeX/LaTeX documents"
-msgstr "režim pro kontrolu dokumentů v TeXu/LaTeXu"
+msgstr "Ubwoko kugirango Inyandiko"
 
 #: modules/filter/modes/texinfo.amf:7
+#, fuzzy
 msgid "mode for checking Texinfo documents"
-msgstr "režim pro kontrolu dokumentů Texinfo"
+msgstr "Ubwoko kugirango Inyandiko"
 
 #: modules/filter/modes/url.amf:5
+#, fuzzy
 msgid "mode to skip URL like constructs (default mode)"
-msgstr "režim pro přeskakování konstrukcí podobných URL (implicitní režim)"
-
-#~ msgid "Empty value; only bool type option and \"rem-all\" list prefix."
-#~ msgstr ""
-#~ "Prázdná hodnota; jen přepínač typu bool a předpona seznamu \"rem-all\"."
-
-#~ msgid "Filter \"%filter:1\" could not be found in filter paths."
-#~ msgstr "Filtr \"%filter:1\" nelze najít v cestě filtrů."
-
-#~ msgid "Can't find the option file \"%option:2\"."
-#~ msgstr "Nemohu najít soubor přepínačů \"%option:2\"."
-
-#~ msgid "Filter for eliminating email quote characters"
-#~ msgstr "Filtr pro eliminaci znaků citací z e-mailu"
-
-#~ msgid "Filters for encoding, filtering and decoding sgml characters"
-#~ msgstr "Filtry pro kódování, filtrování a dekódování znaků sgml"
-
-#~ msgid "multi character coded letters (<char>:<rep>[:<rep>[...]])"
-#~ msgstr "písmena kódovaná více znaky (<znak>:<náhr>[:<náhr>[...]])"
-
-#~ msgid "characters used to encode hyphenation locations"
-#~ msgstr "znaky používané pro kódování umístění dělení slov"
-
-#~ msgid "Filter for hiding urls/paths and similar from Aspell"
-#~ msgstr "Filtr pro skrývání url/cest a podobně před Aspellem"
-
-#~ msgid "indicator for additional flags in word lists"
-#~ msgstr "indikátor dalších příznaků v seznamech slov"
-
-#~ msgid "strip accents from word lists"
-#~ msgstr "odstranit ze seznamu slov diakritiku"
-
-#~ msgid "use jump tables when creating dictionaries"
-#~ msgstr "při tvorbě slovníků používat tabulky skoků"
-
-#~ msgid "Affix compression is currently incompatible with soundslike lookup."
-#~ msgstr ""
-#~ "Komprese přípon momentálně není kompatibilní s vyhledáváním podle "
-#~ "podobnosti zvuku."
+msgstr "Ubwoko Kuri nka Mburabuzi Ubwoko"
