@@ -212,7 +212,8 @@ namespace {
       
     char *           block;
     u32int           block_size;
-    bool             block_mmaped;
+    char *           mmaped_block;
+    u32int           mmaped_size;
     const Jump * jump1;
     const Jump * jump2;
     WordLookup       word_lookup;
@@ -238,8 +239,8 @@ namespace {
 
     ~ReadOnlyDict() {
       if (block != 0) {
-	if (block_mmaped)
-	  mmap_free(block, block_size);
+	if (mmaped_block)
+	  mmap_free(mmaped_block, mmaped_size);
 	else
 	  free(block);
       }
@@ -396,9 +397,13 @@ namespace {
     affix_compressed = data_head.affix_info;
 
     block_size = data_head.block_size;
-    block = mmap_open(block_size, f, data_head.head_size);
-    block_mmaped = block != (char *)MAP_FAILED;
-    if (!block_mmaped) {
+    int offset = data_head.head_size;
+    mmaped_block = mmap_open(block_size + offset, f, 0);
+    if( mmaped_block != (char *)MAP_FAILED) {
+      block = mmaped_block + offset;
+      mmaped_size = block_size + offset;
+    } else {
+      mmaped_block = 0;
       block = (char *)malloc(block_size);
       f.seek(data_head.head_size);
       f.read(block, block_size);
