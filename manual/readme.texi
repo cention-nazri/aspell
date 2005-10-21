@@ -16,6 +16,7 @@ The latest version can always be found at GNU Aspell's home page at
 
 @menu
 * Generic Install Instructions::  
+* HTML Manuals and "make clean"::  
 * Curses Notes::                
 * Loadable Filter Notes::       
 * Upgrading from Aspell 0.60::  
@@ -64,6 +65,16 @@ scripts @command{ispell} and @command{spell} located in the @file{scripts/}
 directory into your binary directory which is usually
 @file{/usr/local/bin} so that programs that expect the
 @command{ispell} or @command{spell} command will work correctly.
+
+@node HTML Manuals and "make clean"
+@appendixsec HTML Manuals and @command{make clean}
+
+The Aspell distribution includes HTML versions of the User and
+Developer's manual.  Unfortunately, doing a @command{make clean} will
+erase them.  This is due to a limitation of automake which is not
+easily fixed.  If makeinfo is installed they can easily be rebuild
+with @command{make aspell.html aspell-dev.html}, or you can unpack
+them from the tarbar.
 
 @node Curses Notes
 @appendixsec Curses Notes

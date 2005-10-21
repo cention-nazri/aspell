@@ -1,11 +1,7 @@
 \input texinfo   @c -*-texinfo-*-
 
 @setfilename aspell.info
-<<<<<<< aspell.texi
 @settitle GNU Aspell 0.61
-=======
-@settitle GNU Aspell 0.60.3
->>>>>>> 1.65.2.9
 @syncodeindex pg cp
 @documentencoding ISO-8859-1
 
@@ -41,7 +37,7 @@ Documentation License''.
 
 @ifnottex
 @node Top
-@top GNU Aspell
+@top GNU Aspell 0.60.4
 GNU Aspell is a spell checker designed to eventually replace Ispell.
 It can either be used as a library or as an independent spell checker.
 
@@ -93,6 +89,7 @@ Working With Dictionaries
 * Dumping the Contents of the Word List::  
 * Creating an Individual Word List::  
 * Working With Affix Info in Word Lists::  
+* Format of the Personal and Replacement Dictionaries::  
 * Using Multi Dictionaries::    
 * Dictionary Naming::           
 * AWLI files::                  
@@ -148,6 +145,17 @@ Notes on Various Items
 * Word skipping by context::    
 * Hidden Markov Model::         
 * Email the Personal Dictionary::  
+
+Installing
+
+* Generic Install Instructions::  
+* HTML Manuals and "make clean"::  
+* Curses Notes::                
+* Loadable Filter Notes::       
+* Upgrading from Aspell 0.50::  
+* Upgrading from Aspell .33/Pspell .12::  
+* Upgrading from a Pre-0.50 snapshot::  
+* WIN32 Notes::                 
 
 Copying
 
@@ -4276,16 +4284,24 @@ non-ASCII letters as well as support for skipping over Tex hyphens.
 Bug fixes.
 @end itemize
 
-@heading Changes from 0.60.3 to 0.60.4 (October 4, 2005)
+@heading Changes from 0.60.3 to 0.60.4 (October 19, 2005)
 @itemize @bullet
 @item
-Fixed a bug that cuased aspell to crash when checking certain Russion
-words, this bug likely affected other lnaguages as well.
+Fixed a bug that caused Aspell to crash when checking certain Russian
+words, this bug likely affected other languages as well.
 @item
-Updated to Gettext 0.14.5 which is requred for AMD64, also updated to
+Updated to Gettext 0.14.5 which is required for AMD64, also updated to
 to Libtool 1.5.20.
 @item
-Other bug fixes.
+Fixed an alignment bug which causes mmap to always fail when reading
+in dictionaries.
+@item
+Added note about how @command{make clean} will remove the HTML manuals.
+@item
+Added manual page for prezip-bin and enhanced word-list-compress manual
+page thanks to the work of Jose Da Silva.
+@item
+Other minor updates and bug fixes.
 @end itemize
 
 @heading Changes from 0.60.2 to 0.60.3 (June 28, 2005)
