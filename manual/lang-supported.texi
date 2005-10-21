@@ -168,7 +168,7 @@
 @item sg @tab Sango @tab Latin @tab Maybe @tab -
 @item si @tab Sinhalese @tab Sinhala @tab - @tab -
 @item sk @tab Slovak @tab Latin @tab 0.50 @tab -
-@item sl @tab Slovenian @tab Latin @tab 0.50 @tab -
+@item sl @tab Slovenian @tab Latin @tab 0.50 @tab Yes
 @item sm @tab Samoan @tab Latin @tab Maybe @tab -
 @item sn @tab Shona @tab Latin @tab Maybe @tab -
 @item so @tab Somali @tab Latin @tab Maybe @tab -
