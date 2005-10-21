@@ -3,7 +3,7 @@
 @item
 @item aa @tab Afar @tab Latin @tab - @tab -
 @item af @tab Afrikaans @tab Latin @tab 0.50 @tab -
-@item ak @tab Akan @tab Latin @tab - @tab -
+@item ak @tab Akan @tab Latin @tab Planned @tab -
 @item am @tab Amharic @tab Ethiopic @tab 0.60 @tab -
 @item ar @tab Arabic @tab Arabic @tab Planned @tab -
 @item as @tab Assamese @tab Bengali @tab - @tab -
@@ -84,7 +84,7 @@
 @item ilo @tab Iloko @tab Latin @tab Maybe @tab -
 @item io @tab Ido @tab Latin @tab - @tab -
 @item is @tab Icelandic @tab Latin @tab 0.50 @tab -
-@item it @tab Italian @tab Latin @tab 0.50 @tab -
+@item it @tab Italian @tab Latin @tab 0.50 @tab Yes
 @item
 @item jv @tab Javanese @tab Javanese, Latin @tab Maybe @tab -
 @item
@@ -121,7 +121,7 @@
 @item mi @tab Maori @tab Latin @tab 0.50 @tab -
 @item min @tab Minangkabau @tab Latin @tab Maybe @tab -
 @item mk @tab Macedonian @tab Cyrillic @tab 0.50 @tab -
-@item ml @tab Malayalam @tab Malayalam @tab Maybe @tab -
+@item ml @tab Malayalam @tab Malayalam @tab Planned @tab -
 @item mn @tab Mongolian @tab Cyrillic @tab 0.60 @tab Yes
 @item mo @tab Moldavian @tab Cyrillic @tab - @tab -
 @item mr @tab Marathi @tab Devanagari @tab 0.60 @tab -
@@ -168,12 +168,12 @@
 @item sg @tab Sango @tab Latin @tab Maybe @tab -
 @item si @tab Sinhalese @tab Sinhala @tab - @tab -
 @item sk @tab Slovak @tab Latin @tab 0.50 @tab -
-@item sl @tab Slovenian @tab Latin @tab 0.50 @tab -
+@item sl @tab Slovenian @tab Latin @tab 0.50 @tab Yes
 @item sm @tab Samoan @tab Latin @tab Maybe @tab -
 @item sn @tab Shona @tab Latin @tab Maybe @tab -
 @item so @tab Somali @tab Latin @tab Maybe @tab -
 @item sq @tab Albanian @tab Latin @tab Maybe @tab -
-@item sr @tab Serbian @tab Cyrillic, Latin @tab Maybe @tab Incomplete
+@item sr @tab Serbian @tab Cyrillic, Latin @tab Planned @tab Incomplete
 @item ss @tab Swati @tab Latin @tab Maybe @tab -
 @item st @tab Southern Sotho @tab Latin @tab Maybe @tab -
 @item su @tab Sundanese @tab Latin @tab Maybe @tab -
@@ -181,7 +181,7 @@
 @item sw @tab Swahili @tab Latin @tab 0.50 @tab -
 @item
 @item ta @tab Tamil @tab Tamil @tab 0.60 @tab -
-@item te @tab Telugu @tab Telugu @tab Maybe @tab -
+@item te @tab Telugu @tab Telugu @tab 0.60 @tab -
 @item tet @tab Tetum @tab Latin @tab 0.50 @tab -
 @item tg @tab Tajik @tab Cyrillic @tab Maybe @tab Incomplete
 @item ti @tab Tigrinya @tab Ethiopic @tab Maybe @tab -
@@ -203,7 +203,7 @@
 @item uz @tab Uzbek @tab Cyrillic @tab 0.60 @tab -
 @item
 @item ve @tab Venda @tab Latin @tab Maybe @tab -
-@item vi @tab Vietnamese @tab Latin @tab 0.60 @tab -
+@item vi @tab Vietnamese @tab Latin @tab 0.60 @tab Yes
 @item
 @item wa @tab Walloon @tab Latin @tab 0.50 @tab Incomplete
 @item wo @tab Wolof @tab Latin @tab Maybe @tab -
