@@ -78,7 +78,7 @@ struct LookupParams
   typedef HashValue Value;
   typedef const char * Key;
 
-  enum { is_multi = 0 };
+  enum { is_multi = 1 };
   LookupParams(const Hash & h, const Equal & e) : hash(h), equal(e) {}
   Hash  hash;
   Equal equal;
@@ -93,7 +93,7 @@ protected:
   String compatibility_suffix;
     
   time_t cur_file_date;
-    
+  
   String compatibility_file_name;
     
   WritableBase(BasicType t, const char * n, const char * s, const char * cs)

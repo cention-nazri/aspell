@@ -1440,7 +1440,7 @@ namespace aspell {
        /* TRANSLATORS: It is OK if this is longer than 50 chars */
        N_("ignore accents when checking words -- CURRENTLY IGNORED"), KEYINFO_MAY_CHANGE | KEYINFO_HIDDEN}
     , {"ignore-case", KeyInfoBool  , "false",
-       N_("ignore case when checking words"), KEYINFO_MAY_CHANGE | KEYINFO_HIDDEN}
+       N_("ignore case when checking words"), KEYINFO_MAY_CHANGE}
     , {"ignore-repl", KeyInfoBool  , "false",
        N_("ignore commands to store replacement pairs"), KEYINFO_MAY_CHANGE}
     , {"jargon",     KeyInfoString, "",

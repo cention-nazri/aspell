@@ -277,10 +277,10 @@ namespace aspell
       {
         if ( d.value == NULL || *d.value == '\0' )
           return make_err(confusing_version).with_file(option_file,d.line_num);
-
-        PosibErr<void> peb = check_version(d.value.str);
+#ifdef FILTER_VERSION_CONTROL 
+       PosibErr<void> peb = check_version(d.value.str);
         if (peb.has_err()) return peb.with_file(option_file,d.line_num);
-
+#endif
         continue;
       }
 	  

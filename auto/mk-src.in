@@ -1,9 +1,9 @@
 #
-# mk-src.in -- Input file for the Perl program to automatically 
+# mk-src.in -- Input file for the Perl program to automatically
 #	       generate interface code.
 #
 # This file is part of The New Aspell
-# Copyright (C) 2001 by Kevin Atkinson under the GNU LGPL
+# Copyright (C) 2001-2005 by Kevin Atkinson under the GNU LGPL
 # license version 2.0 or 2.1.  You should have received a copy of the
 # LGPL license along with this library if you did not you can find it
 # at http://www.gnu.org/.
@@ -12,7 +12,7 @@
 
 The format of mk-src.in is as follows:
 
-  The following charaters are literals: { } / '\ ' \n = >
+  The following characters are literals: { } / '\ ' \n = >
 
   <items>
   <items> := (<item>\n)+
@@ -44,13 +44,13 @@ See MkSrc::Info for a description of the categories and options
 methods: destructible
 	/
 	destructor
-	
+
 #	int: ref count
 #		default => 0
 #
 #	method: ref count
-#		desc => returns a pointer to an int which may be used
-#			for reference counting.	It will default to 0.
+#		desc => Returns a pointer to an int which may be used
+#			for reference counting. It will default to 0.
 #			This integer is not used by the actual library
 #			but may be used my some of the front ends.
 #		c only
@@ -65,8 +65,8 @@ methods: copyable
 #	type id: type id
 #
 #	method: type id
-#		desc => To objects of the same pointer type may be
-#			assigned to each other only if there type ids 
+#		desc => Two objects of the same pointer type may be
+#			assigned to each other only if their type ids
 #			are the same.
 #		cxx impl => return type_id_.num
 #		/
@@ -77,8 +77,8 @@ methods: copyable
 #
 #	method: copyable
 #		desc => Returns 0 if this object can not be copied,
-#			1 if it may be copies, 2 if it should be
-#			copied.  Used by some of the front end to
+#			1 if it may be copied, 2 if it should be
+#			copied.  Used by some of the front ends to
 #			determine if a deep or shallow copy should be
 #			made.
 #		cxx impl => return copyable_
@@ -89,7 +89,7 @@ methods: copyable
 		const
 		/
 		$
-	
+
 	method: assign
 		/
 		void
@@ -156,7 +156,7 @@ class: mutable container
 	mutable container methods
 }
 methods: list
-	
+
 	strip => 1
 	/
 	method: empty
@@ -177,7 +177,7 @@ methods: list
 methods: enumeration
 
 	strip => 1
-	
+
 	/
 	method: at end
 		const
@@ -201,19 +201,19 @@ enum: key info type
 
 struct: key info
 	desc => The Key Info object is used for holding information
-		about a valid key
+		about a valid key.
 	/
 	string: name
-		desc => the name of the key
+		desc => The name of the key.
 	key info type: type
-		desc => the key type
+		desc => The key type.
 	string: def
-		desc => the default value of the key
+		desc => The default value of the key.
 	string: desc
-		desc => a brief description of the key or null if internal value
+		desc => A brief description of the key or NULL if internal value.
 	int: flags
 	int: other data
-}	
+}
 group: config
 {
 no native
@@ -233,9 +233,10 @@ class: config
 	can have error methods
 
 	method: set extra
-		desc => sets extra keys which this config class should accept
-			begin and end are expected to point to the begining
-			and end of an array of Aspell Key Info
+		desc => Sets extra keys which this config class should
+			accept. begin and end are expected to point to
+			the beginning and ending of an array of Aspell
+			Key Info.
 		/
 		void
 		const key info: begin
@@ -243,8 +244,8 @@ class: config
 
 	method: keyinfo
 		posib err
-		desc => returns the KeyInfo object for the
-			corresponding key or returns null and sets
+		desc => Returns the KeyInfo object for the
+			corresponding key or returns NULL and sets
 			error_num to PERROR_UNKNOWN_KEY if the key is
 			not valid. The pointer returned is valid for
 			the lifetime of the object.
@@ -253,17 +254,17 @@ class: config
 		string: key
 
 	method: possible elements
-		desc => returns a newly allocated enumeration of all the 
-			possible objects this config class uses
+		desc => Returns a newly allocated enumeration of all
+			the possible objects this config class uses.
 		/
 		key info enumeration
 		int: include extra
 
 	method: get default
 		posib err
-		desc => returns the default value for given key which
-			may involve substating variables, thus it is
-			not the same as keyinfo(key)->def returns null
+		desc => Returns the default value for given key which
+			may involve substituting variables, thus it is
+			not the same as keyinfo(key)->def returns NULL
 			and sets error_num to PERROR_UNKNOWN_KEY if
 			the key is not valid. Uses the temporary
 			string.
@@ -272,23 +273,23 @@ class: config
 		string: key
 
 	method: elements
-		desc => returns a newly allocated enumeration of all the
-			key/value pairs. This DOES not include ones
-			which are set to their default values
+		desc => Returns a newly allocated enumeration of all
+			the key/value pairs. This DOES not include ones
+			which are set to their default values.
 		/
 		string pair enumeration
 
 	method: replace
 		posib err
-		desc => inserts an item, if the item already exists it
-			will be replaced. returns true if it succeeds
-			or false on error. If the key is not valid it
+		desc => Inserts an item, if the item already exists it
+			will be replaced. Returns TRUE if it succeeded
+			or FALSE on error. If the key in not valid it
 			sets error_num to PERROR_UNKNOWN_KEY, if the
 			value is not valid it will set error_num to
 			PERROR_BAD_VALUE, if the value can not be
 			changed it sets error_num to
 			PERROR_CANT_CHANGE_VALUE, and if the value is
-			a list and you are trying to set it directory
+			a list and you are trying to set its directory,
 			it sets error_num to PERROR_LIST_SET
 		/
 		void
@@ -297,15 +298,15 @@ class: config
 
 	method: remove
 		posib err
-		desc => remove a key and return true if it exists
-			otherise return false. This effectively sets the
-			key to its default value. Calling replace with
-			a value of "<default>" will also call
-			remove. If the key does not exist, then it sets
+		desc => Remove a key and returns TRUE if it exists
+			otherwise return FALSE. This effectively sets
+			the key to its default value. Calling replace
+			with a value of "<default>" will also call
+			remove. If the key does not exist then it sets
 			error_num to 0 or PERROR_NOT, if the key is
-			not valid, then sets error_num to
+			not valid then it sets error_num to
 			PERROR_UNKNOWN_KEY, if the value can not be
-			changed sets error_num to
+			changed then it sets error_num to
 			PERROR_CANT_CHANGE_VALUE
 		/
 		void
@@ -319,7 +320,7 @@ class: config
 
 	method: retrieve
 		posib err
-		desc => returns null on error
+		desc => Returns NULL on error.
 		/
 		string obj
 		string: key
@@ -333,14 +334,14 @@ class: config
 
 	method: retrieve bool
 		posib err
-		desc => return -1 on error, 0 if false, 1 if true
+		desc => Return -1 on error, 0 if false, 1 if true.
 		/
 		bool
 		string: key
 
 	method: retrieve int
 		posib err
-		desc => return -1 on error
+		desc => Return -1 on error.
 		/
 		unsigned int
 		string: key
@@ -382,7 +383,7 @@ class: can have error
 	c impl headers => error
 	/
 	can have error methods
-		prefix => 
+		prefix =>
 	destructible methods
 }
 group: errors
@@ -419,7 +420,7 @@ errors:
 		/
 		cant read dir
 			mesg => The directory "%dir" can not be opened for reading.
-			
+
 	config
 		parms => key
 		/
@@ -447,7 +448,7 @@ errors:
 		no_value_reset
 			mesg => The key "%key" does not take any parameters when prefixed by a "reset-".
 		no_value_enable
-			mesg => The key "%key" does not take any parameters when prefixed by a "enable-".
+			mesg => The key "%key" does not take any parameters when prefixed by an "enable-".
 		no_value_disable
 			mesg => The key "%key" does not take any parameters when prefixed by a "dont-" or "disable-".
 		no_value_clear
@@ -516,7 +517,7 @@ errors:
 			mesg => The affix flag '%aff' can not be applied to word "%word".
 			parms => aff, word
 		unknown unichar
-			mesg => 
+			mesg =>
 		word list flags
 			/
 			invalid flag
@@ -528,7 +529,7 @@ errors:
 	filter
 		/
 		cant dlopen file
-			mesg => dlopen returned "%return". 
+			mesg => dlopen returned "%return".
 			parms => return
 		empty filter
 			mesg => The file "%filter" does not contain any filters.
@@ -552,10 +553,10 @@ errors:
 		/
 		mode option name
 			mesg => Empty option specifier.
-		no filter to option 
+		no filter to option
 			mesg => Option "%option" possibly specified prior to filter.
 			parms => option
-		bad mode key 
+		bad mode key
 			mesg => Unknown mode description key "%key".
 			parms => key
 		expect mode key
@@ -588,7 +589,7 @@ errors:
 			mesg => "%mode": no start for magic search given for magic "%magic".
 		file magic range
 			mesg => "%mode": no range for magic search given for magic "%magic".
-		missing magic 
+		missing magic
 			mesg => "%mode": no magic expression available for magic "%magic".
 		bad magic
 			mesg => "%mode": Magic "%magic": bad regular expression after location specifier; regexp reports: "%regerr".
@@ -637,7 +638,7 @@ class: speller
 	method: check
 
 		posib err
-		desc => returns	 0 if it is not in the dictionary, 
+		desc => Returns 0 if it is not in the dictionary,
 			1 if it is, or -1 on error.
 		/
 		bool
@@ -652,8 +653,9 @@ class: speller
 		const check info
 	
 	method: add to personal
-		
+
 		posib err
+		desc => Add this word to your own personal word list.
 		/
 		void
 		encoded string: word
@@ -668,6 +670,7 @@ class: speller
 	method: add to session
 
 		posib err
+		desc => Add this word to the current spelling session.
 		/
 		void
 		encoded string: word
@@ -682,23 +685,32 @@ class: speller
 	method: personal word list
 
 		posib err
+		desc => This is your own personal word list file plus
+			any extra words added during this session to
+			your own personal word list.
 		/
 		const word list
-		
+
 	method: session word list
 
 		posib err
+		desc => This is a list of words added to this session
+			that are not in the main word list or in your
+			own personal list but are considered valid for
+			this spelling session.
 		/
 		const word list
 
 	method: main word list
 
 		posib err
+		desc => This is the main list of words used during this
+			spelling session.
 		/
 		const word list
 
 	method: save all word lists
-	
+
 		posib err
 		/
 		void
@@ -712,13 +724,13 @@ class: speller
 	method: suggest
 
 		posib err
-		desc => Return null on error. 
-			the word list returned by suggest is only valid until the next
-			call to suggest
+		desc => Return NULL on error.
+			The word list returned by suggest is only
+			valid until the next call to suggest.
 		/
 		const word list
 		encoded string: word
-		
+
 	method: store replacement
 
 		posib err
@@ -944,11 +956,25 @@ struct: module info
 struct: dict info
 	/
 	string: name
-		desc => name to identify the dictionary by
+		desc => The Name to identify this dictionary by.
 	string: code
+		desc => The language code to identify this dictionary.
+			A two letter UPPER-CASE ISO 639 language code
+			and an optional two letter ISO 3166 country
+			code after a dash or underscore.
 	string: jargon
+		desc => Any extra information to distinguish this
+			variety of dictionary from other dictionaries
+			which may have the same language and size.
 	int: size
 	string: size str
+		desc => A two char digit code describing the size of
+			the dictionary: 10=tiny, 20=really small,
+			30=small, 40=med-small, 50=med, 60=med-large,
+			70=large, 80=huge, 90=insane.  Please check
+			the README in aspell-lang-200?????.tar.bz2 or
+			see SCOWL (http://wordlist.sourceforge.net)
+			for an example of how these sizes are used.
 	module info: module
 }
 
@@ -1012,20 +1038,20 @@ class: string map
 	copyable methods
 
 	list methods: string pair
-	
+
 	method: insert
-		desc => Insert a new element. 
+		desc => Insert a new element.
 			Will NOT overwrite an existing entry.
-			Returns false if the element already exists.
+			Returns FALSE if the element already exists.
 		/
 		bool
 		string: key
 		string: value
 
 	method: replace
-		desc => Insert a new element. 
+		desc => Insert a new element.
 			Will overwrite an existing entry.
-			Always returns true.
+			Always returns TRUE.
 		/
 		bool
 		string: key
@@ -1033,10 +1059,10 @@ class: string map
 
 	method: lookup
 		const
-		desc => Looks up an element.
-			Returns null if the element did not exist.
-			Returns an empty string if the element exists but has a null value.
-			Otherwise returns the value
+		desc => Looks up an element and returns the value.
+			Returns NULL if the element does not exist.
+			Returns an empty string if the element exists
+			but has a NULL value.
 		/
 		string
 		string: key
@@ -1067,10 +1093,11 @@ group: cache
 {
 /
 func: reset cache
-	desc => Reset the global cache(s) so that cache queries will create a new
-		object.	 If existing objects are still in use they are not deleted.
-		If which is NULL than ALL caches will be reset.	 Current caches are
-		"encode", "decode", "dictionary", "language", and "keyboard".
+	desc => Reset the global cache(s) so that cache queries will
+		create a new object. If existing objects are still in
+		use they are not deleted. If which is NULL then all
+		caches will be reset. Current caches are "encode",
+		"decode", "dictionary", "language", and "keyboard".
 	/
 	bool
 	string: which

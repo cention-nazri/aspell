@@ -67,11 +67,14 @@ AC_ARG_ENABLE(regex,
 AC_ARG_ENABLE(compile-in-filters,
 [  --enable-compile-in-filters])
 
+AC_ARG_ENABLE(filter-version-control,
+[  --disable-filter-version-control])
+
 AC_ARG_ENABLE(pspell-compatibility,
 [  --disable-pspell-compatibility  don't install pspell compatibility libraries])
 
 AC_ARG_ENABLE(incremented-soname,
-[  --incremented-soname            break aspell 0.50 binary compatibility])
+[  --enable-incremented-soname     break aspell 0.50 binary compatibility])
 
 dnl AC_ARG_ENABLE(aspell5-compatibility,
 dnl [  --enable-aspell5-compatibility  install aspell 0.50 compatibility libraries])
@@ -97,7 +100,8 @@ AC_PROG_LIBTOOL
 dnl DL stuff
 
 AC_CHECK_HEADERS(dlfcn.h,,[enable_compile_in_filters=yes])
-AC_CHECK_LIB(dl, dlopen,,[enable_compile_in_filters=yes])
+AC_CHECK_FUNC(dlopen,,
+              AC_CHECK_LIB(dl, dlopen,,[enable_compile_in_filters=yes]))
 
 dnl
 
@@ -116,6 +120,18 @@ then
   AC_DEFINE(COMPILE_IN_FILTER, 1, [Defined if filters should be compiled in])
 fi
 
+find_cvs=`expr "$PACKAGE_VERSION" : '.*cvs'`
+if test "$find_cvs" -gt 0
+then
+  enable_filter_version_control=no
+fi
+
+if test "$enable_filter_version_control" != "no"
+then
+  AC_DEFINE(FILTER_VERSION_CONTROL, 1, 
+            [Defined if filter version control should be used])
+fi
+
 AM_CONDITIONAL(COMPILE_IN_FILTERS, 
   [test "$enable_compile_in_filters" = "yes"])
 
@@ -130,7 +146,7 @@ dnl         "$enable_aspell5_compatibility" = "yes"])
 dnl GETTEXT
 
 AM_GNU_GETTEXT([external])
-AM_GNU_GETTEXT_VERSION(0.14.1)
+AM_GNU_GETTEXT_VERSION([0.14.5])
 
 AH_TOP([#ifndef ASPELL_SETTINGS__H
 #define ASPELL_SETTINGS__H])

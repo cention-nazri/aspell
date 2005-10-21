@@ -1,6 +1,6 @@
-// Copyright 2000 by Kevin Atkinson under the terms of the LGPL
+// Copyright 2000-2005 by Kevin Atkinson under the terms of the LGPL
 
-// suggest.cc Suggestion code for Aspell
+// suggest.cpp Suggestion code for Aspell
 
 // The magic behind my spell checker comes from merging Lawrence
 // Philips excellent metaphone algorithm and Ispell's near miss
@@ -379,7 +379,9 @@ namespace {
   }
 
   // Forms a word by combining IntrCheckInfo fields.
-  // It returns a MutableString of what was appended to buffer.
+  // Will grow the grow the temp in the buffer.  The final
+  // word must be null terminated and commited.
+  // It returns a MutableString of what was appended to the buffer.
   MutableString Working::form_word(IntrCheckInfo & ci) 
   {
     size_t slen = ci.word.size() - ci.pre_strip_len - ci.suf_strip_len;
@@ -413,6 +415,7 @@ namespace {
       form_word(ci);
       char * end = (char *)buffer.grow_temp(1);
       char * tmp = (char *)buffer.temp_ptr();
+      buffer.commit_temp();
       *end = '\0';
       add_nearmiss(tmp, end - tmp, 0, 0, score, -1, do_count);
     }
@@ -702,7 +705,7 @@ namespace {
       while ( (sw = els->next(stopped_at)) ) {
 
         //CERR.printf("[%s (%d) %d]\n", sw->word, sw->word_size, sw->what);
-        assert(strlen(sw->word) == sw->word_size);
+        //assert(strlen(sw->word) == sw->word_size);
           
         if (sw->what != WordEntry::Word) {
           sl = sw->word;
@@ -1368,14 +1371,18 @@ namespace aspell { namespace sp {
     try_one_edit_word = sp->soundslike_root_only || sp->unconditional_run_together_;
     check_after_one_edit_word = false;
     ngram_threshold = 2;
-    if (mode == "ultra" || mode == "fast") {
+    if (mode == "ultra") {
+      try_scan_1 = true;
+      try_scan_2 = false;
+      try_ngram = false;
+    } else if (mode == "fast") {
       try_scan_1 = true;
       try_scan_2 = false;
       try_ngram = false;
     } else if (mode == "normal") {
       try_scan_1 = true;
       try_scan_2 = true;
-      try_ngram = true;
+      try_ngram = false;
     } else if (mode == "slow") {
       try_scan_1 = false;
       try_scan_2 = true;

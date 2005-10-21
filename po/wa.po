@@ -1,58 +1,58 @@
+# translation of aspell-0.60.2-b20041203.po to Walloon
 # Translation of aspell into the walloon language.
 # Copyright (C) 2004 THE PACKAGE'S COPYRIGHT HOLDER
 # Pablo Saratxaga <pablo@walon.org>, 2004.
 msgid ""
 msgstr ""
-"Project-Id-Version: aspell-0.60-b20040628\n"
+"Project-Id-Version: aspell 0.60.2-b20041203\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2005-06-19 07:12-0600\n"
-"PO-Revision-Date: 2004-07-16 16:42+0200\n"
+"POT-Creation-Date: 2005-10-19 02:25-0600\n"
+"PO-Revision-Date: 2004-12-06 17:51+0100\n"
 "Last-Translator: Pablo Saratxaga <pablo@walon.org>\n"
 "Language-Team: Walloon <linux-wa@walon.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 1.0.2\n"
 
-#: common/info.cpp:281
+#: common/info.cpp:232
 msgid "a number between 0 and 1"
 msgstr "on nombe inte 0 eyet 1"
 
-#: common/info.cpp:650
+#: common/info.cpp:569
 msgid "in the form \"<name> <value>\""
 msgstr "dins l' cogne «<no> <valixhance>»"
 
-#: common/config.cpp:77
+#: common/config.cpp:73
 msgid "string"
 msgstr "tchinne"
 
-#: common/config.cpp:77
+#: common/config.cpp:73
 msgid "integer"
 msgstr "nombe etir"
 
-#: common/config.cpp:77
+#: common/config.cpp:73
 msgid "boolean"
 msgstr "bouleyin"
 
-#: common/config.cpp:77
+#: common/config.cpp:73
 msgid "list"
 msgstr "djivêye"
 
 #. TRANSLATORS: "true" and "false" are literal
 #. * values and should not be translated.
-#: common/config.cpp:1026
+#: common/config.cpp:977
 msgid "either \"true\" or \"false\""
-msgstr "soeye-t i «vraiy» soeye-t i «fås»"
+msgstr "soeye-t i «true» (vraiy) soeye-t i «false» (fås)"
 
-#: common/config.cpp:1045
+#: common/config.cpp:996
 msgid "a positive integer"
 msgstr "on nombe etir pôzitif"
 
-#: common/config.cpp:1173
+#: common/config.cpp:1124
 msgid "# default: "
-msgstr ""
+msgstr "# prémetou: "
 
-#: common/config.cpp:1236
+#: common/config.cpp:1187
 #, c-format
 msgid ""
 "\n"
@@ -73,302 +73,292 @@ msgstr ""
 "# apontieye come shût:\n"
 "\n"
 
-#: common/config.cpp:1334
+#: common/config.cpp:1285
 msgid "ASPELL_CONF env var"
 msgstr "variåve d' evironmint ASPELL_CONF"
 
 #. TRANSLATORS: The remaing strings in config.cpp should be kept
 #. under 50 characters, begin with a lower case character and not
 #. include any trailing punctuation marks.
-#: common/config.cpp:1411
+#: common/config.cpp:1359
 msgid "main configuration file"
 msgstr "mwaisse fitchî d' apontiaedje"
 
-#: common/config.cpp:1413
+#: common/config.cpp:1361
 msgid "location of main configuration file"
 msgstr "eplaeçmint do mwaisse fitchî d' apontiaedje"
 
-#: common/config.cpp:1416
+#: common/config.cpp:1364
 msgid "location of language data files"
 msgstr "eplaeçmint des fitchîs di dnêyes des lingaedjes"
 
-#: common/config.cpp:1418
+#: common/config.cpp:1366
 msgid "create dictionary aliases"
 msgstr "fé des alias di motîs"
 
-#: common/config.cpp:1420
+#: common/config.cpp:1368
 msgid "location of the main word list"
 msgstr "eplaeçmint del mwaisse djivêye di mots"
 
-#: common/config.cpp:1422
+#: common/config.cpp:1370
 msgid "encoding to expect data to be in"
 msgstr "ecôdaedje k' on ratind les dnêyes"
 
-#: common/config.cpp:1426
+#: common/config.cpp:1372
 msgid "add or removes a filter"
 msgstr "radjouter ou bodjî ene passete"
 
-#: common/config.cpp:1428
+#: common/config.cpp:1374
 msgid "path(s) aspell looks for filters"
 msgstr "tchimin(s) k' aspell louke après des passetes"
 
-#: common/config.cpp:1432
+#: common/config.cpp:1378
 msgid "filter mode"
 msgstr "môde passete"
 
-#: common/config.cpp:1434
+#: common/config.cpp:1380
 msgid "extra dictionaries to use"
 msgstr "diccionaires di rawete a-z eployî"
 
-#: common/config.cpp:1436
+#: common/config.cpp:1382
 msgid "location for personal files"
 msgstr "eplaeçmint po les fitchîs da vosse"
 
-#: common/config.cpp:1438
+#: common/config.cpp:1384
 msgid "ignore words <= n chars"
 msgstr "passer houte des mots di moens di n caracteres"
 
 #. TRANSLATORS: It is OK if this is longer than 50 chars
-#: common/config.cpp:1441
-#, fuzzy
+#: common/config.cpp:1387
 msgid "ignore accents when checking words -- CURRENTLY IGNORED"
-msgstr "èn nén tni conte des grandès/ptitès letes pol verifiaedje des mots"
+msgstr ""
+"èn nén tni conte des accints po verifyî les mots -- ÈN ROTE NÉN POL MOUMINT"
 
-#: common/config.cpp:1443
-#, fuzzy
+#: common/config.cpp:1389
 msgid "ignore case when checking words"
-msgstr "èn nén tni conte des accints pol verifiaedje des mots"
+msgstr "èn nén tni conte des grandès/ptitès letes"
 
-#: common/config.cpp:1445
+#: common/config.cpp:1391
 msgid "ignore commands to store replacement pairs"
-msgstr ""
+msgstr "èn nén wårder les pwaires di replaeçmint"
 
-#: common/config.cpp:1447 common/config.cpp:1514
+#: common/config.cpp:1393 common/config.cpp:1460
 msgid "extra information for the word list"
-msgstr ""
+msgstr "informåcion di rawete pol djivêye di mots"
 
-#: common/config.cpp:1449
+#: common/config.cpp:1395
 msgid "keyboard definition to use for typo analysis"
-msgstr ""
-"definixha del taprece a-z eployî po l' analijhe des flotches di tapaedje"
+msgstr "taprece po l' analijhe des flotches di tapaedje"
 
-#: common/config.cpp:1451
+#: common/config.cpp:1397
 msgid "language code"
 msgstr "côde do lingaedje"
 
-#: common/config.cpp:1453
+#: common/config.cpp:1399
 msgid "deprecated, use lang instead"
-msgstr ""
+msgstr "obsolete, eployîz lang purade"
 
-#: common/config.cpp:1455
+#: common/config.cpp:1401
 msgid "location of local language data files"
 msgstr "eplaeçmint des fitchîs locås pol lingaedje"
 
-#: common/config.cpp:1457
+#: common/config.cpp:1403
 msgid "base name of the main dictionary to use"
-msgstr ""
+msgstr "no d' båze pol mwaisse motî a-z eployî"
 
-#: common/config.cpp:1461
+#: common/config.cpp:1407
 msgid "set module name"
-msgstr ""
+msgstr "defini no do module"
 
-#: common/config.cpp:1463
+#: common/config.cpp:1409
 msgid "search order for modules"
-msgstr ""
+msgstr "ôre di cweraedje po les modules"
 
-#: common/config.cpp:1465
+#: common/config.cpp:1411
 msgid "enable Unicode normalization"
-msgstr ""
+msgstr "eployî l' normålijhaedje unicôde"
 
-#: common/config.cpp:1467
+#: common/config.cpp:1413
 msgid "Unicode normalization required for current lang"
-msgstr ""
+msgstr "ci lingaedje a mezåjhe do normålijhaedje unicôde"
 
 #. TRANSLATORS: the values after the ':' are literal
 #. values and should not be translated.
-#: common/config.cpp:1471
+#: common/config.cpp:1417
 msgid "Unicode normalization form: none, nfd, nfc, comp"
-msgstr ""
+msgstr "sôre di normålijhaedje unicôde: none, nfd, nfc, comp"
 
-#: common/config.cpp:1473
+#: common/config.cpp:1419
 msgid "avoid lossy conversions when normalization"
-msgstr ""
+msgstr "eviter di cviersser avou pietes tot normålijhant"
 
-#: common/config.cpp:1475
+#: common/config.cpp:1421
 msgid "personal configuration file"
-msgstr ""
+msgstr "fitchî d' apontiaedje da vosse"
 
-#: common/config.cpp:1478
+#: common/config.cpp:1424
 msgid "personal dictionary file name"
 msgstr "no d' fitchî do motî da vosse"
 
-#: common/config.cpp:1481
+#: common/config.cpp:1427
 msgid "prefix directory"
-msgstr ""
+msgstr "betchete po les ridants"
 
-#: common/config.cpp:1483
+#: common/config.cpp:1429
 msgid "replacements list file name"
-msgstr ""
+msgstr "no d' fitchî del djivêye di replaeçmints"
 
-#: common/config.cpp:1486
+#: common/config.cpp:1432
 msgid "consider run-together words legal"
-msgstr ""
+msgstr "accepter les mots a loyeures"
 
-#: common/config.cpp:1488
+#: common/config.cpp:1434
 msgid "maximum number that can be strung together"
-msgstr ""
+msgstr "longueur macsimom d' on mot a loyeures"
 
-#: common/config.cpp:1490
+#: common/config.cpp:1436
 msgid "minimal length of interior words"
-msgstr ""
+msgstr "longueur minimom des dvintrins mots"
 
-#: common/config.cpp:1492
+#: common/config.cpp:1438
 msgid "save replacement pairs on save all"
 msgstr ""
 
-#: common/config.cpp:1494
+#: common/config.cpp:1440
 msgid "set the prefix based on executable location"
 msgstr ""
 
-#: common/config.cpp:1496
+#: common/config.cpp:1442
 msgid "size of the word list"
 msgstr "grandeu del djivêye di mots"
 
-#: common/config.cpp:1498
+#: common/config.cpp:1444
 msgid "no longer used"
-msgstr ""
+msgstr "pupont eployî"
 
-#: common/config.cpp:1500
+#: common/config.cpp:1446
 msgid "suggestion mode"
 msgstr ""
 
 #. TRANSLATORS: "sug-mode" is a literal value and should not be
 #. translated.
-#: common/config.cpp:1504
+#: common/config.cpp:1450
 msgid "edit distance to use, override sug-mode default"
 msgstr ""
 
-#: common/config.cpp:1506
+#: common/config.cpp:1452
 msgid "use typo analysis, override sug-mode default"
 msgstr ""
 
-#: common/config.cpp:1508
+#: common/config.cpp:1454
 msgid "use replacement tables, override sug-mode default"
 msgstr ""
 
-#: common/config.cpp:1510
+#: common/config.cpp:1456
 msgid "characters to insert when a word is split"
 msgstr ""
 
-#: common/config.cpp:1512
+#: common/config.cpp:1458
 msgid "use personal, replacement & session dictionaries"
 msgstr ""
 
-#: common/config.cpp:1516
+#: common/config.cpp:1462
 msgid "search path for word list information files"
 msgstr ""
 
-#: common/config.cpp:1518
+#: common/config.cpp:1464
 msgid "enable warnings"
-msgstr ""
-
-#: common/config.cpp:1521
-msgid "sub directory for dictionaries"
-msgstr ""
-
-#: common/config.cpp:1523
-msgid "sub directory for other data"
-msgstr ""
+msgstr "mete en alaedje les adviertixhmints"
 
 #. TRANSLATORS: It is OK if this is longer than 50 chars
-#: common/config.cpp:1533
+#: common/config.cpp:1474
 msgid "indicator for affix flags in word lists -- CURRENTLY IGNORED"
 msgstr ""
 
-#: common/config.cpp:1535
+#: common/config.cpp:1476
 msgid "use affix compression when creating dictionaries"
 msgstr ""
 
-#: common/config.cpp:1537
+#: common/config.cpp:1478
 msgid "remove invalid affix flags"
 msgstr ""
 
-#: common/config.cpp:1539
+#: common/config.cpp:1480
 msgid "attempts to clean words so that they are valid"
 msgstr ""
 
-#: common/config.cpp:1541
+#: common/config.cpp:1482
 msgid "compute soundslike on demand rather than storing"
 msgstr ""
 
-#: common/config.cpp:1543
+#: common/config.cpp:1484
 msgid "partially expand affixes for better suggestions"
 msgstr ""
 
-#: common/config.cpp:1545
+#: common/config.cpp:1486
 msgid "skip invalid words"
-msgstr ""
+msgstr "passer houte des mots nén valides"
 
-#: common/config.cpp:1547
+#: common/config.cpp:1488
 msgid "check if affix flags are valid"
-msgstr ""
+msgstr "verifyî si les drapeas sont valides"
 
-#: common/config.cpp:1549
+#: common/config.cpp:1490
 msgid "check if words are valid"
-msgstr ""
+msgstr "verifyî si les mots sont valides"
 
-#: common/config.cpp:1556
+#: common/config.cpp:1497
 msgid "create a backup file by appending \".bak\""
-msgstr ""
+msgstr "fé ene copeye di såvrité avou l' cawete «.bak»"
 
-#: common/config.cpp:1558
+#: common/config.cpp:1499
 msgid "use byte offsets instead of character offsets"
 msgstr ""
 
-#: common/config.cpp:1560
+#: common/config.cpp:1501
 msgid "create missing root/affix combinations"
 msgstr ""
 
-#: common/config.cpp:1562
+#: common/config.cpp:1503
 msgid "keymapping for check mode: \"aspell\" or \"ispell\""
 msgstr ""
 
-#: common/config.cpp:1564
+#: common/config.cpp:1505
 msgid "reverse the order of the suggest list"
 msgstr ""
 
-#: common/config.cpp:1566
+#: common/config.cpp:1507
 msgid "suggest possible replacements"
 msgstr ""
 
-#: common/config.cpp:1568
+#: common/config.cpp:1509
 msgid "time load time and suggest time in pipe mode"
 msgstr ""
 
-#: common/convert.cpp:288 common/convert.cpp:387
+#: common/convert.cpp:303 common/convert.cpp:429
 #, c-format
 msgid ""
 "This could also mean that the file \"%s\" could not be opened for reading or "
 "does not exist."
 msgstr ""
 
-#: common/convert.cpp:542 common/convert.cpp:650 common/convert.cpp:696
+#: common/convert.cpp:552 common/convert.cpp:659 common/convert.cpp:705
 #, c-format
 msgid "The Unicode code point U+%04X is unsupported."
-msgstr ""
+msgstr "Li caractere unicôde U+%04X n' est nén sopoirté."
 
-#: common/convert.cpp:815
+#: common/convert.cpp:829
 #, c-format
 msgid "Invalid UTF-8 sequence at position %d."
-msgstr ""
+msgstr "Secwince UTF-8 nén valide al pôzucion %d."
 
 #: common/errors.cpp:27
 msgid "Operation Not Supported: %what:1"
-msgstr ""
+msgstr "Operåcion nén sopoirtêye: %what:1"
 
 #: common/errors.cpp:43
 msgid "The method \"%what:1\" is unimplemented in \"%where:2\"."
-msgstr ""
+msgstr "Li metôde «%what:1» n' est nén eplemintêye dins «%where:2»."
 
 #: common/errors.cpp:51
 #, c-format
@@ -398,20 +388,20 @@ msgstr "Li fitchî «%file:1» n' est nén valide."
 #: common/errors.cpp:91
 #, c-format
 msgid "The file \"%file:1\" is not in the proper format."
-msgstr ""
+msgstr "Li fitchî «%file:1» n' est nén dins l' boune cogne."
 
 #: common/errors.cpp:107
 #, c-format
 msgid "The directory \"%dir:1\" can not be opened for reading."
-msgstr ""
+msgstr "Li ridant «%dir:1» èn pout nén esse drovou po-z î lére."
 
 #: common/errors.cpp:123
 msgid "The key \"%key:1\" is unknown."
-msgstr ""
+msgstr "Li clé «%key:1» n' est nén cnoxhowe."
 
 #: common/errors.cpp:131
 msgid "The value for option \"%key:1\" can not be changed."
-msgstr ""
+msgstr "Li valixhance pol tchuze «%key:1» èn pout nén esse candjeye."
 
 #: common/errors.cpp:139
 msgid "The key \"%key:1\" is not %accepted:2 and is thus invalid."
@@ -423,577 +413,566 @@ msgid ""
 "key:1\"."
 msgstr ""
 
-#: common/errors.cpp:155
-msgid "You must specify a value for the key \"%key:1\"."
-msgstr ""
-
-#: common/errors.cpp:171
+#: common/errors.cpp:163
 msgid "The key \"%key:1\" is not a string."
 msgstr "Li clé «%key:1» n' est nén ene tchinne."
 
-#: common/errors.cpp:179
+#: common/errors.cpp:171
 msgid "The key \"%key:1\" is not an integer."
 msgstr "Li clé «%key:1» n' est nén on nombe etir."
 
-#: common/errors.cpp:187
+#: common/errors.cpp:179
 msgid "The key \"%key:1\" is not a boolean."
 msgstr "Li clé «%key:1» n' est nén on bouleyin."
 
-#: common/errors.cpp:195
+#: common/errors.cpp:187
 msgid "The key \"%key:1\" is not a list."
 msgstr "Li clé «%key:1» n' est nén ene djivêye."
 
-#: common/errors.cpp:203
+#: common/errors.cpp:195
 msgid ""
 "The key \"%key:1\" does not take any parameters when prefixed by a \"reset-"
 "\"."
 msgstr ""
 
-#: common/errors.cpp:211
+#: common/errors.cpp:203
 msgid ""
-"The key \"%key:1\" does not take any parameters when prefixed by a \"enable-"
+"The key \"%key:1\" does not take any parameters when prefixed by an \"enable-"
 "\"."
 msgstr ""
 
-#: common/errors.cpp:219
+#: common/errors.cpp:211
 msgid ""
 "The key \"%key:1\" does not take any parameters when prefixed by a \"dont-\" "
 "or \"disable-\"."
 msgstr ""
 
-#: common/errors.cpp:227
+#: common/errors.cpp:219
 msgid ""
 "The key \"%key:1\" does not take any parameters when prefixed by a \"clear-"
 "\"."
 msgstr ""
 
-#: common/errors.cpp:243
+#: common/errors.cpp:235
 #, c-format
 msgid "The language \"%lang:1\" is not known."
 msgstr "Li lingaedje «%lang:1» n' est nén cnoxhou."
 
-#: common/errors.cpp:251
+#: common/errors.cpp:243
 #, c-format
 msgid "The soundslike \"%sl:2\" is not known."
-msgstr ""
+msgstr "L' informåcion fonetike «%sl:2» n' est nén cnoxhowe."
 
-#: common/errors.cpp:259
+#: common/errors.cpp:251
 #, c-format
 msgid "The language \"%lang:1\" is not supported."
 msgstr "Li lingaedje «%lang:1» n' est nén sopoirté."
 
-#: common/errors.cpp:267
+#: common/errors.cpp:259
 #, c-format
 msgid "No word lists can be found for the language \"%lang:1\"."
-msgstr ""
+msgstr "Nole djivêye di mots d' trovêye pol lingaedje «%lang:1»."
 
-#: common/errors.cpp:275
+#: common/errors.cpp:267
 #, c-format
 msgid "Expected language \"%lang:1\" but got \"%prev:2\"."
-msgstr ""
+msgstr "Lingaedje «%lang:1» ratindou, mins c' est «%prev:2» ki dj' a-st avou."
 
-#: common/errors.cpp:291
+#: common/errors.cpp:283
 #, c-format
 msgid "Affix '%aff:1' is corrupt."
 msgstr ""
 
-#: common/errors.cpp:299
+#: common/errors.cpp:291
 #, c-format
 msgid "The condition \"%cond:1\" is invalid."
 msgstr ""
 
-#: common/errors.cpp:307
+#: common/errors.cpp:299
 #, c-format
 msgid ""
 "The condition \"%cond:1\" does not guarantee that \"%strip:2\" can always be "
 "stripped."
 msgstr ""
 
-#: common/errors.cpp:315
+#: common/errors.cpp:307
 #, c-format
 msgid ""
 "The file \"%file:1\" is not in the proper format. Expected the file to be in "
 "\"%exp:2\" not \"%got:3\"."
 msgstr ""
 
-#: common/errors.cpp:331
+#: common/errors.cpp:323
 #, c-format
 msgid "The encoding \"%encod:1\" is not known."
 msgstr "L' ecôdaedje «%encod:1» n' est nén cnoxhou."
 
-#: common/errors.cpp:339
-#, c-format
-msgid ""
-"The encoding \"%encod:1\" is not a simple encoding and therefore can not be "
-"used in this context."
-msgstr ""
-
-#: common/errors.cpp:347
+#: common/errors.cpp:331
 #, c-format
 msgid "The encoding \"%encod:1\" is not supported."
 msgstr "L' ecôdaedje «%encod:1» n' est nén sopoirté."
 
-#: common/errors.cpp:355
+#: common/errors.cpp:339
 #, c-format
 msgid "The conversion from \"%encod:1\" to \"%encod2:2\" is not supported."
 msgstr "Li cviersaedje di «%encod:1» viè «%encod2:2» n' est nén sopoirté."
 
-#: common/errors.cpp:395
+#: common/errors.cpp:379
 #, c-format
 msgid "The string \"%str:1\" is invalid."
 msgstr "Li tchinne «%str:1» n' est nén valide."
 
-#: common/errors.cpp:403
+#: common/errors.cpp:387
 msgid "The word \"%word:1\" is invalid."
-msgstr ""
+msgstr "Li mot «%word:1» n' est nén valide."
 
-#: common/errors.cpp:411
-#, c-format
-msgid "Expecting \"%exp:1\" but got \"%got:2\"."
-msgstr ""
-
-#: common/errors.cpp:419
+#: common/errors.cpp:395
 msgid "The affix flag '%aff:1' is invalid for word \"%word:2\"."
 msgstr ""
 
-#: common/errors.cpp:427
+#: common/errors.cpp:403
 msgid "The affix flag '%aff:1' can not be applied to word \"%word:2\"."
 msgstr ""
 
-#: common/errors.cpp:475
+#: common/errors.cpp:451
 msgid "not a version number"
 msgstr "nén on limero d' modêye"
 
-#: common/errors.cpp:491
+#: common/errors.cpp:467
 msgid "dlopen returned \"%return:1\"."
 msgstr "dlopen() a rtourné «%return:1»."
 
-#: common/errors.cpp:499
+#: common/errors.cpp:475
 #, c-format
 msgid "The file \"%filter:1\" does not contain any filters."
 msgstr "Li fitchî «%filter:1» n' a nole passete å dvins."
 
-#: common/errors.cpp:507
+#: common/errors.cpp:483
 #, c-format
 msgid "The filter \"%filter:1\" does not exist."
 msgstr "Li passete «%filter:1» n' egzistêye nén."
 
-#: common/errors.cpp:515 common/errors.cpp:611
+#: common/errors.cpp:491 common/errors.cpp:587
 msgid "Confused by version control."
 msgstr ""
 
-#: common/errors.cpp:523
+#: common/errors.cpp:499
 msgid "Aspell version does not match filter's requirement."
 msgstr ""
 
-#: common/errors.cpp:531
+#: common/errors.cpp:507
 msgid "Filter option already exists."
 msgstr ""
 
-#: common/errors.cpp:539
+#: common/errors.cpp:515
 msgid "Use option modifiers only within named option."
 msgstr ""
 
-#: common/errors.cpp:547
+#: common/errors.cpp:523
 msgid "Option modifier unknown."
 msgstr ""
 
-#: common/errors.cpp:555
+#: common/errors.cpp:531
 msgid "Error setting filter description."
 msgstr ""
 
-#: common/errors.cpp:571
+#: common/errors.cpp:547
 msgid "Empty option specifier."
 msgstr ""
 
-#: common/errors.cpp:579
+#: common/errors.cpp:555
 #, c-format
 msgid "Option \"%option:1\" possibly specified prior to filter."
 msgstr ""
 
-#: common/errors.cpp:587
+#: common/errors.cpp:563
 msgid "Unknown mode description key \"%key:1\"."
 msgstr ""
 
-#: common/errors.cpp:595
+#: common/errors.cpp:571
 #, c-format
 msgid "Expecting \"%modekey:1\" key."
 msgstr ""
 
-#: common/errors.cpp:603
+#: common/errors.cpp:579
 msgid "Version specifier missing key: \"aspell\"."
 msgstr ""
 
-#: common/errors.cpp:619
+#: common/errors.cpp:595
 msgid "Aspell version does not match mode's requirement."
 msgstr ""
 
-#: common/errors.cpp:627
+#: common/errors.cpp:603
 msgid "Missing magic mode expression."
 msgstr ""
 
-#: common/errors.cpp:635
+#: common/errors.cpp:611
 #, c-format
 msgid "Empty extension at char %char:1."
 msgstr ""
 
-#: common/errors.cpp:643
+#: common/errors.cpp:619
 #, c-format
 msgid "\"%mode:1\" error"
 msgstr ""
 
-#: common/errors.cpp:651
+#: common/errors.cpp:627
 #, c-format
 msgid "Unknown mode: \"%mode:1\"."
-msgstr ""
+msgstr "Môde nén cnoxhou: «%mode:1»"
 
-#: common/errors.cpp:659
+#: common/errors.cpp:635
 #, c-format
 msgid "\"%mode:1\" error while extend Aspell modes. (out of memory?)"
 msgstr ""
 
-#: common/errors.cpp:675
+#: common/errors.cpp:651
 #, c-format
 msgid "\"%mode:1\": no start for magic search given for magic \"%magic:2\"."
 msgstr ""
 
-#: common/errors.cpp:683
+#: common/errors.cpp:659
 #, c-format
 msgid "\"%mode:1\": no range for magic search given for magic \"%magic:2\"."
 msgstr ""
 
-#: common/errors.cpp:691
+#: common/errors.cpp:667
 #, c-format
 msgid "\"%mode:1\": no magic expression available for magic \"%magic:2\"."
 msgstr ""
 
-#: common/errors.cpp:699
+#: common/errors.cpp:675
 msgid ""
 "\"%mode:1\": Magic \"%magic:2\": bad regular expression after location "
 "specifier; regexp reports: \"%regerr:3\"."
 msgstr ""
 
-#: common/errors.cpp:715
+#: common/errors.cpp:691
 #, c-format
 msgid "\"%expression:1\" is not a valid regular expression."
 msgstr ""
 
-#: common/errors.cpp:731
-#, c-format
-msgid "Each row in the table must have at least %cols:1 columns."
-msgstr ""
-
-#: common/posib_err.cpp:101
+#: common/posib_err.cpp:100
 msgid "Unhandled Error: "
 msgstr ""
 
-#: prog/aspell.cpp:95
+#: prog/aspell.cpp:97
 #, c-format
 msgid "Error: %s\n"
 msgstr "Aroke: %s\n"
 
-#: prog/aspell.cpp:100
+#: prog/aspell.cpp:102
 msgid "Error: "
 msgstr "Aroke: "
 
-#: prog/aspell.cpp:202
+#: prog/aspell.cpp:203
 msgid "enter Email mode."
 msgstr ""
 
-#: prog/aspell.cpp:203
+#: prog/aspell.cpp:204
 msgid "enter HTML mode."
 msgstr ""
 
-#: prog/aspell.cpp:204
+#: prog/aspell.cpp:205
 msgid "enter TeX mode."
 msgstr ""
 
-#: prog/aspell.cpp:205
+#: prog/aspell.cpp:206
 msgid "enter Nroff mode."
 msgstr ""
 
-#: prog/aspell.cpp:303
+#: prog/aspell.cpp:304
 #, c-format
 msgid "Invalid Option: %s"
-msgstr ""
+msgstr "Tchuze nén valide: %s"
 
-#: prog/aspell.cpp:310
+#: prog/aspell.cpp:311
 msgid " does not take any parameters."
 msgstr ""
 
-#: prog/aspell.cpp:323 prog/aspell.cpp:383
+#: prog/aspell.cpp:324 prog/aspell.cpp:384
 #, c-format
 msgid "You must specify a parameter for \"%s\"."
-msgstr ""
+msgstr "Vos dvoz specifyî on paramete po «%s»."
 
-#: prog/aspell.cpp:372
+#: prog/aspell.cpp:373
 msgid "You must specify an action"
-msgstr ""
+msgstr "Vos dvoz specifyî ene accion"
 
-#: prog/aspell.cpp:380 prog/aspell.cpp:443 prog/aspell.cpp:465
+#: prog/aspell.cpp:381 prog/aspell.cpp:444 prog/aspell.cpp:466
 #, c-format
 msgid "Unknown Action: %s"
 msgstr "Accion nén cnoxhowe: %s"
 
-#: prog/aspell.cpp:386
+#: prog/aspell.cpp:387
 #, c-format
 msgid "Error: You must specify at least %d parameters for \"%s\".\n"
 msgstr ""
 
-#: prog/aspell.cpp:663
+#: prog/aspell.cpp:629
 msgid "Invalid Input"
 msgstr ""
 
-#: prog/aspell.cpp:709
+#: prog/aspell.cpp:704
 #, c-format
 msgid "WARNING: Unable to enter Nroff mode: %s\n"
 msgstr ""
 
-#: prog/aspell.cpp:722
+#: prog/aspell.cpp:725
 msgid "Time to load word list: "
 msgstr ""
 
-#: prog/aspell.cpp:902
+#: prog/aspell.cpp:922
 #, c-format
 msgid "Suggestion Time: %f\n"
 msgstr ""
 
-#: prog/aspell.cpp:954
+#: prog/aspell.cpp:965
 msgid "You must specify a file name."
-msgstr ""
+msgstr "Vos dvoz dner on no d' fitchî."
 
-#: prog/aspell.cpp:964
+#: prog/aspell.cpp:975
 #, c-format
 msgid "Could not open the file \"%s\" for reading"
 msgstr ""
 
-#: prog/aspell.cpp:979
+#: prog/aspell.cpp:990
 #, c-format
 msgid "Could not open the file \"%s\" for writing. File not saved."
 msgstr ""
 
-#: prog/aspell.cpp:992
+#: prog/aspell.cpp:1003
 #, c-format
 msgid "Invalid keymapping: %s"
 msgstr ""
 
-#: prog/aspell.cpp:1004
+#: prog/aspell.cpp:1023
 msgid "Ignore"
 msgstr "Passer houte"
 
-#: prog/aspell.cpp:1005
+#: prog/aspell.cpp:1024
 msgid "Ignore all"
 msgstr "Passer houte totavå"
 
-#: prog/aspell.cpp:1006
+#: prog/aspell.cpp:1025
 msgid "Replace"
 msgstr "Replaecî"
 
-#: prog/aspell.cpp:1007
+#: prog/aspell.cpp:1026
 msgid "Replace all"
 msgstr "Replaecî totavå"
 
-#: prog/aspell.cpp:1008
+#: prog/aspell.cpp:1027
 msgid "Add"
 msgstr "Radjouter"
 
-#: prog/aspell.cpp:1009
+#: prog/aspell.cpp:1028
 msgid "Add Lower"
-msgstr ""
+msgstr "Radjouter e ptitès letes"
 
-#: prog/aspell.cpp:1010
+#: prog/aspell.cpp:1029
 msgid "Abort"
 msgstr "Rinoncî"
 
-#: prog/aspell.cpp:1011
+#: prog/aspell.cpp:1030
 msgid "Exit"
 msgstr "Moussî foû"
 
-#: prog/aspell.cpp:1087
-#, fuzzy
+#: prog/aspell.cpp:1106
 msgid "Are you sure you want to abort (y/n)? "
-msgstr "Estoz vs seur di voleur rinoncî? "
+msgstr "Estoz vs seur di voleur rinoncî (o/n)?  "
 
 #. TRANSLATORS: The user may input any of these characters to say "yes".
 #. MUST ONLY CONSIST OF ASCII CHARACTERS.
-#: prog/aspell.cpp:1091
-msgid "Yy"
-msgstr ""
-
 #: prog/aspell.cpp:1110
+msgid "Yy"
+msgstr "OoAaYyWw"
+
+#: prog/aspell.cpp:1131
 msgid "With: "
 msgstr "Avou: "
 
-#: prog/aspell.cpp:1127
+#: prog/aspell.cpp:1148
 msgid "Sorry that is an invalid choice!"
 msgstr ""
 
-#: prog/aspell.cpp:1345
+#: prog/aspell.cpp:1369
 msgid "Sorry \"filter\" is currently unimplemented.\n"
 msgstr ""
 
-#: prog/aspell.cpp:1491
+#: prog/aspell.cpp:1503
 msgid "Can't merge a master word list yet. Sorry."
 msgstr ""
 
-#: prog/aspell.cpp:1515
+#: prog/aspell.cpp:1527
 msgid "Sorry \"create/merge personal\" is currently unimplemented.\n"
 msgstr ""
 
-#: prog/aspell.cpp:1524 prog/aspell.cpp:1570
+#: prog/aspell.cpp:1536 prog/aspell.cpp:1592
 #, c-format
 msgid "Sorry I won't overwrite \"%s\""
-msgstr ""
+msgstr "Mande escuzes, mins dji n' sipotchrè nén «%s»"
 
-#: prog/aspell.cpp:1561
+#: prog/aspell.cpp:1583
 msgid "Sorry \"create/merge repl\" is currently unimplemented.\n"
 msgstr ""
 
-#: prog/aspell.cpp:1806
+#: prog/aspell.cpp:1851
 #, c-format
 msgid "\"%s\" is not a valid flag for the \"munch-list\" command."
 msgstr ""
 
 #. TRANSLATORS: These should all be formated to fit in 80 column or
 #. less
-#: prog/aspell.cpp:1878
+#: prog/aspell.cpp:2770
 msgid "Usage: aspell [options] <command>"
 msgstr "Po s' è siervi: aspell [tchuzes] <comande>"
 
-#: prog/aspell.cpp:1879
+#: prog/aspell.cpp:2771
 msgid "<command> is one of:"
-msgstr ""
+msgstr "<comande> c' est ene di:"
 
-#: prog/aspell.cpp:1880
+#: prog/aspell.cpp:2772
 msgid "  -?|usage         display a brief usage message"
-msgstr ""
+msgstr "  -?|usage         håynêye on rascourti messaedje d' aidance"
 
-#: prog/aspell.cpp:1881
+#: prog/aspell.cpp:2773
 msgid "  help             display a detailed help message"
-msgstr ""
+msgstr "  help             håynêye on longou messaedje d' aidance"
 
-#: prog/aspell.cpp:1882
+#: prog/aspell.cpp:2774
 msgid "  -c|check <file>  to check a file"
-msgstr ""
+msgstr "  -c|check <fitchî>  po verifyî on fitchî"
 
-#: prog/aspell.cpp:1883
+#: prog/aspell.cpp:2775
 msgid "  -a|pipe          \"ispell -a\" compatibility mode"
 msgstr "  -a|pipe          môde copatibe avou «ispell -a»"
 
-#: prog/aspell.cpp:1884
+#: prog/aspell.cpp:2776
 msgid "  [dump] config    dumps the current configuration to stdout"
 msgstr ""
 
-#: prog/aspell.cpp:1885
+#: prog/aspell.cpp:2777
 msgid "  config <key>     prints the current value of an option"
 msgstr ""
 
-#: prog/aspell.cpp:1886
+#: prog/aspell.cpp:2778
 msgid "  [dump] dicts | filters | modes"
 msgstr ""
 
-#: prog/aspell.cpp:1887
+#: prog/aspell.cpp:2779
 msgid "    lists available dictionaries / filters / filter modes"
 msgstr ""
 
-#: prog/aspell.cpp:1888
+#: prog/aspell.cpp:2780
 msgid "[options] is any of the following:"
-msgstr ""
+msgstr "[tchuzes] c' est ene des tchuzes ki shuvèt:"
 
-#: prog/aspell.cpp:1901
+#: prog/aspell.cpp:2793
 msgid ""
 "  list             produce a list of misspelled words from standard input"
 msgstr ""
+"  list             fwait-st ene djivêye di mots avou des flotches so "
+"l' intrêye standård"
 
-#: prog/aspell.cpp:1904
+#: prog/aspell.cpp:2796
 msgid ""
 "  soundslike       returns the sounds like equivalent for each word entered"
 msgstr ""
 
-#: prog/aspell.cpp:1905
+#: prog/aspell.cpp:2797
 msgid "  munch            generate possible root words and affixes"
 msgstr ""
 
-#: prog/aspell.cpp:1906
+#: prog/aspell.cpp:2798
 msgid "  expand [1-4]     expands affix flags"
 msgstr ""
 
-#: prog/aspell.cpp:1907
+#: prog/aspell.cpp:2799
 msgid ""
 "  clean [strict]   cleans a word list so that every line is a valid word"
 msgstr ""
 
-#: prog/aspell.cpp:1909
+#: prog/aspell.cpp:2801
 msgid "  -v|version       prints a version line"
 msgstr "  -v|version       mostere li modêye do programe"
 
-#: prog/aspell.cpp:1910
+#: prog/aspell.cpp:2802
 msgid "  munch-list [simple] [single|multi] [keep]\n"
 msgstr ""
 
-#: prog/aspell.cpp:1911
+#: prog/aspell.cpp:2803
 msgid "    reduce the size of a word list via affix compression"
 msgstr ""
 
-#: prog/aspell.cpp:1912
+#: prog/aspell.cpp:2804
 msgid "  conv <from> <to> [<norm-form>]"
 msgstr ""
 
-#: prog/aspell.cpp:1913
+#: prog/aspell.cpp:2805
 msgid "    converts from one encoding to another"
 msgstr ""
 
-#: prog/aspell.cpp:1914
+#: prog/aspell.cpp:2806
 msgid "  norm (<norm-map> | <from> <norm-map> <to>) [<norm-form>]"
 msgstr ""
 
-#: prog/aspell.cpp:1915
+#: prog/aspell.cpp:2807
 msgid "    perform Unicode normalization"
 msgstr ""
 
-#: prog/aspell.cpp:1918
+#: prog/aspell.cpp:2810
 msgid "  dump|create|merge master|personal|repl [<name>]"
 msgstr ""
 
-#: prog/aspell.cpp:1919
+#: prog/aspell.cpp:2811
 msgid ""
 "    dumps, creates or merges a master, personal, or replacement dictionary."
 msgstr ""
 
 #. TRANSLATORS: "none", "internal" and "strict" are literal values
 #. and should not be translated.
-#: prog/aspell.cpp:1923
+#: prog/aspell.cpp:2815
 msgid ""
 "  <norm-form>      normalization form to use, either none, internal, or "
 "strict"
 msgstr ""
 
-#: prog/aspell.cpp:1933
-#, fuzzy, c-format
+#: prog/aspell.cpp:2825
+#, c-format
 msgid ""
 "\n"
 "Aspell %s.  Copyright 2000-2004 by Kevin Atkinson.\n"
 "\n"
 msgstr ""
 "\n"
-"Aspell %s alpha.  © 2000-2004 pa Kevin Atkinson.\n"
+"Aspell %s.  © 2000-2004 pa Kevin Atkinson.\n"
 "\n"
 
-#: prog/aspell.cpp:1967
+#: prog/aspell.cpp:2859
 msgid ""
 "Available Dictionaries:\n"
 "    Dictionaries can be selected directly via the \"-d\" or \"master\"\n"
 "    option.  They can also be selected indirectly via the \"lang\",\n"
 "    \"variety\", and \"size\" options.\n"
 msgstr ""
+"Motîs k' i gn a:\n"
+"    Les motîs polèt esse tchoezi directumint avou l' tchuze «-d» ou "
+"«master».\n"
+"    I polèt eto esse tchoezi indirectumint avou l' tchuze "
+"«lang» (lingaedje),\n"
+"    «variety» (variyante) ou co «size» (grandeu).\n"
 
-#: prog/aspell.cpp:1988
+#: prog/aspell.cpp:2880
 msgid ""
 "Available Filters (and associated options):\n"
 "    Filters can be added or removed via the \"filter\" option.\n"
 msgstr ""
+"Passetes k' i gn a (eyet leus tchuzes):\n"
+"    Les passetes polèt esse radjoutêyes ou oistêyes avou l' tchuze "
+"«filter».\n"
 
-#: prog/aspell.cpp:1995
+#: prog/aspell.cpp:2887
 #, c-format
 msgid ""
 "\n"
@@ -1003,7 +982,7 @@ msgstr ""
 "  %s passete: %s\n"
 
 #. TRANSLATORS: This should be formated to fit in 80 column or less
-#: prog/aspell.cpp:2012
+#: prog/aspell.cpp:2904
 msgid ""
 "Available Filter Modes:\n"
 "    Filter Modes are reconfigured combinations of filters optimized for\n"
@@ -1011,6 +990,12 @@ msgid ""
 "    This will happen implicitly if Aspell is able to identify the file\n"
 "    type from the extension, and possibility the contents, of the file.\n"
 msgstr ""
+"Môdes passet k' i gn a:\n"
+"    Les môdes passete sont des rarindjmints des passetes optimijhîs po\n"
+"    des fitchîs d' en sôre dinêye. On môde est tchoezi avou l' tchuze "
+"«mode».\n"
+"    Aspell tchoezixh tot seu li bon môde s' il arive a ricnoxhe li sôre do\n"
+"    fitchî a pårti di s' cawete, ou di çou k' i gn a-st å dvins.\n"
 
 #: prog/check_funs.cpp:287
 msgid "Error: Stdin not a terminal."
@@ -1023,7 +1008,7 @@ msgstr "Enter"
 
 #: prog/check_funs.cpp:771
 msgid "Accept Changes"
-msgstr ""
+msgstr "Accepter les candjmints"
 
 #. TRANSLATORS: This is a literal Key.
 #: prog/check_funs.cpp:774
@@ -1033,198 +1018,206 @@ msgstr "Backspace"
 #. TRANSLATORS: This is a literal Key.
 #: prog/check_funs.cpp:776
 msgid "Control-H"
-msgstr "Ctrl-H"
+msgstr "Control-H"
 
 #: prog/check_funs.cpp:777
 msgid "Delete the previous character"
-msgstr ""
+msgstr "Disfacer l' caractere di dvant"
 
 #. TRANSLATORS: This is a literal Key.
 #: prog/check_funs.cpp:780
 msgid "Left"
-msgstr "Tape Hintche"
+msgstr "Left"
 
 #. TRANSLATORS: This is a literal Key.
 #: prog/check_funs.cpp:782
 msgid "Control-B"
-msgstr "Ctrl-B"
+msgstr "Control-B"
 
 #: prog/check_funs.cpp:783
 msgid "Move Back one space"
-msgstr ""
+msgstr "Potchî å caractere vude di dvant"
 
 #. TRANSLATORS: This is a literal Key.
 #: prog/check_funs.cpp:786
 msgid "Right"
-msgstr "Tape Droete"
+msgstr "Right"
 
 #. TRANSLATORS: This is a literal Key.
 #: prog/check_funs.cpp:788
 msgid "Control-F"
-msgstr "Ctrl-F"
+msgstr "Control-F"
 
 #: prog/check_funs.cpp:789
 msgid "Move Forward one space"
-msgstr ""
+msgstr "Potchî å caractere vude shuvant"
 
 #. TRANSLATORS: This is a literal Key.
 #: prog/check_funs.cpp:792
 msgid "Home"
-msgstr "Tape Måjhon"
+msgstr "Home"
 
 #. TRANSLATORS: This is a literal Key.
 #: prog/check_funs.cpp:794
 msgid "Control-A"
-msgstr "Ctrl-A"
+msgstr "Control-A"
 
 #: prog/check_funs.cpp:795
 msgid "Move to the beginning of the line"
-msgstr ""
+msgstr "Potchî al comince del roye"
 
 #. TRANSLATORS: This is a literal Key.
 #: prog/check_funs.cpp:798
 msgid "End"
-msgstr "Tape Fén"
+msgstr "End"
 
 #. TRANSLATORS: This is a literal Key.
 #: prog/check_funs.cpp:800
 msgid "Control-E"
-msgstr "Ctrl-E"
+msgstr "Control-E"
 
 #: prog/check_funs.cpp:801
 msgid "Move to the end of the line"
-msgstr ""
+msgstr "Potchî al fén del roye"
 
 #. TRANSLATORS: This is a literal Key.
 #: prog/check_funs.cpp:804
 msgid "Delete"
-msgstr "Tape Del"
+msgstr "Delete"
 
 #. TRANSLATORS: This is a literal Key.
 #: prog/check_funs.cpp:806
 msgid "Control-D"
-msgstr ""
+msgstr "Control-D"
 
 #: prog/check_funs.cpp:807
 msgid "Delete the next character"
-msgstr ""
+msgstr "Disfacer l' caractere shuvant"
 
 #. TRANSLATORS: This is a literal Key.
 #: prog/check_funs.cpp:811
 msgid "Control-K"
-msgstr ""
+msgstr "Control-K"
 
 #: prog/check_funs.cpp:812
 msgid "Kill all characters to the EOL"
-msgstr ""
+msgstr "Diusfacer ttafwait disk' al fén del roye"
 
 #. TRANSLATORS: This is a literal Key.
 #: prog/check_funs.cpp:816
 msgid "Control-C"
-msgstr ""
+msgstr "Control-C"
 
 #: prog/check_funs.cpp:817
 msgid "Abort This Operation"
 msgstr ""
 
-#: modules/speller/default/lang_impl.cpp:105
+#: modules/speller/default/language.cpp:103
 msgid "This is probably because: "
 msgstr ""
 
-#: modules/speller/default/lang_impl.cpp:112
+#: modules/speller/default/language.cpp:110
 msgid "The required field \"name\" is missing."
 msgstr ""
 
-#: modules/speller/default/lang_impl.cpp:490
+#: modules/speller/default/language.cpp:488
 msgid "Empty string."
-msgstr ""
+msgstr "Tchinne vude."
 
-#: modules/speller/default/lang_impl.cpp:494
+#: modules/speller/default/language.cpp:492
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear at the beginning of a word."
-msgstr ""
+msgstr "Li caractere «%s» (U+%04X) èn pout nén esse al comince d' on mot."
 
-#: modules/speller/default/lang_impl.cpp:496
-#: modules/speller/default/lang_impl.cpp:505
+#: modules/speller/default/language.cpp:494
+#: modules/speller/default/language.cpp:503
 #, c-format
 msgid ""
 "The character '%s' (U+%02X) must be followed by an alphabetic character."
 msgstr ""
+"Li caractere «%s» (U+%04X) doet esse shuvou d' on caractere alfabetike."
 
-#: modules/speller/default/lang_impl.cpp:498
+#: modules/speller/default/language.cpp:496
 msgid "Does not contain any alphabetic characters."
-msgstr ""
+msgstr "I n' a nou caractere alfabetike."
 
-#: modules/speller/default/lang_impl.cpp:503
+#: modules/speller/default/language.cpp:501
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear in the middle of a word."
-msgstr ""
+msgstr "Li caractere «%s» (U+%04X) èn pout nén esse å mitan d' on mot."
 
-#: modules/speller/default/lang_impl.cpp:510
+#: modules/speller/default/language.cpp:508
 msgid ""
 "The character '\\r' (U+0D) may not appear at the end of a word. This "
 "probably means means that the file is using MS-DOS EOL instead of Unix EOL."
 msgstr ""
+"Li caractere «\\r» (U+000D) èn pout nén esse al fén d' on mot. Probåblumint "
+"ki c' est paski l' fitchî eploye des féns d' roye MS-DOS el plaece di féns "
+"d' roye Unix."
 
-#: modules/speller/default/lang_impl.cpp:513
+#: modules/speller/default/language.cpp:511
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear at the end of a word."
-msgstr ""
+msgstr "Li caractere «%s» (U+%04X) èn pout nén esse al fén d' on mot."
 
-#: modules/speller/default/lang_impl.cpp:545
+#: modules/speller/default/language.cpp:543
 #, c-format
 msgid "Warning: Removing invalid affix '%s' from word %s.\n"
 msgstr ""
 
-#: modules/speller/default/lang_impl.cpp:546
+#: modules/speller/default/language.cpp:544
 #, c-format
 msgid "Warning: Removing inapplicable affix '%s' from word %s.\n"
 msgstr ""
 
-#: modules/speller/default/lang_impl.cpp:678
+#: modules/speller/default/language.cpp:674
 #, c-format
 msgid "Warning: %s Skipping string.\n"
 msgstr ""
 
-#: modules/speller/default/lang_impl.cpp:736
+#: modules/speller/default/language.cpp:732
 msgid "The total length is larger than 240 characters."
-msgstr ""
+msgstr "Li longueur totåle est di pus d' 240 caracteres."
 
-#: modules/speller/default/lang_impl.cpp:740
+#: modules/speller/default/language.cpp:736
 #, c-format
 msgid "Warning: %s Skipping word.\n"
 msgstr ""
 
-#: modules/speller/default/affix.cpp:424
+#: modules/speller/default/affix.cpp:426
 msgid "Possibly incorrect count."
 msgstr ""
 
-#: modules/speller/default/readonly_ws.cpp:363
+#: modules/speller/default/readonly_ws.cpp:362
 msgid "Wrong endian order."
 msgstr ""
 
-#: modules/speller/default/readonly_ws.cpp:386
+#: modules/speller/default/readonly_ws.cpp:385
 msgid "Wrong soundslike."
-msgstr ""
+msgstr "Mwais soundslike."
 
-#: modules/speller/default/readonly_ws.cpp:392
+#: modules/speller/default/readonly_ws.cpp:391
 msgid "Wrong soundslike version."
-msgstr ""
+msgstr "Mwaijhe modêye des dnêyes fonetikes (soundslike)."
 
-#: modules/speller/default/readonly_ws.cpp:825
+#: modules/speller/default/readonly_ws.cpp:855
 msgid "Affix flags found in word but no affix file given."
 msgstr ""
+"Des drapeas trovés dins l' djivêye di mots, mins pont d' fitchî d' definixha "
+"des drapeas."
 
-#: modules/speller/default/readonly_ws.cpp:863
+#: modules/speller/default/readonly_ws.cpp:893
 msgid ""
 "The total word length, with soundslike data, is larger than 240 characters."
 msgstr ""
+"Li longueur totåle doi mot, avou les dnêyes fonetikes, est di pus d' 240 "
+"caracteres."
 
-#: modules/speller/default/suggest.cpp:1395
+#: modules/speller/default/suggest.cpp:1402
 msgid "one of ultra, fast, normal, slow, or bad-spellers"
 msgstr ""
 
-#: modules/speller/default/data.cpp:409
+#: modules/speller/default/data.cpp:405
 msgid "is not one of the allowed types"
 msgstr ""
 
@@ -1240,7 +1233,7 @@ msgstr ""
 msgid "The main word list is unavailable."
 msgstr ""
 
-#: modules/filter/tex.cpp:250 modules/filter/tex.cpp:257
+#: modules/filter/tex.cpp:251 modules/filter/tex.cpp:258
 msgid "a string of 'o','O','p',or 'P'"
 msgstr ""
 
@@ -1257,37 +1250,23 @@ msgstr ""
 
 #: modules/filter/context-filter.info:21
 msgid "swaps visible and invisible text"
-msgstr ""
+msgstr "discandjî li tecse veyåve/nén veyåve"
 
 #: modules/filter/email-filter.info:7
 msgid "filter for skipping quoted text in email messages"
-msgstr ""
+msgstr "passete po n' nén verifyî li tecse cité dins les emiles"
 
 #: modules/filter/email-filter.info:13
 msgid "email quote characters"
-msgstr ""
+msgstr "caracteres pol citåcion dins les emiles"
 
 #: modules/filter/email-filter.info:21
 msgid "num chars that can appear before the quote char"
-msgstr ""
-
-#: modules/filter/genconv-filter.info:8
-#, fuzzy
-msgid "bla"
-msgstr "bouleyin"
-
-#: modules/filter/genconv-filter.info:15
-msgid "Conversion file to use"
-msgstr ""
-
-#: modules/filter/genconv-filter.info:21 modules/filter/tex-filter.info:90
-#: modules/filter/texinfo-filter.info:59
-msgid "The prefered form that output should be in"
-msgstr ""
+msgstr "caracteres macs. divant l' caractere di citåcion"
 
 #: modules/filter/html-filter.info:9
 msgid "filter for dealing with HTML documents"
-msgstr ""
+msgstr "passete po les documints HTML"
 
 #: modules/filter/html-filter.info:15
 msgid "HTML attributes to always check"
@@ -1295,16 +1274,15 @@ msgstr "atributs HTML a tofer verifyî"
 
 #: modules/filter/html-filter.info:21
 msgid "HTML tags to always skip the contents of"
-msgstr ""
+msgstr "etiketes HTML a tofer passer houte leu contnou"
 
 #: modules/filter/nroff-filter.info:7
-#, fuzzy
 msgid "filter for dealing with Nroff documents"
-msgstr "passete po les documints TeX/LaTeX"
+msgstr "passete po les documints Nroff"
 
 #: modules/filter/sgml-filter.info:9
 msgid "filter for dealing with generic SGML/XML documents"
-msgstr ""
+msgstr "passete po les documints SGML/XML djenerikes"
 
 #: modules/filter/sgml-filter.info:15
 msgid "SGML attributes to always check"
@@ -1312,7 +1290,7 @@ msgstr "atributs SGML a tofer verifyî"
 
 #: modules/filter/sgml-filter.info:20
 msgid "SGML tags to always skip the contents of"
-msgstr ""
+msgstr "etiketes SGML a tofer passer houte leu contnou"
 
 #: modules/filter/tex-filter.info:7
 msgid "filter for dealing with TeX/LaTeX documents"
@@ -1327,68 +1305,64 @@ msgid "TeX commands"
 msgstr "comandes TeX"
 
 #: modules/filter/texinfo-filter.info:7
-#, fuzzy
 msgid "filter for dealing with Texinfo documents"
-msgstr "passete po les documints TeX/LaTeX"
+msgstr "passete po les documints Texinfo"
 
-#: modules/filter/texinfo-filter.info:15
+#: modules/filter/texinfo-filter.info:13
 msgid "Texinfo commands to ignore the parameters of"
-msgstr ""
+msgstr "comandes Texinfo a passer houte di leus parametes"
 
-#: modules/filter/texinfo-filter.info:44
+#: modules/filter/texinfo-filter.info:41
 msgid "Texinfo environments to ignore"
-msgstr ""
+msgstr "evironmints Texinfo a passer houte"
 
 #: modules/filter/url-filter.info:7
 msgid "filter to skip URL like constructs"
-msgstr ""
+msgstr "passete po passer houte des mots rshonnant a des hårdêyes (URLs)"
 
 #: modules/filter/modes/ccpp.amf:8
 msgid "mode for checking C++ comments and string literals"
 msgstr ""
+"môde pol verifiaedje des comintaires eyet tchinnes di tecse des fitchîs C++"
 
 #: modules/filter/modes/comment.amf:5
 msgid "mode to check any lines starting with a #"
-msgstr ""
+msgstr "môde po verifyî les royes ki cmincèt avou « # »"
 
 #: modules/filter/modes/email.amf:5
 msgid "mode for skipping quoted text in email messages"
-msgstr ""
+msgstr "môde po n' nén verifyî li tecse cité dins les emiles"
 
 #: modules/filter/modes/html.amf:10
 msgid "mode for checking HTML documents"
-msgstr ""
+msgstr "môde pol verifiaedje des documints HTML"
 
 #: modules/filter/modes/none.amf:5
 msgid "mode to disable all filters"
-msgstr ""
+msgstr "môde po dismete totes les passetes"
 
 #: modules/filter/modes/nroff.amf:7
-#, fuzzy
 msgid "mode for checking Nroff documents"
-msgstr "môde pol erifiaedje des documints TeX/LaTeX"
+msgstr "môde pol verifiaedje des documints Nroff"
 
 #: modules/filter/modes/perl.amf:8
 msgid "mode for checking Perl comments and string literals"
 msgstr ""
+"môde pol verifiaedje des comintaires eyet tchinnes di tecse dins des fitchîs "
+"perl"
 
 #: modules/filter/modes/sgml.amf:8
 msgid "mode for checking generic SGML/XML documents"
-msgstr ""
+msgstr "môde pol verifiaedje des documints SGML/XML djenerikes"
 
 #: modules/filter/modes/tex.amf:7
 msgid "mode for checking TeX/LaTeX documents"
-msgstr "môde pol erifiaedje des documints TeX/LaTeX"
+msgstr "môde pol verifiaedje des documints TeX/LaTeX"
 
 #: modules/filter/modes/texinfo.amf:7
-#, fuzzy
 msgid "mode for checking Texinfo documents"
-msgstr "môde pol erifiaedje des documints TeX/LaTeX"
+msgstr "môde pol verifiaedje des documints Texinfo"
 
 #: modules/filter/modes/url.amf:5
 msgid "mode to skip URL like constructs (default mode)"
-msgstr ""
-
-#, fuzzy
-#~ msgid "filter for processing Nroff documents"
-#~ msgstr "passete po les documints TeX/LaTeX"
+msgstr "môde po passer houte des mots ki rshonnèt des hårdêyes (prémetou môde)"

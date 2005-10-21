@@ -606,6 +606,7 @@ namespace aspell {
     NormTable<E> * data;
     DecodeNormLookup(NormTable<E> * d) : data(d) {}
     // must be null terminated
+    // FIXME: Why must it be null terminated?
     void decode(const char * in, int size, FilterCharVector & out) const {
       const char * stop = in + size; // will word even if size -1
       while (in != stop) {

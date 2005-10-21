@@ -99,12 +99,12 @@ or the name of the library (for example
 
 @appendixsubsec Unicode Support
 
-In order for Aspell to correctly spell check UTF-8 documents the "wide"
-version of the curses library must be installed.  This is different from
-the normal version of curses library, and is normally named
-@file{libcursesw} (with a @samp{w} at the end) or @file{libncursesw}.
-UTF-8 documents will not display correctly without the right curses
-version installed.
+In order for Aspell to correctly spell check UTF-8 documents in full
+screen mode the "wide" version of the curses library must be
+installed.  This is different from the normal version of curses
+library, and is normally named @file{libcursesw} (with a @samp{w} at
+the end) or @file{libncursesw}.  UTF-8 documents will not display
+correctly without the right curses version installed.
 
 In addition your system must also support the @code{mblen} function.
 Although this function was defined in the ISO C89 standard (ANSI
@@ -154,6 +154,9 @@ this reason the old English dictionary (up to 0.51) will no longer
 work.  A new English dictionary is now available which avoids using
 this option.  In addition the @option{ignore-accents} option is
 currently unimplemented.
+
+The flag @option{-l} is now a shortcut for @option{--lang}, instead of
+@option{--list} as it was with Aspell 0.50.
 
 @anchor{Binary Compatibility}
 @appendixsubsec Binary Compatibility
@@ -285,7 +288,7 @@ easiest way is to use a Cygwin compiler but instruct it to build a
 native binary rather than a Cygwin one.  To do this configure with:
 
 @example
-./configure CFLAGS='-O2 -mno-cygswin' CXXFLAGS='-O2 -mno-cygswin'
+./configure CFLAGS='-O2 -mno-cygwin' CXXFLAGS='-O2 -mno-cygswin'
 @end example
 
 You may also want to add the option
@@ -293,7 +296,7 @@ You may also want to add the option
 directories.  @xref{Win32-Directories}.  In this case configure with:
 
 @smallexample
-./configure CFLAGS='-O2 -mno-cygswin' CXXFLAGS='-O2 -mno-cygswin' --enable-win32-relocatable
+./configure CFLAGS='-O2 -mno-cygwin' CXXFLAGS='-O2 -mno-cygswin' --enable-win32-relocatable
 @end smallexample
 
 It should also be possible to build Aspell using the MSYS environment.

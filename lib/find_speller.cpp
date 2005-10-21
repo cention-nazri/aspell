@@ -268,6 +268,7 @@ namespace aspell {
           ++num;
           p = strcspn(c, "-");
           if (p == s && memcmp(m, c, s) == 0) {match = true; break;}
+          if (c[p] == '-') p++;
         }
         if (!match) goto fail;
         cur_rank = 0;
@@ -282,7 +283,7 @@ namespace aspell {
   PosibErr<Config *> find_word_list(Config * c) 
   {
     Config * config = new_config();
-    config->read_in_settings(c);
+    RET_ON_ERR(config->read_in_settings(c));
     String dict_name;
 
     if (config->have("master")) {

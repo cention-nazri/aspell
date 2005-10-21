@@ -1,14 +1,18 @@
 \input texinfo   @c -*-texinfo-*-
 
 @setfilename aspell.info
+<<<<<<< aspell.texi
 @settitle GNU Aspell 0.61
+=======
+@settitle GNU Aspell 0.60.3
+>>>>>>> 1.65.2.9
 @syncodeindex pg cp
 @documentencoding ISO-8859-1
 
 @copying
 This is the user's manual for Aspell
 
-Copyright @copyright{} 2000--2004 Kevin Atkinson.
+Copyright @copyright{} 2000--2005 Kevin Atkinson.
 
 @quotation
 Permission is granted to copy, distribute and/or modify this document
@@ -270,7 +274,12 @@ From Ispell}.
 
 Support for Aspell can be found on the Aspell mailing lists.
 Instructions for joining the various mailing lists (and an archive of
-them) can be found off the Aspell home page at @uref{http://aspell.net}.
+them) can be found off the Aspell home page at
+@uref{http://aspell.net}.
+
+Bug reports should be submitted via the Sourceforge Tracker at
+@uref{http://sourceforge.net/@/tracker/?group_id=245} rather than
+being posted to the mailing lists.
 
 @node Basic Usage
 @chapter Basic Usage
@@ -1640,41 +1649,39 @@ The suggestion modes are as follows.
 @item ultra
 This method will use the fastest method available to come up with
 decent suggestions.  This currently means that it will look for
-soundslikes within one edit distance apart without doing any
-typo-analysis or using replacement tables.
-In this mode Aspell gets about 87% of
-the words from my small test kernel of misspelled words.  (Go to
-@uref{http://aspell.net/test} for more info on the test kernel as well
-as comparisons of this version of Aspell with previous versions and
-other spell checkers.)
+soundslikes within one edit distance.  This method will also use the
+replacement table if one is available.  In this mode Aspell gets about
+87% of the words from my small test kernel of misspelled words.  (Go
+to @uref{http://aspell.net/test} for more info on the test kernel as
+well as comparisons of this version of Aspell with previous versions
+and other spell checkers.)
 
 @item fast
-This method is like @option{ultra} except that it also performs
-typo-analysis and uses replacement tables.  The typo-analysis brings
-words which are likely to be due to typos to the beginning of the
-list.  This mode should get around the same number of words that the
-@option{ultra} method does.
+This method is currently identical to @option{ultra}.
 
 @item normal
-This method normally looks for soundslikes within two edit distance
-apart and performs typo-analysis unless it is turned off.  Is is
-much slower than fast mode but it returns better suggestions. This
-mode gets 93% of the words.
+This mode will use what ever method is necessary to return good
+suggestions in most cases in a reasonable amount of time.  This
+currently means it will looks for soundslikes within two edit distance
+apart.  This mode gets 93% of the words.
 
 @item slow
-
-Normally identical to @option{normal}.
+Like @option{normal} except that ``reasonable amount of time'' is not
+a consideration.  In most cases it will return the same results as
+@option{normal}.  The biggest difference is that it will try an ngram
+scan if the normal methods of finding a suggestion fail.  
+@c FIXME: Explain what this means.
 
 @item bad-spellers
-This method also looks for soundslikes within two edit distances apart
-but is tailored more for the bad speller, where as @option{fast} or
-@option{normal} are tailored more to strike a good balance between
-typos and true misspellings.  This mode never performs typo-analysis
-and returns a @emph{huge} number of words for the really bad spellers
-who can't seem to get the spelling anything close to what it should
-be.  If the misspelled word looks anything like the correct spelling
-it is bound to be found @emph{somewhere} on the list of 100 or more
-suggestions.  This mode gets 98% of the words.
+This method is like @option{slow} but is tailored more for the bad
+speller, where as the other modes are tailored more
+to strike a good balance between typos and true misspellings.  This
+mode never performs typo-analysis and returns a @emph{huge} number of
+words for the really bad spellers who can't seem to get the spelling
+anything close to what it should be.  If the misspelled word looks
+anything like the correct spelling it is bound to be found
+@emph{somewhere} on the list of 100 or more suggestions.  This mode
+gets 98% of the words.
 @end table
 
 If jump tables were not used then the @option{normal} option is
@@ -1949,7 +1956,7 @@ include one of them.
 
 The @option{simple} flag will select an alternate faster algorithm.
 This algorithm is very similar to the @command{munch} command
-distributed with Myspell (the Open Office spell checker), however, it
+distributed with MySpell (the Open Office spell checker), however, it
 doesn't give nearly as good results.  It does okay for the English
 word list but not for some other languages such as German; the normal
 algorithm reduced a list of 312,002 German words to 79,420 base words
@@ -1962,40 +1969,52 @@ algorithm may disappear in a future version of Aspell.
 @anchor{Format of the Personal Dictionary}
 @subsection Format of the Personal Dictionary
                                    
-The personal dictionary generally has a name of the form:
+The personal dictionary generally has a filename of the form:
+
 @example
 .aspell.@var{lang}.pws
 @end example
 
-The file has a header line of the
-form:
+@noindent
+And the file itself contains two parts.  The first part is a
+header line of the form:
+
 @example
-personal_ws-1.1 @var{lang} @var{num}
+personal_ws-1.1 @var{lang} @var{num} @i{[}@var{encoding}@i{]}
 @end example  
+
 @noindent
 where @var{num} is the number of words in the list.  This number is
 only used as a hint, and thus does not have to be accurate.  When
 creating a new dictionary it is perfectly acceptable for @var{num} to
-be 0.
+be 0.  The @var{encoding} is optional and specifies the encoding of
+the word list.  If it is left out the encoding is expected to be in
+the default encoding for the language as specified by the
+@option{data-encoding} option.  @xref{data-encoding}.
 
-The rest of the file is simply a word list with one line per word.
+The second part of simply a word list with one word per line.
 
 @subsection Format of the Personal Replacement Dictionary
 
-The personal replacement dictionary generally has a name of the form:
+The personal replacement dictionary generally has a filename of the form:
+
 @example
 .aspell.@var{lang}.prepl
 @end example
 
-The file has a header line of the
-form:
-@example
-personal_repl-1.1 @var{lang} @var{num}
-@end example  
 @noindent
-where @var{num} is currently unused and thus always 0.
+And the file itself contains two parts.  The first part is a
+header line of the form:
 
-The rest of the file is simply of replacements with one replacement
+@example
+personal_repl-1.1 @var{lang} @var{num} @i{[}@var{encoding}@i{]}
+@end example  
+
+@noindent
+where @var{num} is currently unused and thus always 0.  As with the
+personal dictionary the @var{encoding} is optional.
+
+The second part simply a list of replacements with one replacement
 per line with each replacement pair has the following format:
 
 @example
@@ -2541,6 +2560,7 @@ The optional fields are as follows:
 
 @table @option
 
+@anchor{data-encoding}
 @item data-encoding
 
 The encoding the language data files are expected to be in as well as
@@ -4045,7 +4065,7 @@ Write a @strong{GUI} for the Aspell utility. Ideally it should be able to do
 everything the Aspell utility can do and not just be able spell check
 a document.
 @item
-Develop a @strong{more powerfull C API} for Aspell.  Ideally this API should
+Develop a @strong{more powerful C API} for Aspell.  Ideally this API should
 allow one to perform all the tasks the Aspell utility can do.  This
 included the ability to check whole documents, and create
 dictionaries, among other things.  
@@ -4243,7 +4263,7 @@ a C++ program.
 @node ChangeLog
 @appendix ChangeLog
 
-@heading Changes from 0.60.3 to 0.61
+@heading Changes from 0.60.4 to 0.61
 @itemize @bullet
 @item
 Added a generic conversion (genconv) filter for converting from old
@@ -4256,7 +4276,19 @@ non-ASCII letters as well as support for skipping over Tex hyphens.
 Bug fixes.
 @end itemize
 
-@heading Changes from 0.60.2 to 0.60.3 
+@heading Changes from 0.60.3 to 0.60.4 (October 4, 2005)
+@itemize @bullet
+@item
+Fixed a bug that cuased aspell to crash when checking certain Russion
+words, this bug likely affected other lnaguages as well.
+@item
+Updated to Gettext 0.14.5 which is requred for AMD64, also updated to
+to Libtool 1.5.20.
+@item
+Other bug fixes.
+@end itemize
+
+@heading Changes from 0.60.2 to 0.60.3 (June 28, 2005)
 
 @itemize @bullet
 @item
@@ -4265,9 +4297,27 @@ Fixed bugs involving several of the C API functions.
 Fixed bug where @samp{ultra} or @samp{fast} mode will not return any
 suggestions when soundslike lookup is not used.
 @item
+Made a minor, yet significant, optimization to the suggestion code.
+This speed things up by an order of magnitude in some cases.
+@item
+Avoid using the slow ngram scan except when the @option{sug-mode} is 
+@samp{slow} or @samp{bad-speller}.
+@item
+Fixed a bug in curses mode which causes word-wrap to not work
+correctly in some cases.
+@item
+Fixed a bug in pipe mode with a missing newline.
+@item
 Fixed the @command{spell} compatibility script.
 @item
-Several other bug fixed.
+Several other minor bugs fixed.
+@item
+Made note about the change in behavior of the @option{-l} command line
+switch.
+@item
+Other manual update/fixes.
+@item
+Updated to Libtool 1.5.18, Automake 1.9.6, and Makeinfo 4.8.
 @end itemize
 
 @heading Changes from 0.60.1 to 0.60.2 (December 18, 2004)
