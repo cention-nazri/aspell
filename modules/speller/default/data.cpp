@@ -320,14 +320,13 @@ namespace aspeller {
 
 #define write_conv(s) do { \
     if (!c) {o << s;} \
-    else {ParmString ss(s); buf.clear(); c->convert(ss.str(), ss.size(), buf); o.write(buf.data(), buf.size()-1);} \
+    else {ParmString ss(s); buf.clear(); c->convert(ss.str(), ss.size(), buf); o.write(buf.data(), buf.size());} \
   } while (false)
 
   OStream & WordEntry::write (OStream & o,
                               const Language & l,
                               Convert * c) const
   {
-    String w;
     CharVector buf;
     write_conv(word);
     if (aff && *aff) {
