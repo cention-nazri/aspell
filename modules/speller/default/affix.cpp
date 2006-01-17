@@ -840,7 +840,16 @@ bool AffixMgr::affix_check(const LookupInfo & linf, ParmString word,
   if (prefix_check(linf, pword, ci, gi)) return true;
 
   // if still not found check all suffixes
-  return suffix_check(linf, sword, ci, gi, 0, NULL);
+  if (suffix_check(linf, sword, ci, gi, 0, NULL)) return true;
+
+  // if still not found check again but with the lower case version
+  // which can make a difference if the entire word matches the cond
+  // string
+  if (cp == FirstUpper) {
+    return suffix_check(linf, pword, ci, gi, 0, NULL);
+  } else {
+    return false;
+  }
 }
 
 void AffixMgr::munch(ParmString word, GuessInfo * gi, bool cross) const
