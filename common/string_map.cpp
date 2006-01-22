@@ -21,6 +21,9 @@ namespace acommon {
            HashTable<StringMap::Parms>::find_i(char const* const&, bool&);
   template std::pair<HashTable<StringMap::Parms>::iterator,bool>
            HashTable<StringMap::Parms>::insert(const StringPair &);
+  template void HashTable<StringMap::Parms>::init(unsigned int);
+  template void HashTable<StringMap::Parms>::del(void);
+  template void BlockSList<StringPair>::clear(void);
 
   void StringMap::copy(const StringMap & other)
   {
