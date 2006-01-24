@@ -390,7 +390,7 @@ void get_line(String & line) {
       short cp;
       mvwin_wch(choice_w, 0, i, &cc);
       size_t s = getcchar(&cc, 0, &att, &cp, 0);
-      wstr.resize(s);
+      wstr.resize(s+1); // +1 to allow room for the null character
       getcchar(&cc, wstr.data(), &att, &cp, 0);
       s = wcstombs(0, wstr.data(), 0);
       if (s != (size_t)-1) {
@@ -440,8 +440,8 @@ void get_choice(int & c) {
       handle_last_signal();
       c0 = wgetch(choice_w);
     } while (c0 == ERR);
-    if (c == KEY_BREAK)
-      c = control('c');
+    if (c0 == KEY_BREAK)
+      c0 = control('c');
     if (1 <= c0 && c0 < 128) {
       c = static_cast<char>(c0);
       waddch(choice_w,c);
