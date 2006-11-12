@@ -121,7 +121,7 @@ EXTRA_DIST += common/*.hpp common/*.h\
 # Aspell Program
 #
 
-AM_CPPFLAGS += -DLOCALEDIR=\"$(localedir)\"
+AM_CPPFLAGS += -DLOCALEDIR="$(localedir)"
 
 bin_PROGRAMS = word-list-compress aspell prezip-bin
 
