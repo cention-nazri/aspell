@@ -16,7 +16,7 @@ cmd=`basename "$0"`
 
 warn () 
 {
-  if test -z "$quite"; then echo "$cmd: $1" >&2 ; fi
+  if test -z "$quiet"; then echo "$cmd: $1" >&2 ; fi
 }
 
 error () 
@@ -133,7 +133,7 @@ h )
   prezip-bin -V
   cat <<EOF
 
-  usage $0 [-dzhLV] [-cfks] [file ...]
+  usage $0 [-dzhLV] [-cfksSq] [file ...]
 
    -h --help        display help
    -d --decompress  force decompression
@@ -152,8 +152,8 @@ h )
              as "preunzip" the default action is to decompress.
              as "precat" the default action is to decompress to stdout.
 
-  If no file names are givin than prezip will compress or decompress
-  from the the standard input to standard output.  Short flags can be 
+  If no file names are given then prezip will compress or decompress
+  from the standard input to the standard output.  Short flags can be
   combined so that "-c -s" is the same as "-cs".
 
   Prezip is _not_ a general purpose compressor.  It should only be
@@ -215,7 +215,7 @@ then
             elif test "$force"
             then 
               out="$f.out"
-              warn "can't guess orignal name - using \"$out\""
+              warn "can't guess original name - using \"$out\""
               zip d "$f" "$out"
             else
               warn "$f does not end in .pz or .cwl - ignored"
@@ -236,7 +236,7 @@ then
         fi
       elif test -e "$f"
       then
-        warn "$f is not a a regular file - ignored"
+        warn "$f is not a regular file - ignored"
       else
         error "$f: No such file"
       fi
