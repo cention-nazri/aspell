@@ -281,7 +281,7 @@ class: config
 		posib err
 		desc => Inserts an item, if the item already exists it
 			will be replaced. Returns TRUE if it succeeded
-			or FALSE on error. If the key in not valid it
+			or FALSE on error. If the key is not valid it
 			sets error_num to PERROR_UNKNOWN_KEY, if the
 			value is not valid it will set error_num to
 			PERROR_BAD_VALUE, if the value can not be
@@ -332,14 +332,19 @@ class: config
 
 	method: retrieve bool
 		posib err
-		desc => Return -1 on error, 0 if false, 1 if true.
+		desc => In "ths" Aspell configuration, search for a
+			character string matching "key" string.
+			If "key" is found then return 1 else return 0.
+			If error encountered, then return -1.
 		/
 		bool
 		string: key
 
 	method: retrieve int
 		posib err
-		desc => Return -1 on error.
+		desc => In "ths" Aspell configuration, search for an
+			integer value matching "key" string.
+			Return -1 on error.
 		/
 		unsigned int
 		string: key
