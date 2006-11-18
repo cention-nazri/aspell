@@ -387,7 +387,7 @@ namespace aspeller {
 
     } else {
       
-      char head[32];
+      char head[32] = {0};
       in.read(head, 32);
       if      (strncmp(head, "aspell default speller rowl", 27) ==0)
 	actual_type = DT_ReadOnly;

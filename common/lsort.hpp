@@ -99,6 +99,8 @@ static inline N * merge(N * x, N * y)
 template <class N, class LT, class NX>
 N * sort(N * first, const LT & lt, const NX & nx)
 {
+  if (!first) return first;
+
   N * carry = 0;
   N * counter[sizeof(void *)*8] = {0};
   int fill = 0;

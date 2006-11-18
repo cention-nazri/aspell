@@ -938,7 +938,7 @@ namespace {
     // duplicate check
     // 
     WordData * prev = first;
-    WordData * cur = first->next;
+    WordData * cur = first ? first->next : 0;
     InsensitiveEqual ieq(&lang);
     while (cur) {
       if (strcmp(prev->word, cur->word) == 0) {
