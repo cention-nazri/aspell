@@ -870,7 +870,8 @@ void pipe()
           if (ci->pre_strip_len > 0) 
             guess.append('-').append(ci->word.str(), ci->pre_strip_len);
           if (ci->suf_strip_len > 0) 
-            guess.append('-').append(ci->word.str() - ci->suf_strip_len, ci->suf_strip_len);
+            guess.append('-').append(ci->word.str() + ci->word.size() - ci->suf_strip_len, 
+                                     ci->suf_strip_len);
           if (ci->suf_add && ci->suf_add[0])
             guess.append('+').append(ci->suf_add, ci->suf_add_len);
           real_speller->lang().fix_case(casep, guess.data(), guess.data());
