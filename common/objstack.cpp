@@ -56,8 +56,12 @@ void ObjStack::new_chunk()
 
 void ObjStack::reset()
 {
-  reserve = first->next;
-  first->next = 0;
+  assert(first_free->next == 0);
+  if (first->next) {
+    first_free->next = reserve;
+    reserve = first->next;
+    first->next = 0;
+  } 
   first_free = first;
   setup_chunk();
 }

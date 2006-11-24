@@ -25,7 +25,9 @@ namespace aspell {
   template std::pair<HashTable<StringMap::Parms>::iterator,bool>
            HashTable<StringMap::Parms>::insert(const StringPair &);
 #endif
-
+  template void HashTable<StringMap::Parms>::init(unsigned int);
+  template void HashTable<StringMap::Parms>::del(void);
+  template void BlockSList<StringPair>::clear(void);
 
   void StringMap::copy(const StringMap & other)
   {

@@ -115,6 +115,9 @@ namespace {
     // deal with comments
     if (c == '%' && !prev_backslash) in_comment = true;
     if (in_comment && c == '\n')     in_comment = false;
+
+    prev_backslash = false;
+
     if (in_comment)                  return !check_comments;
 
     if (top.in_what == Name) {
@@ -197,6 +200,7 @@ namespace {
     } 
 
     if (c == '\\') {
+      prev_backslash = true;
       push_command(Name);
       return true;
     }

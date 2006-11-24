@@ -9,6 +9,8 @@
 #include "errors.hpp"
 #include "vector.hpp"
 
+#include "gettext.h"
+
 namespace {
 
   using namespace aspell;
@@ -55,6 +57,11 @@ namespace {
 	return make_err(unknown_key, d.key).with_file(fn, d.line_num);
 
       }
+    }
+
+    if (wss.empty()) {
+      return make_err(bad_file_format, fn, 
+                      _("There must be at least one \"add\" line."));
     }
 
     return no_err;

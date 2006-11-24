@@ -100,7 +100,7 @@ libaspell_la_SOURCES =\
   lib/language-cm.cpp\
   lib/munch_list.cpp
 
-libaspell_la_LIBADD =  $(LIBINTL) $(PTHREAD_LIB)
+libaspell_la_LIBADD =  $(LTLIBINTL) $(PTHREAD_LIB)
 
 if INCREMENTED_SONAME
 libaspell_la_LDFLAGS = -version-info 17:0:1 -no-undefined
@@ -130,7 +130,7 @@ EXTRA_DIST += common/*.hpp common/*.h\
 # Aspell Program
 #
 
-AM_CPPFLAGS += -DLOCALEDIR=\"$(localedir)\"
+AM_CPPFLAGS += -DLOCALEDIR="$(localedir)"
 
 bin_PROGRAMS = aspell prezip-bin
 

@@ -324,14 +324,13 @@ namespace aspell { namespace sp {
 
 #define write_conv(s) do { \
     if (!c) {o << s;} \
-    else {ParmString ss(s); buf.clear(); c->convert(ss.str(), ss.size(), buf); o.write(buf.data(), buf.size()-1);} \
+    else {ParmString ss(s); buf.clear(); c->convert(ss.str(), ss.size(), buf); o.write(buf.data(), buf.size());} \
   } while (false)
 
   OStream & WordEntry::write (OStream & o,
                               const LangImpl & l,
                               Convert * c) const
   {
-    String w;
     CharVector buf;
     write_conv(word);
     if (aff && *aff) {
@@ -392,7 +391,7 @@ namespace aspell { namespace sp {
 
     } else {
       
-      char head[32];
+      char head[32] = {0};
       in.read(head, 32);
       if      (strncmp(head, "aspell default speller rowl", 27) ==0)
 	actual_type = DT_ReadOnly;

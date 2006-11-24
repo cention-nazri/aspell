@@ -838,7 +838,16 @@ bool AffixMgr::affix_check(const LookupInfo & linf, ParmString word,
   if (prefix_check(linf, pword, ci, gi)) return true;
 
   // if still not found check all suffixes
-  return suffix_check(linf, sword, ci, gi, 0, NULL);
+  if (suffix_check(linf, sword, ci, gi, 0, NULL)) return true;
+
+  // if still not found check again but with the lower case version
+  // which can make a difference if the entire word matches the cond
+  // string
+  if (cp == FirstUpper) {
+    return suffix_check(linf, pword, ci, gi, 0, NULL);
+  } else {
+    return false;
+  }
 }
 
 void AffixMgr::munch(ParmString word, GuessInfo * gi, bool cross) const
@@ -1058,7 +1067,7 @@ bool PfxEntry::check(const LookupInfo & linf, const AffixMgr * pmyMgr,
   unsigned              tmpl;   // length of tmpword
   WordEntry             wordinfo;     // hash entry of root word or NULL
   byte *	cp;		
-  VARARRAYM(char, tmpword, word.size()+1, MAXWORDLEN+1);
+  VARARRAYM(char, tmpword, word.size()+stripl+1, MAXWORDLEN+1);
 
   // on entry prefix is 0 length or already matches the beginning of the word.
   // So if the remaining root word has positive length
@@ -1205,7 +1214,7 @@ bool SfxEntry::check(const LookupInfo & linf, ParmString word,
   int			cond;		 // condition beng examined
   WordEntry             wordinfo;        // hash entry pointer
   byte *	cp;
-  VARARRAYM(char, tmpword, word.size()+1, MAXWORDLEN+1);
+  VARARRAYM(char, tmpword, word.size()+stripl+1, MAXWORDLEN+1);
   PfxEntry* ep = (PfxEntry *) ppfx;
 
   // if this suffix is being cross checked with a prefix

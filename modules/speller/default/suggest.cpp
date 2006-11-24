@@ -615,7 +615,7 @@ namespace {
     
     // Interchange two adjacent letters.
     
-    for (i = 0; i+1 != orig.size(); ++i) {
+    for (i = 0; i+1 < orig.size(); ++i) {
       a = new_word[i];
       b = new_word[i+1];
       new_word[i] = b;
