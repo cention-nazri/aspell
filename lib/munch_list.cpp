@@ -700,7 +700,7 @@ void munch_list_complete(Language * lang,
       if (!to_keep_exp[i]) {
         assert(!entries[i]->aff);
         buf.clear();
-        lang->from_internal_->convert(to_keep[i]->word, -1, buf);
+        lang->from_internal_->convert(entries[i]->word, -1, buf);
         word.str = buf.str();
         word.len = buf.size();
         bool res = put_string(ps_data, &word);
