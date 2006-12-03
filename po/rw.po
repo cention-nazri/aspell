@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2005-10-19 02:25-0600\n"
+"POT-Creation-Date: 2006-11-28 12:34-0700\n"
 "PO-Revision-Date: 2005-04-04 10:55-0700\n"
 "Last-Translator: Steven Michael Murphy <murf@e-tools.com>\n"
 "Language-Team: Kinyarwanda <translation-team-rw@lists.sourceforge.net>\n"
@@ -839,130 +839,130 @@ msgstr ""
 msgid "Time to load word list: "
 msgstr "Kuri Ibirimo ijambo Urutonde"
 
-#: prog/aspell.cpp:922
+#: prog/aspell.cpp:923
 #, c-format
 msgid "Suggestion Time: %f\n"
 msgstr ""
 
-#: prog/aspell.cpp:965
+#: prog/aspell.cpp:966
 #, fuzzy
 msgid "You must specify a file name."
 msgstr "a IDOSIYE Izina:"
 
-#: prog/aspell.cpp:975
+#: prog/aspell.cpp:976
 #, fuzzy, c-format
 msgid "Could not open the file \"%s\" for reading"
 msgstr "OYA Gufungura i IDOSIYE kugirango"
 
-#: prog/aspell.cpp:990
+#: prog/aspell.cpp:991
 #, fuzzy, c-format
 msgid "Could not open the file \"%s\" for writing. File not saved."
 msgstr "OYA Gufungura i IDOSIYE kugirango Idosiye OYA"
 
-#: prog/aspell.cpp:1003
+#: prog/aspell.cpp:1004
 #, c-format
 msgid "Invalid keymapping: %s"
 msgstr ""
 
-#: prog/aspell.cpp:1023
+#: prog/aspell.cpp:1024
 msgid "Ignore"
 msgstr "Kureka"
 
 # svx/source\editeng\editeng.src:RID_MENU_SPELL.MN_IGNORE.text
-#: prog/aspell.cpp:1024
+#: prog/aspell.cpp:1025
 #, fuzzy
 msgid "Ignore all"
 msgstr "Kwirengagiza Byose"
 
-#: prog/aspell.cpp:1025
+#: prog/aspell.cpp:1026
 msgid "Replace"
 msgstr "Gusimbura"
 
-#: prog/aspell.cpp:1026
+#: prog/aspell.cpp:1027
 msgid "Replace all"
 msgstr "Gusimbura Byose"
 
-#: prog/aspell.cpp:1027
+#: prog/aspell.cpp:1028
 msgid "Add"
 msgstr "Kongera"
 
-#: prog/aspell.cpp:1028
+#: prog/aspell.cpp:1029
 msgid "Add Lower"
 msgstr ""
 
-#: prog/aspell.cpp:1029
+#: prog/aspell.cpp:1030
 msgid "Abort"
 msgstr "Ntibyakunze"
 
-#: prog/aspell.cpp:1030
+#: prog/aspell.cpp:1031
 msgid "Exit"
 msgstr "Gusohoka"
 
-#: prog/aspell.cpp:1106
+#: prog/aspell.cpp:1107
 #, fuzzy
 msgid "Are you sure you want to abort (y/n)? "
 msgstr "Kuri Kureka Y N"
 
 #. TRANSLATORS: The user may input any of these characters to say "yes".
 #. MUST ONLY CONSIST OF ASCII CHARACTERS.
-#: prog/aspell.cpp:1110
+#: prog/aspell.cpp:1111
 msgid "Yy"
 msgstr ""
 
 # offmgr/source\offapp\dialog\autocdlg.src:RID_OFAPAGE_AUTOCORR_REPLACE.FT_REPLACE.text
-#: prog/aspell.cpp:1131
+#: prog/aspell.cpp:1132
 #, fuzzy
 msgid "With: "
 msgstr "Na:"
 
-#: prog/aspell.cpp:1148
+#: prog/aspell.cpp:1149
 #, fuzzy
 msgid "Sorry that is an invalid choice!"
 msgstr "ni Sibyo"
 
-#: prog/aspell.cpp:1369
+#: prog/aspell.cpp:1370
 #, fuzzy
 msgid "Sorry \"filter\" is currently unimplemented.\n"
 msgstr "Muyunguruzi... ni"
 
-#: prog/aspell.cpp:1503
+#: prog/aspell.cpp:1504
 #, fuzzy
 msgid "Can't merge a master word list yet. Sorry."
 msgstr "Gukomatanya a Mugenga ijambo Urutonde"
 
-#: prog/aspell.cpp:1527
+#: prog/aspell.cpp:1528
 #, fuzzy
 msgid "Sorry \"create/merge personal\" is currently unimplemented.\n"
 msgstr "Kurema Gukomatanya Bwite ni"
 
-#: prog/aspell.cpp:1536 prog/aspell.cpp:1592
+#: prog/aspell.cpp:1537 prog/aspell.cpp:1593
 #, fuzzy, c-format
 msgid "Sorry I won't overwrite \"%s\""
 msgstr "Guhindura"
 
-#: prog/aspell.cpp:1583
+#: prog/aspell.cpp:1584
 #, fuzzy
 msgid "Sorry \"create/merge repl\" is currently unimplemented.\n"
 msgstr "Kurema Gukomatanya ni"
 
-#: prog/aspell.cpp:1851
+#: prog/aspell.cpp:1852
 #, c-format
 msgid "\"%s\" is not a valid flag for the \"munch-list\" command."
 msgstr ""
 
 #. TRANSLATORS: These should all be formated to fit in 80 column or
 #. less
-#: prog/aspell.cpp:2770
+#: prog/aspell.cpp:2779
 #, fuzzy
 msgid "Usage: aspell [options] <command>"
 msgstr "Amahitamo Komandi:"
 
-#: prog/aspell.cpp:2771
+#: prog/aspell.cpp:2780
 #, fuzzy
 msgid "<command> is one of:"
 msgstr "<Komandi: ni Bya"
 
-#: prog/aspell.cpp:2772
+#: prog/aspell.cpp:2781
 #, fuzzy
 msgid "  -?|usage         display a brief usage message"
 msgstr ""
@@ -975,112 +975,112 @@ msgstr ""
 "X- Generator: KBabel 1. 0\n"
 "."
 
-#: prog/aspell.cpp:2773
+#: prog/aspell.cpp:2782
 #, fuzzy
 msgid "  help             display a detailed help message"
 msgstr "Ifashayobora Kugaragaza a Ifashayobora Ubutumwa"
 
-#: prog/aspell.cpp:2774
+#: prog/aspell.cpp:2783
 #, fuzzy
 msgid "  -c|check <file>  to check a file"
 msgstr "-C Kugenzura... IDOSIYE Kuri Kugenzura... a IDOSIYE"
 
-#: prog/aspell.cpp:2775
+#: prog/aspell.cpp:2784
 #, fuzzy
 msgid "  -a|pipe          \"ispell -a\" compatibility mode"
 msgstr "-a a Bihuye neza Ubwoko"
 
-#: prog/aspell.cpp:2776
+#: prog/aspell.cpp:2785
 #, fuzzy
 msgid "  [dump] config    dumps the current configuration to stdout"
 msgstr "[i KIGEZWEHO Iboneza Kuri"
 
-#: prog/aspell.cpp:2777
+#: prog/aspell.cpp:2786
 #, fuzzy
 msgid "  config <key>     prints the current value of an option"
 msgstr "Urufunguzo i KIGEZWEHO Agaciro Bya Ihitamo"
 
-#: prog/aspell.cpp:2778
+#: prog/aspell.cpp:2787
 #, fuzzy
 msgid "  [dump] dicts | filters | modes"
 msgstr "[Muyunguruzi"
 
-#: prog/aspell.cpp:2779
+#: prog/aspell.cpp:2788
 #, fuzzy
 msgid "    lists available dictionaries / filters / filter modes"
 msgstr "Intonde Bihari Inkoranyamagambo Muyunguruzi Muyunguruzi..."
 
-#: prog/aspell.cpp:2780
+#: prog/aspell.cpp:2789
 #, fuzzy
 msgid "[options] is any of the following:"
 msgstr "[Amahitamo ni Bya i"
 
-#: prog/aspell.cpp:2793
+#: prog/aspell.cpp:2802
 #, fuzzy
 msgid ""
 "  list             produce a list of misspelled words from standard input"
 msgstr "Urutonde a Urutonde Bya Amagambo Bivuye Bisanzwe Iyinjiza"
 
-#: prog/aspell.cpp:2796
+#: prog/aspell.cpp:2805
 #, fuzzy
 msgid ""
 "  soundslike       returns the sounds like equivalent for each word entered"
 msgstr "i Amajwi nka kugirango ijambo"
 
-#: prog/aspell.cpp:2797
+#: prog/aspell.cpp:2806
 #, fuzzy
 msgid "  munch            generate possible root words and affixes"
 msgstr "Imizi Amagambo Na"
 
-#: prog/aspell.cpp:2798
+#: prog/aspell.cpp:2807
 #, fuzzy
 msgid "  expand [1-4]     expands affix flags"
 msgstr "Kwagura 1. 4. Amabendera"
 
-#: prog/aspell.cpp:2799
+#: prog/aspell.cpp:2808
 #, fuzzy
 msgid ""
 "  clean [strict]   cleans a word list so that every line is a valid word"
 msgstr "GUSUKURA a ijambo Urutonde buri Umurongo ni a Byemewe ijambo"
 
-#: prog/aspell.cpp:2801
+#: prog/aspell.cpp:2810
 #, fuzzy
 msgid "  -v|version       prints a version line"
 msgstr "-v Verisiyo a Verisiyo Umurongo"
 
-#: prog/aspell.cpp:2802
+#: prog/aspell.cpp:2811
 msgid "  munch-list [simple] [single|multi] [keep]\n"
 msgstr ""
 
-#: prog/aspell.cpp:2803
+#: prog/aspell.cpp:2812
 msgid "    reduce the size of a word list via affix compression"
 msgstr ""
 
-#: prog/aspell.cpp:2804
+#: prog/aspell.cpp:2813
 #, fuzzy
 msgid "  conv <from> <to> [<norm-form>]"
 msgstr "Bivuye Kuri Ifishi"
 
-#: prog/aspell.cpp:2805
+#: prog/aspell.cpp:2814
 #, fuzzy
 msgid "    converts from one encoding to another"
 msgstr "Bivuye Imisobekere: Kuri"
 
-#: prog/aspell.cpp:2806
+#: prog/aspell.cpp:2815
 #, fuzzy
 msgid "  norm (<norm-map> | <from> <norm-map> <to>) [<norm-form>]"
 msgstr "Bivuye Kuri Ifishi"
 
-#: prog/aspell.cpp:2807
+#: prog/aspell.cpp:2816
 msgid "    perform Unicode normalization"
 msgstr ""
 
-#: prog/aspell.cpp:2810
+#: prog/aspell.cpp:2819
 #, fuzzy
 msgid "  dump|create|merge master|personal|repl [<name>]"
 msgstr "Kurema Gukomatanya Mugenga Bwite ijambo Urutonde"
 
-#: prog/aspell.cpp:2811
+#: prog/aspell.cpp:2820
 #, fuzzy
 msgid ""
 "    dumps, creates or merges a master, personal, or replacement dictionary."
@@ -1088,14 +1088,14 @@ msgstr "Cyangwa a Mugenga Bwite Cyangwa ijambo Urutonde"
 
 #. TRANSLATORS: "none", "internal" and "strict" are literal values
 #. and should not be translated.
-#: prog/aspell.cpp:2815
+#: prog/aspell.cpp:2824
 #, fuzzy
 msgid ""
 "  <norm-form>      normalization form to use, either none, internal, or "
 "strict"
 msgstr "<Ifishi Ifishi Kuri Gukoresha Ntacyo By'imbere Cyangwa"
 
-#: prog/aspell.cpp:2825
+#: prog/aspell.cpp:2834
 #, fuzzy, c-format
 msgid ""
 "\n"
@@ -1103,7 +1103,7 @@ msgid ""
 "\n"
 msgstr "ku"
 
-#: prog/aspell.cpp:2859
+#: prog/aspell.cpp:2868
 #, fuzzy
 msgid ""
 "Available Dictionaries:\n"
@@ -1114,7 +1114,7 @@ msgstr ""
 "Byahiswemo Biturutse i D Cyangwa Mugenga Ihitamo Byahiswemo Biturutse i Na "
 "Ingano Amahitamo"
 
-#: prog/aspell.cpp:2880
+#: prog/aspell.cpp:2889
 #, fuzzy
 msgid ""
 "Available Filters (and associated options):\n"
@@ -1123,7 +1123,7 @@ msgstr ""
 "Na Amahitamo Kyongewe Cyangwa Cyavanyweho Biturutse i Muyunguruzi... Ihitamo"
 
 # wizards/source\formwizard\dbwizres.src:RID_DB_QUERY_WIZARD_START_+_16.text
-#: prog/aspell.cpp:2887
+#: prog/aspell.cpp:2896
 #, fuzzy, c-format
 msgid ""
 "\n"
@@ -1131,7 +1131,7 @@ msgid ""
 msgstr "%sMuyunguruzi"
 
 #. TRANSLATORS: This should be formated to fit in 80 column or less
-#: prog/aspell.cpp:2904
+#: prog/aspell.cpp:2913
 #, fuzzy
 msgid ""
 "Available Filter Modes:\n"
@@ -1385,11 +1385,15 @@ msgid ""
 "The total word length, with soundslike data, is larger than 240 characters."
 msgstr "Igiteranyo ijambo Uburebure Na: Ibyatanzwe ni Kinini Inyuguti"
 
+#: modules/speller/default/multi_ws.cpp:58
+msgid "There must be at least one \"add\" line."
+msgstr ""
+
 #: modules/speller/default/suggest.cpp:1402
 msgid "one of ultra, fast, normal, slow, or bad-spellers"
 msgstr ""
 
-#: modules/speller/default/data.cpp:405
+#: modules/speller/default/data.cpp:404
 msgid "is not one of the allowed types"
 msgstr ""
 
@@ -1405,7 +1409,7 @@ msgstr ""
 msgid "The main word list is unavailable."
 msgstr ""
 
-#: modules/filter/tex.cpp:251 modules/filter/tex.cpp:258
+#: modules/filter/tex.cpp:255 modules/filter/tex.cpp:262
 #, fuzzy
 msgid "a string of 'o','O','p',or 'P'"
 msgstr "a Ikurikiranyanyuguti Bya Cyangwa"
