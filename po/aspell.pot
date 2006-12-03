@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2005-10-21 05:51-0600\n"
+"POT-Creation-Date: 2006-12-03 14:40-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -442,7 +442,7 @@ msgstr ""
 
 #: common/errors.cpp:211
 msgid ""
-"The key \"%key:1\" does not take any parameters when prefixed by a \"enable-"
+"The key \"%key:1\" does not take any parameters when prefixed by an \"enable-"
 "\"."
 msgstr ""
 
@@ -1205,11 +1205,15 @@ msgid ""
 "The total word length, with soundslike data, is larger than 240 characters."
 msgstr ""
 
+#: modules/speller/default/multi_ws.cpp:64
+msgid "There must be at least one \"add\" line."
+msgstr ""
+
 #: modules/speller/default/suggest.cpp:1402
 msgid "one of ultra, fast, normal, slow, or bad-spellers"
 msgstr ""
 
-#: modules/speller/default/data.cpp:409
+#: modules/speller/default/data.cpp:408
 msgid "is not one of the allowed types"
 msgstr ""
 
@@ -1225,7 +1229,7 @@ msgstr ""
 msgid "The main word list is unavailable."
 msgstr ""
 
-#: modules/filter/tex.cpp:250 modules/filter/tex.cpp:257
+#: modules/filter/tex.cpp:254 modules/filter/tex.cpp:261
 msgid "a string of 'o','O','p',or 'P'"
 msgstr ""
 
