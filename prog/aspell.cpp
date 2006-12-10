@@ -2523,6 +2523,9 @@ void munch_list_complete(bool multi, bool simplify)
     }
 
     to_keep_exp.resize(entries.size());
+    for (int i = 0; i != to_keep_exp.size(); ++i) {
+      printf(">>> %d %d\n", i, (int)to_keep_exp[i]);
+    }
 
     // Store the expansion of each base word in a bit vector and
     // add it to the working set
@@ -2684,6 +2687,11 @@ void munch_list_complete(bool multi, bool simplify)
 
     // Finally print the resulting list
 
+    printf("XXX %d %d\n", to_keep.size(), to_keep_exp.size());
+    for (int i = 0; i != to_keep_exp.size(); ++i) {
+      printf(">>> %d %d\n", i, (int)to_keep_exp[i]);
+    }
+
     for (unsigned i = 0; i != to_keep.size(); ++i) {
       COUT << oconv(to_keep[i]->word);
       if (to_keep[i]->aff[0]) {
@@ -2800,7 +2808,7 @@ static const char * help_text[] =
   N_("  clean [strict]   cleans a word list so that every line is a valid word"),
   //N_("  filter           passes standard input through filters"),
   N_("  -v|version       prints a version line"),
-  N_("  munch-list [simple] [single|multi] [keep]\n")
+  N_("  munch-list [simple] [single|multi] [keep]"),
   N_("    reduce the size of a word list via affix compression"),
   N_("  conv <from> <to> [<norm-form>]"),
   N_("    converts from one encoding to another"),
