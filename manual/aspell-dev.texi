@@ -4,17 +4,15 @@
 @settitle Aspell Developer's Manual
 @setchapternewpage off
 @syncodeindex pg cp
+@documentencoding ISO-8859-1
+@documentdescription
+Aspell spell checker developer's manual.
+@end documentdescription
 
 @copying
-This is the developer's manual for Aspell
+This is the developer's manual for Aspell.
 
-This manual is designed for those who wish to develop Aspell.
-It is currently very sketchy.
-However, it should improve over time.
-The latest version of this document can be found at 
-@uref{http://savannah.gnu.org/download/aspell/manual/devel/devel.html}.
-
-Copyright @copyright{} 2002, 2003, 2004 Kevin Atkinson.
+Copyright @copyright{} 2002, 2003, 2004, 2006 Kevin Atkinson.
 
 @quotation
 Permission is granted to copy, distribute and/or modify this document
@@ -64,6 +62,7 @@ latest version of this document can be found at
 * Filter Modes::            
 * Data Structures::             
 * Mk-Src Script::               
+* How It All Works::
 * Copying::
 @end menu
 
@@ -78,6 +77,7 @@ latest version of this document can be found at
 * Templates::                   
 * Error Handling::              
 * Source Code Layout ::         
+* Strings::
 * Smart Pointers::              
 * I/O::                         
 * Config Class::                
@@ -85,17 +85,28 @@ latest version of this document can be found at
 * Filter Modes::            
 * Data Structures::             
 * Mk-Src Script::               
+* How It All Works::
+* Copying::
 
 As far as coding styles go I am really not that picky.  The important
 thing is to stay consistent.  However, please whatever you do, do not
 indent with more than 4 characters as I find indenting with more than
 that extremely difficult to read as most of the code ends up on the
-right side of the window.
+right side of the screen.
 
 @node How to Submit a Patch, C++ Standard Library, Style Guidelines, Top
 @chapter How to Submit a Patch
 
-Coming or removed soon.
+Bug reports and patches should be submitted via the Sourceforge Tracker
+at @uref{http://sourceforge.net/@/tracker/?group_id=245} rather than
+being posted to any of the mailing lists.
+
+The mailing lists are good if you need to check something out or need
+help or feedback from other readers, but they are not the best place to
+submit bugs or patches because they will likely get forgotten or lost
+within the mailing list traffic if not acted upon immediately.
+
+Please make the effort to use the tracker.
 
 @node C++ Standard Library, Templates, How to Submit a Patch, Top
 @chapter C++ Standard Library
@@ -144,16 +155,16 @@ documentation is written.
 
 @table @file
 @item common/
- Common code used by all parts of Aspell
+ Common code used by all parts of Aspell.
 
 @item lib/
- Library code used only by the actual Aspell library
+ Library code used only by the actual Aspell library.
 
 @item data/
- Data files used by Aspell
+ Data files used by Aspell.
 
 @item modules/
- Aspell modules which are eventually meant to be pluggable
+ Aspell modules which are eventually meant to be pluggable.
 
 @table @file
   @item speller/ 
@@ -168,7 +179,7 @@ documentation is written.
 @end table
 
 @item auto/
-Scripts and data files to automatically generate code used by Aspell
+Scripts and data files to automatically generate code used by Aspell.
 
 @item interface/
 Header files and such that external programs should use when in order
@@ -185,12 +196,12 @@ Actual programs based on the Aspell library. The main Aspell utility
 is included here.
 
 @item scripts/
-Miscellaneous scripts used by Aspell
+Miscellaneous scripts used by Aspell.
 
 @item manual/
 
 @item examples/
-Example programs demonstrating the use of the Aspell library
+Example programs demonstrating the use of the Aspell library.
 @end table
 
 
@@ -253,11 +264,11 @@ simplify memory management tasks and to avoid memory leaks.
 @section CopyPtr
 
 The @code{CopyPtr} class makes a deep copy of an object whenever it is
-copied.  The @code{CopyPtr} class is defined in @code{copy_ptr.hpp}.
+copied.  The @code{CopyPtr} class is defined in @file{copy_ptr.hpp}.
 This header should be included wherever @code{CopyPtr} is used.  The
 complete definition of the object @code{CopyPtr} is pointing to does
 not need to be defined at this point.  The implementation is defined
-in @code{copy_ptr-t.hpp}.  The implementation header file should be
+in @file{copy_ptr-t.hpp}.  The implementation header file should be
 included at a point in your code where the class @code{CopyPtr} is
 pointing to is completely defined.
 
@@ -265,23 +276,23 @@ pointing to is completely defined.
 
 @code{ClonePtr} is like copy pointer except the @code{clone()} method
 is used instead of the copy constructor to make copies of an object.
-If is defined in @code{clone_ptr.hpp} and implemented in
-@code{clone_ptr-t.hpp}.
+If is defined in @file{clone_ptr.hpp} and implemented in
+@file{clone_ptr-t.hpp}.
 
 @section StackPtr
 
 A @code{StackPtr} is designed to be used whenever the only pointer to
 a new object allocated with @command{new} is on the stack.  It is
 similar to the standard C++ @code{auto_ptr} but the semantics are a
-bit different.  It is defined in @code{stack_ptr.hpp} --- unlike
+bit different.  It is defined in @file{stack_ptr.hpp} --- unlike
 @code{CopyPtr} or @code{ClonePtr} it is defined and implemented in
 this header file.
 
 @section GenericCopyPtr
 
 A generalized version of @code{CopyPtr} and @code{ClonePtr} which the
-two are based on.  It is defined in @code{generic_copy_ptr.hpp} and
-implemented in @code{generic_copy_ptr-t.hpp}.
+two are based on.  It is defined in @file{generic_copy_ptr.hpp} and
+implemented in @file{generic_copy_ptr-t.hpp}.
 
 @node I/O, Config Class, Smart Pointers, Top
 @chapter I/O
@@ -296,17 +307,17 @@ provided so that standard C I/O can be used in a more C++ like way.
 
 These two base classes mimic some of the functionally of the C++
 functionally of the corresponding classes.  They are defined in
-@code{istream.hpp} and @code{ostream.hpp} respectively.  They are
+@file{istream.hpp} and @file{ostream.hpp} respectively.  They are
 however based on standard C I/O and are not proper C++ streams.
 
 @section FStream
 
-Defined in @code{fstream.hpp}.
+Defined in @file{fstream.hpp}.
 
 
 @section Standard Streams
 
-@code{CIN}/@code{COUT}/@code{CERR}.  Defined in @code{iostream.hpp}.
+@code{CIN}/@code{COUT}/@code{CERR}.  Defined in @file{iostream.hpp}.
 
 @node Config Class, Filter Interface, I/O, Top
 @chapter Config Class
@@ -314,7 +325,7 @@ Defined in @code{fstream.hpp}.
 The @code{Config} class is used to hold configuration information.  It
 has a set of keys which it will accept.  Inserting or even trying to
 look at a key that it does not know will produce an error.  It is
-defined in @code{common/config.hpp}.
+defined in @file{common/config.hpp}.
 
 
 @node Filter Interface, Filter Modes, Config Class, Top
@@ -390,7 +401,7 @@ The @emph{encoder} to convert into a standard format
 
 
 A @code{FilterChar} is a struct defined in
-@code{common/filter_char.hpp} which contains two members, a character,
+@file{common/filter_char.hpp} which contains two members, a character,
 and a width.  Its purpose is to keep track of the width of the
 character in the original format.  This is important because when a
 misspelled word is found the exact location of the word needs to be
@@ -421,7 +432,7 @@ Mr. foo said "I hate my namme".
 @end verbatim
 
 The standard @emph{encoder} and @emph{decoder} filters are defined in
-@code{common/convert.cpp}.  There should generally not be any need to
+@file{common/convert.cpp}.  There should generally not be any need to
 deal with them so they will not be discussed here.  The other three
 filters, the @emph{encoding filter}, the @emph{true filter}, and the
 @emph{decoding filter}, are all defined the exact same way; they are
@@ -460,7 +471,7 @@ class.
 @section IndividualFilter class
 
 All filters are required to inherit from the @code{IndividualFilter}
-class found in @code{indiv_filter.hpp}.  See that file for more
+class found in @file{indiv_filter.hpp}.  See that file for more
 details and the other filter modules for examples of how it is used.
 
 @section Constructor Function
@@ -549,14 +560,14 @@ The @code{ENDOPTION} line may be omitted as it is assumed implicitly
 if a line containing @code{OPTION}, @code{STATIC}.
 
 @quotation
-@strong{Note:} The keywords in a filter description file are case
+@strong{Note@:} The keywords in a filter description file are case
 insensitive.  The above examples use the all uppercase for better
 distinguishing them from values and comments.  Further a filter
 description may contain blank lines to enhance their readability.
 @end quotation
 
 @quotation
-@strong{Note:} An option of @code{list} type may contain multiple
+@strong{Note@:} An option of @code{list} type may contain multiple
 consecutive lines for default values starting with @code{DEFAULT} or
 @code{DEF}, to specify numerous default values.
 @end quotation
@@ -693,7 +704,7 @@ filters which are used regularly and thus abbreviate Aspell's
 command line arguments.
 
 A new filter mode is specified by a file named like the filter
-new mode and prefixed by .amf (Aspell Mode File). If such a file
+new mode and prefixed by @file{.amf} (Aspell Mode File). If such a file
 is accessible by the path set via filter-path option Aspell
 will try to load the contained mode specification.
 
@@ -794,7 +805,7 @@ something from scratch.
 
 @section Vector
 
-The @code{vector} class is defined in @code{vector.hpp} and works the
+The @code{vector} class is defined in @file{vector.hpp} and works the
 same way as the standard STL @code{vector} does except that it doesn't
 have as many constructors.
 
@@ -802,13 +813,13 @@ have as many constructors.
 
 @code{BasicList} is a simple list structure which can either be
 implemented as a singly or doubly linked list.  It is defined in
-@code{basic_list.hpp}.
+@file{basic_list.hpp}.
 
 @section StringMap
 
 @code{StringMap} is a associative array for strings.  You should try
 to use this when ever possible to avoid code bloat.  It is defined in
-@code{string_map.hpp}.
+@file{string_map.hpp}.
 
 
 @section Hash Tables
@@ -817,15 +828,15 @@ Several hash tables are provided when @code{StringMap} is not
 appropriate.  These hash tables provide a @code{hash_set},
 @code{hash_multiset}, @code{hash_map} and @code{hash_multimap} which
 are very similar to SGI's STL implementation with a few exceptions.
-It is defined in @code{hash.hpp}.
+It is defined in @file{hash.hpp}.
 
 
 @section BlockSList
 
 @code{BlockSList} provided a pool of nodes which can be used for
-singly linked lists.  It is defined in @code{block_slist.hpp}.
+singly linked lists.  It is defined in @file{block_slist.hpp}.
 
-@node Mk-Src Script, Copying, Data Structures, Top
+@node Mk-Src Script, How It All Works, Data Structures, Top
 @chapter Mk-Src Script
 
 A good deal of interface code is automatically generated by the
@@ -833,15 +844,241 @@ A good deal of interface code is automatically generated by the
 to write a lot of relative code for the C++ interface.  This should
 also make adding interface for other languages a lot less tedious and
 will allow the interface to automatically take advantage of new Aspell
-functionality as it is made available.  The @code{mk-src.pl} script
-uses @code{mk-src.in} as its input.
+functionality as it is made available.  The @file{mk-src.pl} script
+uses @file{mk-src.in} as its input.
 
 @include mksrc.texi
 
-@node Copying,  , Mk-Src Script, Top
+@node How It All Works, Part 1 - Compiled Dictionary Format, Mk-Src Script, Top
+@chapter How It All Works
+
+The details of how Aspell really works is a mystery to most users who
+want to participate in developing and improving Aspell, so it is best
+to fully explain Aspell's core algorithms and data structures to you.
+
+In explaining these, it is hoped to bring prospective developers up to
+speed more quickly and also help you understand the amount of thought
+put into this.  In time, you may be able to improve Aspell even more.
+
+There are many details to explain here, so these will need explaining
+in small segments.
+
+@menu
+* Part 1 - Compiled Dictionary Format::
+* Part 2 - Quickly Finding Similar Soundslike::
+* Part 3::
+@end menu
+
+@node Part 1 - Compiled Dictionary Format, Part 2 - Quickly Finding Similar Soundslike, How It All Works, How It All Works
+@section Part 1 - The Compiled Dictionary Format
+
+In this part you will see how the data is laid out in the compiled
+dictionary for Aspell 0.60.  See source file @file{readonly_ws.cpp}.
+
+Aspell's main compiled wordlist dictionary file is made as follows:
+
+@itemize
+@item header
+@item jump table for editdist 1
+@item jump table for editdist 2
+@item data block
+@item hash table
+@end itemize
+
+There is nothing particularly interesting about the header.  Just a
+bunch of meta information.
+
+The jump tables are described in the next section @dots{}
+
+Words in the data block are grouped based on the soundslike.  Each
+group is as follows:
+
+@example
+<8 bit: offset to next item><8 bit: soundslike size><soundslike>
+<null><words>
+@end example
+
+@noindent
+ Each word group is as follows: 
+
+@example
+<8 bit: flags><8 bit: offset to next word><8 bit: word size><word><null>
+[<affix info><null>]
+@end example
+
+The offset for the final word in each group points to the next word in
+the following group.  The offset for the final word and soundslike
+group in the dictionary is 0.
+
+There is some provisions for additional info to be stored with the word
+but for simplicity, it's left out here.  If soundslike data is not used
+then the soundslike block it not used.
+
+This format makes it easy to iterate over the data without using the
+hash table.
+
+Each soundslike group can be a maximum of about 256 bytes.  If this
+limit is reached then the soundslike group is split. Using 2 bytes for
+the soundslike offset would of solved this problem however 256 bytes
+is normally sufficient, thus I would of wasted some space by using an
+extra byte.  More importantly, Using 2 bytes means I would of had to
+worry about alignment issues.
+
+The soundslike groups are sorted in more or less alphabetic order.
+
+The hash table is a simple open address hash table.  The key is the
+dictionary word in all lowercase form with all accents removed (what is
+known as the "clean" form of the word).  The value stored in the table
+is a 32-bit offset to the beginning of the word.  A 32-bit integer
+offset is used rather than a pointer so that the compiled dictionary
+can be mmaped to make loading the dictionary very fast and so that the
+memory can be shared between processed, and on 64 bit platforms using
+pointers would have doubled the size of the hash table.
+
+Additional information for each word can be derived from each offset:
+
+@example
+word size: offset - 1
+offset to next word: offset - 2
+flags: offset - 3
+@end example
+
+I use helper functions for getting this information.  Doing it this way
+rather than having a data structure is slightly evil, but admittedly,
+I have my reasons.
+
+In the next section, you will see how Aspell uses the jump tables to
+search the list for @emph{soundslike} with @emph{edit-distance} of 1 or 2.
+
+@node Part 2 - Quickly Finding Similar Soundslike, Part 3, Part 1 - Compiled Dictionary Format, How It All Works
+@section Part 2 - Quickly Finding Similar Soundslike
+
+In order for Aspell to find suggestions for a misspelled word Aspell 1)
+creates a list of candidate words, 2) scores them, and 3) returns the most
+likely candidates.  One of the ways Aspell finds candidate words is to look
+for all words with a soundslike which is of a small edit distance from the
+soundslike of the original word.  The edit distance is the total number of
+deletions, insertions, exchanges, or adjacent swaps needed to make one
+string equivalent to the other. The exact distance chosen is either 1 or 2
+depending on a number of factors.  In this part I will focus on how Aspell
+find all such soundslike efficiently and how the jump tables play a key
+role.
+
+This section will focus on how Aspell finds all such soundslike
+efficiently and how the jump tables play a key role.
+
+The naive way to scan the list for all possible soundslike is to
+compute the edit-distance of every soundslike in the dictionary and
+then keep the ones within the threshold.  This is exactly what Aspell
+did prior to 0.60. before a faster method was created.  When a fast
+enough edit distance function is used this method turns out not to be
+unbearably slow, at least for English, but for other languages, with
+large word lists and no soundslike, this can be slow due to the number
+of items that need to be scanned.
+
+Aspell uses a special edit distance function which gives up if the
+distance is larger than the threshold, thus making it very fast.  The
+basic algorithm is as follows:
+
+@example
+limit_edit_distance(A,B,limit) = ed(A,B,0)
+  where ed(A,B,d) = d                              if A & B is empty.
+                  = infinity                       if d > limit
+                  = ed(A[2..],B[2..], d)           if A[1] == B[1]
+                  = min ( ed(A[2..],B[2..], d+1),
+                          ed(A,     B[2..], d+1),
+                          ed(A[2..],B,      d+1) ) otherwise
+@end example
+
+However the algorithm used also allows for swaps and is not recursive.
+Specialized versions are provided for an edit distance of one and two.
+The running time is asymptotically bounded above by @code{(3^l)*n}
+where @code{l} is the limit and @code{n} is the maximum of
+@code{strlen(A),strlen(B)}.  Based on informal tests, the @code{n}
+does not really matter and the running time is more like @code{(3^l)}.
+
+For complete details on this algorithm see the files
+@file{leditdist.hpp} and @file{leditdist.cpp} in the source
+distribution under @file{modules/speller/default}.
+
+So, by exploiting the properties of @code{limit_edit_distance} it is
+possible to avoid having to look at many of the soundslikes in the
+dictionary.  @code{Limit_edit_distance} is efficient because in many
+cases, it does not have to look at the entire word before it can
+determine that it isn't within the given threshold, and then by having
+it return the last position looked at, @emph{p}, it is possible to
+avoid having to look at similar soundslike which are not within the
+threshold.  That is, if two soundslike are the same up to the position
+@code{p}, then neither of them are within the given threshold.
+
+Aspell 0.60 exploits this property by using jump tables.  Each entry
+in the jump table contains two fields: the first @code{N} letters of a
+soundslike, and an offset.  The entries are sorted in lexicographic
+order based on the raw byte value.  Aspell maintains two jump tables.
+
+The first table contains the first 2 letters of a soundslike and the
+offset points into the second jump table.
+
+The second table contains the first 3 letters of a soundslike where
+the offset points to the location of the soundslike in the data block.
+The soundslike in the datablock are sorted so that a linear scan can
+be used to find all soundslike with the same prefix.  If the
+@code{limit_edit_distance} stops before reaching the end of a
+@emph{"soundslike"} in one of the jump tables then it is possible to
+skip all the soundslike in the data block with the same prefix.
+
+Thus, the scan for all @emph{soundslike} within a given edit distance
+goes something like this:
+
+@enumerate
+
+@item
+Compare the entry in the first jump table using
+@code{limit_edit_distance}.  If the @code{limit_edit_distance} scanned
+passed the end of the word, then go to the first entry in the second
+jump table with the same prefix, otherwise go to the next entry in the
+first jump table and repeat.
+
+@item
+Compare the entry in the second jump table.  If the
+@code{limit_edit_distance}  passed the end of the word, then go to the
+first @emph{soundslike} in the data block with this prefix, otherwise
+if the first two letters of the next entry are the same as the current
+one go to it and repeat.  If the first two letters are not the same
+then go to the next entry in the first jump table and repeat step 1.
+
+@item
+Compare the @emph{soundslike} in the data block.  If the edit
+distance is within the target distance, then add the word to the
+candidate list, otherwise don't.  Let @code{N} be the position where
+@code{limit_edit_distance} stopped, (starting at 0).  If @code{N} is
+less than 6, then skip over any soundslike that have the same first
+@code{N + 1} letters.  If after skipping over any similar
+@emph{soundslike} the next @emph{soundslike} does not have the same
+first three letters, then go to the next entry in the second jump table
+and repeat step 2, otherwise repeat this step with the next
+@emph{soundslike}.
+
+@end enumerate
+
+The part of skipping over @emph{soundslike} with the first @code{N + 1}
+letters in step 3 were added in Aspell 0.60.3.  The function
+responsible for most of this is found in function
+@code{ReadOnlyDict::SoundslikeElements::next} which is found in file
+@file{readonly_ws.cpp}.
+
+The next part will describe how Aspell deals with @emph{soundslike}
+lookup when affix compression is involved.
+
+@node Part 3, Copying, Part 2 - Quickly Finding Similar Soundslike, How It All Works
+@section Part 3
+
+Not written yet.
+
+@node Copying,  , Part 3, Top
 @appendix Copying
 
-Copyright @copyright{} 2002, 2003, 2004 Kevin Atkinson.
+Copyright @copyright{} 2002, 2003, 2004, 2006 Kevin Atkinson.
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.1 or

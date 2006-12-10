@@ -1,14 +1,20 @@
 \input texinfo   @c -*-texinfo-*-
 
 @setfilename aspell.info
-@settitle GNU Aspell 0.60.4
+@settitle GNU Aspell 0.60.5
 @syncodeindex pg cp
 @documentencoding ISO-8859-1
+@documentdescription
+Aspell 0.60.5 spell checker user's manual.
+@end documentdescription
 
 @copying
 This is the user's manual for Aspell
 
-Copyright @copyright{} 2000--2005 Kevin Atkinson.
+GNU Aspell is a spell checker designed to eventually replace Ispell.
+It can either be used as a library or as an independent spell checker.
+
+Copyright @copyright{} 2000--2006 Kevin Atkinson.
 
 @quotation
 Permission is granted to copy, distribute and/or modify this document
@@ -26,7 +32,7 @@ Documentation License".
 @end direntry
 
 @titlepage
-@title GNU Aspell 0.60.4
+@title GNU Aspell 0.60.5
 @author Kevin Atkinson (@email{kevina@@gnu.org})
 @page
 @vskip 0pt plus 1filll
@@ -37,9 +43,12 @@ Documentation License".
 
 @ifnottex
 @node Top
-@top GNU Aspell 0.60.4
+@top GNU Aspell 0.60.5
+This is the user's manual for Aspell
+
 GNU Aspell is a spell checker designed to eventually replace Ispell.
 It can either be used as a library or as an independent spell checker.
+@end ifnottex
 
 @menu
 * Introduction::                
@@ -165,8 +174,6 @@ Copying
 @end detailmenu
 @end menu
 
-@end ifnottex
-
 @node Introduction
 @chapter Introduction
 
@@ -220,9 +227,9 @@ having to use it through a pipe.
 
 @item
 Does a much better job of suggesting possible replacements for a
-misspelled word than Ispell does or for that matter any other spell
-checker I have seen.  If you know a spell checker that does a better job
-please let me know.
+misspelled word than Ispell does or for that matter many other spell
+checkers I have seen.  If you know a spell checker that does a better
+job please let me know.
 
 @item
 Can learn from user's misspellings.
@@ -236,7 +243,7 @@ Has support for using multiple dictionaries at once.
 
 @item
 Is multiprocess intelligent.  When a personal dictionary (or
-replacement list) is saved it will now first update the list against
+replacement list) is saved, it will now first update the list against
 the dictionary on disk in case another process modified it.
 
 @item
@@ -316,7 +323,9 @@ the mode to use when checking files.  The available modes are
 various modes see @ref{Notes on Various Filters and Filter Modes}.
 
 @item --dont-backup
-don't create a backup file.
+don't create a backup file.  Normally, if there are any corrections
+the Aspell utility will append @file{.bak} to the existing file name
+and then create a new file with corrections made during spell checking.
 
 @item --sug-mode=@var{mode}
 the suggestion mode to use where mode is one of @code{ultra},
@@ -358,7 +367,7 @@ suggestion mode and the American English dictionary:
 aspell check --sug-mode=bad-spellers -d en_US foo.txt
 @end example
 
-If the @option{mode} option is not given then Aspell will use the
+If the @option{mode} option is not given, then Aspell will use the
 extension of the file to determine the current mode.  If the extension
 is @file{.tex}, then @option{tex} mode will be used, if the extension
 is @file{.html}, @file{.htm}, @file{.php}, or @file{.sgml} it will
@@ -369,16 +378,16 @@ For more information on the various modes that can be used, see
 @ref{Notes on Various Filters and Filter Modes}.
 
 If Aspell was compiled with curses support and the @env{TERM}
-environment variable is set to a capable terminal type than Aspell
-will use a nice full screen interface.  Otherwise it will use a
+environment variable is set to a capable terminal type then Aspell
+will use a nice full screen interface, otherwise it will use a
 simpler ``dumb'' terminal interface where the misspelled word is
 surrounded by two '*'.  In either case the interface should be self
 explanatory.
 
 If Aspell is compiled with a version of the curses library that support
-wide characters than Aspell can also check UTF-8 text.  Furthermore, the
+wide characters then Aspell can also check UTF-8 text.  Furthermore, the
 document will be displayed in the encoding defined by the current
-locale.  This encoding does not necessary have to be the same encoding
+locale.  This encoding does not necessarily have to be the same encoding
 that the document is in.  This means that is is possible to check an
 8-bit encoding such as ISO-8859-1 on an UTF-8 terminal.  To do so
 simply set the @option{encoding} option to @samp{iso-8859-1}.
@@ -409,11 +418,11 @@ with Aspell via the Ispell compatibility script.
 Otherwise, the recommended way to use Aspell as a replacement for
 Ispell is to change the @command{ispell} command from within the
 program being used.  If the program uses @command{ispell} in pipe mode
-simple change @command{ispell} to @command{aspell}.  If the program
-calls the @command{ispell} command to check the file change
+simply change @command{ispell} to @command{aspell}.  If the program
+calls the @command{ispell} command to check the file, then change
 @command{ispell} with @command{aspell check}.
 
-If that is impossible than the @command{run-with-aspell} script can be
+If that is impossible then the @command{run-with-aspell} script can be
 used.  This script modifies the patch so that programs see the Ispell
 compatibility script instead of the actual true @command{ispell}
 command.  The format of the script is:
@@ -436,8 +445,8 @@ Ispell such as Ispell's own scripts.
 Nevertheless, Aspell is not Ispell, nor is it meant to completely
 emulate the behavior of Ispell.  The @command{aspell} command is not
 identical to the @command{ispell} command when not used in ``pipe''
-mode.  If an application expects the @command{ispell} command than
-the Ispell compatibility script should be used.  
+mode.  If an application expects the @command{ispell} command, then
+the Ispell compatibility script should be used instead.
 
 @subsubsection Functionally of the Ispell Compatibility Script
 
@@ -446,7 +455,7 @@ functionally.
 
 @itemize @bullet
 @item
-The ability to check a file when called with out any mode parameters.
+The ability to check a file when called without any mode parameters.
 
 @item
 The pipe or -a mode.
@@ -472,13 +481,13 @@ have an affix file.
 
 @end itemize
 
-However the Ispell script currently unable to emulate the 
+However the Ispell script currently unable to emulate
 the '-A' pipe mode.  This is different from the normal pipe mode in
 that the special @code{&Include_File&} command is recognized.
 
 @subsubsection Recognized Options
 
-Aspell, and thus the ispell compatibility script, recognizes most of
+Aspell, and thus the Ispell compatibility script, recognizes most of
 the options that Ispell uses except for the '-S', '-w' and '-T'
 options.  The Aspell command will simply ignore these options if it
 sees them.
@@ -513,12 +522,12 @@ only commands or if the line starts with a '~' which is ignored by Aspell.
 
 The compiled dictionary format is completely different than Ispell's.
 Furthermore the format of the language data files' are different than
-Ispell's affix file.  However, all known Ispell dictionaries been
+Ispell's affix file.  However, all known Ispell dictionaries were
 converted to Aspell format, except for Albanian (sq) as I was unable
 to find the source word list.
 
 The naming and format of the personal dictionary is also different.
-However, ispell personal dictionaries can be imported using the
+However, Ispell personal dictionaries can be imported using the
 @command{aspell-import} script.  @xref{Using aspell-import}.  The
 Ispell personal dictionary is simply a list of words while the Aspell
 one is a list of words with a header line.  Thus it is also fairly
@@ -545,10 +554,10 @@ line:
 (setq-default ispell-program-name "aspell")
 @end verbatim
 
-to the end of your .emacs file.
+to the end of your @file{.emacs} file.
 
 For some reason version 3.0 of ispell.el (the lisp program that
-(x)emacs uses) want to reverse the suggestion list.  To fix this add
+(x)emacs uses) wants to reverse the suggestion list.  To fix this add
 this line:
 
 @verbatim
@@ -637,7 +646,7 @@ configuration file.  Options specified in the environment variable
 configuration file will take effect no matter how Aspell is used which
 includes being used by other applications.
 
-Aspell has three basic type of options: @dfn{boolean}, @dfn{value},
+Aspell has three basic types of options: @dfn{boolean}, @dfn{value},
 and @dfn{list}.
 
 @dfn{Boolean} options are either enabled or disabled, @dfn{value}
@@ -665,7 +674,7 @@ All options specified at the command line have the following basic format:
 @noindent
 where the @samp{=} can be replaced by whitespace.
 
-However some options also have single letter abbreviations of the form:
+Some options also have single letter abbreviations of the form:
 
 @example
 @var{letter} [@var{optional_whitespace} @var{value}]
@@ -674,7 +683,7 @@ However some options also have single letter abbreviations of the form:
 Any non-ASCII characters are expected to be in the encoding
 specified by the current locale.
 
-To reset an option to the default value prefix the option with a
+To reset an option to the default value, prefix the option with a
 @samp{reset-} and don't specify a value.
 
 @subsubsection Value options
@@ -694,31 +703,31 @@ To enable a boolean option simply specify the option without any
 corresponding value, or prefix it with an @samp{enable-}.  For example
 to create a backup file use @samp{--backup}.  To disable a boolean
 option prefix the option name with a @samp{dont-} or @samp{disable-}.
-For avoid creating a backup file use @samp{--dont-backup}.  Boolean options
+To avoid creating a backup file use @samp{--dont-backup}.  Boolean options
 can also be set directly like a value option where the value is either
 "true" or "false", for example @samp{--backup=true}.
 
 If a boolean option has a single letter abbreviation simply give the
 letter corresponding to either enabling or disabling the option
-without any corresponding value.  For example to consider run-together
-words legal use @samp{-C} or to consider them illegal use
+without any corresponding value.  For example, to consider run-together
+words valid use @samp{-C} or to consider them invalid use
 @samp{-B}
 
 @subsubsection List options
 
-To add a value to the list, prefix the option name with a
-@samp{add-} and then specify the value to add.  For example to add
+To add a value to the list, prefix the option name with an
+@samp{add-} and then specify the value to add.  For example, to add
 the URL filter use @samp{--add-filter url}.  To remove a value from
-a list option prefix the option name with a @samp{rem-} and then
-specify the value to remove.  For example to remove the URL filter use
+a list option, prefix the option name with a @samp{rem-} and then
+specify the value to remove.  For example, to remove the URL filter use
 @samp{--rem-filter url}.  To remove all items from a list prefix the
 option name with a @samp{clear-} without specify any value.  For
-example to remove all filters use @samp{--clear-filter}.
+example, to remove all filters use @samp{--clear-filter}.
 
 A list option can also be set directly, in which case it will be set to
 a single value.  To directly set a list option to multiple values prefix
 the option name with a @samp{lset-} and separate each value with a
-@samp{:}.  For example to use the URL and TeX filter use
+@samp{:}.  For example, to use the URL and TeX filter use
 @samp{--lset-filter url:tex}.
 
 
@@ -741,7 +750,8 @@ Each line of the configuration file has the format:
 
 There may be any number of spaces between the option and the value
 however it can only be spaces, i.e. there is no @samp{=} between the
-option name and the value.
+option name and the value and there are no preceding @samp{--} as
+used on the command line.
 
 Comments may also be included by preceding them with a @samp{#} as
 anything from a @samp{#} to a newline is ignored.  Blank lines are also
@@ -771,7 +781,7 @@ line to the meta filter file before its options may be specified.
 @subsubsection Value options
 
 To specify a value option simply include the option followed by the
-corresponding option.  For example to set the default language to
+corresponding value.  For example to set the default language to
 German use @option{lang german}.
 
 @subsubsection Boolean options
@@ -782,19 +792,19 @@ to allow run-together words use @samp{run-together true}.
 
 @subsubsection List options
 
-To add a value to the list, prefix the option name with a
+To add a value to the list, prefix the option name with an
 @samp{add-} and then specify the value to add.  For example to add
 the URL filter use @samp{add-filter url}.  To remove a value from
 a list option prefix the option name with a @samp{rem-} and then
-specify the value to remove.  For example to remove the URL filter use
+specify the value to remove.  For example, to remove the URL filter use
 @samp{rem-filter url}.  To remove all items from a list prefix the
 option name with a @samp{clear-} without specifying any value.  For
-example to remove all filters use @samp{clear-filter}.
+example, to remove all filters use @samp{clear-filter}.
 
 A list option can also be set directly, in which case it will be set to
 a single value.  To directly set a list option to multiple values prefix
 the option name with a @samp{lset-} and separate each value with a
-@samp{:}.  For example to use the URL and TeX filter use
+@samp{:}.  For example, to use the URL and TeX filter use
 @samp{lset-filter url:tex}.  To include a literal @samp{:} use
 @samp{\:}.
 
@@ -842,7 +852,7 @@ an Appropriate Dictionary}):
 
 @item master,-d
 @i{(string)}
-Base name of the dictionary to use.  If this option is specified than
+Base name of the dictionary to use.  If this option is specified then
 Aspell will either use this dictionary or die.
 
 @item dict-dir
@@ -851,7 +861,7 @@ Location of the main word list.
 
 @item lang
 @i{(string)}
-Language to use, it follows the same format of the @env{LANG}
+Language to use.  It follows the same format of the @env{LANG}
 environment variable on most systems.  It consists of the two letter
 @acronym{ISO 639} language code and an optional two letter
 @acronym{ISO 3166} country code after a dash or underscore.  The
@@ -1041,7 +1051,7 @@ HTML tags to always skip the contents of, such as <script>.
 @end table
 
 @subsubsection sgml
-This filter is identical to the HTML filter except that it options has
+This filter is identical to the HTML filter except that its options has
 different default values which are currently the empty list.
 
 @subsubsection tex/latex
@@ -1063,7 +1073,7 @@ check @TeX{} comments
 @end table
 
 @subsubsection texinfo
-This filter hides all Texinfo command from Aspell.  It can also hide
+This filter hides all Texinfo commands from Aspell.  It can also hide
 Texinfo parameters and environments not corresponding to readable text.
 
 @table @b
@@ -1116,10 +1126,9 @@ Words}):
 @item run-together,-C|-B
 @i{(boolean)}
 consider run-together words legal
-
 @item run-together-limit
 @i{(integer)}
-maximum numbers that can be strung together
+maximum number of words that can be strung together
 
 @item run-together-min
 @i{(integer)}
@@ -1148,7 +1157,7 @@ location of language data files
 alternative location of language data files.  This directory is
 searched before @option{data-dir}.  It defaults to the same directory
 the actual main word list is in (which is not necessarily
-@option{dict-dir}).
+@option{dict-dir})
 
 @item home-dir
 @i{(dir)}
@@ -1157,6 +1166,16 @@ location for personal files
 @item per-conf
 @i{(file)}
 personal configuration file
+
+@item keyboard
+@i{(file)}
+use this keyboard layout for suggesting possible words.  These spelling
+errors happen if a user accidently presses a key next to the intended
+correct key.  The default is keyboard standard.  If you are creating
+documents, you may want to set it according to your particular type of
+keyboard.  If spellchecking documents created elsewhere, you might
+want to set this to the keyboard type for that locale.  If you are not
+sure, just leave this as standard
 
 @item prefix
 @i{(dir)}
@@ -1207,14 +1226,13 @@ will simply report the misspelling and make no attempt at suggestions
 or possible corrections.
 @end table
 
-
 @node Dumping Configuration Values
 @section Dumping Configuration Values
 
 To find out the current value of all the options use the command
-@command{aspell dump config}.  This will dump the current
+@command{aspell dump config}.  This will dump the current Aspell
 configuration to standard output.  The format of the contents dumped
-is such that it can be used as either the global or personal
+is such that it can be used as either the global or your personal
 configuration file.
 
 To find out the current value of a particular option use
@@ -1346,8 +1364,8 @@ is
 
 The first item is simply the command name.  The second item controls
 which parameters to skip over.  A 'p' skips over a parameter while a
-'P' doesn't.  Similar an 'o' will skip over an optional parameter
-while a 'O' doesn't.  The first letter on the list will apply to the
+'P' doesn't.  Similarly an 'o' will skip over an optional parameter
+while an 'O' doesn't.  The first letter on the list will apply to the
 first parameter, the second letter will apply to the second parameter
 etc.  If there are more parameters than letters Aspell will simply
 check them as normal.  For example the option
@@ -1381,7 +1399,7 @@ enlargethispage p
 will ignore the first parameter in both @option{enlargethispage} and
 @option{enlargethispage*}.
 
-To remove a command simple use the @option{rem-tex-command} option.
+To remove a command simply use the @option{rem-tex-command} option.
 For example
 
 @example
@@ -1526,9 +1544,9 @@ if @option{prefix} was @file{/usr/local/aspell} and @option{dict-dir}
 has a default value of @file{/usr/local/aspell/dict} than changing
 @option{prefix} to @file{/opt/aspell} will also change the default
 value of @option{dict-dir} to @file{/opt/aspell/dict}.  Note that
-modifying @option{prefix} will only effect the default compiled in
+modifying @option{prefix} will only affect the default compiled in
 values of directories.  If a directory option is explicitly given a
-value than changing the value of @option{prefix} has no effect on that
+value then changing the value of @option{prefix} has no effect on that
 directory option.
 
 @node Notes on Typo-Analysis
@@ -1571,7 +1589,7 @@ as
 
 @noindent
 will indicate that @samp{a} and @samp{s} are right next to each other.
-If @samp{as} is listed as a entry it is not necessary to list @samp{sa}
+If @samp{as} is listed as an entry it is not necessary to list @samp{sa}
 as an entry as that will be done automatically.  Also by @dfn{right
 next to each other} I mean two keys that are close enough together that
 it is easy to type one instead of the other.  On most keyboards this
@@ -1588,7 +1606,7 @@ The @option{dvorak} option can be used for a Dvorak layout.
 @subsection Notes on the Different Suggestion Modes
 
 In order to understand what these suggestion modes do, a basic
-understanding of how Aspell works is required.  For that see
+understanding of how Aspell works is required.  For that, see
 @ref{Aspell Suggestion Strategy}.
 
 The suggestion modes are as follows.
@@ -1634,9 +1652,8 @@ gets 98% of the words.
 @end table
 
 If jump tables were not used then the @option{normal} option is
-identical to @option{fast}.  And the @option{slow} option is identical
+identical to @option{fast} and the @option{slow} option is identical
 to the @option{normal} if jump tables were used.
-
 
 @node Working With Dictionaries
 @chapter Working With Dictionaries
@@ -1672,7 +1689,6 @@ This means that you have not installed support for the given language,
 in this case @code{de} for German.  To rectify the situation download
 and install a dictionary designed to work with GNU Aspell 0.50 or
 better.
-
 
 @node How Aspell Selects an Appropriate Dictionary
 @section How Aspell Selects an Appropriate Dictionary
@@ -1826,7 +1842,7 @@ the following format
 
 The @command{munch} command takes a list of words from standard input
 and outputs a list of possible root words and affixes.  The root may,
-however, be invalid as it does not check them against the exiting
+however, be invalid as it does not check them against the existing
 dictionary.  For example the command:
 @example
 echo brother | aspell -l en munch
@@ -1844,7 +1860,7 @@ echo both/R | aspell -l en expand
 both bother
 @end example
 
-It formal usage is:
+The formal usage is:
 @example
 aspell expand [@var{level}] [@var{limit}]
 @end example
@@ -1864,10 +1880,10 @@ both/R both
 both/R bother
 @end example
 @noindent
-Levels larger than 3 may also be supported, but should not used as
+Levels larger than 3 may also be supported, but should not be used as
 they may eventually be removed.
 
-If a @var{limit} parameter is given than only expansions which effect
+If a @var{limit} parameter is given then only expansions which affect
 the first @var{limit} letters will be expanded.  If a base word is not
 completely expanded for a given affix flag that flag will be left on
 the word.  Note that prefixes are always expanded.
@@ -1902,7 +1918,7 @@ word more than once.  Unfortunately, the current version of Aspell can
 not correctly handle multiple base words in a dictionary.  Therefore,
 the current default behavior is to only include the one with the most
 expansions.  All of them can be included via the @option{multi} flag.
-Once aspell is able to handle multiple base words the default will be
+Once Aspell is able to handle multiple base words the default will be
 to include them all.  The @option{single} flag can be used to only
 include one of them.
 
@@ -2004,7 +2020,7 @@ with the only accepted key being @option{add}.
 In order for Aspell to be able to correctly recognize a dictionary
 based on the setting of the @env{LANG} environment variable the
 dictionaries need to be located somewhere Aspell can find them and
-they need to be @emph{multi} dictionaries.  Where aspell looks for
+they need to be @emph{multi} dictionaries.  Where Aspell looks for
 dictionaries depends on the value of the @option{dict-dir} and
 @option{word-list-path} option.
 
@@ -2024,7 +2040,7 @@ the two letter region code, @var{variety} is any extra information to
 distinguish the word list from other ones with the same language and
 spelling.  Multiple varieties can be used by separating them with a '-'.
 Finally, @var{size} is the size of the dictionary.  If no size is
-specified that the default size of 60 will be assumed.
+specified then the default size of 60 will be assumed.
 
 For example:
 
@@ -2428,10 +2444,10 @@ beginning, began, begging, begin, begun @dots{}
 @end example
 
 I myself often misspelled beginning (and still do) as something close
-to begging and two many times wind up writing sentences such as
+to begging and too many times wind up writing sentences such as
 "begging with @dots{}".
 
-Please also note that replacements commands has a memory.  Which means
+Please also note that replacements commands have a memory.  Which means
 if you first store the replacement pair:
 
 @example
@@ -2505,7 +2521,7 @@ word lists to be formatted in.  If possible choose from one of the
 standard ones provided with Aspell.  These are @samp{iso-8859-*},
 @samp{koi8-*}, or @samp{viscii}.  If your language does not require
 any non-ascii characters choose @samp{iso-8859-1}.  If one of these
-standard character sets is not suitable for your language than you can
+standard character sets is not suitable for your language then you can
 create a new one.  @xref{Creating A New Character Set}.
 
 The optional fields are as follows:
@@ -2530,7 +2546,7 @@ spaces.  Each item of the list has the following format.
 <char> <begin><middle><end>
 @end example
 
-@var{char} is the non letter character in question.
+@var{char} is the non-letter character in question.
 @var{begin}, @var{middle}, @var{end} are either a
 @samp{-} or a @samp{*}.  A star for @var{begin} means that the
 character can begin a word, a @samp{-} means it can't.  The same is
@@ -2560,7 +2576,7 @@ used.  This is nearly as powerful as full phonetic soundslike but it
 can be computed a lot faster.  (@pxref{The Simple Soundslike})
 
 If the soundslike name is @samp{none}, or this option is not specified,
-than no soundslike will be used.  The effective soundslike is the word
+then no soundslike will be used.  The effective soundslike is the word
 converted to all lowercase and possibly with accents stripped
 depending on the @option{store-as} option.  For languages with
 phonetic spelling the difference will not be very noticeable.
@@ -2766,7 +2782,7 @@ things look a bit different.  Here @samp{CH} belongs together and
 @samp{SCH} belongs together and both are spoken separately.  The
 algorithm however first finds the string @samp{CHS} which may not be
 transformed like in the previous word @samp{FUCHS}.  At this point the
-algorithm can find a follow up rule.  It takes the last character of
+algorithm can find a follow-up rule.  It takes the last character of
 the first matching rule (@samp{CHS}) which is @samp{S} and looks for
 the next match, beginning from this character.  What it finds is
 clear: It finds @samp{SCH -> SH}, which has the same priority
@@ -2906,7 +2922,7 @@ misspelled and the desired word.  What you should do if you implement
 the phonetic transformation table is to reduce the number of used
 letters to the only really necessary ones.
 
-Characters that sound similar should be reduced to one.  In English
+Characters that sound similar should be reduced to one.  In the English
 language for example `Z' sounds like `S' and that's why the
 transformation rule @samp{Z -> S} is present in the
 replacement table.  ``PH is spoken like ``F and so we have a
@@ -2955,7 +2971,7 @@ corresponding phonetic version of this word on the same line.  If you
 do this once before the change and once after the change you can make
 a diff (see @command{man diff}) to see what @emph{really} changed.  To
 do this use the command @command{aspell --lang=@var{your_language}
-soundslike}.  In this mode aspell will output the the original word
+soundslike}.  In this mode Aspell will output the the original word
 and then its soundslike separated by a tab character for each word you
 give it.  If you are interested in seeing how the algorithm works you
 can download a set of useful programs from
@@ -3078,7 +3094,7 @@ possible roots of the misspelled word.
 When no soundslike information, or the simple soundslike, is used it
 may be beneficial to specify the option @option{partially-expand}
 which will partially expand a word with affix information so that the
-affix flags do not effect the first 3 letters of the word.  This will
+affix flags do not affect the first 3 letters of the word.  This will
 allow Aspell to get more accurate results when scanning the list for near
 misses since the full word can be used and not just the root.
 Specifying this option, however, will also effectively expand any
@@ -3172,7 +3188,7 @@ OOo format.
 
 @enumerate
 @item
-The ispell english.aff has flag D under the "suffix" section so
+The Ispell english.aff has flag D under the "suffix" section so
 you know it is a suffix.
 
 @item
@@ -3196,7 +3212,7 @@ The third field is the string to add (the affix)
 @end itemize
 @end enumerate
 
-In addition all chars in ispell aff files are in uppercase.
+In addition all chars in Ispell aff files are in uppercase.
 
 @subsection Specifying Affix Flags
 
@@ -3237,14 +3253,14 @@ be specified in both the language data file or as a normal option.
 @node Creating A New Character Set
 @section Creating A New Character Set
 
-If there is not a standard character set for your language than you
+If there is not a standard character set for your language then you
 can invent one.  The new charset will only be used by Aspell
 internally.  If the option @option{data-encoding} is set to
 @samp{utf-8}, and your current locale character type is always set to
 @samp{utf-8}, than you can use UTF-8 for everything and not
 worry yourself that an 8-bit character set is being used internally.
 If your language has no more than 210 distinct symbols, including
-different capitalizations and accents, than Aspell can support it.
+different capitalizations and accents, then Aspell can support it.
 
 In order to create a new character set you will need to download
 the file @file{aspell-lang-@var{version}.tar.bz2} from
@@ -3270,7 +3286,7 @@ you change the Unicode mapping, this line should not be changed.
 Once you have a basic dictionary working, you should consider creating
 an official package so that it can be distributed with Aspell.  To do so
 download
-@url{ftp://alpha.gnu.org/@/gnu/aspell/@/aspell-lang-@var{version}.tar.bz2}.
+@url{ftp://ftp.gnu.org/@/gnu/aspell/@/aspell-lang-@var{version}.tar.bz2}.
 
 @node Implementation Notes
 @appendix Implementation Notes
@@ -3338,17 +3354,17 @@ algorithm please see the data file @file{english_phonet.dat}.
 There is a very good reason I use 8-bit characters in Aspell. Speed
 and simplicity. While many parts of my code can fairly easily be
 converted to some sort of wide character as my code is clean. Other
-parts can not be.
+parts cannot be.
 
-One of the reasons because is many, many places I use a direct lookup
-to find out various information about characters. With 8-bit
+One of the reasons why is because in many, many places I use a direct
+lookup to find out various information about characters. With 8-bit
 characters this is very feasible because there is only 256 of
 them. With 16-bit wide characters this will waste a LOT of space. With
 32-bit characters this is just plain impossible. Converting the lookup
 tables to another form is certainly possible but degrades performance
 significantly.
 
-Furthermore, some of my algorithms relay on words consisting only on a
+Furthermore, some of my algorithms rely on words consisting only on a
 small number of distinct characters (often around 30 when case and
 accents are not considered). When the possible character can consist
 of any Unicode character this number becomes several thousand, if
@@ -3367,9 +3383,9 @@ such as UTF-8. Unfortunately, way, way too many of the algorithms will
 simply not work with variable width characters without significant
 modification which will very likely degrade performance. So the
 solution is to work with the characters as 32-bit wide characters and
-than convert it to a shorter representation when storing them in the
+then convert it to a shorter representation when storing them in the
 lookup tables. Now that can lead to an inefficiency. I could also use
-16 bit wide characters however that may not be good enough to hold all
+16 bit wide characters, however that may not be good enough to hold all
 future versions of Unicode and therefore has the same problems.
 
 As a response to the space waste used by storing word lists in some
@@ -3387,7 +3403,7 @@ something like that) after mapping.
 
 However, the fact of the matter is that most of the dictionary will be
 read into memory anyway if it is available. If it is not available
-than there would be a good deal of disk swaps. Making characters
+then there would be a good deal of disk swaps. Making characters
 32-bit wide will increase the chance that there are more disk swaps.
 So the bottom line is that it is more efficient to convert characters
 from something like UTF-8 into some sort of 8-bit character. I could
@@ -3745,7 +3761,7 @@ CMP <flag> <strip> <add> <cond> <cond2>
 @end example
 
 @noindent
-All but the last field are the same as a suffix entry in the exiting
+All but the last field are the same as a suffix entry in the existing
 affix code.
 
 <cond> is a simplified regular expression.  Some examples:
@@ -3849,7 +3865,7 @@ symbol belongs with the word or not?  Currently Aspell assumes it does,
 which is not always the correct thing to do.
 
 Numbers in words present a different challenge to Aspell.  If Aspell
-treats numbers as letters than every possible number a user might write
+treats numbers as letters then every possible number a user might write
 in a document must be specified in the dictionary.  This could easily
 be solved by having special code to assume all numbers are correctly
 spelled.  Yet, what about something like ``4th''.  Since the ``th''
@@ -3923,7 +3939,6 @@ with a certain letter such as an @samp{s}.  However, it can probably get
 more complicated than that.  I would like to know how complicated before
 I attempt to implement support for context sensitive spelling.
 
-
 @node To Do
 @appendix To Do
 
@@ -3955,7 +3970,7 @@ already exiting normalization code if possible.
 Make Aspell @strong{Thread safe}. Even though Aspell itself is not
 multi-threaded I would like it to be thread safe so that it can be
 used by multi-threaded programs. There are several areas of Aspell
-that that are potently thread unsafe (such as accessing a global pool)
+that are potentially thread unsafe (such as accessing a global pool)
 and several classes which have the potential of being used by more
 than one thread (such as the personal dictionary). @emph{[In
 Progress]}.
@@ -4068,7 +4083,7 @@ replacement list to a particular address either periodically or when
 it grows to a certain size. @xref{Email the Personal Dictionary}.
 @end itemize
 
-The following good ideas were found in the ispell @file{WISHES} file
+The following good ideas were found in the Ispell @file{WISHES} file
 so I thought I would pass them on.
 
 @itemize @bullet
@@ -4219,6 +4234,16 @@ a C++ program.
 @node ChangeLog
 @appendix ChangeLog
 
+@heading Changes from 0.60.4 to 0.60.5 (November 27, 2006)
+@itemize @bullet
+@item
+Compile fix for gcc 4.1
+@item
+Updated to Gettext 0.15, Libtool 1.5.22, Automake 1.10, Autoconf 2.61
+@item
+Lots of small bug fixes.
+@end itemize
+
 @heading Changes from 0.60.3 to 0.60.4 (October 19, 2005)
 @itemize @bullet
 @item
@@ -4228,7 +4253,7 @@ words, this bug likely affected other languages as well.
 Updated to Gettext 0.14.5 which is required for AMD64, also updated to
 to Libtool 1.5.20.
 @item
-Fixed an alignment bug which causes mmap to always fail when reading
+Fixed an alignment bug which caused mmap to always fail when reading
 in dictionaries.
 @item
 Added note about how @command{make clean} will remove the HTML manuals.
@@ -4245,16 +4270,16 @@ Other minor updates and bug fixes.
 @item
 Fixed bugs involving several of the C API functions.
 @item
-Fixed bug where @samp{ultra} or @samp{fast} mode will not return any
-suggestions when soundslike lookup is not used.
+Fixed bug where @samp{ultra} or @samp{fast} mode would not return any
+suggestions when soundslike lookup was not used.
 @item
 Made a minor, yet significant, optimization to the suggestion code.
-This speed things up by an order of magnitude in some cases.
+This sped things up by an order of magnitude in some cases.
 @item
 Avoid using the slow ngram scan except when the @option{sug-mode} is 
 @samp{slow} or @samp{bad-speller}.
 @item
-Fixed a bug in curses mode which causes word-wrap to not work
+Fixed a bug in curses mode which caused word-wrap to not work
 correctly in some cases.
 @item
 Fixed a bug in pipe mode with a missing newline.
@@ -4275,7 +4300,7 @@ Updated to Libtool 1.5.18, Automake 1.9.6, and Makeinfo 4.8.
 
 @itemize @bullet
 @item
-Added the @command{munch-list} command to the aspell utility.  The
+Added the @command{munch-list} command to the Aspell utility.  The
 @command{munch} program in the @file{myspell/} directory will
 disappear in Aspell 0.61.  The @command{munchlist} script will also
 likely disappear or be replaced when Aspell 0.61 is released since it
@@ -4393,7 +4418,7 @@ Reworked url filter which fixed several bugs and now accepts
 "bla.bla/kdkdl" as a url.
 @item
 Fixed bug in which the url filter was coming before all other filters
-when it was suppose to come after. This solved a number of problems
+when it was supposed to come after. This solved a number of problems
 where the url filter was interfering with other filters.
 @item
 Small bug fix in SGML filter.
@@ -4464,7 +4489,7 @@ CVS version  of libtool).
 
 @itemize @bullet
 @item
-Hopefully fixed the ispell alignment error problem when Aspell is used
+Hopefully fixed the Ispell alignment error problem when Aspell is used
 with ispell.el.
 
 @item
@@ -4491,7 +4516,7 @@ Updated to Autoconf 2.56.
 
 @itemize @bullet
 @item
-Fixed a number of bugs in ispell compatibility mode
+Fixed a number of bugs in Ispell compatibility mode
 
 @item
 Fixed a number of bugs with the handling of replacement pairs
@@ -4585,11 +4610,11 @@ Compile fix for Gcc 3.0 and Solaris.
 Updates to Autoconf 2.50 and switched to the HEAD branch of libtools.
 
 @item
-Fixed a bug which caused Aspell to crash when typo-analysis is not
+Fixed a bug which caused Aspell to crash when typo-analysis was not
 used such as when sug-mode is @strong{fast} or @strong{bad spellers}.
 
 @item
-Added support for typo-analysis even when a soundslike is not used.
+Added support for typo-analysis even when a soundslike was not used.
 
 @item
 Fixed a bug which causes extended charters to display incorrectly on
@@ -4601,7 +4626,7 @@ Compile fixes so that it will compile with Gcc 3.0.
 @item
 Compile fixed which should allow Aspell to compile with Egcs 1.1.  I
 have not been able to actually test it though.  Please let me know at
-kevina@@users.sourceforge.net if you have have tried with Egcs 1.1.
+kevina@@users.sourceforge.net if you have tried with Egcs 1.1.
 
 @item
 Compile and configuration script fixes so that USE_FILE_INO will
@@ -4649,7 +4674,7 @@ pspell-module/Makefile  which caused problems on some platforms.
 
 @item
 Added the configure option AM_MAINTAINER_MODE to avoid enabling rules
-which often causes generated build files to be rebuild with the wrong
+which often causes generated build files to be rebuilt with the wrong
 version of Libtool by default.  I don't know why I didn't think to do
 this a long time ago.
 @end itemize
@@ -4688,7 +4713,7 @@ Added hack to deal with Libtool's interdependencies problem.  See bug
 to use based on the @env{LANG} environment variable.
 
 @item
-Fixed a problem on Win32 which involves path names that begin with
+Fixed a problem on Win32 which involves path names that began with
 <Drive Letter>:.
 
 @item
@@ -4709,11 +4734,11 @@ upcoming Gcc 3.0 compiler.
 Minor changes to remove some -Wall warnings.
 
 @item
-Added a hack to that Aspell will properly compile as a shared library
+Added a hack so that Aspell would properly compile as a shared library
 under Solaris.
 
 @item
-Added a few import missing words to the English word list.
+Added a few important missing words to the English word list.
 @end itemize
 
 @heading Changes from .32.6 to .33 (January 28, 2001)
@@ -4731,12 +4756,12 @@ instead of "teh" which are likely to be due to typos.
 Reorganized the manual so that it is hopefully easier to follow.
 
 @item
-Ability to automatically select the best dictionary to used based on
+Ability to automatically select the best dictionary to use based on
 the setting of the @env{LANG} environment variable.
 
 @item
 Expanded the medium dictionary size to include more words which
-included the original words found in ispell and eliminated the large
+included the original words found in Ispell and eliminated the large
 size for now.
 
 @item
@@ -4751,8 +4776,8 @@ Switched to the multi-language branch of the CVS version of libtool.
 
 @itemize @bullet
 @item
-Fixed a bug that where Aspell will crash when reading in accented
-characters on some platforms.  This fixes bug # 112435.
+Fixed a bug where Aspell would crash when reading-in accented
+characters on some platforms.  This fixed bug # 112435.
 
 @item
 Fixed some other bugs so that it will run under Win32 under CygWin.
@@ -4792,7 +4817,7 @@ terms to the medium size word list.
 
 @item
 Added an @strong{ispell} and @strong{spell} compatibility script for
-systems which don't have ispell installed.  They are located in the
+systems which don't have Ispell installed.  They are located in the
 scripts/ directory and are not installed by default.
 
 @item
@@ -4812,7 +4837,7 @@ Minor compile fixes for recent gcc snapshot.
 Fixed naming of pwli files.
 
 @item
-Fixed a bug when aspell will crash when used with certain single
+Fixed a bug when Aspell will crash when used with certain single
 letter flags.  This bug was most noticeable when used with Emacs.
 
 @item
@@ -4885,11 +4910,11 @@ Added an option to produce a list of misspelled words from standard input.
 More robust error reporting when reading in language data files.
 
 @item
-Fixed a bug when that will cause Aspell to crash if the
+Fixed a bug that would cause Aspell to crash if the
 @strong{special} line was not defined in the language data file.
 
 @item
-Update Pspell Module.
+Updated Pspell Module.
 
 @item
 Minor bug fixes.
@@ -4906,7 +4931,7 @@ use.
 Ported Aspell to Win32 platforms.
 
 @item
-Portability fixes which may help aspell compile on other platforms.
+Portability fixes which may help Aspell compile on other platforms.
 
 @item
 Aspell will no longer fail if for some reason the mmap fails, instead
@@ -4917,11 +4942,11 @@ Minor changes in the format of the main word list as a result of the
 changes, the old format should still work in most cases.
 
 @item
-Fixed a bug when aspell was ignoring the extension of file names such
+Fixed a bug where Aspell was ignoring the extension of file names such
 as .html or .tex when checking files.
 
 @item
-Fixed a bug when aspell will go into an infinite loop when creating
+Fixed a bug where Aspell will go into an infinite loop when creating
 the main word list from a word list which has duplicates in it.
 
 @item
@@ -4946,11 +4971,11 @@ Added ability to change configuration options in the middle of a session.
 
 @item
 Added words from /usr/dict/words found on most Linux systems as well
-as a bunch of commonly used abbreviation to the word list.
+as a bunch of commonly used abbreviations to the word list.
 
 @item
-Fixed a bug when aspell will dump core after reporting certain errors
-when compiled with gcc 2.95 or higher.  This involved reworked the
+Fixed a bug where Aspell would dump core after reporting certain errors
+when compiled with gcc 2.95 or higher.  This involved reworking the
 Exception heritage to get around a bug in gcc 2.95.
 
 @item
@@ -4984,7 +5009,7 @@ Reworked parts of Aspell to use Pspell services to avoid duplicating code.
 
 @item
 Added a module for the newly released Pspell.  It will get installed
-with the rest of aspell.
+with the rest of Aspell.
 
 @item
 Miscellaneous other bug fixes.
@@ -4994,18 +5019,18 @@ Miscellaneous other bug fixes.
 
 @itemize @bullet
 @item
-Improved the @TeX{} filter so that it will accept '@@' at the begging
-of a command name and ignore trailing '*'s.  It also now has better
+Improved the @TeX{} filter so that it will accept '@@' at the beginning
+of a command name and ignored trailing '*'s.  It also now has better
 defaults for which parameters to skip.
 
 @item
 Reworked the main dictionary so that it can be memory mapped in.  This
-decreases startup time and allows multiple aspell processes to use the
+decreases startup time and allows multiple Aspell processes to use the
 same memory for the main word list.  This also also made Aspell 64 bit
 clean so that it should work on an alpha now.
 
 @item
-Fix so that aspell can compile on platforms that gnu as is not
+Fix so that Aspell could compile on platforms that gnu is not yet
 available for.
 
 @item
@@ -5054,7 +5079,7 @@ which means that gcc 2.8.* and egcs 1.0.* will no longer cut it.
 
 @item
 Used file locks when reading and saving the personal dictionaries so
-that it truly multiprocess safe.
+that it truly multiprocesses safely.
 
 @item
 Added rudimentary filter support.
@@ -5065,12 +5090,12 @@ the end user who does not directly use my library should be minimal.
 
 @item
 Rewrote my code that handles parsing command line parameters so that
-it no longer uses popt as it was causing to many problems and didn't
+it no longer used popt as it was causing too many problems and didn't
 integrate well with my new configuration system.
 
 @item
 Fixed pipe mode so that it will properly ignore lines starting with
-'~' for better ispell compatibility.
+'~' for better Ispell compatibility.
 
 @item
 Aspell now has a new home page at
@@ -5085,7 +5110,7 @@ Miscellaneous manual fixes and clarifications.
 
 @itemize @bullet
 @item
-Fixed a bug that caused aspell to crash when spell checking words over
+Fixed a bug that caused Aspell to crash when spell checking words over
 60 characters long.
 
 @item
@@ -5120,16 +5145,16 @@ Fixed a problem with undefined references when linking to the shared library.
 Fixed a bunch of bugs in the language and configuration classes.
 
 @item
-Minor changed in the code so that it could compile with the new gcc
+Minor changes in the code so that it could compile with the new gcc
 2.95(.1).
 
 @item
 Changed the output of @code{dump config} so that default values are
 given the value @code{<default>}.  This means that the output can
-be used to created a configuration file.
+be used to create a configuration file.
 
 @item
-Added notes on using aspell with VIM.
+Added notes on using Aspell with VIM.
 @end itemize
 
 @heading Changes from .28 to .28.1 (July 27, 1999)
@@ -5143,8 +5168,8 @@ Changed notes on compiling with gcc 2.8.* as I managed to get it to
 compile on my school account
 
 @item
-Avoided included @strong{stdexcept} in @file{const_string.hh} so that
-I could get to compile on my schools account with gcc 2.8.1.
+Avoided including @strong{stdexcept} in @file{const_string.hh} so that
+I could get Aspell to compile on my school account with gcc 2.8.1.
 @end itemize
 
 @heading Changes from .27.2 to .28 (July 25, 1999)
@@ -5157,13 +5182,13 @@ Added support for dumping and creating and merging the personal and
 replacement word lists.
 
 @item
-Changed the aspell utility command line a bit, it now used popt.
+Changed the Aspell utility command line a bit, it now used popt.
 
 @item
-Totally reworked aspell configuration system.  Now aspell can get
+Totally reworked Aspell configuration system.  Now Aspell could get
 configuration from any of 5 sources: the command line, the environment
 variable @env{ASPELL_CONF}, the personal configuration file, the
-global configuration file, and finally the compiled in defaults.
+global configuration file, and finally the compiled-in defaults.
 
 @item
 Totally reworked the language class in preparation for my new language
@@ -5192,11 +5217,11 @@ printed version.
 
 @itemize @bullet
 @item
-Fixed a major bug that caused aspell to dump core when used without
+Fixed a major bug that caused Aspell to dump core when used without
 any arguments
 
 @item
-Fixed another major bug that caused aspell to do nothing when used in
+Fixed another major bug that caused Aspell to do nothing when used in
 interactive mode.
 
 @item
@@ -5206,7 +5231,7 @@ Added an option to exit in Aspell's interactive mode.
 Removed some old documentation files from the distribution.
 
 @item
-Minor changes on to the section on using Aspell with egcs.
+Minor changes to the the section on using Aspell with egcs.
 
 @item
 Minor changes to remove -Wall warnings.
@@ -5219,8 +5244,8 @@ Minor changes to remove -Wall warnings.
 Fixed a minor compile problem.
 
 @item
-Updated the section on using Aspell with egcs to it it more clear why
-the patch is necessary.
+Updated the section on using Aspell with egcs to it.  It was now more
+clear why the patch was necessary.
 @end itemize
 
 @heading Changes from .26.2 to .27 (Feb 22, 1999)
@@ -5238,7 +5263,7 @@ C++ class library.
 The C++ class library now throws exceptions.
 
 @item
-Reworked aspell ability to learn from users misspellings a bit so that
+Reworked Aspell ability to learn from users misspellings a bit so that
 it now has a memory.  For more information see @ref{Notes on Storing
 Replacement Pairs}.
 
@@ -5247,8 +5272,8 @@ Upgraded autoconf to version 2.13 and automake to version 1.4 for
 better portability.
 
 @item
-Fixed the configuration so the @code{make dist} will work.  For now on
-aspell will be distributed with @code{make dist}.
+Fixed the configuration so the @code{make dist} will work.  From now on
+Aspell will be distributed with @code{make dist}.
 
 @item
 Added support to skip over URL's, email addresses and host names.
@@ -5266,7 +5291,7 @@ Reorganized the source code.
 Started using proper version numbers for the shared library.
 
 @item
-Fixed a bug that caused a spell to crash when adding certain
+Fixed a bug that caused Aspell to crash when adding certain
 replacement pairs.
 
 @item
@@ -5293,18 +5318,18 @@ Fixed a small compile problem in @file{as_data.cc}.
 
 @itemize @bullet
 @item
-Fixed a bug that causes duplicates items to be displayed in the
-suggestion list for good.  (If it still does it please send be email.)
+Fixed a bug that caused duplicate items to be displayed in the
+suggestion list for good.  (If it still does it please send me email.)
 
 @item
-Added the ability for aspell to learn form the users misspellings.
+Added the ability for Aspell to learn form the users misspellings.
 
 @item
 Library Interface changes.  Still more to come @dots{}.
 
 @item
 Is now multiprocess safe.  When a personal dictionary (or replacement
-list) is saved it will now first update he list against the dictionary
+list) is saved it will now first update the list against the dictionary
 on disk in case another process modified it.
 
 @item
@@ -5392,7 +5417,7 @@ Added the @code{to_phoneme} method to the @code{aspell} class.
 
 @item
 Added the framework for being able to learn from the users
-misspelling.  Right now it just keep a log of replacements.
+misspelling.  Right now it just keeps a log of replacements.
 
 @item
 Redid @file{stl_rope-30.diff}.  For some reason the version of patch
@@ -5418,7 +5443,7 @@ Fixed my code so that it can once again compile with g++ 2.7.2.
 Rewrote the How It Works chapter.
 
 @item
-Rewrote the Requirement section and added noted on compiling with g++
+Rewrote the Requirement section and added notes on compiling with g++
 2.7.2.
 
 @item
@@ -5464,7 +5489,7 @@ Started a C interface and added some rough documentation for it.
 @itemize @bullet
 @item
 Minor bug fixes.  I was deleting arrays with delete rather than
-delete[].  I was suppressed that this had not created a problem.
+delete[].  I was suprised that this had not created a problem.
 
 @item
 Added a simple test program to test for a memory leak present on some
@@ -5476,12 +5501,12 @@ memleak-test.cc for more info.
 
 @itemize @bullet
 @item
-Major redesign or the scoring method.  It now uses absolute distances
+Major redesign of the scoring method.  It now uses absolute distances
 rather than relative scores for more consistent results.  See
 @file{suggest.cc} for more info.
 
 @item
-Suggest code rewritten is several places however the core process
+Suggest code rewritten in several places, however the core process
 stayed the same.
 
 @item
@@ -5551,7 +5576,7 @@ Other minor bug fixes.
 @node Authors
 @appendix Authors
 
-The folowing people or companies have contributed a non-trival amount of
+The following people or companies have contributed a non-trival amount of
 code to Aspell and thus own the Copyright to part of Aspell.
 
 @table @asis
@@ -5567,11 +5592,11 @@ Enhanced the SGML filter to also support skipping sgml tags such as
 "script" blocks.
 
 @item Kevin B. Hendricks (and Contributers)
-Wrote MySpell which is a simpile spell checker library that supports
+Wrote MySpell which is a simple spell checker library that supports
 affix compression.  Aspell affix compression code is based on his code.
 
 @item Christoph Hinterm@"uller
-Added support for for loadable filters.
+Added support for loadable filters.
 
 @item Melvin Hadasht
 Wrote a locale independent version of strtol and strtod.  
@@ -5611,13 +5636,13 @@ Wrote the original metaphone algorithm; however, he released his work
 into the Public Domain.
 
 @item Michael Kuhn
-Converted the metaphone algorithm into C code and made some enhansments
-to the orignal algorithm.  He also released his work into the Public
+Converted the metaphone algorithm into C code and made some enhancements
+to the original algorithm.  He also released his work into the Public
 Domain.
 
 @item Geoff Kuenning (and contributers)
-The authors of Ispell.  Many of the ideas used in Aspell, espacally with
-the affix code, were taken from Ispell.  However none of the orignal
+The authors of Ispell.  Many of the ideas used in Aspell, especially with
+the affix code, were taken from Ispell.  However none of the original
 Ispell code is used in Aspell.
 
 @end table
@@ -5625,7 +5650,7 @@ Ispell code is used in Aspell.
 @node Copying
 @appendix Copying
 
-Copyright @copyright{} 2000--2004 Kevin Atkinson.
+Copyright @copyright{} 2000--2006 Kevin Atkinson.
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.1 or
@@ -5634,7 +5659,7 @@ Invariant Sections, no Front-Cover Texts and no Back-Cover Texts.  A
 copy of the license is included in the section entitled "GNU Free
 Documentation License".
 
-The library and utility program is copyright @copyright{} 2000--2004 by
+The library and utility program is copyright @copyright{} 2000--2006 by
 Kevin Atkinson.  You can redistribute it and/or modify it under the
 terms of the GNU Lesser General Public License as (LGPL) published by
 the Free Software Foundation; either version 2.1 of the License, or
