@@ -868,8 +868,11 @@ environment variable on most systems.  It consists of the two letter
 default value is based on the value of the @env{LC_MESSAGES} locale.
 
 @item size
-@i{(string)}
-The preferred size of the word list.
+@i{(string)} 
+The preferred size of the word list.  This consists of a
+two char digit code describing the size of the list, with typical
+values of: 10=tiny, 20=really small, 30=small, 40=med-small, 50=med,
+60=med-large, 70=large, 80=huge, 90=insane.
 
 @item variety
 @i{(list)}
@@ -1125,7 +1128,7 @@ Words}):
 
 @item run-together,-C|-B
 @i{(boolean)}
-consider run-together words legal
+consider run-together words valid
 @item run-together-limit
 @i{(integer)}
 maximum number of words that can be strung together
@@ -1142,7 +1145,7 @@ Miscellaneous other options that don't fall under any other category
 
 @item conf
 @i{(file)}
-main configuration file
+Main configuration file.  This file overrides Aspell's global defaults.
 
 @item conf-dir
 @i{(dir)}
@@ -1165,7 +1168,8 @@ location for personal files
 
 @item per-conf
 @i{(file)}
-personal configuration file
+personal configuration file.  This file overrides options found in
+the global @conf{conf} file
 
 @item keyboard
 @i{(file)}
@@ -1193,8 +1197,9 @@ when compiled with @option{--enable-win32-relocatable})
 
 @item backup,-b|-x
 @i{(boolean)}
-Create a backup file by appending @file{.bak} to the file name.  (Only
-applies when the command is @command{check}).
+Create a backup file by appending @file{.bak} to the file name.  This
+applies when the command is @command{check} and the backup file is
+only created if any spelling modifications take place.
 
 @item time
 @i{(boolean)}
