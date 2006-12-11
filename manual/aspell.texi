@@ -1,4 +1,4 @@
-\input texinfo   @c -*-texinfo-*-
+n\input texinfo   @c -*-texinfo-*-
 
 @setfilename aspell.info
 @settitle GNU Aspell 0.60.5
@@ -1169,7 +1169,7 @@ location for personal files
 @item per-conf
 @i{(file)}
 personal configuration file.  This file overrides options found in
-the global @conf{conf} file
+the global @option{conf} file
 
 @item keyboard
 @i{(file)}
@@ -4245,6 +4245,8 @@ a C++ program.
 Compile fix for gcc 4.1
 @item
 Updated to Gettext 0.15, Libtool 1.5.22, Automake 1.10, Autoconf 2.61
+@item
+Updated @command{man} page.
 @item
 Lots of small bug fixes.
 @end itemize
