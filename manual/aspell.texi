@@ -4244,7 +4244,7 @@ a C++ program.
 @item
 Compile fix for gcc 4.1
 @item
-Updated to Gettext 0.15, Libtool 1.5.22, Automake 1.10, Autoconf 2.61
+Updated to Gettext 0.16.1, Libtool 1.5.22, Automake 1.10, Autoconf 2.61
 @item
 Updated @command{man} page.
 @item

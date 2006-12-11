@@ -144,7 +144,7 @@ dnl         "$enable_aspell5_compatibility" = "yes"])
 dnl GETTEXT
 
 AM_GNU_GETTEXT([external])
-AM_GNU_GETTEXT_VERSION([0.15])
+AM_GNU_GETTEXT_VERSION([0.16.1])
 
 AH_TOP([#ifndef ASPELL_SETTINGS__H
 #define ASPELL_SETTINGS__H])
@@ -567,13 +567,12 @@ AC_TRY_COMPILE(
 #                                                                 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-AC_CONFIG_FILES([Makefile gen/Makefile common/Makefile lib/Makefile data/Makefile 
-                 m4/Makefile 
+AC_CONFIG_FILES([Makefile gen/Makefile common/Makefile lib/Makefile data/Makefile
                  auto/Makefile modules/Makefile modules/tokenizer/Makefile
                  modules/speller/Makefile modules/speller/default/Makefile
 		 interfaces/Makefile interfaces/cc/Makefile
 		 scripts/Makefile examples/Makefile
-		 prog/Makefile manual/Makefile po/Makefile.in modules/filter/Makefile
-		 myspell/Makefile lib5/Makefile
+		 prog/Makefile manual/Makefile po/Makefile.in m4/Makefile
+                 modules/filter/Makefile myspell/Makefile lib5/Makefile
                  ])
 AC_OUTPUT
