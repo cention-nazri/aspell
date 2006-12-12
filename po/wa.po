@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60.2-b20041203\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2006-11-28 12:34-0700\n"
+"POT-Creation-Date: 2006-12-11 23:16-0700\n"
 "PO-Revision-Date: 2004-12-06 17:51+0100\n"
 "Last-Translator: Pablo Saratxaga <pablo@walon.org>\n"
 "Language-Team: Walloon <linux-wa@walon.org>\n"
@@ -898,7 +898,7 @@ msgid "  -v|version       prints a version line"
 msgstr "  -v|version       mostere li modêye do programe"
 
 #: prog/aspell.cpp:2811
-msgid "  munch-list [simple] [single|multi] [keep]\n"
+msgid "  munch-list [simple] [single|multi] [keep]"
 msgstr ""
 
 #: prog/aspell.cpp:2812

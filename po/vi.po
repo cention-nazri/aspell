@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell-0.60.3\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2006-11-28 12:34-0700\n"
+"POT-Creation-Date: 2006-12-11 23:16-0700\n"
 "PO-Revision-Date: 2006-07-01 14:35+0930\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "Language-Team: Vietnamese <vi-VN@googlegroups.com>\n"
@@ -927,7 +927,8 @@ msgid "  -v|version       prints a version line"
 msgstr "  -v|version       in ra dòng _phiên bản_"
 
 #: prog/aspell.cpp:2811
-msgid "  munch-list [simple] [single|multi] [keep]\n"
+#, fuzzy
+msgid "  munch-list [simple] [single|multi] [keep]"
 msgstr ""
 "  munch-list [simple] [single|multi] [keep]\n"
 "\t(nhai danh sách, đơn giản, đơn, đa, giữ)\n"

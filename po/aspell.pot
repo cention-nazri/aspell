@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2006-11-28 12:34-0700\n"
+"POT-Creation-Date: 2006-12-11 23:16-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -889,7 +889,7 @@ msgid "  -v|version       prints a version line"
 msgstr ""
 
 #: prog/aspell.cpp:2811
-msgid "  munch-list [simple] [single|multi] [keep]\n"
+msgid "  munch-list [simple] [single|multi] [keep]"
 msgstr ""
 
 #: prog/aspell.cpp:2812
