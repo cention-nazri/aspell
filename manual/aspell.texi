@@ -1,4 +1,4 @@
-n\input texinfo   @c -*-texinfo-*-
+\input texinfo   @c -*-texinfo-*-
 
 @setfilename aspell.info
 @settitle GNU Aspell 0.60.5
@@ -119,7 +119,6 @@ Adding Support For Other Languages
 * Affix Compression::           
 * Controlling the Behavior of Run-together Words::  
 * Creating A New Character Set::  
-* Format of the Character Set Data File::  
 * Creating An Official Dictionary Package::  
 
 Implementation Notes
@@ -400,7 +399,7 @@ that encoding.
 
 As of GNU Aspell 0.60.1 Aspell should be able to completely replace
 Ispell for most applications.  The Ispell compatibility script should
-work for most applications which expect Ispell.  However their are
+work for most applications which expect Ispell.  However there are
 some differences which you should be aware of.
 
 @subsection As a Drop In Replacement
@@ -411,8 +410,8 @@ used with programs that simply call the @command{ispell} command and
 expect the original file to be overwritten with the corrected version.
 
 If you do not have Ispell installed on your system and have installed
-the Ispell compatibly script than you should not need to do anything
-as most applications will that expect Ispell will work as expected
+the Ispell compatibility script then you should not need to do anything
+as most applications that expect Ispell will work as expected
 with Aspell via the Ispell compatibility script.
 
 Otherwise, the recommended way to use Aspell as a replacement for
@@ -481,7 +480,7 @@ have an affix file.
 
 @end itemize
 
-However the Ispell script currently unable to emulate
+However the Ispell script is currently unable to emulate
 the '-A' pipe mode.  This is different from the normal pipe mode in
 that the special @code{&Include_File&} command is recognized.
 
@@ -2482,8 +2481,8 @@ will also get stored so that you don't have to worry about it.
 Before you consider adding support for Aspell, first make sure that
 someone else has not already done it.  A good number of dictionaries
 off the Aspell home page at @uref{http://aspell.net}.  If your
-language is not listed above please send me a note and I will work
-with you on adding support.
+language is not listed above fell free to send mail to aspell-dict at
+gnu org for help in getting started.
 
 Adding a language to Aspell is fairly straightforward.  You basically
 need to create the language data file, and compile a new word list.
@@ -2497,7 +2496,6 @@ need to create the language data file, and compile a new word list.
 * Affix Compression::           
 * Controlling the Behavior of Run-together Words::  
 * Creating A New Character Set::  
-* Format of the Character Set Data File::  
 * Creating An Official Dictionary Package::  
 @end menu
 
@@ -2571,13 +2569,22 @@ language data file:
 special ' -*- - -*-
 @end example
 
+However, please be aware that adding special characters can have
+unintended consequences due to limitations of Aspell.  For example if
+the @samp{-} was accepted as a middle character, than @emph{every}
+word with a @samp{-} in it to be flagged as a spelling error unless
+that exact word is in the dictionary, even if both parts are in the
+dictionary.  Also, having a @samp{.} as an end character will cause
+the @samp{.} to be part of any misspelled words.  Which can get very
+annoying if you misspell a word at the end of a sentence.
+
 @item soundslike
 
 The name of the soundslike data for the language.  The data is
 expected to be in the file @file{@var{name}_phonetic.dat}.
 
 If @var{name} is @samp{simpile} then a very simple soundslike is
-used.  This is nearly as powerful as full phonetic soundslike but it
+used.  This is not as powerful as full phonetic soundslike but it
 can be computed a lot faster.  (@pxref{The Simple Soundslike})
 
 If the soundslike name is @samp{none}, or this option is not specified,
@@ -3267,31 +3274,26 @@ worry yourself that an 8-bit character set is being used internally.
 If your language has no more than 210 distinct symbols, including
 different capitalizations and accents, then Aspell can support it.
 
-In order to create a new character set you will need to download
-the file @file{aspell-lang-@var{version}.tar.bz2} from
-@uref{ftp://ftp.gnu.org/@/gnu/aspell/} and follow
-the instructions in the @file{README} file.  Version 0.1, and 0.2 of
-mkchardata @emph{will not} work as the format of the character data file
-has changed.
-
-@node Format of the Character Set Data File
-@section Format of the Character Set Data File
-
-The character set data files that Aspell uses can be fine tuned.  If
-this is done, that character set file should be renamed to
-@file{@var{lang}.cset}.
-
-The line(s) starting with @samp{=} do not specify the exact name of the
-file, but rather the name of the Unicode mapping that is used.  Unless
-you change the Unicode mapping, this line should not be changed.
+The first thing to do is to download the Aspell lang package 
+(@pxref{Creating An Official Dictionary Package})
+and check if one of the provided charsets in this package will suite
+your needs.  Non-standard character sets are provided for many scripts
+and languages.  If not see the included @file{README} file for
+instructions on creating a new one.  Version 0.1, and 0.2 of
+mkchardata @emph{will not} work as the format of the character data
+file has changed.
 
 @node Creating An Official Dictionary Package
 @section Creating An Official Dictionary Package
 
 Once you have a basic dictionary working, you should consider creating
-an official package so that it can be distributed with Aspell.  To do so
-download
-@url{ftp://ftp.gnu.org/@/gnu/aspell/@/aspell-lang-@var{version}.tar.bz2}.
+an official package so that it can be distributed with Aspell. To do
+so download the aspell-lang package available at
+@url{ftp://ftp.gnu.org/@/gnu/aspell/@/aspell-lang-@var{version}.tar.bz2}
+or in the ``aspell-lang'' module in the Aspell CVS repository
+available at @url{https://savannah.gnu.org@//cvs/?group=aspell}.  See
+the included @file{README} file for what to do.  Or, send mail to
+aspell-dict at gnu org asking for help on how to get started.
 
 @node Implementation Notes
 @appendix Implementation Notes
@@ -3647,6 +3649,34 @@ support.
 @node Planned Dictionaries
 @appendixsec Notes on Planned Dictionaries
 
+According to
+@uref{http://wiki.services.openoffice.org/@/wiki/Dictionaries}, Open
+Office dictionaries are avaliable for the following languages, but no
+corresponding Aspell dictionary exists:
+
+@include oo-only.texi
+
+@noindent
+If you are interested in converting any of them please coordinate your
+efforts with the dictionary author and submit it to 
+aspell-dict at gnu org when you have something ready.
+
+An unofficial dictionary for Albanian (sq) is available at
+@uref{http://psychology.rutgers.edu/@/~zaimi/software.html}.  However,
+I can not find any contact information for the author, thus I have
+been unable to contact him.  In addition an Albanian (sq) dictionary
+is available for Ispell at
+@uref{http://@/www.7kosova.com/kde-shqip/@/ispell/ispell.html}.  
+However, the raw word list is not provided and the author has not
+been responding to emails, possibly because he doesn't speak English.
+If you have any additional information on either of these dictionaries,
+or can speak Albanian and can translate for me please let me know at
+@email{kevina@@gnu.org}
+
+An unofficial dictionary for Malayalam (ml) is available at
+@uref{http://in.geocities.com/@/paivakil/downloads/aspell/}.
+I am working with the author to create an official one.
+
 Kevin Patrick Scannell has word lists available for the following
 languages based on his web crawling software
 (@uref{http://borel.slu.edu/crubadan/}) but needs someone to proofread
@@ -3656,20 +3686,6 @@ them:
 
 @noindent
 If you are interested, please contact him at scannell at slu edu.
-
-A free spell checker for the Arabic (ar) languages called Duali can be
-found at @uref{http://@/www.arabeyes.org/@/project.php?@/proj=duali}.
-It uses its own form of affix compression.  This needs to be converted
-to Aspell format.  The author, Mohammed Elzubeir, expressed an interest
-in converting it but I have not heard from him in a while.  If you are
-interested in helping with this conversion please let me know.
-
-An Ispell hash table has been discovered for Albanian (sq) at
-@uref{http://@/www.7kosova.com/kde-shqip/@/ispell/ispell.html}.
-However, the raw word list is not provided and the author has not
-been responding to emails.  If you know how to disassemble a Ispell hash
-table or the where-abouts of the word list used to create the hash
-table I would appreciate hearing from you.
 
 A dictionary marked as "Planned" or "Maybe" but not listed in
 the section means that someone has expressed an interest in creating
@@ -4239,16 +4255,19 @@ a C++ program.
 @node ChangeLog
 @appendix ChangeLog
 
-@heading Changes from 0.60.4 to 0.60.5 (November 27, 2006)
+@heading Changes from 0.60.4 to 0.60.5 (December 18, 2006)
 @itemize @bullet
 @item
 Compile fix for gcc 4.1
 @item
 Updated to Gettext 0.16.1, Libtool 1.5.22, Automake 1.10, Autoconf 2.61
 @item
-Updated @command{man} page.
+Documentation improvements, including an updated @command{man} page.
 @item
-Lots of small bug fixes.
+Complain if more than one file is specified when checking files using
+the @command{aspell check} command, rather than ignoring the other files.
+@item
+Large number of bug fixes.
 @end itemize
 
 @heading Changes from 0.60.3 to 0.60.4 (October 19, 2005)
