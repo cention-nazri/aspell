@@ -965,8 +965,11 @@ void check()
   if (args.size() == 0) {
     print_error(_("You must specify a file name."));
     exit(-1);
+  } else if (args.size() > 1) {
+    print_error(_("Only one file name may be specified."));
+    exit(-1);
   }
-    
+  
   file_name = args[0];
   new_name = file_name;
   new_name += ".new";
