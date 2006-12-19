@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60.2-b20041203\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2006-12-11 23:16-0700\n"
+"POT-Creation-Date: 2006-12-19 04:01-0700\n"
 "PO-Revision-Date: 2005-10-19 02:13-0600\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
@@ -739,205 +739,209 @@ msgstr "Čas návrhu: %f\n"
 msgid "You must specify a file name."
 msgstr "Musíte určit název souboru."
 
-#: prog/aspell.cpp:976
+#: prog/aspell.cpp:969
+msgid "Only one file name may be specified."
+msgstr ""
+
+#: prog/aspell.cpp:979
 #, c-format
 msgid "Could not open the file \"%s\" for reading"
 msgstr "Nemohu otevřít soubor \"%s\" pro čtení"
 
-#: prog/aspell.cpp:991
+#: prog/aspell.cpp:994
 #, c-format
 msgid "Could not open the file \"%s\" for writing. File not saved."
 msgstr "Nemohu otevřít soubor \"%s\" pro zápis. Soubor nebyl uložen."
 
-#: prog/aspell.cpp:1004
+#: prog/aspell.cpp:1007
 #, c-format
 msgid "Invalid keymapping: %s"
 msgstr "Neplatné mapování kláves: %s"
 
-#: prog/aspell.cpp:1024
+#: prog/aspell.cpp:1027
 msgid "Ignore"
 msgstr "Ignorovat"
 
-#: prog/aspell.cpp:1025
+#: prog/aspell.cpp:1028
 msgid "Ignore all"
 msgstr "Ignorovat vše"
 
-#: prog/aspell.cpp:1026
+#: prog/aspell.cpp:1029
 msgid "Replace"
 msgstr "Nahradit"
 
-#: prog/aspell.cpp:1027
+#: prog/aspell.cpp:1030
 msgid "Replace all"
 msgstr "Nahradit vše"
 
-#: prog/aspell.cpp:1028
+#: prog/aspell.cpp:1031
 msgid "Add"
 msgstr "Přidat"
 
-#: prog/aspell.cpp:1029
+#: prog/aspell.cpp:1032
 msgid "Add Lower"
 msgstr "Přidat malá"
 
-#: prog/aspell.cpp:1030
+#: prog/aspell.cpp:1033
 msgid "Abort"
 msgstr "Přerušit"
 
-#: prog/aspell.cpp:1031
+#: prog/aspell.cpp:1034
 msgid "Exit"
 msgstr "Ukončit"
 
 # FIXME: "to abort"
-#: prog/aspell.cpp:1107
+#: prog/aspell.cpp:1110
 msgid "Are you sure you want to abort (y/n)? "
 msgstr "Jste si jisti, že chcete přerušit (a/n)? "
 
 #. TRANSLATORS: The user may input any of these characters to say "yes".
 #. MUST ONLY CONSIST OF ASCII CHARACTERS.
-#: prog/aspell.cpp:1111
+#: prog/aspell.cpp:1114
 msgid "Yy"
 msgstr "Aa"
 
-#: prog/aspell.cpp:1132
+#: prog/aspell.cpp:1135
 msgid "With: "
 msgstr "S: "
 
-#: prog/aspell.cpp:1149
+#: prog/aspell.cpp:1152
 msgid "Sorry that is an invalid choice!"
 msgstr "Lituji, to je neplatná volba!"
 
-#: prog/aspell.cpp:1370
+#: prog/aspell.cpp:1373
 msgid "Sorry \"filter\" is currently unimplemented.\n"
 msgstr "Lituji, \"filter\" momentálně není implementováno.\n"
 
-#: prog/aspell.cpp:1504
+#: prog/aspell.cpp:1507
 msgid "Can't merge a master word list yet. Sorry."
 msgstr "Zatím neumím sloučit hlavní seznam slov. Lituji."
 
-#: prog/aspell.cpp:1528
+#: prog/aspell.cpp:1531
 msgid "Sorry \"create/merge personal\" is currently unimplemented.\n"
 msgstr "Lituji, \"vytvořit/sloučit osobní\" momentálně není implementováno.\n"
 
-#: prog/aspell.cpp:1537 prog/aspell.cpp:1593
+#: prog/aspell.cpp:1540 prog/aspell.cpp:1596
 #, c-format
 msgid "Sorry I won't overwrite \"%s\""
 msgstr "Lituji, nepřepíšu \"%s\""
 
-#: prog/aspell.cpp:1584
+#: prog/aspell.cpp:1587
 msgid "Sorry \"create/merge repl\" is currently unimplemented.\n"
 msgstr "Lituji, \"vytvořit/sloučit náhr\" momentálně není implementováno.\n"
 
-#: prog/aspell.cpp:1852
+#: prog/aspell.cpp:1855
 #, c-format
 msgid "\"%s\" is not a valid flag for the \"munch-list\" command."
 msgstr "\"%s\" není platný přepínač pro příkaz \"munch-list\"."
 
 #. TRANSLATORS: These should all be formated to fit in 80 column or
 #. less
-#: prog/aspell.cpp:2779
+#: prog/aspell.cpp:2782
 msgid "Usage: aspell [options] <command>"
 msgstr "Použití: aspell [přepínače] <příkaz>"
 
-#: prog/aspell.cpp:2780
+#: prog/aspell.cpp:2783
 msgid "<command> is one of:"
 msgstr "<příkaz> je jedno z:"
 
-#: prog/aspell.cpp:2781
+#: prog/aspell.cpp:2784
 msgid "  -?|usage         display a brief usage message"
 msgstr "  -?|usage         zobrazit krátkou zprávu o použití"
 
-#: prog/aspell.cpp:2782
+#: prog/aspell.cpp:2785
 msgid "  help             display a detailed help message"
 msgstr "  help             zobrazit podrobnou zprávu s nápovědou"
 
-#: prog/aspell.cpp:2783
+#: prog/aspell.cpp:2786
 msgid "  -c|check <file>  to check a file"
 msgstr "  -c|check <soubor> zkontrolovat soubor"
 
-#: prog/aspell.cpp:2784
+#: prog/aspell.cpp:2787
 msgid "  -a|pipe          \"ispell -a\" compatibility mode"
 msgstr "  -a|pipe          režim pro kompatibilitu s \"ispell -a\""
 
-#: prog/aspell.cpp:2785
+#: prog/aspell.cpp:2788
 msgid "  [dump] config    dumps the current configuration to stdout"
 msgstr "  [dump] config    vypíše aktuální nastavení na stdout"
 
-#: prog/aspell.cpp:2786
+#: prog/aspell.cpp:2789
 msgid "  config <key>     prints the current value of an option"
 msgstr "  config <klíč>    vypíše aktuální hodnotu přepínače"
 
-#: prog/aspell.cpp:2787
+#: prog/aspell.cpp:2790
 msgid "  [dump] dicts | filters | modes"
 msgstr "  [dump] dicts | filters | modes"
 
-#: prog/aspell.cpp:2788
+#: prog/aspell.cpp:2791
 msgid "    lists available dictionaries / filters / filter modes"
 msgstr "    vypíše dostupné slovníky / filtry / režimy filtrů"
 
-#: prog/aspell.cpp:2789
+#: prog/aspell.cpp:2792
 msgid "[options] is any of the following:"
 msgstr "[přepínač] je libovolný z následujících:"
 
-#: prog/aspell.cpp:2802
+#: prog/aspell.cpp:2805
 msgid ""
 "  list             produce a list of misspelled words from standard input"
 msgstr ""
 "  list             vypsat seznam slov s překlepy ze standardního vstupu"
 
-#: prog/aspell.cpp:2805
+#: prog/aspell.cpp:2808
 msgid ""
 "  soundslike       returns the sounds like equivalent for each word entered"
 msgstr ""
 "  soundslike       vrátí ekvivalent pro podobnost zvuku každého zadaného "
 "slova"
 
-#: prog/aspell.cpp:2806
+#: prog/aspell.cpp:2809
 msgid "  munch            generate possible root words and affixes"
 msgstr "  munch            vygenerovat možné kořeny slov a přípony"
 
-#: prog/aspell.cpp:2807
+#: prog/aspell.cpp:2810
 msgid "  expand [1-4]     expands affix flags"
 msgstr "  expand [1-4]     rozbaluje příznaky přípon"
 
-#: prog/aspell.cpp:2808
+#: prog/aspell.cpp:2811
 msgid ""
 "  clean [strict]   cleans a word list so that every line is a valid word"
 msgstr ""
 "  clean [strict]   vyčistí seznam slov, aby každý řádek bylo platné slovo"
 
-#: prog/aspell.cpp:2810
+#: prog/aspell.cpp:2813
 msgid "  -v|version       prints a version line"
 msgstr "  -v|version       vypíše řádek o verzi"
 
-#: prog/aspell.cpp:2811
+#: prog/aspell.cpp:2814
 #, fuzzy
 msgid "  munch-list [simple] [single|multi] [keep]"
 msgstr "  munch-list [simple] [single|multi] [keep]\n"
 
-#: prog/aspell.cpp:2812
+#: prog/aspell.cpp:2815
 msgid "    reduce the size of a word list via affix compression"
 msgstr "    zmenšit seznam slov kompresí přípon"
 
-#: prog/aspell.cpp:2813
+#: prog/aspell.cpp:2816
 msgid "  conv <from> <to> [<norm-form>]"
 msgstr "  conv <z> <do> [<norm-forma>]"
 
-#: prog/aspell.cpp:2814
+#: prog/aspell.cpp:2817
 msgid "    converts from one encoding to another"
 msgstr "    převede z jednoho kódování do jiného"
 
-#: prog/aspell.cpp:2815
+#: prog/aspell.cpp:2818
 msgid "  norm (<norm-map> | <from> <norm-map> <to>) [<norm-form>]"
 msgstr "  norm (<norm-map> | <z> <norm-map> <do>) [<norm-forma>]"
 
-#: prog/aspell.cpp:2816
+#: prog/aspell.cpp:2819
 msgid "    perform Unicode normalization"
 msgstr "   provést normalizaci Unicode"
 
-#: prog/aspell.cpp:2819
+#: prog/aspell.cpp:2822
 msgid "  dump|create|merge master|personal|repl [<name>]"
 msgstr "  dump|create|merge master|personal|repl [<název>]"
 
-#: prog/aspell.cpp:2820
+#: prog/aspell.cpp:2823
 msgid ""
 "    dumps, creates or merges a master, personal, or replacement dictionary."
 msgstr ""
@@ -946,13 +950,13 @@ msgstr ""
 
 #. TRANSLATORS: "none", "internal" and "strict" are literal values
 #. and should not be translated.
-#: prog/aspell.cpp:2824
+#: prog/aspell.cpp:2827
 msgid ""
 "  <norm-form>      normalization form to use, either none, internal, or "
 "strict"
 msgstr "  <norm-forma>     normalizační forma, buď none, internal nebo strict"
 
-#: prog/aspell.cpp:2834
+#: prog/aspell.cpp:2837
 #, c-format
 msgid ""
 "\n"
@@ -963,7 +967,7 @@ msgstr ""
 "Aspell %s.  Copyright 2000-2004 Kevin Atkinson.\n"
 "\n"
 
-#: prog/aspell.cpp:2868
+#: prog/aspell.cpp:2871
 msgid ""
 "Available Dictionaries:\n"
 "    Dictionaries can be selected directly via the \"-d\" or \"master\"\n"
@@ -975,7 +979,7 @@ msgstr ""
 "    Mohou také být vybrány nepřímo pomocí přepínače \"lang\", \"variety\"\n"
 "    a \"size\".\n"
 
-#: prog/aspell.cpp:2889
+#: prog/aspell.cpp:2892
 msgid ""
 "Available Filters (and associated options):\n"
 "    Filters can be added or removed via the \"filter\" option.\n"
@@ -983,7 +987,7 @@ msgstr ""
 "Dostupné filtry (a asociované přepínače):\n"
 "    Filtry mohou být přidány nebo odebrány pomocí přepínače \"filter\".\n"
 
-#: prog/aspell.cpp:2896
+#: prog/aspell.cpp:2899
 #, c-format
 msgid ""
 "\n"
@@ -994,7 +998,7 @@ msgstr ""
 
 # FIXME: s/reconfigured/preconfigured/
 #. TRANSLATORS: This should be formated to fit in 80 column or less
-#: prog/aspell.cpp:2913
+#: prog/aspell.cpp:2916
 msgid ""
 "Available Filter Modes:\n"
 "    Filter Modes are reconfigured combinations of filters optimized for\n"
