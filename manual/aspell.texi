@@ -2581,7 +2581,7 @@ annoying if you misspell a word at the end of a sentence.
 @item soundslike
 
 The name of the soundslike data for the language.  The data is
-expected to be in the file @file{@var{name}_phonetic.dat}.
+expected to be in the file @file{@var{name}_phonet.dat}.
 
 If @var{name} is @samp{simpile} then a very simple soundslike is
 used.  This is not as powerful as full phonetic soundslike but it
