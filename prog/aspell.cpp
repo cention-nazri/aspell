@@ -2528,9 +2528,9 @@ void munch_list_complete(bool multi, bool simplify)
     }
 
     to_keep_exp.resize(entries.size());
-    for (int i = 0; i != to_keep_exp.size(); ++i) {
-      printf(">>> %d %d\n", i, (int)to_keep_exp[i]);
-    }
+    //for (int i = 0; i != to_keep_exp.size(); ++i) {
+    //  printf(">>> %d %d\n", i, (int)to_keep_exp[i]);
+    //}
 
     // Store the expansion of each base word in a bit vector and
     // add it to the working set
@@ -2692,10 +2692,10 @@ void munch_list_complete(bool multi, bool simplify)
 
     // Finally print the resulting list
 
-    printf("XXX %d %d\n", to_keep.size(), to_keep_exp.size());
-    for (int i = 0; i != to_keep_exp.size(); ++i) {
-      printf(">>> %d %d\n", i, (int)to_keep_exp[i]);
-    }
+    //printf("XXX %d %d\n", to_keep.size(), to_keep_exp.size());
+    //for (int i = 0; i != to_keep_exp.size(); ++i) {
+    //  printf(">>> %d %d\n", i, (int)to_keep_exp[i]);
+    //}
 
     for (unsigned i = 0; i != to_keep.size(); ++i) {
       COUT << oconv(to_keep[i]->word);
