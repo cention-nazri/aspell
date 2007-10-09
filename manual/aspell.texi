@@ -2481,7 +2481,7 @@ will also get stored so that you don't have to worry about it.
 Before you consider adding support for Aspell, first make sure that
 someone else has not already done it.  A good number of dictionaries
 off the Aspell home page at @uref{http://aspell.net}.  If your
-language is not listed above fell free to send mail to aspell-dict at
+language is not listed above feel free to send mail to aspell-dict at
 gnu org for help in getting started.
 
 Adding a language to Aspell is fairly straightforward.  You basically
@@ -2571,8 +2571,8 @@ special ' -*- - -*-
 
 However, please be aware that adding special characters can have
 unintended consequences due to limitations of Aspell.  For example if
-the @samp{-} was accepted as a middle character, than @emph{every}
-word with a @samp{-} in it to be flagged as a spelling error unless
+the @samp{-} was accepted as a middle character, then @emph{every}
+word with a @samp{-} in it would be flagged as a spelling error unless
 that exact word is in the dictionary, even if both parts are in the
 dictionary.  Also, having a @samp{.} as an end character will cause
 the @samp{.} to be part of any misspelled words.  Which can get very
@@ -3269,7 +3269,7 @@ If there is not a standard character set for your language then you
 can invent one.  The new charset will only be used by Aspell
 internally.  If the option @option{data-encoding} is set to
 @samp{utf-8}, and your current locale character type is always set to
-@samp{utf-8}, than you can use UTF-8 for everything and not
+@samp{utf-8}, then you can use UTF-8 for everything and not
 worry yourself that an 8-bit character set is being used internally.
 If your language has no more than 210 distinct symbols, including
 different capitalizations and accents, then Aspell can support it.
@@ -3278,7 +3278,7 @@ The first thing to do is to download the Aspell lang package
 (@pxref{Creating An Official Dictionary Package})
 and check if one of the provided charsets in this package will suite
 your needs.  Non-standard character sets are provided for many scripts
-and languages.  If not see the included @file{README} file for
+and languages.  If not, then see the included @file{README} file for
 instructions on creating a new one.  Version 0.1, and 0.2 of
 mkchardata @emph{will not} work as the format of the character data
 file has changed.
@@ -3651,7 +3651,7 @@ support.
 
 According to
 @uref{http://wiki.services.openoffice.org/@/wiki/Dictionaries}, Open
-Office dictionaries are avaliable for the following languages, but no
+Office dictionaries are available for the following languages, but no
 corresponding Aspell dictionary exists:
 
 @include oo-only.texi
