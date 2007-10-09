@@ -7,19 +7,20 @@ AM_CONFIG_HEADER(gen/settings.h)
 AM_MAINTAINER_MODE
 
 AC_ARG_ENABLE(docdir, 
-[  --enable-docdir=DIR      documentation files in DIR [PREFIX/doc/aspell] ],
-pkgdocdir=$enable_docdir, pkgdocdir=\${prefix}/share/doc/aspell )
+AS_HELP_STRING([--enable-docdir=DIR],[documentation files in DIR @<:@PREFIX/doc/aspell@:>@]),
+[pkgdocdir=$enable_docdir], [pkgdocdir=\${prefix}/share/doc/aspell])
 AC_SUBST(pkgdocdir)
 
 dnl pkgdatadir
 
 pkgdatadir=undef
 AC_ARG_ENABLE(pkgdatadir, 
-[  --enable-pkgdatadir=DIR   device dependent data files [LIBDIR/aspell-0.60] ], 
+AS_HELP_STRING([--enable-pkgdatadir=DIR],[device dependent data files @<:@LIBDIR/aspell-0.60@:>@]),
 pkgdatadir=$enable_pkgdatadir)
 
 AC_ARG_ENABLE(pkgdata-dir, 
-[  --enable-data-dir=DIR    alias for pkgdatadir ], 
+AC_HELP_STRING([--enable-data-dir=DIR],[alias for pkgdatadir]),
+[pkgdatadir=$enable_dict_dir])
 pkgdatadir=$enable_dict_dir)
 
 if test "$pkgdatadir" = "undef"
@@ -33,11 +34,11 @@ dnl pkglibdir
 
 pkglibdir=undef
 AC_ARG_ENABLE(pkglibdir, 
-[  --enable-pkglibdir=DIR   device dependent data files [LIBDIR/aspell-0.60] ], 
+AC_HELP_STRING([--enable-pkglibdir=DIR],[device dependent data files @<:@LIBDIR/aspell-0.60@:>@]),
 pkglibdir=$enable_pkglibdir)
 
 AC_ARG_ENABLE(dict-dir, 
-[  --enable-dict-dir=DIR    alias for pkglibdir ], 
+AC_HELP_STRING([--enable-dict-dir=DIR],[alias for pkglibdir]),
 pkglibdir=$enable_dict_dir)
 
 if test "$pkglibdir" = "undef"
@@ -53,13 +54,13 @@ AC_ARG_ENABLE(win32-relocatable,
 [  --enable-win32-relocatable])
 
 AC_ARG_ENABLE(curses,           
-[  --enable-curses=LIBFILE])
+AS_HELP_STRING([--enable-curses=LIBFILE],[cursor control library]))
 
 AC_ARG_ENABLE(curses-include,           
 [  --enable-curses-include=DIR])
 
 AC_ARG_ENABLE(wide-curses,
-[  --disable-wide-curses])
+AS_HELP_STRING([--disable-wide-curses],[disable wide char utf8 cursor control]))
 
 AC_ARG_ENABLE(regex,
 [  --disable-regex])
