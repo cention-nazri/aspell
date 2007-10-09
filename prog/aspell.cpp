@@ -653,7 +653,9 @@ void print_elements(const AspellWordList * wl) {
 struct StatusFunInf 
 {
   aspeller::SpellerImpl * real_speller;
+  Conv oconv;
   bool verbose;
+  StatusFunInf(Convert * c) : oconv(c) {}
 };
 
 void status_fun(void * d, Token, int correct)
@@ -664,7 +666,7 @@ void status_fun(void * d, Token, int correct)
     if (ci->compound)
       COUT.put("-\n");
     else if (ci->pre_flag || ci->suf_flag)
-      COUT.printf("+ %s\n", ci->word.str());
+      COUT.printf("+ %s\n", p->oconv(ci->word.str()));
     else
       COUT.put("*\n");
   }
@@ -724,7 +726,7 @@ void pipe()
   if (do_time)
     COUT << _("Time to load word list: ")
          << (clock() - start)/(double)CLOCKS_PER_SEC << "\n";
-  StatusFunInf status_fun_inf;
+  StatusFunInf status_fun_inf(setup_conv(&real_speller->lang(), config));
   status_fun_inf.real_speller = real_speller;
   bool & print_star = status_fun_inf.verbose;
   print_star = true;
