@@ -27,6 +27,8 @@ namespace aspell {
 #endif
   template void HashTable<StringMap::Parms>::init(unsigned int);
   template void HashTable<StringMap::Parms>::del(void);
+  template HashTable<StringMap::Parms>::size_type
+           HashTable<StringMap::Parms>::erase(char const* const&);
   template void BlockSList<StringPair>::clear(void);
 
   void StringMap::copy(const StringMap & other)

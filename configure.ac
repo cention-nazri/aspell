@@ -7,20 +7,20 @@ AM_CONFIG_HEADER(gen/settings.h)
 AM_MAINTAINER_MODE
 
 AC_ARG_ENABLE(docdir, 
-[  --enable-docdir=DIR      documentation files in DIR [PREFIX/doc/aspell] ],
-pkgdocdir=$enable_docdir, pkgdocdir=\${prefix}/share/doc/aspell )
+  AS_HELP_STRING([--enable-docdir=DIR],[documentation files in DIR @<:@PREFIX/doc/aspell@:>@]),
+  pkgdocdir=$enable_docdir, pkgdocdir=\${prefix}/share/doc/aspell)
 AC_SUBST(pkgdocdir)
 
 dnl pkgdatadir
 
 pkgdatadir=undef
 AC_ARG_ENABLE(pkgdatadir, 
-[  --enable-pkgdatadir=DIR   device dependent data files [LIBDIR/aspell-0.61] ], 
-pkgdatadir=$enable_pkgdatadir)
+  AS_HELP_STRING([--enable-pkgdatadir=DIR],[device dependent data files @<:@LIBDIR/aspell-0.61@:>@]),
+  pkgdatadir=$enable_pkgdatadir)
 
 AC_ARG_ENABLE(pkgdata-dir, 
-[  --enable-data-dir=DIR    alias for pkgdatadir ], 
-pkgdatadir=$enable_dict_dir)
+  AS_HELP_STRING([--enable-data-dir=DIR],[alias for pkgdatadir]),
+  pkgdatadir=$enable_dict_dir)
 
 if test "$pkgdatadir" = "undef"
 then
@@ -33,12 +33,12 @@ dnl pkglibdir
 
 pkglibdir=undef
 AC_ARG_ENABLE(pkglibdir, 
-[  --enable-pkglibdir=DIR   device dependent data files [LIBDIR/aspell-0.61] ], 
-pkglibdir=$enable_pkglibdir)
+  AS_HELP_STRING([--enable-pkglibdir=DIR],[device dependent data files @<:@LIBDIR/aspell-0.61@:>@]),
+  pkglibdir=$enable_pkglibdir)
 
 AC_ARG_ENABLE(dict-dir, 
-[  --enable-dict-dir=DIR    alias for pkglibdir ], 
-pkglibdir=$enable_dict_dir)
+  AS_HELP_STRING([--enable-dict-dir=DIR],[alias for pkglibdir]),
+  pkglibdir=$enable_dict_dir)
 
 if test "$pkglibdir" = "undef"
 then
@@ -50,31 +50,31 @@ AC_SUBST(pkglibdir)
 dnl optional features
 
 AC_ARG_ENABLE(win32-relocatable,
-[  --enable-win32-relocatable])
+  [  --enable-win32-relocatable])
 
 AC_ARG_ENABLE(curses,           
-[  --enable-curses=LIBFILE])
+  AS_HELP_STRING([--enable-curses=LIBFILE],[cursor control library]))
 
 AC_ARG_ENABLE(curses-include,           
-[  --enable-curses-include=DIR])
+  [  --enable-curses-include=DIR])
 
 AC_ARG_ENABLE(wide-curses,
-[  --disable-wide-curses])
+  AS_HELP_STRING([--disable-wide-curses],[disable wide char utf8 cursor control]))
 
 AC_ARG_ENABLE(regex,
-[  --disable-regex])
+  [  --disable-regex])
 
 AC_ARG_ENABLE(compile-in-filters,
-[  --enable-compile-in-filters])
+  [  --enable-compile-in-filters])
 
 AC_ARG_ENABLE(filter-version-control,
-[  --disable-filter-version-control])
+  [  --disable-filter-version-control])
 
 AC_ARG_ENABLE(pspell-compatibility,
-[  --disable-pspell-compatibility  don't install pspell compatibility libraries])
+  AS_HELP_STRING([--disable-pspell-compatibility],[don't install pspell compatibility libraries]))
 
 AC_ARG_ENABLE(incremented-soname,
-[  --enable-incremented-soname     break aspell 0.50 binary compatibility])
+  AS_HELP_STRING([--enable-incremented-soname],[break aspell 0.50 binary compatibility]))
 
 dnl AC_ARG_ENABLE(aspell5-compatibility,
 dnl [  --enable-aspell5-compatibility  install aspell 0.50 compatibility libraries])
@@ -146,7 +146,7 @@ dnl         "$enable_aspell5_compatibility" = "yes"])
 dnl GETTEXT
 
 AM_GNU_GETTEXT([external])
-AM_GNU_GETTEXT_VERSION([0.15])
+AM_GNU_GETTEXT_VERSION([0.16.1])
 
 AH_TOP([#ifndef ASPELL_SETTINGS__H
 #define ASPELL_SETTINGS__H])

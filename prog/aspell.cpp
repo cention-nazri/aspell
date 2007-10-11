@@ -953,8 +953,11 @@ void check()
   if (args.size() == 0) {
     print_error(_("You must specify a file name."));
     exit(-1);
+  } else if (args.size() > 1) {
+    print_error(_("Only one file name may be specified."));
+    exit(-1);
   }
-    
+  
   file_name = args[0];
   new_name = file_name;
   new_name += ".new";
@@ -1907,7 +1910,7 @@ static const char * help_text[] =
   N_("  clean [strict]   cleans a word list so that every line is a valid word"),
   //N_("  filter           passes standard input through filters"),
   N_("  -v|version       prints a version line"),
-  N_("  munch-list [simple] [single|multi] [keep]\n")
+  N_("  munch-list [simple] [single|multi] [keep]"),
   N_("    reduce the size of a word list via affix compression"),
   N_("  conv <from> <to> [<norm-form>]"),
   N_("    converts from one encoding to another"),

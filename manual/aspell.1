@@ -1,4 +1,4 @@
-.TH ASPELL 1 "2004-03-03" "GNU" "Aspell Abbreviated User's Manual"
+.TH ASPELL 1 "2006-12-10" "GNU" "Aspell Abbreviated User's Manual"
 .SH NAME
 aspell \- interactive spell checker
 .SH SYNOPSIS
@@ -7,219 +7,307 @@ aspell \- interactive spell checker
 .br
 .SH "DESCRIPTION"
 .B aspell
-is a utility that can function as an 
+is a utility program that connects to the Aspell library so that it can
+function as an
 .B "ispell -a"
 replacement, as an independent spell checker, as a test utility to test
-out Aspell features, and as a utility for managing dictionaries.
+out Aspell library features, and as a utility for managing dictionaries
+used by the library.
+.PP
+The Aspell library contains an interface allowing other programs direct
+access to it's functions and therefore reducing the complex task of
+spell checking to simple library calls.  The default library does not
+contain dictionary word lists.  To add language dictionaries, please
+check your distro first for modified dictionaries, otherwise look here
+for base language dictionaries <http://aspell.net>.
+.PP
+The following information describes the commands and options used by the
+Aspell Utility.  
+.PP
+This manual page is maintained separately from the 
+official documentation so it may be out of date or incomplete.  The
+official documentation is maintained as a Texinfo manual.  See the
+.RB "`\|" aspell "\|'"
+entry in
+.B info
+for more complete documentation.
 .SH COMMANDS
 .I "<command>"
 is one of:
 .TP
-.B \-?,help
-display the help message
+\fBusage\fR, \fB\-?\fR
+Send a brief Aspell Utility usage message to standard output.  This is
+a short summary listing more common spell\-check commands and options.
 .TP
-.BI "\-c,check " file
-to spell-check a file
+.B help
+Send a detailed Aspell Utility help message to standard output.  This is
+a complete list showing all commands, options, filters and dictionaries.
 .TP
-.B \-a,pipe
+\fBversion\fR, \fB\-v\fR
+Print version number of Aspell Library and Utility to standard output.
+.TP
+\fBcheck\fR \fI<file>\fR, \fB\-c\fR \fI<file>\fR
+Spell\-check a single file.
+.TP
+\fBpipe\fR, \fB\-a\fR
+Run Aspell in
 .I "ispell -a"
-compatibility mode
+compatibility mode.
 .TP
 .B list
-produce a list of misspelled words from standard input
+Produce a list of misspelled words from standard input.
 .TP
-.B [dump] config
-dump the current configuration to stdout
+[\fBdump\fR] \fBconfig\fR
+Dump all current configuration options to standard output.
 .TP
-.BI "config " key
-print the current value of an option
+.BI "config " <key>
+Send the current value of
+.I <key>
+to standard output.
 .TP
 .B soundslike
-return the soundslike equivalent for each word entered
+Output the soundslike equivalent of each word entered.
 .TP
-.B filter
-pass standard input through the same set of filters that would be used
-to spell check a document
+.B munch
+Generate possible root words and affixes from an input list of words.
 .TP
-.B \-v,version
-print version number and exit
+\fBexpand\fR [\fB1\-4\fR]
+Expands the affix flags of each affix compressed word entered.
 .TP
-.BI "dump|create|merge master|personal|repl " "wordlist"
-dump, create, or merge a master, personal, or replacement word list
+\fBclean\fR [\fBstrict\fR]
+Cleans an input word list so that every line is a valid word.
+.TP
+\fBmunch\-list\fR [\fBsimple\fR] [\fBsingle\fR|\fBmulti\fR] [\fBkeep\fR]
+Reduce the size of a word list via affix compression.
+.TP
+\fBconv\fR \fI<from> <to>\fR [\fI<norm-form>\fR]
+Converts
+.I <from>
+one encoding
+.I <to>
+another.
+.TP
+\fBnorm\fR (\fI<norm\-map>\fR|\fI<from> <norm\-map> <to>\fR) [\fI<norm-form>\fR]
+Perform Unicode normalization.
+.TP
+[\fBdump\fR] \fBdicts\fR|\fBfilters\fR|\fBmodes\fR
+Lists available dictionaries, filters, or modes.
+.TP
+\fBdump\fR|\fBcreate\fR|\fBmerge master\fR|\fBpersonal\fR|\fBrepl\fR \fI<wordlist>\fR
+dump, create, or merge a master, personal, or replacement word list.
 .SH DICTIONARY OPTIONS
 The following options may be used to control which dictionaries to use
 and how they behave.
 .TP
-.BI "\-d,\-\-master="string
-base name of the dictionary to use. If this option is specified then
+\fB\-\-master=\fR\fI<name>\fR, \fB\-d\fR \fI<name>\fR
+Base name of the dictionary to use.  If this option is specified then
 Aspell will either use this dictionary or die.
 .TP
-.BI "\-\-dict\-dir="dir
-location of the main word list 
+\fB\-\-dict\-dir=\fR\fI<directory>\fR
+Location of the main dictionary word list.
 .TP
-.BI "\-l,\-\-lang="string
-language to use, it follows the same format of the LANG environmental
+\fB\-\-lang=\fR\fI<string>\fR, \fB\-l\fR \fI<string>\fR
+Language to use.  It follows the same format of the LANG environmental
 variable on most systems. It consists of the two letter ISO 639 language
 code and an optional two letter ISO 3166 country code after a dash or
 underscore. The default value is based on the value of the LC_MESSAGES
 locale.
 .TP
-.BI "\-\-size="string
-the preferred size of the word list 
+\fB\-\-size=\fR\fI<string>\fR
+The preferred size of the dictionary word list.  This consists of a two
+char digit code describing the size of the list, with typical values of:
+10=tiny, 20=really small, 30=small, 40=med-small, 50=med, 60=med-large,
+70=large, 80=huge, 90=insane.
 .TP
-.BI "\-\-jargon="string
-an extra information to distinguish two different words lists that have
-the same lang and size.
+\fB\-\-variety=\fR\fI<string>\fR
+Any extra information to distinguish this variety of dictionary from
+other dictionaries which may have the same \fIlang\fR and \fIsize\fR.
 .TP
-.BI "\-\-word\-list\-path="list
-search path for word list information files
+\fB\-\-jargon=\fR\fI<string>\fR
+Please use the \fIvariety\fR option since it replaces \fIjargon\fR as a
+better choice.  \fIjargon\fR will be removed in the future.
 .TP
-.BI "\-\-module\-search\-order="list
-list of available modules, modules that come first on this list have a
-higher priority. Currently there is only one speller module.
+\fB\-\-word\-list\-path=\fR\fI<list of directories>\fR
+Search path for word list information files.
 .TP
-.BI "\-p,\-\-personal="file
-personal word list file name
+\fB\-\-personal=\fR\fI<file>\fR, \fB\-p\fR \fI<file>\fR
+Personal word list file name.
 .TP
-.BI "\-\-repl="file
-replacements list file name
+\fB\-\-repl=\fR\fI<file>\fR
+Replacements list file name.
 .TP
-.BI "\-\-extra\-dicts="list
-extra dictionaries to use.
+\fB\-\-extra\-dicts=\fR\fI<list>\fR
+Extra dictionaries to use.
 .TP
-.BI "\-\-strip\-accents="boolean
-strip accents from all words in the dictionary
+\fB\-\-ignore\-accents\fR
+This option is not yet implemented.
 .SH CHECKER OPTIONS
 These options control the behavior of Aspell when checking documents.
 .TP
-.BI "\-W,\-\-ignore="integer
-ignore words <= n chars 
+\fB\-\-ignore=\fR\fI<integer>\fR, \fB\-W\fR \fI<integer>\fR
+Ignore words <=
+.I <integer>
+characters in length.
 .TP
-.BI "\-\-ignore\-case="boolean
-ignore case when checking words
+\fB\-\-ignore\-case\fR, \fB\-\-dont\-ignore\-case\fR
+Ignore case when checking words.
 .TP
-.BI "\-\-ignore\-accents="boolean
-ignore accents when checking words
+\fB\-\-ignore\-repl\fR, \fB\-\-dont\-ignore\-repl\fR
+Ignore commands to store replacement pairs.
 .TP
-.BI "\-\-ignore\-repl="boolean
-ignore commands to store replacement pairs
+\fB\-\-save\-repl\fR, \fB\-\-dont\-save\-repl\fR
+Save the replacement word list on save all.
 .TP
-.BI "\-\-save\-repl="boolean
-save the replacement word list on save allkeyboard (file) the base name
-of the keyboard definition file to use (see section 4.4.3)
-.TP
-.BI "\-\-sug\-mode="mode
-suggestion mode = ultra | fast | normal | bad-spellers
+\fB\-\-sug\-mode=\fR\fI<mode>\fR
+Suggestion
+.I <mode>
+\= \fBultra\fR|\fBfast\fR|\fBnormal\fR|\fBbad-spellers\fR
 .SH FILTER OPTIONS
 These options modify the behavior of the various filters.
 .TP
-.BI "\-\-filter="list
-add or removes a filter
+\fB\-\-add\-filter=\fR\fI<list>\fR, \fB\-\-rem\-filter=\fR\fI<list>\fR
+Add or remove a filter.
 .TP
-.BI "\-\-mode="string
-sets the filter mode. Mode is one if none, url, email, sgml, or
-tex. (The short cut options '-e' may be used for email, '-H' for
-Html/Sgml, or '-t' for Tex)
+\fB\-\-add\-filter\-path=\fR\fI<paths>\fR, \fB\-\-rem\-filter\-path=\fR\fI<paths>\fR
+Add or remove paths searched for filters.
 .TP
-.BI "\-\-encoding="string
-The encoding the input text is in. Valid values are ``utf-8'',
-``iso8859-*'', ``koi8-r'', ``viscii'', ``cp1252'', ``machine unsigned
-16'', ``machine unsigned 32''. However, the Aspell utility will
-currently only function correctly with 8-bit encodings. utf-8 support is
-planned for the future. The two ``machine unsigned'' encodings are
-intended to be used by other programs using the Aspell library and it
-is unlikely the Aspell utility will ever support these encodings.
+\fB\-\-mode=\fR\fI<string>\fR, \fB\-e\fR, \fB\-H\fR, \fB\-t\fR, \fB\-n\fR
+Sets the filter mode.  \fIMode\fR is one of none, url, email, html, tex
+or nroff.  The alternative shortcut options are '-e' for email, '-H'
+for Html/Sgml, '-t' for Tex or '-n' for Nroff.
 .TP
-.BI "\-\-add|rem\-email\-quote="list
-email quote characters
+\fB\-\-encoding=\fR\fI<string>\fR
+encoding the document is expected to be in.  The default depends on the
+current locale.
 .TP
-.BI "\-\-email\-margin="integer
-number of chars that can appear before the quote char
+\fB\-\-add-email\-quote=\fR\fI<list>\fR, \fB\-\-rem-email\-quote=\fR\fI<list>\fR
+Add or Remove a list of email quote characters.
 .TP
-.BI "\-\-sgml\-check="list
-SGML attributes to always check
+\fB\-\-email\-margin=\fR\fI<integer>\fR
+Number of chars that can appear before the quote char.
 .TP
-.BI "\-\-sgml\-extension="list
-SGML file extensions
+\fB\-\-add\-html\-check=\fR\fI<list>\fR, \fB\-\-rem\-html\-check=\fR\fI<list>\fR
+Add or remove a list of HTML attributes to always check.  For example,
+look inside alt= tags.
 .TP
-.BI "\-\-tex\-command="list
-TeX commands
+\fB\-\-add\-html\-skip=\fR\fI<list>\fR, \fB\-\-rem\-html\-skip=\fR\fI<list>\fR
+Add or remove a list of HTML attributes to always skip while spell
+checking.
 .TP
-.BI "\-\-tex\-check\-comments="boolean
-check TeX comments
+\fB\-\-add\-sgml\-check=\fR\fI<list>\fR, \fB\-\-rem\-sgml\-check=\fR\fI<list>\fR
+Add or remove a list of SGML attributes to always check for spelling.
+.TP
+\fB\-\-add\-sgml\-skip=\fR\fI<list>\fR, \fB\-\-rem\-sgml\-skip=\fR\fI<list>\fR
+Add or remove a list of SGML attributes to always skip while spell
+checking.
+.TP
+\fB\-\-sgml\-extension=\fR\fI<list>\fR
+SGML file extensions.
+.TP
+\fB\-\-tex\-check\-comments\fR, \fB\-\-dont\-tex\-check\-comments\fR
+Check TeX comments.
+.TP
+\fB\-\-add\-tex\-command=\fR\fI<list>\fR, \fB\-\-rem\-tex\-command=\fR\fI<list>\fR
+Add or Remove a list of TeX commands.
 .SH RUN\-TOGETHER WORD OPTIONS
-These may be used to control the behavior of run-together words.
+These may be used to control the behavior of run\-together words.
 .TP
-.BI "\-C|\-B,\-\-run-together="boolean
-consider run-together words legal
+\fB\-\-run\-together\fR, \fB\-\-dont\-run\-together\fR, \fB\-C\fR, \fB\-B\fR
+Consider run\-together words valid.
 .TP
-.BI "\-\-run\-together\-limit="integer
-maximum numbers that can be strung together
+\fB\-\-run\-together\-limit=\fR\fI<integer>\fR
+Maximum number of words that can be strung together.
 .TP
-.BI "\-\-run\-together\-min="integer
-minimal length of interior words
+\fB\-\-run\-together\-min=\fR\fI<integer>\fR
+Minimal length of interior words.
 .SH MISC OPTIONS
 Miscellaneous options that don't fall under any other category.
 .TP
-.BI "\-\-conf="file
-main configuration file
+\fB\-\-conf=\fR\fI<file name>\fR
+Main configuration file.  This file overrides Aspell's global defaults.
 .TP
-.BI "\-\-conf\-dir="dir
-location of main configuration file
+\fB\-\-conf\-dir=\fR\fI<directory>\fR
+Location of main configuration file.
 .TP
-.BI "\-\-data\-dir="dir
-location of language data files
+\fB\-\-data\-dir=\fR\fI<directory>\fR
+Location of language data files.
 .TP
-.BI "\-\-local\-data\-dir="dir
-alternative location of language data files. This directory is searched
-before data-dir. It defaults to the same directory the actual main word
-list is in (which is not necessarily dict-dir).
+\fB\-\-keyboard=\fR\fI<keyboard>\fR
+Use this keyboard layout for suggesting possible words.  These spelling
+errors happen if a user accidently presses a key next to the intended
+correct key.
 .TP
-.BI "\-\-home\-dir="dir
-location for personal files
+\fB\-\-local\-data\-dir=\fR\fI<directory>\fR
+Alternative location of language data files.  This directory is searched
+before data\-dir.
 .TP
-.BI "\-\-per\-conf="file
-personal configuration file
+\fB\-\-home\-dir=\fR\fI<directory>\fR
+Directory Location for personal wordlist files.
 .TP
-.BI "\-\-prefix="dir
-prefix directory
-.SH UTILITY OPTIONS
+\fB\-\-per\-conf=\fR\fI<file name>\fR
+Personal configuration file.  This file overrides options found in the
+global config file.
+.SH ASPELL UTILITY OPTIONS
+These options are part of the
+.I aspell
+Utility and work independently of the library.
 .TP
-.BI "\-b|\-x\-\-backup="boolean
-create a backup file by appending 
+\fB--backup\fR, \fB\-\-dont\-backup\fR, \fB\-b\fR, \fB\-x\fR
+The aspell utility creates a backup file by making a copy and appending
 .I .bak
-to the file name. Only applies when the command is check.
+to file name.  This only applies when the command is
+.I check <file>
+and the backup file is only created if any spelling modifications take
+place.
 .TP
-.BI "\-\-time="boolean
-time load time and suggest time in pipe mode.
+\fB\-\-byte\-offsets\fR, \fB\-\-dont\-byte\-offsets\fR
+Use byte offsets instead of character offsets.
 .TP
-.BI "\-\-reverse="boolean
-reverse the order of the suggestions list
+\fB\-\-guess\fR, \fB\-\-dont\-guess\fR, \fB\-m\fR, \fB\-P\fR
+Create missing root/affix combinations not in the dictionary in
+\fBpipe\fR mode.
 .TP
-.BI "\-\-keymapping="string
-the keymapping to use, either 
+\fB\-\-keymapping=aspell\fR, \fB\-\-keymapping=ispell\fR
+The keymapping to use, either
 .I aspell
 for the default mapping or
 .I ispell
-to use the same mapping that the ispell utility uses
+to use the same mapping that the Ispell utility uses.
+.TP
+\fB\-\-reverse\fR, \fB\-\-dont\-reverse\fR
+Reverse the order of the suggestions list in pipe mode.
+.TP
+\fB\-\-suggest\fR, \fB\-\-dont\-suggest\fR
+Suggest possible replacements in pipe mode. If false, Aspell will simply
+report the misspelling and make no attempt at suggestions or possible
+corrections.
+.TP
+\fB\-\-time\fR, \fB\-\-dont\-time\fR
+Time the load time and suggest a time in pipe mode.
 .PP
-In addition Aspell will try to make sense out of ispell's command line
-options so that it can function as a drop in replacement for ispell.  If
-Aspell is run without any command line options it will display a brief help
-screen and quit.
+In addition Aspell will try to make sense out of Ispell's command line
+options so that it can function as a drop in replacement for Ispell.  If
+Aspell is run without any command line options it will display a brief
+help screen and quit.
 .SH CONFIGURATION
-Aspell can also accept options via a personal or global configuration
-file. The exact files to used are specified by the options per-conf and
-conf respectfully but the personal configuration file is normally
-.I ".aspell.conf"
+Aspell can accept options via global or personal configuration files so
+that you do not need to specify them each time at the command line.  The
+default global configuration file is
+.I "/etc/aspell.conf"
+or another file specified by option \fI\-\-conf\fR and is checked first.
+The default per user configuration file
+.I "~/.aspell.conf"
 located in the
 .B "$HOME"
-directory.
-.pp
+directory (or another file specified by option \fI\-\-per\-conf\fR) is
+checked next and overrides options set in the global config file.
+Options specified at either the command line or via an environmental
+variable override those specified by either configuration file.
+.PP
 Each line of the configuration file has the format:
 .PP
 .RS
-.BI "option "[value]
+\fBoption\fR \fI[value]\fR
 .RE
 .PP
 where 
@@ -232,30 +320,33 @@ Swiss German:
 .B lang de_CH
 .RE
 .PP
-There may any number of spaces between the option and the value however
-it can only be spaces, i.e. there is no '=' between the option name and
-the value. Comments may also be included by preceding them with a '#' as
-anything from a '#' to a newline is ignored. Blank lines are also
-allowed.  Values set in the personal configuration file override those
-in the global file. Options specified at either the command line or via
-an environmental variable override those specified by either
-configuration file.
-.PP
-The global configuration file for Aspell is 
-.I "/etc/aspell.conf"
-and the per user configuration file is 
-.I "~/.aspell.conf"
+There may be any number of spaces between the option and the value,
+however it can only be spaces, i.e. there is no '=' between the option
+name and the value.  Comments may also be included by preceding them
+with a '#' as anything from a '#' to a newline is ignored.  Blank lines
+are also allowed.  The \fI/etc/aspell.conf\fR file is a good example of
+how to set these options and the Aspell Manual has more detailed info.
 .SH SEE ALSO
 .PP
+.BR aspell\-import (1),
+.BR prezip\-bin (1),
 .BR run\-with\-aspell (1),
-.BR word\-list\-compress (1),
-.BR aspell\-import (1)
+.BR word\-list\-compress (1)
 .PP
 Aspell is fully documented in its Texinfo manual.  See the
 .RB "`\|" aspell "\|'"
 entry in
 .B info
 for more complete documentation.
+.SH SUPPORT
+Support for Aspell can be found on the Aspell mailing lists.
+Instructions for joining the various mailing lists (and an archive of
+them) can be found off the Aspell home page at <http://aspell.net>.
+Bug reports should be submitted via the Sourceforge Tracker rather
+than being posted to the mailing lists.
 .SH AUTHOR
-This manual page was written by Brian Nelson <pyro@debian.org> based on
-the Aspell User's Manual, Copyright \(co 2002 Kevin Atkinson.
+This manual page was written by Brian Nelson <pyro@debian.org> based
+on the Aspell User's Manual, Copyright \(co 2002 Kevin Atkinson.
+Updated Nov 2006 by Jose Da Silva <digital@joescat.com>, and Dec 2006
+by Kevin Atkinson <kevina@gnu.org>.
+
