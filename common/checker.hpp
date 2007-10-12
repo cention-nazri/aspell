@@ -61,6 +61,8 @@ namespace aspell {
 
   struct Segment
   {
+    // Each segment is expected to have the null character ('\0') as
+    // the last character of the string ie *(end-1) == '\0';
     const FilterChar * begin;
     const FilterChar * end;
     Segment * prev;
@@ -127,6 +129,11 @@ namespace aspell {
     //   NOT: "hello w", "orld"
     //   OK:  "http://www.google.com"
     //   NOT: "http://", "www.google.com"
+    // An imaginary whitespace character is inserted after each
+    // segment, thus,
+    //   "hel", "lo world"
+    // will be interrupted as "hel lo world".
+    //
     // The "which" is a genertic pointer which can be used to
     // keep track of which string the current word belongs to.
     //
@@ -165,7 +172,7 @@ namespace aspell {
 
     void set_more_data_callback(void (*c)(void *, void *), void * d) 
       {more_data_callback_ = c; more_data_callback_data_ = d;}
-    // sets the callback that is called when more data is needed the
+    // sets the callback that is called when more data is needed.  The
     // callback function is expected to add more data with the
     // "process" method.  The first paramter will of the callback
     // function is the callback specific data "d", the second

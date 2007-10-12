@@ -73,7 +73,7 @@ namespace aspell {
     conv_->decode(str, size, proc_str_);
     proc_str_.append(0);
     FilterChar * begin = proc_str_.pbegin();
-    FilterChar * end   = proc_str_.pend() - 1;
+    FilterChar * end   = proc_str_.pend();
     if (filter)
       filter->process(begin, end);
     else
@@ -107,7 +107,7 @@ namespace aspell {
         conv_->decode(str, size, proc_str_);
         proc_str_.append(0);
         FilterChar * begin = proc_str_.pbegin();
-        FilterChar * end   = proc_str_.pend() - 1;
+        FilterChar * end   = proc_str_.pend();
         filter_->process(begin, end);
       }
       if (which)
