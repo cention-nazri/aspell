@@ -1477,6 +1477,10 @@ namespace aspell {
     , {"personal", KeyInfoString, PERSONAL,
        N_("personal dictionary file name")}
     , {"personal-path", KeyInfoString, "<home-dir/personal>", 0}
+    , {"personal-no-hint", KeyInfoBool, "false",
+       N_("don't write size hint to personal dictionary when saving")}
+    , {"personal-sort", KeyInfoBool, "false",
+       N_("sort personal dictionary when saving")}
     , {"prefix",   KeyInfoString, PREFIX,
        N_("prefix directory")}
     , {"repl",     KeyInfoString, REPL,

@@ -47,6 +47,11 @@ namespace aspell {
   template <class Value>
   class HT_Iterator {
   public: // but don't use
+    typedef std::input_iterator_tag iterator_category;
+    typedef Value                   value_type;
+    typedef ptrdiff_t               difference_type;
+    typedef Value*                  pointer;
+    typedef Value&                  reference;
     typedef typename BlockSList<Value>::Node Node;
     Node * * t;
     Node * * n;

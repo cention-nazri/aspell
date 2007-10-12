@@ -99,6 +99,7 @@ protected:
   WritableBase(BasicType t, const char * n, const char * s, const char * cs)
     : Dictionary(t,n),
       suffix(s), compatibility_suffix(cs),
+      personal_no_hint(false), personal_sort(false),
       use_soundslike(true) {fast_lookup = true;}
   virtual ~WritableBase() {}
   
@@ -121,6 +122,12 @@ protected:
   PosibErr<void> synchronize() {return save(true);}
   PosibErr<void> save_noupdate() {return save(false);}
 
+  template <typename InputIterator>
+  void save_words(FStream&, InputIterator, InputIterator);
+
+  bool personal_no_hint;
+  bool personal_sort;
+
   bool use_soundslike;
   ObjStack             buffer;
  
@@ -138,6 +145,9 @@ PosibErr<void> WritableBase::load(ParmString f0, Config & config,
   set_file_name(f0);
   const String f = file_name();
   FStream in;
+
+  personal_no_hint = config.retrieve_bool("personal-no-hint");
+  personal_sort = config.retrieve_bool("personal-sort");
 
   if (file_exists(f)) {
       
@@ -607,19 +617,41 @@ PosibErr<void> WritableDict::merge(FStream & in,
   return no_err;
 }
 
-PosibErr<void> WritableDict::save(FStream & out, ParmString file_name) 
+template <typename InputIterator>
+inline void WritableBase::save_words(FStream& out, InputIterator i, InputIterator e)
 {
-  out.printf("personal_ws-1.1 %s %i %s\n", 
-             lang_name(), word_lookup->size(), file_encoding.c_str());
-
-  WordLookup::const_iterator i = word_lookup->begin();
-  WordLookup::const_iterator e = word_lookup->end();
-    
   ConvP conv(oconv);
   for (;i != e; ++i) {
     const char *w = (*i)->word_;
     out.printf("%s\n", conv(w));
   }
+}
+
+// return true if r1 < r2
+inline bool compare_word_rec(WordRec const* r1, WordRec const* r2)
+{
+  return strcmp(r1->key(), r2->key()) < 0;
+}
+
+PosibErr<void> WritableDict::save(FStream & out, ParmString file_name)
+{
+  int size = personal_no_hint ? 0 : word_lookup->size();
+
+  out.printf("personal_ws-1.1 %s %i %s\n",
+             lang_name(), size, file_encoding.c_str());
+
+  if (personal_sort) {
+    // WordVec sorted_words(word_lookup->begin(), word_lookup->end());
+    // WordVec doesn't support the iterator copy constructor
+    WordVec sorted_words;
+    sorted_words.assign(word_lookup->begin(), word_lookup->end());
+    // NOTE: std::sort is likely an overkill here
+    std::sort(sorted_words.begin(), sorted_words.end(), compare_word_rec);
+    save_words(out, sorted_words.begin(), sorted_words.end());
+  } else {
+    save_words(out, word_lookup->begin(), word_lookup->end());
+  }
+
   return no_err;
 }
 
