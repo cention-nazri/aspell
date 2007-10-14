@@ -1368,7 +1368,8 @@ namespace aspell { namespace sp {
     ngram_keep = 10;
     use_typo_analysis = true;
     use_repl_table = sp->have_repl;
-    try_one_edit_word = sp->soundslike_root_only || sp->unconditional_run_together_;
+    try_one_edit_word = true; // always a good idea, even when
+                              // soundslike lookup is used
     check_after_one_edit_word = false;
     ngram_threshold = 2;
     if (mode == "ultra") {
@@ -1402,10 +1403,9 @@ namespace aspell { namespace sp {
       return make_err(bad_value, "sug-mode", mode, _("one of ultra, fast, normal, slow, or bad-spellers"));
     }
     if (!sp->have_soundslike) {
-      if (try_scan_2) {
-        try_scan_1 = false;
-      } else if (try_scan_1) {
-        try_one_edit_word = true;
+      // in this case try_scan_1 will not get better results than
+      // try_one_edit_word
+      if (try_scan_1) {
         check_after_one_edit_word = true;
         try_scan_1 = false;
       }
