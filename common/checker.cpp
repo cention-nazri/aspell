@@ -73,7 +73,7 @@ namespace aspell {
     conv_->decode(str, size, proc_str_);
     proc_str_.append(0);
     FilterChar * begin = proc_str_.pbegin();
-    FilterChar * end   = proc_str_.pend();
+    FilterChar * end   = proc_str_.pend() - 1;
     if (filter)
       filter->process(begin, end);
     else
@@ -81,6 +81,7 @@ namespace aspell {
     SegmentData * buf = new SegmentData;
     conv_->encode(begin, end, *buf);
     if (seg == 0) seg = new Segment;
+    buf->append('\0');
     seg->begin = buf->pbegin();
     seg->end = buf->pend();
     seg->offset = 0;
@@ -107,7 +108,7 @@ namespace aspell {
         conv_->decode(str, size, proc_str_);
         proc_str_.append(0);
         FilterChar * begin = proc_str_.pbegin();
-        FilterChar * end   = proc_str_.pend();
+        FilterChar * end   = proc_str_.pend() - 1;
         filter_->process(begin, end);
       }
       if (which)
