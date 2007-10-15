@@ -20,7 +20,7 @@ than Aspell.
 
 ALMOST DONE: Still a few rough spots, especially with Ispell compatibly.
   - "ascii" can not be used as a name for a language specific encoding
-  - the "+" command in pipe mode doesn't also changes the multi-character
+  - the "+" command in pipe mode also changes the multi-character
     conversion layer, in Ispell it ONLY changes the filter
   - The multi-character conversion lawyer is not selected based on the file
     name extension as in Ispell
@@ -34,18 +34,27 @@ when the replacement is more than one word. [DONE]
 Create a special pipe mode that ignores special characters at the
 beginning of a line so that a user can feed it a text file as is.
 
-
 THINKS OTHERS ARE WORKING ON:
 
 1) 
 Expand prezip-bin to also support compressing in the
 same format that "word-list-compress" so that the word-list-compress
 program can be removed and replaced with a link to prezip-bin (or if
-really necessary a shell script). [Jose Da Silva]
+really necessary a shell script). [Jose Da Silva] [DONE, I think]
 
 2) 
 Possible improve writable.cpp to make it easier to understand and
 add additional features. [Gary Setter] [DONE]
+
+OTHER WELL DEFINED TASKS:
+
+1) 
+Modify the scoring algo to give higher scores to typos, see the TODO
+at the top of suggest.cpp
+
+2) 
+Add an incremental mode to munch-list, see the TODO at the top of
+lib/munch-list.cpp
 
 
 OTHER POSSIBILITIES:
@@ -60,6 +69,4 @@ information.
 2)
 Develop a GUI interface for Aspell.  It will probably be very similar
 to the old Gaspell.
-
-
 

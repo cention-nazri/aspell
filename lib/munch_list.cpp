@@ -15,6 +15,23 @@ using namespace aspell;
 // It is very close to the optimum result. 
 //
 
+/* TODO:
+ *
+ * Have some sort in incremental mode which will get good results
+ * without having to completely expand the word list first.
+ * 
+ * The idea is to have two word lists, the first one is the previously
+ * compressed list, and the second one is the list of words to run
+ * munch-list on.  First check that words in the second list or not
+ * already covered by the first list.  If not than ... to be
+ * determined.  Will go something like this, when checking for legal
+ * root words and expansions check both list.  If any of the root
+ * words or expansions are in the first list put them in the same
+ * disjoint set of the original word, but don't expand entries from the
+ * first list yet...
+ *
+ */
+
 //
 // Hash table to store the words
 //
@@ -297,6 +314,12 @@ void munch_list_complete(Language * lang,
 
   // Now try to munch each word in the dictionary.  This will also
   // group the base words into disjoint sets based on there expansion.
+  // For example the words:
+  //   clean cleaning cleans cleaned dog dogs
+  // would be grouped into two disjoint sets:
+  //   1) clean cleaning cleans cleaned
+  //   2) dog dogs
+  // Each of the disjoint sets can then be processed independently
   CML_Table::iterator p = table.begin();
   CML_Table::iterator end = table.end();
   String flags;

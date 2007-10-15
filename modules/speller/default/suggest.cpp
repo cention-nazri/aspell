@@ -36,6 +36,51 @@
 // NOTE: It is assumed that that strlen(soundslike) <= strlen(word)
 //       for any possible word
 
+/* TODO:
+ *
+ * Use typo edit distance as the word score, rather than using it to
+ * fine tune the score at the very end.  Also, when a word is clearly
+ * a typo (ie a typo edit distance less than around 100) than give the
+ * word score a higher weight, like maybe around as high as 85%.  This
+ * will eliminate the need for the small_word_threshold hack, and thus
+ * should improve the overall results.  In a similar manor when the
+ * soundslike is identical consider giving the soundslike score more
+ * weight.  One way to do this is, is to have variable weights which
+ * depend on the actual score.  For example maybe something like:
+ *   word_weight = 50; soundslike_weight = 50;
+ *   if (word_score < 100) 
+ *     word_weight = (0.85*50)/(1-0.85)
+ *   if (soundslike_score == 0)
+ *     soundslike_weight = (0.60*50)/(1-0.60)
+ * or maybe a sliding scale.  It will take some experimenting to figure
+ * out what works best.  It is also possible the the soundslike_weight
+ * should stay fixed, and only the word_weight should change.  In any
+ * case a large list of common mistakes should be used to test any
+ * changes such as:
+ *   http://en.wikipedia.org/wiki/Wikipedia:Lists_of_common_misspellings
+ *
+ * NOTES: 
+ *
+ * Finding the typo edit distance is expensive, thus
+ * limit_edit_distance should still be used to find possible candidate
+ * words, and then run typo edit distance to find tune the result, or
+ * perhaps enhance limit_edit_distance to return the same results as
+ * typo_edit_distance, but this might slow it down significantly.
+ *
+ * try_one_edit_word, should obviously be modified to use the typo
+ * score.  Thus, merge_dups may end up helping, when both
+ * try_one_edit_word and try_scan_* is used, since finding typo edit
+ * distance is expensive, than again maybe not.
+ *
+ * It will probably be a good idea to skip over all typos before
+ * taking "parms->span" into account, otherwise all that may be
+ * returned are corrections for a possible typo, which will be of
+ * little help to the user if the mistake was a true misspelling and
+ * just a simple typo.  This wasn't a problem before since the typo
+ * edit distance was only used to reorder the existing list.
+ *
+ */
+
 // POSSIBLE OPTIMIZATION:
 //   store the number of letters that are the same as the previous 
 //     soundslike so that it can possible be skipped
@@ -65,8 +110,8 @@
 
 #include "gettext.h"
 
-//#include "iostream.hpp"
-//#define DEBUG_SUGGEST
+#include "iostream.hpp"
+#define DEBUG_SUGGEST
 
 using namespace aspell::sp;
 using namespace aspell;
@@ -136,8 +181,19 @@ namespace {
     return compare(lhs, rhs) == 0;
   }
 
+  static inline bool lt_word (const ScoreWordSound & lhs,
+                const ScoreWordSound & rhs) {
+    int temp = strcmp(lhs.word,rhs.word);
+    if (temp) 
+      return temp < 0;
+    else if (lhs.repl_list != rhs.repl_list)
+      return lhs.repl_list < rhs.repl_list;
+    else
+      return lhs.word_score < rhs.word_score;
+  }
+
   typedef BasicList<ScoreWordSound> NearMisses;
- 
+
   class Score {
   protected:
     const LangImpl * lang;
@@ -277,6 +333,8 @@ namespace {
     void try_repl();
     void try_ngram();
 
+    void merge_dups();
+ 
     void score_list();
     void fine_tune_score();
     void transfer();
@@ -987,6 +1045,42 @@ namespace {
       add_sound(ci->i, &ci->info, ci->soundslike);
     }
   }
+
+  // merge_dups is an optimization to avoid having to score the same
+  // word more than once, not sure if it does any good yet.  The idea,
+  // is that if both try_scan_* and try_one_edit_word is used than
+  // both the soundslike and the word score should already be known
+  // for many words, but they will be in different entries, thus merge
+  // them to avoid unnecessary work
+  void Working::merge_dups() {
+      near_misses.sort(lt_word);
+      NearMisses::iterator end = near_misses.end();
+      NearMisses::iterator first, last;
+      first = near_misses.begin();
+      while (last != end) {
+        last = first;
+        unsigned cnt = 0;
+        ++last;
+        while (last != end && strcmp(first->word, last->word) == 0 && first->repl_list == last->repl_list) {
+          ++cnt;
+          if (!first->word_clean && last->word_clean)
+            first->word_clean = last->word_clean;
+          if (!first->soundslike && last->soundslike)
+            first->soundslike = last->soundslike;
+          if (first->soundslike_score > last->soundslike_score) {
+            first->soundslike_score = last->soundslike_score;
+            first->score = weighted_average(first->word_score, first->soundslike_score);
+          }
+          if (!first->count && last->count)
+            first->count = last->count;
+          ++last;
+        }
+        if (cnt)
+          near_misses.erase_after(first, last);
+        first = last;
+      }
+    }
+
   
   void Working::score_list() {
 
@@ -1062,7 +1156,7 @@ namespace {
       cont1:
         prev = i;
         ++i;
-      }
+      } // while (i != near_misses.end())
 	
       scored_near_misses.sort();
 	
@@ -1076,7 +1170,7 @@ namespace {
       if ((k == parms->skip && i->score <= try_for) 
 	  || prev == near_misses.begin() ) // or no more left in near_misses
 	break;
-    }
+    } // while(true) (top loop)
       
     threshold = i->score + parms->span;
     if (threshold < parms->edit_distance_weights.max)

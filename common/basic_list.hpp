@@ -61,6 +61,11 @@ namespace aspell {
       data_.splice(data_.begin(),other.data_,cur);
       //data_.splice_after(data_.begin(), prev);
     }
+    void erase_after(iterator before_first, iterator last) 
+    {
+      data_.erase(++before_first, last);
+    }
+    
   };
 
 }
