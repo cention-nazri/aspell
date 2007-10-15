@@ -215,7 +215,7 @@ const PossibleOption * find_option(char c) {
 }
 
 static inline bool str_equal(const char * begin, const char * end, 
-			     const char * other) 
+                             const char * other) 
 {
   while(begin != end && *begin == *other)
     ++begin, ++other;
@@ -225,7 +225,7 @@ static inline bool str_equal(const char * begin, const char * end,
 static const PossibleOption * find_option(const char * begin, const char * end) {
   const PossibleOption * i = possible_options;
   while (i != possible_options_end 
-	 && !str_equal(begin, end, i->name))
+         && !str_equal(begin, end, i->name))
     ++i;
   return i;
 }
@@ -233,7 +233,7 @@ static const PossibleOption * find_option(const char * begin, const char * end) 
 static const PossibleOption * find_option(const char * str) {
   const PossibleOption * i = possible_options;
   while (i != possible_options_end 
-	 && !strcmp(str, i->name) == 0)
+         && !strcmp(str, i->name) == 0)
     ++i;
   return i;
 }
@@ -268,50 +268,50 @@ int main (int argc, const char *argv[])
     if (argv[i][0] == '-') {
       bool have_parm = false;
       if (argv[i][1] == '-') {
-	// a long arg
-	const char * c = argv[i] + 2;
-	while(*c != '=' && *c != '\0') ++c;
-	o = find_option(argv[i] + 2, c);
-	if (o == possible_options_end) {
-	  option_name.assign(argv[i] + 2, c - argv[i] - 2);
+        // a long arg
+        const char * c = argv[i] + 2;
+        while(*c != '=' && *c != '\0') ++c;
+        o = find_option(argv[i] + 2, c);
+        if (o == possible_options_end) {
+          option_name.assign(argv[i] + 2, c - argv[i] - 2);
           other_opt.name    = option_name.c_str();
           other_opt.num_arg = -1;
           o = &other_opt;
-	}
-	if (*c == '=') {have_parm = true; ++c;}
-	parm = c;
+        }
+        if (*c == '=') {have_parm = true; ++c;}
+        parm = c;
       } else {
-	// a short arg
-	const ModeAbrv * j = mode_abrvs;
-	while (j != mode_abrvs_end && j->abrv != argv[i][1]) ++j;
-	if (j == mode_abrvs_end) {
-	  o = find_option(argv[i][1]);
-	  if (argv[i][1] == 'v' && argv[i][2] == 'v')
-	    // Hack for -vv
-	    parm = argv[i] + 3;
-	  else
-	    parm = argv[i] + 2;
-	} else { // mode option
-	  other_opt.name = "mode";
-	  other_opt.num_arg = 1;
-	  o = &other_opt;
-	  parm = j->mode + 5;
-	}
+        // a short arg
+        const ModeAbrv * j = mode_abrvs;
+        while (j != mode_abrvs_end && j->abrv != argv[i][1]) ++j;
+        if (j == mode_abrvs_end) {
+          o = find_option(argv[i][1]);
+          if (argv[i][1] == 'v' && argv[i][2] == 'v')
+            // Hack for -vv
+            parm = argv[i] + 3;
+          else
+            parm = argv[i] + 2;
+        } else { // mode option
+          other_opt.name = "mode";
+          other_opt.num_arg = 1;
+          o = &other_opt;
+          parm = j->mode + 5;
+        }
         if (*parm) have_parm = true;
       }
       if (o == possible_options_end) {
-	print_error(_("Invalid Option: %s"), argv[i]);
-	return 1;
+        print_error(_("Invalid Option: %s"), argv[i]);
+        return 1;
       }
       int num_parms;
       if (o->num_arg == 0) {
         num_parms = 0;
-	if (parm[0] != '\0') {
-	  print_error(_(" does not take any parameters."), 
-		      String(argv[i], parm - argv[i]));
-	  return 1;
-	}
-	i += 1;
+        if (parm[0] != '\0') {
+          print_error(_(" does not take any parameters."), 
+                      String(argv[i], parm - argv[i]));
+          return 1;
+        }
+        i += 1;
       } else if (have_parm) {
         num_parms = 1;
         i += 1;
@@ -329,9 +329,9 @@ int main (int argc, const char *argv[])
         i += 2;
       }
       if (o->is_command) {
-	args.push_back(o->name);
-	if (o->num_arg == 1)
-	  args.push_back(parm);
+        args.push_back(o->name);
+        if (o->num_arg == 1)
+          args.push_back(parm);
       } else if (o->name[0] != '\0') {
         Config::Entry * entry = new Config::Entry;
         entry->key = o->name;
@@ -463,7 +463,7 @@ int main (int argc, const char *argv[])
       dump_affix();
     else {
       print_error(_("Unknown Action: %s"),
-		  String(action_str + " " + what_str));
+                  String(action_str + " " + what_str));
       return 1;
     }
   }
@@ -770,10 +770,12 @@ void pipe()
       word = trim_wspace(line + 1);
       err = config->replace("mode", word);
       if (err.get_err())
-	config->replace("mode", "tex");
+        config->replace("mode", "tex");
       goto reload_filters;
     case '-':
-      config->remove("filter");
+      // FIXME: config->remove("filter") doesn't work, is this even
+      // the correct thing to do.  This is what I did in Aspell 0.60
+      config->replace("mode", "nroff");
       goto reload_filters;
     case '~':
       word = trim_wspace(line + 1);
@@ -787,51 +789,51 @@ void pipe()
       break;
     case '$':
       if (line[1] == '$') {
-	switch(line[2]) {
-	case 'r':
-	  switch(line[3]) {
-	  case 'a':
-	    if (get_word_pair(line + 4, word, word2))
-	      aspell_speller_store_replacement(speller, word, -1, word2, -1);
-	    break;
-	  }
-	  break;
-	case 'c':
-	  switch (line[3]) {
-	  case 's':
-	    if (get_word_pair(line + 4, word, word2))
-	      BREAK_ON_ERR(err = config->replace(word, word2));
+        switch(line[2]) {
+        case 'r':
+          switch(line[3]) {
+          case 'a':
+            if (get_word_pair(line + 4, word, word2))
+              aspell_speller_store_replacement(speller, word, -1, word2, -1);
+            break;
+          }
+          break;
+        case 'c':
+          switch (line[3]) {
+          case 's':
+            if (get_word_pair(line + 4, word, word2))
+              BREAK_ON_ERR(err = config->replace(word, word2));
             if (strcmp(word,"suggest") == 0)
               suggest = config->retrieve_bool("suggest");
             else if (strcmp(word,"time") == 0)
               do_time = config->retrieve_bool("time");
             else if (strcmp(word,"guess") == 0)
               include_guesses = config->retrieve_bool("guess");
-	    break;
-	  case 'r':
-	    word = trim_wspace(line + 4);
-	    BREAK_ON_ERR_SET(config->retrieve(word), String, ret);
+            break;
+          case 'r':
+            word = trim_wspace(line + 4);
+            BREAK_ON_ERR_SET(config->retrieve_any(word), String, ret);
             COUT.printl(ret);
-	    break;
-	  }
-	  break;
-	case 'p':
-	  switch (line[3]) {
-	  case 'p':
-	    print_elements(aspell_speller_personal_word_list(speller));
-	    break;
-	  case 's':
-	    print_elements(aspell_speller_session_word_list(speller));
-	    break;
-	  }
-	  break;
-	case 'l':
-	  COUT.printl(config->retrieve("lang"));
-	  break;
-	}
-	break;
+            break;
+          }
+          break;
+        case 'p':
+          switch (line[3]) {
+          case 'p':
+            print_elements(aspell_speller_personal_word_list(speller));
+            break;
+          case 's':
+            print_elements(aspell_speller_session_word_list(speller));
+            break;
+          }
+          break;
+        case 'l':
+          COUT.printl(config->retrieve("lang"));
+          break;
+        }
+        break;
       } else {
-	// continue on (no break)
+        // continue on (no break)
       }
     case '^':
       ignore = 1;
@@ -908,10 +910,9 @@ void pipe()
     if (c == EOF) break;
     continue;
   reload_filters:
-    BREAK_ON_ERR(config->replace("encoding", word));
     BREAK_ON_ERR(reload_filters(real_speller));
-    //checker.del(); // FIXME.  Why?
-    //checker = new_checker(speller, status_fun_inf);
+    delete_aspell_checker(checker); // FIXME: Why?
+    checker = new_checker(speller);
     continue;
   }
 
@@ -925,7 +926,7 @@ void pipe()
 //
 
 enum UserChoice {None, Ignore, IgnoreAll, Replace, ReplaceAll, 
-		 Add, AddLower, Exit, Abort};
+                 Add, AddLower, Exit, Abort};
 
 struct Mapping {
   char primary[9];
@@ -1453,7 +1454,7 @@ void dump (aspell::sp::Dict * lws, Convert * conv)
       StackPtr<DictsEnumeration> els(lws->dictionaries());
       Dict * ws;
       while (ws = els->next(), ws) 
-	dump (ws, conv);
+        dump (ws, conv);
     }
     break;
   default:
@@ -1525,7 +1526,7 @@ void personal () {
     if (action == do_create) {
       if (file_exists(speller->config()->retrieve("personal-path"))) {
         print_error(_("Sorry I won't overwrite \"%s\""), 
-		    speller->config()->retrieve("personal-path"));
+                    speller->config()->retrieve("personal-path"));
         exit (1);
       }
       speller->personal_word_list().data->clear();
@@ -1571,7 +1572,7 @@ void repl() {
     if (action == do_create) {
       if (file_exists(speller->config()->retrieve("repl-path"))) {
         print_error(_("Sorry I won't overwrite \"%s\""),
-		    speller->config()->retrieve("repl-path"));
+                    speller->config()->retrieve("repl-path"));
         exit (1);
       }
       speller->personal_repl().clear();
@@ -1581,8 +1582,8 @@ void repl() {
       String word,repl;
 
       while (true) {
-	get_word_pair(word,repl,':');
-	EXIT_ON_ERR(speller->store_repl(word,repl,false));
+        get_word_pair(word,repl,':');
+        EXIT_ON_ERR(speller->store_repl(word,repl,false));
       }
 
     } catch (bad_cin) {}
@@ -1845,7 +1846,7 @@ void dump_affix()
 //
 
 void print_help_line(char abrv, char dont_abrv, const char * name, 
-		     KeyInfoType type, const char * desc, bool no_dont = false) 
+                     KeyInfoType type, const char * desc, bool no_dont = false) 
 {
   String command;
   if (abrv != '\0') {
@@ -1950,8 +1951,8 @@ void print_help (bool verbose) {
     const PossibleOption * o = find_option(k->name);
     const char * name = k->name;
     print_help_line(o->abrv, 
-		    strncmp((o+1)->name, "dont-", 5) == 0 ? (o+1)->abrv : '\0',
-		    name, k->type, k->desc);
+                    strncmp((o+1)->name, "dont-", 5) == 0 ? (o+1)->abrv : '\0',
+                    name, k->type, k->desc);
     if (verbose && strcmp(name, "mode") == 0) {
       for (const ModeAbrv * j = mode_abrvs;
            j != mode_abrvs_end;
