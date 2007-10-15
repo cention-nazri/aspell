@@ -4301,7 +4301,7 @@ a C++ program.
 @node ChangeLog
 @appendix ChangeLog
 
-@heading Changes from 0.60.4 to 0.61 (???)
+@heading Changes from 0.60.5 to 0.61 (???)
 @itemize @bullet
 @item
 Added a generic conversion (genconv) filter for converting from old
@@ -4311,7 +4311,13 @@ Unicode.
 Added support for recognizing TeX and Texinfo commands used to encode
 non-ASCII letters as well as support for skipping over Tex hyphens.
 @item
-Bug fixes.
+Rewrote the document checker interface to correctly handle the case
+when the replacement is more than one word.
+@item
+Be able to store the same base word multiple times ie ``foo/x'',
+``foo/y'', which makes sense when cross products are involved.
+@item
+Other minor enhancements and bug fixes.
 @end itemize
 
 @heading Changes from 0.60.4 to 0.60.5 (December 18, 2006)
