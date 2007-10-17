@@ -18,7 +18,8 @@ SUFFIXES = .info
 
 noinst_DATA = 
 pkgdata_DATA = 
-EXTRA_DIST = win32/Makefile\
+EXTRA_DIST = TODO-0.61\
+             win32/Makefile\
              win32/settings.h\
              win32/dirs.h\
              win32/libstub.cpp
@@ -172,8 +173,7 @@ optfiles = \
   modules/filter/html-filter.info\
   modules/filter/context-filter.info\
   modules/filter/nroff-filter.info\
-  modules/filter/texinfo-filter.info\
-  modules/filter/genconv-filter.info
+  modules/filter/texinfo-filter.info
 
 ### Add any extra data files your filter uses here
 fltdata = \
@@ -213,8 +213,7 @@ libaspell_la_SOURCES +=\
   modules/filter/sgml.cpp\
   modules/filter/context.cpp\
   modules/filter/nroff.cpp\
-  modules/filter/texinfo.cpp\
-  modules/filter/genconv.cpp
+  modules/filter/texinfo.cpp
 
 else # not COMPILE_IN_FILTERS
 
@@ -225,8 +224,7 @@ filter_ldflags = -module -avoid-version
 ### must look like lib<filtername>-filter.la see development manual
 filter_LTLIBRARIES = email-filter.la tex-filter.la\
 	             sgml-filter.la context-filter.la\
-                     nroff-filter.la texinfo-filter.la\
-                     genconv-filter.la
+                     nroff-filter.la texinfo-filter.la
 
 email_filter_la_SOURCES = modules/filter/email.cpp
 email_filter_la_LIBADD = libaspell.la 
@@ -251,10 +249,6 @@ nroff_filter_la_LDFLAGS  = ${filter_ldflags}
 texinfo_filter_la_SOURCES  = modules/filter/texinfo.cpp
 texinfo_filter_la_LIBADD = libaspell.la
 texinfo_filter_la_LDFLAGS  = ${filter_ldflags}
-
-genconv_filter_la_SOURCES  = modules/filter/genconv.cpp
-genconv_filter_la_LIBADD = libaspell.la
-genconv_filter_la_LDFLAGS  = ${filter_ldflags}
 
 ### Before this line add the corresponding <yourfilterlibrary>_SOURCES and
 ### <yourfilterlibrary>_LIBADD lines.  The later at least has to look
