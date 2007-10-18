@@ -69,6 +69,9 @@ namespace sp {
 
     const char * affix_file;
 
+  public: // but don't use
+    bool                two_fold_suffix;
+
   public:
  
     AffixMgr(const LangImpl * l);

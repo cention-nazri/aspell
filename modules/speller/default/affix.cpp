@@ -272,6 +272,9 @@ static inline void max_(int & lhs, int rhs)
 // read in aff file and build up prefix and suffix entry objects 
 PosibErr<void> AffixMgr::parse_file(const char * affpath, Conv & iconv)
 {
+  //
+  two_fold_suffix = false;
+
   // io buffers
   String buf; DataPair dp;
 
@@ -392,6 +395,9 @@ PosibErr<void> AffixMgr::parse_file(const char * affpath, Conv & iconv)
           ++f;
           dp.key.size = strlen(dp.key.str);
           nptr->flags = data_buf.dup(iconv(f));
+          two_fold_suffix = true;
+          // FIXME: Add error checking to make sure flags specified
+          // are valid
         } else {
           nptr->flags = "";
         }
@@ -1298,8 +1304,7 @@ bool SfxEntry::check(const LookupInfo & linf, const AffixMgr * pmyMgr,
       // if the root word is not in the dictionary and two_fold_suffix
       // stripping is enabled, try again with the new root word
 
-      static const bool two_fold_suffix = true; // FIXME: Autodetect
-      if (two_fold_suffix && !psfx) {
+      if (pmyMgr->two_fold_suffix && !psfx) {
         IntrCheckInfo * before = gi ? gi->head : NULL;
         bool res = (pmyMgr->suffix_check(linf, ParmString(tmpword, tmpl),
                                          ci, gi, optflags, ppfx, this));
