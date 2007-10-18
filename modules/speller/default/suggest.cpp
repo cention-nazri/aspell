@@ -110,8 +110,8 @@
 
 #include "gettext.h"
 
-#include "iostream.hpp"
-#define DEBUG_SUGGEST
+//#include "iostream.hpp"
+//#define DEBUG_SUGGEST
 
 using namespace aspell::sp;
 using namespace aspell;
@@ -448,8 +448,8 @@ namespace {
     if (ci.pre_add_len) 
       memcpy(tmp, ci.pre_add, ci.pre_add_len);
     memcpy(tmp + ci.pre_add_len, ci.word.str() + ci.pre_strip_len, slen);
-    if (ci.suf_add_len) 
-      memcpy(tmp + ci.pre_add_len + slen, ci.suf_add, ci.suf_add_len);
+    if (ci.suf_add_len)
+      ci.get_suf(tmp + ci.pre_add_len + slen);
     return MutableString(tmp,wlen);
   }
 

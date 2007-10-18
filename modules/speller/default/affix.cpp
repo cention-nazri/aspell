@@ -81,6 +81,7 @@ struct AffEntry
 {
   const char *   appnd;
   const char *   strip;
+  const char *   flags;
   byte           appndl;
   byte           stripl;
   byte           xpflg;
@@ -123,12 +124,14 @@ struct SfxEntry : public AffEntry
 
   SfxEntry() {}
 
-  bool check(const LookupInfo &, ParmString, IntrCheckInfo &, GuessInfo *,
-             int optflags, AffEntry * ppfx);
+  bool check(const LookupInfo &, const AffixMgr * pmyMgr,
+             ParmString, IntrCheckInfo &, GuessInfo *,
+             int optflags, const PfxEntry * ppfx, const SfxEntry * psfx) const;
 
   inline bool          allow_cross() const { return ((xpflg & XPRODUCT) != 0); }
   inline byte flag() const { return achar;  }
   inline const char *  key() const  { return rappnd; } 
+  void add_outer_sfx_info(IntrCheckInfo *) const;
   bool applicable(SimpleString) const;
   SimpleString add(SimpleString, ObjStack & buf, int limit, SimpleString) const;
 };
@@ -381,6 +384,19 @@ PosibErr<void> AffixMgr::parse_file(const char * affpath, Conv & iconv)
         split(dp);
         if (dp.key.empty()) goto error;
         // key is affix string or 0 for null
+
+        // separate out any flags
+        char * f = strchr(dp.key, '/');
+        if (f) {
+          *f = '\0';
+          ++f;
+          dp.key.size = strlen(dp.key.str);
+          nptr->flags = data_buf.dup(iconv(f));
+        } else {
+          nptr->flags = "";
+        }
+
+        // now handle affix string
         if (dp.key != "0") {
           nptr->appnd  = data_buf.dup(iconv(dp.key));
           nptr->appndl = strlen(nptr->appnd);
@@ -785,13 +801,14 @@ bool AffixMgr::prefix_check (const LookupInfo & linf, ParmString word,
 // check word for suffixes
 bool AffixMgr::suffix_check (const LookupInfo & linf, ParmString word, 
                              IntrCheckInfo & ci, GuessInfo * gi,
-                             int sfxopts, AffEntry * ppfx) const
+                             int sfxopts, 
+                             const PfxEntry * ppfx, const SfxEntry * psfx) const
 {
 
   // first handle the special case of 0 length suffixes
   SfxEntry * se = sStart[0];
   while (se) {
-    if (se->check(linf, word, ci, gi, sfxopts, ppfx)) return true;
+    if (se->check(linf, this, word, ci, gi, sfxopts, ppfx, psfx)) return true;
     se = se->next;
   }
   
@@ -801,7 +818,7 @@ bool AffixMgr::suffix_check (const LookupInfo & linf, ParmString word,
 
   while (sptr) {
     if (isRevSubset(sptr->key(), word + word.size() - 1, word.size())) {
-      if (sptr->check(linf, word, ci, gi, sfxopts, ppfx)) return true;
+      if (sptr->check(linf, this, word, ci, gi, sfxopts, ppfx, psfx)) return true;
       sptr = sptr->next_eq;
     } else {
       sptr = sptr->next_ne;
@@ -838,13 +855,13 @@ bool AffixMgr::affix_check(const LookupInfo & linf, ParmString word,
   if (prefix_check(linf, pword, ci, gi)) return true;
 
   // if still not found check all suffixes
-  if (suffix_check(linf, sword, ci, gi, 0, NULL)) return true;
+  if (suffix_check(linf, sword, ci, gi)) return true;
 
   // if still not found check again but with the lower case version
   // which can make a difference if the entire word matches the cond
   // string
   if (cp == FirstUpper) {
-    return suffix_check(linf, pword, ci, gi, 0, NULL);
+    return suffix_check(linf, pword, ci, gi);
   } else {
     return false;
   }
@@ -859,7 +876,7 @@ void AffixMgr::munch(ParmString word, GuessInfo * gi, bool cross) const
   if (cp == AllUpper) return;
   if (cp != FirstUpper)
     prefix_check(li, word, ci, gi, cross);
-  suffix_check(li, word, ci, gi, 0, NULL);
+  suffix_check(li, word, ci, gi);
 }
 
 WordAff * AffixMgr::expand(ParmString word, ParmString aff, 
@@ -877,10 +894,7 @@ WordAff * AffixMgr::expand(ParmString word, ParmString aff,
   WordAff * cur = head;
   cur->word = buf.dup(word);
   cur->aff  = suf;
-  {
-    const byte * c = (const byte *)aff.str();
-    const byte * end = c + aff.size();
-    for (;
+  for (const byte *c = (const byte *)aff.str(), *end = c + aff.size();
        c != end; 
        ++c) 
   {
@@ -896,7 +910,6 @@ WordAff * AffixMgr::expand(ParmString word, ParmString aff,
       cur->aff = p->allow_cross() ? csuf : empty;
     }
   }
-  }
   *suf_e = 0;
   *csuf_e = 0;
   cur->next = 0;
@@ -906,13 +919,11 @@ WordAff * AffixMgr::expand(ParmString word, ParmString aff,
   WordAff * * end = &cur->next;
   WordAff * * very_end = end;
   size_t nsuf_s = suf_e - suf + 1;
-  {
   for (WordAff * * cur = &head; cur != end; cur = &(*cur)->next) {
     if ((int)(*cur)->word.size - max_strip_ >= limit) continue;
     byte * nsuf = (byte *)buf.alloc(nsuf_s);
     expand_suffix((*cur)->word, (*cur)->aff, buf, limit, nsuf, &very_end, word);
     (*cur)->aff = nsuf;
-  }
   }
   return head;
 }
@@ -940,8 +951,14 @@ WordAff * AffixMgr::expand_suffix(ParmString word, const byte * aff,
         (*cur)->aff  = (const byte *)EMPTY;
         cur = &(*cur)->next;
         expanded = true;
+        // Now handle the two-fold suffix case
+        // FIXME: I am making the some, possible invalid, assumtions
+        //        when limit is used
+        if (p->flags[0]) {
+          expand_suffix(newword, (const byte *)p->flags, buf, INT_MAX, 0, &cur, orig_word);
+        }
       }
-    }
+    } 
     if (new_aff && (!expanded || not_expanded)) *new_aff++ = *aff;
     ++aff;
   }
@@ -954,17 +971,13 @@ WordAff * AffixMgr::expand_suffix(ParmString word, const byte * aff,
 CheckAffixRes AffixMgr::check_affix(ParmString word, char aff) const
 {
   CheckAffixRes res = InvalidAffix;
-  {  
   for (PfxEntry * p = pFlag[(unsigned char)aff]; p; p = p->flag_next) {
     res = InapplicableAffix;
     if (p->applicable(word)) return ValidAffix;
   }
-  }
-  {
   for (SfxEntry * p = sFlag[(unsigned char)aff]; p; p = p->flag_next) {
     if (res == InvalidAffix) res = InapplicableAffix;
     if (p->applicable(word)) return ValidAffix;
-  }
   }
   return res;
 }
@@ -979,6 +992,9 @@ CheckAffixRes AffixMgr::check_affix(ParmString word, char aff) const
 int LookupInfo::lookup (ParmString word, const SensitiveCompare * c, 
                         char achar, 
                         WordEntry & o, GuessInfo * gi) const
+  // returns 0 if nothing found
+  // 1 if a match is found
+  // -1 if a word is found but affix doesn't match and "gi"
 {
   SpellerImpl::WS::const_iterator i = begin;
   const char * g = 0;
@@ -1126,7 +1142,7 @@ bool PfxEntry::check(const LookupInfo & linf, const AffixMgr * pmyMgr,
       if (cross && xpflg & XPRODUCT) {
         if (pmyMgr->suffix_check(linf, ParmString(tmpword, tmpl), 
                                  ci, gi,
-                                 XPRODUCT, (AffEntry *)this)) {
+                                 XPRODUCT, this)) {
           lci = &ci;
           
         } else if (gi) {
@@ -1206,16 +1222,17 @@ SimpleString SfxEntry::add(SimpleString word, ObjStack & buf,
 }
 
 // see if this suffix is present in the word 
-bool SfxEntry::check(const LookupInfo & linf, ParmString word,
+bool SfxEntry::check(const LookupInfo & linf, const AffixMgr * pmyMgr,
+                     ParmString word,
                      IntrCheckInfo & ci, GuessInfo * gi,
-                     int optflags, AffEntry* ppfx)
+                     int optflags, 
+                     const PfxEntry * ppfx, const SfxEntry * psfx) const
 {
   unsigned              tmpl;		 // length of tmpword 
   int			cond;		 // condition beng examined
   WordEntry             wordinfo;        // hash entry pointer
   byte *	cp;
   VARARRAYM(char, tmpword, word.size()+stripl+1, MAXWORDLEN+1);
-  PfxEntry* ep = (PfxEntry *) ppfx;
 
   // if this suffix is being cross checked with a prefix
   // but it does not support cross products skip it
@@ -1261,12 +1278,16 @@ bool SfxEntry::check(const LookupInfo & linf, ParmString word,
       tmpl += stripl;
       const SensitiveCompare * cmp = 
         optflags & XPRODUCT ? &linf.sp->s_cmp_middle : &linf.sp->s_cmp_begin;
+      if (psfx && !TESTAFF(flags, psfx->achar)) // avoid generating invalid guesses
+        gi = 0;
       int res = linf.lookup(tmpword, cmp, achar, wordinfo, gi);
       if (res == 1
-          && ((optflags & XPRODUCT) == 0 || TESTAFF(wordinfo.aff, ep->achar)))
+          && ((optflags & XPRODUCT) == 0 || TESTAFF(wordinfo.aff, ppfx->achar))
+          && (!psfx || TESTAFF(flags, psfx->achar)))
       {
         lci = &ci;
         lci->word = wordinfo.word;
+        goto quit;
       } else if (res == 1 && gi) {
         lci = gi->add();
         lci->word = wordinfo.word;
@@ -1274,17 +1295,49 @@ bool SfxEntry::check(const LookupInfo & linf, ParmString word,
         lci = gi->head;
       }
 
+      // if the root word is not in the dictionary and two_fold_suffix
+      // stripping is enabled, try again with the new root word
+
+      static const bool two_fold_suffix = true; // FIXME: Autodetect
+      if (two_fold_suffix && !psfx) {
+        IntrCheckInfo * before = gi ? gi->head : NULL;
+        bool res = (pmyMgr->suffix_check(linf, ParmString(tmpword, tmpl),
+                                         ci, gi, optflags, ppfx, this));
+
+        if (gi) {
+          for (IntrCheckInfo * c = gi->head;
+               c != before; 
+               c = const_cast<IntrCheckInfo * >(c->next))
+            add_outer_sfx_info(c);
+        }
+        if (res) {
+          add_outer_sfx_info(&ci);
+          return true;
+        }
+      }
+      
+    quit:
       if (lci) {
         lci->suf_flag = achar;
-        lci->suf_strip_len = stripl;
-        lci->suf_add_len = appndl;
-        lci->suf_add = appnd;
+        lci->inner_suf_strip_len = lci->suf_strip_len = stripl;
+        lci->inner_suf_add_len   = lci->suf_add_len = appndl;
+        lci->inner_suf_add = appnd;
       }
       
       if (lci == &ci) return true;
     }
   }
   return false;
+}
+
+void SfxEntry::add_outer_sfx_info(IntrCheckInfo * c) const {
+  c->outer_suf_strip_len = stripl;
+  c->outer_suf_add_len = appndl;
+  c->outer_suf_add = appnd;
+  c->suf_add_len = c->inner_suf_add_len - stripl + appndl;
+  if (c->suf_add_len < 0) c->suf_add_len = 0;
+  int inner_prefix_len = c->suf_add_len - stripl;
+  if (inner_prefix_len < 0) c->suf_strip_len += -inner_prefix_len;
 }
 
 //////////////////////////////////////////////////////////////////////

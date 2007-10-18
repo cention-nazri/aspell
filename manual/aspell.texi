@@ -3228,6 +3228,8 @@ the next to the last character in the word must @emph{not} be any of the
 following "a", "e", "i", "o" or "u".  The second condition is that
 the last character of the word must end in "y".
 
+FIXME: Add info in two-fold suffix stripping
+
 @subsection When Compared With Ispell
 
 Now for comparison purposes, here is the same information from the
@@ -4316,6 +4318,8 @@ when the replacement is more than one word.
 @item
 Be able to store the same base word multiple times ie ``foo/x'',
 ``foo/y'', which makes sense when cross products are involved.
+@item
+Support for two-fold suffix stripping.
 @item
 Other minor enhancements and bug fixes.
 @end itemize

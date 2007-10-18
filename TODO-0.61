@@ -34,6 +34,12 @@ when the replacement is more than one word. [DONE]
 Create a special pipe mode that ignores special characters at the
 beginning of a line so that a user can feed it a text file as is.
 
+5) 
+Handle two-fold suffix stripping, prefix-suffix depenedices, and
+possible two-fold prefix stripping.
+
+IN PROGRESS: Very basic fold suffix stripping is implemented
+
 THINKS OTHERS ARE WORKING ON:
 
 1) 

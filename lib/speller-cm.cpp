@@ -28,8 +28,10 @@ extern "C" const CheckInfo * aspell_speller_check_info(Speller * ths)
       if (p->suf_strip_len > 0) 
         buf.append('-').append(p->word.str() + p->word.size() - p->suf_strip_len, 
                                p->suf_strip_len);
-      if (p->suf_add && p->suf_add[0])
-        buf.append('+').append(p->suf_add, p->suf_add_len);
+      if (p->suf_add_len > 0) {
+        buf.append('+');
+        p->get_suf(buf.data(buf.alloc(p->suf_add_len)));
+      }
       // FIXME: real_speller->lang().fix_case(casep, buf.data(), buf.data());
     } else if (p->compound) {
       buf.append('-');

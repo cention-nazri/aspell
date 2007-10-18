@@ -40,16 +40,31 @@ namespace aspell {
     mutable String str;    // buffer for use by the above
     const IntrCheckInfo * next;
     ParmString word; // generally the root
+
+    const char * pre_add;
+    const char * inner_suf_add;
+    const char * outer_suf_add;
+
+    void get_suf(char * buf) const; 
+    // puts combined suffix in buf, len must be at least suf_add_len,
+    // doesn't null terminate
+
     short pre_strip_len;
     short pre_add_len;
-    const char * pre_add;
+
     short suf_strip_len;
     short suf_add_len;
-    const char * suf_add;
+
     short pre_flag;
     short suf_flag;
     short guess;
     short compound;
+
+    short inner_suf_strip_len;
+    short inner_suf_add_len;
+
+    short outer_suf_strip_len;
+    short outer_suf_add_len;
   };
 
   class Speller : public CanHaveError
