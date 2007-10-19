@@ -85,7 +85,6 @@ namespace sp {
     bool prefix_check(const LookupInfo &, ParmString, IntrCheckInfo &, GuessInfo *,
                       bool cross = true) const;
     bool suffix_check(const LookupInfo &, ParmString, IntrCheckInfo &, GuessInfo *,
-                      int sfxopts = 0, 
                       const PfxEntry * ppfx = NULL, const SfxEntry * psfx = NULL) const;
 
     void munch(ParmString word, GuessInfo *, bool cross = true) const;

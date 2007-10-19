@@ -126,7 +126,7 @@ struct SfxEntry : public AffEntry
 
   bool check(const LookupInfo &, const AffixMgr * pmyMgr,
              ParmString, IntrCheckInfo &, GuessInfo *,
-             int optflags, const PfxEntry * ppfx, const SfxEntry * psfx) const;
+             const PfxEntry * ppfx, const SfxEntry * psfx) const;
 
   inline bool          allow_cross() const { return ((xpflg & XPRODUCT) != 0); }
   inline byte flag() const { return achar;  }
@@ -807,14 +807,13 @@ bool AffixMgr::prefix_check (const LookupInfo & linf, ParmString word,
 // check word for suffixes
 bool AffixMgr::suffix_check (const LookupInfo & linf, ParmString word, 
                              IntrCheckInfo & ci, GuessInfo * gi,
-                             int sfxopts, 
                              const PfxEntry * ppfx, const SfxEntry * psfx) const
 {
 
   // first handle the special case of 0 length suffixes
   SfxEntry * se = sStart[0];
   while (se) {
-    if (se->check(linf, this, word, ci, gi, sfxopts, ppfx, psfx)) return true;
+    if (se->check(linf, this, word, ci, gi, ppfx, psfx)) return true;
     se = se->next;
   }
   
@@ -824,7 +823,7 @@ bool AffixMgr::suffix_check (const LookupInfo & linf, ParmString word,
 
   while (sptr) {
     if (isRevSubset(sptr->key(), word + word.size() - 1, word.size())) {
-      if (sptr->check(linf, this, word, ci, gi, sfxopts, ppfx, psfx)) return true;
+      if (sptr->check(linf, this, word, ci, gi, ppfx, psfx)) return true;
       sptr = sptr->next_eq;
     } else {
       sptr = sptr->next_ne;
@@ -1138,17 +1137,17 @@ bool PfxEntry::check(const LookupInfo & linf, const AffixMgr * pmyMgr,
 
       }
       
-      // prefix matched but no root word was found 
-      // if XPRODUCT is allowed, try again but now 
-      // cross checked combined with a suffix
+      // prefix matched but no root word was found if XPRODUCT is
+      // allowed, try again but now cross checked combined with a
+      // suffix, also cross check if two_fold_suffix is defined to
+      // allow for prefix-suffix dependencies
       
       if (gi)
         lci = gi->head;
       
-      if (cross && xpflg & XPRODUCT) {
+      if (cross && ((xpflg & XPRODUCT) || pmyMgr->two_fold_suffix)) {
         if (pmyMgr->suffix_check(linf, ParmString(tmpword, tmpl), 
-                                 ci, gi,
-                                 XPRODUCT, this)) {
+                                 ci, gi, this)) {
           lci = &ci;
           
         } else if (gi) {
@@ -1231,7 +1230,6 @@ SimpleString SfxEntry::add(SimpleString word, ObjStack & buf,
 bool SfxEntry::check(const LookupInfo & linf, const AffixMgr * pmyMgr,
                      ParmString word,
                      IntrCheckInfo & ci, GuessInfo * gi,
-                     int optflags, 
                      const PfxEntry * ppfx, const SfxEntry * psfx) const
 {
   unsigned              tmpl;		 // length of tmpword 
@@ -1240,10 +1238,15 @@ bool SfxEntry::check(const LookupInfo & linf, const AffixMgr * pmyMgr,
   byte *	cp;
   VARARRAYM(char, tmpword, word.size()+stripl+1, MAXWORDLEN+1);
 
-  // if this suffix is being cross checked with a prefix
-  // but it does not support cross products skip it
-
-  if ((optflags & XPRODUCT) != 0 &&  (xpflg & XPRODUCT) == 0)
+  // check to make sure if this suffix is even valid in light of:
+  //   1) cross-products, is it allowed by both the prefix and suffix
+  //   2) dependent prefix-sufix is the prefix flag in this->flags
+  //   3) two-stage-suffix is the outer suffix flag in this->flags
+  bool prefix_suffix_dep = ppfx && TESTAFF(flags, ppfx->achar);
+  // if prefix_suffix_dep no point is doing cross_prod checks
+  bool cross_prod = ppfx && !prefix_suffix_dep && (ppfx->xpflg & xpflg & XPRODUCT);
+  if ((ppfx && (!cross_prod && !prefix_suffix_dep)) ||
+      (psfx && !TESTAFF(flags, psfx->achar)))
     return false;
 
   // upon entry suffix is 0 length or already matches the end of the word.
@@ -1283,13 +1286,9 @@ bool SfxEntry::check(const LookupInfo & linf, const AffixMgr * pmyMgr,
       IntrCheckInfo * lci = 0;
       tmpl += stripl;
       const SensitiveCompare * cmp = 
-        optflags & XPRODUCT ? &linf.sp->s_cmp_middle : &linf.sp->s_cmp_begin;
-      if (psfx && !TESTAFF(flags, psfx->achar)) // avoid generating invalid guesses
-        gi = 0;
+        ppfx ? &linf.sp->s_cmp_middle : &linf.sp->s_cmp_begin;
       int res = linf.lookup(tmpword, cmp, achar, wordinfo, gi);
-      if (res == 1
-          && ((optflags & XPRODUCT) == 0 || TESTAFF(wordinfo.aff, ppfx->achar))
-          && (!psfx || TESTAFF(flags, psfx->achar)))
+      if (res == 1 && (!cross_prod ||TESTAFF(wordinfo.aff, ppfx->achar)))
       {
         lci = &ci;
         lci->word = wordinfo.word;
@@ -1307,7 +1306,7 @@ bool SfxEntry::check(const LookupInfo & linf, const AffixMgr * pmyMgr,
       if (pmyMgr->two_fold_suffix && !psfx) {
         IntrCheckInfo * before = gi ? gi->head : NULL;
         bool res = (pmyMgr->suffix_check(linf, ParmString(tmpword, tmpl),
-                                         ci, gi, optflags, ppfx, this));
+                                         ci, gi, ppfx, this));
 
         if (gi) {
           for (IntrCheckInfo * c = gi->head;
