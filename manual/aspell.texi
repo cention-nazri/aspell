@@ -3228,7 +3228,7 @@ the next to the last character in the word must @emph{not} be any of the
 following "a", "e", "i", "o" or "u".  The second condition is that
 the last character of the word must end in "y".
 
-FIXME: Add info in two-fold suffix stripping
+FIXME: Add info in two-fold suffix stripping and CIRCUMFIX flag.
 
 @subsection When Compared With Ispell
 

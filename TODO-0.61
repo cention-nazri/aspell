@@ -38,7 +38,8 @@ beginning of a line so that a user can feed it a text file as is.
 Handle two-fold suffix stripping, prefix-suffix depenedices, and
 possible two-fold prefix stripping.
 
-IN PROGRESS: Very basic fold suffix stripping is implemented
+IN PROGRESS: Implemented, but AffixMgr::expand doesn't work with
+prefix-suffix deps.  Also needs better testing.
 
 THINKS OTHERS ARE WORKING ON:
 
