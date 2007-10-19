@@ -23,6 +23,7 @@
 #define MAXAFFIXES      256
 #define MAXWORDLEN      255
 #define XPRODUCT        (1 << 0)
+#define CIRCUMFIX       (1 << 1)
 
 #define MAXLNLEN        1024
 

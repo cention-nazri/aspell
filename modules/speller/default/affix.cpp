@@ -84,7 +84,7 @@ struct AffEntry
   const char *   flags;
   byte           appndl;
   byte           stripl;
-  byte           xpflg;
+  byte           xpflgs;
   char           achar;
   const Conds *  conds;
   //unsigned int numconds;
@@ -104,7 +104,7 @@ struct PfxEntry : public AffEntry
   bool check(const LookupInfo &, const AffixMgr * pmyMgr,
              ParmString, IntrCheckInfo &, GuessInfo *, bool cross = true) const;
 
-  inline bool          allow_cross() const { return ((xpflg & XPRODUCT) != 0); }
+  inline bool          allow_cross() const { return ((xpflgs & XPRODUCT) != 0); }
   inline byte flag() const { return achar;  }
   inline const char *  key() const  { return appnd;  }
   bool applicable(SimpleString) const;
@@ -128,7 +128,7 @@ struct SfxEntry : public AffEntry
              ParmString, IntrCheckInfo &, GuessInfo *,
              const PfxEntry * ppfx, const SfxEntry * psfx) const;
 
-  inline bool          allow_cross() const { return ((xpflg & XPRODUCT) != 0); }
+  inline bool          allow_cross() const { return ((xpflgs & XPRODUCT) != 0); }
   inline byte flag() const { return achar;  }
   inline const char *  key() const  { return rappnd; } 
   void add_outer_sfx_info(IntrCheckInfo *) const;
@@ -291,6 +291,7 @@ PosibErr<void> AffixMgr::parse_file(const char * affpath, Conv & iconv)
   // read in each line ignoring any that do not
   // start with a known line type indicator
 
+  char circumfix_flag = '\0'; 
   char prev_aff = '\0';
 
   while (getdata_pair(afflst,dp,buf)) {
@@ -303,6 +304,12 @@ PosibErr<void> AffixMgr::parse_file(const char * affpath, Conv & iconv)
       encoding = data_buf.dup(fix_encoding_str(dp.value, buf));
       if (strcmp(encoding, lang->data_encoding()) != 0)
         return make_err(incorrect_encoding, affix_file, lang->data_encoding(), encoding);
+    }
+
+    if (dp.key == "CIRCUMFIX") {
+      const char * data = iconv(dp.value);
+      circumfix_flag = *data;
+      // FIXME: Error check, make sure only one character is specified
     }
 
     /* parse in the flag used by the controlled compound words */
@@ -326,7 +333,7 @@ PosibErr<void> AffixMgr::parse_file(const char * affpath, Conv & iconv)
 
     int numents = 0;      // number of affentry structures to parse
     char achar='\0';      // affix char identifier
-    short xpflg=0;
+    short xpflgs=0;
     AffEntry * nptr;
     {
       // split affix header line into pieces
@@ -343,7 +350,7 @@ PosibErr<void> AffixMgr::parse_file(const char * affpath, Conv & iconv)
       if (dp.key.size != 1 || 
           !(dp.key[0] == 'Y' || dp.key[0] == 'N')) goto error;
       // key is cross product indicator 
-      if (dp.key[0] == 'Y') xpflg = XPRODUCT;
+      if (dp.key[0] == 'Y') xpflgs |= XPRODUCT;
     
       split(dp);
       if (dp.key.empty()) goto error;
@@ -362,7 +369,7 @@ PosibErr<void> AffixMgr::parse_file(const char * affpath, Conv & iconv)
           new (nptr) SfxEntry;
         }
 
-        nptr->xpflg = xpflg;
+        nptr->xpflgs = xpflgs;
 
         split(dp);
         if (dp.key.empty()) goto error;
@@ -396,6 +403,10 @@ PosibErr<void> AffixMgr::parse_file(const char * affpath, Conv & iconv)
           dp.key.size = strlen(dp.key.str);
           nptr->flags = data_buf.dup(iconv(f));
           two_fold_suffix = true;
+          for (const char * f = nptr->flags; *f; ++f) {
+            if (*f == circumfix_flag)
+              nptr->xpflgs |= CIRCUMFIX;
+          }
           // FIXME: Add error checking to make sure flags specified
           // are valid
         } else {
@@ -884,6 +895,8 @@ void AffixMgr::munch(ParmString word, GuessInfo * gi, bool cross) const
   suffix_check(li, word, ci, gi);
 }
 
+// FIXME NOW: expand doesn't work correctly when prefix-suffix
+//            deps. are involved, it basically ignores the prefix
 WordAff * AffixMgr::expand(ParmString word, ParmString aff, 
                            ObjStack & buf, int limit) const
 {
@@ -957,7 +970,7 @@ WordAff * AffixMgr::expand_suffix(ParmString word, const byte * aff,
         cur = &(*cur)->next;
         expanded = true;
         // Now handle the two-fold suffix case
-        // FIXME: I am making the some, possible invalid, assumtions
+        // FIXME: I am making some, possible invalid, assumtions
         //        when limit is used
         if (p->flags[0]) {
           expand_suffix(newword, (const byte *)p->flags, buf, INT_MAX, 0, &cur, orig_word);
@@ -1123,14 +1136,18 @@ bool PfxEntry::check(const LookupInfo & linf, const AffixMgr * pmyMgr,
       IntrCheckInfo * guess = 0;
       tmpl += stripl;
 
-      int res = linf.lookup(tmpword, &linf.sp->s_cmp_end, achar, wordinfo, gi);
+      // if a CIRCUMFIX than the prefix is only valid if matched with a suffix
+      // it doesn't make sence if checked it by itself
+      int res = 0;
+      if (!(xpflgs & CIRCUMFIX))
+        res = linf.lookup(tmpword, &linf.sp->s_cmp_end, achar, wordinfo, gi);
 
       if (res == 1) {
 
         lci = &ci;
         lci->word = wordinfo.word;
         goto quit;
-        
+                
       } else if (res == -1) {
 
         guess = gi->head;
@@ -1145,7 +1162,7 @@ bool PfxEntry::check(const LookupInfo & linf, const AffixMgr * pmyMgr,
       if (gi)
         lci = gi->head;
       
-      if (cross && ((xpflg & XPRODUCT) || pmyMgr->two_fold_suffix)) {
+      if (cross && ((xpflgs & XPRODUCT) || pmyMgr->two_fold_suffix)) {
         if (pmyMgr->suffix_check(linf, ParmString(tmpword, tmpl), 
                                  ci, gi, this)) {
           lci = &ci;
@@ -1242,11 +1259,18 @@ bool SfxEntry::check(const LookupInfo & linf, const AffixMgr * pmyMgr,
   //   1) cross-products, is it allowed by both the prefix and suffix
   //   2) dependent prefix-sufix is the prefix flag in this->flags
   //   3) two-stage-suffix is the outer suffix flag in this->flags
+  //   4) the CIRCUMFIX flag
   bool prefix_suffix_dep = ppfx && TESTAFF(flags, ppfx->achar);
   // if prefix_suffix_dep no point is doing cross_prod checks
-  bool cross_prod = ppfx && !prefix_suffix_dep && (ppfx->xpflg & xpflg & XPRODUCT);
+  bool cross_prod = ppfx && !prefix_suffix_dep && (ppfx->xpflgs & xpflgs & XPRODUCT);
   if ((ppfx && (!cross_prod && !prefix_suffix_dep)) ||
-      (psfx && !TESTAFF(flags, psfx->achar)))
+      (psfx && !TESTAFF(flags, psfx->achar)) ||
+      (!ppfx && (xpflgs & CIRCUMFIX)) ||
+      // this last test is for compatibility for hunspell, but
+      // shouldn't be necessary since CIRCUMFIX should only be
+      // allowed to be combined via prefix-suffix dependencies
+      // (ie the cross-product flag should not be set)
+      (ppfx && ((ppfx->xpflgs ^ xpflgs) & CIRCUMFIX)))
     return false;
 
   // upon entry suffix is 0 length or already matches the end of the word.
@@ -1397,7 +1421,7 @@ struct AffEntry
    short  stripl;         // length of the strip string
    short  appndl;         // length of the affix string
    short  numconds;       // the number of conditions that must be met
-   short  xpflg;          // flag: XPRODUCT- combine both prefix and suffix 
+   short  xpflgs;          // flag: XPRODUCT- combine both prefix and suffix 
    char   conds[SETSIZE]; // array which encodes the conditions to be met
 };
 
