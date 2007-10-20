@@ -11,6 +11,31 @@
 
 namespace aspell {
 
+  void IntrCheckInfo::clear() {
+    // this is fun
+    // can't just use memset since we don't have a POD on 
+    // account of str.
+    ext = CheckInfo();
+    str.clear();
+    next = 0;
+    word = ParmString();
+    pre_add = 0;
+    inner_suf_add = 0;
+    outer_suf_add = 0;
+    pre_strip_len = 0;
+    pre_add_len = 0;
+    suf_strip_len = 0;
+    suf_add_len = 0;
+    pre_flag = 0;
+    suf_flag = 0;
+    guess = 0;
+    compound = 0;
+    inner_suf_strip_len = 0;
+    inner_suf_add_len = 0;
+    outer_suf_strip_len = 0;
+    outer_suf_add_len = 0;
+  }
+
   void IntrCheckInfo::get_suf(char * buf) const {
     if (inner_suf_add_len - outer_suf_strip_len > 0) {
       memcpy(buf, inner_suf_add, inner_suf_add_len);

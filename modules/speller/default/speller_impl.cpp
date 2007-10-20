@@ -178,7 +178,7 @@ namespace aspell { namespace sp {
   {
     assert(run_together_limit <= 8); // otherwise it will go above the 
                                      // bounds of the word array
-    clear_check_info(*ci);
+    ci->clear();
     bool res = check2(word, try_uppercase, *ci, gi);
     if (res) return true;
     if (run_together_limit <= 1) return false;

@@ -65,6 +65,8 @@ namespace aspell {
 
     short outer_suf_strip_len;
     short outer_suf_add_len;
+
+    void clear();
   };
 
   class Speller : public CanHaveError

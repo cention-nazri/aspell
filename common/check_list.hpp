@@ -12,11 +12,6 @@
 
 namespace aspell {
 
-  static inline void clear_check_info(IntrCheckInfo & ci)
-  {
-    memset(&ci, 0, sizeof(ci));
-  }
-
   struct GuessInfo
   {
     int num;
@@ -26,7 +21,8 @@ namespace aspell {
     IntrCheckInfo * add() {
       num++;
       IntrCheckInfo * tmp = (IntrCheckInfo *)buf.alloc_top(sizeof(IntrCheckInfo));
-      clear_check_info(*tmp);
+      new(tmp) IntrCheckInfo();
+      tmp->clear();
       tmp->next = head;
       head = tmp;
       head->guess = true;
