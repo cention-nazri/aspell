@@ -52,7 +52,7 @@ public:
   
   // This alloc_bottom does NOT check alignment.  However, if you always
   // insert objects with a multiple of min_align than it will always
-  // me aligned as such.
+  // be aligned as such.
   void * alloc_bottom(size_t size)  {
     byte * tmp = bottom;
     bottom += size;
