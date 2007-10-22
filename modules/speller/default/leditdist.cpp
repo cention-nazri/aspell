@@ -64,10 +64,10 @@ namespace aspell { namespace sp {
       }
 
       if (*a == '\0') {
-
+        
 	do {
 	  score += w.del2;
-	  if (score >= min) goto FINISH;
+	  if (score >= min || score > limit) goto FINISH;
 	  ++b;
 	} while (*b != '\0');
 	min = score;
@@ -76,7 +76,7 @@ namespace aspell { namespace sp {
 	
 	do {
 	  score += w.del1;
-	  if (score >= min) goto FINISH;
+	  if (score >= min || score > limit) goto FINISH;
 	  ++a;
 	} while (*a != '\0');
 	min = score;

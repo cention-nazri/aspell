@@ -112,6 +112,9 @@
 
 //#include "iostream.hpp"
 //#define DEBUG_SUGGEST
+//   SCORE_LIST_SANITY_CHECK performs an expensive check on
+//   score_list.  It should not be enabled in production builds.
+//#define SCORE_LIST_SANITY_CHECK
 
 using namespace aspell::sp;
 using namespace aspell;
@@ -145,6 +148,12 @@ namespace {
   //
 
   struct ScoreWordSound {
+    // If word_score or soundslike_score is >= LARGE_NUM than that means the
+    // the score is unknown.  In most cases either word_score or
+    // soundslike_score will be known when the word is added to near_misses.
+    // Note that word_score may not necessary be the result from
+    // edit_distance(original.word, word), for example if a replacement table
+    // was used.
     char * word;
     char * word_clean;
     //unsigned word_size;
@@ -155,7 +164,9 @@ namespace {
     bool          count;
     WordEntry * repl_list;
     ScoreWordSound() {repl_list = 0;}
+#ifndef SCORE_LIST_SANITY_CHECK // hack
     ~ScoreWordSound() {delete repl_list;}
+#endif
   };
 
   inline int compare (const ScoreWordSound &lhs, 
@@ -305,25 +316,25 @@ namespace {
       return (parms->word_weight*word_score 
 	      + parms->soundslike_weight*soundslike_score)/100;
     }
-    int skip_first_couple(NearMisses::iterator & i) {
+    // Skip over the first couple of items as they should
+    // not be counted in the threshold score.
+    // Return true if it skipped over them before falling of the end
+    // if it fell of the end it will return the last element
+    bool skip_first_couple(NearMisses::iterator & i) {
       int k = 0;
       InsensitiveCompare cmp(lang);
-      const char * prev_word = "";
-      while (preview_next(i) != scored_near_misses.end()) 
-	// skip over the first couple of items as they should
-	// not be counted in the threshold score.
+      NearMisses::iterator prev = i;
+      for (;;prev = i, ++i)
       {
-	if (!i->count || cmp(prev_word, i->word) == 0) {
-	  ++i;
-	} else if (k == parms->skip) {
-	  break;
-	} else {
-          prev_word = i->word;
+        if (i == scored_near_misses.end()) {
+          i = prev;
+          break;
+        } if (i->count && cmp(prev->word, i->word) != 0) {
 	  ++k;
-	  ++i;
-	}
+          if (k == parms->skip) return true;
+        }
       }
-      return k;
+      return false;
     }
 
     void try_split();
@@ -335,9 +346,17 @@ namespace {
 
     void merge_dups();
  
-    void score_list();
+    void score_list(bool score_all);
     void fine_tune_score();
     void transfer();
+
+#  ifndef SCORE_LIST_SANITY_CHECK
+    void score_list() {score_list(false);}
+#  else
+    void score_list_sanity();
+    void score_list() {score_list_sanity();}
+#  endif
+
   public:
     Working(SpellerImpl * m, const LangImpl *l,
 	    const String & w, const SuggestParms *  p)
@@ -1081,8 +1100,7 @@ namespace {
       }
     }
 
-  
-  void Working::score_list() {
+  void Working::score_list(bool score_all) {
 
 #  ifdef DEBUG_SUGGEST
     COUT.printl("SCORING LIST");
@@ -1101,9 +1119,34 @@ namespace {
     // this item will only be looked at when sorting so 
     // make it a small value to keep it at the front.
 
+    // Each iteration of this loop will look for any words whose final score
+    // is within try_for, by the end of each iteration all scores which can
+    // possible be <= try_for are known, furthermore any words with are likely
+    // candidates for the final list are put into scored_near_misses.
+    //
+    // The loop terminated when we have a sufficient number of words in
+    // scored_near_misses.  Any words left in near_misses can not possibly
+    // have a score > try_for.
+    //
+    // The idea of is to start with a low try_for then in each iteration
+    // try_for is incremented by just_enough to increase the level (see below)
+    // by 1.  This is an important optimization because for small words the
+    // list to be scored can sometimes be huge (for example up to around
+    // 20,000 for small words for the English language) and starting with a
+    // low try_for saves a lot of time for two reasons:
+    //   1) In some cases it not even necessary to score the word 
+    //   2) When it is necessary we have an upper bound on the score
+    //      required (ie try_for), we can make use of this information
+    //      to greatly speed up the cost of calling edit_distance
+    //      (see limit_edit_distance for why).
     int try_for = (parms->word_weight*parms->edit_distance_weights.max)/100;
+    if (score_all) try_for = LARGE_NUM;
     while (true) {
       try_for += (parms->word_weight*parms->edit_distance_weights.max)/100;
+
+#  ifdef DEBUG_SUGGEST
+      COUT << "Trying for: " << try_for << "\n";
+#  endif
 
       // put all pairs whose score <= initial_limit*max_weight
       // into the scored list
@@ -1126,7 +1169,7 @@ namespace {
                                           level, level,
                                           parms->edit_distance_weights);
         }
-        
+
         if (i->word_score >= LARGE_NUM) goto cont1;
 
         if (i->soundslike_score >= LARGE_NUM) 
@@ -1162,16 +1205,21 @@ namespace {
 	
       i = scored_near_misses.begin();
       ++i;
+
+      bool skipped_first_couple = skip_first_couple(i);
 	
-      if (i == scored_near_misses.end()) continue;
+      if (prev == near_misses.begin()) // or no more left in near_misses
+        break;
+
+      if (!skipped_first_couple) // reached end after skipping first couple
+        continue;
 	
-      int k = skip_first_couple(i);
-	
-      if ((k == parms->skip && i->score <= try_for) 
-	  || prev == near_misses.begin() ) // or no more left in near_misses
-	break;
+      if (i->score <= try_for) // we have reached our target (after skipping
+        break;                 // the first couple)
+      
     } // while(true) (top loop)
       
+    printf("XXX %s %d %d\n", i->word, i->score, parms->span);
     threshold = i->score + parms->span;
     if (threshold < parms->edit_distance_weights.max)
       threshold = parms->edit_distance_weights.max;
@@ -1184,6 +1232,10 @@ namespace {
 #  endif
 
     //if (threshold - try_for <=  parms->edit_distance_weights.max/2) return;
+
+    // Now do one final pass to find any words with a score greater than
+    // try_for but less than threshold.  When the loop terminates all
+    // words in near_misses have a score > threshold.
       
     prev = near_misses.begin();
     i = prev;
@@ -1242,9 +1294,7 @@ namespace {
       try_harder = 1;
     } else {
       i = scored_near_misses.begin();
-      skip_first_couple(i);
-      ++i;
-      try_harder = i == scored_near_misses.end() ? 2 : 0;
+      try_harder = skip_first_couple(i) ? 0 : 2;
     }
 
 #  ifdef DEBUG_SUGGEST
@@ -1252,7 +1302,64 @@ namespace {
     COUT << "Size of ! scored: " << near_misses.size() << "\n";
     COUT << "Try Harder: " << try_harder << "\n";
 #  endif
+
   }
+
+#ifdef SCORE_LIST_SANITY_CHECK
+  void Working::score_list_sanity() {
+    merge_dups(); // to avoid false positives
+    NearMisses orig_near_misses(near_misses);
+    NearMisses orig_scored_near_misses(scored_near_misses);
+#  ifdef DEBUG_SUGGEST
+    COUT << "********************* SCORING ALL IN LIST **************************\n";
+#  endif
+    score_list(true);
+    NearMisses scored_near_misses_all(scored_near_misses);
+    int threshold_all = threshold;
+#  ifdef DEBUG_SUGGEST
+    COUT << "********************* DONE *****************************************\n";
+#  endif
+    near_misses = orig_near_misses;
+    scored_near_misses = orig_scored_near_misses;
+    score_list(false);
+
+    // now compare the lists
+    NearMisses::const_iterator 
+      i = scored_near_misses.begin(), 
+      j = scored_near_misses_all.begin(), 
+      i_end = scored_near_misses.end(),
+      j_end = scored_near_misses_all.end();
+    unsigned c = 0;
+    if (threshold != threshold_all) {
+      CERR << "WARNING score_list_sanity_check: thresholds differ\n";
+      goto dump_lists;
+    }
+    for (;i != i_end && j != j_end && i->score < threshold_all; ++i, ++j, ++c) {
+      if (strcmp(i->word,j->word) != 0) {
+        CERR << "WARNING score_list_sanity_check: lists differ at position " << c << "\n";
+        goto dump_lists;
+      }
+      if (i == i_end && j != j_end && j->score < threshold_all) {
+        CERR << "WARNING score_list_sanity_check: orig list is too small\n";
+      }
+    }
+    return;
+  dump_lists:
+    CERR << original.word << '\t' 
+	 << original.soundslike << '\t'
+	 << "\n";
+    CERR << "ORIG (With out try_for hack):\n";
+    CERR << "  Threshold: " << threshold << "\n";
+    for (i = scored_near_misses.begin(), c = 0; i != i_end && i->score < threshold_all; ++i, ++c)
+      CERR << "  " << c << '\t' << i->word << '\t' << i->score << '\t' << i->word_score
+           << '\t' << i->soundslike << '\t' << i->soundslike_score << "\n";
+    CERR << "NEW (With large try_for):\n";
+    CERR << "  Threshold: " << threshold_all << "\n";
+    for (j = scored_near_misses_all.begin(), c = 0; j != j_end && j->score < threshold_all; ++j, ++c)
+      CERR << "  " << c << '\t' << j->word << '\t' << j->score << '\t' << j->word_score
+           << '\t' << j->soundslike << '\t' << j->soundslike_score << "\n";
+  }
+#endif
 
   void Working::fine_tune_score() {
 

@@ -7,11 +7,11 @@ namespace aspell { namespace sp {
   struct EditDistanceWeights {
     int del1;    // the cost of deleting a char in the first string
     int del2;    // the cost of inserting a character or deleting a char
-                    // in the next string
+                 // in the next string
     int swap;    // the cost of swapping two adjacent letters
     int sub;     // the cost of replacing one letter with another
     int similar; // the cost of a "similar" but not exact match for
-                    // two characters
+                 // two characters
     int min;     // the min of del1, del2, swap and sub.
     int max;     // the max of del1, del2, swap and sub.
     EditDistanceWeights()
