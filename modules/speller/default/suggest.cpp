@@ -1208,7 +1208,7 @@ namespace {
 
       bool skipped_first_couple = skip_first_couple(i);
 	
-      if (prev == near_misses.begin()) // or no more left in near_misses
+      if (prev == near_misses.begin()) // no more left in near_misses
         break;
 
       if (!skipped_first_couple) // reached end after skipping first couple
@@ -1219,7 +1219,6 @@ namespace {
       
     } // while(true) (top loop)
       
-    printf("XXX %s %d %d\n", i->word, i->score, parms->span);
     threshold = i->score + parms->span;
     if (threshold < parms->edit_distance_weights.max)
       threshold = parms->edit_distance_weights.max;
