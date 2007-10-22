@@ -40,9 +40,9 @@ namespace aspell {
     typedef typename List::iterator       iterator;
     typedef typename List::const_iterator const_iterator;
     typedef typename List::size_type      size_type;
-    bool empty() {return data_.empty();}
+    bool empty() const {return data_.empty();}
     void clear() {data_.clear();}
-    size_type size() {return data_.size();}
+    size_type size() const {return data_.size();}
     iterator begin() {return data_.begin();}
     iterator end()   {return data_.end();}
     const_iterator begin() const {return data_.begin();}
