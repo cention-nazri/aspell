@@ -65,6 +65,7 @@ namespace aspell {
     {
       data_.erase(++before_first, last);
     }
+    const T & back() const {return data_.back();}
     
   };
 

@@ -1289,12 +1289,14 @@ namespace {
     scored_near_misses.sort();
     scored_near_misses.pop_front();
 
-    if (near_misses.empty()) {
+    i = scored_near_misses.begin();
+    if (!skip_first_couple(i))
+      try_harder = 2;
+    else if (near_misses.empty() 
+             && scored_near_misses.back().score < threshold)
       try_harder = 1;
-    } else {
-      i = scored_near_misses.begin();
-      try_harder = skip_first_couple(i) ? 0 : 2;
-    }
+    else
+      try_harder = 0;
 
 #  ifdef DEBUG_SUGGEST
     COUT << "Size of scored: " << scored_near_misses.size() << "\n";
