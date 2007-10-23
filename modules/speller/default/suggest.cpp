@@ -1293,7 +1293,7 @@ namespace {
     if (!skip_first_couple(i))
       try_harder = 2;
     else if (near_misses.empty() 
-             && scored_near_misses.back().score < threshold)
+             && scored_near_misses.back().score <= threshold)
       try_harder = 1;
     else
       try_harder = 0;
