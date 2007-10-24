@@ -399,6 +399,10 @@ namespace {
 
     }
 
+    if (lang->affix()->two_fold_suffix)
+      goto done; // HACK: Until I fix try_scan_* to work sensibly
+                 // with two_fold_suffix
+
     if (parms->try_scan_1) {
       
 #ifdef DEBUG_SUGGEST
