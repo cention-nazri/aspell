@@ -952,8 +952,6 @@ WordAff * AffixMgr::expand_suffix(ParmString word, const byte * aff,
                                   ParmString orig_word,
                                   bool twofold) const
 {
-  //printf("%s %s %s %d\n", twofold ? ">>EXPAND" : "  expand", 
-  //       word.str(), aff, limit);
   WordAff * head = 0;
   if (l) head = **l;
   WordAff * * cur = l ? *l : &head;
