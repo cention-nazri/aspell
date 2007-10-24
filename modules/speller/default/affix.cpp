@@ -949,8 +949,11 @@ WordAff * AffixMgr::expand(ParmString word, ParmString aff,
 WordAff * AffixMgr::expand_suffix(ParmString word, const byte * aff, 
                                   ObjStack & buf, int limit,
                                   byte * new_aff, WordAff * * * l,
-                                  ParmString orig_word) const
+                                  ParmString orig_word,
+                                  bool twofold) const
 {
+  //printf("%s %s %s %d\n", twofold ? ">>EXPAND" : "  expand", 
+  //       word.str(), aff, limit);
   WordAff * head = 0;
   if (l) head = **l;
   WordAff * * cur = l ? *l : &head;
@@ -972,8 +975,8 @@ WordAff * AffixMgr::expand_suffix(ParmString word, const byte * aff,
         // Now handle the two-fold suffix case
         // FIXME: I am making some, possible invalid, assumtions
         //        when limit is used
-        if (p->flags[0]) {
-          expand_suffix(newword, (const byte *)p->flags, buf, INT_MAX, 0, &cur, orig_word);
+        if (twofold && p->flags[0]) {
+          expand_suffix(newword, (const byte *)p->flags, buf, INT_MAX, 0, &cur, orig_word, false);
         }
       }
     } 
@@ -1308,7 +1311,6 @@ bool SfxEntry::check(const LookupInfo & linf, const AffixMgr * pmyMgr,
 
     if (cond < 0) {
       IntrCheckInfo * lci = 0;
-      tmpl += stripl;
       const SensitiveCompare * cmp = 
         ppfx ? &linf.sp->s_cmp_middle : &linf.sp->s_cmp_begin;
       int res = linf.lookup(tmpword, cmp, achar, wordinfo, gi);
