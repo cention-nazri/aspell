@@ -160,6 +160,11 @@ do
   esac
 done
 
+if test "$stdout"
+then
+  keep=t
+fi 
+
 if test "$errors"
 then
   mode=h
