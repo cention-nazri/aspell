@@ -447,7 +447,7 @@ identical to the @command{ispell} command when not used in ``pipe''
 mode.  If an application expects the @command{ispell} command, then
 the Ispell compatibility script should be used instead.
 
-@subsubsection Functionally of the Ispell Compatibility Script
+@subsubsection Functionality of the Ispell Compatibility Script
 
 The Ispell compatibility script provides the following Ispell
 functionally.
@@ -460,7 +460,7 @@ The ability to check a file when called without any mode parameters.
 The pipe or -a mode.
 
 @item 
-The list of -l mode.
+The list or -l mode.
 
 @item
 The version or -v mode.  A single line is returned which, while not
@@ -3630,7 +3630,7 @@ for Aspell to work with Hangul it needs to be form A.  Unfortunately the
 existing Normalization code in Aspell will not be able to adequately
 deal with converting Hangul from form D and C to form A and back again.
 However, once this code is written, Aspell should be able to spell check
-Hangul with out any problem.
+Hangul without any problem.
 
 @node Multiple Scripts
 @appendixsec Languages Written in Multiple Scripts
