@@ -238,7 +238,7 @@ namespace acommon {
   }
 
   template <class T>
-  static void free_norm_table(NormTable<T> * d)
+  void free_norm_table(NormTable<T> * d)
   {
     for (T * cur = d->data; cur != d->end; ++cur) {
       if (cur->sub_table) 
