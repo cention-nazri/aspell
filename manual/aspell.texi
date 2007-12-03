@@ -4255,6 +4255,22 @@ a C++ program.
 @node ChangeLog
 @appendix ChangeLog
 
+@heading Changes from 0.60.5 to 0.60.6 (???)
+@itemize @bullet
+@item
+Compiles fixes for upcoming Gcc 4.3.
+@item
+Minor tweak to suggestion code which improve suggestion results in
+certain cases.
+@item
+Always line buffer stdout and stderr in Aspell utility that has
+the potential to be used interactively through a pipe.
+@item
+Removed debug output in @command{aspell munch-list}.
+@item
+Other minor updates and bug fixes.
+@end itemize
+
 @heading Changes from 0.60.4 to 0.60.5 (December 18, 2006)
 @itemize @bullet
 @item
