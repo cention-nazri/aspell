@@ -780,19 +780,19 @@ namespace aspell {
       out.append(c);
     }
     else if (c < 0x800) {
-      out.append(0xC0 | c>>6);
-      out.append(0x80 | c & 0x3F);
+      out.append(0xC0 | (c>>6));
+      out.append(0x80 | (c & 0x3F));
     }
     else if (c < 0x10000) {
-      out.append(0xE0 | c>>12);
-      out.append(0x80 | c>>6 & 0x3F);
-      out.append(0x80 | c & 0x3F);
+      out.append(0xE0 | (c>>12));
+      out.append(0x80 | (c>>6 & 0x3F));
+      out.append(0x80 | (c & 0x3F));
     }
     else if (c < 0x200000) {
-      out.append(0xF0 | c>>18);
-      out.append(0x80 | c>>12 & 0x3F);
-      out.append(0x80 | c>>6 & 0x3F);
-      out.append(0x80 | c & 0x3F);
+      out.append(0xF0 | (c>>18));
+      out.append(0x80 | (c>>12 & 0x3F));
+      out.append(0x80 | (c>>6 & 0x3F));
+      out.append(0x80 | (c & 0x3F));
     }
   }
   

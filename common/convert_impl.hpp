@@ -153,7 +153,7 @@ namespace aspell {
       if (dest->from == 0) dest->from = T::from_non_char;
     }
     for (T * dest = final->data; dest < final->end; dest += final->height) {
-      if (dest->from == 0 || dest->from == T::from_non_char && dest->to[0] == 0) {
+      if (dest->from == 0 || (dest->from == T::from_non_char && dest->to[0] == 0)) {
         dest->from = T::from_non_char;
         dest->set_to_to_non_char();
       }

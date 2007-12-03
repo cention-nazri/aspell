@@ -49,7 +49,7 @@ struct CML_Parms {
   typedef CML_Entry Value;
   typedef const char * Key;
   static const bool is_multi = true;
-  hash<const char *> hash;
+  aspell::hash<const char *> hash;
   bool equal(Key x, Key y) {return strcmp(x,y) == 0;}
   Key key(const Value & v) {return v.word;}
 };

@@ -129,10 +129,10 @@ namespace aspell {
     }
 
     char & operator[] (size_t pos) {return begin_[pos];}
-    const char operator[] (size_t pos) const {return begin_[pos];}
+    char operator[] (size_t pos) const {return begin_[pos];}
 
     char & back() {return end_[-1];}
-    const char back() const {return end_[-1];}
+    char back() const {return end_[-1];}
 
     void clear() {end_ = begin_;}
 
@@ -496,7 +496,7 @@ namespace aspell {
 
 namespace std
 {
-  template<> static inline void swap(aspell::String & x, aspell::String & y) {x.swap(y);}
+  template<> inline void swap(aspell::String & x, aspell::String & y) {x.swap(y);}
 }
 
 #endif
