@@ -704,7 +704,7 @@ namespace acommon {
             char * dest = magic.mstr();
             const char * src  = magic.mstr();
             while (*src) {
-              if (*src == '\\' && src[1] == '/' || src[1] == '#')
+              if ((*src == '\\' && src[1] == '/') || src[1] == '#')
                 ++src;
               *dest++ = *src++;
             }

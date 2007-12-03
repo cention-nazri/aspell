@@ -193,7 +193,7 @@ struct CondsLookupParms {
   typedef const Conds * Value;
   typedef const char * Key;
   static const bool is_multi = false;
-  hash<const char *> hfun;
+  acommon::hash<const char *> hfun;
   size_t hash(const char * s) {return hfun(s);}
   bool equal(const char * x, const char * y) {return strcmp(x,y) == 0;}
   const char * key(const Conds * c) {return c->str;}

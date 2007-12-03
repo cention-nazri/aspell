@@ -129,10 +129,10 @@ namespace acommon {
     }
 
     char & operator[] (size_t pos) {return begin_[pos];}
-    const char operator[] (size_t pos) const {return begin_[pos];}
+    char operator[] (size_t pos) const {return begin_[pos];}
 
     char & back() {return end_[-1];}
-    const char back() const {return end_[-1];}
+    char back() const {return end_[-1];}
 
     void clear() {end_ = begin_;}
 
@@ -492,7 +492,7 @@ namespace acommon {
 
 namespace std
 {
-  template<> static inline void swap(acommon::String & x, acommon::String & y) {return x.swap(y);}
+  template<> inline void swap(acommon::String & x, acommon::String & y) {return x.swap(y);}
 }
 
 #endif

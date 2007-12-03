@@ -726,7 +726,7 @@ namespace {
   struct WordLookupParms {
     const char * block_begin;
     WordLookupParms() {}
-    typedef Vector<u32int>      Vector;
+    typedef acommon::Vector<u32int> Vector;
     typedef u32int              Value;
     typedef const char *        Key;
     static const bool is_multi = false;

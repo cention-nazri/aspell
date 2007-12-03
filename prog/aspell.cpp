@@ -239,6 +239,14 @@ static const PossibleOption * find_option(const char * str) {
   return i;
 }
 
+static void line_buffer() {
+#ifndef WIN32
+  // set up stdin and stdout to be line buffered
+  assert(setvbuf(stdin, 0, _IOLBF, 0) == 0); 
+  assert(setvbuf(stdout, 0, _IOLBF, 0) == 0);
+#endif
+}
+
 Conv dconv;
 Conv uiconv;
 
@@ -688,11 +696,7 @@ DocumentChecker * new_checker(AspellSpeller * speller,
 
 void pipe() 
 {
-#ifndef WIN32
-  // set up stdin and stdout to be line buffered
-  assert(setvbuf(stdin, 0, _IOLBF, 0) == 0); 
-  assert(setvbuf(stdout, 0, _IOLBF, 0) == 0);
-#endif
+  line_buffer();
 
   bool terse_mode = true;
   bool do_time = options->retrieve_bool("time");
@@ -1653,6 +1657,7 @@ void soundslike() {
   Conv oconv(setup_conv(lang, options));
   String word;
   String sl;
+  line_buffer();
   while (CIN.getline(word)) {
     const char * w = iconv(word);
     lang->LangImpl::to_soundslike(sl, w);
@@ -1677,6 +1682,7 @@ void munch()
   Conv oconv(setup_conv(lang, options));
   String word;
   GuessInfo gi;
+  line_buffer();
   while (CIN.getline(word)) {
     lang->munch(iconv(word), &gi);
     COUT << word;
@@ -1715,6 +1721,7 @@ void expand()
   String word, buf;
   ObjStack exp_buf;
   WordAff * exp_list;
+  line_buffer();
   while (CIN.getline(word)) {
     buf = word;
     char * w = iconv(buf.mstr(), buf.size());
@@ -1801,6 +1808,7 @@ void combine()
   String word;
   String base;
   String affs;
+  line_buffer();
   while (CIN.getline(word)) {
     word = iconv(word);
 
@@ -1884,7 +1892,7 @@ struct SML_Parms {
   typedef SML_WordEntry Value;
   typedef const char * Key;
   static const bool is_multi = false;
-  hash<const char *> hash;
+  acommon::hash<const char *> hash;
   bool equal(Key x, Key y) {return strcmp(x,y) == 0;}
   Key key(const Value & v) {return v.word;}
 };
@@ -2035,7 +2043,7 @@ struct CML_Parms {
   typedef CML_Entry Value;
   typedef const char * Key;
   static const bool is_multi = true;
-  hash<const char *> hash;
+  acommon::hash<const char *> hash;
   bool equal(Key x, Key y) {return strcmp(x,y) == 0;}
   Key key(const Value & v) {return v.word;}
 };

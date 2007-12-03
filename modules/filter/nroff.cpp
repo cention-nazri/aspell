@@ -66,7 +66,7 @@ namespace {
 	"do",
 	"so"
       };
-      for (int i = 0; i < sizeof(ignore_req_tab)/sizeof(ignore_req_tab[0]);
+      for (unsigned i = 0; i < sizeof(ignore_req_tab)/sizeof(ignore_req_tab[0]);
 	   i++)
 	if (memcmp(ignore_req_tab[i], req_name, 2) == 0)
 	  return true;
