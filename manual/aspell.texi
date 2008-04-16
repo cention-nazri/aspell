@@ -1,11 +1,11 @@
 \input texinfo   @c -*-texinfo-*-
 
 @setfilename aspell.info
-@settitle GNU Aspell 0.60.5
+@settitle GNU Aspell 0.60.6
 @syncodeindex pg cp
 @documentencoding ISO-8859-1
 @documentdescription
-Aspell 0.60.5 spell checker user's manual.
+Aspell 0.60.6 spell checker user's manual.
 @end documentdescription
 
 @copying
@@ -32,7 +32,7 @@ Documentation License".
 @end direntry
 
 @titlepage
-@title GNU Aspell 0.60.5
+@title GNU Aspell 0.60.6
 @author Kevin Atkinson (@email{kevina@@gnu.org})
 @page
 @vskip 0pt plus 1filll
@@ -43,7 +43,7 @@ Documentation License".
 
 @ifnottex
 @node Top
-@top GNU Aspell 0.60.5
+@top GNU Aspell 0.60.6
 This is the user's manual for Aspell
 
 GNU Aspell is a spell checker designed to eventually replace Ispell.
@@ -4255,16 +4255,18 @@ a C++ program.
 @node ChangeLog
 @appendix ChangeLog
 
-@heading Changes from 0.60.5 to 0.60.6 (???)
+@heading Changes from 0.60.5 to 0.60.6 (April 16, 2007)
 @itemize @bullet
 @item
-Compiles fixes for upcoming Gcc 4.3.
+Compile fixes for Gcc 4.3.
 @item
-Minor tweak to suggestion code which improve suggestion results in
+Updated to Libtool 2.2.2 and Automake 1.10.1
+@item
+Minor tweak to suggestion code which improved suggestion results in
 certain cases.
 @item
-Always line buffer stdout and stderr in Aspell utility that has
-the potential to be used interactively through a pipe.
+Always line buffer stdout and stderr in the Aspell utility when there is 
+the potential for it to be used interactively through a pipe.
 @item
 Removed debug output in @command{aspell munch-list}.
 @item
