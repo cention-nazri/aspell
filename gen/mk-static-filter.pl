@@ -159,7 +159,7 @@ while ($filter = shift @filterhashes) {
   printf STATICFILTERS "\n  const KeyInfo * ".${$filter}{"NAME"}."_options_begin = ".
                                               ${$filter}{"NAME"}."_options;\n";
   # If structure is empty, set options_end to same as options_begin.
-  if (%{$filter}) {
+  if ($firstopt) {
     printf STATICFILTERS "\n  const KeyInfo * ".${$filter}{"NAME"}."_options_end = ".
                                                 ${$filter}{"NAME"}."_options;\n";
   } else {
