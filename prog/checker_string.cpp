@@ -36,8 +36,8 @@ static int get_line(FILE * in, CheckerString::Line & d)
 }
 
 CheckerString::CheckerString(AspellSpeller * speller, 
-			     FILE * in, FILE * out, 
-			     int num_lines)
+                             FILE * in, FILE * out, 
+                             int num_lines)
   : in_(in), out_(out), speller_(speller)
 {
   lines_.reserve(num_lines + 1);
@@ -101,7 +101,7 @@ bool CheckerString::next_misspelling()
     //        an API enhancement in Checker.
     for (int i = 0; i != real_word_size_; ++i) {
       if (asc_isspace(*(real_word_begin_ + i)))
-	correct = true;
+        correct = true;
     }
     if (!correct)
       correct = aspell_speller_check(speller_, &*real_word_begin_, real_word_size_);
@@ -127,7 +127,7 @@ void CheckerString::replace(ParmString repl)
   assert(real_word_size_ > 0);
   int offset = real_word_begin_ - cur_line_->real.begin();
   aspell_speller_store_replacement(speller_, &*real_word_begin_, real_word_size_,
-				   repl.str(), repl.size());
+                                   repl.str(), repl.size());
   cur_line_->real.replace(real_word_begin_, real_word_begin_ + real_word_size_,
                           repl.str(), repl.str() + repl.size());
   real_word_begin_ = cur_line_->real.begin() + offset;
