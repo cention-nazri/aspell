@@ -327,7 +327,11 @@ void get_line(String & line) {
     wnoutrefresh(choice_w);
     doupdate();
     line.resize(0);
+#ifdef HAVE_WIDE_CURSES
+    wint_t c;
+#else
     int c;
+#endif
     noecho();
     int begin_x;
     {int junk; getyx(choice_w, junk, begin_x);}
@@ -336,13 +340,12 @@ void get_line(String & line) {
     while (true) {
       handle_last_signal();
 #ifdef HAVE_WIDE_CURSES
-      wint_t wi = 0;
-      int res = wget_wch(choice_w, &wi);
-      c = wi;
+      int res = wget_wch(choice_w, &c);
+      if (res == ERR) continue;
 #else
       c = wgetch(choice_w);
-#endif
       if (c == ERR) continue;
+#endif
       if (c == '\r' || c == '\n' || c == KEY_ENTER) 
         break;
       if (c == control('c') || c == KEY_BREAK) {
@@ -373,7 +376,9 @@ void get_line(String & line) {
       } else if (x < max_x && 32 <= c && c != '\x7F' && NOT_KEY /*c < 256*/) {
 #ifdef HAVE_WIDE_CURSES
         wchar_t wc = c;
-        wins_nwstr(choice_w, &wc, 1);
+        cchar_t cc;
+        setcchar(&cc, &wc, 0, 0, NULL);
+        wins_wch(choice_w, &cc);
 #else
         winsch(choice_w, c);
 #endif
