@@ -94,9 +94,9 @@ libaspell_la_SOURCES =\
 libaspell_la_LIBADD =  $(LTLIBINTL) $(PTHREAD_LIB)
 
 if INCREMENTED_SONAME
-libaspell_la_LDFLAGS = -version-info 16:4:0 -no-undefined
+libaspell_la_LDFLAGS = -version-info 16:5:0 -no-undefined
 else
-libaspell_la_LDFLAGS = -version-info 16:4:1 -no-undefined
+libaspell_la_LDFLAGS = -version-info 16:5:1 -no-undefined
 endif
 
 if PSPELL_COMPATIBILITY
@@ -105,9 +105,9 @@ libpspell_la_SOURCES = lib/dummy.cpp
 libpspell_la_LIBADD = libaspell.la
 
 if INCREMENTED_SONAME
-libpspell_la_LDFLAGS = -version-info 16:4:0 -no-undefined
+libpspell_la_LDFLAGS = -version-info 16:5:0 -no-undefined
 else
-libpspell_la_LDFLAGS = -version-info 16:4:1 -no-undefined
+libpspell_la_LDFLAGS = -version-info 16:5:1 -no-undefined
 endif
 
 endif
