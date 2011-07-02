@@ -453,7 +453,7 @@ namespace {
     const char * w = (const char *)wi->intr[0];
     const SensitiveCompare * c = (const SensitiveCompare *)wi->intr[1];
     const char * orig = (const char *)wi->intr[2];
-    wi->word = w;
+    convert(w,*wi);
     wi->adv_ = 0;
     prep_next(wi, w, c, orig);
   }
@@ -467,7 +467,6 @@ namespace {
     const char * w = word_block + *i;
     for (;;) {
       if ((*c)(word, w)) {
-        o.what = WordEntry::Word;
         convert(w,o);
         prep_next(&o, w, c, word);
         return true;
@@ -579,7 +578,6 @@ namespace {
     data.word_size = get_word_size(tmp);
     if (invisible_soundslike) {
       convert(tmp, data);
-      data.what = WordEntry::Word;
     } 
     data.intr[0] = (void *)tmp;
     

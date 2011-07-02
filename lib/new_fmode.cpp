@@ -277,10 +277,12 @@ namespace acommon {
   }
 
   void FilterMode::MagicString::remExtension(const String & ext) {
-    for ( Vector<String>::iterator it = fileExtensions.begin() ;
-          it != fileExtensions.end() ; it++ ) {
-      if ( *it == ext ) {
-        fileExtensions.erase(it);
+    Vector<String>::iterator it = fileExtensions.begin();
+    while (it != fileExtensions.end()) {
+      if (*it == ext) {
+        it = fileExtensions.erase(it);
+      } else {
+        it++;
       }
     }
   }
@@ -671,7 +673,7 @@ namespace acommon {
             if ( regend == regbegin ) 
             {
               char charCount[64];
-              sprintf(&charCount[0],"%i",regbegin - (char *)dp.value);
+              sprintf(&charCount[0],"%li",(long)(regbegin - (char *)dp.value));
               return  make_err(empty_file_ext,charCount).with_file(possModeFile,dp.line_num);
             }
 
@@ -689,7 +691,7 @@ namespace acommon {
             if ( regend == regbegin ) 
             {
               char charCount[64];
-              sprintf(&charCount[0],"%i",regbegin - (char *)dp.value);
+              sprintf(&charCount[0],"%li",(long)(regbegin - (char *)dp.value));
               return  make_err(empty_file_ext,charCount).with_file(possModeFile,dp.line_num);
             }
             swap = *regend;
@@ -724,7 +726,7 @@ namespace acommon {
           if (extCount > 0 ) continue;
 
           char charCount[64];
-          sprintf(&charCount[0],"%i",strlen((char *)dp.value));
+          sprintf(&charCount[0],"%lu",(unsigned long)strlen((char *)dp.value));
           return  make_err(empty_file_ext,charCount).with_file(possModeFile,dp.line_num);
         }
 

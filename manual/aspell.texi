@@ -2310,6 +2310,10 @@ beginning of the line and the beginning of the misspelled word, a
 colon, another space, and a list of the suggestions separated by
 commas and spaces.
 
+If you set the option @command{run-together} and Aspell thinks this word
+is a combination of two words in the dictionary, then it prints a single
+@samp{-} in one line.
+
 Finally, if the word does not appear in the dictionary, and there are
 no suggestions, then the line contains a @samp{#}, a space, the
 misspelled word, a space, and the character offset from the beginning
@@ -4255,6 +4259,21 @@ a C++ program.
 @node ChangeLog
 @appendix ChangeLog
 
+@heading Changes from 0.60.6 to 0.60.6.1 (July ??, 2011)
+@itemize @bullet
+@item
+Update to Automake 1.10.3.
+@item
+Fix a bug which caused a race condition (leading to a likely crash)
+when two threads try to update the dictionary cache at the same time.
+@item
+Make it very clear that compiling Aspell with NDEBUG is a bad idea
+(see @uref{http://aspell.net/ndebug.html}) by outputting a
+warning when building with NDEBUG defined.
+@item
+Numerous other minor updates and bug fixes.
+@end itemize
+
 @heading Changes from 0.60.5 to 0.60.6 (April 16, 2007)
 @itemize @bullet
 @item
@@ -4276,7 +4295,7 @@ Other minor updates and bug fixes.
 @heading Changes from 0.60.4 to 0.60.5 (December 18, 2006)
 @itemize @bullet
 @item
-Compile fix for gcc 4.1
+Compile fix for Gcc 4.1
 @item
 Updated to Gettext 0.16.1, Libtool 1.5.22, Automake 1.10, Autoconf 2.61
 @item

@@ -826,7 +826,7 @@ namespace acommon {
         FilterChar c = from_utf8(in, stop, (Uni32)-1);
         if (c == (Uni32)-1) {
           char m[70];
-          snprintf(m, 70, _("Invalid UTF-8 sequence at position %d."), in - begin);
+          snprintf(m, 70, _("Invalid UTF-8 sequence at position %ld."), (long)(in - begin));
           return make_err(invalid_string, orig, m);
         }
         out.append(c);

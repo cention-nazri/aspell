@@ -12,6 +12,8 @@
 
 #include "errors.hpp"
 
+#include "ndebug.hpp"
+
 namespace acommon {
 
   // PosibErr<type> is a special Error handling device that will make
@@ -158,6 +160,16 @@ namespace acommon {
     void del();
   };
 
+  template <>
+  class PosibErr<void> : public PosibErrBase
+  {
+  public:
+    PosibErr(const PosibErrBase & other) 
+      : PosibErrBase(other) {}
+
+    PosibErr() {}
+  };
+
   template <typename Ret>
   class PosibErr : public PosibErrBase
   {
@@ -184,16 +196,6 @@ namespace acommon {
     operator const Ret & () const {posib_handle_err(); return data;}
 
     Ret data;
-  };
-
-  template <>
-  class PosibErr<void> : public PosibErrBase
-  {
-  public:
-    PosibErr(const PosibErrBase & other) 
-      : PosibErrBase(other) {}
-
-    PosibErr() {}
   };
 
 //

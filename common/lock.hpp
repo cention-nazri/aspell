@@ -15,6 +15,8 @@
 #ifndef DISTRIBNET_LOCK__HPP
 #define DISTRIBNET_LOCK__HPP
 
+#include <assert.h>
+
 #include "settings.h"
 
 #ifdef USE_POSIX_MUTEX
@@ -57,6 +59,8 @@ namespace acommon {
     Mutex * lock_;
   public:
     Lock(Mutex * l) : lock_(l) {if (lock_) lock_->lock();}
+    void set(Mutex * l) {assert(!lock_); lock_ = l; if (lock_) lock_->lock();}
+    void release() {if (lock_) lock_->unlock(); lock_ = NULL;}
     ~Lock() {if (lock_) lock_->unlock();}
   };
 };

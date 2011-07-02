@@ -8,6 +8,7 @@
 //#define DEBUG {fprintf(stderr,"File: %s(%i)\n",__FILE__,__LINE__);}
 #include <string.h>
 #include <stdlib.h>
+#include "ndebug.hpp"
 #include <assert.h>
 
 #include "dirs.h"
@@ -1521,3 +1522,4 @@ namespace acommon {
   }
   
 }
+

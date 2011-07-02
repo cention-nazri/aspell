@@ -8,6 +8,9 @@ namespace acommon {
 class GlobalCacheBase;
 template <class Data> class GlobalCache;
 
+// get_cache_data (both versions) and release_cache_data will acquires
+// the cache's lock
+
 template <class Data>
 PosibErr<Data *> get_cache_data(GlobalCache<Data> *, 
                                 typename Data::CacheConfig *, 
@@ -32,9 +35,11 @@ public: // but don't use
   Cacheable * * prev;
   mutable int refcount;
   GlobalCacheBase * cache;
+public:
   bool attached() {return prev;}
-  void copy() const;
-  void release() const {release_cache_data(cache,this);}
+  void copy_no_lock() const {refcount++;}
+  void copy() const; // Acquires cache->lock
+  void release() const {release_cache_data(cache,this);} // Acquires cache->lock
   Cacheable(GlobalCacheBase * c = 0) : next(0), prev(0), refcount(1), cache(c) {}
   virtual ~Cacheable() {}
 };

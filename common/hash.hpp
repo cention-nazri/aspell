@@ -318,7 +318,7 @@ namespace acommon {
       : Base(s, Parms(h,e)) {}
     data_type & operator[](const key_type & k) 
     {
-      return (*((insert(value_type(k, data_type()))).first)).second;
+      return (*((this->insert(value_type(k, data_type()))).first)).second;
     }
   };
 

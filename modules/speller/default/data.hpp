@@ -3,6 +3,7 @@
 #ifndef ASPELLER_DATA__HPP
 #define ASPELLER_DATA__HPP
 
+#include "ndebug.hpp"
 #include <assert.h>
 
 #include "copy_ptr.hpp"

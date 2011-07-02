@@ -986,21 +986,6 @@ void check()
     exit(-1);
   }
     
-#ifdef USE_FILE_INO
-  {
-    struct stat st;
-    fstat(fileno(in), &st);
-    int fd = open(new_name.c_str(), O_WRONLY | O_CREAT | O_TRUNC, st.st_mode);
-    if (fd >= 0) out = fdopen(fd, "w");
-  }
-#else
-  out = fopen(new_name.c_str(), "w");
-#endif
-  if (!out) {
-    print_error(_("Could not open the file \"%s\" for writing. File not saved."), file_name);
-    exit(-1);
-  }
-
   if (!options->have("mode"))
     EXIT_ON_ERR(set_mode_from_extension(options, file_name));
     
@@ -1019,6 +1004,21 @@ void check()
   if (aspell_error(ret)) {
     print_error(aspell_error_message(ret));
     exit(1);
+  }
+
+#ifdef USE_FILE_INO
+  {
+    struct stat st;
+    fstat(fileno(in), &st);
+    int fd = open(new_name.c_str(), O_WRONLY | O_CREAT | O_TRUNC, st.st_mode);
+    if (fd >= 0) out = fdopen(fd, "w");
+  }
+#else
+  out = fopen(new_name.c_str(), "w");
+#endif
+  if (!out) {
+    print_error(_("Could not open the file \"%s\" for writing. File not saved."), file_name);
+    exit(-1);
   }
 
   setup_display_conv();
@@ -1130,11 +1130,18 @@ void check()
     case Add:
       aspell_speller_add_to_personal(speller, word, -1);
       break;
-    case AddLower:
-      aspell_speller_add_to_personal
-        (speller, 
-         reinterpret_cast<Speller *>(speller)->to_lower(word), -1);
+    case AddLower: 
+    {
+      // Emulate the c function add_to_personal, but add extra step to
+      // convert word to lowercase.  Yeah its a bit of a hack.
+      Speller * sp = reinterpret_cast<Speller *>(speller);
+      sp->temp_str_0.clear();
+      sp->to_internal_->convert(word, -1, sp->temp_str_0);
+      char * lower = sp->to_lower(sp->temp_str_0.mstr());
+      PosibErr<void> ret = sp->add_to_personal(MutableString(lower));
+      sp->err_.reset(ret.release_err());
       break;
+    }
     case Replace:
     case ReplaceAll:
       // the string new_word is in the encoding of the document
