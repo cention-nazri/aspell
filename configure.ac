@@ -201,7 +201,8 @@ AC_MSG_CHECKING(if file ino is supported)
 touch conftest-f1
 touch conftest-f2
 AC_TRY_RUN(
-  [#include <sys/stat.h>
+  [#include <stdlib.h>
+   #include <sys/stat.h>
    int main() {
      struct stat s1,s2;
      if (stat("conftest-f1",&s1) != 0) exit(2);
