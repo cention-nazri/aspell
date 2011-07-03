@@ -66,7 +66,7 @@ extern "C" {int getch();}
 
 #if CURSES_INCLUDE_STANDARD
 
-#include <term.h>
+#include TERM_HEADER
 
 #elif CURSES_INCLUDE_WORKAROUND_1
 
