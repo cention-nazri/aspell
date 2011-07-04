@@ -1,60 +1,61 @@
-# Translation of aspell-0.60.5.po to Russian
-# Copyright (C) 2004, 2005, 2007 Free Software Foundation, Inc.
+# Japanese translation for aspell
+# Copyright (C) 2011 Kevin Atkinson
 # This file is distributed under the same license as the aspell package.
-# Copyright (C) 2004 Kevin Atkinson.
+# Takeshi Hamasaki <hmatrjp@users.sourceforge.jp>, 2011.
 #
-# Pavel Maryanov <acid_jack@ukr.net>, 2004, 2005, 2007.
 msgid ""
 msgstr ""
-"Project-Id-Version: aspell-0.60.5\n"
+"Project-Id-Version: aspell 0.60.6\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
 "POT-Creation-Date: 2011-07-04 02:03-0600\n"
-"PO-Revision-Date: 2010-12-11 20:27+0600\n"
-"Last-Translator: Алекс <davian818@gmail.com>\n"
-"Language-Team: Russian <ru@li.org>\n"
+"PO-Revision-Date: 2011-04-11 22:43+0900\n"
+"Last-Translator: Takeshi Hamasaki <hmatrjp@users.sourceforge.jp>\n"
+"Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=KOI8-R\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 1.11.4\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: ja\n"
+"X-Poedit-Language: Japanese\n"
+"X-Poedit-Country: JAPAN\n"
+"X-Poedit-Basepath: /factory/ja-po/aspell/aspell-0.60.6\n"
 
 #: common/info.cpp:232
 msgid "a number between 0 and 1"
-msgstr "число между 0 и 1"
+msgstr "0 Ц│╗ 1 Ц│╝И√⌠Ц│╝Ф∙╟"
 
 #: common/info.cpp:569
 msgid "in the form \"<name> <value>\""
-msgstr "в виде \"<имя> <значение>\""
+msgstr "\"<name> <value>\" Ц│╝Е╫╒Е╪▐"
 
 #: common/config.cpp:74
 msgid "string"
-msgstr "string"
+msgstr "Ф√┤Е╜≈Е┬≈"
 
 #: common/config.cpp:74
 msgid "integer"
-msgstr "integer"
+msgstr "Ф∙╢Ф∙╟"
 
 #: common/config.cpp:74
 msgid "boolean"
-msgstr "boolean"
+msgstr "Х╚√Г░├Е─╓"
 
 #: common/config.cpp:74
 msgid "list"
-msgstr "список"
+msgstr "Ц┐╙Ц┌╧Ц┐┬"
 
 #. TRANSLATORS: "true" and "false" are literal
 #. * values and should not be translated.
 #: common/config.cpp:978
 msgid "either \"true\" or \"false\""
-msgstr "\"true\" либо \"false\""
+msgstr "\"true\" Ц│╬Ц│÷Ц│╞ \"false\""
 
 #: common/config.cpp:997
 msgid "a positive integer"
-msgstr "положительное целое число"
+msgstr "Ф╜ёЦ│╝Ф∙╢Ф∙╟"
 
 #: common/config.cpp:1125
 msgid "# default: "
-msgstr "# по умолчанию: "
+msgstr "# Ц┐┤Ц┐∙Ц┌╘Ц┐╚Ц┐┬:"
 
 #: common/config.cpp:1188
 #, c-format
@@ -71,272 +72,272 @@ msgstr ""
 "\n"
 "#######################################################################\n"
 "#\n"
-"# Фильтр: %s\n"
+"# Ц┐∙Ц┌ёЦ┐╚Ц┌©: %s\n"
 "#   %s\n"
 "#\n"
-"# настроен следующим образом:\n"
+"# Д╩╔Д╦▀Ц│╝Ц┌┬Ц│├Ц│╚Х╗╜Е╝ Ц│∙Ц┌▄Ц│╕Ц│└Ц│╬Ц│≥:\n"
 "\n"
 
 #: common/config.cpp:1286
 msgid "ASPELL_CONF env var"
-msgstr "переменная окружения ASPELL_CONF"
+msgstr "ASPELL_CONF Г▓╟Е╒┐Е╓┴Ф∙╟"
 
 #. TRANSLATORS: The remaing strings in config.cpp should be kept
 #. under 50 characters, begin with a lower case character and not
 #. include any trailing punctuation marks.
 #: common/config.cpp:1360
 msgid "main configuration file"
-msgstr "главный конфигурационный файл"
+msgstr "Ц┐║Ц┌╓Ц┐ЁХ╗╜Е╝ Ц┐∙Ц┌║Ц┌╓Ц┐╚"
 
 #: common/config.cpp:1362
 msgid "location of main configuration file"
-msgstr "местонахождение главного конфигурационного файла"
+msgstr "Ц┐║Ц┌╓Ц┐ЁХ╗╜Е╝ Ц┐∙Ц┌║Ц┌╓Ц┐╚Ц│╝Е═╢Ф┴─"
 
 #: common/config.cpp:1365
 msgid "location of language data files"
-msgstr "местонахождение файлов языковых данных"
+msgstr "Х╗─Х╙·Ц┐┤Ц┐╪Ц┌©Ц┐∙Ц┌║Ц┌╓Ц┐╚Ц│╝Е═╢Ф┴─"
 
 #: common/config.cpp:1367
 msgid "create dictionary aliases"
-msgstr "создание псевдонимов словаря"
+msgstr "Х╬·Ф⌡╦Ц│╝Е┬╔Е░█Ц┌▓Д╫°Ф┬░"
 
 #: common/config.cpp:1369
 msgid "location of the main word list"
-msgstr "местонахождение главного списка слов"
+msgstr "Ц┐║Ц┌╓Ц┐ЁЕ█≤Х╙·Ц┐╙Ц┌╧Ц┐┬Ц│╝Е═╢Ф┴─"
 
 #: common/config.cpp:1371
 msgid "encoding to expect data to be in"
-msgstr "ожидаемая кодировка данных"
+msgstr "Д╨┬Ф╦╛Ц│∙Ц┌▄Ц┌▀Ц┐┤Ц┐╪Ц┌©Ц│╝Ц┌╗Ц┐ЁЦ┌ЁЦ┐╪Ц┐┤Ц┌ёЦ┐ЁЦ┌╟"
 
 #: common/config.cpp:1373
 msgid "add or removes a filter"
-msgstr "добавление или удаление фильтра"
+msgstr "Ц┐∙Ц┌ёЦ┐╚Ц┌©Ц┌▓Х©╫Е┼═Ц│╬Ц│÷Ц│╞Е┴┼И≥╓"
 
 #: common/config.cpp:1375
 msgid "path(s) aspell looks for filters"
-msgstr "пути для поиска фильтров aspell"
+msgstr "aspell Ц│▄Ц┐∙Ц┌ёЦ┐╚Ц┌©Ц┌▓Ф▌╒Ц│≥Ц┐▒Ц┌╧О╪┬Х╓┤Ф∙╟Е▐╞О╪┴"
 
 #: common/config.cpp:1379
 msgid "filter mode"
-msgstr "режим фильтра"
+msgstr "Ц┐∙Ц┌ёЦ┐╚Ц┌©Ц┐╒Ц┐╪Ц┐┴"
 
 #: common/config.cpp:1381
 msgid "extra dictionaries to use"
-msgstr "дополнительные используемые словари"
+msgstr "Х©╫Е┼═Ц│╖Д╫©Г■╗Ц│≥Ц┌▀Х╬·Ф⌡╦"
 
 #: common/config.cpp:1383
 msgid "location for personal files"
-msgstr "местонахождение личных файлов"
+msgstr "Е─▀Д╨╨Г■╗Ц┐∙Ц┌║Ц┌╓Ц┐╚Ц│╝Е═╢Ф┴─"
 
 #: common/config.cpp:1385
 msgid "ignore words <= n chars"
-msgstr "игнорирование слов короче n символов"
+msgstr "nФ√┤Е╜≈Д╩╔Д╦▀Ц│╝Е█≤Х╙·Ц┌▓Г└║Х╕√Ц│≥Ц┌▀"
 
 #. TRANSLATORS: It is OK if this is longer than 50 chars
 #: common/config.cpp:1388
 msgid "ignore accents when checking words -- CURRENTLY IGNORED"
-msgstr "игнорирование ударений при проверке слов -- СЕЙЧАС ИГНОРИРУЕТСЯ"
+msgstr "Е█≤Х╙·Ц┌▓Ц┐│Ц┌╖Ц┐┐Ц┌╞Ц│≥Ц┌▀Ф≥┌Ц│╚Ц┌╒Ц┌╞Ц┌╩Ц┐ЁЦ┐┬Ц┌▓Г└║Х╕√Ц│≥Ц┌▀ -- Г▐╬Е°╗Ц│╞Г└║Е┼╧Ц│╖Ц│≥"
 
 #: common/config.cpp:1390
 msgid "ignore case when checking words"
-msgstr "игнорирование регистра при проверке слов"
+msgstr "Е╓╖Ф√┤Е╜≈Ц┐╩Е╟▐Ф√┤Е╜≈Ц┌▓Е▄╨Е┬╔Ц│≈Ц│╙Ц│└"
 
 #: common/config.cpp:1392
 msgid "ignore commands to store replacement pairs"
-msgstr "игнорирование команд для сохранения пар замены"
+msgstr "Г╫╝Ф▐⌡Ц┐ Ц┌╒Ц┌▓Ф═╪Г╢█Ц│≥Ц┌▀Ц┌ЁЦ┐·Ц┐ЁЦ┐┴Ц┌▓Г└║Х╕√Ц│≥Ц┌▀"
 
 #: common/config.cpp:1394 common/config.cpp:1461
 msgid "extra information for the word list"
-msgstr "доп. информация для списка слов"
+msgstr "Е█≤Х╙·Ц┐╙Ц┌╧Ц┐┬Ц│╝Х©╫Е┼═Ф┐┘Е═╠"
 
 #: common/config.cpp:1396
 msgid "keyboard definition to use for typo analysis"
-msgstr "определение клавиатуры для анализа опечаток"
+msgstr "Е┘╔Е┼⌡И√⌠И│∙Ц│└(typo)Ц│╝Х╖ёФ·░Ц│╚Д╫©Г■╗Ц│≥Ц┌▀Ц┌╜Ц┐╪Ц┐°Ц┐╪Ц┐┴Е╝ Г╬╘"
 
 #: common/config.cpp:1398
 msgid "language code"
-msgstr "код языка"
+msgstr "Х╗─Х╙·Ц│╝Ц┌ЁЦ┐╪Ц┐┴"
 
 #: common/config.cpp:1400
 msgid "deprecated, use lang instead"
-msgstr "устарел, используйте lang"
+msgstr "И²·Ф▌╗Е╔╗Ц─│Д╩ёЦ┌▐Ц┌┼Ц│╚ lang Ц┌▓Д╫©Г■╗Ц│≈Ц│╕Ц│▐Ц│═Ц│∙Ц│└"
 
 #: common/config.cpp:1402
 msgid "location of local language data files"
-msgstr "местонахождение файлов локальных языковых данных"
+msgstr "Г▐╬Е°╟Х╙·Ц┐┤Ц┐╪Ц┌©Ц┐∙Ц┌║Ц┌╓Ц┐╚Ц┌▓Ф═╪Г╢█Ц│≈Ц│╕Ц│┌Ц┌▀Е═╢Ф┴─"
 
 #: common/config.cpp:1404
 msgid "base name of the main dictionary to use"
-msgstr "базовое имя главного словаря"
+msgstr "Д╫©Г■╗Ц│≥Ц┌▀Д╦╩Х╬·Ф⌡╦Ц│╝Ц┐≥Ц┐╪Ц┌╧Е░█"
 
 #: common/config.cpp:1408
 msgid "set module name"
-msgstr "установка имени модуля"
+msgstr "Ц┐╒Ц┌╦Ц┐╔Ц┐╪Ц┐╚Е░█Ц┌▓Х╗╜Е╝ "
 
 #: common/config.cpp:1410
 msgid "search order for modules"
-msgstr "порядок поиска модуля"
+msgstr "Ц┐╒Ц┌╦Ц┐╔Ц┐╪Ц┐╚Ц│╝Ф╓°Г╢╒И═├"
 
 #: common/config.cpp:1412
 msgid "enable Unicode normalization"
-msgstr "включение нормализации Юникода"
+msgstr "UnicodeФ╜ёХ╕▐Е▄√Ц┌▓Ф°┴Е┼╧Ц│╚Ц│≥Ц┌▀"
 
 #: common/config.cpp:1414
 msgid "Unicode normalization required for current lang"
-msgstr "для текущего языка требуется нормализация Юникода"
+msgstr "Г▐╬Е°╗Ц│╝Х╗─Х╙·Ц│╚Ц│╞Ц┐╕Ц┐▀Ц┌ЁЦ┐╪Ц┐┴Ф╜ёХ╕▐Е▄√Ц│▄Е©┘Х╕│Ц│╖Ц│≥"
 
 #. TRANSLATORS: the values after the ':' are literal
 #. values and should not be translated.
 #: common/config.cpp:1418
 msgid "Unicode normalization form: none, nfd, nfc, comp"
-msgstr "тип нормализации Юникода: none, nfd, nfc, comp"
+msgstr "Ц┐╕Ц┐▀Ц┌ЁЦ┐╪Ц┐┴Ф╜ёХ╕▐Е▄√Ц┐∙Ц┌╘Ц┐╪Ц┐═: none, nfd, nfc, comp"
 
 #: common/config.cpp:1420
 msgid "avoid lossy conversions when normalization"
-msgstr "не допускать потерь при нормализации"
+msgstr "Ф╜ёХ╕▐Е▄√Ц│≥Ц┌▀Ф≥┌Ц│╚И²·Е▐╞И─├Е╓┴Ф▐⌡Ц┌▓И│©Ц│▒Ц┌▀"
 
 #: common/config.cpp:1422
 msgid "personal configuration file"
-msgstr "личный конфигурационный файл"
+msgstr "Е─▀Д╨╨Г■╗Х╗╜Е╝ Ц┐∙Ц┌║Ц┌╓Ц┐╚"
 
 #: common/config.cpp:1425
 msgid "personal dictionary file name"
-msgstr "имя файла личного словаря"
+msgstr "Е─▀Д╨╨Г■╗Х╬·Ф⌡╦Ц┐∙Ц┌║Ц┌╓Ц┐╚Е░█"
 
 #: common/config.cpp:1428
 msgid "prefix directory"
-msgstr "каталог-префикс"
+msgstr "Ц┐┤Ц┌ёЦ┐╛Ц┌╞Ц┐┬Ц┐╙Ц│╝Ф▌╔И═╜Х╬·"
 
 #: common/config.cpp:1430
 msgid "replacements list file name"
-msgstr "имя файла списка замен"
+msgstr "Г╫╝Ф▐⌡Ц┐╙Ц┌╧Ц┐┬Ц│╝Е┘╔Ц│ёЦ│÷Ц┐∙Ц┌║Ц┌╓Ц┐╚Е░█"
 
 #: common/config.cpp:1433
 msgid "consider run-together words legal"
-msgstr "разрешать написанные слитно слова"
+msgstr "Е█≤Х╙·Ц│▄Ц│▐Ц│ёЦ│╓Ц│└Ц│╕Ц│└Ц│╕Ц┌┌Х╙╓Ц┌┼Ц│╗Ц│≈Ц│╙Ц│└"
 
 #: common/config.cpp:1435
 msgid "maximum number that can be strung together"
-msgstr "максимальное число написанных слитно слов"
+msgstr "Ц│▐Ц│ёЦ│╓Ц│└Ц│╕Ц│└Ц│╕Ц┌┌Ц│└Ц│└Е█≤Х╙·Ц│╝Е─▀Ф∙╟О╪┬Ф°─Е╓╖О╪┴"
 
 #: common/config.cpp:1437
 msgid "minimal length of interior words"
-msgstr "минимальная длина внутренних слов"
+msgstr "Е░╚Ц│╬Ц┌▄Ц┌▀Е█≤Х╙·Ц│╝Ф°─Е╟▐Ф√┤Е╜≈Ф∙╟"
 
 #: common/config.cpp:1439
 msgid "save replacement pairs on save all"
-msgstr "сохранение замененных пар при сохранении всего"
+msgstr "Ц│≥Ц│╧Ц│╕Д©²Е╜≤ Ц│╖Г╫╝Ф▐⌡Ц┐ Ц┌╒Ц┌▓Д©²Е╜≤Ц│≥Ц┌▀"
 
 #: common/config.cpp:1441
 msgid "set the prefix based on executable location"
-msgstr "уст. префикса согласно местонахождению исп. файла"
+msgstr "Е╝÷Х║▄Ц┐∙Ц┌║Ц┌╓Ц┐╚Ц│╝Д╫█Г╫╝Ц┌▓Е÷╨Ф╨√Ц│╚Ц│≈Ц│╕Ц┐≈Ц┐╛Ц┐∙Ц┌ёЦ┐┐Ц┌╞Ц┌╧Ц┌▓Х╗╜Е╝ Ц│≥Ц┌▀"
 
 #: common/config.cpp:1443
 msgid "size of the word list"
-msgstr "размер списка слов"
+msgstr "Е█≤Х╙·Ц┐╙Ц┌╧Ц┐┬Ц│╝Е╓╖Ц│█Ц│∙"
 
 #: common/config.cpp:1445
 msgid "no longer used"
-msgstr "больше не используется"
+msgstr "Ц┌┌Ц│├Д╫©Ц┌▐Ц┌▄Ц│╕Ц│└Ц│╙Ц│└"
 
 #: common/config.cpp:1447
 msgid "suggestion mode"
-msgstr "режим предложения"
+msgstr "Ф▐░Ф║┬Ц┐╒Ц┐╪Ц┐┴"
 
 #. TRANSLATORS: "sug-mode" is a literal value and should not be
 #. translated.
 #: common/config.cpp:1451
 msgid "edit distance to use, override sug-mode default"
-msgstr "изменение исп. расстояния, перекрывает sug-mode"
+msgstr "Д╫©Г■╗Ц│≥Ц┌▀Х╥²И⌡╒Ц┌▓Г╥╗И⌡├Ц│≈Ц─│sug-mode Ц│╝Ц┐┤Ц┐∙Ц┌╘Ц┐╚Ц┐┬Ц┌▓Г╫╝Ц│█Ф▐⌡Ц│┬Ц┌▀"
 
 #: common/config.cpp:1453
 msgid "use typo analysis, override sug-mode default"
-msgstr "использов. анализа опечаток, перекрывает sug-mode"
+msgstr "Ц┐÷Ц┌╧Ц┌©Ц┌╓Ц┐≈Х╖ёФ·░Ц┌▓Д╫©Г■╗Ц│≈Ц─│sug-mode Ц│╝Ц┐┤Ц┐∙Ц┌╘Ц┐╚Ц┐┬Ц┌▓Г╫╝Ц│█Ф▐⌡Ц│┬Ц┌▀"
 
 #: common/config.cpp:1455
 msgid "use replacement tables, override sug-mode default"
-msgstr "использов. таблиц замены, перекрывает sug-mode"
+msgstr "Г╫╝Ф▐⌡Ц┐├Ц┐╪Ц┐√Ц┐╚Ц┌▓Д╫©Г■╗Ц│≈Ц─│sug-mode Ц│╝Ц┐┤Ц┐∙Ц┌╘Ц┐╚Ц┐┬Ц┌▓Г╫╝Ц│█Ф▐⌡Ц│┬Ц┌▀"
 
 #: common/config.cpp:1457
 msgid "characters to insert when a word is split"
-msgstr "символы, вставляемые при разделении слова"
+msgstr "Е█≤Х╙·Ц┌▓Е┬├Е┴╡Ц│≥Ц┌▀Ц│╗Ц│█Ц│╚Ф▄©Е┘╔Ц│≥Ц┌▀Ф√┤Е╜≈"
 
 #: common/config.cpp:1459
 msgid "use personal, replacement & session dictionaries"
-msgstr "использование личн., с замен. и сессион. словарей"
+msgstr "Е─▀Д╨╨Ц─│Г╫╝Ф▐⌡Ц─│Ц┌╩Ц┐┐Ц┌╥Ц┐╖Ц┐ЁЦ│╝Е░└Х╬·Ф⌡╦Ц┌▓Д╫©Г■╗Ц│≥Ц┌▀"
 
 #: common/config.cpp:1463
 msgid "search path for word list information files"
-msgstr "путь поиска файлов с информацией списка слов"
+msgstr "Е█≤Х╙·Ц┐╙Ц┌╧Ц┐┬Ф┐┘Е═╠Ц┐∙Ц┌║Ц┌╓Ц┐╚Ц┌▓Ф╓°Г╢╒Ц│≥Ц┌▀Ц┐▒Ц┌╧"
 
 #: common/config.cpp:1465
 msgid "enable warnings"
-msgstr "включение предупреждений"
+msgstr "Х╜╕Е▒┼Ц┌▓Ф°┴Е┼╧Ц│╚Ц│≥Ц┌▀"
 
 #. TRANSLATORS: It is OK if this is longer than 50 chars
 #: common/config.cpp:1475
 msgid "indicator for affix flags in word lists -- CURRENTLY IGNORED"
-msgstr "индикатор флагов аффиксов в списках слов - СЕЙЧАС ИГНОРИРУЕТСЯ"
+msgstr "Е█≤Х╙·Ц┐╙Ц┌╧Ц┐┬Д╦╜Ц│╖ affix Ц┐∙Ц┐╘Ц┌╟Ц┌▓Г╓╨Ц│≥Ф√┤Е╜≈ -- Г▐╬Е°╗Ц│╞Г└║Х╕√Ц│∙Ц┌▄Ц│╬Ц│≥"
 
 #: common/config.cpp:1477
 msgid "use affix compression when creating dictionaries"
-msgstr "использование сжатия аффиксов при создании словарей"
+msgstr "Х╬·Ф⌡╦Ц┌▓Д╫°Ф┬░Ц│≥Ц┌▀Ф≥┌Ц│╚Ф▌╔Х╬·Е°╖Г╦╝Ц┌▓Д╫©Г■╗Ц│≥Ц┌▀"
 
 #: common/config.cpp:1479
 msgid "remove invalid affix flags"
-msgstr "удаление неверных флагов аффиксов"
+msgstr "Г└║Е┼╧Ц│╙Ф▌╔Х╬·Ц┐∙Ц┐╘Ц┌╟Ц┌▓И≥╓Е▌╩Ц│≈Ц│╬Ц│≥"
 
 #: common/config.cpp:1481
 msgid "attempts to clean words so that they are valid"
-msgstr "попытка очистить слова, чтобы они стали верными"
+msgstr "Е█≤Х╙·Ц┌▓Ц─▄Ф▌┐И≥╓Ц─█Ц│≈Ц│╕Ф°┴Е┼╧Ц│╙Ц┌┌Ц│╝Ц│╚Ц│≥Ц┌▀Ц│⌠Ц│╗Ц┌▓Х╘╕Ц│©Ц┌▀"
 
 #: common/config.cpp:1483
 msgid "compute soundslike on demand rather than storing"
-msgstr "вычисление soundslike по требованию вместо хранения"
+msgstr "Е©┘Х╕│Ц│╚Е©°Ц│≤Ц│╕ soundslike Ц┌▓Х╗┬Г╝≈Ц│≥Ц┌▀Ц│⌠Ц│╗Ц│╚Ц│≈Ц─│Ц│┌Ц┌┴Ц│▀Ц│≤Ц┌│Ф═╪Г╢█Ц│╞Ц│≈Ц│╙Ц│└"
 
 #: common/config.cpp:1485
 msgid "partially expand affixes for better suggestions"
-msgstr "частичное расшир. аффиксов для улучш. предложений"
+msgstr "Ц┌┬Ц┌┼Ц┌┬Ц│└Ф▐░Ф║┬Ц┌▓Х╘╕Ц│©Ц┌▀Ц│÷Ц┌│Ц│╚И┐╗Е┬├Г └Ц│╚Ф▌╔Х╬·Ц┌▓Ф▀║Е╪╣Ц│≥Ц┌▀"
 
 #: common/config.cpp:1487
 msgid "skip invalid words"
-msgstr "пропуск неверных слов"
+msgstr "Г└║Е┼╧Ц│╙Е█≤Х╙·Ц┌▓Ц┌╧Ц┌╜Ц┐┐Ц┐≈Ц│≥Ц┌▀"
 
 #: common/config.cpp:1489
 msgid "check if affix flags are valid"
-msgstr "проверка правильности флагов аффиксов"
+msgstr "Ф▌╔Х╬·Ц┐∙Ц┐╘Ц┌╟Ц│▄Ф°┴Е┼╧Ц│▀Ц┐│Ц┌╖Ц┐┐Ц┌╞Ц│≥Ц┌▀"
 
 #: common/config.cpp:1491
 msgid "check if words are valid"
-msgstr "проверка правильности слов"
+msgstr "Е█≤Х╙·Ц│▄Ф°┴Е┼╧Ц│▀Ц┐│Ц┌╖Ц┐┐Ц┌╞Ц│≥Ц┌▀"
 
 #: common/config.cpp:1498
 msgid "create a backup file by appending \".bak\""
-msgstr "создание резервного файла добавлением \".bak\""
+msgstr "\".bak\" Ц┌▓Х©╫Е┼═Ц│≈Ц│╕Ц┐░Ц┐┐Ц┌╞Ц┌╒Ц┐┐Ц┐≈Ц┐∙Ц┌║Ц┌╓Ц┐╚Ц┌▓Д╫°Ф┬░Ц│≥Ц┌▀"
 
 #: common/config.cpp:1500
 msgid "use byte offsets instead of character offsets"
-msgstr "смещения в байтах вместо смещений в символах"
+msgstr "Ф√┤Е╜≈Ц┌╙Ц┐∙Ц┌╩Ц┐┐Ц┐┬Ц│╝Д╩ёЦ┌▐Ц┌┼Ц│╚Ц┐░Ц┌╓Ц┐┬Ц┌╙Ц┐∙Ц┌╩Ц┐┐Ц┐┬Ц┌▓Д╫©Г■╗Ц│≥Ц┌▀"
 
 #: common/config.cpp:1502
 msgid "create missing root/affix combinations"
-msgstr "создание отсутствующих комбинаций корень/аффикс"
+msgstr "Ф╛═Ц│▒Ц│╕Ц│└Ц┌▀Х╙·Е╧╧/Ф▌╔Х╬·Ц│╝Г╣└Ц│©Е░┬Ц┌▐Ц│⌡Ц┌▓Д╫°Ф┬░Ц│≥Ц┌▀"
 
 #: common/config.cpp:1504
 msgid "keymapping for check mode: \"aspell\" or \"ispell\""
-msgstr "клавиши режима проверки: \"aspell\" или \"ispell\""
+msgstr "Ц┐│Ц┌╖Ц┐┐Ц┌╞Ц┐╒Ц┐╪Ц┐┴Ц│╝Ц│÷Ц┌│Ц│╝Ц┌╜Ц┐╪Е┴╡Ц┌┼Е╫⌠Ц│╕: \"aspell\" or \"ispell\""
 
 #: common/config.cpp:1506
 msgid "reverse the order of the suggest list"
-msgstr "обратный порядок списка предложений"
+msgstr "Ф▐░Ф║┬Ц┐╙Ц┌╧Ц┐┬Ц┌▓И─├И═├Ц│╚Д╦╕Ц│╧Ф⌡©Ц│┬Ц┌▀"
 
 #: common/config.cpp:1508
 msgid "suggest possible replacements"
-msgstr "предложение возможных замен"
+msgstr "Г╫╝Ф▐⌡Ц┌▓Ф▐░Ф║┬Ц│≥Ц┌▀"
 
 #: common/config.cpp:1510
 msgid "time load time and suggest time in pipe mode"
-msgstr "время загрузки и время предложения в pipe-режиме"
+msgstr "Ц┐▒Ц┌╓Ц┐≈Ц┐╒Ц┐╪Ц┐┴Ц│╖Х╡═Х█╥Ф≥┌И√⌠Ц│╗Ф▐░Ф║┬Ф≥┌И√⌠Ц┌▓Х╗┬Ф╦╛Ц│≥Ц┌▀"
 
 #: common/convert.cpp:303 common/convert.cpp:429
 #, c-format
@@ -344,26 +345,26 @@ msgid ""
 "This could also mean that the file \"%s\" could not be opened for reading or "
 "does not exist."
 msgstr ""
-"Это также может означать, что файл  \"%s\" не может быть открыт для чтения "
-"или он не существует."
+"Ц┐∙Ц┌║Ц┌╓Ц┐╚ \"%s\" Ц│╞Х╙╜Ц│©Х╬╪Ц│©Ц│╝Ц│÷Ц┌│Ц│╚И√▀Ц│▒Ц│╙Ц│└Ц─│Ц│╬Ц│÷Ц│╞Е╜≤Е°╗Ц│≈Ц│╙Ц│└Ц│╝Ц│▀Ц┌┌Ц│≈Ц┌▄Ц│╬Ц│⌡"
+"Ц┌⌠Ц─┌"
 
 #: common/convert.cpp:552 common/convert.cpp:659 common/convert.cpp:705
 #, c-format
 msgid "The Unicode code point U+%04X is unsupported."
-msgstr "Символ Юникода U+%04X не поддерживается."
+msgstr "Ц┐╕Ц┐▀Ц┌ЁЦ┐╪Ц┐┴Ц│╝Ц┌ЁЦ┐╪Ц┐┴Ц┐²Ц┌╓Ц┐ЁЦ┐┬ U+%04X Ц│╞Ц┌╣Ц┐²Ц┐╪Ц┐┬Ц│∙Ц┌▄Ц│╕Ц│└Ц│╬Ц│⌡Ц┌⌠."
 
 #: common/convert.cpp:829
 #, c-format
 msgid "Invalid UTF-8 sequence at position %ld."
-msgstr "Неверная последовательность UTF-8 по адресу %ld."
+msgstr "Д╫█Г╫╝ %ld Ц│╖Д╦█Ф╜ёЦ│╙UTF-8Ц┌╥Ц┐╪Ц┌╠Ц┐ЁЦ┌╧Ц│▄Ц│┌Ц┌┼Ц│╬Ц│≈Ц│÷Ц─┌"
 
 #: common/errors.cpp:27
 msgid "Operation Not Supported: %what:1"
-msgstr "Операция не поддерживается: %what:1"
+msgstr "Ц┌╣Ц┐²Ц┐╪Ц┐┬Ц│∙Ц┌▄Ц│╕Ц│└Ц│╙Ц│└Ф⌠█Д╫°: %what:1"
 
 #: common/errors.cpp:43
 msgid "The method \"%what:1\" is unimplemented in \"%where:2\"."
-msgstr "Метод \"%what:1\" не реализован в \"%where:2\"."
+msgstr "Ц┐║Ц┌╫Ц┐┐Ц┐┴ \"%what:1\" Ц│╞ \"where:2\" Ц│╝Д╦╜Ц│╖Е╝÷Хё┘Ц│∙Ц┌▄Ц│╕Ц│└Ц│╬Ц│⌡Ц┌⌠."
 
 #: common/errors.cpp:51
 #, c-format
@@ -373,129 +374,132 @@ msgstr "%file:1:"
 #: common/errors.cpp:59
 #, c-format
 msgid "The file \"%file:1\" can not be opened"
-msgstr "Файл \"%file:1\" не может быть открыт"
+msgstr "Ц┐∙Ц┌║Ц┌╓Ц┐╚ \"%file:1\" Ц┌▓И√▀Ц│▒Ц│╬Ц│⌡Ц┌⌠Ц│╖Ц│≈Ц│÷"
 
 #: common/errors.cpp:67
 #, c-format
 msgid "The file \"%file:1\" can not be opened for reading."
-msgstr "Файл \"%file:1\" не может быть открыт для чтения."
+msgstr "Ц┐∙Ц┌║Ц┌╓Ц┐╚ \"%file:1\" Ц┌▓Х╙╜Ц│©Х╬╪Ц│©Ц│╝Ц│÷Ц┌│Ц│╚И√▀Ц│▐Ц│⌠Ц│╗Ц│▄Ц│╖Ц│█Ц│╬Ц│⌡Ц┌⌠Ц─┌"
 
 #: common/errors.cpp:75
 #, c-format
 msgid "The file \"%file:1\" can not be opened for writing."
-msgstr "Файл \"%file:1\" не может быть открыт для записи."
+msgstr "Ц┐∙Ц┌║Ц┌╓Ц┐╚ \"%file:1\" Ц┌▓Ф⌡╦Ц│█Х╬╪Ц│©Ц│╝Ц│÷Ц┌│Ц│╚И√▀Ц│▐Ц│⌠Ц│╗Ц│▄Ц│╖Ц│█Ц│╬Ц│⌡Ц┌⌠Ц─┌"
 
 #: common/errors.cpp:83
 #, c-format
 msgid "The file name \"%file:1\" is invalid."
-msgstr "Неверное имя файла \"%file:1\"."
+msgstr "Ц┐∙Ц┌║Ц┌╓Ц┐╚Е░█ \"%file:1\" Ц│▄Г└║Е┼╧Ц│╖Ц│≥Ц─┌"
 
 #: common/errors.cpp:91
 #, c-format
 msgid "The file \"%file:1\" is not in the proper format."
-msgstr "Файл \"%file:1\" в неподходящем формате."
+msgstr "Ц┐∙Ц┌║Ц┌╓Ц┐╚ \"%file:1\" Ц│╞И│╘Е┬┤Ц│╙Е╫╒Е╪▐Ц│╖Ц│╞Ц│┌Ц┌┼Ц│╬Ц│⌡Ц┌⌠Ц─┌"
 
 #: common/errors.cpp:107
 #, c-format
 msgid "The directory \"%dir:1\" can not be opened for reading."
-msgstr "Каталог \"%dir:1\" не может быть открыт для чтения."
+msgstr "Ц┐┤Ц┌ёЦ┐╛Ц┌╞Ц┐┬Ц┐╙ \"%dir:1\" Ц┌▓Х╙╜Ц│©Х╬╪Ц│©Ц│╝Ц│÷Ц┌│Ц│╚И√▀Ц│▐Ц│⌠Ц│╗Ц│▄Ц│╖Ц│█Ц│╬Ц│⌡Ц┌⌠."
 
 #: common/errors.cpp:123
 msgid "The key \"%key:1\" is unknown."
-msgstr "Ключ \"%key:1\" не известен."
+msgstr "Ц┌╜Ц┐╪ \"%key:1\" Ц│╞Ф°╙Г÷╔Ц│╖Ц│≥Ц─┌"
 
 #: common/errors.cpp:131
 msgid "The value for option \"%key:1\" can not be changed."
-msgstr "Значение для опции \"%key:1\" не может быть изменено."
+msgstr "Ц┌╙Ц┐≈Ц┌╥Ц┐╖Ц┐Ё \"%key:1\" Ц│╝Е─╓Ц│╞Е╓┴Ф⌡╢Ц│╖Ц│█Ц│╬Ц│⌡Ц┌⌠."
 
 #: common/errors.cpp:139
 msgid "The key \"%key:1\" is not %accepted:2 and is thus invalid."
-msgstr "Ключ \"%key:1\" не %accepted:2, и поэтому является неверным."
+msgstr "Ц┌╜Ц┐╪ \"%key:1\" Ц│╞ %accepted:2 Ц│╖Ц│╞Ц│╙Ц│└Ц│╝Ц│╖Г└║Е┼╧Ц│╖Ц│≥Ц─┌"
 
 #: common/errors.cpp:147
 msgid ""
 "The value \"%value:2\" is not %accepted:3 and is thus invalid for the key \"%"
 "key:1\"."
 msgstr ""
-"Значение \"%value:2\" не %accepted:3, и поэтому является неверным для ключа "
-"\"%key:1\"."
+"Е─╓ \"%value:2\" Ц│╞ %accepted:3 Ц│╖Ц│╞Ц│╙Ц│└Ц│╝Ц│╖Ц┌╜Ц┐╪ \"%key:1\" Ц│╚Е╞╬Ц│≈Ц│╕Ц│╞Г└║Е┼╧Ц│╖"
+"Ц│≥Ц─┌"
 
 #: common/errors.cpp:163
 msgid "The key \"%key:1\" is not a string."
-msgstr "Ключ \"%key:1\" не является строкой."
+msgstr "Ц┌╜Ц┐╪ \"%key:1\" Ц│╞Ф√┤Е╜≈Е┬≈Ц│╖Ц│╞Ц│┌Ц┌┼Ц│╬Ц│⌡Ц┌⌠Ц─┌"
 
 #: common/errors.cpp:171
 msgid "The key \"%key:1\" is not an integer."
-msgstr "Ключ \"%key:1\" не является целым числом."
+msgstr "Ц┌╜Ц┐╪ \"%key:1\" Ц│╞Ф∙╢Ф∙╟Ц│╖Ц│╞Ц│┌Ц┌┼Ц│╬Ц│⌡Ц┌⌠Ц─┌"
 
 #: common/errors.cpp:179
 msgid "The key \"%key:1\" is not a boolean."
-msgstr "Ключ \"%key:1\" не является логическим значением."
+msgstr "Ц┌╜Ц┐╪ \"%key:1\" Ц│╞Х╚√Г░├Е─╓Ц│╖Ц│╞Ц│┌Ц┌┼Ц│╬Ц│⌡Ц┌⌠Ц─┌"
 
 #: common/errors.cpp:187
 msgid "The key \"%key:1\" is not a list."
-msgstr "Ключ \"%key:1\" не является списком."
+msgstr "Ц┌╜Ц┐╪ \"%key:1\" Ц│╞Ц┐╙Ц┌╧Ц┐┬Ц│╖Ц│╞Ц│┌Ц┌┼Ц│╬Ц│⌡Ц┌⌠Ц─┌"
 
 #: common/errors.cpp:195
 msgid ""
 "The key \"%key:1\" does not take any parameters when prefixed by a \"reset-"
 "\"."
-msgstr "Ключ \"%key:1\" с префиксом \"reset-\" не использует параметры."
+msgstr ""
+"Ц┌╜Ц┐╪ \"%key:1\" Ц│╞ \"reset-\" Ц│▄Е┴█Ц│╚Д╩≤Ц│└Ц│╕Ц│└Ц┌▀Ф≥┌Ц│╚Ц│╞Ц┐▒Ц┐╘Ц┐║Ц┐╪Ц┌©Ц┌▓Е▐√Ц┌┼Ц│╬Ц│⌡Ц┌⌠Ц─┌"
 
 #: common/errors.cpp:203
 msgid ""
 "The key \"%key:1\" does not take any parameters when prefixed by an \"enable-"
 "\"."
-msgstr "Ключ \"%key:1\" с префиксом \"enable-\" не использует параметры."
+msgstr ""
+"Ц┌╜Ц┐╪ \"%key:1\" Ц│╞ \"enable-\" Ц│▄Е┴█Ц│╚Д╩≤Ц│└Ц│╕Ц│└Ц┌▀Ф≥┌Ц│╚Ц│╞Ц┐▒Ц┐╘Ц┐║Ц┐╪Ц┌©Ц┌▓Е▐√Ц┌┼Ц│╬Ц│⌡Ц┌⌠Ц─┌"
 
 #: common/errors.cpp:211
 msgid ""
 "The key \"%key:1\" does not take any parameters when prefixed by a \"dont-\" "
 "or \"disable-\"."
 msgstr ""
-"Ключ \"%key:1\" с префиксами \"dont-\" или \"disable-\" не использует "
-"параметры."
+"Ц┌╜Ц┐╪ \"%key:1\" Ц│╞ \"boot-\" Ц│╬Ц│÷Ц│╞ \"disable-\"Ц│▄Е┴█Ц│╚Д╩≤Ц│└Ц│╕Ц│└Ц┌▀Ф≥┌Ц│╚Ц│╞Ц┐▒Ц┐╘"
+"Ц┐║Ц┐╪Ц┌©Ц┌▓Е▐√Ц┌┼Ц│╬Ц│⌡Ц┌⌠Ц─┌"
 
 #: common/errors.cpp:219
 msgid ""
 "The key \"%key:1\" does not take any parameters when prefixed by a \"clear-"
 "\"."
-msgstr "Ключ \"%key:1\" с префиксом \"clear-\" не использует параметры."
+msgstr ""
+"Ц┌╜Ц┐╪ \"%key:1\" Ц│╞ \"clear-\" Ц│▄Е┴█Ц│╚Д╩≤Ц│└Ц│╕Ц│└Ц┌▀Ф≥┌Ц│╚Ц│╞Ц┐▒Ц┐╘Ц┐║Ц┐╪Ц┌©Ц┌▓Е▐√Ц┌┼Ц│╬Ц│⌡Ц┌⌠Ц─┌"
 
 #: common/errors.cpp:235
 #, c-format
 msgid "The language \"%lang:1\" is not known."
-msgstr "Язык \"%lang:1\" не известен."
+msgstr "Х╗─Х╙· \"%lang:1\" Ц│╞Ф°╙Г÷╔Ц│╖Ц│≥Ц─┌"
 
 #: common/errors.cpp:243
 #, c-format
 msgid "The soundslike \"%sl:2\" is not known."
-msgstr "Soundslike \"%sl:2\" не известен."
+msgstr "Г√▒Д╪╪И÷ЁЕё╟ \"%sl:2\" Ц│╞Ф°╙Г÷╔Ц│╖Ц│≥Ц─┌"
 
 #: common/errors.cpp:251
 #, c-format
 msgid "The language \"%lang:1\" is not supported."
-msgstr "Язык \"%lang:1\" не поддерживается."
+msgstr "Х╗─Х╙· \"%lang:1\" Ц┌▓Ц┌╣Ц┐²Ц┐╪Ц┐┬Ц│≈Ц│╕Ц│└Ц│╬Ц│⌡Ц┌⌠Ц─┌"
 
 #: common/errors.cpp:259
 #, c-format
 msgid "No word lists can be found for the language \"%lang:1\"."
-msgstr "Не найдены списки слов для языка \"%lang:1\"."
+msgstr "Х╗─Х╙· \"%lang:1\" Ц│╝Е█≤Х╙·Ц┐╙Ц┌╧Ц┐┬Ц│▄Х╕▀Ц│╓Ц│▀Ц┌┼Ц│╬Ц│⌡Ц┌⌠."
 
 #: common/errors.cpp:267
 #, c-format
 msgid "Expected language \"%lang:1\" but got \"%prev:2\"."
-msgstr "Ожидался язык \"%lang:1\", а получен \"%prev:2\"."
+msgstr "Х╗─Х╙· \"%lang:1\" Ц┌▓Д╨┬Ф°÷Ц│≈Ц│╕Ц│└Ц│╬Ц│≈Ц│÷Ц│▄Ц─│ \"%prev:2\" Ц│╖Ц│≈Ц│÷."
 
 #: common/errors.cpp:283
 #, c-format
 msgid "Affix '%aff:1' is corrupt."
-msgstr "Аффикс '%aff:1' поврежден."
+msgstr "Ф▌╔Х╬· '%aff:1' Ц│▄Её┼Ц┌▄Ц│╕Ц│└Ц│╬Ц│≥Ц─┌"
 
 #: common/errors.cpp:291
 #, c-format
 msgid "The condition \"%cond:1\" is invalid."
-msgstr "Неверное условие \"%cond:1\"."
+msgstr "Ф²║Д╩╤ \"%cond:1\" Ц│▄Г└║Е┼╧Ц│╖Ц│≥Ц─┌"
 
 #: common/errors.cpp:299
 #, c-format
@@ -503,7 +507,8 @@ msgid ""
 "The condition \"%cond:1\" does not guarantee that \"%strip:2\" can always be "
 "stripped."
 msgstr ""
-"Условие \"%cond:1\" не гарантирует, что \"%strip:2\" всегда можно отделить."
+"Ф²║Д╩╤ \"%cond:1\" Ц│╖Ц│╞Е╦╦Ц│╚ \"%strip:2\" Ц│╝Х╙·Е╧╧Ц│╝Ф┼°Ц│█Е┤╨Ц│≈Ц│▄Ц│╖Ц│█Ц┌▀Ц│╗Ц│╞И≥░Ц┌┼Ц│╬Ц│⌡"
+"Ц┌⌠Ц─┌"
 
 #: common/errors.cpp:307
 #, c-format
@@ -511,297 +516,300 @@ msgid ""
 "The file \"%file:1\" is not in the proper format. Expected the file to be in "
 "\"%exp:2\" not \"%got:3\"."
 msgstr ""
-"Файл \"%file:1\" в неподходящем формате. Ожидалось, что файл будет \"%exp:2"
-"\", а не \"%got:3\"."
+"Ц┐∙Ц┌║Ц┌╓Ц┐╚ \"%file:1\" Ц│╞И│╘Е┬┤Ц│╙Е╫╒Е╪▐Ц│╖Ц│╞Ц│┌Ц┌┼Ц│╬Ц│⌡Ц┌⌠Ц─┌Ц┐∙Ц┌║Ц┌╓Ц┐╚Ц│╞ \"%exp:2\" Ц│╖Ц│┌Ц┌▀"
+"Ц│╞Ц│ Ц│╖Ц│≥О╪┬\"%got:3\" Ц│╖Ц│╞Ц│╙Ц│▐О╪┴Ц─┌"
 
 #: common/errors.cpp:323
 #, c-format
 msgid "The encoding \"%encod:1\" is not known."
-msgstr "Кодировка \"%encod:1\" не известна."
+msgstr "Ц┌╗Ц┐ЁЦ┌ЁЦ┐╪Ц┐┤Ц┌ёЦ┐ЁЦ┌╟ \"%encod:1\" Ц│╞Ф°╙Г÷╔Ц│╖Ц│≥Ц─┌"
 
 #: common/errors.cpp:331
 #, c-format
 msgid "The encoding \"%encod:1\" is not supported."
-msgstr "Кодировка \"%encod:1\" не поддерживается."
+msgstr "Ц┌╗Ц┐ЁЦ┌ЁЦ┐╪Ц┐┤Ц┌ёЦ┐ЁЦ┌╟ \"%encod:1\" Ц│╞Ц┌╣Ц┐²Ц┐╪Ц┐┬Ц│≈Ц│╕Ц│└Ц│╬Ц│⌡Ц┌⌠Ц─┌"
 
 #: common/errors.cpp:339
 #, c-format
 msgid "The conversion from \"%encod:1\" to \"%encod2:2\" is not supported."
-msgstr "Преобразование из \"%encod:1\" в \"%encod2:2\" не поддерживается."
+msgstr "\"%encod:1\" Ц│▀Ц┌┴ \"%encod2:2\" Ц│╦Ц│╝Е╓┴Ф▐⌡Ц│╞Ц┌╣Ц┐²Ц┐╪Ц┐┬Ц│≈Ц│╕Ц│└Ц│╬Ц│⌡Ц┌⌠Ц─┌"
 
 #: common/errors.cpp:379
 #, c-format
 msgid "The string \"%str:1\" is invalid."
-msgstr "Неверная строка \"%str:1\"."
+msgstr "Ф√┤Е╜≈Е┬≈ \"%str:1\" Ц│╞Г└║Е┼╧Ц│╖Ц│≥Ц─┌"
 
 #: common/errors.cpp:387
 msgid "The word \"%word:1\" is invalid."
-msgstr "Неверное слово \"%word:1\"."
+msgstr "Е█≤Х╙· \"%word:1\" Ц│╞Г└║Е┼╧Ц│╖Ц│≥Ц─┌"
 
 #: common/errors.cpp:395
 msgid "The affix flag '%aff:1' is invalid for word \"%word:2\"."
-msgstr "Флаг аффикса '%aff:1' является неверным для слова \"%word:2\"."
+msgstr "Ф▌╔Х╬·Ц┐∙Ц┐╘Ц┌╟ '%aff:1' Ц│╞Е█≤Х╙· \"%word:2\" Ц│╚Е╞╬Ц│≈Ц│╕Ц│╞Г└║Е┼╧Ц│╖Ц│≥."
 
 #: common/errors.cpp:403
 msgid "The affix flag '%aff:1' can not be applied to word \"%word:2\"."
-msgstr "Флаг аффикса '%aff:1' не может быть применен к слову \"%word:2\"."
+msgstr "Ф▌╔Х╬·Ц┐∙Ц┐╘Ц┌╟ '%aff:1' Ц│╞Е█≤Х╙· \"%word:2\" Ц│╚И│╘Г■╗Ц│╖Ц│█Ц│╬Ц│⌡Ц┌⌠."
 
 #: common/errors.cpp:451
 msgid "not a version number"
-msgstr "не номер версии"
+msgstr "Ц┐░Ц┐╪Ц┌╦Ц┐╖Ц┐ЁГ∙╙Е▐╥Ц│╖Ц│╞Ц│╙Ц│└"
 
 #: common/errors.cpp:467
 msgid "dlopen returned \"%return:1\"."
-msgstr "dlopen возвратил \"%return:1\"."
+msgstr "dlopen Ц│▄ \"%return:1\" Ц┌▓Х©■Ц│≈Ц│÷Ц─┌"
 
 #: common/errors.cpp:475
 #, c-format
 msgid "The file \"%filter:1\" does not contain any filters."
-msgstr "Файл \"%filter:1\" не содержит никаких фильтров."
+msgstr "Ц┐∙Ц┌║Ц┌╓Ц┐╚ \"%filter:1\" Ц│╞Ц┐∙Ц┌ёЦ┐╚Ц┌©Ц┌▓Е░╚Ц┌⌠Ц│╖Ц│└Ц│╬Ц│⌡Ц┌⌠Ц─┌"
 
 #: common/errors.cpp:483
 #, c-format
 msgid "The filter \"%filter:1\" does not exist."
-msgstr "Фильтр \"%filter:1\" не существует."
+msgstr "Ц┐∙Ц┌ёЦ┐╚Ц┌© \"%filter:1\" Ц│╞Е╜≤Е°╗Ц│≈Ц│╬Ц│⌡Ц┌⌠Ц─┌"
 
 #: common/errors.cpp:491 common/errors.cpp:587
 msgid "Confused by version control."
-msgstr "Сбит с толку управлением версиями."
+msgstr "Ц┐░Ц┐╪Ц┌╦Ц┐╖Ц┐ЁГ╝║Г░├Ц│╚Ц┌┬Ц│ёЦ│╕Ф╥╥Д╧╠Ц│≈Ц│╕Ц│└Ц│╬Ц│≥Ц─┌"
 
 #: common/errors.cpp:499
 msgid "Aspell version does not match filter's requirement."
-msgstr "Версия Aspell не удовлетворят требованиям фильтра."
+msgstr "Aspell Ц│╝Ц┐░Ц┐╪Ц┌╦Ц┐╖Ц┐ЁЦ│▄Ц┐∙Ц┌ёЦ┐╚Ц┌©Ц│╝Х╕│Ф╠┌Ц│╗Е░┬Ц│ёЦ│╕Ц│└Ц│╬Ц│⌡Ц┌⌠Ц─┌"
 
 #: common/errors.cpp:507
 msgid "Filter option already exists."
-msgstr "Опция фильтра уже существует."
+msgstr "Ц┐∙Ц┌ёЦ┐╚Ц┌©Ц┌╙Ц┐≈Ц┌╥Ц┐╖Ц┐ЁЦ│╞Ф≈╒Ц│╚Е╜≤Е°╗Ц│≈Ц│╬Ц│≥Ц─┌"
 
 #: common/errors.cpp:515
 msgid "Use option modifiers only within named option."
-msgstr "Используйте модификаторы опций только с именованными опциями."
+msgstr "Ц┌╙Ц┐≈Ц┌╥Ц┐╖Ц┐ЁД©╝Иё╬Е╜░Ц│╞Ф╠╨Ц┌│Ц┌┴Ц┌▄Ц│÷Ц┌╙Ц┐≈Ц┌╥Ц┐╖Ц┐ЁЦ│╝Ц│©Ц│╖Д╫©Г■╗Ц│≈Ц│╕Ц│▐Ц│═Ц│∙Ц│└Ц─┌"
 
 #: common/errors.cpp:523
 msgid "Option modifier unknown."
-msgstr "Неизвестный модификатор опции."
+msgstr "Ф°╙Г÷╔Ц│╝Ц┌╙Ц┐≈Ц┌╥Ц┐╖Ц┐ЁД©╝Иё╬Х╙·Ц│╖Ц│≥Ц─┌"
 
 #: common/errors.cpp:531
 msgid "Error setting filter description."
-msgstr "Ошибка установки описания фильтра."
+msgstr "Ц┐∙Ц┌ёЦ┐╚Ц┌©Х╗≤Х©╟Ц│╝Х╗╜Е╝ Ц│╖Ц┌╗Ц┐╘Ц┐╪Ц│▄Г≥╨Г■÷Ц│≈Ц│╬Ц│≈Ц│÷Ц─┌"
 
 #: common/errors.cpp:547
 msgid "Empty option specifier."
-msgstr "Пустой указатель опции."
+msgstr "Г╘╨Ц│╝Ц┌╙Ц┐≈Ц┌╥Ц┐╖Ц┐ЁФ▄┤Е╝ Е╜░Ц│╖Ц│≥Ц─┌"
 
 #: common/errors.cpp:555
 #, c-format
 msgid "Option \"%option:1\" possibly specified prior to filter."
-msgstr "Возможно, опция \"%option:1\" указана перед фильтром."
+msgstr "Ц┌╙Ц┐≈Ц┌╥Ц┐╖Ц┐Ё \"%option:1\" Ц│╞Ц┐∙Ц┌ёЦ┐╚Ц┌©Ц│╝Е┴█Ц│╚Ф▄┤Е╝ Ц│∙Ц┌▄Ц│÷Ц│╝Ц│▀Ц┌┌Ц│≈Ц┌▄Ц│╬Ц│⌡Ц┌⌠Ц─┌"
 
 #: common/errors.cpp:563
 msgid "Unknown mode description key \"%key:1\"."
-msgstr "Неизвестный ключ описания режима \"%key:1\"."
+msgstr "Ф°╙Г÷╔Ц│╝Ц┐╒Ц┐╪Ц┐┴Х╗≤Х©╟Ц┌╜Ц┐╪Ц│╖Ц│≥Ц─┌\"%key:1\""
 
 #: common/errors.cpp:571
 #, c-format
 msgid "Expecting \"%modekey:1\" key."
-msgstr "Ожидается ключ \"%modekey:1\"."
+msgstr "\"%modekey:1\" Ц┌╜Ц┐╪Ц┌▓Д╨┬Ф°÷Ц│≈Ц│╕Ц│└Ц│╬Ц│≈Ц│÷Ц─┌"
 
 #: common/errors.cpp:579
 msgid "Version specifier missing key: \"aspell\"."
-msgstr "Отсутствует ключ указателя версии: \"aspell\"."
+msgstr "Ц┐░Ц┐╪Ц┌╦Ц┐╖Ц┐ЁФ▄┤Е╝ Ц│╚Ц┌╜Ц┐╪ \"aspell\" Ц│▄Ф╛═Ц│▒Ц│╕Ц│└Ц│╬Ц│≥Ц─┌"
 
 #: common/errors.cpp:595
 msgid "Aspell version does not match mode's requirement."
-msgstr "Версия Aspell не удовлетворяет требованиям режима."
+msgstr "Aspell Ц│╝Ц┐░Ц┐╪Ц┌╦Ц┐╖Ц┐ЁЦ│▄Ц┐╒Ц┐╪Ц┐┴Ц│╝Х╕│Ф╠┌Ц│╗Е░┬Ц│ёЦ│╕Ц│└Ц│╬Ц│⌡Ц┌⌠Ц─┌"
 
 #: common/errors.cpp:603
 msgid "Missing magic mode expression."
-msgstr "Отсутствует выражение режима magic."
+msgstr "Ц┐·Ц┌╦Ц┐┐Ц┌╞О╪┬Х╜≤Е┬╔И█╣О╪┴Ц┐╒Ц┐╪Ц┐┴Е╪▐Ц│▄Ф╛═Ц│▒Ц│╕Ц│└Ц│╬Ц│≥"
 
 #: common/errors.cpp:611
 #, c-format
 msgid "Empty extension at char %char:1."
-msgstr "Пустое расширение в символе %char:1."
+msgstr "Ф√┤Е╜≈ %char:1 Ц│╝Е═╢Ф┴─Ц│╚Г╘╨Ц│╝Ф▀║Е╪╣Е╜░Ц─┌"
 
 #: common/errors.cpp:619
 #, c-format
 msgid "\"%mode:1\" error"
-msgstr "Ошибка \"%mode:1\""
+msgstr "\"%mode:1\" Ц┌╗Ц┐╘Ц┐╪"
 
 #: common/errors.cpp:627
 #, c-format
 msgid "Unknown mode: \"%mode:1\"."
-msgstr "Неизвестный режим: \"%mode:1\"."
+msgstr "Ф°╙Г÷╔Ц│╝Ц┐╒Ц┐╪Ц┐┴: \"%mode:1\"."
 
 #: common/errors.cpp:635
 #, c-format
 msgid "\"%mode:1\" error while extend Aspell modes. (out of memory?)"
-msgstr "Ошибка \"%mode:1\" при расширении режимов Aspell (нехватка памяти?)"
+msgstr ""
+"\"%mode:1\"  Aspell Ц│╝Ц┐╒Ц┐╪Ц┐┴Ц┌▓Ф▀║Е╪╣Ц│≥Ц┌▀Ф≥┌Ц│╚Ц┌╗Ц┐╘Ц┐╪Ц│▄Г≥╨Г■÷Ц│≈Ц│╬Ц│≈Ц│÷Ц─┌(Ц┐║Ц┐╒Ц┐╙Д╦█Х╤Ё?)"
 
 #: common/errors.cpp:651
 #, c-format
 msgid "\"%mode:1\": no start for magic search given for magic \"%magic:2\"."
 msgstr ""
-"\"%mode:1\": нет начала для поиска magic, заданного для magic \"%magic:2\"."
+"\"%mode:1\": Ц┐·Ц┌╦Ц┐┐Ц┌╞О╪┬Х╜≤Е┬╔И█╣О╪┴ \"%magic:2\" Ц┌▓Ф╓°Г╢╒Ц│≥Ц┌▀Ц│÷Ц┌│Ц│╝И√▀Е╖▀Г┌╧Ц│▄Д╦▌Ц│┬Ц┌┴Ц┌▄"
+"Ц│╕Ц│└Ц│╬Ц│⌡Ц┌⌠Ц─┌"
 
 #: common/errors.cpp:659
 #, c-format
 msgid "\"%mode:1\": no range for magic search given for magic \"%magic:2\"."
 msgstr ""
-"\"%mode:1\": нет диапазона для поиска magic, заданного для magic \"%magic:2"
-"\"."
+"\"%mode:1\": Ц┐·Ц┌╦Ц┐┐Ц┌╞О╪┬Х╜≤Е┬╔И█╣О╪┴ \"%magic:2\" Ц┌▓Ф╓°Г╢╒Ц│≥Ц┌▀Ц│÷Ц┌│Ц│╝Г╞└Е⌡╡Ц│▄Д╦▌Ц│┬Ц┌┴Ц┌▄Ц│╕"
+"Ц│└Ц│╬Ц│⌡Ц┌⌠Ц─┌"
 
 #: common/errors.cpp:667
 #, c-format
 msgid "\"%mode:1\": no magic expression available for magic \"%magic:2\"."
-msgstr "\"%mode:1\": нет доступного выражения magic для magic \"%magic:2\"."
+msgstr "\"%mode:1\": Ц┐·Ц┌╦Ц┐┐Ц┌╞О╪┬Х╜≤Е┬╔И█╣О╪┴ \"%magic:2\" Ц│╝Е╪▐Ц│▄Ц│┌Ц┌┼Ц│╬Ц│⌡Ц┌⌠Ц─┌"
 
 #: common/errors.cpp:675
 msgid ""
 "\"%mode:1\": Magic \"%magic:2\": bad regular expression after location "
 "specifier; regexp reports: \"%regerr:3\"."
 msgstr ""
-"\"%mode:1\": Magic \"%magic:2\": неверное регулярное выражение после "
-"указателя местонахождения; regexp возвратил: \"%regerr:3\"."
+"\"%mode:1\": Ц┐·Ц┌╦Ц┐┐Ц┌╞О╪┬Х╜≤Е┬╔И█╣О╪┴ \"%magic:2\": И√⌠И│∙Ц│ёЦ│÷Ф╜ёХ╕▐Х║╗Г▐╬  Е═╢Ф┴─Ф▄┤Е╝ Е╜░Ц│╝"
+"Е╬▄Ц│╚; Ф╜ёХ╕▐Х║╗Г▐╬Е═╠Е▒┼: \"%regerr:3\"Ц─┌"
 
 #: common/errors.cpp:691
 #, c-format
 msgid "\"%expression:1\" is not a valid regular expression."
-msgstr "\"%expression:2\" не является верным регулярным выражением."
+msgstr "\"%expression:1\" Ц│╞Ф°┴Е┼╧Ц│╙Ф╜ёХ╕▐Х║╗Г▐╬Ц│╖Ц│╞Ц│┌Ц┌┼Ц│╬Ц│⌡Ц┌⌠Ц─┌"
 
 #: common/posib_err.cpp:100
 msgid "Unhandled Error: "
-msgstr "Необработанная ошибка: "
+msgstr "Е┤╕Г░├Ц│╖Ц│█Ц│╙Ц│└Ц┌╗Ц┐╘Ц┐╪:"
 
 #: prog/aspell.cpp:97
 #, c-format
 msgid "Error: %s\n"
-msgstr "Ошибка: %s\n"
+msgstr "Ц┌╗Ц┐╘Ц┐╪: %s\n"
 
 #: prog/aspell.cpp:102
 msgid "Error: "
-msgstr "Ошибка: "
+msgstr "Ц┌╗Ц┐╘Ц┐╪: "
 
 #: prog/aspell.cpp:203
 msgid "enter Email mode."
-msgstr "переход в режим Email."
+msgstr "EЦ┐║Ц┐╪Ц┐╚Ц┐╒Ц┐╪Ц┐┴Ц│╚Е┘╔Ц┌┼Ц│╬Ц│≥Ц─┌"
 
 #: prog/aspell.cpp:204
 msgid "enter HTML mode."
-msgstr "переход в режим HTML."
+msgstr "HTMLЦ┐╒Ц┐╪Ц┐┴Ц│╚Е┘╔Ц┌┼Ц│╬Ц│≥Ц─┌"
 
 #: prog/aspell.cpp:205
 msgid "enter TeX mode."
-msgstr "переход в режим TeX."
+msgstr "TeXЦ┐╒Ц┐╪Ц┐┴Ц│╚Е┘╔Ц┌┼Ц│╬Ц│≥Ц─┌"
 
 #: prog/aspell.cpp:206
 msgid "enter Nroff mode."
-msgstr "переход в режим Nroff."
+msgstr "NroffЦ┐╒Ц┐╪Ц┐┴Ц│╚Е┘╔Ц┌┼Ц│╬Ц│≥Ц─┌"
 
 #: prog/aspell.cpp:312
 #, c-format
 msgid "Invalid Option: %s"
-msgstr "Неверная опция: %s"
+msgstr "И√⌠И│∙Ц│ёЦ│÷Ц┌╙Ц┐≈Ц┌╥Ц┐╖Ц┐Ё: %s"
 
 #: prog/aspell.cpp:319
 msgid " does not take any parameters."
-msgstr " не принимает никаких параметров."
+msgstr "Е╪∙Ф∙╟Ц┌▓Ц│╗Ц┌┼Ц│╬Ц│⌡Ц┌⌠Ц─┌"
 
 #: prog/aspell.cpp:332 prog/aspell.cpp:392
 #, c-format
 msgid "You must specify a parameter for \"%s\"."
-msgstr "Нужно указать параметр для \"%s\"."
+msgstr "\"%s\" Ц│╚Ц┐▒Ц┐╘Ц┐║Ц┐╪Ц┌©Ц┌▓О╪▒Ц│╓Ф▄┤Е╝ Ц│≥Ц┌▀Е©┘Х╕│Ц│▄Ц│┌Ц┌┼Ц│╬Ц│≥Ц─┌"
 
 #: prog/aspell.cpp:381
 msgid "You must specify an action"
-msgstr "Нужно указать действие"
+msgstr "Е┤╕Г░├Ц┌▓Ф▄┤Е╝ Ц│≈Ц│╕Д╦▀Ц│∙Ц│└"
 
 #: prog/aspell.cpp:389 prog/aspell.cpp:452 prog/aspell.cpp:474
 #, c-format
 msgid "Unknown Action: %s"
-msgstr "Неизвестное действие: %s"
+msgstr "Ф°╙Г÷╔Ц│╝Е┤╕Г░├: %s"
 
 #: prog/aspell.cpp:395
 #, c-format
 msgid "Error: You must specify at least %d parameters for \"%s\".\n"
-msgstr "Ошибка: Нужно указать не менее %d параметров для \"%s\".\n"
+msgstr "Ц┌╗Ц┐╘Ц┐╪: Е╟▒Ц│╙Ц│▐Ц│╗Ц┌┌ %d Е─▀Ц│╝Е╪∙Ф∙╟Ц┌▓ \"%s\" Ц│╚Е╞╬Ц│≈Ц│╕Ф▄┤Е╝ Ц│≈Ц│╕Ц│▐Ц│═Ц│∙Ц│└Ц─┌\n"
 
 #: prog/aspell.cpp:637
 msgid "Invalid Input"
-msgstr "Неверные входные данные"
+msgstr "И√⌠И│∙Ц│ёЦ│÷Е┘╔Е┼⌡"
 
 #: prog/aspell.cpp:710
 #, c-format
 msgid "WARNING: Unable to enter Nroff mode: %s\n"
-msgstr "ВНИМАНИЕ: Невозможно перейти в режим Nroff: %s\n"
+msgstr "Х╜╕Е▒┼: Nroff Ц┐╒Ц┐╪Ц┐┴Ц│╚Е┘╔Ц┌▀Ц│⌠Ц│╗Ц│▄Ц│╖Ц│█Ц│╬Ц│⌡Ц┌⌠: %s\n"
 
 #: prog/aspell.cpp:731
 msgid "Time to load word list: "
-msgstr "Время загрузки списка слов: "
+msgstr "Е█≤Х╙·Ц┐╙Ц┌╧Ц┐┬Х╙╜Ц│©Х╬╪Ц│©Ц│╚Ц│▀Ц│▀Ц│ёЦ│÷Ф≥┌И√⌠:"
 
 #: prog/aspell.cpp:929
 #, c-format
 msgid "Suggestion Time: %f\n"
-msgstr "Время предложения: %f\n"
+msgstr "Ф▐░Ф║┬Ф≥┌И√⌠: %f\n"
 
 #: prog/aspell.cpp:972
 msgid "You must specify a file name."
-msgstr "Укажите имя файла."
+msgstr "Ц┐∙Ц┌║Ц┌╓Ц┐╚Е░█Ц┌▓О╪▒Ц│╓Ф▄┤Е╝ Ц│≈Ц│╕Ц│▐Ц│═Ц│∙Ц│└Ц─┌"
 
 #: prog/aspell.cpp:975
 msgid "Only one file name may be specified."
-msgstr "Можно указать только одно имя файла."
+msgstr "Ц┐∙Ц┌║Ц┌╓Ц┐╚Е░█Ц│╞О╪▒Ц│╓Ц│═Ц│▒Ф▄┤Е╝ Ц│╖Ц│█Ц│╬Ц│≥Ц─┌"
 
 #: prog/aspell.cpp:985
 #, c-format
 msgid "Could not open the file \"%s\" for reading"
-msgstr "Невозможно открыть файл \"%s\" для чтения"
+msgstr "Х╙╜Ц│©Х╬╪Ц│©Г■╗Ц│╚Ц┐∙Ц┌║Ц┌╓Ц┐╚ \"%s\" Ц┌▓И√▀Ц│▐Ц│⌠Ц│╗Ц│▄Ц│╖Ц│█Ц│╬Ц│⌡Ц┌⌠"
 
 #: prog/aspell.cpp:998
 #, c-format
 msgid "Invalid keymapping: %s"
-msgstr "Неверные сочетания клавиш: %s"
+msgstr "Г└║Е┼╧Ц│╙Ц┌╜Ц┐╪Ц┐·Ц┐┐Ц┐≈Ц│╖Ц│≥: %s"
 
 #: prog/aspell.cpp:1020
 #, c-format
 msgid "Could not open the file \"%s\" for writing. File not saved."
-msgstr "Невозможно открыть файл \"%s\" для записи. Файл не сохранён."
+msgstr ""
+"\"%s\" Ц┌▓Ф⌡╦Ц│█Х╬╪Ц│©Ц┐╒Ц┐╪Ц┐┴Ц│╖И√▀Ц│▒Ц│╬Ц│⌡Ц┌⌠Ц│╖Ц│≈Ц│÷Ц─┌Ц┐∙Ц┌║Ц┌╓Ц┐╚Ц│╞Д©²Е╜≤Ц│∙Ц┌▄Ц│╕Ц│└Ц│╬Ц│⌡Ц┌⌠Ц─┌"
 
 #: prog/aspell.cpp:1033
 msgid "Ignore"
-msgstr "Пропустить"
+msgstr "Г└║Х╕√"
 
 #: prog/aspell.cpp:1034
 msgid "Ignore all"
-msgstr "Пропустить все"
+msgstr "Ц│≥Ц│╧Ц│╕Г└║Х╕√"
 
 #: prog/aspell.cpp:1035
 msgid "Replace"
-msgstr "Заменить"
+msgstr "Г╫╝Ф▐⌡"
 
 #: prog/aspell.cpp:1036
 msgid "Replace all"
-msgstr "Заменить все"
+msgstr "Ц│≥Ц│╧Ц│╕Г╫╝Ф▐⌡"
 
 #: prog/aspell.cpp:1037
 msgid "Add"
-msgstr "Добавить"
+msgstr "Х©╫Е┼═"
 
 #: prog/aspell.cpp:1038
 msgid "Add Lower"
-msgstr "Добавить строчн."
+msgstr "Е╟▐Ф√┤Е╜≈Ц│╚Ц│≈Ц│╕Х©╫Е┼═"
 
 #: prog/aspell.cpp:1039
 msgid "Abort"
-msgstr "Прервать"
+msgstr "Д╦╜Ф√╜"
 
 #: prog/aspell.cpp:1040
 msgid "Exit"
-msgstr "Выход"
+msgstr "Г╣┌Д╨├"
 
 #: prog/aspell.cpp:1116
 msgid "Are you sure you want to abort (y/n)? "
-msgstr "Прервать проверку (y/n)?"
+msgstr "Ф°╛Е╫⌠Ц│╚Д╦╜Ф√╜Ц│≈Ц│╕Ц┌┬Ц┌█Ц│≈Ц│└Ц│╖Ц│≥Ц│▀ (y/n)?"
 
 #. TRANSLATORS: The user may input any of these characters to say "yes".
 #. MUST ONLY CONSIST OF ASCII CHARACTERS.
@@ -811,71 +819,71 @@ msgstr "Yy"
 
 #: prog/aspell.cpp:1148
 msgid "With: "
-msgstr "На: "
+msgstr "Г╫╝Ф▐⌡Ф√┤Е╜≈Е┬≈: "
 
 #: prog/aspell.cpp:1165
 msgid "Sorry that is an invalid choice!"
-msgstr "Извините, это неверный выбор!"
+msgstr "Ф╝▀Е©╣Ц─│Г└║Е┼╧Ц│╙И│╦Ф┼·Ц│╖Ц│≥!"
 
 #: prog/aspell.cpp:1386
 msgid "Sorry \"filter\" is currently unimplemented.\n"
-msgstr "Извините, \"filter\" на данный момент не релизован.\n"
+msgstr "Ф╝▀Е©╣Ц─│\"filter\" Ц│╞Г▐╬Е°╗Е╝÷Хё┘Ц│∙Ц┌▄Ц│╕Ц│└Ц│╬Ц│⌡Ц┌⌠Ц─┌\n"
 
 #: prog/aspell.cpp:1520
 msgid "Can't merge a master word list yet. Sorry."
-msgstr "Пока что невозможно объединить главный список слов. Извините."
+msgstr "Ц┐·Ц┌╧Ц┌©Ц┐╪Е█≤Х╙·Ц┐╙Ц┌╧Ц┐┬Ц┌▓Ц┐·Ц┐╪Ц┌╦Ц│╖Ц│█Ц│╬Ц│⌡Ц┌⌠Ц─┌Ц│≥Ц│©Ц│╬Ц│⌡Ц┌⌠Ц─┌"
 
 #: prog/aspell.cpp:1544
 msgid "Sorry \"create/merge personal\" is currently unimplemented.\n"
-msgstr "Извините, \"create/merge personal\" на данный момент не реализован.\n"
+msgstr "Ф╝▀Е©╣Ц─│\"create/merge personal\" Ц│╞Г▐╬Е°╗Е╝÷Хё┘Ц│∙Ц┌▄Ц│╕Ц│└Ц│╬Ц│⌡Ц┌⌠Ц─┌\n"
 
 #: prog/aspell.cpp:1553 prog/aspell.cpp:1609
 #, c-format
 msgid "Sorry I won't overwrite \"%s\""
-msgstr "Извините, \"%s\" не будет перезаписан"
+msgstr "Ц│≥Ц│©Ц│╬Ц│⌡Ц┌⌠Ц─│ \"%s\" Ц┌▓Д╦┼Ф⌡╦Ц│█Ц│≈Ц│╬Ц│⌡Ц┌⌠"
 
 #: prog/aspell.cpp:1600
 msgid "Sorry \"create/merge repl\" is currently unimplemented.\n"
-msgstr "Извините, \"create/merge repl\" на данный момент не реализован.\n"
+msgstr "Ф╝▀Е©╣Ц─│\"create/merge repl\" Ц│╞Г▐╬Е°╗Е╝÷Хё┘Ц│∙Ц┌▄Ц│╕Ц│└Ц│╬Ц│⌡Ц┌⌠Ц─┌\n"
 
 #: prog/aspell.cpp:1872
 #, c-format
 msgid "\"%s\" is not a valid flag for the \"munch-list\" command."
-msgstr "\"%s\" - это неверный флаг для команды \"munch-list\"."
+msgstr "\"%s\" Ц│╞ \"munch-list\" Ц┌ЁЦ┐·Ц┐ЁЦ┐┴Ц│╚Е╞╬Ц│≥Ц┌▀Ф°┴Е┼╧Ц│╙Ц┐∙Ц┐╘Ц┌╟Ц│╖Ц│╞Ц│┌Ц┌┼Ц│╬Ц│⌡Ц┌⌠Ц─┌"
 
 #. TRANSLATORS: These should all be formated to fit in 80 column or
 #. less
 #: prog/aspell.cpp:2799
 msgid "Usage: aspell [options] <command>"
-msgstr "Использование: aspell [опции] <команда>"
+msgstr "Д╫©Ц│└Ф√╧: aspell [Ц┌╙Ц┐≈Ц┌╥Ц┐╖Ц┐Ё] <Ц┌ЁЦ┐·Ц┐ЁЦ┐┴>"
 
 #: prog/aspell.cpp:2800
 msgid "<command> is one of:"
-msgstr "<команда> одна из:"
+msgstr "<Ц┌ЁЦ┐·Ц┐ЁЦ┐┴> Ц│╞Ф╛║Ц│╝Ц│├Ц│║Ц│╝О╪▒Ц│╓Ц│╖Ц│≥:"
 
 #: prog/aspell.cpp:2801
 msgid "  -?|usage         display a brief usage message"
-msgstr "  -?|usage         вывод краткого сообщения об использовании"
+msgstr "  -?|usage         Г÷╜Ц│└Д╫©Г■╗Ф√╧ФЁ∙Ц│╝Х║╗Г╓╨"
 
 #: prog/aspell.cpp:2802
 msgid "  help             display a detailed help message"
-msgstr "  help             вывод подробного сообщения со справкой"
+msgstr "  help             Х╘ЁЦ│≈Ц│└Д╫©Г■╗Ф√╧ФЁ∙Ц│╝Х║╗Г╓╨"
 
 #: prog/aspell.cpp:2803
 msgid "  -c|check <file>  to check a file"
-msgstr "  -c|check <файл>  проверка файла"
+msgstr "  -c|check <Ц┐∙Ц┌║Ц┌╓Ц┐╚>  Ц┐∙Ц┌║Ц┌╓Ц┐╚Ц┌▓Ц┐│Ц┌╖Ц┐┐Ц┌╞"
 
 #: prog/aspell.cpp:2804
 msgid "  -a|pipe          \"ispell -a\" compatibility mode"
-msgstr "  -a|pipe          режим совместимости с \"ispell -a\""
+msgstr "  -a|pipe          \"ispell -a\" Д╨▓Ф▐⌡Ц┐╒Ц┐╪Ц┐┴"
 
 #: prog/aspell.cpp:2805
 msgid "  [dump] config    dumps the current configuration to stdout"
-msgstr "  [dump] config    вывод дампа текущей конфигурации на stdout"
+msgstr "  [dump] config    Г▐╬Е°╗Ц│╝Ц│≥Ц│╧Ц│╕Ц│╝Х╗╜Е╝ Ц┌▓Ф╗≥Ф╨√Е┤╨Е┼⌡Ц│╚Х║╗Г╓╨Ц│≥Ц┌▀"
 
 #: prog/aspell.cpp:2806
 msgid "  config <key>     prints the current value of an option"
-msgstr "  config <ключ>    вывод текущего значения опции"
+msgstr "  config <key>     Ф▄┤Е╝ Ц│≈Ц│÷Ц┌╙Ц┐≈Ц┌╥Ц┐╖Ц┐ЁЦ│╝Г▐╬Е°╗Ц│╝Е─╓Ц┌▓Х║╗Г╓╨Ц│≥Ц┌▀"
 
 #: prog/aspell.cpp:2807
 msgid "  [dump] dicts | filters | modes"
@@ -883,41 +891,38 @@ msgstr "  [dump] dicts | filters | modes"
 
 #: prog/aspell.cpp:2808
 msgid "    lists available dictionaries / filters / filter modes"
-msgstr "    список доступных словарей / фильтров / режимов фильтра"
+msgstr "    Е┬╘Г■╗Е▐╞Х┐╫Ц│╙Х╬·Ф⌡╦/Ц┐∙Ц┌ёЦ┐╚Ц┌©/Ц┐∙Ц┌ёЦ┐╚Ц┌©Ц┐╒Ц┐╪Ц┐┴ Ц│╝Д╦─Х╕╖Ц┌▓Х║╗Г╓╨Ц│≥Ц┌▀"
 
 #: prog/aspell.cpp:2809
 msgid "[options] is any of the following:"
-msgstr "[опции] любая из следующих:"
+msgstr "[Ц┌╙Ц┐≈Ц┌╥Ц┐╖Ц┐Ё] Ц│╚Ц│╞Д╩╔Д╦▀Ц│╝Ц┌┌Ц│╝Ц│▄Ц│┌Ц┌┼Ц│╬Ц│≥:"
 
 #: prog/aspell.cpp:2822
 msgid ""
 "  list             produce a list of misspelled words from standard input"
-msgstr ""
-"  list             создание списка слов с ошибками со стандартного ввода"
+msgstr "  list             Ф╗≥Ф╨√Е┘╔Е┼⌡Ц│▀Ц┌┴Ц┌╧Ц┐ Ц┐╚Ц│╝И√⌠И│∙Ц│ёЦ│÷Е█≤Х╙·Ц│╝Ц┐╙Ц┌╧Ц┐┬Ц┌▓Д╫°Ф┬░Ц│≥Ц┌▀"
 
 #: prog/aspell.cpp:2825
 msgid ""
 "  soundslike       returns the sounds like equivalent for each word entered"
-msgstr ""
-"  soundslike       возврат звукового эквивалента для каждого введенного слова"
+msgstr "  soundslike       Е┘╔Е┼⌡Ц│≈Ц│÷Ц│²Ц┌▄Ц│·Ц┌▄Ц│╝Е█≤Х╙·Ц│╚Е╞╬Ц│≥Ц┌▀Г√▒Д╪╪И÷ЁЕё╟Ц┌▓Х©■Ц│≥"
 
 #: prog/aspell.cpp:2826
 msgid "  munch            generate possible root words and affixes"
-msgstr "  munch            создание возможных корней и аффиксов слов"
+msgstr "  munch            Х╙·Е╧╧Ц│╗Ф▌╔Х╬·Ц│╝Е─≥Хё°Ц┌▓Г■÷Ф┬░Ц│≥Ц┌▀"
 
 #: prog/aspell.cpp:2827
 msgid "  expand [1-4]     expands affix flags"
-msgstr "  expand [1-4]     расширение флагов аффиксов"
+msgstr "  expand [1-4]     Ф▌╔Х╬·Ц┐∙Ц┐╘Ц┌╟Ц┌▓Ф▀║Е╪╣Ц│≥Ц┌▀"
 
 #: prog/aspell.cpp:2828
 msgid ""
 "  clean [strict]   cleans a word list so that every line is a valid word"
-msgstr ""
-"  clean [strict]   очистка списка слов, т.е. каждая строка - правильное слово"
+msgstr "  clean [strict]   Е█≤Х╙·Ц┐╙Ц┌╧Ц┐┬Ц┌▓Ф▌┐И≥╓Ц│≈Ц─│Ц│≥Ц│╧Ц│╕Ц│╝Х║▄Ц│╝Е█≤Х╙·Ц┌▓Ф°┴Е┼╧Ц│╚Ц│≥Ц┌▀"
 
 #: prog/aspell.cpp:2830
 msgid "  -v|version       prints a version line"
-msgstr "  -v|version       вывод номера версии"
+msgstr "  -v|version       Ц┐░Ц┐╪Ц┌╦Ц┐╖Ц┐ЁЦ┌▓Х║╗Г╓╨"
 
 #: prog/aspell.cpp:2831
 msgid "  munch-list [simple] [single|multi] [keep]"
@@ -925,33 +930,32 @@ msgstr "  munch-list [simple] [single|multi] [keep]"
 
 #: prog/aspell.cpp:2832
 msgid "    reduce the size of a word list via affix compression"
-msgstr "    уменьшение размера списка слов посредством сжатия аффиксов"
+msgstr "    Ф▌╔Х╬·Ц┌▓Е°╖Г╦╝Ц│≈Ц│╕Е█≤Х╙·Ц┐╙Ц┌╧Ц┐┬Ц│╝Ц┌╣Ц┌╓Ц┌╨Ц┌▓Ф╦⌡Ц┌┴Ц│≥"
 
 #: prog/aspell.cpp:2833
 msgid "  conv <from> <to> [<norm-form>]"
-msgstr "  conv <из> <в> [<форма-норм>]"
+msgstr "  conv <from> <to> [<norm-form>]"
 
 #: prog/aspell.cpp:2834
 msgid "    converts from one encoding to another"
-msgstr "    преобразование из одной кодировки в другую"
+msgstr "    Ц┌╗Ц┐ЁЦ┌ЁЦ┐╪Ц┐┤Ц┌ёЦ┐ЁЦ┌╟Ц┌▓Д╩√Ц│╝Ц┌┌Ц│╝Ц│╚Е╓┴Ф▐⌡Ц│≥Ц┌▀"
 
 #: prog/aspell.cpp:2835
 msgid "  norm (<norm-map> | <from> <norm-map> <to>) [<norm-form>]"
-msgstr "  norm (<карта-норм> | <из> <карта-норм> <в>) [<форма-норм>]"
+msgstr "  norm (<norm-map> | <from> <norm-map> <to>) [<norm-form>]"
 
 #: prog/aspell.cpp:2836
 msgid "    perform Unicode normalization"
-msgstr "    выполнение нормализации Юникода"
+msgstr "    Unicode Ф╜ёХ╕▐Е▄√Ц┌▓Х║▄Ц│├"
 
 #: prog/aspell.cpp:2839
 msgid "  dump|create|merge master|personal|repl [<name>]"
-msgstr "  dump|create|merge master|personal|repl [<имя>]"
+msgstr "  dump|create|merge master|personal|repl [<Е░█Е┴█>]"
 
 #: prog/aspell.cpp:2840
 msgid ""
 "    dumps, creates or merges a master, personal, or replacement dictionary."
-msgstr ""
-"    вывод, создание или объединение словаря: главного, личного или замены."
+msgstr "    Ц┐·Ц┌╧Ц┌©Ц┐╪/Е─▀Д╨╨Г■╗/Г╫╝Ф▐⌡Г■╗Ц│╝Х╬·Ф⌡╦Ц┌▓Ц─│Х║╗Г╓╨/Г■÷Ф┬░/Ц┐·Ц┐╪Ц┌╦Ц│≥Ц┌▀Ц─┌"
 
 #. TRANSLATORS: "none", "internal" and "strict" are literal values
 #. and should not be translated.
@@ -959,8 +963,7 @@ msgstr ""
 msgid ""
 "  <norm-form>      normalization form to use, either none, internal, or "
 "strict"
-msgstr ""
-"  <форма-норм>     используемая форма нормализации: none, internal или strict"
+msgstr "  <norm-form>      Ф╜ёХ╕▐Е▄√Ц│╝Е╫╒Е╪▐ none, internal, strict Ц│╝Ц│└Ц│ Ц┌▄Ц│▀"
 
 #: prog/aspell.cpp:2854
 #, c-format
@@ -970,7 +973,7 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"Aspell %s.  Copyright 2000-2004 Кевин Аткинсон.\n"
+"Aspell %s.  Copyright 2000-2004 by Kevin Atkinson.\n"
 "\n"
 
 #: prog/aspell.cpp:2888
@@ -980,18 +983,18 @@ msgid ""
 "    option.  They can also be selected indirectly via the \"lang\",\n"
 "    \"variety\", and \"size\" options.\n"
 msgstr ""
-"Доступные словари:\n"
-"    Словари могут быть выбраны непосредственно через опцию \"-d\"\n"
-"    или \"master\". Они также могут быть выбраны косвенным образом\n"
-"    через опции \"lang\", \"variety\" и \"size\".\n"
+"Е┬╘Г■╗Е▐╞Х┐╫Ц│╙Х╬·Ф⌡╦:\n"
+"  Х╬·Ф⌡╦Ц┌▓Г⌡╢Ф▌╔Ф▄┤Е╝ Ц│≥Ц┌▀Ц│╚Ц│╞ \"-d\" Ц│╬Ц│÷Ц│╞ \"master\" Ц┌╙Ц┐≈Ц┌╥Ц┐╖Ц┐Ё\n"
+"  Ц┌▓Д╫©Г■╗Ц│≈Ц│╬Ц│≥Ц─┌\"lang\", \"variety\", \"size\" Ц┌╙Ц┐≈Ц┌╥Ц┐╖Ц┐ЁЦ┌▓Д╫©Г■╗Ц│≈Ц│╕\n"
+"  И√⌠Ф▌╔Г └Ц│╚Ф▄┤Е╝ Ц│≥Ц┌▀Ц│⌠Ц│╗Ц┌┌Ц│╖Ц│█Ц│╬Ц│≥Ц─┌\n"
 
 #: prog/aspell.cpp:2909
 msgid ""
 "Available Filters (and associated options):\n"
 "    Filters can be added or removed via the \"filter\" option.\n"
 msgstr ""
-"Доступные фильтры (и связанные с ними опции):\n"
-"    Фильтры могут быть добавлены или удалены через опцию \"filter\".\n"
+"Е┬╘Г■╗Е▐╞Х┐╫Ц│╙Ц┐∙Ц┌ёЦ┐╚Ц┌© (Ц│╗И√╒И─ёЦ│≥Ц┌▀Ц┌╙Ц┐≈Ц┌╥Ц┐╖Ц┐Ё)\n"
+"  Ц┐∙Ц┌ёЦ┐╚Ц┌©Ц│╞ \"filter\" Ц┌╙Ц┐≈Ц┌╥Ц┐╖Ц┐ЁЦ│╖Х©╫Е┼═/И≥╓Е▌╩Ц│╖Ц│█Ц│╬Ц│≥Ц─┌\n"
 
 #: prog/aspell.cpp:2916
 #, c-format
@@ -1000,7 +1003,7 @@ msgid ""
 "  %s filter: %s\n"
 msgstr ""
 "\n"
-"  %s фильтр: %s\n"
+"  %s Ц┐∙Ц┌ёЦ┐╚Ц┌©: %s\n"
 
 #. TRANSLATORS: This should be formated to fit in 80 column or less
 #: prog/aspell.cpp:2933
@@ -1011,16 +1014,15 @@ msgid ""
 "    This will happen implicitly if Aspell is able to identify the file\n"
 "    type from the extension, and possibility the contents, of the file.\n"
 msgstr ""
-"Доступные режимы фильтра:\n"
-"    Режимы фильтра - это переконфигурированные комбинации фильтров,\n"
-"    оптимизированные для файлов определенного типа. Режим выбирается\n"
-"    через опцию \"mode\". Это будет происходить постоянно, если\n"
-"    Aspell в состоянии определить тип файла по расширению и, возможно,\n"
-"    содержимому файла.\n"
+"Е┬╘Г■╗Е▐╞Х┐╫Ц│╙Ц┐∙Ц┌ёЦ┐╚Ц┌©Ц┐╒Ц┐╪Ц┐┴:\n"
+"  Ц┐∙Ц┌ёЦ┐╚Ц┌©Ц┐╒Ц┐╪Ц┐┴Ц│╞Ц│┌Ц┌▀Г╗╝И║·Ц│╝Ц┐∙Ц┌║Ц┌╓Ц┐╚Ц│╚Е░┬Ц┌▐Ц│⌡Ц│╕Е├█Х╗╜Е╝ Ц│∙Ц┌▄Ц│÷Ц┐∙Ц┌ёЦ┐╚Ц┌©Ц│╝\n"
+"  Г╣└Ц│©Е░┬Ц┌▐Ц│⌡Ц│╖Ц│≥Ц─┌Ц┐╒Ц┐╪Ц┐┴Ц│╞ \"mode\" Ц┌╙Ц┐≈Ц┌╥Ц┐╖Ц┐ЁЦ│╖Ф▄┤Е╝ Ц│≈Ц│╬Ц│≥Ц─┌Aspell Ц│▄\n"
+"  Ц┐∙Ц┌║Ц┌╓Ц┐╚Ц│╝Ц┌©Ц┌╓Ц┐≈Ц┌▓Ф▀║Е╪╣Е╜░Ц─│Ц│╬Ц│÷Ц│╞Е├┘Е╝╧Ц│▀Ц┌┴Г┴╧Е╝ Ц│≥Ц┌▀Ц│⌠Ц│╗Ц│▄Е▐╞Х┐╫Ц│╙Е═╢Е░┬Ц│╚Ц│╞\n"
+"  Ф▄┤Е╝ Ц│≈Ц│╙Ц│▐Ц│╕Ц┌┌Д╫©Г■╗Ц│∙Ц┌▄Ц┌▀Ц│⌠Ц│╗Ц│▄Ц│┌Ц┌┼Ц│╬Ц│≥Ц─┌\n"
 
 #: prog/check_funs.cpp:287
 msgid "Error: Stdin not a terminal."
-msgstr "Ошибка: Stdin не является терминалом."
+msgstr "Ц┌╗Ц┐╘Ц┐╪: Ф╗≥Ф╨√Е┘╔Е┼⌡Ц│▄Г╚╞Ф°╚Ц│╖Ц│╞Ц│┌Ц┌┼Ц│╬Ц│⌡Ц┌⌠Ц─┌"
 
 #. TRANSLATORS: This is a literal Key.
 #: prog/check_funs.cpp:774
@@ -1029,7 +1031,7 @@ msgstr "Enter"
 
 #: prog/check_funs.cpp:776
 msgid "Accept Changes"
-msgstr "Принять изменения"
+msgstr "Е╓┴Ф⌡╢Ц┌▓Е▐≈Ц│▒Е┘╔Ц┌▄Ц┌▀"
 
 #. TRANSLATORS: This is a literal Key.
 #: prog/check_funs.cpp:779
@@ -1043,12 +1045,12 @@ msgstr "Control-H"
 
 #: prog/check_funs.cpp:782
 msgid "Delete the previous character"
-msgstr "Удаление предыдущего символа"
+msgstr "Е┴█Ц│╝Ф√┤Е╜≈Ц┌▓Е┴┼И≥╓"
 
 #. TRANSLATORS: This is a literal Key.
 #: prog/check_funs.cpp:785
 msgid "Left"
-msgstr "Стрелка влево"
+msgstr "Б├░"
 
 #. TRANSLATORS: This is a literal Key.
 #: prog/check_funs.cpp:787
@@ -1057,12 +1059,12 @@ msgstr "Control-B"
 
 #: prog/check_funs.cpp:788
 msgid "Move Back one space"
-msgstr "Перемещение назад на одну позицию"
+msgstr "1Ф√┤Е╜≈Е┬├Ф┬╩Ц┌▀"
 
 #. TRANSLATORS: This is a literal Key.
 #: prog/check_funs.cpp:791
 msgid "Right"
-msgstr "Стрелка вправо"
+msgstr "Б├▓"
 
 #. TRANSLATORS: This is a literal Key.
 #: prog/check_funs.cpp:793
@@ -1071,7 +1073,7 @@ msgstr "Control-F"
 
 #: prog/check_funs.cpp:794
 msgid "Move Forward one space"
-msgstr "Перемещение вперед на одну позицию"
+msgstr "1Ф√┤Е╜≈Е┬├И─╡Ц┌─"
 
 #. TRANSLATORS: This is a literal Key.
 #: prog/check_funs.cpp:797
@@ -1085,7 +1087,7 @@ msgstr "Control-A"
 
 #: prog/check_funs.cpp:800
 msgid "Move to the beginning of the line"
-msgstr "Перемещение в начало строки"
+msgstr "Х║▄И═╜Ц│╚Г╖╩Е▀∙"
 
 #. TRANSLATORS: This is a literal Key.
 #: prog/check_funs.cpp:803
@@ -1099,7 +1101,7 @@ msgstr "Control-E"
 
 #: prog/check_funs.cpp:806
 msgid "Move to the end of the line"
-msgstr "Перемещение в конец строки"
+msgstr "Х║▄Ф°╚Ц│╚Г╖╩Е▀∙"
 
 #. TRANSLATORS: This is a literal Key.
 #: prog/check_funs.cpp:809
@@ -1113,7 +1115,7 @@ msgstr "Control-D"
 
 #: prog/check_funs.cpp:812
 msgid "Delete the next character"
-msgstr "Удаление следующего символа"
+msgstr "Ф╛║Ц│╝Ф√┤Е╜≈Ц┌▓Е┴┼И≥╓"
 
 #. TRANSLATORS: This is a literal Key.
 #: prog/check_funs.cpp:816
@@ -1122,7 +1124,7 @@ msgstr "Control-K"
 
 #: prog/check_funs.cpp:817
 msgid "Kill all characters to the EOL"
-msgstr "Удаление всех символов до конца строки"
+msgstr "Х║▄Ф°╚Ц│╬Ц│╖Ц│╝Ц│≥Ц│╧Ц│╕Ц│╝Ф√┤Е╜≈Ц┌▓Е┴┼И≥╓"
 
 #. TRANSLATORS: This is a literal Key.
 #: prog/check_funs.cpp:821
@@ -1131,254 +1133,254 @@ msgstr "Control-C"
 
 #: prog/check_funs.cpp:822
 msgid "Abort This Operation"
-msgstr "Прерывание этой операции"
+msgstr "Ц│⌠Ц│╝Ф⌠█Д╫°Ц┌▓Д╦╜Ф√╜"
 
 #: modules/speller/default/language.cpp:103
 msgid "This is probably because: "
-msgstr "Это возможно вследствие: "
+msgstr "Ц│⌠Ц│╝Г░├Г■╠Ц│╞Ц│┼Ц│²Ц┌┴Ц│▐:"
 
 #: modules/speller/default/language.cpp:110
 msgid "The required field \"name\" is missing."
-msgstr "Отсутствует требуемое поле \"name\"."
+msgstr "Е©┘Х╕│Ц│╙Ц┐∙Ц┌ёЦ┐╪Ц┐╚Ц┐┴ \"name\" Ц│▄Ц│┌Ц┌┼Ц│╬Ц│⌡Ц┌⌠Ц─┌"
 
 #: modules/speller/default/language.cpp:488
 msgid "Empty string."
-msgstr "Пустая строка."
+msgstr "Г╘╨Ц│╝Ф√┤Е╜≈Е┬≈Ц│╖Ц│≥Ц─┌"
 
 #: modules/speller/default/language.cpp:492
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear at the beginning of a word."
-msgstr "Символ '%s' (U+%02X) не может появляться в начале слова."
+msgstr "Ф√┤Е╜≈ '%s' (U+%02X) Ц│╞Е█≤Х╙·Ц│╝Е┘┬И═╜Ц│╚Ц│╞Г▐╬Ц┌▄Ц│╬Ц│⌡Ц┌⌠Ц─┌"
 
 #: modules/speller/default/language.cpp:494
 #: modules/speller/default/language.cpp:503
 #, c-format
 msgid ""
 "The character '%s' (U+%02X) must be followed by an alphabetic character."
-msgstr "После символа '%s' (U+%02X) должен следовать буквенный символ."
+msgstr "Ф√┤Е╜≈ '%s' (U+%02X) Ц│╝Е╬▄Ц│╚Ц│╞Ц┌╒Ц┐╚Ц┐∙Ц┌║Ц┐≥Ц┐┐Ц┐┬Ц│▄Г╤ Ц│▀Ц│╙Ц│▒Ц┌▄Ц│╟Ц│╙Ц┌┼Ц│╬Ц│⌡Ц┌⌠Ц─┌"
 
 #: modules/speller/default/language.cpp:496
 msgid "Does not contain any alphabetic characters."
-msgstr "Не содержит никаких буквенных символов."
+msgstr "Ц┌╒Ц┐╚Ц┐∙Ц┌║Ц┐≥Ц┐┐Ц┐┬Ц┌▓Е░╚Ц┌⌠Ц│╖Ц│└Ц│╬Ц│⌡Ц┌⌠Ц─┌"
 
 #: modules/speller/default/language.cpp:501
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear in the middle of a word."
-msgstr "Символ '%s' (U+%02X) не может появляться в середине слова."
+msgstr "Ф√┤Е╜≈ '%s' (U+%02X) Ц│╞Е█≤Х╙·Ц│╝Д╦╜И√⌠Ц│╚Ц│╞Г▐╬Ц┌▄Ц│╬Ц│⌡Ц┌⌠Ц─┌"
 
 #: modules/speller/default/language.cpp:508
 msgid ""
 "The character '\\r' (U+0D) may not appear at the end of a word. This "
 "probably means means that the file is using MS-DOS EOL instead of Unix EOL."
 msgstr ""
-"Символ '\\r' (U+0D) не может появляться в конце слова. Возможно, это "
-"означает, что в файле используется символ конца файла MS-DOS, а не Unix."
+"Ф√┤Е╜≈ '\\r' (U+0D) Ц│╞Е█≤Х╙·Ц│╝Ф°╚Е╟╬Ц│╚Ц│╞Г▐╬Ц┌▄Ц│╬Ц│⌡Ц┌⌠Ц─┌Ф│░Ц┌┴Ц│▐Ц─│Ц┐∙Ц┌║Ц┌╓Ц┐╚Ц│▄ Unix Ц│╖Ц│╞Ц│╙"
+"Ц│▐ MS-DOS Ц│╝ EOL Ц┌▓Д╫©Г■╗Ц│≈Ц│╕Ц│└Ц┌▀Ц│╝Ц│╖Ц│≈Ц┌┤Ц│├Ц─┌"
 
 #: modules/speller/default/language.cpp:511
 #, c-format
 msgid "The character '%s' (U+%02X) may not appear at the end of a word."
-msgstr "Символ '%s' (U+%02X) не может появляться в конце слова."
+msgstr "Ф√┤Е╜≈ '%s' (U+%02X) Ц│╞Е█≤Х╙·Ц│╝Ф°╚Е╟╬Ц│╚Ц│╞Г▐╬Ц┌▄Ц│╬Ц│⌡Ц┌⌠Ц─┌"
 
 #: modules/speller/default/language.cpp:543
 #, c-format
 msgid "Warning: Removing invalid affix '%s' from word %s.\n"
-msgstr "Предупреждение: Удаляется неверный аффикс '%s' из слова %s.\n"
+msgstr "Х╜╕Е▒┼: Г└║Е┼╧Ц│╙Ф▌╔Х╬· '%s' Ц┌▓Е█≤Х╙· %s Ц│▀Ц┌┴И≥╓Е▌╩Ц│≈Ц│╕Ц│└Ц│╬Ц│≥Ц─┌\n"
 
 #: modules/speller/default/language.cpp:544
 #, c-format
 msgid "Warning: Removing inapplicable affix '%s' from word %s.\n"
-msgstr "Предупреждение: Удаляется неподходящий аффикс '%s' из слова %s.\n"
+msgstr "Х╜╕Е▒┼: Д╦█И│╘Е┬┤Ц│╙Ф▌╔Х╬· '%s' Ц┌▓Е█≤Х╙· %s Ц│▀Ц┌┴И≥╓Е▌╩Ц│≈Ц│╕Ц│└Ц│╬Ц│≥Ц─┌\n"
 
 #: modules/speller/default/language.cpp:674
 #, c-format
 msgid "Warning: %s Skipping string.\n"
-msgstr "Предупреждение: %s Пропускается строка.\n"
+msgstr "Х╜╕Е▒┼: %s Ф√┤Е╜≈Е┬≈Ц┌▓Ц┌╧Ц┌╜Ц┐┐Ц┐≈Ц│≈Ц│╬Ц│≥Ц─┌\n"
 
 #: modules/speller/default/language.cpp:732
 msgid "The total length is larger than 240 characters."
-msgstr "Общая длина превышает 240 символов."
+msgstr "И∙╥Ц│∙Ц│╝Е░┬Х╗┬Ц│▄240Ф√┤Е╜≈Ц┌▓Х╤┘Ц│┬Ц│╕Ц│└Ц│╬Ц│≥Ц─┌"
 
 #: modules/speller/default/language.cpp:736
 #, c-format
 msgid "Warning: %s Skipping word.\n"
-msgstr "Предупреждение: %s Пропускается слово.\n"
+msgstr "Х╜╕Е▒┼: %s Е█≤Х╙·Ц┌▓Ц┌╧Ц┌╜Ц┐┐Ц┐≈Ц│≈Ц│╬Ц│≥Ц─┌\n"
 
 #: modules/speller/default/affix.cpp:426
 msgid "Possibly incorrect count."
-msgstr "Возможно, неверное число строк."
+msgstr "Е╓ Е┬├Ц─│Ц┌╚Ц┌╕Ц┐ЁЦ┐┬Ц│▄И√⌠И│∙Ц│ёЦ│╕Ц│└Ц│╬Ц│≥Ц─┌"
 
 #: modules/speller/default/readonly_ws.cpp:362
 msgid "Wrong endian order."
-msgstr "Неверный порядок байт."
+msgstr "Х╙╓Ц│ёЦ│÷Ц┐░Ц┌╓Ц┐┬И═├"
 
 #: modules/speller/default/readonly_ws.cpp:385
 msgid "Wrong soundslike."
-msgstr "Неверный soundslike."
+msgstr "Х╙╓Ц│ёЦ│÷Г√▒Д╪╪И÷ЁЕё╟Ц│╖Ц│≥Ц─┌"
 
 #: modules/speller/default/readonly_ws.cpp:391
 msgid "Wrong soundslike version."
-msgstr "Неверная версия soundslike."
+msgstr "Г√▒Д╪╪И÷ЁЕё╟Ц│╝Ц┐░Ц┐╪Ц┌╦Ц┐╖Ц┐ЁЦ│▄И│∙Ц│└Ц│╬Ц│≥Ц─┌"
 
 #: modules/speller/default/readonly_ws.cpp:853
 msgid "Affix flags found in word but no affix file given."
-msgstr "В слове найдены флаги аффикса, но не указан файл аффиксов."
+msgstr "Ф▌╔Х╬·Ц┐∙Ц┐╘Ц┌╟Ц│▄Е█≤Х╙·Ц│╝Д╦╜Ц│╚Х╕▀Ц│╓Ц│▀Ц┌┼Ц│╬Ц│≈Ц│÷Ц│▄Ф▌╔Х╬·Ц┐∙Ц┌║Ц┌╓Ц┐╚Ц│▄Ц│┌Ц┌┼Ц│╬Ц│⌡Ц┌⌠Ц─┌"
 
 #: modules/speller/default/readonly_ws.cpp:891
 msgid ""
 "The total word length, with soundslike data, is larger than 240 characters."
-msgstr "Общая длина слов с данными soundslike превышает 240 символов."
+msgstr "Е█≤Х╙·Г╜┴Ц│╝И∙╥Ц│∙Ц│╝Е░┬Х╗┬Ц│▄240Ф√┤Е╜≈Ц┌▓Х╤┘Ц│┬Ц│╕Ц│└Ц│╬Ц│≥Ц─┌"
 
 #: modules/speller/default/multi_ws.cpp:58
 msgid "There must be at least one \"add\" line."
-msgstr "Должна быть хотя бы одна строка \"add\"."
+msgstr "Д╦─Ц│╓Д╩╔Д╦┼\"add\" Х║▄Ц│▄Ц│╙Ц│▐Ц│╕Ц│╞Ц│╙Ц┌┼Ц│╬Ц│⌡Ц┌⌠Ц─┌"
 
 #: modules/speller/default/suggest.cpp:1403
 msgid "one of ultra, fast, normal, slow, or bad-spellers"
-msgstr "один из: ultra, fast, normal, slow или bad-spellers"
+msgstr "Ф╛║Ц│╝Ц│├Ц│║Ц│╝О╪▒Ц│╓: ultra, fast, normal, slow, or bad-spellers"
 
 #: modules/speller/default/data.cpp:404
 msgid "is not one of the allowed types"
-msgstr "не из списка разрешённых типов"
+msgstr "Ц│╞Х╗╠Ц│∙Ц┌▄Ц│÷Е·▀Ц│╖Ц│╞Ц│┌Ц┌┼Ц│╬Ц│⌡Ц┌⌠"
 
 #: modules/speller/default/speller_impl.cpp:241
 msgid "The personal word list is unavailable."
-msgstr "Личный список слов недоступен."
+msgstr "Е─▀Д╨╨Г■╗Е█≤Х╙·Ц┐╙Ц┌╧Ц┐┬Ц│▄Е┬╘Г■╗Ц│╖Ц│█Ц│╬Ц│⌡Ц┌⌠Ц─┌"
 
 #: modules/speller/default/speller_impl.cpp:248
 msgid "The session word list is unavailable."
-msgstr "Сеансовый список слов недоступен."
+msgstr "Ц┌╩Ц┐┐Ц┌╥Ц┐╖Ц┐ЁЕ█≤Х╙·Ц┐╙Ц┌╧Ц┐┬Ц│▄Е┬╘Г■╗Ц│╖Ц│█Ц│╬Ц│⌡Ц┌⌠Ц─┌"
 
 #: modules/speller/default/speller_impl.cpp:255
 msgid "The main word list is unavailable."
-msgstr "Главный список слов недоступен."
+msgstr "Ц┐║Ц┌╓Ц┐ЁЕ█≤Х╙·Ц┐╙Ц┌╧Ц┐┬Ц│▄Е┬╘Г■╗Ц│╖Ц│█Ц│╬Ц│⌡Ц┌⌠Ц─┌"
 
 #: modules/filter/tex.cpp:255 modules/filter/tex.cpp:262
 msgid "a string of 'o','O','p',or 'P'"
-msgstr "строка из 'o','O','p' или 'P'"
+msgstr "'o','O','p','P' Ц│╝Ц│└Ц│ Ц┌▄Ц│▀Ц│╝Ц│╓Ц│╙Ц│▄Ц┌┼"
 
 #. TRANSLATORS: Like the strings in config.cpp, all strings in *-filter.opt
 #. should be under 50 characters, begin with a lower case character and 
 #. not include any trailing punctuation marks.
 #: modules/filter/context-filter.info:7
 msgid "experimental filter for hiding delimited contexts"
-msgstr "фильтр для обработки разделенных контекстов"
+msgstr "Е▄╨Е┬┤Ц┌┴Ц┌▄Ц│÷Е├┘Е╝╧Ц┌▓И ═Ц│≥Ц│÷Ц┌│Ц│╝Е╝÷И╗⌠Г └Ц│╙Ц┐∙Ц┌ёЦ┐╚Ц┌©"
 
 #: modules/filter/context-filter.info:13
 msgid "context delimiters (separated by spaces)"
-msgstr "разделители контекста (разделенные пробелами)"
+msgstr "Е▄╨Е┬┤Ц┌┼Х╗≤Е▐╥О╪┬Х╓┤Ф∙╟Ц│┌Ц┌▀Е═╢Е░┬Ц│╞Ц┌╧Ц┐ Ц┐╪Ц┌╧Ц│╖Е▄╨Е┬┤Ц│ёЦ│╕Ф▄┤Е╝ О╪┴"
 
 #: modules/filter/context-filter.info:21
 msgid "swaps visible and invisible text"
-msgstr "меняет местами видимый и невидимый текст"
+msgstr "Х║╗Г╓╨Ц│≥Ц┌▀Ц┐├Ц┌╜Ц┌╧Ц┐┬Ц│╗Х║╗Г╓╨Ц│≈Ц│╙Ц│└Ц┐├Ц┌╜Ц┌╧Ц┐┬Ц│╗Ц┌▓Е┘╔Ц┌▄Ф▐⌡Ц│┬Ц┌▀"
 
 #: modules/filter/email-filter.info:7
 msgid "filter for skipping quoted text in email messages"
-msgstr "фильтр для пропуска цитируемого текста в сообщениях email"
+msgstr "EЦ┐║Ц┐╪Ц┐╚Ф°╛Ф√┤Д╦╜Ц│╝Е╪∙Г■╗Ц│∙Ц┌▄Ц│÷Ц┐├Ц┌╜Ц┌╧Ц┐┬Ц┌▓Ц┌╧Ц┌╜Ц┐┐Ц┐≈Ц│≥Ц┌▀Ц│÷Ц┌│Ц│╝Ц┐╒Ц┐╪Ц┐┴"
 
 #: modules/filter/email-filter.info:13
 msgid "email quote characters"
-msgstr "символы цитирования email"
+msgstr "EЦ┐║Ц┐╪Ц┐╚Ц│╝Е╪∙Г■╗Ц┌▓Г╓╨Ц│≥Ф√┤Е╜≈Е┬≈"
 
 #: modules/filter/email-filter.info:21
 msgid "num chars that can appear before the quote char"
-msgstr "максимальная позиция символа цитирования"
+msgstr "Е╪∙Г■╗Ц┌▓Г╓╨Ц│≥Ф√┤Е╜≈Ц│╝Е┴█Ц│╚Ц│┌Ц│ёЦ│╕Ц┌┌Ц│└Ц│└Ф√┤Е╜≈Ф∙╟"
 
 #: modules/filter/html-filter.info:9
 msgid "filter for dealing with HTML documents"
-msgstr "фильтр для работы с документами HTML"
+msgstr "HTMLФ√┤Ф⌡╦Ц│╝Ц│÷Ц┌│Ц│╝Ц┐∙Ц┌ёЦ┐╚Ц┌©"
 
 #: modules/filter/html-filter.info:15
 msgid "HTML attributes to always check"
-msgstr "всегда проверяемые атрибуты HTML"
+msgstr "Е╦╦Ц│╚Ц┐│Ц┌╖Ц┐┐Ц┌╞Ц│≥Ц┌▀HTMLЦ│╝Е╠·Ф─╖"
 
 #: modules/filter/html-filter.info:21
 msgid "HTML tags to always skip the contents of"
-msgstr "всегда пропускаемые теги HTML с содержимым"
+msgstr "Е╦╦Ц│╚Д╦╜Х╨╚Ц│╝Ц┐│Ц┌╖Ц┐┐Ц┌╞Ц┌▓Ц┌╧Ц┌╜Ц┐┐Ц┐≈Ц│≥Ц┌▀HTMLЦ┌©Ц┌╟"
 
 #: modules/filter/nroff-filter.info:7
 msgid "filter for dealing with Nroff documents"
-msgstr "фильтр для работы с документами Nroff"
+msgstr "NroffФ√┤Ф⌡╦Ц│╝Ц│÷Ц┌│Ц│╝Ц┐∙Ц┌ёЦ┐╚Ц┌©"
 
 #: modules/filter/sgml-filter.info:9
 msgid "filter for dealing with generic SGML/XML documents"
-msgstr "фильтр для работы с документами SGML/XML"
+msgstr "Д╦─Х┬╛Ц│╝SGML/XMLФ√┤Ф⌡╦Ц│╝Ц│÷Ц┌│Ц│╝Ц┐∙Ц┌ёЦ┐╚Ц┌©"
 
 #: modules/filter/sgml-filter.info:15
 msgid "SGML attributes to always check"
-msgstr "всегда проверяемые атрибуты SGML"
+msgstr "Е╦╦Ц│╚Ц┐│Ц┌╖Ц┐┐Ц┌╞Ц│≥Ц┌▀SGMLЦ│╝Е╠·Ф─╖"
 
 #: modules/filter/sgml-filter.info:20
 msgid "SGML tags to always skip the contents of"
-msgstr "всегда пропускаемые теги SGML с содержимым"
+msgstr "Е╦╦Ц│╚Д╦╜Х╨╚Ц│╝Ц┐│Ц┌╖Ц┐┐Ц┌╞Ц┌▓Ц┌╧Ц┌╜Ц┐┐Ц┐≈Ц│≥Ц┌▀SGMLЦ┌©Ц┌╟"
 
 #: modules/filter/tex-filter.info:7
 msgid "filter for dealing with TeX/LaTeX documents"
-msgstr "фильтр для работы с документами TeX/LaTeX"
+msgstr "TeX/LaTeXФ√┤Ф⌡╦Ц│╝Ц│÷Ц┌│Ц│╝Ц┐∙Ц┌ёЦ┐╚Ц┌©"
 
 #: modules/filter/tex-filter.info:15
 msgid "check TeX comments"
-msgstr "проверка комментариев TeX"
+msgstr "TeXЦ│╝Ц┌ЁЦ┐║Ц┐ЁЦ┐┬Ц┌▓Г╒╨Х╙█Ц│≥Ц┌▀"
 
 #: modules/filter/tex-filter.info:21
 msgid "TeX commands"
-msgstr "команды TeX"
+msgstr "TeXЦ│╝Ц┌ЁЦ┐·Ц┐ЁЦ┐┴"
 
 #: modules/filter/texinfo-filter.info:7
 msgid "filter for dealing with Texinfo documents"
-msgstr "фильтр для работы с документами Texinfo"
+msgstr "TexinfoФ√┤Ф⌡╦Ц│╝Ц│÷Ц┌│Ц│╝Ц┐∙Ц┌ёЦ┐╚Ц┌©"
 
 #: modules/filter/texinfo-filter.info:13
 msgid "Texinfo commands to ignore the parameters of"
-msgstr "Команды Texinfo с игнорируемыми параметрами"
+msgstr "Е╪∙Ф∙╟Ц┌▓Г└║Х╕√Ц│≥Ц┌▀Texinfo Ц│╝Ц┌ЁЦ┐·Ц┐ЁЦ┐┴"
 
 #: modules/filter/texinfo-filter.info:41
 msgid "Texinfo environments to ignore"
-msgstr "Игнорируемые окружения Texinfo"
+msgstr "Г└║Х╕√Ц│≥Ц┌▀ Texinfo Ц│╝Г▓╟Е╒┐"
 
 #: modules/filter/url-filter.info:7
 msgid "filter to skip URL like constructs"
-msgstr "фильтр для пропуска конструкций типа URL"
+msgstr "URLЦ│╝Ц┌┬Ц│├Ц│╙Ф╖▀И─═Ц┌▓Ц┌╧Ц┌╜Ц┐┐Ц┐≈Ц│≥Ц┌▀Ц│÷Ц┌│Ц│╝Ц┐∙Ц┌ёЦ┐╚Ц┌©"
 
 #: modules/filter/modes/ccpp.amf:8
 msgid "mode for checking C++ comments and string literals"
-msgstr "режим для проверки комментариев и строк C++"
+msgstr "C++Ц│╝Ц┌ЁЦ┐║Ц┐ЁЦ┐┬Ц│╗Ф√┤Е╜≈Е┬≈Ц┌▓Ц┐│Ц┌╖Ц┐┐Ц┌╞Ц│≥Ц┌▀Ц│÷Ц┌│Ц│╝Ц┐╒Ц┐╪Ц┐┴"
 
 #: modules/filter/modes/comment.amf:5
 msgid "mode to check any lines starting with a #"
-msgstr "режим для проверки любых строк, начинающихся с #"
+msgstr "# Ц│╖Е╖▀Ц│╬Ц┌▀Х║▄Ц┌▓Ц┐│Ц┌╖Ц┐┐Ц┌╞Ц│≥Ц┌▀Ц│÷Ц┌│Ц│╝Ц┐╒Ц┐╪Ц┐┴"
 
 #: modules/filter/modes/email.amf:5
 msgid "mode for skipping quoted text in email messages"
-msgstr "режим для пропуска цитируемого текста в сообщениях email"
+msgstr "EЦ┐║Ц┐╪Ц┐╚Ф°╛Ф√┤Д╦╜Ц│╝Е╪∙Г■╗Ц│∙Ц┌▄Ц│÷Ц┐├Ц┌╜Ц┌╧Ц┐┬Ц┌▓Ц┌╧Ц┌╜Ц┐┐Ц┐≈Ц│≥Ц┌▀Ц│÷Ц┌│Ц│╝Ц┐╒Ц┐╪Ц┐┴"
 
 #: modules/filter/modes/html.amf:10
 msgid "mode for checking HTML documents"
-msgstr "режим для проверки документов HTML"
+msgstr "HTMLФ√┤Ф⌡╦Ц┌▓Ц┐│Ц┌╖Ц┐┐Ц┌╞Ц│≥Ц┌▀Ц│÷Ц┌│Ц│╝Ц┐╒Ц┐╪Ц┐┴"
 
 #: modules/filter/modes/none.amf:5
 msgid "mode to disable all filters"
-msgstr "режим для отключения всех фильтров"
+msgstr "Ц│≥Ц│╧Ц│╕Ц│╝Ц┐∙Ц┌ёЦ┐╚Ц┌©Ц┌▓Г└║Е┼╧Ц│╚Ц│≥Ц┌▀Ц┐╒Ц┐╪Ц┐┴"
 
 #: modules/filter/modes/nroff.amf:7
 msgid "mode for checking Nroff documents"
-msgstr "режим для проверки документов Nroff"
+msgstr "NroffФ√┤Ф⌡╦Ц┌▓Ц┐│Ц┌╖Ц┐┐Ц┌╞Ц│≥Ц┌▀Ц│÷Ц┌│Ц│╝Ц┐╒Ц┐╪Ц┐┴"
 
 #: modules/filter/modes/perl.amf:8
 msgid "mode for checking Perl comments and string literals"
-msgstr "режим для проверки комментариев и строк Perl"
+msgstr "PerlЦ│╝Ц┌ЁЦ┐║Ц┐ЁЦ┐┬Ц│╗Ф√┤Е╜≈Е┬≈Ц┌▓Ц┐│Ц┌╖Ц┐┐Ц┌╞Ц│≥Ц┌▀Ц│÷Ц┌│Ц│╝Ц┐╒Ц┐╪Ц┐┴"
 
 #: modules/filter/modes/sgml.amf:8
 msgid "mode for checking generic SGML/XML documents"
-msgstr "режим для проверки документов SGML/XML"
+msgstr "Д╦─Х┬╛Ц│╝SGML/XMLФ√┤Ф⌡╦Ц┌▓Ц┐│Ц┌╖Ц┐┐Ц┌╞Ц│≥Ц┌▀Ц│÷Ц┌│Ц│╝Ц┐╒Ц┐╪Ц┐┴"
 
 #: modules/filter/modes/tex.amf:7
 msgid "mode for checking TeX/LaTeX documents"
-msgstr "режим для проверки документов TeX/LaTeX"
+msgstr "Tex/LaTeXФ√┤Ф⌡╦Ц┌▓Ц┐│Ц┌╖Ц┐┐Ц┌╞Ц│≥Ц┌▀Ц│÷Ц┌│Ц│╝Ц┐╒Ц┐╪Ц┐┴"
 
 #: modules/filter/modes/texinfo.amf:7
 msgid "mode for checking Texinfo documents"
-msgstr "режим для проверки документов Texinfo"
+msgstr "TexinfoФ√┤Ф⌡╦Ц┌▓Ц┐│Ц┌╖Ц┐┐Ц┌╞Ц│≥Ц┌▀Ц│÷Ц┌│Ц│╝Ц┐╒Ц┐╪Ц┐┴"
 
 #: modules/filter/modes/url.amf:5
 msgid "mode to skip URL like constructs (default mode)"
-msgstr "режим для пропуска конструкций типа URL (режим по умолчанию)"
+msgstr "URLЦ│╝Ц┌┬Ц│├Ц│╙Ф╖▀И─═Ц┌▓Ц┌╧Ц┌╜Ц┐┐Ц┐≈Ц│≥Ц┌▀Ц│÷Ц┌│Ц│╝Ц┐╒Ц┐╪Ц┐┴О╪┬Ц┐┤Ц┐∙Ц┌╘Ц┐╚Ц┐┬Ц│╝Ц┐╒Ц┐╪Ц┐┴О╪┴"
