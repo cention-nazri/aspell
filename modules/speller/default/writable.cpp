@@ -40,6 +40,48 @@ struct Equal {
   }
 };
 
+void write_n_escape(FStream & o, const char * str) {
+  while (*str != '\0') {
+    if (*str == '\n') o << "\\n";
+    else if (*str == '\r') o << "\\r";
+    else if (*str == '\\') o << "\\\\";
+    else o << *str;
+    ++str;
+  }
+}
+
+static inline char f_getc(FStream & in) {
+  int c = in.get();
+  return c == EOF ? '\0' : (char)c;
+}
+  
+bool getline_n_unescape(FStream & in, String & str, char delem) {
+  str.clear();
+  char c = f_getc(in);
+  if (!c) return false;
+  while (c && c != delem) {
+    if (c == '\\') {
+      c = f_getc(in);
+      if (c == 'n') str.append('\n');
+      else if (c == 'r') str.append('\r');
+      else if (c == '\\') str.append('\\');
+      else {str.append('\\'); continue;}
+    } else {
+      str.append(c);
+    }
+    c = f_getc(in);
+  }
+  return true;
+}
+
+bool getline_n_unescape(FStream & in, DataPair & d, String & buf)
+{
+  if (!getline_n_unescape(in, buf, '\n')) return false;
+  d.value.str  = buf.mstr();
+  d.value.size = buf.size();
+  return true;
+}
+
 typedef Vector<Str> StrVector;
 
 typedef hash_multiset<Str,Hash,Equal> WordLookup;
@@ -508,7 +550,7 @@ PosibErr<void> WritableDict::merge(FStream & in,
     set_file_encoding("", *config);
   
   ConvP conv(iconv);
-  while (getline(in, dp, buf)) {
+  while (getline_n_unescape(in, dp, buf)) {
     if (ver == 10)
       split(dp);
     else
@@ -532,7 +574,8 @@ PosibErr<void> WritableDict::save(FStream & out, ParmString file_name)
     
   ConvP conv(oconv);
   for (;i != e; ++i) {
-    out.printf("%s\n", conv(*i));
+    write_n_escape(out, conv(*i));
+    out << '\n';
   }
   return no_err;
 }
@@ -779,7 +822,10 @@ PosibErr<void> WritableReplDict::save (FStream & out, ParmString file_name)
     StrVector * v = get_vector(*i);
     for (StrVector::iterator j = v->begin(); j != v->end(); ++j)
     {
-      out.printf("%s %s\n", conv1(*i), conv2(*j));
+      write_n_escape(out, conv1(*i));
+      out << ' ';
+      write_n_escape(out, conv2(*j));
+      out << '\n';
     }
   }
   return no_err;
@@ -791,7 +837,6 @@ PosibErr<void> WritableReplDict::merge(FStream & in,
 {
   typedef PosibErr<void> Ret;
   unsigned int version;
-  String word, mis, sound, repl;
   unsigned int num_words, num_repls;
 
   String buf;
@@ -833,16 +878,21 @@ PosibErr<void> WritableReplDict::merge(FStream & in,
 
     ConvP conv1(iconv);
     ConvP conv2(iconv);
-    do {
-      in.getline(mis, ' ');
-      if (!in) break;
-      in.getline(repl, '\n');
-      if (!in) make_err(bad_file_format, file_name);
+    for (;;) {
+      bool res = getline_n_unescape(in, buf, '\n');
+      if (!res) break;
+      char * mis = buf.mstr();
+      char * repl = strchr(mis, ' ');
+      if (!repl) continue; // bad line, ignore
+      *repl = '\0'; // split string
+      ++repl;
+      if (!repl[0]) continue; // empty repl, ignore
       WritableReplDict::add_repl(conv1(mis), conv2(repl));
-    } while (true);
-
+    }
+    
   } else {
-
+    
+    String mis, sound, repl;
     unsigned int h,i,j;
     for (h=0; h != num_soundslikes; ++h) {
       in >> sound >> num_words;
