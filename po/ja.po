@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60.6\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2011-07-04 02:03-0600\n"
+"POT-Creation-Date: 2011-07-04 03:25-0600\n"
 "PO-Revision-Date: 2011-04-11 22:43+0900\n"
 "Last-Translator: Takeshi Hamasaki <hmatrjp@users.sourceforge.jp>\n"
 "Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
@@ -969,11 +969,11 @@ msgstr "  <norm-form>      正規化の形式 none, internal, strict のいず�
 #, c-format
 msgid ""
 "\n"
-"Aspell %s.  Copyright 2000-2004 by Kevin Atkinson.\n"
+"Aspell %s.  Copyright 2000-2011 by Kevin Atkinson.\n"
 "\n"
 msgstr ""
 "\n"
-"Aspell %s.  Copyright 2000-2004 by Kevin Atkinson.\n"
+"Aspell %s.  Copyright 2000-2011 by Kevin Atkinson.\n"
 "\n"
 
 #: prog/aspell.cpp:2888

@@ -1,8 +1,8 @@
-// This file is part of The New Aspell
-// Copyright (C) 2002,2003,2004 by Kevin Atkinson under the GNU LGPL license
+// This file is part of The New Aspell Copyright (C)
+// 2002,2003,2004,2011 by Kevin Atkinson under the GNU LGPL license
 // version 2.0 or 2.1.  You should have received a copy of the LGPL
-// license along with this library if you did not you can find
-// it at http://www.gnu.org/.
+// license along with this library if you did not you can find it at
+// http://www.gnu.org/.
 
 //
 // NOTE: This program currently uses a very ugly mix of the internal
@@ -2852,7 +2852,7 @@ void print_help (bool verbose) {
   load_all_filters(options);
   if (verbose) {
     printf(_("\n"
-             "Aspell %s.  Copyright 2000-2004 by Kevin Atkinson.\n"
+             "Aspell %s.  Copyright 2000-2011 by Kevin Atkinson.\n"
              "\n"), VERSION);
     for (unsigned i = 0; i < help_text_size; ++i)
       puts(gt_(help_text[i]));

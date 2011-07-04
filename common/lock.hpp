@@ -1,6 +1,6 @@
 // File: lock.hpp
 //
-// Copyright (c) 2002,2003 
+// Copyright (c) 2002,2003,2011
 // Kevin Atkinson
 //
 // Permission to use, copy, modify, distribute and sell this software

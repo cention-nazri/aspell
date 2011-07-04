@@ -1,13 +1,13 @@
 # -*- mode: po; coding: utf-8; -*- Slovenian translations for aspell.
 # This file is distributed under the same license as the aspell package.
 # Martin Srebotnjak <miles@filmsi.net>, 2005, 2008.
-# $Id: aspell-0.60.6.sl.po,v 1.4 2008/05/05 07:39:49 srebotnjak Exp $
+# $Id: sl.po,v 1.1.2.5.2.1 2011/07/04 08:52:34 kevina Exp $
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60.6\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2011-07-04 02:03-0600\n"
+"POT-Creation-Date: 2011-07-04 03:25-0600\n"
 "PO-Revision-Date: 2008-05-05 20:57+0100\n"
 "Last-Translator: Martin Srebotnjak <miles@filmsi.net>\n"
 "Language-Team: Slovenian <translation-team-sl@lists.sourceforge.net>\n"
@@ -969,11 +969,11 @@ msgstr ""
 #, c-format
 msgid ""
 "\n"
-"Aspell %s.  Copyright 2000-2004 by Kevin Atkinson.\n"
+"Aspell %s.  Copyright 2000-2011 by Kevin Atkinson.\n"
 "\n"
 msgstr ""
 "\n"
-"Aspell %s.  Copyright 2000-2004 Kevin Atkinson.\n"
+"Aspell %s.  Copyright 2000-2011 Kevin Atkinson.\n"
 "\n"
 
 #: prog/aspell.cpp:2888

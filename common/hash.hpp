@@ -1,4 +1,4 @@
-// Copyright (c) 2001
+// Copyright (c) 2001,2011
 // Kevin Atkinson
 //
 // Permission to use, copy, modify, distribute and sell this software

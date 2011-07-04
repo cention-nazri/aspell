@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60.5\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2011-07-04 02:03-0600\n"
+"POT-Creation-Date: 2011-07-04 03:25-0600\n"
 "PO-Revision-Date: 2007-09-06 21:28+0200\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
@@ -959,11 +959,11 @@ msgstr "  <norm-forma>     normalizační forma, buď none, internal nebo strict
 #, c-format
 msgid ""
 "\n"
-"Aspell %s.  Copyright 2000-2004 by Kevin Atkinson.\n"
+"Aspell %s.  Copyright 2000-2011 by Kevin Atkinson.\n"
 "\n"
 msgstr ""
 "\n"
-"Aspell %s.  Copyright 2000-2004 Kevin Atkinson.\n"
+"Aspell %s.  Copyright 2000-2011 Kevin Atkinson.\n"
 "\n"
 
 #: prog/aspell.cpp:2888
