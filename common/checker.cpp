@@ -156,7 +156,8 @@ namespace aspell {
       else                last = next_seg;
     }
     unsigned tok_width = token.end.offset - token.begin.offset;
-    unsigned seg_width = FilterChar::sum(seg->begin, seg->end);
+    // segments include the '\0' as part of the string, thus use end-1
+    unsigned seg_width = FilterChar::sum(seg->begin, seg->end - 1);
     int diff = seg_width - tok_width;
     Segment * c = seg->next;
     while (c && c->id == seg->id) {
