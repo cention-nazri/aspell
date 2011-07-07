@@ -19,11 +19,8 @@ The latest version can always be found at GNU Aspell's home page at
 * HTML Manuals and "make clean"::  
 * Curses Notes::                
 * Loadable Filter Notes::       
-<<<<<<< readme.texi
-* Upgrading from Aspell 0.60::  
-=======
 * Using 32-Bit Dictionaries on a 64-Bit System::  
->>>>>>> 1.16.2.9
+* Upgrading from Aspell 0.60::  
 * Upgrading from Aspell 0.50::  
 * Upgrading from Aspell .33/Pspell .12::  
 * Upgrading from a Pre-0.50 snapshot::  
@@ -137,20 +134,6 @@ filters as individual modules by using the
 @option{--enable-compile-in-filters} when configuring Aspell with
 @command{./configure}.
 
-<<<<<<< readme.texi
-@node Upgrading from Aspell 0.60
-@appendixsec Upgrading from Aspell 0.60
-
-The dictionary format has NOT changes however the filter interface
-HAS.  For this reasons things are now, by default, installed in
-lib/aspel-0.61 (instead of lib/aspell-0.60) you can just copy the dict
-files....
-
-The Aspell 0.61 should be binary compatible with Aspell 0.60.  A few
-symbols were removed from the library, but they are most likely unused
-as they were generally useless and poorly documented.
-
-=======
 @node Using 32-Bit Dictionaries on a 64-Bit System
 @appendixsec Using 32-Bit Dictionaries on a 64-Bit System
 
@@ -170,7 +153,18 @@ with:
 Error: The file ``@var{some-file}'' is not in the proper format. Incompatible hash function.
 @end quotation
 
->>>>>>> 1.16.2.9
+@node Upgrading from Aspell 0.60
+@appendixsec Upgrading from Aspell 0.60
+
+The dictionary format has NOT changes however the filter interface
+HAS.  For this reasons things are now, by default, installed in
+lib/aspel-0.61 (instead of lib/aspell-0.60) you can just copy the dict
+files....
+
+The Aspell 0.61 should be binary compatible with Aspell 0.60.  A few
+symbols were removed from the library, but they are most likely unused
+as they were generally useless and poorly documented.
+
 @node Upgrading from Aspell 0.50
 @appendixsec Upgrading from Aspell 0.50
 
