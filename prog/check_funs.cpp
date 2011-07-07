@@ -1,5 +1,5 @@
 // This file is part of The New Aspell
-// Copyright (C) 2002 by Kevin Atkinson under the GNU LGPL license
+// Copyright (C) 2002,2011 by Kevin Atkinson under the GNU LGPL license
 // version 2.0 or 2.1.  You should have received a copy of the LGPL
 // license along with this library if you did not you can find
 // it at http://www.gnu.org/.
@@ -66,7 +66,7 @@ extern "C" {int getch();}
 
 #if CURSES_INCLUDE_STANDARD
 
-#include <term.h>
+#include TERM_HEADER
 
 #elif CURSES_INCLUDE_WORKAROUND_1
 
@@ -258,11 +258,11 @@ void begin_check() {
   } else {
     set_term(term);
     if ((tigetstr(const_cast<char *>("cup") /*move*/) != 0 
-	 || (tigetstr(const_cast<char *>("cuf1") /*right*/) != 0 
-	     && tigetstr(const_cast<char *>("cub1") /*left*/)  != 0 
-	     && tigetstr(const_cast<char *>("cuu1") /*up  */)  != 0 
-	     && tigetstr(const_cast<char *>("cud1") /*down*/)  != 0))
-	&& (tigetstr(const_cast<char *>("rev")) != 0))
+         || (tigetstr(const_cast<char *>("cuf1") /*right*/) != 0 
+             && tigetstr(const_cast<char *>("cub1") /*left*/)  != 0 
+             && tigetstr(const_cast<char *>("cuu1") /*up  */)  != 0 
+             && tigetstr(const_cast<char *>("cud1") /*down*/)  != 0))
+        && (tigetstr(const_cast<char *>("rev")) != 0))
     {
       use_curses = true;
     } else {
@@ -327,7 +327,11 @@ void get_line(String & line) {
     wnoutrefresh(choice_w);
     doupdate();
     line.resize(0);
+#ifdef HAVE_WIDE_CURSES
+    wint_t c;
+#else
     int c;
+#endif
     noecho();
     int begin_x;
     {int junk; getyx(choice_w, junk, begin_x);}
@@ -336,49 +340,50 @@ void get_line(String & line) {
     while (true) {
       handle_last_signal();
 #ifdef HAVE_WIDE_CURSES
-      wint_t wi = 0;
-      int res = wget_wch(choice_w, &wi);
-      c = wi;
+      int res = wget_wch(choice_w, &c);
+      if (res == ERR) continue;
 #else
       c = wgetch(choice_w);
-#endif
       if (c == ERR) continue;
+#endif
       if (c == '\r' || c == '\n' || c == KEY_ENTER) 
-	break;
+        break;
       if (c == control('c') || c == KEY_BREAK) {
-	end_x = begin_x;
-	break;
+        end_x = begin_x;
+        break;
       }
       int y,x;
       getyx(choice_w,y,x);
       if ((IS_KEY(LEFT) || c == control('b')) && begin_x < x) {
-	wmove(choice_w, y,x-1);
+        wmove(choice_w, y,x-1);
       } else if ((IS_KEY(RIGHT) || c == control('f')) && x < end_x) {
-	wmove(choice_w, y,x+1);
+        wmove(choice_w, y,x+1);
       } else if (IS_KEY(HOME) || c == control('a')) {
-	wmove(choice_w, y, begin_x);
+        wmove(choice_w, y, begin_x);
       } else if (IS_KEY(END)  || c == control('e')) {
-	wmove(choice_w, y, end_x);
+        wmove(choice_w, y, end_x);
       } else if ((IS_KEY(BACKSPACE) || c == control('h') || c == '\x7F') 
-		 && begin_x < x) {
-	wmove(choice_w, y,x-1);
-	wdelch(choice_w);
-	--end_x;
+                 && begin_x < x) {
+        wmove(choice_w, y,x-1);
+        wdelch(choice_w);
+        --end_x;
       } else if (IS_KEY(DC) || c == control('d')) {
-	wdelch(choice_w);
-	--end_x;
+        wdelch(choice_w);
+        --end_x;
       } else if (IS_KEY(EOL) || c == control('k')) {
-	wclrtoeol(choice_w);
-	end_x = x;
+        wclrtoeol(choice_w);
+        end_x = x;
       } else if (x < max_x && 32 <= c && c != '\x7F' && NOT_KEY /*c < 256*/) {
 #ifdef HAVE_WIDE_CURSES
         wchar_t wc = c;
-        wins_nwstr(choice_w, &wc, 1);
+        cchar_t cc;
+        setcchar(&cc, &wc, 0, 0, NULL);
+        wins_wch(choice_w, &cc);
 #else
-	winsch(choice_w, c);
+        winsch(choice_w, c);
 #endif
-	wmove(choice_w, y, x+1);
-	++end_x;
+        wmove(choice_w, y, x+1);
+        ++end_x;
       }
       wrefresh(choice_w);
     }
@@ -758,13 +763,13 @@ void display_menu() {
       int height,width;
       getmaxyx(menu_w,height,width);
       struct MenuLine {
-	const char * capname;
-	const char * fun_key;
-	const char * control_key;
-	const char * desc;
+        const char * capname;
+        const char * fun_key;
+        const char * control_key;
+        const char * desc;
       };
       static MenuLine menu_items[9] = {
-	{0, 
+        {0, 
          /* TRANSLATORS: This is a literal Key.*/
          N_("Enter"), 
          "", 
@@ -775,42 +780,42 @@ void display_menu() {
          /* TRANSLATORS: This is a literal Key. */
          N_("Control-H"), 
          N_("Delete the previous character")},
-	{"kcub1", 
+        {"kcub1", 
          /* TRANSLATORS: This is a literal Key. */
          N_("Left"), 
          /* TRANSLATORS: This is a literal Key. */
          N_("Control-B"), 
          N_("Move Back one space")},
-	{"kcuf1", 
+        {"kcuf1", 
          /* TRANSLATORS: This is a literal Key. */
          N_("Right"), 
          /* TRANSLATORS: This is a literal Key. */
          N_("Control-F"), 
          N_("Move Forward one space")},
-	{"khome", 
+        {"khome", 
          /* TRANSLATORS: This is a literal Key. */
          N_("Home"), 
          /* TRANSLATORS: This is a literal Key. */
          N_("Control-A"), 
          N_("Move to the beginning of the line")},
-	{"kend" , 
+        {"kend" , 
          /* TRANSLATORS: This is a literal Key. */
          N_("End"), 
          /* TRANSLATORS: This is a literal Key. */
          N_("Control-E"), 
          N_("Move to the end of the line")},
-	{"kdch1", 
+        {"kdch1", 
          /* TRANSLATORS: This is a literal Key. */
          N_("Delete"), 
          /* TRANSLATORS: This is a literal Key. */
          N_("Control-D"), 
          N_("Delete the next character")},
-	{0, 
+        {0, 
          "", 
          /* TRANSLATORS: This is a literal Key. */
          N_("Control-K"), 
          N_("Kill all characters to the EOL")},
-	{0, 
+        {0, 
          "", 
          /* TRANSLATORS: This is a literal Key. */
          N_("Control-C"), 
@@ -822,7 +827,7 @@ void display_menu() {
       int y,x,x0;
       for (int i = 0; i != 9; ++i) {
         wmove(menu_w, i, beg);
-	if (menu_items[i].capname == 0 
+        if (menu_items[i].capname == 0 
             || tigetstr(const_cast<char *>(menu_items[i].capname)) != 0)
         {
           getyx(menu_w, y, x0);

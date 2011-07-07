@@ -1,4 +1,4 @@
-// Copyright (c) 2001
+// Copyright (c) 2001,2011
 // Kevin Atkinson
 //
 // Permission to use, copy, modify, distribute and sell this software
@@ -85,7 +85,7 @@ namespace aspell {
   }
 
   template <class P>
-  std::pair<TYPENAME HashTable<P>::iterator,bool> HashTable<P>::insert(const Value & to_insert)
+  std::pair<typename HashTable<P>::iterator,bool> HashTable<P>::insert(const Value & to_insert)
   {
     bool have;
     iterator put_me_here = find_i(parms_.key(to_insert), have);
@@ -153,7 +153,7 @@ namespace aspell {
   }
 
   template <class P>
-  std::pair<TYPENAME HashTable<P>::iterator, TYPENAME HashTable<P>::iterator>
+  std::pair<typename HashTable<P>::iterator, typename HashTable<P>::iterator>
   HashTable<P>::equal_range_i(const Key & to_find, int & c)
   {
     c = 0;

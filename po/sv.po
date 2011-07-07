@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aspell 0.60.3\n"
 "Report-Msgid-Bugs-To: kevina@gnu.org\n"
-"POT-Creation-Date: 2006-12-03 14:40-0700\n"
+"POT-Creation-Date: 2011-07-06 23:56-0600\n"
 "PO-Revision-Date: 2006-05-23 23:45+0100\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
@@ -23,37 +23,37 @@ msgstr "ett tal mellan 0 och 1"
 msgid "in the form \"<name> <value>\""
 msgstr "i formatet \"<namn> <värde>\""
 
-#: common/config.cpp:77
+#: common/config.cpp:78
 msgid "string"
 msgstr "sträng"
 
-#: common/config.cpp:77
+#: common/config.cpp:78
 msgid "integer"
 msgstr "heltal"
 
-#: common/config.cpp:77
+#: common/config.cpp:78
 msgid "boolean"
 msgstr "boolesk"
 
-#: common/config.cpp:77
+#: common/config.cpp:78
 msgid "list"
 msgstr "lista"
 
 #. TRANSLATORS: "true" and "false" are literal
 #. * values and should not be translated.
-#: common/config.cpp:1026
+#: common/config.cpp:1027
 msgid "either \"true\" or \"false\""
 msgstr "antingen \"true\" eller \"false\""
 
-#: common/config.cpp:1045
+#: common/config.cpp:1046
 msgid "a positive integer"
 msgstr "ett positivt heltal"
 
-#: common/config.cpp:1173
+#: common/config.cpp:1174
 msgid "# default: "
 msgstr "# standard: "
 
-#: common/config.cpp:1236
+#: common/config.cpp:1237
 #, c-format
 msgid ""
 "\n"
@@ -74,292 +74,301 @@ msgstr ""
 "# konfigurerad som följer:\n"
 "\n"
 
-#: common/config.cpp:1334
+#: common/config.cpp:1335
 msgid "ASPELL_CONF env var"
 msgstr "miljövariabeln ASPELL_CONF"
 
 #. TRANSLATORS: The remaing strings in config.cpp should be kept
 #. under 50 characters, begin with a lower case character and not
 #. include any trailing punctuation marks.
-#: common/config.cpp:1411
+#: common/config.cpp:1412
 msgid "main configuration file"
 msgstr "huvudkonfigurationsfil"
 
-#: common/config.cpp:1413
+#: common/config.cpp:1414
 msgid "location of main configuration file"
 msgstr "platsen för huvudkonfigurationsfilen"
 
-#: common/config.cpp:1416
+#: common/config.cpp:1417
 msgid "location of language data files"
 msgstr "platsen för språkdatafiler"
 
-#: common/config.cpp:1418
+#: common/config.cpp:1419
 msgid "create dictionary aliases"
 msgstr "skapa ordboksalias"
 
-#: common/config.cpp:1420
+#: common/config.cpp:1421
 msgid "location of the main word list"
 msgstr "platsen för huvudordlistan"
 
-#: common/config.cpp:1422
+#: common/config.cpp:1423
 msgid "encoding to expect data to be in"
 msgstr "kodning att förvänta att datan är i"
 
-#: common/config.cpp:1426
+#: common/config.cpp:1427
 msgid "add or removes a filter"
 msgstr "lägger till eller tar bort ett filter"
 
-#: common/config.cpp:1428
+#: common/config.cpp:1429
 msgid "path(s) aspell looks for filters"
 msgstr "sökväg(ar) som aspell letar i efter filter"
 
-#: common/config.cpp:1432
+#: common/config.cpp:1433
 msgid "filter mode"
 msgstr "filterläge"
 
-#: common/config.cpp:1434
+#: common/config.cpp:1435
 msgid "extra dictionaries to use"
 msgstr "extra ordböcker att använda"
 
-#: common/config.cpp:1436
+#: common/config.cpp:1437
 msgid "location for personal files"
 msgstr "plats för personliga filer"
 
-#: common/config.cpp:1438
+#: common/config.cpp:1439
 msgid "ignore words <= n chars"
 msgstr "ignorera ord <= n tecken"
 
 # diakritiska tecken?
 #. TRANSLATORS: It is OK if this is longer than 50 chars
-#: common/config.cpp:1441
+#: common/config.cpp:1442
 msgid "ignore accents when checking words -- CURRENTLY IGNORED"
 msgstr "ignorera accenter vid kontroll av ord -- IGNORERAS FÖR NÄRVARANDE"
 
-#: common/config.cpp:1443
+#: common/config.cpp:1444
 msgid "ignore case when checking words"
 msgstr "ignorera skiftläge vid kontroll av ord"
 
-#: common/config.cpp:1445
+#: common/config.cpp:1446
 msgid "ignore commands to store replacement pairs"
 msgstr "ignorera kommandon för att lagra ersättande par"
 
-#: common/config.cpp:1447 common/config.cpp:1514
+#: common/config.cpp:1448 common/config.cpp:1519
 msgid "extra information for the word list"
 msgstr "extra information för ordlistan"
 
-#: common/config.cpp:1449
+#: common/config.cpp:1450
 msgid "keyboard definition to use for typo analysis"
 msgstr "tangentbordsdefinition att använda för felstavningsanalys"
 
-#: common/config.cpp:1451
+#: common/config.cpp:1452
 msgid "language code"
 msgstr "språkkod"
 
-#: common/config.cpp:1453
+#: common/config.cpp:1454
 msgid "deprecated, use lang instead"
 msgstr "föråldrad, använd lang istället"
 
-#: common/config.cpp:1455
+#: common/config.cpp:1456
 msgid "location of local language data files"
 msgstr "platsen för lokala språkdatafiler"
 
-#: common/config.cpp:1457
+#: common/config.cpp:1458
 msgid "base name of the main dictionary to use"
 msgstr "basnamn för huvudordboken att använda"
 
-#: common/config.cpp:1461
+#: common/config.cpp:1462
 msgid "set module name"
 msgstr "ställ in modulnamn"
 
-#: common/config.cpp:1463
+#: common/config.cpp:1464
 msgid "search order for modules"
 msgstr "sökordning för moduler"
 
-#: common/config.cpp:1465
+#: common/config.cpp:1466
 msgid "enable Unicode normalization"
 msgstr ""
 
-#: common/config.cpp:1467
+#: common/config.cpp:1468
 msgid "Unicode normalization required for current lang"
 msgstr ""
 
 #. TRANSLATORS: the values after the ':' are literal
 #. values and should not be translated.
-#: common/config.cpp:1471
+#: common/config.cpp:1472
 msgid "Unicode normalization form: none, nfd, nfc, comp"
 msgstr ""
 
-#: common/config.cpp:1473
+#: common/config.cpp:1474
 msgid "avoid lossy conversions when normalization"
 msgstr ""
 
-#: common/config.cpp:1475
+#: common/config.cpp:1476
 msgid "personal configuration file"
 msgstr "personlig konfigurationsfil"
 
-#: common/config.cpp:1478
+#: common/config.cpp:1479
 msgid "personal dictionary file name"
 msgstr "filnamn för personlig ordbok"
 
-#: common/config.cpp:1481
+#: common/config.cpp:1482
+msgid "don't write size hint to personal dictionary when saving"
+msgstr ""
+
+#: common/config.cpp:1484
+#, fuzzy
+msgid "sort personal dictionary when saving"
+msgstr "filnamn för personlig ordbok"
+
+#: common/config.cpp:1486
 msgid "prefix directory"
 msgstr ""
 
-#: common/config.cpp:1483
+#: common/config.cpp:1488
 msgid "replacements list file name"
 msgstr ""
 
-#: common/config.cpp:1486
+#: common/config.cpp:1491
 msgid "consider run-together words legal"
 msgstr ""
 
-#: common/config.cpp:1488
+#: common/config.cpp:1493
 msgid "maximum number that can be strung together"
 msgstr ""
 
-#: common/config.cpp:1490
+#: common/config.cpp:1495
 msgid "minimal length of interior words"
 msgstr ""
 
-#: common/config.cpp:1492
+#: common/config.cpp:1497
 msgid "save replacement pairs on save all"
 msgstr ""
 
-#: common/config.cpp:1494
+#: common/config.cpp:1499
 msgid "set the prefix based on executable location"
 msgstr ""
 
-#: common/config.cpp:1496
+#: common/config.cpp:1501
 msgid "size of the word list"
 msgstr "storlek på ordlistan"
 
-#: common/config.cpp:1498
+#: common/config.cpp:1503
 msgid "no longer used"
 msgstr "används inte längre"
 
-#: common/config.cpp:1500
+#: common/config.cpp:1505
 msgid "suggestion mode"
 msgstr "förslagsläge"
 
 #. TRANSLATORS: "sug-mode" is a literal value and should not be
 #. translated.
-#: common/config.cpp:1504
+#: common/config.cpp:1509
 msgid "edit distance to use, override sug-mode default"
 msgstr ""
 
-#: common/config.cpp:1506
+#: common/config.cpp:1511
 msgid "use typo analysis, override sug-mode default"
 msgstr ""
 
-#: common/config.cpp:1508
+#: common/config.cpp:1513
 msgid "use replacement tables, override sug-mode default"
 msgstr ""
 
-#: common/config.cpp:1510
+#: common/config.cpp:1515
 msgid "characters to insert when a word is split"
 msgstr ""
 
-#: common/config.cpp:1512
+#: common/config.cpp:1517
 msgid "use personal, replacement & session dictionaries"
 msgstr ""
 
-#: common/config.cpp:1516
+#: common/config.cpp:1521
 msgid "search path for word list information files"
 msgstr ""
 
-#: common/config.cpp:1518
+#: common/config.cpp:1523
 msgid "enable warnings"
 msgstr "aktivera varningar"
 
-#: common/config.cpp:1521
+#: common/config.cpp:1526
 msgid "sub directory for dictionaries"
 msgstr ""
 
-#: common/config.cpp:1523
+#: common/config.cpp:1528
 msgid "sub directory for other data"
 msgstr ""
 
 #. TRANSLATORS: It is OK if this is longer than 50 chars
-#: common/config.cpp:1533
+#: common/config.cpp:1538
 msgid "indicator for affix flags in word lists -- CURRENTLY IGNORED"
 msgstr ""
 
-#: common/config.cpp:1535
+#: common/config.cpp:1540
 msgid "use affix compression when creating dictionaries"
 msgstr ""
 
-#: common/config.cpp:1537
+#: common/config.cpp:1542
 msgid "remove invalid affix flags"
 msgstr ""
 
-#: common/config.cpp:1539
+#: common/config.cpp:1544
 msgid "attempts to clean words so that they are valid"
 msgstr ""
 
-#: common/config.cpp:1541
+#: common/config.cpp:1546
 msgid "compute soundslike on demand rather than storing"
 msgstr ""
 
-#: common/config.cpp:1543
+#: common/config.cpp:1548
 msgid "partially expand affixes for better suggestions"
 msgstr ""
 
-#: common/config.cpp:1545
+#: common/config.cpp:1550
 msgid "skip invalid words"
 msgstr "hoppa över ogiltiga ord"
 
-#: common/config.cpp:1547
+#: common/config.cpp:1552
 msgid "check if affix flags are valid"
 msgstr ""
 
-#: common/config.cpp:1549
+#: common/config.cpp:1554
 msgid "check if words are valid"
 msgstr "kontrollera om orden är giltiga"
 
-#: common/config.cpp:1556
+#: common/config.cpp:1561
 msgid "create a backup file by appending \".bak\""
 msgstr "skapa en säkerhetskopia genom att lägga till \".bak\""
 
-#: common/config.cpp:1558
+#: common/config.cpp:1563
 msgid "use byte offsets instead of character offsets"
 msgstr ""
 
-#: common/config.cpp:1560
+#: common/config.cpp:1565
 msgid "create missing root/affix combinations"
 msgstr ""
 
-#: common/config.cpp:1562
+#: common/config.cpp:1567
 msgid "keymapping for check mode: \"aspell\" or \"ispell\""
 msgstr ""
 
-#: common/config.cpp:1564
+#: common/config.cpp:1569
 msgid "reverse the order of the suggest list"
 msgstr ""
 
-#: common/config.cpp:1566
+#: common/config.cpp:1571
 msgid "suggest possible replacements"
 msgstr ""
 
-#: common/config.cpp:1568
+#: common/config.cpp:1573
 msgid "time load time and suggest time in pipe mode"
 msgstr ""
 
-#: common/convert.cpp:288 common/convert.cpp:387
+#: common/convert.cpp:288 common/convert.cpp:446
 #, c-format
 msgid ""
 "This could also mean that the file \"%s\" could not be opened for reading or "
 "does not exist."
 msgstr ""
 
-#: common/convert.cpp:542 common/convert.cpp:651 common/convert.cpp:697
+#: common/convert.cpp:556 common/convert.cpp:665 common/convert.cpp:711
 #, c-format
 msgid "The Unicode code point U+%04X is unsupported."
 msgstr ""
 
-#: common/convert.cpp:816
+#: common/convert.cpp:830
 #, c-format
-msgid "Invalid UTF-8 sequence at position %d."
-msgstr "Ogiltig UTF-8-sekvens vid position %d."
+msgid "Invalid UTF-8 sequence at position %ld."
+msgstr "Ogiltig UTF-8-sekvens vid position %ld."
 
 #: common/errors.cpp:27
 msgid "Operation Not Supported: %what:1"
@@ -713,274 +722,279 @@ msgstr "gå in i TeX-läge."
 msgid "enter Nroff mode."
 msgstr "gå in i Nroff-läge."
 
-#: prog/aspell.cpp:303
+#: prog/aspell.cpp:311
 #, c-format
 msgid "Invalid Option: %s"
 msgstr "Ogiltig flagga: %s"
 
-#: prog/aspell.cpp:310
+#: prog/aspell.cpp:318
 msgid " does not take any parameters."
 msgstr " tar inga parametrar."
 
-#: prog/aspell.cpp:323 prog/aspell.cpp:383
+#: prog/aspell.cpp:331 prog/aspell.cpp:391
 #, c-format
 msgid "You must specify a parameter for \"%s\"."
 msgstr "Du måste ange en parameter för \"%s\"."
 
-#: prog/aspell.cpp:372
+#: prog/aspell.cpp:380
 msgid "You must specify an action"
 msgstr "Du måste ange en åtgärd"
 
-#: prog/aspell.cpp:380 prog/aspell.cpp:443 prog/aspell.cpp:465
+#: prog/aspell.cpp:388 prog/aspell.cpp:451 prog/aspell.cpp:473
 #, c-format
 msgid "Unknown Action: %s"
 msgstr "Okänd åtgärd: %s"
 
-#: prog/aspell.cpp:386
+#: prog/aspell.cpp:394
 #, c-format
 msgid "Error: You must specify at least %d parameters for \"%s\".\n"
 msgstr "Fel: Du måste ange åtminstone %d parametrar för \"%s\".\n"
 
-#: prog/aspell.cpp:663
+#: prog/aspell.cpp:671
 msgid "Invalid Input"
 msgstr "Felaktig indata"
 
-#: prog/aspell.cpp:709
+#: prog/aspell.cpp:713
 #, c-format
 msgid "WARNING: Unable to enter Nroff mode: %s\n"
 msgstr "VARNING: Kunde inte gå in i Nroff-läge: %s\n"
 
-#: prog/aspell.cpp:722
+#: prog/aspell.cpp:726
 msgid "Time to load word list: "
 msgstr "Tid att läsa in ordlistan: "
 
-#: prog/aspell.cpp:902
+#: prog/aspell.cpp:908
 #, c-format
 msgid "Suggestion Time: %f\n"
 msgstr "Tid för förslag: %f\n"
 
-#: prog/aspell.cpp:954
+#: prog/aspell.cpp:959
 msgid "You must specify a file name."
 msgstr "Du måste ange ett filnamn."
 
-#: prog/aspell.cpp:964
+#: prog/aspell.cpp:962
+msgid "Only one file name may be specified."
+msgstr ""
+
+#: prog/aspell.cpp:972
 #, c-format
 msgid "Could not open the file \"%s\" for reading"
 msgstr "Kunde inte öppna filen \"%s\" för läsning"
 
-#: prog/aspell.cpp:979
-#, c-format
-msgid "Could not open the file \"%s\" for writing. File not saved."
-msgstr "Kunde inte öppna filen \"%s\" för skrivning. Filen är inte sparad."
-
-#: prog/aspell.cpp:992
+#: prog/aspell.cpp:985
 #, c-format
 msgid "Invalid keymapping: %s"
 msgstr "Ogiltig tangentbindning: %s"
 
-#: prog/aspell.cpp:1004
+#: prog/aspell.cpp:1000
+#, c-format
+msgid "Could not open the file \"%s\" for writing. File not saved."
+msgstr "Kunde inte öppna filen \"%s\" för skrivning. Filen är inte sparad."
+
+#: prog/aspell.cpp:1012
 msgid "Ignore"
 msgstr "Ignorera"
 
-#: prog/aspell.cpp:1005
+#: prog/aspell.cpp:1013
 msgid "Ignore all"
 msgstr "Ignorera alla"
 
-#: prog/aspell.cpp:1006
+#: prog/aspell.cpp:1014
 msgid "Replace"
 msgstr "Ersätt"
 
-#: prog/aspell.cpp:1007
+#: prog/aspell.cpp:1015
 msgid "Replace all"
 msgstr "Ersätt alla"
 
-#: prog/aspell.cpp:1008
+#: prog/aspell.cpp:1016
 msgid "Add"
 msgstr "Lägg till"
 
-#: prog/aspell.cpp:1009
+#: prog/aspell.cpp:1017
 msgid "Add Lower"
 msgstr ""
 
-#: prog/aspell.cpp:1010
+#: prog/aspell.cpp:1018
 msgid "Abort"
 msgstr "Avbryt"
 
-#: prog/aspell.cpp:1011
+#: prog/aspell.cpp:1019
 msgid "Exit"
 msgstr "Avsluta"
 
-#: prog/aspell.cpp:1087
+#: prog/aspell.cpp:1095
 msgid "Are you sure you want to abort (y/n)? "
 msgstr "Är du säker på att du vill avbryta? (y/n) "
 
 #. TRANSLATORS: The user may input any of these characters to say "yes".
 #. MUST ONLY CONSIST OF ASCII CHARACTERS.
-#: prog/aspell.cpp:1091
+#: prog/aspell.cpp:1099
 msgid "Yy"
 msgstr "JjYy"
 
-#: prog/aspell.cpp:1110
+#: prog/aspell.cpp:1118
 msgid "With: "
 msgstr "Med:"
 
-#: prog/aspell.cpp:1127
+#: prog/aspell.cpp:1135
 msgid "Sorry that is an invalid choice!"
 msgstr "Tyvärr, det är ett ogiltigt val!"
 
-#: prog/aspell.cpp:1345
+#: prog/aspell.cpp:1353
 msgid "Sorry \"filter\" is currently unimplemented.\n"
 msgstr "Tyvärr, \"filter\" är för närvarande inte implementerat.\n"
 
-#: prog/aspell.cpp:1491
+#: prog/aspell.cpp:1499
 msgid "Can't merge a master word list yet. Sorry."
 msgstr "Kan inte sammanfoga en huvudordlista ännu. Tyvärr."
 
-#: prog/aspell.cpp:1515
+#: prog/aspell.cpp:1523
 msgid "Sorry \"create/merge personal\" is currently unimplemented.\n"
 msgstr ""
 "Tyvärr, \"create/merge personal\" är för närvarande inte implementerat.\n"
 
-#: prog/aspell.cpp:1524 prog/aspell.cpp:1570
+#: prog/aspell.cpp:1532 prog/aspell.cpp:1578
 #, c-format
 msgid "Sorry I won't overwrite \"%s\""
 msgstr "Tyvärr, jag kommer inte att skriva över \"%s\""
 
-#: prog/aspell.cpp:1561
+#: prog/aspell.cpp:1569
 msgid "Sorry \"create/merge repl\" is currently unimplemented.\n"
 msgstr "Tyvärr, \"create/merge repl\" är för närvarande inte implementerat.\n"
 
-#: prog/aspell.cpp:1806
+#: prog/aspell.cpp:1818
 #, c-format
 msgid "\"%s\" is not a valid flag for the \"munch-list\" command."
 msgstr "\"%s\" är inte en giltig flagga för kommandot \"munch-list\"."
 
 #. TRANSLATORS: These should all be formated to fit in 80 column or
 #. less
-#: prog/aspell.cpp:1878
+#: prog/aspell.cpp:1890
 msgid "Usage: aspell [options] <command>"
 msgstr "Användning: aspell [flaggor] <kommando>"
 
-#: prog/aspell.cpp:1879
+#: prog/aspell.cpp:1891
 msgid "<command> is one of:"
 msgstr "<kommando> är en av:"
 
-#: prog/aspell.cpp:1880
+#: prog/aspell.cpp:1892
 msgid "  -?|usage         display a brief usage message"
 msgstr "  -?|usage         visa en kortfattad användningstext"
 
-#: prog/aspell.cpp:1881
+#: prog/aspell.cpp:1893
 msgid "  help             display a detailed help message"
 msgstr "  help             visa ett detaljerat hjälpmeddelande"
 
-#: prog/aspell.cpp:1882
+#: prog/aspell.cpp:1894
 msgid "  -c|check <file>  to check a file"
 msgstr "  -c|check <fil>   för att kontrollera en fil"
 
-#: prog/aspell.cpp:1883
+#: prog/aspell.cpp:1895
 msgid "  -a|pipe          \"ispell -a\" compatibility mode"
 msgstr "  -a|pipe          \"ispell -a\" kompatibilitetsläge"
 
-#: prog/aspell.cpp:1884
+#: prog/aspell.cpp:1896
 msgid "  [dump] config    dumps the current configuration to stdout"
 msgstr ""
 
-#: prog/aspell.cpp:1885
+#: prog/aspell.cpp:1897
 msgid "  config <key>     prints the current value of an option"
 msgstr ""
 
-#: prog/aspell.cpp:1886
+#: prog/aspell.cpp:1898
 msgid "  [dump] dicts | filters | modes"
 msgstr ""
 
-#: prog/aspell.cpp:1887
+#: prog/aspell.cpp:1899
 msgid "    lists available dictionaries / filters / filter modes"
 msgstr "    listar tillgängliga ordböcker / filter / filterlägen"
 
-#: prog/aspell.cpp:1888
+#: prog/aspell.cpp:1900
 msgid "[options] is any of the following:"
 msgstr "[flaggor] är någon av följande:"
 
-#: prog/aspell.cpp:1901
+#: prog/aspell.cpp:1913
 msgid ""
 "  list             produce a list of misspelled words from standard input"
 msgstr ""
 
-#: prog/aspell.cpp:1904
+#: prog/aspell.cpp:1916
 msgid ""
 "  soundslike       returns the sounds like equivalent for each word entered"
 msgstr ""
 
-#: prog/aspell.cpp:1905
+#: prog/aspell.cpp:1917
 msgid "  munch            generate possible root words and affixes"
 msgstr ""
 
-#: prog/aspell.cpp:1906
+#: prog/aspell.cpp:1918
 msgid "  expand [1-4]     expands affix flags"
 msgstr ""
 
-#: prog/aspell.cpp:1907
+#: prog/aspell.cpp:1919
 msgid ""
 "  clean [strict]   cleans a word list so that every line is a valid word"
 msgstr ""
 
-#: prog/aspell.cpp:1909
+#: prog/aspell.cpp:1921
 msgid "  -v|version       prints a version line"
 msgstr "  -v|version       skriver ut en versionsrad"
 
-#: prog/aspell.cpp:1910
-msgid "  munch-list [simple] [single|multi] [keep]\n"
+#: prog/aspell.cpp:1922
+#, fuzzy
+msgid "  munch-list [simple] [single|multi] [keep]"
 msgstr "  munch-list [simple] [single|multi] [keep]\n"
 
-#: prog/aspell.cpp:1911
+#: prog/aspell.cpp:1923
 msgid "    reduce the size of a word list via affix compression"
 msgstr ""
 
-#: prog/aspell.cpp:1912
+#: prog/aspell.cpp:1924
 msgid "  conv <from> <to> [<norm-form>]"
 msgstr "  conv <från> <till> [<norm-form>]"
 
-#: prog/aspell.cpp:1913
+#: prog/aspell.cpp:1925
 msgid "    converts from one encoding to another"
 msgstr "    konverterar från en teckenkodning till en annan"
 
-#: prog/aspell.cpp:1914
+#: prog/aspell.cpp:1926
 msgid "  norm (<norm-map> | <from> <norm-map> <to>) [<norm-form>]"
 msgstr "  norm (<norm-map> | <från> <norm-map> <till>) [<norm-form>]"
 
-#: prog/aspell.cpp:1915
+#: prog/aspell.cpp:1927
 msgid "    perform Unicode normalization"
 msgstr ""
 
-#: prog/aspell.cpp:1918
+#: prog/aspell.cpp:1930
 msgid "  dump|create|merge master|personal|repl [<name>]"
 msgstr "  dump|create|merge master|personal|repl [<namn>]"
 
-#: prog/aspell.cpp:1919
+#: prog/aspell.cpp:1931
 msgid ""
 "    dumps, creates or merges a master, personal, or replacement dictionary."
 msgstr ""
 
 #. TRANSLATORS: "none", "internal" and "strict" are literal values
 #. and should not be translated.
-#: prog/aspell.cpp:1923
+#: prog/aspell.cpp:1935
 msgid ""
 "  <norm-form>      normalization form to use, either none, internal, or "
 "strict"
 msgstr ""
 
-#: prog/aspell.cpp:1933
+#: prog/aspell.cpp:1945
 #, c-format
 msgid ""
 "\n"
-"Aspell %s.  Copyright 2000-2004 by Kevin Atkinson.\n"
+"Aspell %s.  Copyright 2000-2011 by Kevin Atkinson.\n"
 "\n"
 msgstr ""
 "\n"
-"Aspell %s.  Copyright 2000-2004 av Kevin Atkinson.\n"
+"Aspell %s.  Copyright 2000-2011 av Kevin Atkinson.\n"
 "\n"
 
-#: prog/aspell.cpp:1967
+#: prog/aspell.cpp:1979
 msgid ""
 "Available Dictionaries:\n"
 "    Dictionaries can be selected directly via the \"-d\" or \"master\"\n"
@@ -988,14 +1002,14 @@ msgid ""
 "    \"variety\", and \"size\" options.\n"
 msgstr ""
 
-#: prog/aspell.cpp:1988
+#: prog/aspell.cpp:2000
 msgid ""
 "Available Filters (and associated options):\n"
 "    Filters can be added or removed via the \"filter\" option.\n"
 msgstr ""
 
 # Osäker
-#: prog/aspell.cpp:1995
+#: prog/aspell.cpp:2007
 #, c-format
 msgid ""
 "\n"
@@ -1005,7 +1019,7 @@ msgstr ""
 "  %s-filter: %s\n"
 
 #. TRANSLATORS: This should be formated to fit in 80 column or less
-#: prog/aspell.cpp:2012
+#: prog/aspell.cpp:2024
 msgid ""
 "Available Filter Modes:\n"
 "    Filter Modes are reconfigured combinations of filters optimized for\n"
@@ -1019,113 +1033,113 @@ msgid "Error: Stdin not a terminal."
 msgstr "Fel: Standard in är inte en terminal."
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:769
+#: prog/check_funs.cpp:774
 msgid "Enter"
 msgstr "Enter"
 
-#: prog/check_funs.cpp:771
+#: prog/check_funs.cpp:776
 msgid "Accept Changes"
 msgstr "Acceptera ändringar"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:774
+#: prog/check_funs.cpp:779
 msgid "Backspace"
 msgstr "Backspace"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:776
+#: prog/check_funs.cpp:781
 msgid "Control-H"
 msgstr "Control-H"
 
-#: prog/check_funs.cpp:777
+#: prog/check_funs.cpp:782
 msgid "Delete the previous character"
 msgstr "Ta bort föregående tecken"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:780
+#: prog/check_funs.cpp:785
 msgid "Left"
 msgstr "Vänster"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:782
+#: prog/check_funs.cpp:787
 msgid "Control-B"
 msgstr "Control-B"
 
-#: prog/check_funs.cpp:783
+#: prog/check_funs.cpp:788
 msgid "Move Back one space"
 msgstr "Flytta bakåt ett steg"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:786
+#: prog/check_funs.cpp:791
 msgid "Right"
 msgstr "Höger"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:788
+#: prog/check_funs.cpp:793
 msgid "Control-F"
 msgstr "Control-F"
 
-#: prog/check_funs.cpp:789
+#: prog/check_funs.cpp:794
 msgid "Move Forward one space"
 msgstr "Flytta framåt ett steg"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:792
+#: prog/check_funs.cpp:797
 msgid "Home"
 msgstr "Home"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:794
+#: prog/check_funs.cpp:799
 msgid "Control-A"
 msgstr "Control-A"
 
-#: prog/check_funs.cpp:795
+#: prog/check_funs.cpp:800
 msgid "Move to the beginning of the line"
 msgstr "Flytta till början av raden"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:798
+#: prog/check_funs.cpp:803
 msgid "End"
 msgstr "End"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:800
+#: prog/check_funs.cpp:805
 msgid "Control-E"
 msgstr "Control-E"
 
-#: prog/check_funs.cpp:801
+#: prog/check_funs.cpp:806
 msgid "Move to the end of the line"
 msgstr "Flytta till slutet på raden"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:804
+#: prog/check_funs.cpp:809
 msgid "Delete"
 msgstr "Delete"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:806
+#: prog/check_funs.cpp:811
 msgid "Control-D"
 msgstr "Control-D"
 
-#: prog/check_funs.cpp:807
+#: prog/check_funs.cpp:812
 msgid "Delete the next character"
 msgstr "Ta bort nästa tecken"
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:811
+#: prog/check_funs.cpp:816
 msgid "Control-K"
 msgstr "Control-K"
 
-#: prog/check_funs.cpp:812
+#: prog/check_funs.cpp:817
 msgid "Kill all characters to the EOL"
 msgstr ""
 
 #. TRANSLATORS: This is a literal Key.
-#: prog/check_funs.cpp:816
+#: prog/check_funs.cpp:821
 msgid "Control-C"
 msgstr "Control-C"
 
-#: prog/check_funs.cpp:817
+#: prog/check_funs.cpp:822
 msgid "Abort This Operation"
 msgstr "Avbryt denna operation"
 
@@ -1183,41 +1197,45 @@ msgstr ""
 msgid "Warning: Removing inapplicable affix '%s' from word %s.\n"
 msgstr ""
 
-#: modules/speller/default/lang_impl.cpp:678
+#: modules/speller/default/lang_impl.cpp:679
 #, c-format
 msgid "Warning: %s Skipping string.\n"
 msgstr ""
 
-#: modules/speller/default/lang_impl.cpp:736
+#: modules/speller/default/lang_impl.cpp:737
 msgid "The total length is larger than 240 characters."
 msgstr "Den totala längden är större än 240 tecken."
 
-#: modules/speller/default/lang_impl.cpp:740
+#: modules/speller/default/lang_impl.cpp:741
 #, c-format
 msgid "Warning: %s Skipping word.\n"
 msgstr "Varning: %s Hoppar över ord.\n"
 
-#: modules/speller/default/affix.cpp:424
+#: modules/speller/default/affix.cpp:457
 msgid "Possibly incorrect count."
 msgstr ""
 
 #: modules/speller/default/readonly_ws.cpp:364
+msgid "Incompatible hash function."
+msgstr ""
+
+#: modules/speller/default/readonly_ws.cpp:442
 msgid "Wrong endian order."
 msgstr ""
 
-#: modules/speller/default/readonly_ws.cpp:387
+#: modules/speller/default/readonly_ws.cpp:465
 msgid "Wrong soundslike."
 msgstr ""
 
-#: modules/speller/default/readonly_ws.cpp:393
+#: modules/speller/default/readonly_ws.cpp:471
 msgid "Wrong soundslike version."
 msgstr ""
 
-#: modules/speller/default/readonly_ws.cpp:857
+#: modules/speller/default/readonly_ws.cpp:936
 msgid "Affix flags found in word but no affix file given."
 msgstr ""
 
-#: modules/speller/default/readonly_ws.cpp:895
+#: modules/speller/default/readonly_ws.cpp:974
 msgid ""
 "The total word length, with soundslike data, is larger than 240 characters."
 msgstr ""
@@ -1226,7 +1244,7 @@ msgstr ""
 msgid "There must be at least one \"add\" line."
 msgstr ""
 
-#: modules/speller/default/suggest.cpp:1402
+#: modules/speller/default/suggest.cpp:1609
 msgid "one of ultra, fast, normal, slow, or bad-spellers"
 msgstr ""
 
@@ -1234,15 +1252,15 @@ msgstr ""
 msgid "is not one of the allowed types"
 msgstr ""
 
-#: modules/speller/default/speller_impl.cpp:233
+#: modules/speller/default/speller_impl.cpp:241
 msgid "The personal word list is unavailable."
 msgstr ""
 
-#: modules/speller/default/speller_impl.cpp:240
+#: modules/speller/default/speller_impl.cpp:248
 msgid "The session word list is unavailable."
 msgstr ""
 
-#: modules/speller/default/speller_impl.cpp:247
+#: modules/speller/default/speller_impl.cpp:255
 msgid "The main word list is unavailable."
 msgstr ""
 

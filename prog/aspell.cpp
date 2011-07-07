@@ -1,8 +1,8 @@
-// This file is part of The New Aspell
-// Copyright (C) 2002,2003,2004 by Kevin Atkinson under the GNU LGPL license
+// This file is part of The New Aspell Copyright (C)
+// 2002,2003,2004,2011 by Kevin Atkinson under the GNU LGPL license
 // version 2.0 or 2.1.  You should have received a copy of the LGPL
-// license along with this library if you did not you can find
-// it at http://www.gnu.org/.
+// license along with this library if you did not you can find it at
+// http://www.gnu.org/.
 
 //
 // NOTE: This program currently uses a very ugly mix of the internal
@@ -236,6 +236,14 @@ static const PossibleOption * find_option(const char * str) {
          && !strcmp(str, i->name) == 0)
     ++i;
   return i;
+}
+
+static void line_buffer() {
+#if ! defined(WIN32) && ! defined(_WIN32)
+  // set up stdin and stdout to be line buffered
+  assert(setvbuf(stdin, 0, _IOLBF, 0) == 0); 
+  assert(setvbuf(stdout, 0, _IOLBF, 0) == 0);
+#endif
 }
 
 Conv dconv;
@@ -691,11 +699,7 @@ void print_elements(const AspellWordList * wl) {
 
 void pipe() 
 {
-#if ! defined(WIN32) && ! defined(_WIN32)
-  // set up stdin and stdout to be line buffered
-  assert(setvbuf(stdin, 0, _IOLBF, 0) == 0); 
-  assert(setvbuf(stdout, 0, _IOLBF, 0) == 0);
-#endif
+  line_buffer();
 
   bool terse_mode = false;
   bool do_time = options->retrieve_bool("time");
@@ -969,6 +973,19 @@ void check()
     exit(-1);
   }
     
+  if (!options->have("mode"))
+    EXIT_ON_ERR(set_mode_from_extension(options, file_name));
+    
+  String m = options->retrieve("keymapping");
+  if (m == "aspell")
+    mapping.to_aspell();
+  else if (m == "ispell")
+    mapping.to_ispell();
+  else {
+    print_error(_("Invalid keymapping: %s"), m);
+    exit(-1);
+  }
+
 #ifdef USE_FILE_INO
   {
     struct stat st;
@@ -981,19 +998,6 @@ void check()
 #endif
   if (!out) {
     print_error(_("Could not open the file \"%s\" for writing. File not saved."), file_name);
-    exit(-1);
-  }
-
-  if (!options->have("mode"))
-    EXIT_ON_ERR(set_mode_from_extension(options, file_name));
-    
-  String m = options->retrieve("keymapping");
-  if (m == "aspell")
-    mapping.to_aspell();
-  else if (m == "ispell")
-    mapping.to_ispell();
-  else {
-    print_error(_("Invalid keymapping: %s"), m);
     exit(-1);
   }
 
@@ -1357,8 +1361,8 @@ void filter()
 //
 
 void print_ver () {
-  COUT.put("@(#) International Ispell Version 3.1.20 " 
-           "(but really Aspell " VERSION ")\n");
+  printf("@(#) International Ispell Version 3.1.20 " 
+         "(but really Aspell %s)\n", aspell_version_string());
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -1621,6 +1625,7 @@ void repl() {
 void soundslike() {
   AspellLanguage * lang = new_language();
   String word;
+  line_buffer();
   while (CIN.getline(word)) {
     const char * sl = aspell_language_to_soundslike(lang, word.str(), word.size());
     printf("%s\t%s\n", word.str(), sl);
@@ -1643,6 +1648,7 @@ void munch()
 {
   AspellLanguage * lang = new_language();
   String word;
+  line_buffer();
   while (CIN.getline(word)) {
     COUT << word;
     aspell_language_munch(lang, word.str(), word.size(), put_word_munch, 0);
@@ -1682,6 +1688,7 @@ void expand()
     limit = atoi(args[1].c_str());
   AspellLanguage * lang = new_language();
   String word;
+  line_buffer();
   while (CIN.getline(word)) {
     if (level <= 2) {
       if (level == 2) COUT << word << ' ';
@@ -1742,6 +1749,7 @@ void combine()
   String word;
   String base;
   String affs;
+  line_buffer();
   while (CIN.getline(word)) {
     word = iconv(word);
 
@@ -1935,8 +1943,8 @@ void print_help (bool verbose) {
   load_all_filters(options);
   if (verbose) {
     printf(_("\n"
-             "Aspell %s.  Copyright 2000-2004 by Kevin Atkinson.\n"
-             "\n"), VERSION);
+             "Aspell %s.  Copyright 2000-2011 by Kevin Atkinson.\n"
+             "\n"), aspell_version_string());
     for (unsigned i = 0; i < help_text_size; ++i)
       puts(gt_(help_text[i]));
   } else {

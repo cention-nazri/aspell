@@ -163,10 +163,16 @@ while ($filter = shift @filterhashes) {
   printf STATICFILTERS "\n  };\n";
   printf STATICFILTERS "\n  const KeyInfo * ".${$filter}{"NAME"}."_options_begin = ".
                                               ${$filter}{"NAME"}."_options;\n";
-  printf STATICFILTERS "\n  const KeyInfo * ".${$filter}{"NAME"}."_options_end = ".
-                                              ${$filter}{"NAME"}."_options+sizeof(".
-                                              ${$filter}{"NAME"}."_options)/".
-                                              "sizeof(KeyInfo);\n";
+  # If structure is empty, set options_end to same as options_begin.
+  if ($firstopt) {
+    printf STATICFILTERS "\n  const KeyInfo * ".${$filter}{"NAME"}."_options_end = ".
+                                                ${$filter}{"NAME"}."_options;\n";
+  } else {
+    printf STATICFILTERS "\n  const KeyInfo * ".${$filter}{"NAME"}."_options_end = ".
+                                                ${$filter}{"NAME"}."_options+sizeof(".
+                                                ${$filter}{"NAME"}."_options)/".
+                                                "sizeof(KeyInfo);\n";
+  }
 }
 
 #finally create filter modules list.

@@ -19,7 +19,11 @@ The latest version can always be found at GNU Aspell's home page at
 * HTML Manuals and "make clean"::  
 * Curses Notes::                
 * Loadable Filter Notes::       
+<<<<<<< readme.texi
 * Upgrading from Aspell 0.60::  
+=======
+* Using 32-Bit Dictionaries on a 64-Bit System::  
+>>>>>>> 1.16.2.9
 * Upgrading from Aspell 0.50::  
 * Upgrading from Aspell .33/Pspell .12::  
 * Upgrading from a Pre-0.50 snapshot::  
@@ -83,7 +87,7 @@ If you are having problems compiling @file{check_funs.cpp} then the
 most likely reason is due to incompatibilities with the curses
 implementation on your system.  You should first try disabling the
 ``wide'' curses library by with the @option{--disable-wide-curses}
-configure option..  By doing so you will lose support for properly
+configure option.  By doing so you will lose support for properly
 displaying UTF-8 characters but you may still be able to get the full
 screen interface.  If this fails than you can disable curses support
 altogether with the @option{--disable-curses} configure option.  By
@@ -133,6 +137,7 @@ filters as individual modules by using the
 @option{--enable-compile-in-filters} when configuring Aspell with
 @command{./configure}.
 
+<<<<<<< readme.texi
 @node Upgrading from Aspell 0.60
 @appendixsec Upgrading from Aspell 0.60
 
@@ -145,6 +150,27 @@ The Aspell 0.61 should be binary compatible with Aspell 0.60.  A few
 symbols were removed from the library, but they are most likely unused
 as they were generally useless and poorly documented.
 
+=======
+@node Using 32-Bit Dictionaries on a 64-Bit System
+@appendixsec Using 32-Bit Dictionaries on a 64-Bit System
+
+Due to an oversight, Aspell compiled dictionaries not only depend on
+the endian order, they also depend on the the size of the
+@code{size_t} type, which is generally different on 32 and
+64-bit systems.  The @code{size_t} type is used in the hash function
+of the compiled dictionaries.  To force the hash function to use a
+32-bit integer instead, use the @option{--enable-32-bit-hash-fun}
+configure option.  This option will allow you to use dictionaries
+compiled on a 32-bit machine on a 64-bit one as long as the endian
+order is the same.  Of course, dictionaries compiled on a 64-bit
+machine without this option enabled will no longer be usable.  If
+Aspell detects that an incompatible hash function is used, it will fail
+with:
+@quotation
+Error: The file ``@var{some-file}'' is not in the proper format. Incompatible hash function.
+@end quotation
+
+>>>>>>> 1.16.2.9
 @node Upgrading from Aspell 0.50
 @appendixsec Upgrading from Aspell 0.50
 
@@ -299,7 +325,7 @@ easiest way is to use a Cygwin compiler but instruct it to build a
 native binary rather than a Cygwin one.  To do this configure with:
 
 @example
-./configure CFLAGS='-O2 -mno-cygwin' CXXFLAGS='-O2 -mno-cygswin'
+./configure CFLAGS='-O2 -mno-cygwin' CXXFLAGS='-O2 -mno-cygwin'
 @end example
 
 You may also want to add the option
@@ -307,7 +333,7 @@ You may also want to add the option
 directories.  @xref{Win32-Directories}.  In this case configure with:
 
 @smallexample
-./configure CFLAGS='-O2 -mno-cygwin' CXXFLAGS='-O2 -mno-cygswin' --enable-win32-relocatable
+./configure CFLAGS='-O2 -mno-cygwin' CXXFLAGS='-O2 -mno-cygwin' --enable-win32-relocatable
 @end smallexample
 
 It should also be possible to build Aspell using the MSYS environment.

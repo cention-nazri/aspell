@@ -32,7 +32,7 @@ namespace aspell { namespace sp {
   }
   
   template<class Parms>
-  std::pair<TYPENAME VectorHashTable<Parms>::iterator, bool> 
+  std::pair<TYPENAME VectorHashTable<Parms>::iterator, bool>
   VectorHashTable<Parms>::insert(const value_type & d) 
   {
     MutableFindIterator j(this, parms_.key(d));

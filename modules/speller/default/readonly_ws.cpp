@@ -1,5 +1,5 @@
 // This file is part of The New Aspell
-// Copyright (C) 2000-2001 by Kevin Atkinson under the GNU LGPL
+// Copyright (C) 2000-2001,2011 by Kevin Atkinson under the GNU LGPL
 // license version 2.0 or 2.1.  You should have received a copy of the
 // LGPL license along with this library if you did not you can find it
 // at http://www.gnu.org/.
@@ -15,12 +15,12 @@
 // data block laid out as follows:
 //
 // Words:
-//   (<8 bit frequency><8 bit: flags><8 bit: offset>
+//   (<8 bit frequency><8 bit: flags><8 bit: offset to next word>
 //      <8 bit: word size><word><null>
 //      [<affix info><null>][<category info><null>])+
 // Words with soundslike:
 //   (<8 bit: offset to next item><8 bit: soundslike size><soundslike>
-//      <words>)+
+//      <words with that soundlike>)+
 // Flags are mapped as follows:
 //   bits 0-3: word info
 //   bit    4: duplicate flag
@@ -60,6 +60,12 @@ typedef unsigned int   u32int;
 static const u32int u32int_max = (u32int)-1;
 typedef unsigned short u16int;
 typedef unsigned char byte;
+
+#ifdef USE_32_BIT_HASH_FUN
+typedef u32int hash_int_t;
+#else
+typedef size_t hash_int_t;
+#endif
 
 #ifdef HAVE_MMAP 
 
@@ -203,7 +209,7 @@ namespace {
       typedef const char *              Key;
       static const bool is_multi = false;
       Key key(Value v) const {return block_begin + v;}
-      InsensitiveHash  hash;
+      InsensitiveHash<hash_int_t> hash;
       InsensitiveEqual equal;
       bool is_nonexistent(Value v) const {return v == u32int_max;}
       void make_nonexistent(const Value & v) const {abort();}
@@ -249,6 +255,8 @@ namespace {
     }
     
     PosibErr<void> load(ParmString, Config &, DictList *, SpellerImpl *);
+    PosibErr<void> check_hash_fun() const;
+    void low_level_dump() const;
 
     bool lookup(ParmString word, const SensitiveCompare *, WordEntry &) const;
 
@@ -258,6 +266,7 @@ namespace {
     bool soundslike_lookup(ParmString, WordEntry &) const;
     
     SoundslikeEnumeration * soundslike_elements() const;
+
   };
 
   static inline void convert(const char * w, WordEntry & o) {
@@ -293,6 +302,75 @@ namespace {
 
   WordEntryEnumeration * ReadOnlyDict::detailed_elements() const {
     return new Elements(first_word);
+  }
+
+  void ReadOnlyDict::low_level_dump() const {
+    bool next_dup = false;
+    const char * w = first_word;
+    for (;;) {
+      if (get_offset(w) == 0) w += 2; // FIXME: This needs to be 3
+                                      //        when freq info is used
+      if (get_offset(w) == 0) break;
+      
+      const char * aff = get_affix(w);
+      byte flags = get_flags(w);
+      byte word_info = flags & WORD_INFO_MASK;
+      byte offset = get_offset(w);
+      int size = get_word_size(w);
+      if (next_dup) printf("\\");
+      printf("%s", w);
+      if (flags & HAVE_AFFIX_FLAG) printf("/%s", aff);
+      if (word_info) printf(" [WI: %d]", word_info);
+      //if (flags & DUPLICATE_FLAG) printf(" [NEXT DUP]");
+      const char * p = w;
+      WordLookup::const_iterator i = word_lookup.find(w);
+      if (!next_dup) {
+        if (i == word_lookup.end())
+          printf(" <BAD HASH>");
+        else if (word_block + *i != w) {
+          printf(" <BAD HASH, got %s>", word_block + *i);
+        }
+        else 
+          printf(" <hash ok>");
+      }
+      printf("\n");
+      String buf;
+      if (flags & DUPLICATE_FLAG) next_dup = true;
+      else next_dup = false;
+      w = get_next(w);
+    }
+  }
+  
+  PosibErr<void> ReadOnlyDict::check_hash_fun() const {
+    const char * w = first_word;
+    for (;;) {
+      if (get_offset(w) == 0) w += 2; // FIXME: This needs to be 3
+                                      //        when freq info is used
+      if (get_offset(w) == 0) break;
+      if (get_word_size(w) >= 12) {
+        const char * p = w;
+        int clean_size = 0;
+        for (;;) {
+          if (!*p) goto next; // reached end before clean_size was at
+                              // least 12, thus skip
+          if (lang()->to_clean(*p)) ++clean_size;
+          if (clean_size >= 12) goto clean_size_ok;
+          ++p;
+        }
+      clean_size_ok:
+        WordLookup::const_iterator i = word_lookup.find(w);
+        if (i == word_lookup.end() || word_block + *i != w)
+          return make_err(bad_file_format, file_name(), 
+                          _("Incompatible hash function."));
+        else
+          return no_err;
+      }
+    next:
+      while (get_flags(w) & DUPLICATE_FLAG)
+        w = get_next(w);
+      w = get_next(w);
+    }
+    return no_err;
   }
 
   ReadOnlyDict::Size ReadOnlyDict::size() const {
@@ -430,6 +508,9 @@ namespace {
     word_lookup.vector().set(begin, begin + data_head.word_buckets);
     word_lookup.set_size(data_head.word_count);
     
+    //low_level_dump();
+    RET_ON_ERR(check_hash_fun());
+    
     return no_err;
   }
 
@@ -469,7 +550,6 @@ namespace {
     const char * w = word_block + *i;
     for (;;) {
       if ((*c)(word, w)) {
-        o.what = WordEntry::Word;
         convert(w,o);
         prep_next(&o, w, c, word);
         return true;
@@ -581,7 +661,6 @@ namespace {
     data.word_size = get_word_size(tmp);
     if (invisible_soundslike) {
       convert(tmp, data);
-      data.what = WordEntry::Word;
     } 
     data.intr[0] = (void *)tmp;
     
@@ -728,12 +807,12 @@ namespace {
   struct WordLookupParms {
     const char * block_begin;
     WordLookupParms() {}
-    typedef Vector<u32int>      Vec;
+    typedef aspell::Vector<u32int>      Vec;
     typedef u32int              Value;
     typedef const char *        Key;
     static const bool is_multi = false;
     Key key(Value v) const {return block_begin + v;}
-    InsensitiveHash  hash;
+    InsensitiveHash<hash_int_t> hash;
     InsensitiveEqual equal;
     bool is_nonexistent(Value v) const {return v == u32int_max;}
     void make_nonexistent(Value & v) const {v = u32int_max;}

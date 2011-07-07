@@ -158,6 +158,16 @@ namespace aspell {
     void del();
   };
 
+  template <>
+  class PosibErr<void> : public PosibErrBase
+  {
+  public:
+    PosibErr(const PosibErrBase & other) 
+      : PosibErrBase(other) {}
+
+    PosibErr() {}
+  };
+
   template <typename Ret>
   class PosibErr : public PosibErrBase
   {
@@ -184,16 +194,6 @@ namespace aspell {
     operator const Ret & () const {posib_handle_err(); return data;}
 
     Ret data;
-  };
-
-  template <>
-  class PosibErr<void> : public PosibErrBase
-  {
-  public:
-    PosibErr(const PosibErrBase & other) 
-      : PosibErrBase(other) {}
-
-    PosibErr() {}
   };
 
 //

@@ -78,6 +78,7 @@ namespace aspell {
       if (storage_end_ - begin_ >= (int)s + 1) return;
       reserve_i(s);
     }
+    void ensure_data() {reserve_i();}
 
     char * begin() {return begin_;}
     char * end() {return end_;}

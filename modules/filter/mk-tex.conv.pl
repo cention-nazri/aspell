@@ -35,7 +35,7 @@ for (my $i = 0; $i != @table; $i += 2)
  0x030C => ['\\\\v', '{}', 'a'],
 );
 
-open F, "/home/kevina/devel/aspell-lang/decomp.txt";
+open F, "/home/kevina/aspell-lang/decomp.txt";
 while (<F>) {
   next unless /^(....) = (....) (....)$/;
   my ($a, $b, $c) = (hex($1), hex($2), hex($3));
@@ -50,7 +50,7 @@ while (<F>) {
   push @{$table{$a}}, "$C\{$B\}", "$C\\ $B";
 }
 
-open F, "/home/kevina/devel/aspell-lang/decomp.txt";
+open F, "/home/kevina/aspell-lang/decomp.txt";
 while (<F>) {
   next unless /^(....) = (....) (....)$/;
   my ($a, $b, $c) = (hex($1), hex($2), hex($3));

@@ -12,7 +12,7 @@ void Cacheable::copy() const
 {
   //CERR << "COPY\n";
   LOCK(&cache->lock);
-  refcount++;
+  copy_no_lock();
 }
 
 void GlobalCacheBase::del(Cacheable * n)

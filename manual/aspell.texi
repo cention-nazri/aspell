@@ -14,7 +14,7 @@ This is the user's manual for Aspell
 GNU Aspell is a spell checker designed to eventually replace Ispell.
 It can either be used as a library or as an independent spell checker.
 
-Copyright @copyright{} 2000--2006 Kevin Atkinson.
+Copyright @copyright{} 2000--2011 Kevin Atkinson.
 
 @quotation
 Permission is granted to copy, distribute and/or modify this document
@@ -454,7 +454,7 @@ identical to the @command{ispell} command when not used in ``pipe''
 mode.  If an application expects the @command{ispell} command, then
 the Ispell compatibility script should be used instead.
 
-@subsubsection Functionally of the Ispell Compatibility Script
+@subsubsection Functionality of the Ispell Compatibility Script
 
 The Ispell compatibility script provides the following Ispell
 functionally.
@@ -467,7 +467,7 @@ The ability to check a file when called without any mode parameters.
 The pipe or -a mode.
 
 @item 
-The list of -l mode.
+The list or -l mode.
 
 @item
 The version or -v mode.  A single line is returned which, while not
@@ -1876,10 +1876,15 @@ the options @option{--dont-skip-invalid-words} and
 @option{--dont-clean-affixes} can be specified to turn the warnings into
 errors.
 
-The compiled dictionary file are endian order dependent.  When a
-dictionary is loaded the endian order is checked.  Please do not
-distribute the compiled dictionaries unless you are only distributing
-them for a particular platform such as you would a binary.
+The compiled dictionaries are platform dependent.  They depend on the
+endian order and (unless compiled with the
+@option{--enable-32-bit-hash-fun} option) the size of the
+@code{size_t} type as it used in the hash function; this 
+type is generally different on 32 and 64-bit systems.  When a
+dictionary is loaded the endian order and compatibility of the hash
+function is checked.  Please do not distribute the compiled
+dictionaries unless you are only distributing them for a particular
+platform such as you would a binary.
 
 Aspell is now also able to use special @code{multi} dictionaries.  for
 more information @ref{How Aspell Selects an Appropriate Dictionary}.
@@ -2359,6 +2364,10 @@ the number of near misses, the number of characters between the
 beginning of the line and the beginning of the misspelled word, a
 colon, another space, and a list of the suggestions separated by
 commas and spaces.
+
+If you set the option @command{run-together} and Aspell thinks this word
+is a combination of two words in the dictionary, then it prints a single
+@samp{-} in one line.
 
 Finally, if the word does not appear in the dictionary, and there are
 no suggestions, then the line contains a @samp{#}, a space, the
@@ -3682,7 +3691,7 @@ for Aspell to work with Hangul it needs to be form A.  Unfortunately the
 existing Normalization code in Aspell will not be able to adequately
 deal with converting Hangul from form D and C to form A and back again.
 However, once this code is written, Aspell should be able to spell check
-Hangul with out any problem.
+Hangul without any problem.
 
 @node Multiple Scripts
 @appendixsec Languages Written in Multiple Scripts
@@ -4324,10 +4333,68 @@ Support for two-fold suffix stripping.
 Other minor enhancements and bug fixes.
 @end itemize
 
+@heading Changes from 0.60.6.1 to 0.60.7 (??, 2011)
+@itemize @bullet
+@item
+Add partial support for recognizing the Unicode apostrophe (') in
+words.  In particular Aspell will accept the Unicode apostrophe when
+the language uses an ISO Latin charset that doesn't already have a
+Unicode apostrophe.  For now, Aspell will still use the ASCII version
+in suggestions.
+@item
+Detect when a dictionary compiled on a 32-bit machine is used on a
+64-bit one (and vise versa), as due to an oversight, compiled
+dictionaries depend on more than the endianness.  Also added a compile
+time option to remove this dependency, but at the cost of breaking
+compatibility with already compiled dictionaries on 64-bit systems.
+@item
+Fix a bug which caused Aspell to crash when passing in a null string
+to almost any of the C API functions.  This should not happen if the
+size is also zero as the pointer should never be derefrenced.
+@item
+In addition to outputting a warning when building with NDEBUG defined,
+also include NDEBUG in the version string.
+@item
+Other minor updates and bug fixes.
+@end itemize
+
+@heading Changes from 0.60.6 to 0.60.6.1 (July 4, 2011)
+@itemize @bullet
+@item
+Update to Automake 1.10.3
+@item
+Fix a bug which caused a race condition (leading to a likely crash)
+when two threads try to update the dictionary cache at the same time.
+@item
+Make it very clear that compiling Aspell with NDEBUG is a bad idea
+(see @uref{http://aspell.net/ndebug.html}) by outputting a
+warning when building with NDEBUG defined.
+@item
+Numerous other minor updates and bug fixes.
+@end itemize
+
+@heading Changes from 0.60.5 to 0.60.6 (April 16, 2007)
+@itemize @bullet
+@item
+Compile fixes for Gcc 4.3.
+@item
+Updated to Libtool 2.2.2 and Automake 1.10.1
+@item
+Minor tweak to suggestion code which improved suggestion results in
+certain cases.
+@item
+Always line buffer stdout and stderr in the Aspell utility when there is 
+the potential for it to be used interactively through a pipe.
+@item
+Removed debug output in @command{aspell munch-list}.
+@item
+Other minor updates and bug fixes.
+@end itemize
+
 @heading Changes from 0.60.4 to 0.60.5 (December 18, 2006)
 @itemize @bullet
 @item
-Compile fix for gcc 4.1
+Compile fix for Gcc 4.1
 @item
 Updated to Gettext 0.16.1, Libtool 1.5.22, Automake 1.10, Autoconf 2.61
 @item

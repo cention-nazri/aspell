@@ -1,5 +1,5 @@
 // This file is part of The New Aspell
-// Copyright (C) 2000-2001 by Kevin Atkinson under the GNU LGPL
+// Copyright (C) 2000-2001,2011 by Kevin Atkinson under the GNU LGPL
 // license version 2.0 or 2.1.  You should have received a copy of the
 // LGPL license along with this library if you did not you can find it
 // at http://www.gnu.org/.
@@ -83,20 +83,28 @@ namespace aspell { namespace sp {
     String cor1, cor2;
     String buf;
     bool correct = false;
-    if (pos = cor.find(' '), pos == String::npos) {
+    pos = cor.find(' '); 
+    if (pos == String::npos) {
       cor1 = cor;
       correct = check_affix(cor, w1, 0);
     } else {
       cor1 = (String)cor.substr(0,pos);
-      cor2 = (String)cor.substr(pos+1);
+      ++pos;
+      while (pos < cor.size() && cor[pos] == ' ') ++pos;
+      cor2 = (String)cor.substr(pos);
       correct = check_affix(cor1, w1, 0) && check_affix(cor2, w2, 0);
     }
     if (correct) {
       String cor_orignal_casing(cor1);
       if (!cor2.empty()) {
-        cor_orignal_casing += cor[pos];
+        cor_orignal_casing += cor[pos-1];
         cor_orignal_casing += cor2;
       }
+      // Don't try to add the empty string, causes all kinds of
+      // problems.  Can happen if the original replacement nothing but
+      // whitespace.
+      if (cor_orignal_casing.empty()) 
+        return no_err;
       if (first_word == 0 || cor != first_word) {
         lang().to_lower(buf, mis.str());
         repl_->add_repl(buf, cor_orignal_casing);

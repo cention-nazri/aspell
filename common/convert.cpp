@@ -331,8 +331,9 @@ namespace aspell {
     bool have_sub_table; // if a sub_table exits get_sub_table MUST be called
     PosibErr<void> init() // sets up the table for input and sets size
     {
+      const char FUNC[] = "TableFromIStream::init";
       const char * p = get_nb_line(in, buf);
-      assert(*p == 'N');
+      SANITY(*p == 'N');
       ++p;
       size = strtoul(p, (char **)&p, 10);
       return no_err;
@@ -340,15 +341,16 @@ namespace aspell {
     PosibErr<bool> get_next() // fills in next entry pointed to by
                               // cur and sets have_sub_table
     {
+      const char FUNC[] = "TableFromIStream::get_next";
       char * p = get_nb_line(in, buf);
       if (*p == '.') return false;
       Uni32 f = strtoul(p, (char **)&p, 16);
       cur->from = static_cast<typename T::From>(f);
-      assert(f == cur->from);
+      SANITY(f == cur->from);
       ++p;
-      assert(*p == '>');
+      SANITY(*p == '>');
       ++p;
-      assert(*p == ' ');
+      SANITY(*p == ' ');
       ++p;
       {
         typename T::AppendTo append_to(cur, os);
@@ -373,6 +375,63 @@ namespace aspell {
     void get_sub_table(TableFromIStream & d) {}
   };
 
+  static PosibErr<void> init_norm_tables(FStream & in, NormTables * d) 
+  {
+    const char FUNC[] = "init_norm_tables";
+    String l;
+    get_nb_line(in, l);
+    remove_comments(l);
+    
+    SANITY (l == "INTERNAL");
+    get_nb_line(in, l);
+    remove_comments(l);
+    SANITY (l == "/");
+    { 
+      TableFromIStream<FromUniNormEntry> tin(in, l);
+      CREATE_NORM_TABLE(FromUniNormEntry, tin, d->internal);
+    }
+    get_nb_line(in, l);
+    remove_comments(l);
+    SANITY (l == "STRICT");
+    char * p = get_nb_line(in, l);
+    remove_comments(l);
+    if (l == "/") {
+      TableFromIStream<FromUniNormEntry> tin(in, l);
+      CREATE_NORM_TABLE(FromUniNormEntry, tin, d->strict_d);
+      d->strict = d->strict_d;
+    } else {
+      SANITY(*p == '=');
+      ++p; ++p;
+      SANITY(strcmp(p, "INTERNAL") == 0);
+      d->strict = d->internal;
+    }
+    while (get_nb_line(in, l)) {
+      remove_comments(l);
+      d->to_uni.push_back(NormTables::ToUniTable());
+      NormTables::ToUniTable & e = d->to_uni.back();
+      e.name.resize(l.size());
+      for (unsigned i = 0; i != l.size(); ++i)
+        e.name[i] = asc_tolower(l[i]);
+      char * p = get_nb_line(in, l);
+      remove_comments(l);
+      if (l == "/") {
+        TableFromIStream<ToUniNormEntry> tin(in, l);
+        CREATE_NORM_TABLE(ToUniNormEntry, tin, e.data);
+        e.ptr = e.data;
+      } else {
+        SANITY(*p == '=');
+        ++p; ++p;
+        for (char * q = p; *q; ++q) *q = asc_tolower(*q);
+        Vector<NormTables::ToUniTable>::iterator i = d->to_uni.begin();
+        while (i->name != p && i != d->to_uni.end()) ++i;
+        SANITY(i != d->to_uni.end());
+        e.ptr = i->ptr;
+        get_nb_line(in, l);
+      }
+    }  
+    return no_err;
+  }
+
   PosibErr<NormTables *> NormTables::get_new(const String & encoding, 
                                              const Config * config)
   {
@@ -391,56 +450,11 @@ namespace aspell {
 
     NormTables * d = new NormTables;
     d->key = encoding;
-    String l;
-    get_nb_line(in, l);
-    remove_comments(l);
-    
-    assert (l == "INTERNAL");
-    get_nb_line(in, l);
-    remove_comments(l);
-    assert (l == "/");
-    { 
-      TableFromIStream<FromUniNormEntry> tin(in, l);
-      d->internal = create_norm_table<FromUniNormEntry>(tin);
+    err = init_norm_tables(in, d);
+    if (err.has_err()) {
+      return make_err(bad_file_format, file_name, err.get_err()->mesg);
     }
-    get_nb_line(in, l);
-    remove_comments(l);
-    assert (l == "STRICT");
-    char * p = get_nb_line(in, l);
-    remove_comments(l);
-    if (l == "/") {
-      TableFromIStream<FromUniNormEntry> tin(in, l);
-      d->strict_d = create_norm_table<FromUniNormEntry>(tin);
-      d->strict = d->strict_d;
-    } else {
-      assert(*p == '=');
-      ++p; ++p;
-      assert(strcmp(p, "INTERNAL") == 0);
-      d->strict = d->internal;
-    }
-    while (get_nb_line(in, l)) {
-      remove_comments(l);
-      d->to_uni.push_back(ToUniTable());
-      ToUniTable & e = d->to_uni.back();
-      e.name.resize(l.size());
-      for (unsigned i = 0; i != l.size(); ++i)
-        e.name[i] = asc_tolower(l[i]);
-      char * p = get_nb_line(in, l);
-      remove_comments(l);
-      if (l == "/") {
-        TableFromIStream<ToUniNormEntry> tin(in, l);
-        e.ptr = e.data = create_norm_table<ToUniNormEntry>(tin);
-      } else {
-        assert(*p == '=');
-        ++p; ++p;
-        for (char * q = p; *q; ++q) *q = asc_tolower(*q);
-        Vector<ToUniTable>::iterator i = d->to_uni.begin();
-        while (i->name != p && i != d->to_uni.end()) ++i;
-        assert(i != d->to_uni.end());
-        e.ptr = i->ptr;
-        get_nb_line(in, l);
-      }
-    }  
+
     return d;
   }
 
@@ -801,7 +815,7 @@ namespace aspell {
     ToUniLookup lookup;
     void decode(const char * in, int size, FilterCharVector & out) const {
       const char * stop = in + size; // this is OK even if size == -1
-      while (*in && in != stop) {
+      while (in != stop && *in) {
         out.append(from_utf8(in, stop));
       }
     }
@@ -809,11 +823,11 @@ namespace aspell {
                              FilterCharVector & out, ParmStr orig) const {
       const char * begin = in;
       const char * stop = in + size; // this is OK even if size == -1
-      while (*in && in != stop) {
+      while (in != stop && *in) {
         FilterChar c = from_utf8(in, stop, (Uni32)-1);
         if (c == (Uni32)-1) {
           char m[70];
-          snprintf(m, 70, _("Invalid UTF-8 sequence at position %d."), in - begin);
+          snprintf(m, 70, _("Invalid UTF-8 sequence at position %ld."), (long)(in - begin));
           return make_err(invalid_string, orig, m);
         }
         out.append(c);
@@ -1281,5 +1295,17 @@ namespace aspell {
     }
     return 0;
   }
-  
+
+  //////////////////////////////////////////////////////////////////////
+  //
+  // error checking utility function
+  //
+  PosibErrBase sanity_fail(const char * file, const char * func, 
+                           unsigned line, const char * check_str) 
+  {
+    char mesg[500];
+    snprintf(mesg, 500, "%s:%d: %s: Assertion \"%s\" failed.",
+             file,  line, func, check_str);
+    return make_err(bad_input_error, mesg);
+  }
 }

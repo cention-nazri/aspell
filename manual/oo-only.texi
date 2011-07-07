@@ -1,9 +1,11 @@
 @itemize
 @item Coptic (cop)
-@item Fijian (fj)
-@item Friulian (fur)
 @item Dyula (dyu)
 @item Fulah (ff)
+@item Fijian (fj)
+@item Friulian (fur)
+@item Khmer (km)
+@item Luxembourgish (lb)
 @item Mossi (mos)
 @item Nepali (ne)
 @item South Ndebele (nr)
@@ -13,6 +15,4 @@
 @item Tsonga (ts)
 @item Venda (ve)
 @item Xhosa (xh)
-@item Khmer (km)
-@item Luxembourgish (lb)
 @end itemize

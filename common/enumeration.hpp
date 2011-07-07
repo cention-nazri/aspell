@@ -55,7 +55,7 @@ namespace aspell {
     virtual ~Enumeration() {}
   };
 
-  template <class Parms, class Enum = Enumeration<TYPENAME Parms::Value> > 
+  template <class Parms, class Enum = Enumeration<typename Parms::Value> > 
   // Parms is expected to have the following members:
   //   typename Value
   //   typename Iterator;

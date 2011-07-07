@@ -640,9 +640,10 @@ namespace aspell { namespace sp {
   WordListIterator::WordListIterator(StringEnumeration * in0,
                                    const LangImpl * lang0,
                                    OStream * log0)
-    : in(in0), lang(lang0), log(log0), val(), str(0), str_end(0), brk(), 
+    : in(in0), lang(lang0), log(log0), val(), str(0), str_end(0),
       clean_affix(lang0, log0)
   {
+    memset(brk, '\0', sizeof(brk));
   }
 
   PosibErr<void>  WordListIterator::init(Config & config)

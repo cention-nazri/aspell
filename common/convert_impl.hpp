@@ -48,7 +48,7 @@ namespace aspell {
     NormLookupRet(const typename T::To * t, const From * l) 
       : to(t), last(l) {}
   };
-  
+
   template <class T, class From>
   static inline NormLookupRet<T,From> norm_lookup(const NormTable<T> * d, 
                                                   const From * s, const From * stop,
@@ -79,7 +79,7 @@ namespace aspell {
   }
 
   template <class T>
-  static void free_norm_table(NormTable<T> * d)
+  void free_norm_table(NormTable<T> * d)
   {
     for (T * cur = d->data; cur != d->end; ++cur) {
       if (cur->sub_table)
@@ -92,6 +92,15 @@ namespace aspell {
   //
   // create norm table
   //
+
+# define SANITY(check) \
+    if (!(check)) return sanity_fail(__FILE__, FUNC, __LINE__, #check)
+# define CREATE_NORM_TABLE(T, in, res) \
+    do { PosibErr<NormTable<T> *> pe( create_norm_table<T>(in) );\
+         if (pe.has_err()) return PosibErrBase(pe); \
+         res = pe.data; } while(false)
+  PosibErrBase sanity_fail(const char * file, const char * func, 
+                           unsigned line, const char * check_str);
 
   struct Tally 
   {
@@ -112,6 +121,7 @@ namespace aspell {
   template <class T, class TableInput>
   static PosibErr< NormTable<T> * > create_norm_table(TableInput & in)
   {
+    const char FUNC[] = "create_norm_table";
     RET_ON_ERR(in.init());
     int size = in.size;
     VARARRAY(T, d, size);
@@ -130,11 +140,11 @@ namespace aspell {
       if (in.have_sub_table) {
         TableInput next_in(in);
         in.get_sub_table(next_in);
-        in.cur->sub_table = create_norm_table<T>(next_in);
+        CREATE_NORM_TABLE(T, next_in, in.cur->sub_table);
       }
       ++in.cur;
     }
-    assert(in.cur - d == size);
+    SANITY(in.cur - d == size);
     Tally * which = &tally0;
     if (which->max > tally1.max) which = &tally1;
     if (which->max > tally2.max) which = &tally2;

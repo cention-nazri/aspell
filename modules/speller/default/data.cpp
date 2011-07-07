@@ -1,5 +1,5 @@
 // This file is part of The New Aspell
-// Copyright (C) 2000-2001 by Kevin Atkinson under the GNU LGPL
+// Copyright (C) 2000-2001,2011 by Kevin Atkinson under the GNU LGPL
 // license version 2.0 or 2.1.  You should have received a copy of the
 // LGPL license along with this library if you did not you can find it
 // at http://www.gnu.org/.
@@ -419,7 +419,10 @@ namespace aspell { namespace sp {
 
     res = 0;
 
+    Lock dict_cache_lock(NULL);
+
     if (actual_type == DT_ReadOnly) { // try to get it from the cache
+      dict_cache_lock.set(&dict_cache.lock); 
       res = dict_cache.find(id);
     }
 
@@ -450,11 +453,14 @@ namespace aspell { namespace sp {
       
       res = w.release();
 
-    } else {
-      
-      res->copy();
+    } else { // actual_type == DT_ReadOnly implied, and hence the lock
+             // is already acquired
+
+      res->copy_no_lock();
       
     }
+
+    dict_cache_lock.release();
 
     if (new_dicts)
       new_dicts->add(res);

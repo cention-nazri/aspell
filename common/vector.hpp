@@ -35,10 +35,10 @@ namespace aspell
       this->push_back(t);
     }
     void append(const T * begin, unsigned int size) {
-      insert(this->end(), begin, begin+size);
+      this->insert(this->end(), begin, begin+size);
     }
     void append(const T * begin, const T * end) {
-      insert(this->end(), begin, end);
+      this->insert(this->end(), begin, end);
     }
     int alloc(int s) {
       int pos = this->size();

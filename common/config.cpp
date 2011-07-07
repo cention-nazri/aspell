@@ -8,6 +8,7 @@
 //#define DEBUG {fprintf(stderr,"File: %s(%i)\n",__FILE__,__LINE__);}
 #include <string.h>
 #include <stdlib.h>
+#include "ndebug.hpp"
 #include <assert.h>
 #ifdef WIN32PORT
 #include <windows.h>// GetModuleFilename
@@ -1585,3 +1586,4 @@ namespace aspell {
   }
   
 }
+

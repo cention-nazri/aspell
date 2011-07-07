@@ -389,7 +389,8 @@ namespace sp {
       return cmp(a,b) == 0;
     }
   };
-  
+
+  template <typename HASH_INT = size_t>
   struct InsensitiveHash {
     // hashes a string without regards to casing or special begin
     // or end characters
@@ -397,9 +398,9 @@ namespace sp {
     InsensitiveHash() {}
     InsensitiveHash(const LangImpl * l)
 	: lang(l) {}
-    size_t operator() (const char * s) const
+    HASH_INT operator() (const char * s) const
     {
-      size_t h = 0;
+      HASH_INT h = 0;
       for (;;) {
 	if (*s == 0) break;
         unsigned char c = lang->to_clean(*s++);
@@ -412,9 +413,10 @@ namespace sp {
   struct SensitiveCompare {
     const LangImpl * lang;
     bool case_insensitive;
-    bool ignore_accents;    
-    bool begin;
-    bool end;
+    bool ignore_accents; // unused
+    bool begin; // if not begin we are checking the end of the word
+    bool end;   // if not end we are checking the beginning of the word
+                // if both false we are checking the middle of a word
     SensitiveCompare(const LangImpl * l = 0) 
       : lang(l), case_insensitive(false), ignore_accents(false),
         begin(true), end(true) {}

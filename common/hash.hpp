@@ -1,4 +1,4 @@
-// Copyright (c) 2001
+// Copyright (c) 2001,2011
 // Kevin Atkinson
 //
 // Permission to use, copy, modify, distribute and sell this software
@@ -323,7 +323,7 @@ namespace aspell {
       : Base(s, Parms(h,e)) {}
     data_type & operator[](const key_type & k) 
     {
-      return (*((insert(value_type(k, data_type()))).first)).second;
+      return (*((this->insert(value_type(k, data_type()))).first)).second;
     }
   };
 

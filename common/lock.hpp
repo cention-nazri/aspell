@@ -1,6 +1,6 @@
 // File: lock.hpp
 //
-// Copyright (c) 2002,2003 
+// Copyright (c) 2002,2003,2011
 // Kevin Atkinson
 //
 // Permission to use, copy, modify, distribute and sell this software
@@ -14,6 +14,8 @@
 
 #ifndef DISTRIBNET_LOCK__HPP
 #define DISTRIBNET_LOCK__HPP
+
+#include <assert.h>
 
 #include "settings.h"
 
@@ -85,6 +87,8 @@ namespace aspell {
     Mutex * lock_;
   public:
     Lock(Mutex * l) : lock_(l) {if (lock_) lock_->lock();}
+    void set(Mutex * l) {assert(!lock_); lock_ = l; if (lock_) lock_->lock();}
+    void release() {if (lock_) lock_->unlock(); lock_ = NULL;}
     ~Lock() {if (lock_) lock_->unlock();}
   };
 };

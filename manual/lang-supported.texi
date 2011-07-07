@@ -49,6 +49,7 @@
 @item fo @tab Faroese @tab Latin @tab 0.50 @tab -
 @item fr @tab French @tab Latin @tab 0.50 @tab Yes
 @item fur @tab Friulian @tab Latin @tab Maybe @tab -
+@item fy @tab Frisian @tab Latin @tab 0.60 @tab -
 @item
 @item ga @tab Irish @tab Latin @tab 0.50 @tab Yes
 @item gd @tab Scottish Gaelic @tab Latin @tab 0.50 @tab -
@@ -104,8 +105,8 @@
 @item mg @tab Malagasy @tab Latin @tab 0.50 @tab -
 @item mi @tab Maori @tab Latin @tab 0.50 @tab -
 @item mk @tab Macedonian @tab Cyrillic @tab 0.50 @tab -
-@item ml @tab Malayalam @tab Latin, Malayalam @tab Planned @tab -
-@item mn @tab Mongolian @tab Cyrillic, Mongolian @tab 0.60 @tab Yes
+@item ml @tab Malayalam @tab Latin, Malayalam @tab 0.60 @tab -
+@item mn @tab Mongolian @tab Cyrillic, Mongolian @tab 0.60 @tab Incomplete
 @item mo @tab Moldavian @tab Cyrillic @tab - @tab -
 @item mos @tab Mossi @tab - @tab Maybe @tab -
 @item mr @tab Marathi @tab Devanagari @tab 0.60 @tab -
@@ -146,7 +147,7 @@
 @item sd @tab Sindhi @tab Arabic @tab - @tab -
 @item sg @tab Sango @tab Latin @tab Maybe @tab -
 @item si @tab Sinhalese @tab Sinhala @tab - @tab -
-@item sk @tab Slovak @tab Latin @tab 0.50 @tab -
+@item sk @tab Slovak @tab Latin @tab 0.50 @tab Yes
 @item sl @tab Slovenian @tab Latin @tab 0.50 @tab Yes
 @item sm @tab Samoan @tab Latin @tab Maybe @tab -
 @item sn @tab Shona @tab Latin @tab Maybe @tab -
@@ -164,7 +165,7 @@
 @item tet @tab Tetum @tab Latin @tab 0.50 @tab -
 @item tg @tab Tajik @tab Arabic, Cyrillic, Latin @tab Maybe @tab Incomplete
 @item ti @tab Tigrinya @tab Ethiopic @tab Maybe @tab -
-@item tk @tab Turkmen @tab Arabic, Cyrillic, Latin @tab Maybe @tab -
+@item tk @tab Turkmen @tab Arabic, Cyrillic, Latin @tab 0.50 @tab -
 @item tl @tab Tagalog @tab Latin, Tagalog @tab 0.50 @tab -
 @item tn @tab Tswana @tab Latin @tab 0.50 @tab -
 @item to @tab Tonga @tab Latin @tab Maybe @tab -

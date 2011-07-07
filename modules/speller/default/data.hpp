@@ -1,8 +1,9 @@
-// Copyright 2000 by Kevin Atkinson under the terms of the LGPL
+// Copyright 2000,2011 by Kevin Atkinson under the terms of the LGPL
 
 #ifndef ASPELLER_DATA__HPP
 #define ASPELLER_DATA__HPP
 
+#include "ndebug.hpp"
 #include <assert.h>
 
 #include "copy_ptr.hpp"
